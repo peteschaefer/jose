@@ -27,16 +27,26 @@ libraries needed:
 [x] macOS 15 Sequoia VM
 [x] jdk1.8 (64 bit)
 [ ] 64 bit binaries for stockfish and lc0
-[ ] plan A: fix dependencies for libmysqlje 32 bit ?
+[-] plan A: fix dependencies for libmysqlje 32 bit ?
     most unlikely because 32bit support is missing completely from MacOS
-[ ] plan B: get libmysqld 64 bit
+[-] plan B: get libmysqld 64 bit
     -> requires upgrading to 5.0.67 ?
     mysql upgrades are notoriously painful :(
-[ ] plan C: compile libmysqld+je for 64 bit (on my Mac Pro) ?
+[-] plan C: compile libmysqld+je for 64 bit (on my Mac Pro) ?
     CFLAGS=-m64, configure --host=x86_64
-[ ] plan D: compile mysqld standalone
+[ ] plan D: get a usable mysqld standalone
+[ ] plan E: compile mysqld standalone
 
-Q: is the db already running in standalone mode?
+jose 1.4.4 is running mysqdld in standalone mode.
+I don't even know, if the embedded lib was ever compiled for MacOS.
+Which pretty much suggests plan D.
+
+jose 1.4.4 setup on my MacPro
+
+MacOS 10.7.5 i386
+JRE 1.6.0_65 (Apple) "mixed mode"
+mysqld 5.0.24a i686 from 11-07-2005
+
 
 [ ] compile easylink
 [ ] libquaqua 64 bit --> try: https://violetlib.org/vaqua
@@ -87,6 +97,23 @@ Q: is the db already running in standalone mode?
   - can't delete? (Apply !!)
 
 ==== Postponed
+
+* SQLite backend. Now, that's a bit of work but it would
+ - relieve us from libmysqld (old, poorly supported)
+ - pave the way to the land of 64bit computing
+  -> have more flexibility with jdks
+
+[ ] create an adpater class for sqlite
+[ ] how much sql statements contain mysql specificities ?
+       - Maybe fewer than one thinks?
+         LOCK, FLUSH TABLE can be replaced by transaction
+         LIMIT is supported
+       - e.g. full-text stuff is not used at all
+[ ] for legacy dbs and .jose archives, we still need to read myisam.
+       - Maybe that is not so difficult. See sources for myisamchk.
+       - We can ignore indices.
+       - We don't need to write myisam
+       - we didn't use compression (lucky me)
 
 * Graph View interactive
     - mark current move
