@@ -61,6 +61,7 @@ public class JoSplitPane
 	public static final int DIVIDE_WEIGHT	= -3;
 	/*  don't adjust divider location, just keep it */
 	public static final int DIVIDE_USER     = -4;
+	public static final int DIVIDER_SIZE = 8;
 
 	protected int dividerMethod;
 
@@ -81,8 +82,8 @@ public class JoSplitPane
          * (note that the actual divider size will be overwritten, anyway)
          */
 //        System.out.println(UIManager.getDefaults().get("SplitPaneUI"));
-        UIManager.getDefaults().put("SplitPane.dividerSize",6);
-		setUI(new JoSplitPaneUI());
+//        UIManager.put("SplitPane.dividerSize",16);
+//		setUI(new JoSplitPaneUI());
 
 		if (size==null)
 			size = getSize();
@@ -350,19 +351,19 @@ public class JoSplitPane
 		/*
 		 * hide dividers for fixed-size components (toolbars, in particular)
 		 */
-		if (getOrientation()==HORIZONTAL_SPLIT) {
-			if (firstJoComponent().getWeightX()<=0.0 || secondJoComponent().getWeightX()<=0.0)
-				setDividerSize(2);
-			else
-				setDividerSize(4);
-		}
-		else {
-			if (firstJoComponent().getWeightY()<=0.0 || secondJoComponent().getWeightY()<=0.0)
-				setDividerSize(2);
-			else
-				setDividerSize(4);
-		}
+		if (getOrientation()==HORIZONTAL_SPLIT)
+			setDividerEnabled(firstJoComponent().getWeightX() > 0.0 && secondJoComponent().getWeightX() > 0.0);
+		else
+			setDividerEnabled(firstJoComponent().getWeightY() > 0.0 && secondJoComponent().getWeightY() > 0.0);
+	}
 
+	private void setDividerEnabled(boolean movable) {
+		setDividerSize(movable ? DIVIDER_SIZE:2);
+		//	following has no effect, sadly...
+		putClientProperty("SplitPaneDivider.style", movable ? "grip":"plain");
+		putClientProperty("SplitPaneDivider.gripDotCount", movable ? 3:0);
+		//putClientProperty("SplitPaneDivider.gripColor", movable ? Color.black : Color.white);
+		//updateUI();
 	}
 
 	public void startContinuousResize()

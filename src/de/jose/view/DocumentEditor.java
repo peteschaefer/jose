@@ -54,7 +54,7 @@ public class DocumentEditor
 	/**	Color used to hilite the current move
 	 *	(do not confuse with text hilite for copy & paste)
 	 */
-	protected static final Color MOVE_HILITE_COLOR = ImgUtil.lightBlue;
+	protected static final Color MOVE_HILITE_COLOR = Color.yellow;
 
 	protected static final int PADDING_NONE         = 0x00;
 	protected static final int PADDING_LEADING      = 0x01;

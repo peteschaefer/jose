@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.IntConsumer;
 
 import static de.jose.pgn.INodeConstants.ANNOTATION_NODE;
 
@@ -154,7 +155,11 @@ public class DocumentPanel
 
 		theTabPane = new JoTabbedPane();	//	not yet visible !
 		currentTabIndex = -1;
-
+		theTabPane.putClientProperty("JTabbedPane.tabClosable", true );
+		theTabPane.putClientProperty( "JTabbedPane.tabCloseCallback",
+				(IntConsumer) tabIndex -> {
+					closeTab(null,tabIndex);
+				} );
 		theTabPane.addMouseListener(this);
 
 		updateFromProfile(Application.theUserProfile);
@@ -1072,18 +1077,22 @@ public class DocumentPanel
 		    if (tab >= 0)
 		    {
 			    //  close tab
-			    final Command cmd = new Command("menu.game.close",e,tab);
-			    SwingUtilities.invokeLater(new Runnable() {
-				    public void run()
-				    {
-						Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-				    }
-			    });
-		    }
+				closeTab(e, tab);
+			}
 	    }
     }
 
-    public void mousePressed(MouseEvent e)
+	private static void closeTab(MouseEvent e, int tab) {
+		final Command cmd = new Command("menu.game.close", e, tab);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+			}
+		});
+	}
+
+	public void mousePressed(MouseEvent e)
     {
     }
 
