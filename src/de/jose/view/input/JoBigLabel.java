@@ -12,14 +12,13 @@
 
 package de.jose.view.input;
 
+import de.jose.view.PreferredHeightComponent;
+
 import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 /**
@@ -32,6 +31,7 @@ import java.util.LinkedList;
 
 public class JoBigLabel
 		extends JTextArea
+		implements PreferredHeightComponent
 {
 
     public JoBigLabel(String text)

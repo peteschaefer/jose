@@ -10,6 +10,7 @@ import de.jose.profile.FontEncoding;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.view.input.JoBigLabel;
+import de.jose.view.input.JoStyledLabel;
 import de.jose.view.style.JoFontConstants;
 import de.jose.view.style.JoStyleContext;
 
@@ -120,7 +121,7 @@ public class PopupBoardWindow
 
     protected int trackMouse()
     {
-        JoBigLabel pv = engpanel.getPvLabel(pvidx,false,false);
+        JoStyledLabel pv = engpanel.getPvLabel(pvidx,false,false);
         assert(pv!=null);
         Point mouse = pv.mouseLocation;
         int ply = engpanel.findPly(pv,mouse);
