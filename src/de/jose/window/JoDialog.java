@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1633,7 +1633,8 @@ public class JoDialog
     public static void newLinkButton(StringBuffer buf, String command, String icon)
     {
         String labelText = Language.get(command);
-        String iconPath = ImgUtil.getImageFile("menu",icon);
+        String iconPath = null;
+		if (icon!=null) iconPath = ImgUtil.getImageFile("menu",icon);
 
         JoStyledLabel.appendLink(buf,iconPath, labelText, "verbatim:"+command);
     }

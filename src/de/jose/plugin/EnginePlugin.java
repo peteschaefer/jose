@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ import java.util.*;
 
 /**
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 abstract public class EnginePlugin
@@ -826,6 +826,8 @@ abstract public class EnginePlugin
 			//  value is from white's point of view !
 			if (value <= Score.UNKNOWN)
 				return false; //  unknown value
+			//	todo mapUnit(Score) !!
+
 			if (EngUtil.isBlack(engineColor)) value = -value;
 			//  now value is from the engine's point of view
 			if (value > EnginePlugin.RESIGN_THRESHOLD)
@@ -848,6 +850,8 @@ abstract public class EnginePlugin
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
 			int value = node.getEngineValue();
+			//	todo mapUnitWDL(Score) !!
+
 			if (value <= Score.UNKNOWN)
 				return false; //  unknown value
 			if ((value < -EnginePlugin.DRAW_THRESHOLD) || (value > EnginePlugin.DRAW_THRESHOLD))

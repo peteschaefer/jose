@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import java.util.Vector;
 /**
  *  a list of available Engine Plugins
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class PluginList
@@ -187,7 +187,8 @@ public class PluginList
 		else {
 			img = (ImageIcon)SoftCache.gInstance.get(file);
 			if (img==null) {
-				img = ImgUtil.getIcon(file,100,50);
+				Dimension size = new Dimension(100,50);
+				img = ImgUtil.getIcon(file,size);
 				SoftCache.gInstance.put(file,img);
 			}
 		}
@@ -227,7 +228,7 @@ public class PluginList
 		protected void paintComponent(Graphics g)
 		{
 			if (selected)
-				g.setColor(getSelectionBackground());
+				g.setColor(/*getSelectionBackground()*/Color.yellow);
 			else
 				g.setColor(Color.white);
 			g.fillRect(0,0,getWidth(),getHeight());
@@ -258,7 +259,8 @@ public class PluginList
 			if (logo!=null && logo.exists())
 				try {
 					ImageIcon img = getImage(logo,true);
-					g.drawImage(img.getImage(), inner.x,inner.y, inner.width,inner.height, null);
+					//	retain aspect ratio
+					drawCentered(g,img.getImage(), inner.x,inner.y, new Dimension(inner.width,inner.height));
 				} catch (Exception ex) {
 					//  image unreadable; can't help it...
 					ex.printStackTrace();
@@ -296,5 +298,14 @@ public class PluginList
 				g.fillRect(inner.x,inner.y, inner.width,inner.height);
 			}
 		}
+	}
+
+	protected static void drawCentered(Graphics g, Image img, int x, int y, Dimension r)
+	{
+		Dimension d = ImgUtil.scaledAspectRatio(img,r);
+		g.drawImage(img,
+				x + (int)(r.getWidth() - d.getWidth())/2,
+				y + (int)(r.getHeight() - d.getHeight())/2,
+				(int)d.getWidth(), (int)d.getHeight(),null);
 	}
 }

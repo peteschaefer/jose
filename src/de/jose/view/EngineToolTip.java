@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.io.File;
 
 /**
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class EngineToolTip
@@ -99,7 +99,7 @@ public class EngineToolTip
 
 				File logoFile = plugin.getLogo();
 				if (logoFile != null) {
-					icon = ImgUtil.getIcon(logoFile,100,50);
+					icon = ImgUtil.getIcon(logoFile,new Dimension(100,50));
 				}
 				else {
 					icon = null;

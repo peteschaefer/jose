@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -167,8 +167,11 @@ public class AboutDialog
             placeholders.put("custom-logo", splogos[0]);
         }
         else {
-			placeholders.put("custom-url", Application.theApplication.theConfig.getURL("online-donate"));
-			placeholders.put("custom-logo", "project-support.jpg");
+			String donateURL = Application.theApplication.theConfig.getURL("online-donate");
+			if (donateURL != null) {
+				placeholders.put("custom-url", donateURL);
+				placeholders.put("custom-logo", "project-support.jpg");
+			}
         }
         placeholders.put("gpl-hint", Language.get("dialog.about.gpl"));
 /*

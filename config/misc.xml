@@ -235,7 +235,7 @@
 		<!-- online update info -->
 		<online-update>https://hrimfaxi.bitbucket.io/jose/download.xml</online-update>
         <!-- online donation -->
-        <online-donate>http://jose-chess.sourceforge.net/main.html#donate</online-donate>
+        <!--online-donate>http://jose-chess.sourceforge.net/main.html#donate</online-donate-->
 		<!-- book download -->
 		<book-download>http://jose-chess.sourceforge.net/download.html#books</book-download>
 

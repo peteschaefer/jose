@@ -19,8 +19,9 @@ libraries needed:
 ? TraceConnection probably not needed anyway
 * check links (remove donate, update, help, ...)
 * update download.xml
+* get rid of some outdated stuff (customizing for jdk 1.4, 1.5, plafs, ...)
 
-==== Linux build
+==== Linux build (!!)
 * requires jre 1.8 (i386)
 * requires some extra libraries (i386)
     - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
@@ -51,7 +52,7 @@ Leela
   - if possible, redraw only modified arrows
 
 * "New Game from here"
-  - eco update ??
+  - eco update !! ??
   - player names update
   - turn board on engine start
   - turn board in toolbar
@@ -89,6 +90,10 @@ java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 * BUG: engine configurations
   - absolute path to directories?
   - can't delete?
+* BUG: Engine Panel, Opening Book, no tooltips
+* BUG: offer draw, resign doesn't work
+   Leela resigns early (probably ScoreType confusion)
+* BUG: link buttons (Setup Dialog, Engine Dialog)
 
 ==== Postponed
 

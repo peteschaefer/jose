@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1161,8 +1161,9 @@ public class EnginePanel
         list.add(ContextMenu.SEPARATOR);
 
 		list.add("menu.game.hint");
-		list.add("menu.game.draw");
-		list.add("menu.game.resign");
+		//list.add("menu.game.draw");
+		//list.add("menu.game.resign");
+		/* draw and resign are disabled until we come up with a really good heuristic */
 
 		list.add(ContextMenu.SEPARATOR);
 

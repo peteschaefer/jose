@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -507,7 +507,7 @@ public class ImgUtil
 			return null;
 	}
 
-	public static ImageIcon getIcon(File file, int width, int height)
+	public static ImageIcon getIcon(File file, Dimension sz)
 	{
 		ImageIcon icon = (ImageIcon)SoftCache.gInstance.get(file);
 		if (icon!=null) return icon;
@@ -515,13 +515,15 @@ public class ImgUtil
 		if (FileUtil.hasExtension(file.getName(),"bmp"))
 		{
 			Image img = readBmp(file);
-			img = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+			sz = scaledAspectRatio(img,sz);
+			img = img.getScaledInstance((int)sz.getWidth(), (int)sz.getHeight(), Image.SCALE_SMOOTH);
 			icon = new ImageIcon(img);
 		}
 		else {
 			icon = new ImageIcon(file.getAbsolutePath());
 			Image img = icon.getImage();
-			img = img.getScaledInstance(width,height,Image.SCALE_SMOOTH);
+			sz = scaledAspectRatio(img,sz);
+			img = img.getScaledInstance((int)sz.getWidth(), (int)sz.getHeight(),Image.SCALE_SMOOTH);
 			icon.setImage(img);
 		}
 
@@ -812,6 +814,19 @@ public class ImgUtil
 	{
 		if (!ClassPathUtil.existsClass("com.sun.media.jai.codec.ImageCodec"))
 			ClassPathUtil.addToClassPath(new File(Application.theWorkingDirectory,"lib/jai_codec.jar"));
+	}
+
+	public static Dimension scaledAspectRatio(Image img, Dimension r)
+	{
+		int iwidth = img.getWidth(null);
+		int iheight = img.getHeight(null);
+
+		int swidth = (int)(r.getHeight() * iwidth / iheight);
+		int sheight = (int)(r.getWidth() * iheight / iwidth);
+		if (swidth <= r.getWidth())
+			return new Dimension(swidth,(int)r.getHeight());
+		else
+			return new Dimension((int)r.getWidth(),sheight);
 	}
 
 

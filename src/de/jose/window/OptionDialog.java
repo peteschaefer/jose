@@ -317,7 +317,91 @@ public class OptionDialog
 		JPanel tab4 = (JPanel)comp4;
         tab4.setLayout(new BoxLayout(tab4,BoxLayout.X_AXIS));
 
-//		pluginList = new JComboBox(EnginePlugin.getEngineNames(Version.osDir));
+		JComponent box = createPluginListPanel();
+		tab4.add(box);
+
+		JPanel p1 = createPluginInfoPanel();
+		JPanel p2 = createPluginSearchPanel();
+		JPanel p4 = createPluginOptionsPanel();
+		JPanel p3 = createMorePluginOptionsPanel();
+
+		pluginInfo.add(p1, ELEMENT_ONE_ROW);
+		pluginInfo.add(p2, ELEMENT_ONE_ROW);
+		pluginInfo.add(p4, ELEMENT_ONE_ROW);
+		pluginInfo.add(p3, ELEMENT_ONE_ROW);
+
+		pluginScroller = new JScrollPane(pluginInfo,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		pluginScroller.getVerticalScrollBar().setUnitIncrement(20);
+
+		tab4.add(pluginScroller);
+	}
+
+	private JPanel createPluginSearchPanel()
+	{
+		JPanel p2 = newGridBox("plugin.search.title");
+
+		addWithLabel(p2, 0,0,2, null, newRadioButton("plugin.search.time.control"));
+
+		StringBuffer buf = new StringBuffer();
+		buf.append("<div style='font-size:12pt;'>");
+		JoDialog.newLinkButton(buf,"plugin.search.time.control.link",  null);
+		buf.append("</div>");
+
+		JoStyledLabel button = new JoStyledLabel(buf.toString());
+		button.addActionListener(this);
+		p2.add(button, ELEMENT_THREE);
+
+
+		addWithLabel(p2, 0,1,2, null, newRadioButton("plugin.search.time.fixed"));
+		p2.add(newTimeField("plugin.search.time.fixed.value"), ELEMENT_THREE);
+
+		GridBagConstraints suffix = (GridBagConstraints) ELEMENT_FOUR_SMALL.clone();
+
+		addWithLabel(p2, 0,2,2, null, newRadioButton("plugin.search.depth"));
+		p2.add(newIntegerField("plugin.search.depth.value"), ELEMENT_THREE);
+		suffix.gridy=2;
+		p2.add(newLabel("plugin.search.plies.suffix"), suffix);
+
+		addWithLabel(p2, 0,3,2, null, newRadioButton("plugin.search.nodes"));
+		p2.add(newIntegerField("plugin.search.nodes.value"), ELEMENT_THREE);
+		suffix.gridy=3;
+		p2.add(newLabel("plugin.search.nodes.suffix"), suffix);
+
+		newButtonGroup("plugin.search");
+		return p2;
+	}
+
+	private JPanel createPluginOptionsPanel() {
+		pluginOptions = newGridPane();
+		optionWaitMessage = newLabel("plugin.options.wait", JLabel.CENTER);
+		optionWaitMessage.setVisible(false);
+
+		JPanel p4 = newGridBox("plugin.options");
+		p4.add(optionWaitMessage, ELEMENT_ONE_ROW);
+		p4.add(pluginOptions, ELEMENT_REMAINDER);
+
+		return p4;
+	}
+
+	private JPanel createMorePluginOptionsPanel()
+	{
+		//  filled dynamically
+		JPanel p3 = new JPanel(new BorderLayout());
+		p3.setBorder(new TitledBorder(Language.get("plugin.startup")));
+
+		JTextArea moreOptions = newTextArea(4,20);
+		moreOptions.setName("plugin.startup");
+		reg(moreOptions);
+		p3.add(moreOptions, BorderLayout.CENTER);
+
+		return p3;
+	}
+
+	private JComponent createPluginListPanel()
+	{
+		//		pluginList = new JComboBox(EnginePlugin.getEngineNames(Version.osDir));
 		pluginList = new PluginList();
 		pluginList.addListSelectionListener(this);
 		pluginList.setName("plugin.1");
@@ -329,8 +413,8 @@ public class OptionDialog
 		                                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		reg(pluginList);
 
-        Box vbox = Box.createVerticalBox();
-        Box hbox = Box.createHorizontalBox();
+		Box vbox = Box.createVerticalBox();
+		Box hbox = Box.createHorizontalBox();
 
 		JButton addButton = newButton("plugin.add","add");
 		JButton duplButton = newButton("plugin.duplicate","duplicate");
@@ -341,23 +425,26 @@ public class OptionDialog
 		duplButton.setBorder(border);
 		delButton.setBorder(border);
 
-        hbox.add(reg(addButton));
+		hbox.add(reg(addButton));
 		hbox.add(reg(duplButton));
-        hbox.add(reg(delButton));
+		hbox.add(reg(delButton));
 
 		vbox.setMaximumSize(new Dimension(pluginList.getMaximumSize().width+20, Integer.MAX_VALUE));
 
 		JCheckBox logoCheckbox = newCheckBox("plugin.show.logos");
 		logoCheckbox.addChangeListener(this);
 
-        vbox.add(hbox);
-        vbox.add(scroller);
+		vbox.add(hbox);
+		vbox.add(scroller);
 
 		hbox = Box.createHorizontalBox();
 		hbox.add(reg(logoCheckbox));
 		vbox.add(hbox);
-		tab4.add(vbox);
+		return vbox;
+	}
 
+	private JPanel createPluginInfoPanel()
+	{
 		pluginInfo = newGridPane();
 
 		JPanel p1 = newGridBox("plugin.info");
@@ -372,7 +459,7 @@ public class OptionDialog
 
 		FileInput logoInput = newFileInputField("plugin.logo");
 
-		dirInput.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);		
+		dirInput.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		exeInput.addFilter(new ExecutableFileFilter());
 		logoInput.addFilter(new ImageFileFilter());
 
@@ -392,34 +479,7 @@ public class OptionDialog
 		newButtonGroup("plugin.protocol");
 		radUci.addItemListener(this);
 		radXboard.addItemListener(this);
-
-		pluginOptions = newGridPane();
-		optionWaitMessage = newLabel("plugin.options.wait", JLabel.CENTER);
-		optionWaitMessage.setVisible(false);
-
-		JPanel p4 = newGridBox("plugin.options");
-		p4.add(optionWaitMessage, ELEMENT_ONE_ROW);
-		p4.add(pluginOptions, ELEMENT_REMAINDER);
-
-		//  filled dynamically
-		JPanel p3 = new JPanel(new BorderLayout());
-		p3.setBorder(new TitledBorder(Language.get("plugin.startup")));
-
-		JTextArea moreOptions = newTextArea(4,20);
-		moreOptions.setName("plugin.startup");
-		reg(moreOptions);
-		p3.add(moreOptions, BorderLayout.CENTER);
-
-		pluginInfo.add(p1, ELEMENT_ONE_ROW);
-		pluginInfo.add(p4, ELEMENT_ONE_ROW);
-		pluginInfo.add(p3, ELEMENT_ONE_ROW);
-
-		pluginScroller = new JScrollPane(pluginInfo,
-		                                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-		                                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		pluginScroller.getVerticalScrollBar().setUnitIncrement(20);
-
-        tab4.add(pluginScroller);
+		return p1;
 	}
 
 	protected void initTab6(Component comp6)
@@ -749,6 +809,14 @@ public class OptionDialog
 			}
 		};
 		map.put("styles.modified",action);
+
+		action = new CommandAction() {
+			@Override
+			public void Do(Command cmd) throws Exception {
+				OptionDialog.super.getTabbedPane().setSelectedIndex(4);
+			}
+		};
+		map.put("plugin.search.time.control.link",action);
 	}
 
 	public void addBooks(File[] files)
