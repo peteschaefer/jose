@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import de.jose.util.StringUtil;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
 /**
  * a read-only text label that can display styled text
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class JoStyledLabel
@@ -50,26 +52,36 @@ public class JoStyledLabel
 	public JToolTip tooltip = null;
     public Point mouseLocation;
 
-	protected HTMLDocument doc;
+	protected StyledDocument doc;
     protected ArrayList actionListeners;
 
-	public JoStyledLabel(String text)
+    public JoStyledLabel(String text)
+    {
+        this(text,null);
+    }
+
+	public JoStyledLabel(String text, StyledDocument sdoc)
 	{
-		super();
+        super();
+        if (sdoc!=null)
+            setStyledDocument(doc=sdoc);
+
 		setEditable(false);
 
 		Color bgColor = UIManager.getColor("Panel.background");
 		setBackground(bgColor);
 
-		if (htmlKit==null) {
-			htmlKit = new HTMLEditorKit();
-			theStyleSheet = htmlKit.getStyleSheet();
-			theStyleSheet.addRule("body { font-family: sans-serif; font-size: 12pt; }");
-		}
+        if (doc==null) {
+            if (htmlKit == null) {
+                htmlKit = new HTMLEditorKit();
+                theStyleSheet = htmlKit.getStyleSheet();
+                theStyleSheet.addRule("body { font-family: sans-serif; font-size: 12pt; }");
+            }
 
-		setEditorKit(htmlKit);
-		doc = (HTMLDocument)htmlKit.createDefaultDocument();
-		setStyledDocument(doc);
+            setEditorKit(htmlKit);
+            doc = (StyledDocument)htmlKit.createDefaultDocument();
+            setStyledDocument(doc);
+        }
 
 //        if (text==null || text.length()==0)
 //            text = "<html><body id='body'></body></html>";
@@ -126,18 +138,6 @@ public class JoStyledLabel
 		}
 */
 	}
-
-    public void appendText(String text)
-    {
-        try {
-            //  find the <body> tag
-            Element body = doc.getElement("body");
-            doc.insertBeforeEnd(body,text);
-
-        } catch (Exception e) {
-            Application.error(e);
-        }
-    }
 
 	public void paintComponent(Graphics g)
 	{

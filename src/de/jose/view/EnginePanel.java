@@ -108,7 +108,7 @@ public class EnginePanel
 	protected boolean showInfoLabel;
 
 	protected StyledMoveFormatter formatter;
-	protected Style textStyle, boldStyle, figStyle, infoStyle;
+	protected JoStyleContext styles;
 
 	/** status info    */
 	protected JLabel    lStatus;
@@ -155,21 +155,30 @@ public class EnginePanel
 	{
 		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
 
-		JoStyleContext styles = Application.theUserProfile.getStyleContext();
+		JoStyleContext userStyles = Application.theUserProfile.getStyleContext();
 		//textStyle = styles.getStyle("body.line");
-		textStyle = styles.addStyle("engine.pv",null);
+		styles = new JoStyleContext(userStyles);
+		styles.setScreenResolution(72);
+		//	not sure what that means, or why it is necessary
+		//	but it scales correctly :\
+
+		Style textStyle = styles.addStyle("engine.pv",null);
 		StyleConstants.setFontFamily(textStyle, "sans-serif");
 		StyleConstants.setFontSize(textStyle, 12);
+		StyleConstants.setLineSpacing(textStyle, -12.f);
 
-		boldStyle = styles.addStyle("engine.pv.bold",textStyle);
+		Style boldStyle = styles.addStyle("bold",null);
 		StyleConstants.setBold(boldStyle, true);
 
-		infoStyle = styles.addStyle("engine.pv.info",textStyle);
+		Style infoStyle = styles.addStyle("engine.pv.info",textStyle);
 		StyleConstants.setFontSize(infoStyle, 10);
 		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
 
-		figStyle = styles.getStyle("body.figurine");
-		// todo what about figStyle bold? Let StyledMoveFormatter handle it?
+		Style userFigStyle = userStyles.getStyle("body.figurine");
+		String figFontName = StyleConstants.getFontFamily(userFigStyle);
+
+		Style figStyle = styles.addStyle("engine.pv.figurine",textStyle);
+		StyleConstants.setFontFamily(figStyle,figFontName);
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
@@ -179,7 +188,7 @@ public class EnginePanel
 		int moveFormat = Application.theUserProfile.getInt("doc.move.format", MoveFormatter.SHORT);
 		formatter.setFormat(moveFormat);
 
-		boolean useFigurines = styles.useFigurineFont();
+		boolean useFigurines = userStyles.useFigurineFont();
 		formatter.setFigStyle(useFigurines ? figStyle : null);
 	}
 
@@ -311,7 +320,11 @@ public class EnginePanel
 	private JoStyledLabel createPvLineComponent(String name)
 	{
 		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
-		JoStyledLabel label = new JoStyledLabel(""/*Language.get(name)*/);
+
+		//JoStyleContext styles = Application.theUserProfile.getStyleContext();
+		StyledDocument sdoc = new DefaultStyledDocument(this.styles);
+		JoStyledLabel label = new JoStyledLabel(""/*Language.get(name)*/, sdoc);
+
 		makeLabel(label, name,normalFont,JLabel.LEFT,
                                     JoLineBorder.ALL, 3,3,3,3);
 		return label;
@@ -1032,12 +1045,12 @@ public class EnginePanel
 					formatter.reformatFrom(text);
 				}
 				else {
-					doc.insertString(0, text.toString(), textStyle);
+					doc.insertString(0, text.toString(), styles.getStyle("engine.pv"));
 				}
 			}
 			if (info!=null && info.length()>0) {
-				doc.insertString(doc.getLength(), "\n", null);
-				doc.insertString(doc.getLength(), info.toString(), infoStyle);
+				doc.insertString(doc.getLength(), "\n", styles.getStyle("engine.pv"));
+				doc.insertString(doc.getLength(), info.toString(), styles.getStyle("engine.pv.info"));
 			}
         } catch (BadLocationException e) {
             Application.error(e);
