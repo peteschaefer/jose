@@ -100,9 +100,9 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME selected="true"> 4000 </TIME>
+		<TIME> 4000 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES> 100 </NODES>
+		<NODES selected="true"> 100 </NODES>
 		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>

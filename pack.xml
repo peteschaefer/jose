@@ -780,7 +780,7 @@
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
 			<arg value="--progress-bar" />
-			<arg line="-u hrimfaxi:ATBBqyv4Ut6HUGR6AFpGzLWPWwTs12658F94"/>
+			<arg line="-u hrimfaxi:ATBBqf6dG8TZLspP7Jj35jgFhTh732D9087A"/>
 			<arg line="-X POST" />
 			<arg line="-F files=@${file}" />
 			<arg value="https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads" />
@@ -803,19 +803,18 @@
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-windows.zip"/>
 		</antcall>
-		<!--
+
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-linux.zip"/>
 		</antcall>
-	-->
-		<!--
+
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-macos-intel.zip"/>
 		</antcall>
-		-->
-		<!--antcall target="upload-file">
+
+		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-macos-arm.zip"/>
-		</antcall-->
+		</antcall>
 	</target>
 
 </project>
