@@ -344,7 +344,10 @@ public class GameBuffer
 	protected void initRow(Row r)
 		throws SQLException
 	{
-		if (conn!=null) r.Id = Game.getSequence(conn);
+		if (conn!=null)
+			r.Id = Game.getSequence(conn);
+		else
+			r.Id = 0;
 		r.CId = CId;
 		r.Idx = gameIdx++;
 		r.Attributes = 0;
@@ -384,6 +387,7 @@ public class GameBuffer
 		" EventId,SiteId,GameDate,EventDate,DateFlags,AnnotatorId,ECO,OpeningId) "+
 		" VALUES ";
 */
+		if (r.Id==0) r.Id = Game.getSequence(conn);
 		pstm1.setInt			(p1++, r.Id);
 		pstm1.setInt			(p1++, r.CId);
 		pstm1.setInt			(p1++, r.Idx);
@@ -478,12 +482,13 @@ public class GameBuffer
 				pstm2 = conn.getPreparedStatement(sql2.toString());
 
 				//	fill in parameters
-				for (int j=0; j<fill; j++)
+				for (int j=0; j<fill; j++) {
+					System.err.println("insert id="+buffer[j].Id);
 					setParameters(buffer[j],
-								pstm1, 1+j*COUNT_VALUES_1,
-								pstm2, 1+j*COUNT_VALUES_2,
-								true);
-
+							pstm1, 1 + j * COUNT_VALUES_1,
+							pstm2, 1 + j * COUNT_VALUES_2,
+							true);
+				}
 				flush(reader);
 
 				//	let's do it
