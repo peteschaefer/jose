@@ -634,6 +634,8 @@ public class DocumentEditor
 			}
 			else if (node1 != node2) {
 				/*  selection spans several nodes; can't edit, or can we ? */
+				splitReplaceNode(node1,node2,d);
+				return;
 			}
 			else {
                 //  the normal case
@@ -652,6 +654,25 @@ public class DocumentEditor
             caretListen = true;
         }
     }
+
+	private void splitReplaceNode(Node node1, Node node2, DocUpdate d) throws BadLocationException {
+		int pos2 = d.pos2;
+		d.pos2 = node1.getEndOffset();
+		doReplaceNode(node1,d,PADDING_NONE);
+
+		//	delete the rest
+		d.newText = "";
+		d.nag = -1;
+		for(Node n = node1.next(); n!=null && n!=node2; n = n.next()) {
+			d.pos1 = n.getStartOffset();
+			d.pos2 = n.getEndOffset();
+			doReplaceNode(n, d, PADDING_NONE);
+		}
+
+		d.pos1 = node2.getStartOffset();
+		d.pos2 = pos2;
+		doReplaceNode(node2,d,PADDING_NONE);
+	}
 
 	@Override
 	public String getToolTipText(MouseEvent event)

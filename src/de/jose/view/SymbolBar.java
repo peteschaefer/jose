@@ -36,67 +36,6 @@ import java.util.Map;
 import static java.awt.GridBagConstraints.REMAINDER;
 
 /**
- * todo
- *  reorganize list! a plain vertical list is not user-friendly
- *  we need something like the symbol picker in Word :)
- *
- *  - table for common nags (43 entries)
- *  - most used nags on top
- *  - mouse hover; text in status line
- *  - recently used nags in a separate list
- *  - there's a number of "composable" nag, how should their gui look like?
- *
- *      BorderLayout (south = status bar)
- *      GridLayout for icons
- *      CardLayout switch to combo boxes
- *
- *  [0]
- *  [1..6]  ! ? !! ?? !? ?!
- *  [7..9] forced, singular, worst move
- *  [10..13] drawish, quiet, active, unclear position
- *
- *  [140] with the idea
- *  [141] against
- *  [142] is better
- *  [143] is worse
- *  [144] is equivalent
- *  [145] RR (remark)
- *  [146] Novelty
- *  [147] Weak Point
- *  [148..150] endgame,line,diagonal
- *  [151..154] w/b bishop pair, opp colored bishops, same colored bishops
- *  [156..163] passed pawn, more pawns, with/withou/see/rank
- *
- *  [190..195] etc. double pawns, isolated pawns, connected pawns
- *
- *  [201] Diagram
- *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
- *
- *   = 43 nags. present in table
- *
- *  --- [14..139] "composable" nags ---
- *  --- how should we present them? with an array of combo boxes? ---
- *  --- see class ComboNag ---
- *
- *  [14..21] white/black has a slight/moderate/decisive/crushing advantage
- *  [22..23] white/black is in Zugzwang
- *  [24..35] w/b has slight/moderate/decisive space/time advantage
- *
- *  [36..41] w/b has the/a lasting initiative/attack
- *  [42..47] w/b has insufficient/sufficient/more than adequate compentsion for material deficit
- *
- *  [48..65] w/b has slight/moderate/decisive center/kingside/queenside control advantage
- *
- *  [66..69] w/b has a vulnerable/well protected first rank
- *  [70..77] w/b has a poorly/well protected/placed king
- *
- *  [78..85] w/b has very/moderately weak/strong pawn structure
- *
- *  [86..101] w/b has poor/good knight/bishop/rook/queen placement
- *  [102..104] w/b has poor/good piece coordination
- *  [106..129] w/b has played the opening/middlegame/ending (very) poorly/well
- *  [130..135] w/b has slight/moderate/decisive counterplay
- *  [136..139] w/b has moderate/severe time control pressure
  *
  */
 public class SymbolBar 
@@ -115,6 +54,7 @@ public class SymbolBar
 
     protected ArrayList<JButton> easyButtons;
     protected ArrayList<JButton> normalButtons;
+    protected ArrayList<JButton> exoticButtons;
 
     protected ComboNag comboNag;
     protected JButton comboButton;
@@ -132,32 +72,12 @@ public class SymbolBar
     protected FontEncoding fontEncoding = null;
 	//protected JoBigLabel[] labels;
 
-/*
- *  [1..6]  ! ? !! ?? !? ?!
- *  [7..9] forced, singular, worst move
- *  [10..13] drawish, quiet, active, unclear position
- *
- *  [140] with the idea
- *  [141] against
- *  [142] is better
- *  [143] is worse
- *  [144] is equivalent
- *  [145] RR (remark)
- *  [146] Novelty
- *  [147] Weak Point
- *  [148..150] endgame,line,diagonal
- *  [151..154] w/b bishop pair, opp colored bishops, same colored bishops
- *  [156..163] passed pawn, more pawns, with/withou/see/rank
- *
- *  [190..195] etc. double pawns, isolated pawns, connected pawns
- *
- *  [201] Diagram
- *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
- */
+    //  easy codes have plaintext expressions. They can be typed (no need for buttons).
     protected static final int[] EASY_CODES = new int[] {
             1,2,3,4,5,6, 10,// ! ?
             14,15,16,17,18,19 // +/-
     };
+    // common NAG codes
     protected static final int[] NORMAL_CODES = new int[] {
             44, 45, 7,/*8,9,*/
             /*11,12,*/ 13,
@@ -172,6 +92,14 @@ public class SymbolBar
             24, 32, 50, 62, 56,
             22, 36, 40,
             132, 136
+    };
+    //  exotic NAG codes (not standardized but implemented by FigurineSymbols
+    protected static final int[] EXOTIC_CODES = new int[] {
+            202, 203, 204, 205, 206, 207, 208, 209,
+            210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
+            /*220,*/ 221, 223, 222,  225, 224, 226, 227, 228, 229,
+            230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
+            240, 241, 242, 243, 244, 245, 246, 247
     };
 
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
@@ -206,15 +134,24 @@ public class SymbolBar
     {
         int cells = gridRows * gridCols;
         int n=0;
-        if (cells >= (normalButtons.size()+easyButtons.size())) {
-            //  show complete set of buttons
+        if (cells >= (normalButtons.size()+easyButtons.size()+exoticButtons.size())
+            && supportsRange(fontEncoding,EXOTIC_CODES))
+        {   //  show complete set of buttons
             n = relayoutButtons(easyButtons,n);
             n = relayoutButtons(normalButtons,n);
+            n = relayoutButtons(exoticButtons,n);
+        }
+        else if (cells >= (normalButtons.size()+easyButtons.size()))
+        {   //  hide exotic buttons
+            n = relayoutButtons(easyButtons,n);
+            n = relayoutButtons(normalButtons,n);
+            relayoutButtons(exoticButtons,-Integer.MAX_VALUE);
         }
         else {
             //  don't show "easy" buttons
             relayoutButtons(easyButtons,-Integer.MAX_VALUE);
             n = relayoutButtons(normalButtons,n);
+            relayoutButtons(exoticButtons,-Integer.MAX_VALUE);
         }
 
         int bottomcols = n % gridCols;
@@ -438,16 +375,18 @@ public class SymbolBar
     {
         easyButtons = new ArrayList<>();
         normalButtons = new ArrayList<>();
+        exoticButtons = new ArrayList<>();
 
-        for (int i=0; i < EASY_CODES.length; ++i) {
-            JButton button = makeSymbolButton(EASY_CODES[i]);
-            easyButtons.add(button);
+        makeSymbolButtons(EASY_CODES, easyButtons);
+        makeSymbolButtons(NORMAL_CODES, normalButtons);
+        makeSymbolButtons(EXOTIC_CODES, exoticButtons);
+    }
+
+    private void makeSymbolButtons(int[] codes, ArrayList<JButton> result) {
+        for (int i = 0; i < codes.length; ++i) {
+            JButton button = makeSymbolButton(codes[i]);
+            result.add(button);
             this.add(button);   // constraints are attached later
-        }
-        for (int i=0; i < NORMAL_CODES.length; ++i) {
-            JButton button = makeSymbolButton(NORMAL_CODES[i]);
-            normalButtons.add(button);
-            this.add(button);  // constraints are attached later
         }
     }
 
@@ -462,6 +401,7 @@ public class SymbolBar
 	{
 		for (JButton button : easyButtons) updateLanguage(button);
         for (JButton button : normalButtons) updateLanguage(button);
+        for (JButton button : exoticButtons) updateLanguage(button);
         updateLanguage(comboButton);
 	}
 
@@ -476,13 +416,23 @@ public class SymbolBar
 
 		for(JButton button : easyButtons) updateFormat(button);
         for(JButton button : normalButtons) updateFormat(button);
+        for(JButton button : exoticButtons) updateFormat(button);
         updateFormat(comboButton);
+        relayout();
 	}
 
     private void updateFormat(JButton button)
     {
         int nag = (Integer)button.getClientProperty("nag");
         setSymbol(button,nag);
+    }
+
+    private boolean supportsRange(FontEncoding fontEncoding, int[] codes)
+    {
+        for(int nag : codes)
+            if (fontEncoding.getSymbol(nag) != null)
+                return true;
+        return false;
     }
 
     public void setupActionMap(Map<String, CommandAction> map)
