@@ -546,13 +546,8 @@ getCharacterSet(final String name)
       charsetStream = (InputStream)java.security.AccessController.
 	              doPrivileged(new java.security.PrivilegedAction() {
 	  public Object run() {
-	      //return RTFReader.class.getResourceAsStream
-		  //                   ("/javax/swing/text/rtf/charsets/" + name + ".txt");
-          try {
-              return new FileInputStream("lib/charsets/"+name+".txt");
-          } catch (FileNotFoundException e) {
-              throw new RuntimeException(e);
-          }
+	      return RTFReader.class.getResourceAsStream
+		                     ("/de/jose/util/rtf/charsets/" + name + ".txt");
       }
       });
       set = readCharset(charsetStream);

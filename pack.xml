@@ -106,7 +106,6 @@
 				<include name="jdbc/mysql.jar"/>
 				<include name="jdbc/mysql-je.jar"/>
 				<include name="plaf/metouia.jar"/>
-				<include name="charsets/*.txt"/>
 				<include name="com.sun.jar" />
 				<include name="json.jar" />
 			</zipfileset>
@@ -296,9 +295,6 @@
 			<zipfileset dir="doc" prefix="doc">
 				<include name="annotations.pgn"/>
 				<include name="annotations.pdf"/>
-			</zipfileset>
-			<zipfileset dir="lib" prefix="lib">
-				<include name="charsets/*.txt"/>
 			</zipfileset>
 		</zip>
 
