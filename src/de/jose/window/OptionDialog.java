@@ -349,13 +349,7 @@ public class OptionDialog
 		addWithLabel(p2, 0,0,2, null,
 				reg(newRadioButton("plugin.search",searchRadioValues[SearchType.TIME_CONTROL.ordinal()])));
 
-		StringBuffer buf = new StringBuffer();
-		buf.append("<div style='font-size:12pt;'>");
-		JoDialog.newLinkButton(buf,"plugin.search.time.control.link",  null);
-		buf.append("</div>");
-
-		JoStyledLabel button = new JoStyledLabel(buf.toString());
-		button.addActionListener(this);
+		JButton button = JoDialog.newLinkButton("time.control.link",  null, this);
 		p2.add(button, ELEMENT_THREE_SMALL);
 
 		JTimeField timeField = newTimeField("plugin.search.time.fixed.value");
@@ -713,6 +707,13 @@ public class OptionDialog
 			}
 		};
 		map.put("plugin.add",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				getTabbedPane().setSelectedIndex(3);
+			}
+		};
+		map.put("time.control.link",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
@@ -1369,7 +1370,7 @@ public class OptionDialog
 			checkbox.setSelected(option.defaultBooleanValue());
 			checkbox.setText(compTitle);
 			component = checkbox;
-			//compTitle = "";
+			compTitle = "";
 			break;
 
 		case UciPlugin.SPIN:

@@ -159,8 +159,8 @@
 		<!--item id="window.toolbar.3"		check="true"/-->
 		<separator/>
 		<item id="menu.window.reset"/>
-		<separator/>
-		<item id="menu.window.fullscreen"	check="true"/>
+		<!--separator/-->
+		<!--item id="menu.window.fullscreen"	check="true"/-->
 <!--		<item id="board.3d.screenshot"		key="PRINTSCREEN"/>-->
 	</menu>
 	<!-- - - - - - - - - - -->

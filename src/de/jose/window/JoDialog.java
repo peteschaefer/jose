@@ -35,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
@@ -782,7 +783,10 @@ public class JoDialog
 		JPanel panel = newGridPane();
 		panel.setName(title);
 		if (title!=null) {
-			Border border = new TitledBorder(Language.get(title));
+			TitledBorder border = new TitledBorder(Language.get(title));
+			Font font = border.getTitleFont();
+			font = font.deriveFont(Font.BOLD);
+			border.setTitleFont(font);
 			panel.setBorder(border);
 		}
 		return panel;
@@ -1639,12 +1643,19 @@ public class JoDialog
 	    return button;
 	}
 
-    public static void newLinkButton(StringBuffer buf, String command, String icon)
+    public static JButton newLinkButton(String name, String icon, ActionListener listener)
     {
-        String labelText = Language.get(command);
-        String iconPath = null;
-		if (icon!=null) iconPath = ImgUtil.getImageFile("menu",icon);
+        JButton button = newButton(name, ImgUtil.getMenuIcon(icon), listener);
+		button.setBorderPainted(false);
+		button.setBorder(new EmptyBorder(2,8,2,8));
+		button.setPreferredSize(new Dimension(92,22));
 
-        JoStyledLabel.appendLink(buf,iconPath, labelText, "verbatim:"+command);
+		Font font = new Font("dialog",Font.PLAIN,10);
+		Map attrs = font.getAttributes();
+		attrs.put(TextAttribute.UNDERLINE,TextAttribute.UNDERLINE_ON);
+		font = font.deriveFont(attrs);
+		button.setFont(font);
+		button.setForeground(Color.BLUE);
+		return button;
     }
 }

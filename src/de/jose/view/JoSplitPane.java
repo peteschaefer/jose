@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,6 @@ public class JoSplitPane
 		super(newOrientation, false,
                 (Component)newLeftComponent,
                 (Component)newRightComponent);
-
         /**
          * workaround for GTK look & feel. This value is missing and would crash JoSplitPaneUI
          * (note that the actual divider size will be overwritten, anyway)
@@ -122,7 +121,7 @@ public class JoSplitPane
 	    }
 	    else
 	    {
-		    min1 = firstComponent().getMinimumSize().height;
+			min1 = firstComponent().getMinimumSize().height;
 		    max1 = firstJoComponent().getMaximumSize(orientation).height;
 
 		    max2 = size.height - secondComponent().getMinimumSize().height;
@@ -241,7 +240,7 @@ public class JoSplitPane
     public void reshape(int x, int y, int width, int height)
     {
         //  adjust divider locations, based on new size
-	    if (width > 0 && height > 0)
+	    if (width > 0 && height > 0 && firstComponent()!=null && secondComponent()!=null)
 	        adjustDivider(new Dimension(width,height));
         super.reshape(x,y,width,height);
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import java.awt.*;
 import java.util.Map;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class SetupDialog
 		extends JoDialog
@@ -202,17 +202,14 @@ public class SetupDialog
 			getElementPane().add(frc,ELEMENT_TWO_SMALL);
 
 	    //  Edit buttons
-	    StringBuffer buf = new StringBuffer();
-	    buf.append("<div style='font-size:10pt;'>");
-	    newLinkButton(buf,"dialog.setup.clear",     "menu.edit.clear"); buf.append("<br>");
-	    newLinkButton(buf,"dialog.setup.initial",   "menu.web.home"); buf.append("<br>");
-	    newLinkButton(buf,"dialog.setup.copy",      "menu.edit.copy"); buf.append("<br>");
-	    newLinkButton(buf,"menu.edit.copy.fen",     "menu.edit.copy"); buf.append("<br>");
-	    newLinkButton(buf,"menu.edit.paste",        "menu.edit.paste");
-	    buf.append("</div>");
+	    JComponent buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons,BoxLayout.Y_AXIS));
+	    buttons.add(JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear", this) );
+		buttons.add(JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", this));
+		buttons.add(JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", this));
+		buttons.add(JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", this));
+		buttons.add(JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", this));
 
-	    JoStyledLabel buttons = new JoStyledLabel(buf.toString());
-	    buttons.addActionListener(this);
 	    getElementPane().add(buttons,ELEMENT_TWO);
 
 			addButtons(OK_CANCEL);

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -377,18 +377,11 @@ public class QueryPanel
         controls.add(Box.createVerticalStrut(10));
 
         //  Edit buttons
-        StringBuffer buf = new StringBuffer();
-        buf.append("<div style='font-size:10pt;'>");
-        JoDialog.newLinkButton(buf,"dialog.setup.clear",     "menu.edit.clear"); buf.append("<br>");
-        JoDialog.newLinkButton(buf,"dialog.setup.initial",   "menu.web.home"); buf.append("<br>");
-        JoDialog.newLinkButton(buf,"dialog.setup.copy",      "menu.edit.copy"); buf.append("<br><br><br>");
-        JoDialog.newLinkButton(buf,"menu.edit.copy.fen",     "menu.edit.copy"); buf.append("<br>");
-        JoDialog.newLinkButton(buf,"menu.edit.paste",        "menu.edit.paste");
-        buf.append("</div>");
-
-        JoStyledLabel buttons = new JoStyledLabel(buf.toString());
-        buttons.addActionListener(this);
-        controls.add(buttons);
+		controls.add( JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear",this) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", this) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", this) );
+		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", this) );
+		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", this) );
 
         posPanel.add(posEditor, BorderLayout.CENTER);
 		posPanel.add(controls, BorderLayout.WEST);
