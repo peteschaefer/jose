@@ -507,9 +507,27 @@ public class ImgUtil
 		while (!pi.isDone()) {
 			int type = pi.currentSegment(coords);
 			switch (type) {
-			case PathIterator.SEG_CLOSE:	
-				current.closePath();
-				result.add(current);
+			case PathIterator.SEG_MOVETO:
+				if (current.getCurrentPoint()==null) {
+					//	first move in a path, ok
+					current.moveTo(coords[0], coords[1]);
+				}
+				else {
+					//	next move -> split path in two
+					current.closePath();
+					//current.trimToSize(); // Java 10
+					result.add(current);
+
+					current = new GeneralPath(pi.getWindingRule());
+					current.moveTo(coords[0], coords[1]);
+				}
+				break;
+			case PathIterator.SEG_CLOSE:
+				if (current.getCurrentPoint()!=null) {
+					current.closePath();
+					//current.trimToSize(); // Java 10
+					result.add(current);
+				}
 				current = new GeneralPath(pi.getWindingRule());
 				break;
 			case PathIterator.SEG_CUBICTO:
@@ -518,9 +536,6 @@ public class ImgUtil
 			case PathIterator.SEG_LINETO:
 				current.lineTo(coords[0],coords[1]);
 				break;
-			case PathIterator.SEG_MOVETO:
-				current.moveTo(coords[0],coords[1]);
-				break;
 			case PathIterator.SEG_QUADTO:
 				current.quadTo(coords[0],coords[1],coords[2],coords[3]);
 				break;
@@ -528,9 +543,12 @@ public class ImgUtil
 			pi.next();
 		}
 		
-		if (current.getCurrentPoint()!=null)
-			result.add(current);	//	remaining, unclosed shape
-		
+		if (current.getCurrentPoint()!=null) {
+			current.closePath();
+			//current.trimToSize(); // Java 10
+			result.add(current);    //	remaining, unclosed shape
+		}
+
 		if (outline)
 			for (int i=result.size()-1; i>=1; i--) {
 				Shape a = (Shape)result.get(i);

@@ -12,7 +12,6 @@
 
 package de.jose.image;
 
-import de.jose.Application;
 import de.jose.util.SoftCache;
 import de.jose.util.FontUtil;
 
@@ -180,7 +179,7 @@ public class FontCapture
 */			return s;
 	}
 
-	protected static void draw(MapEntry ety, Font font, String text, Surface white, Surface black,
+	public static void draw(MapEntry ety, Font font, String text, Surface white, Surface black,
 	                           boolean transparent, boolean useShadow)
 		throws FileNotFoundException
 	{
@@ -440,14 +439,15 @@ public class FontCapture
             if (ff.exists())
             {
                 f = Font.createFont(Font.TRUETYPE_FONT,new FileInputStream(ff));
-                f = f.deriveFont(Font.PLAIN, 32);
+                f = f.deriveFont(Font.PLAIN, 80);
             }
             else
-                f = new Font(args[0],Font.PLAIN,32);
+                f = new Font(args[0],Font.PLAIN,80);
 
-            File out = new File(f.getName()+".jpg");
+            File out = new File(f.getName()+".png");
 
-            printFontSample(f,out);
+            //printFontSample(f,out);
+			printFontCapture(f,args[1],80,out);
 
 		} catch (Throwable thw) {
 			thw.printStackTrace();
@@ -471,6 +471,17 @@ public class FontCapture
 		}
 	}
 */
+	protected static void printFontCapture(Font font, String piece, int size, File out) throws IOException
+	{
+		Surface white = Surface.newColor(Color.white);
+		Surface black = Surface.newColor(Color.black);
+		Rectangle bounds = new Rectangle(0,0,size,size);
+
+		MapEntry ety = new MapEntry();
+		FontCapture.draw(ety,font,piece,white,black,true,false);
+
+		ImageIO.write(ety.img.img,"png",out);
+	}
 
 	protected static void printFontSample(Font f, File output)
 		throws IOException

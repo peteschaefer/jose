@@ -174,7 +174,7 @@ public class FontUtil
 	 * @return
 	 * @throws IOException
 	 */
-	protected static Font loadCustomFont(File file) throws IOException
+	public static Font loadCustomFont(File file) throws IOException
 	{
 		if (!file.exists()) return null;
 //Object mark = de.jose.devtools.Profiler.set(file.getName());
