@@ -347,7 +347,6 @@ public class FOPUtil
 					new DOMSource(doc),
 					new StreamResult(fos));
 			fos.close();
-
 			return true;
 		} catch (Exception e) {
 			return false;

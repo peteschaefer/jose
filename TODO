@@ -1,10 +1,9 @@
 ==== Bugs
 
-* suggestion arrow colors don't update as they should
+* suggestion arrow colors don't update as they should?
 * double click insert variant; trying to delete it
 * project urls
 
-? fix Berlin font
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? Text File export not implemented?
