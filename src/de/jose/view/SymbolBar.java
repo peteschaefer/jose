@@ -30,6 +30,60 @@ import javax.swing.text.Style;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * todo
+ *  reorganize list! a plain vertical list is not user-friendly
+ *  we need something like the symbol picker in Word :)
+ *
+ *  - table
+ *  - most used nags on top
+ *  - mouse hover; text in status line
+ *  - recently used nags in a separate list
+ *  - there's a number of "composable" nag, how should their gui look like?
+ *
+ *  [0]
+ *  [1..6]  ! ? !! ?? !? ?!
+ *  [7..9] forced, singular, worst move
+ *  [10..13] drawish, quiet, active, unclear position
+ *
+ *  [140] with the idea
+ *  [141] against
+ *  [142] is better
+ *  [143] is worse
+ *  [144] is equivalent
+ *  [145] RR (remark)
+ *  [146] Novelty
+ *  [147] Weak Point
+ *  [148..150] endgame,line,diagonal
+ *  [151..154] w/b bishop pair, opp colored bishops, same colored bishops
+ *  [156..163] passed pawn, more pawns, with/withou/see/rank
+ *
+ *  [190..195] etc. double pawns, isolated pawns, connected pawns
+ *
+ *  --- "composable" nags ---
+ *  --- how should we present them? with an array of combo boxes? ---
+ *
+ *  [14..21] white/black has a slight/moderate/decisive/crushing advantage
+ *  [22..23] white/black is in Zugzwang
+ *  [24..35] w/b has slight/moderate/decisive space/time advantage
+ *
+ *  [36..41] w/b has the/a lasting initiative/attack
+ *  [42..47] w/b has insufficient/sufficient/more than adequate compentsion for material deficit
+ *
+ *  [48..65] w/b has slight/moderate/decisive center/kingside/queenside control advantage
+ *
+ *  [66..69] w/b has a vulnerable/well protected first rank
+ *  [70..77] w/b has a poorly/well protected/placed king
+ *
+ *  [78..85] w/b has very/moderately weak/strong pawn structure
+ *
+ *  [86..101] w/b has poor/good knight/bishop/rook/queen placement
+ *  [102..104] w/b has poor/good piece coordination
+ *  [106..129] w/b has played the opening/middlegame/ending (very) poorly/well
+ *  [130..135] w/b has slight/moderate/decisive counterplay
+ *  [136..139] w/b has moderate/severe time control pressure
+ *
+ */
 public class SymbolBar 
         extends JoPanel
 		implements PgnConstants
@@ -40,6 +94,115 @@ public class SymbolBar
     protected Font symbolFont, textFont, labelFont;
 	protected JButton[] buttons;
 	protected JoBigLabel[] labels;
+
+    protected static String[] wb = {"white","black"};
+    protected static String[] grd1 = {"slight","moderate","decisive","crushing"};
+    protected static String[] grd2 = {"slight","moderate","decisive" };
+    protected static String[] lasting = {"the","a lasting" };
+    protected static String[] suff = {"insufficient","sufficient","more than adequate" };
+    protected static String[] side = {"center","kingside","queenside" };
+    protected static String[] poor = {"poor","good" };
+    protected static String[] poorly = {"poorly","well" };
+    protected static String[] verypoor = {"very poor","poor","good","very good" };
+    protected static String[] placed = {"protected","placed" };
+    protected static String[] vulnerable = {"vulnerable","well protected" };
+    protected static String[] officer = {"knight","bishop","rook","queen" };
+    protected static String[] very = {"very","moderately" };
+    protected static String[] moderate = {"moderate","severe" };
+    protected static String[] weak = {"weak","strong" };
+    protected static String[] phase = {"opening","middle","end" };
+
+    //  "composable nags"
+    // [14..21] white/black has a slight/moderate/decisive/crushing advantage
+    protected static ComboNag advantage1    = new ComboNag(14, "has a", grd1, "advantage" );
+    // [22..23] white/black is in Zugzwang
+    protected static ComboNag zugzwang      = new ComboNag(22, "is in", "zugzwang" );
+    // [24..35] w/b has slight/moderate/decisive space/time advantage
+    protected static ComboNag spaceadv      = new ComboNag(24, "has a", grd2, "space advantage" );
+    protected static ComboNag timeadv       = new ComboNag(30, "has a", grd2, "time advantage" );
+    //  [36..41] w/b has the/a lasting initiative/attack
+    protected static ComboNag initiative    = new ComboNag(36, "has", lasting, "initiative" );
+    protected static ComboNag attack        = new ComboNag(40, "has the", "attack" );
+    //  [42..47] w/b has insufficient/sufficient/more than adequate compentsion for material deficit
+    protected static ComboNag compensation  = new ComboNag(42,  "has", suff, "compensation" );
+    //  [48..65] w/b has slight/moderate/decisive center/kingside/queenside control advantage
+    protected static ComboNag control       = new ComboNag(48, "has", grd2, side, "control" );
+    //   [66..69] w/b has a vulnerable/well protected first rank
+    protected static ComboNag rank          = new ComboNag(66,"has", vulnerable, "first rank" );
+    //  [70..77] w/b has a poorly/well protected/placed king
+    protected static ComboNag king          = new ComboNag(66, "has", poorly, placed, "king" );
+    //  [78..85] w/b has very/moderately weak/strong pawn structure
+    protected static ComboNag pawns         = new ComboNag(78, "has a", very, weak, "pawn structure" );
+    //  [86..101] w/b has poor/good knight/bishop/rook/queen placement
+    protected static ComboNag placement     = new ComboNag(86, "has", poor, officer, "placement" );
+    //  [102..104] w/b has poor/good piece coordination
+    protected static ComboNag coordination  = new ComboNag(102, "has", poor, "coordination" );
+    //  [106..129] w/b has played the opening/middlegame/ending (very) poorly/well
+    protected static ComboNag play          = new ComboNag(106, "has played a", verypoor, phase, "game" );
+    //  [130..135] w/b has slight/moderate/decisive counterplay
+    protected static ComboNag counterplay   = new ComboNag(130,"has", grd2, "counterplay" );
+    //  [136..139] w/b has moderate/severe time control pressure
+    protected static ComboNag timecontrol   = new ComboNag(136,"has", moderate, "time control pressure" );
+
+    static class ComboNag
+    {
+        int base;
+        String[] color;
+        String verb;
+        String[] adjective;
+        String[] subst;
+        String selector;
+        //  current selection
+        int selcol=0,seladj=0,selsubst=0;
+
+        ComboNag(int base, String verb, String selector) {
+            this(base,verb,null,null,selector);
+        }
+
+        ComboNag(int base, String verb, String[] adjective, String selector) {
+            this(base,verb,adjective,null,selector);
+        }
+
+        ComboNag(int base, String verb, String[] adjective, String[] subst, String selector) {
+            this.base = base;
+            this.color = wb;
+            this.verb = verb;
+            this.adjective = adjective;
+            this.subst = subst;
+            this.selector = selector;
+        }
+
+        void select(int col, int adj, int subst) {
+            selcol=col;
+            seladj=adj;
+            selsubst=subst;
+        }
+
+        int nag() {
+            return base
+                    + selsubst * adjective.length * color.length
+                    + seladj * color.length
+                    + selcol;
+        }
+
+        public String toString()
+        {
+            StringBuffer buf = new StringBuffer();
+            buf.append(color[selcol]);
+            buf.append(" ");
+            buf.append(verb);
+            if (adjective != null) {
+                buf.append(adjective[seladj]);
+                buf.append(" ");
+            }
+            if (subst != null) {
+                buf.append(subst[selsubst]);
+                buf.append(" ");
+            }
+            buf.append(selector);
+            return buf.toString();
+        }
+    }
 
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
     {
