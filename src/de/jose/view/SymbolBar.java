@@ -36,11 +36,15 @@ import java.util.Map;
  *  reorganize list! a plain vertical list is not user-friendly
  *  we need something like the symbol picker in Word :)
  *
- *  - table
+ *  - table for common nags (43 entries)
  *  - most used nags on top
  *  - mouse hover; text in status line
  *  - recently used nags in a separate list
  *  - there's a number of "composable" nag, how should their gui look like?
+ *
+ *      BorderLayout (south = status bar)
+ *      GridLayout for icons
+ *      CardLayout switch to combo boxes
  *
  *  [0]
  *  [1..6]  ! ? !! ?? !? ?!
@@ -64,7 +68,6 @@ import java.util.Map;
  *  [201] Diagram
  *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
  *
- *   = [1..13] [140..163] [190..195] [201][250]
  *   = 43 nags. present in table
  *
  *  --- [14..139] "composable" nags ---
@@ -102,6 +105,40 @@ public class SymbolBar
     protected Font symbolFont, textFont, labelFont;
 	protected JButton[] buttons;
 	protected JoBigLabel[] labels;
+
+/*
+ *  [1..6]  ! ? !! ?? !? ?!
+ *  [7..9] forced, singular, worst move
+ *  [10..13] drawish, quiet, active, unclear position
+ *
+ *  [140] with the idea
+ *  [141] against
+ *  [142] is better
+ *  [143] is worse
+ *  [144] is equivalent
+ *  [145] RR (remark)
+ *  [146] Novelty
+ *  [147] Weak Point
+ *  [148..150] endgame,line,diagonal
+ *  [151..154] w/b bishop pair, opp colored bishops, same colored bishops
+ *  [156..163] passed pawn, more pawns, with/withou/see/rank
+ *
+ *  [190..195] etc. double pawns, isolated pawns, connected pawns
+ *
+ *  [201] Diagram
+ *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
+ */
+    protected static final int[] COMMON = new int[] {
+            1,2,3,4,5,6,
+            7,8,9,
+            10,11,12,13,
+            140,141,142,143,144,145,146,147,
+            148,149,150,
+            151,152,153,154,
+            156,157,158,159,160,161,162,163,
+            190,191,192,193,194,195,
+            201 /*,250*/
+    };
 
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
     {

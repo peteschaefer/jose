@@ -22,6 +22,7 @@ public class ComboNag
     protected static final String[] moderate = {"moderate","severe" };
     protected static final String[] weak = {"very weak","moderately weak","moderately strong","very strong" };
     protected static final String[] phase = {"opening","middle","end" };
+    protected static final String[] spacetime = {"space","time (development)" };
     protected static final String[] empty = new String[0];
 
     //  "composable nags"
@@ -30,8 +31,7 @@ public class ComboNag
     // [22..23] white/black is in Zugzwang
     protected static ComboNag zugzwang      = new ComboNag(22, "is in", "zugzwang" );
     // [24..35] w/b has slight/moderate/decisive space/time advantage
-    protected static ComboNag spaceadv      = new ComboNag(24, "has a", grd2, "space advantage" );
-    protected static ComboNag timeadv       = new ComboNag(30, "has a", grd2, "time (development) advantage" );
+    protected static ComboNag advantage2    = new ComboNag(24, "has a", grd2, spacetime, "advantage" );
     //  [36..41] w/b has the/a lasting initiative/attack
     protected static ComboNag initiative    = new ComboNag(36, "has", lasting, "initiative" );
     protected static ComboNag attack        = new ComboNag(40, "has the", "attack" );
@@ -56,10 +56,13 @@ public class ComboNag
     //  [136..139] w/b has moderate/severe time control pressure
     protected static ComboNag timecontrol   = new ComboNag(136,"has", moderate, "time control pressure" );
 
+    protected static AdvantageNag advantage = new AdvantageNag();
+
     //  [14..139]
     public static ComboNag[] ALL = {
-            advantage1, zugzwang, spaceadv, timeadv, initiative,
-            attack, compensation, control, rank, king, pawns, placement,
+            advantage, /*advantage1,*/
+            zugzwang, /*advantage2,*/ initiative,
+            attack, compensation, /*control,*/ rank, king, pawns, placement,
             play, counterplay, timecontrol
     };
 
@@ -72,7 +75,9 @@ public class ComboNag
     public final String[] subst;
     public final String selector;
     //  current selection
-    private int selcol = 0, seladj = 0, selsubst = 0;
+    protected int selcol = 0;
+    protected int seladj = 0;
+    protected int selsubst = 0;
 
     public ComboNag(int base, String verb, String selector) {
         this(base, verb, null, null, selector);
@@ -120,11 +125,11 @@ public class ComboNag
         buf.append(" ");
         buf.append(verb);
         buf.append(" ");//  "has a"
-        if (adjective.length > 0) {
+        if (adjective.length > 0 && !adjective[seladj].isEmpty()) {
             buf.append(adjective[seladj]);  //  "slight/moderate/decisive"
             buf.append(" ");
         }
-        if (subst.length > 0) {
+        if (subst.length > 0 && !subst[selsubst].isEmpty()) {
             buf.append(subst[selsubst]);    //  "king side/queen side"
             buf.append(" ");
         }
@@ -154,4 +159,56 @@ public class ComboNag
             }
         }
     }
+}
+// [14..21] white/black has a slight/moderate/decisive/crushing advantage
+// ComboNag advantage1    = new ComboNag(14, "has a", grd1, "advantage" );
+
+// [24..35] w/b has slight/moderate/decisive space/time advantage
+// ComboNag advantage2    = new ComboNag(24, "has a", grd2, spacetime, "advantage" );
+
+//  [48..65] w/b has slight/moderate/decisive center/kingside/queenside control advantage
+// ComboNag control       = new ComboNag(48, "has a", grd2, side, "control advantage" );
+
+class AdvantageNag extends ComboNag
+{
+    private static final String[] type = {
+            "",
+            "space", "time (development)",
+            "center control", "kingside control", "queenside control" };
+    //  combines advantage1, advantage2, control
+    AdvantageNag()
+    {
+        super(0, "has a", grd1, type, "advantage");
+    }
+
+    @Override
+    void select(int col, int adj, int subst) {
+        //  "crushing" is only available for advantage1
+        if (subst >= 1)
+            adj = Math.min(adj, grd2.length-1);
+
+        super.select(col, adj, subst);
+    }
+
+    @Override
+    int code() {
+        switch(selsubst) {
+            case 0:
+                advantage1.select(selcol,seladj,0);
+                return advantage1.code();
+            case 1:
+            case 2:
+                advantage2.select(selcol,seladj,selsubst-1);
+                return advantage2.code();
+            default:
+                control.select(selcol,seladj,selsubst-3);
+                return control.code();
+        }
+    }
+
+    @Override
+    int maxCode() {
+        return control.maxCode();
+    }
+
 }
