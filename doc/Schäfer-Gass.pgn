@@ -1,0 +1,34 @@
+[Event "Bezirksliga West 2024/25"]
+[Site "Enkenbach"]
+[Date "2025.03.23"]
+[Round "8"]
+[White "Schäfer, Peter"]
+[Black "Gaß, Udo"]
+[Result "1-0"]
+[Opening "English: Anglo-Indian, 2.g3"]
+[ECO "A15"]
+[Board "6"]
+[Variant ""]
+[PlyCount "111"]
+
+1.c4 Nf6 2.g3 d6 3.Bg2 g6 4.e4 Bg7 5.Ne2 O-O 6.O-O c5 7.d3  {meine Lieblingseröffnung} 7...Nc6 
+8.Be3 ?! Rb8  (8...Ng4 ) 9.Nbc3 a6 10.Rc1  (10.a4 Ng4 )  (10.h3 ) 10...Bd7  {zu unentschlossen.
+Jetzt ginge auch}  (10...Ng4 )  (10...b5 ) 11.h3 Qc8 12.Kh2 b5 13.b3 bxc4 14.dxc4 
+Nb4 15.Qd2  (15.e5 !? dxe5 16.a3 Nc6 17.Bxc5 ) 15...a5 16.Bh6 Bc6  {ein Verlegenheitszug,
+scheint mir} 17.Bxg7 Kxg7 18.Nd5 Nfxd5 19.exd5 $14  {hier komme ich schon in guten
+Vorteil} 19...Bd7 20.f4 Rd8 21.Rf3 e6 ?!  {sucht die Entscheidung im Zentrum, aber
+warum eigentlich?} 22.a3 Na6 23.dxe6  (23.g4 exd5 24.f5 Rf8 25.Nf4  {das sind so
+Computer-Varianten...} ) 23...Bxe6 24.Qxa5  {der Spatz in der Hand. Aber Schwarz
+erhält Gegenspiel}  (24.f5 ! Bxf5 25.Rcf1 $140 -- 26.Nf4 -- 27.Nh5+ ) 24...d5 !? 25.cxd5 
+ (25.Qc3+ ?! ) 25...Bxd5 26.Rd3 Qe6 ?!  (26...Bxg2 27.Qc3+ Kg8 28.Rxd8+ Qxd8 29.Kxg2 
+Qd5+ 30.Qf3 Qxf3+ 31.Kxf3 Rxb3+ $144 ) 27.Qc3+ Kg8 28.Rxd5  (28.Qd2 $16 ) 28...Rxd5 
+29.Bxd5 Qxd5 30.Rb1  {gefiel mir nicht, musste aber sein} 30...Nc7 31.b4 Ne6  (31...c4 
+$144 ) 32.Rb2 Rc8  (32...cxb4 33.axb4 Qe4 $144 ) 33.Rd2 Qb7 34.Rc2 Qb6 35.bxc5 Rxc5 
+36.Qe3 Qc6 37.Rxc5 Nxc5 38.Nd4 Qa4 39.Qc3 Na6 ?  {auf den ersten Blick harmlos, aber
+der Computer ist gar nicht einverstanden} 40.Nc2  ( {wegen} 40.h4 ) 40...Qd7 41.Nb4 
+Nc7 42.Qd3 Qc8 43.Nc6 Qb7 44.Qd8+ Kg7 45.Qd4+ Kg8 46.Ne5 Ne6 47.Qc3 Qa6 48.Qd3 Qa4 
+{Schwarz bot remis} 49.h4 Nc5 ?  {erlaubt mir Gegenspiel. Eine typische psychologische
+Falle.Nach dem abgelehnten Remis-Angebot wir man nachlässig. Und schon passiert es:
+} 50.Qd8+ Kg7 51.Qe7 $18 Qc2+ 52.Kh3 Qf5+ 53.g4 Qc2  (53...Qxf4  {hilft auch nicht} 54.Qxc5 
+Qf1+ 55.Kg3 ) 54.Qxf7+ Kh6 55.g5+  (55.Qf8+ ) 55...Kh5 56.Qxh7+ 1-0
+

@@ -12,6 +12,7 @@
     -> interpreted as take-take sequence
     -> don't do that. Qxh7 is a likely (and legal) move
 
+[ ] stop analysis on mate
 [ ] uci figurines:
      [ ] use english
      [ ] or: support multi letter (like russian)
