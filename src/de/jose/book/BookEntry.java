@@ -187,11 +187,11 @@ public class BookEntry
 		score.win = (countWhite != IUNKNOWN) ? countWhite : 0;
 		score.draw = (countDraw != IUNKNOWN) ? countDraw : 0;
 		score.lose = (countBlack != IUNKNOWN) ? countBlack : 0;
-		if (count > cap) {
+		if (count > cap && score.hasWDL()) {
 			//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
 			score.win = score.win * cap / count;
 			score.draw = score.draw * cap / count;
-			score.lose = cap-score.win-score.draw;//score.lose * 1000 / entry.count;
+			score.lose = score.lose * cap / count;
 		}
 	}
 

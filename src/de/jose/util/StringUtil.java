@@ -1135,6 +1135,38 @@ public class StringUtil
 			return object.toString();
 	}
 
+	public static String swapCase(String str) {
+		StringBuilder bld = new StringBuilder(str);
+		swapCase(bld);
+		return bld.toString();
+	}
+
+	public static void swapCase(StringBuilder b) {
+		for(int i=0; i<b.length(); i++) {
+			char c = b.charAt(i);
+			if (Character.isLowerCase(c))
+				b.setCharAt(i,Character.toUpperCase(c));
+			else if (Character.isUpperCase(c))
+				b.setCharAt(i,Character.toLowerCase(c));
+		}
+	}
+
+	public static String swap(String str, char a, char b) {
+		StringBuilder bld = new StringBuilder(str);
+		swap(bld,a,b);
+		return bld.toString();
+	}
+
+	public static void swap(StringBuilder bld, char a, char b) {
+		for(int i=0; i<bld.length(); i++) {
+			char c = bld.charAt(i);
+			if (c==a)
+				bld.setCharAt(i,b);
+			else if (c==b)
+				bld.setCharAt(i,a);
+		}
+	}
+
 	/**
 	 * a String Comparator that is not case sensitive
 	 * null values are compared, too

@@ -13,6 +13,7 @@
 package de.jose.chess;
 
 import de.jose.Util;
+import de.jose.util.StringUtil;
 
 /**
  * utility functions for pieces and square
@@ -426,6 +427,32 @@ public class EngUtil
 	public static final double distance(int a, int b)
 	{
 		return Math.sqrt(squareDistance(a,b));	
+	}
+
+	public static String transposeColors(String fen)
+	{
+		String[] parts = fen.split("[\\ /]");
+		//	parts 0..7 contains the board
+		//	mirror upside down
+		for(int i=0; i < 4; ++i)
+			Util.swap(parts,i,7-i);
+		//	swap pieces
+		for(int i=0; i < 8; ++i)
+			parts[i] = StringUtil.swapCase(parts[i]);
+		//	parts[8] who moves next
+		parts[8] = StringUtil.swap(parts[8],'w','b');
+		//	parts[9] contains the castling rights
+		parts[9] = StringUtil.swapCase(parts[9]);
+		//	parts[10] contains the ep square; mirror it
+		parts[10] = StringUtil.swap(parts[10],'6','3');
+
+		StringBuilder builder = new StringBuilder();
+		for(int i=0; i < parts.length; ++i) {
+			if (i > 0 && i < 8) builder.append("/");
+			if (i >= 8) builder.append(" ");
+			builder.append(parts[i]);
+		}
+		return builder.toString();
 	}
 
 }

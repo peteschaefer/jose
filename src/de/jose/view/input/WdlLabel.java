@@ -31,7 +31,7 @@ public class WdlLabel
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (wdlScore != null)
+        if (wdlScore != null && wdlScore.hasWDL())
             paintScore(g);
     }
 

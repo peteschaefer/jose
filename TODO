@@ -11,13 +11,7 @@
 [ ] game vs. opening explorer:
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
-[x] Application.selectBookMove needs to be asynchronized.
-    [?] update/don't update book when navigating
-    [x] pause button should pause engine;
-        book is shown in both, USER_INPUT and ANALYSIS
-    [?] no duplicate Book Queries
-[x] pause button activation
-[x] play button activation
+
 [ ] hint button activation
 [ ] hint button behavior
     switch(engine state)
@@ -26,6 +20,19 @@
     case ANAYLSIS: hint = current analysis (arrows)
     case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
     -> no need for PLUGIN_REQUESTED_HINT messaging
+
+[x] Lichess LRU Cache
+[X] Liches Reversed Colors
+    make two queries !?
+[ ] Tab icons? (Option Dialog and others)
+
+[x] Application.selectBookMove needs to be asynchronized.
+    [?] update/don't update book when navigating
+    [x] pause button should pause engine;
+        book is shown in both, USER_INPUT and ANALYSIS
+    [?] no duplicate Book Queries
+[x] pause button activation
+[x] play button activation
 
 [x] BOOK_PLAY ~= THINKING
 [ ] test with/without book

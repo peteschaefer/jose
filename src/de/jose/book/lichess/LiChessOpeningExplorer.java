@@ -2,6 +2,7 @@ package de.jose.book.lichess;
 
 import de.jose.AbstractApplication;
 import de.jose.Application;
+import de.jose.chess.EngUtil;
 import de.jose.comm.Command;
 import de.jose.Language;
 import de.jose.book.BookEntry;
@@ -24,9 +25,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LiChessOpeningExplorer extends OpeningBook
@@ -42,10 +43,18 @@ public class LiChessOpeningExplorer extends OpeningBook
     //  number of top games in each query
     public static final int TOP_GAMES = 8;
 
+    private LinkedHashMap<String,String> lruQueries;
+
     public LiChessOpeningExplorer(org.w3c.dom.Element config)
     {
         apiUrl = XMLUtil.getChildValue(config,"URL");
         downloadUrl = XMLUtil.getChildValue(config,"DOWNLOAD");
+        lruQueries = new LinkedHashMap<String,String>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                return size() > 100;
+            }
+        };
     }
 
     public static String getInfoText(org.w3c.dom.Element config, boolean enabled)
@@ -79,18 +88,14 @@ public class LiChessOpeningExplorer extends OpeningBook
 
     @Override
     public boolean canTranspose() {
-        return false;
+        return true;
     }
 
     @Override
-    public boolean canTransposeColor() {
-        return false;
-    }
+    public boolean canTransposeColor() { return true; }
 
     @Override
-    public boolean canTransposeIntoBook() {
-        return false;
-    }
+    public boolean canTransposeIntoBook() { return true; }
 
     @Override
     public boolean open(RandomAccessFile file) throws IOException {
@@ -115,45 +120,17 @@ public class LiChessOpeningExplorer extends OpeningBook
                                  int topGames,
                                  List<BookEntry> result) throws IOException
     {
-        fen = URLEncoder.encode(fen);
-        String urlString = apiUrl+"?fen="+fen+"&topGames="+topGames;    //  don't enumerate games
-
         try {
-            URL url = new URL(urlString);
-            InputStream in = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String jsonText = br.lines().collect(Collectors.joining("\n"));
-
-            JSONObject obj = new org.json.JSONObject(jsonText);
-            JSONArray moves = obj.getJSONArray("moves");
             HashMap<String,LiChessBookEntry> mvmap = new HashMap();
+            String jsonText = getJsonData(fen,topGames);
+            parseJsonData(jsonText, deep,false, result,mvmap);
 
-            for(int i=0; i<moves.length(); i++) {
-                JSONObject json = moves.getJSONObject(i);
-                String key = json.getString("uci");
-
-                LiChessBookEntry bk = new LiChessBookEntry(json);
-                mvmap.put(key,bk);
-
-                if (deep || bk.count >= MIN_GAMES_PLAYED)
-                    result.add(bk);
+            //  reversed color query (swapped fen)
+            if (ignoreColors) {
+                fen = EngUtil.transposeColors(fen);
+                jsonText = getJsonData(fen,topGames);
+                parseJsonData(jsonText, deep, true, result,mvmap);
             }
-
-            JSONArray games = obj.getJSONArray("topGames");
-            for(int j=0; j<games.length(); j++)
-            {
-                JSONObject json = games.getJSONObject(j);
-                String key = json.getString("uci");
-
-                LiChessGameRef ref = new LiChessGameRef(json);
-                LiChessBookEntry bk = mvmap.get(key);
-
-                if (bk!=null) {
-                    bk.gameRefs.add(ref);
-                    //System.out.println(ref);
-                }
-            }
-
             return true;
         } catch (IOException e) {
             /*  network failures are not fatal.
@@ -169,6 +146,58 @@ public class LiChessOpeningExplorer extends OpeningBook
             e.printStackTrace();
             return false;
         }
+    }
+
+    private static void parseJsonData(String jsonText,
+                                      boolean deep, boolean transposed,
+                                      List<BookEntry> result,
+                                      HashMap<String,LiChessBookEntry> mvmap)
+    {
+        JSONObject obj = new JSONObject(jsonText);
+        JSONArray moves = obj.getJSONArray("moves");
+
+        for(int i=0; i<moves.length(); i++) {
+            JSONObject json = moves.getJSONObject(i);
+            String key = json.getString("uci");
+
+            LiChessBookEntry bk = new LiChessBookEntry(json,transposed);
+            mvmap.put(key,bk);
+
+            if (deep || bk.count >= MIN_GAMES_PLAYED)
+                result.add(bk);
+        }
+
+        JSONArray games = obj.getJSONArray("topGames");
+        for(int j=0; j<games.length(); j++)
+        {
+            JSONObject json = games.getJSONObject(j);
+            String key = json.getString("uci");
+
+            LiChessGameRef ref = new LiChessGameRef(json);
+            LiChessBookEntry bk = mvmap.get(key);
+
+            if (bk!=null) {
+                bk.gameRefs.add(ref);
+                //System.out.println(ref);
+            }
+        }
+    }
+
+    private String getJsonData(String fen, int topGames) throws IOException
+    {
+        //  query lru cache
+        String jsonText = lruQueries.get(fen);
+        if (jsonText!=null)
+            return jsonText;
+
+        String urlString = apiUrl+"?fen="+URLEncoder.encode(fen)+"&topGames="+topGames;    //  don't enumerate games
+        URL url = new URL(urlString);
+
+        InputStream in = url.openStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        jsonText = br.lines().collect(Collectors.joining("\n"));
+        lruQueries.put(fen,jsonText);
+        return jsonText;
     }
 
 //    @Override

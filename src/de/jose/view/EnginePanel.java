@@ -738,9 +738,6 @@ public class EnginePanel
 	protected void broadcastMoveValue(int ply, Score score)
 	{
 		score = new Score(score);
-		if (!score.hasWDL())
-			plugin.mapUnit(score);
-
 		Command cmd = new Command("move.value", null, score, ply);
 		Game game = Application.theApplication.theGame;
 		if (game!=null) {
@@ -813,6 +810,9 @@ public class EnginePanel
 					assert(data.line!=null);
 					setEvaluation(idx, data.eval);
 					setVariation(idx, data.line, data.info, data.book);
+
+					if (!data.eval.hasWDL() && !bookMode && (plugin!=null))
+						plugin.mapUnit(data.eval);	// todo why has this not been done before?
 
 					if (idx==0)
 						broadcastMoveValue(rec.ply, data.eval);
@@ -1215,12 +1215,13 @@ public class EnginePanel
 	protected void updateStatus(EngineState state)
 	{
 		String text = null;
+		ImageIcon icon = null;
 		if (state==null) {
 			//text = "book.title";
 			//text = Language.get(text);
 			//text = StringUtil.replace(text,"%book%", Application.theApplication.theOpeningLibrary.getTitle());
 			text = Application.theApplication.theOpeningLibrary.getTitle();
-			lStatus.setIcon(iBook);
+			icon = iBook;
 		}
 		else {
 			switch (state) {
@@ -1232,8 +1233,9 @@ public class EnginePanel
 			}
 			text = Language.get(text);
 			text = StringUtil.replace(text,"%engine%", (pluginName==null) ? "":pluginName);
-			lStatus.setIcon(iEngine);
+			icon = iEngine;
 		}
+		lStatus.setIcon(icon);
 		lStatus.setText(text);
 	}
 

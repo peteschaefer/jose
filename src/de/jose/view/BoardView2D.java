@@ -1135,7 +1135,18 @@ public class BoardView2D
 			wid = (int)(devSquareSize*0.25f);
 		}
 
-		doDrawEvalbar(g, b, x2, gap, y0, wid, boardSize);
+		if (eval.hasWDL())
+			doDrawEvalbar(g, b, x2, gap, y0, wid, boardSize);
+		else if (currentBackground.useTexture()) {
+			//	paint background around board
+			Image txtr = TextureCache.getTexture(currentBackground.texture, TextureCache.LEVEL_MAX);
+			TextureCache.paintTexture(g, x2, y0, wid, boardSize, txtr);
+		} else {
+			//	paint background around board
+			g.setPaint(currentBackground.getPaint(wid, boardSize));
+			g.fillRect(x2, y0, wid, boardSize);
+		}
+
 	}
 
 	private void doDrawEvalbar(Graphics2D g, Border b,
