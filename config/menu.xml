@@ -48,7 +48,7 @@
         <item id="menu.edit.empty.trash"	icon="\uf2ed:#404040"/>
 <!--			<item id="menu.edit.paste.copy"/>-->
 <!--			<item id="menu.edit.paste.same"/>-->
-        <item id="menu.edit.restore"/>
+        <item id="menu.edit.restore"	icon="\uf82a:#404040"/>
         <item id="menu.edit.ecofy"/>
 
 		<separator hide="mac"/>
