@@ -70,7 +70,7 @@ public class UnixUtils
     public static int getPid(Process process) throws NoSuchFieldException, IllegalAccessException
     {
         // assumes process instanceof java.lang.UNIXProcess
-        Object result = ReflectionUtil.getValue(process,"pid");
+        Object result = ReflectionUtil.getValue(process,"pid"); // todo Java 9 has Process.pid()
         return ((Number)result).intValue();
     }
 

@@ -24,9 +24,7 @@ import de.jose.sax.JoContentHandler;
 import de.jose.chess.*;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
-import de.jose.db.ParamStatement;
 import de.jose.task.db.GameUtil;
-import de.jose.util.ReflectionUtil;
 import de.jose.util.StringUtil;
 import de.jose.view.style.JoStyleContext;
 
@@ -36,7 +34,6 @@ import java.util.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
-import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import java.io.PrintWriter;
 import java.sql.SQLException;

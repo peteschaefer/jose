@@ -13,9 +13,6 @@
 package de.jose.util.print;
 
 import de.jose.util.file.FileUtil;
-import de.jose.util.ReflectionUtil;
-import de.jose.Util;
-import de.jose.Version;
 import de.jose.Application;
 import de.jose.sax.AbstractObjectReader;
 

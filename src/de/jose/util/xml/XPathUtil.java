@@ -12,12 +12,9 @@
 
 package de.jose.util.xml;
 
-import de.jose.Version;
-import de.jose.util.ReflectionUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.NodeIterator;
 
 import javax.xml.transform.TransformerException;
 
