@@ -55,6 +55,12 @@ libraries needed:
     - tooltips
     - click navigate
 
+* LiChess Opening Explorer
+    - download top games for a variation
+    1. copy to local db?
+    2. open in tabs?
+    3. inserts as sub-lines (most convenient, but a lot of text)
+
 * Refactor Scoring !!
     - no more float[]. Use Score.wdl instead.
         Normalisation (and validity) can be based on wdl (plus engine knowledge).

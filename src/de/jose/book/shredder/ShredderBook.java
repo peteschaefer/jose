@@ -7,7 +7,6 @@ package de.jose.book.shredder;
 import de.jose.book.*;
 import de.jose.book.BookEntry;
 import de.jose.chess.Position;
-import de.jose.chess.HashKey;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -75,7 +74,7 @@ public class ShredderBook extends OpeningBook
 		return ! moveEntries.isEmpty();
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, List result)
+	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
 			throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors

@@ -15,11 +15,8 @@ package de.jose.book.crafty;
 import de.jose.chess.*;
 import de.jose.book.OpeningBook;
 import de.jose.book.BookEntry;
-import de.jose.util.file.FileUtil;
 
 import java.io.RandomAccessFile;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -71,10 +68,11 @@ public class CraftyBook extends OpeningBook
 	 * from a given position, get all book moves and the associated Book Entries
 	 *
 	 * @param pos
+	 * @param deep
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, List result) throws IOException
+	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result) throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos,false,result);

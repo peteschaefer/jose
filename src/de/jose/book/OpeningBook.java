@@ -17,7 +17,6 @@ import de.jose.chess.Move;
 import de.jose.chess.HashKey;
 import de.jose.book.crafty.CraftyBook;
 import de.jose.book.polyglot.PolyglotBook;
-import de.jose.util.file.FileUtil;
 
 import java.io.*;
 import java.util.List;
@@ -62,17 +61,17 @@ public abstract class OpeningBook
 			throws IOException;
 
 	/**
-	 *
-	 * @param pos current position
+	 * @param pos          current position
 	 * @param ignoreColors look for reversed color transpositions, too
-	 * @param result list of book moves + book entries
+	 * @param deep
+	 * @param result       list of book moves + book entries
 	 * @return true if the position is contained in the book.
-	 *      Note that an out-of-book position still might return moves that transpose into the book.
-	 *      However, those moves are not chosen when playing against an engine.
-	 *
+	 * Note that an out-of-book position still might return moves that transpose into the book.
+	 * However, those moves are not chosen when playing against an engine.
 	 * @throws IOException
 	 */
-	abstract public boolean getBookMoves(Position pos, boolean ignoreColors, List<BookEntry> result)
+	abstract public boolean getBookMoves(Position pos, boolean ignoreColors,
+										 boolean deep, List<BookEntry> result)
 			throws IOException;
 
 	/**
@@ -154,7 +153,7 @@ public abstract class OpeningBook
 	{
 		List book_moves = new ArrayList();
 
-		boolean in_book = book.getBookMoves(pos,true,book_moves);
+		boolean in_book = book.getBookMoves(pos,true,true, book_moves);
 
 		if (in_book)
 			System.out.println("position is in book");

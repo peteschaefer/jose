@@ -1471,7 +1471,7 @@ public class EnginePanel
 			inBook = false;
 		}
 		else {
-			bookMoves = lib.collectMoves(pos,true,false);
+			bookMoves = lib.collectMoves(pos, Application.theApplication.theMode,true,false);
 			inBook = bookMoves!=null && !bookMoves.isEmpty();
 		}
 

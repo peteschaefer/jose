@@ -15,7 +15,6 @@ package de.jose.book;
 import de.jose.profile.UserProfile;
 import de.jose.Config;
 import de.jose.Application;
-import de.jose.util.xml.XMLUtil;
 import de.jose.chess.Position;
 
 import java.util.*;
@@ -23,9 +22,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Document;
 
-import javax.xml.transform.TransformerException;
+import static de.jose.Application.ANALYSIS;
+import static de.jose.Application.USER_INPUT;
 
 /**
  * OpeningLibrary
@@ -181,7 +180,7 @@ public class OpeningLibrary
 	}
 
 
-	public List collectMoves(Position pos, boolean ignoreColors, boolean allowOutOfBook)
+	public List collectMoves(Position pos, int gameMode, boolean ignoreColors, boolean allowOutOfBook)
 			throws IOException
 	{
 		ArrayList result = new ArrayList();
@@ -191,7 +190,8 @@ public class OpeningLibrary
 			if (fentry.book==null) continue;
 
 			ArrayList one_result = new ArrayList();
-			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, one_result);
+			boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
+			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, go_deep, one_result);
 			if (!containsPosition && !allowOutOfBook)
 				continue;   //  transpose from out-of-book into the book. Ignore !
 
@@ -209,7 +209,7 @@ public class OpeningLibrary
 	}
 
 
-	public BookEntry selectMove(Position pos, boolean ignoreColors, boolean turnWhite)
+	public BookEntry selectMove(Position pos, int gameMode, boolean ignoreColors, boolean turnWhite)
 			throws IOException
 	{
 		if (selectMode==SELECT_IMPLEMENTATION)
@@ -223,7 +223,7 @@ public class OpeningLibrary
 				if (entry!=null) return entry;
 			}
 
-		List moves = collectMoves(pos,ignoreColors, false);
+		List moves = collectMoves(pos,gameMode,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}
 

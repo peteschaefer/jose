@@ -1,11 +1,9 @@
 package de.jose.book.lichess;
 
-import de.jose.Language;
 import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
-import de.jose.util.StringUtil;
 import de.jose.util.xml.XMLUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,7 +77,7 @@ public class LiChessOpeningExplorer extends OpeningBook
     }
 
     @Override
-    public boolean getBookMoves(Position pos, boolean ignoreColors, List<BookEntry> result) throws IOException
+    public boolean getBookMoves(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
     {
         String fen = pos.toString();
         fen = URLEncoder.encode(fen);
@@ -105,7 +103,7 @@ public class LiChessOpeningExplorer extends OpeningBook
                 bk.countBlack = move.getInt("black");
                 bk.count = (bk.countWhite+bk.countDraw+bk.countBlack);
 
-                if (bk.count >= MIN_GAMES_PLAYED)
+                if (deep || bk.count >= MIN_GAMES_PLAYED)
                     result.add(bk);
             }
             return true;

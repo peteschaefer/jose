@@ -2123,7 +2123,7 @@ public class Application
 				 * otherwise: request hint from Book or Engine
 				 */
 				Position pos = theGame.getPosition();
-				BookEntry hint = theOpeningLibrary.selectMove(pos, true, pos.whiteMovesNext());
+				BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
 				if (hint!=null) {
 					//  (1) Hint from Opening Library
 					Application.this.handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, hint.move);
@@ -3579,8 +3579,9 @@ public class Application
 		default:
 		case OpeningLibrary.GUI_BOOK_ONLY:
 		case OpeningLibrary.PREFER_GUI_BOOK:
-			BookEntry bookEntry = theOpeningLibrary.selectMove(theGame.getPosition(), true,
-												theGame.getPosition().whiteMovesNext());
+			BookEntry bookEntry = theOpeningLibrary.selectMove(
+					theGame.getPosition(), theMode, true,
+					theGame.getPosition().whiteMovesNext());
 			return (bookEntry!=null) && playBookMove(bookEntry);
 
 		case OpeningLibrary.NO_BOOK:

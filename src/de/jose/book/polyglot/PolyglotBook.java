@@ -17,7 +17,6 @@ import de.jose.book.BookEntry;
 import de.jose.chess.Position;
 
 import java.io.RandomAccessFile;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -55,7 +54,7 @@ public class PolyglotBook extends OpeningBook
 		return result;
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, List result)
+	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
 			throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
