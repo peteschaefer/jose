@@ -503,8 +503,8 @@ public class LineNode
 			short sw = in.readShort();
 			short sd = in.readShort();
 
-			float fw = (float)sw/32768.0f;
-			float fd = (float)sd/32768.0f;
+			float fw = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sw/32767.0f;
+			float fd = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sd/32767.0f;
 
 			move.engineValue = new float[] {fw,fd};
 
@@ -535,8 +535,8 @@ public class LineNode
 			float fw = (val!=null) ? val[0] : Float.MAX_VALUE;
 			float fd = (val!=null) ? val[1] : Float.MAX_VALUE;
 
-			short sw = (short)(fw * 32768.0f);
-			short sd = (short)(fd * 32768.0f);
+			short sw = (fw==Float.MAX_VALUE) ? Short.MIN_VALUE : (short)(fw * 32767.0f);
+			short sd = (fd==Float.MAX_VALUE) ? Short.MIN_VALUE : (short)(fd * 32767.0f);
 
 			out.writeShort(sw);
 			out.writeShort(sd);
