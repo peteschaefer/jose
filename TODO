@@ -20,7 +20,8 @@ libraries needed:
 (? resize Ubuntu partition on xps 15)
 
 ==== New Features
-? suggestion arrows (from pvs; color green-blue-yellow-red)
+
+* suggestion arrows: why flicker?
 * Contempt Slider
 
         White seeks a draw - neutral - Black seeks a draw - Armageddon
@@ -31,7 +32,7 @@ libraries needed:
 
 * mouse hover PV: display position (on main board? no. in tooltip is better)
 
-* score POV adjustable? (uci provides current poc; adjusted for white)
+* score POV adjustable? (uci provides current pov; always adjusted for white)
 ? score graph??
 * eval bar 3D
 ? commentary arrows and highlights
@@ -40,8 +41,6 @@ libraries needed:
 ==== Interesting Leela settings.
 ? temperature for more variations in the opening
 ? contempt for sharp/dull play
-? UCI_showWDL always on
-* cp can mean several things: win_percentage, Q, WDL_mu, cp_with_drawscore ??
 
 Contempt
 ? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
@@ -49,5 +48,3 @@ Contempt
 
 * DrawScore / ContemptMode ?
 * WDLDrawRate ?
-
-? Make 'contempt' / Armageddon slider controls for Black vs. White and Human vs. Leela ?

@@ -13,7 +13,10 @@
 package de.jose.plugin;
 
 import de.jose.Util;
+import de.jose.chess.Move;
 import de.jose.util.StringUtil;
+
+import java.util.ArrayList;
 
 import static de.jose.plugin.Score.UNKNOWN;
 
@@ -75,6 +78,7 @@ public class AnalysisRecord
 	public Score[]	eval;
 	/**	the primary variations	*/
 	public StringBuffer[] line;
+	public ArrayList<Move>[] moves;
 
 	/** general info    */
 	public String   info;
@@ -94,6 +98,7 @@ public class AnalysisRecord
 		for(int i=0; i < eval.length; ++i)
 			eval[i] = new Score();
 		line = new StringBuffer[256];
+		moves = new ArrayList[256];
 		pvmodified = new long[4];   // = 256 bits; one for each pv
 		maxpv = 0;
 	}
@@ -105,6 +110,13 @@ public class AnalysisRecord
 		return line[pv];
 	}
 
+	public ArrayList<Move> getMoves(int pv)
+	{
+		if (pv > maxpv) maxpv = pv;
+		if (moves[pv]==null) moves[pv] = new ArrayList<Move>();
+		return moves[pv];
+	}
+
 	public boolean wasModified(int set)
 	{
 		return Util.anyOf(modified,set);
@@ -113,6 +125,12 @@ public class AnalysisRecord
 	public boolean wasPvModified(int pv)
 	{
 		return (pvmodified[pv>>6] & (1<<(pv&0x3f))) != 0L;
+	}
+
+	public boolean wasPvModified() {
+		for(int i=0; i < maxpv; ++i)
+			if (wasPvModified(i)) return true;
+		return false;
 	}
 
 	public void setPvModified(int pv)
@@ -138,8 +156,11 @@ public class AnalysisRecord
 		elapsedTime = UNKNOWN;
 		nodes = UNKNOWN;
 		nodesPerSecond = UNKNOWN;
-		for (int i=0; i<=maxpv; i++) eval[i].clear();
-		for (int i=0; i<=maxpv; i++) if (line[i]!=null) line[i].setLength(0);
+		for (int i=0; i<=maxpv; i++) {
+			eval[i].clear();
+			if (line[i]!=null) line[i].setLength(0);
+			if (moves[i]!=null) moves[i].clear();
+		}
 		info = null;
 		modified = -1;  //  all fields modified
 	}

@@ -13,6 +13,7 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.chess.EngUtil;
 import de.jose.pgn.DiagramNode;
 import de.jose.image.ImgUtil;
 import de.jose.chess.Constants;
@@ -34,9 +35,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.datatransfer.*;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 
 /**
@@ -531,20 +530,38 @@ public class BoardPanel
 		}
 		//	update eval bar
 		switch(what) {
-			case EnginePlugin.THINKING:
 			case EnginePlugin.ANALYZING:
+			case EnginePlugin.THINKING:
 			case EnginePlugin.PONDERING:
 				AnalysisRecord a = (AnalysisRecord)data;
+				EnginePlugin plugin = (EnginePlugin)who;
 				if (a==null || a.maxpv==0)
-					theView.setScore(null);	//	nothing to be done
+					theView.setScore(null,null);	//	nothing to be done
 				else
-					theView.setScore(a.eval[0]);
+					theView.setScore(a.eval[0],plugin);
 				theView.repaint();
 				break;
 
 			case EnginePlugin.PAUSED:
-				theView.setScore(null);
+				theView.setScore(null,null);
 				theView.repaint();
+				break;
+		}
+
+		//	update suggestions (only in ANALYZTE mode, not during thinking and pondering)
+		switch(what) {
+			case EnginePlugin.ANALYZING:
+				AnalysisRecord a = (AnalysisRecord)data;
+				EnginePlugin plugin = (EnginePlugin)who;
+				if (a==null) break;
+				if (!a.wasPvModified()) break;
+
+				theView.hideAllHints(false);
+				showAnalysisHints(a,plugin);
+				break;
+			case EnginePlugin.PAUSED:
+				//	hide all suggestions
+				theView.hideAllHints(true);
 				break;
 		}
 	}
@@ -555,6 +572,68 @@ public class BoardPanel
 		//  upon complete, the command will be issues to ourself
 		theView.captureImage(this,transparent);
 	}
+
+	protected void showAnalysisHints(AnalysisRecord a, EnginePlugin plugin)
+	{
+		ArrayList<Hint> hints = new ArrayList<Hint>();
+		if (a.maxpv==0) return;
+
+		int pov = (a.white_next) ? 1 : -1;
+		double cplast = plugin.mapUnit(a.eval[0])*pov;
+		double cpmin = cplast;
+		double cpmax = cplast;
+
+		int MAX_HINTS = 6;	//	don't show too many
+		double SCORE_DROP = 0.15;	//	don't shaw bad moves
+
+		//	find interesting moves from PV list
+		for (int idx=0; idx <= a.maxpv && hints.size() < MAX_HINTS; idx++)
+		{
+			if (a.moves[idx]==null || a.moves[idx].isEmpty())
+				continue;
+			double cp = plugin.mapUnit(a.eval[idx])*pov;
+			if (cp < (cplast-SCORE_DROP))
+				break;	//	move is not interesting
+
+			if (cp > cpmax) cpmax = cp;
+			if (cp < cpmin) cpmin = cp;
+			cplast = cp;
+
+			Move mv = a.moves[idx].get(0);
+			Hint hint = new Hint(0,mv.from,mv.to,null,null);
+			hint.implData = cp;
+			hints.add(hint);
+		}
+		//	update colors
+		for(Hint hint : hints)
+		{
+			double cp = (Double)hint.implData;
+			assert(cp>=cpmin && cp<=cpmax);
+			if (cpmin==cpmax)
+				cp = 1.0;
+			else
+				cp = (cp-cpmin) / (cpmax-cpmin);
+			hint.color = suggestionColor((float)cp);
+		}
+		//	sort by Z order
+		Collections.sort(hints,new CompareHintsByZorder());
+		//	add to view
+		for(Hint hint : hints)
+			theView.showHint(hint,false);
+		theView.doRepaintHints();
+	}
+
+	public static class CompareHintsByZorder implements Comparator<Hint>
+	{
+		public int compare(Hint a, Hint b) {
+			if (a.from != b.from)
+				return (a.from - b.from);
+			int la = EngUtil.euclidDistSq(a.from,a.to);
+			int lb = EngUtil.euclidDistSq(b.from,b.to);
+			return la-lb;
+		}
+	}
+
 
 	//-------------------------------------------------------------------------------
 	//	implements IBoardAdapter
@@ -620,6 +699,20 @@ public class BoardPanel
 }
 		}
 //		 bHint.setText(data.toString());
+	}
+
+	public static Color suggestionColor(float val)
+	{
+		//	0 = red, 1 = green
+		float[] hsbRed = Color.RGBtoHSB(255,0,0, null);
+		float[] hsbGreen = Color.RGBtoHSB(0,255,0, null);
+		float hueRed = hsbRed[0];
+		float hueGreen = hsbGreen[0];
+		float hue = hueRed + val * (hueGreen-hueRed);
+		int col = Color.HSBtoRGB(hue,0.8f,0.8f);
+		//	alpha
+		col += 32<<24;
+		return new Color(col,true);
 	}
 
 }

@@ -217,7 +217,14 @@ public class EngUtil
 	{
 		return rowOf(a)-rowOf(b);
 	}
-	
+
+	public static final int euclidDistSq(int a, int b)
+	{
+		int dfile = fileDiff(a,b);
+		int drow = rowDiff(a,b);
+		return dfile*dfile+drow*drow;
+	}
+
 	public static final char fileChar(int file)
 	{
 		return (char)('a'+file-FILE_A);

@@ -26,7 +26,9 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
+
 
 /**
  * abstract base class for BoardView2D and BoardView3D
@@ -61,25 +63,7 @@ abstract public class BoardView
 	/** current hints
 	 *  Vector<Hint>
 	 * */
-	protected Vector<Hint> hints;
-
-	protected class Hint
-	        extends Timer
-	{
-		int from;
-		int to;
-		Color color;
-		Object implData;
-
-		Hint(int delay, int from, int to, Color color)
-		{
-			super(delay,BoardView.this);
-			this.from = from;
-			this.to = to;
-			this.color = color;
-		}
-	}
-
+	protected ArrayList<Hint> hints;
 
 	public static final Color   ENGINE_HINT_COLOR   = new Color(255,255,0, 64); //  yellow (transparent)
 	public static final Color   ANIM_HINT_COLOR     = new Color(0,255,0, 64); //  green (transparent)
@@ -96,7 +80,7 @@ abstract public class BoardView
 
 		setMinimumSize(new Dimension(48,48));
 		setOpaque(true);
-		hints = new Vector();
+		hints = new ArrayList<Hint>();
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }
@@ -209,20 +193,24 @@ abstract public class BoardView
 		Hint hnt = getHint(mv);
 		if (hnt==null)
 		{
-			hnt = new Hint((int)millis, mv.from,mv.to, color);
-			hnt.start();
-
-			hints.add(hnt);
-			doShowHint(hnt);
+			hnt = new Hint((int)millis, mv.from,mv.to, color, this);
+			showHint(hnt,true);
 		}
     }
+
+	public final void showHint(Hint hnt,boolean repaint)
+	{
+		if (hnt.getDelay() > 0) hnt.start();
+		hints.add(hnt);
+		doShowHint(hnt,repaint);
+	}
 
 	/**
 	 * show text hint (as popup window)
 	 */
 	public final void showHint(String text, long millis, Color color)
 	{
-		Hint hnt = new Hint((int)millis,0,0,null);
+		Hint hnt = new Hint((int)millis,0,0,null, this);
 
 		StyledToolTip tip = new StyledToolTip();
 		tip.setTipText("<font size=+5><b>"+text+"</b></font>");
@@ -237,7 +225,7 @@ abstract public class BoardView
 		hnt.start();
 	}
 
-	protected final void hideHint(Hint hnt)
+	protected final void hideHint(Hint hnt,boolean repaint)
 	{
 		if (hnt.from==0) {
 			//  text hint
@@ -245,15 +233,15 @@ abstract public class BoardView
 			hints.remove(hnt);
 		}
 		else if (hints.remove(hnt)) //  hide Move hint implemented by subclass
-			doHideHint(hnt);
+			doHideHint(hnt,repaint);
 	}
 
-	protected void hideAllHints()
+	protected void hideAllHints(boolean repaint)
 	{
 		for (int i=hints.size()-1; i>=0; i--)
 		{
 			Hint hnt = (Hint)hints.get(i);
-			if (hnt.from==0) {
+			if (hnt!=null && hnt.from==0) {
 				//  text hint
 				((Popup)hnt.implData).hide();
 				hints.remove(i);
@@ -261,8 +249,9 @@ abstract public class BoardView
 		}
 		//  hide Move hints (implemented by subclass)
 		if (hints.size() > 0) {
+			int sz = hints.size();
 			hints.clear();
-			doHideAllHints(hints.size());
+			doHideAllHints(sz,repaint);
 		}
 	}
 
@@ -280,31 +269,30 @@ abstract public class BoardView
 		for (int i=0; i<hints.size(); i++)
 		{
 			Hint hnt = (Hint)hints.get(i);
-			if (hnt.from==from && hnt.to==to)
+			if (hnt!=null && hnt.from==from && hnt.to==to)
 				return hnt;
 		}
 		return null;
 	}
 
-	abstract protected void doShowHint(Hint hnt);
+	abstract protected void doShowHint(Hint hnt,boolean repaint);
 
-	abstract protected void doHideHint(Hint hnt);
+	abstract protected void doHideHint(Hint hnt,boolean repaint);
 
-	abstract protected void doHideAllHints(int count);
+	abstract protected void doHideAllHints(int count,boolean repaint);
 
-	public void setScore(Score sc)
+	abstract protected void doRepaintHints();
+
+	public void setScore(Score sc, EnginePlugin plugin)
 	{
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
 			this.eval = null;	//	Score object contains no useful info. Ignore.
 		else if (sc==null)
 			this.eval = null;
-		else {
-			EnginePlugin plugin = Application.theApplication.getEnginePlugin();
-			if (plugin==null)
-				this.eval = null;
-			else
-				this.eval = plugin.mapUnitWDL(sc);
-		}
+		else if (plugin==null)
+			this.eval = null;
+		else
+			this.eval = plugin.mapUnitWDL(sc);
 	}
 
 	/**
@@ -400,7 +388,7 @@ abstract public class BoardView
 	{
 		if (evt.getSource() instanceof Hint) {
 			Hint hnt = (Hint)evt.getSource();
-			hideHint(hnt);
+			hideHint(hnt,true);
 			hnt.stop();
 		}
 		else if (evt.getActionCommand().startsWith("promote.")) {

@@ -1060,7 +1060,7 @@ public class BoardView3D
 		finishMove(mv, millis);
 	}
 
-	protected void doShowHint(Hint hnt)
+	protected void doShowHint(Hint hnt, boolean repaint)
 	{
 		Point2d p1 = PieceGroup.squareCenter(hnt.from);
 		Point2d p2 = PieceGroup.squareCenter(hnt.to);
@@ -1074,19 +1074,23 @@ public class BoardView3D
 		Arrow3D arrow = new Arrow3D(p1,p2, coords,PieceGroup.squareSize/4, hnt.color);
 		hnt.implData = arrow;
 		hintGroup.addChild(arrow);
-		canvas.paint(getGraphics());
+		if (repaint) canvas.paint(getGraphics());
 	}
 
-	protected void doHideHint(Hint hnt)
+	protected void doHideHint(Hint hnt, boolean repaint)
 	{
 		Arrow3D arrow = (Arrow3D)hnt.implData;
 		hintGroup.removeChild(arrow);
-		canvas.paint(getGraphics());
+		if (repaint) canvas.paint(getGraphics());
 	}
 
-	protected void doHideAllHints(int count)
+	protected void doHideAllHints(int count, boolean repaint)
 	{
 		hintGroup.removeAllChildren();
+		if (repaint) canvas.paint(getGraphics());
+	}
+
+	protected void doRepaintHints() {
 		canvas.paint(getGraphics());
 	}
 

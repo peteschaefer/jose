@@ -142,7 +142,8 @@ public class UciPlugin
 
 	public void disableBook()
 	{
-		setOption("OwnBook","false");
+		if (supportsOption("OwnBook"))
+			setOption("OwnBook","false");
 	}
 
 	public boolean canResign() {
@@ -258,7 +259,7 @@ public class UciPlugin
 
         //  set options
 		setOptions(false);
-		// useWDL(true);	//	use WDL, if available (or maybe not?)
+		//useWDL(true);	//	use WDL, if available (or maybe not?)
 
         setMode(PAUSED);
 		return false;
@@ -863,6 +864,8 @@ public class UciPlugin
 			else if (t.equals("pv")) {
 				StringBuffer line = rec.getLine(pvidx);
 				line.setLength(0);
+				if (rec.moves[pvidx]!=null)
+					rec.moves[pvidx].clear();
 				ispv = tokispv = true;                
 /*              //  don't print ponder move !
 				if (ponderMove!=null) {
@@ -970,10 +973,9 @@ public class UciPlugin
 				Move mv = parseMove(t,0);       //  parse & format move
 
 				String formatted = printMove(mv, rec.getLine(pvidx).length()==0);
-				if (formatted!=null)
-					appendMove(rec,formatted,pvidx);
-				else
-					appendMove(rec,t,pvidx);
+				if (formatted==null) formatted = t;
+				//	if formatting fails, fall back to engine input
+				appendMove(rec,mv,formatted,pvidx);
 				//  TODO handle refutation lines and current lines (low prio)
 				tokispv = true;
 			}
@@ -982,7 +984,7 @@ public class UciPlugin
 		}
 
 		if (score_modified) {
-			adjustPointOfView(score,rec.white_next);	//	todo confusing for win-percentage scores!!
+			adjustPointOfView(score,rec.white_next);
 			rec.eval[pvidx] = score;
 			rec.setPvModified(pvidx);
 		}
@@ -1030,11 +1032,20 @@ public class UciPlugin
 		return formatted;
 	}
 
-	protected void appendMove(AnalysisRecord rec, String text, int pvidx)
+	protected void appendMove(AnalysisRecord rec, Move mv, String text, int pvidx)
 	{
 		StringBuffer line = rec.getLine(pvidx);
 		line.append(text);
 		line.append(" ");
+		rec.getMoves(pvidx).add(mv);
+		// todo also keep track of index into string; make it into an object
+		/*
+		{
+			Move mv;
+			Score score;
+			int text_offset
+		}
+		 */
 		rec.setPvModified(pvidx);
 	}
 

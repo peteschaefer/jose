@@ -142,7 +142,7 @@ public class BoardView2D
 
 	public void refresh(boolean stopAnimation)	{
 		if (stopAnimation) {
-			hideAllHints();
+			hideAllHints(true);
 			if (sprite1!=null) sprite1.drop();
 			if (sprite2!=null) sprite2.drop();
 		}
@@ -259,13 +259,18 @@ public class BoardView2D
 	{
 		squareSize = calcSquareSize();
 
-		int right = getWidth();
-		if (showEvalbar) right -= 0.4f * squareSize;
-		inset.x = (int)(right-8*squareSize) / 2;
+		float divx = 8.0f, divy = 8.0f;
+		if (showCoords) {
+			divx += 0.4f;
+			divy += 0.4f;
+		}
+		if (showEvalbar)
+			divx += 0.4f;
 
-		int bottom = getHeight();
-		if (showCoords) bottom -= 0.4f*squareSize;
-		inset.y = (int)(bottom -8*squareSize) / 2;
+		inset.x = (int)(getWidth()-divx*squareSize) / 2;
+		if (showCoords) inset.x += 0.4*squareSize;
+
+		inset.y = (int)(getHeight()-divy*squareSize) / 2;
 	}
 
 	private int calcSquareSize()
@@ -275,9 +280,8 @@ public class BoardView2D
 			divx += 0.4f;
 			divy += 0.4f;
 		}
-		if (showEvalbar) {
+		if (showEvalbar)
 			divx += 0.4f;
-		}
 
 		return (int)(float)Math.min((getWidth()-4)/divx, (getHeight()-4)/divy);
 	}
@@ -438,20 +442,22 @@ public class BoardView2D
 		finishMove(mv, millis);
 	}
 
-	protected void doShowHint(Hint hnt)
+	protected void doShowHint(Hint hnt,boolean repaint)
 	{
-		forceRedraw = true;
-		repaint();
+		if (repaint) doRepaintHints();
 	}
 
-	protected void doHideHint(Hint hnt)
+	protected void doHideHint(Hint hnt, boolean repaint)
 	{
-		forceRedraw = true;
-		repaint();
+		if (repaint) doRepaintHints();
 	}
 
-	protected void doHideAllHints(int count)
+	protected void doHideAllHints(int count, boolean repaint)
 	{
+		if (repaint) doRepaintHints();
+	}
+
+	protected void doRepaintHints() {
 		forceRedraw = true;
 		repaint();
 	}
@@ -511,9 +517,11 @@ public class BoardView2D
 		for (int i=0; i < hints.size(); i++)
 		{
 			Hint hnt =(Hint)hints.get(i);
-			Graphics2D g = getBufferGraphics();
-			paintArrow(g, center(hnt.from), center(hnt.to),
-			        squareSize/6, hnt.color);
+			if (hnt!=null) {
+				Graphics2D g = getBufferGraphics();
+				paintArrow(g, center(hnt.from), center(hnt.to),
+						squareSize/16, hnt.color);
+			}
 		}
 
 		sprite1.updateBuffer();
@@ -551,7 +559,7 @@ public class BoardView2D
 	{
 		/** set up a a polygon of normal width */
 		int length = (int)Math.round(p1.distance(p2));
-		int tip = 2*width;
+		int tip = (int)(2*width);
 
 		int[] x = createArrowXCoordinates(length,width,tip);
 		int[] y = craeteArrowYCoordinates(length,width,tip);

@@ -35,9 +35,9 @@
 		<OPTION name="MaxOutOfOrderEvalsFactor"> 2.400000 </OPTION>
 		<OPTION name="StickyEndgames"> true </OPTION>
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
-		<OPTION name="MultiPV"> 3 </OPTION>
+		<OPTION dirty="true" name="MultiPV"> 10 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
-		<OPTION dirty="true" name="ScoreType"> win_percentage </OPTION>
+		<OPTION name="ScoreType"> win_percentage </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
 		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
 		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>
@@ -68,7 +68,7 @@
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
-		<OPTION dirty="true" name="UCI_ShowWDL"> false </OPTION>
+		<OPTION name="UCI_ShowWDL"> true </OPTION>
 		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
 		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
 		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>
@@ -77,7 +77,6 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
-		<OPTION name="OwnBook"> true </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>

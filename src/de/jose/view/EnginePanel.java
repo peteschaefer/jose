@@ -829,6 +829,7 @@ public class EnginePanel
 		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
+		assert(plugin!=null);
 		String text = plugin.printScore(score,true);
 		String tooltip = plugin.printScoreTooltip(score,true);
 

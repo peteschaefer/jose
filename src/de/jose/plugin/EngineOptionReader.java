@@ -150,7 +150,8 @@ public class EngineOptionReader
 			}
 
 			EnginePlugin.setOptionValue(new_cfg,"Ponder","true");
-			EnginePlugin.setOptionValue(new_cfg,"OwnBook","true");
+			if (uciplug.supportsOption("OwnBook"))
+				EnginePlugin.setOptionValue(new_cfg,"OwnBook","true");
 
 		} catch (IllegalArgumentException ex) {
 			//  not a UCI plugin - OK
