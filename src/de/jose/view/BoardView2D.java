@@ -17,6 +17,7 @@ import de.jose.chess.EngUtil;
 import de.jose.chess.Move;
 import de.jose.chess.Rook;
 import de.jose.image.*;
+import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
@@ -174,6 +175,27 @@ public class BoardView2D
 		}
 		if (fety != null)
 			prf.set("board.images",map);
+	}
+
+	@Override
+	public void setScore(Score sc, EnginePlugin plugin)
+	{
+		boolean hadeval = (showEvalbar && eval!=null);
+		super.setScore(sc, plugin);
+		boolean haseval = (showEvalbar && eval!=null);
+		if (hadeval!=haseval)
+			forceRedraw = true;
+		//	when eval bar switches state, a redraw is necessary
+	}
+
+	@Override
+	public void showEvalbar(boolean on) {
+		boolean hadeval = (showEvalbar && eval!=null);
+		super.showEvalbar(on);
+		boolean haseval = (showEvalbar && eval!=null);
+		if (hadeval!=haseval)
+			forceRedraw = true;
+		//	when eval bar switches state, a redraw is necessary
 	}
 
 	/**
