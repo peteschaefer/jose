@@ -113,11 +113,15 @@ Alternative JREs:
     [x] eval bar
     [x] font awesome
      -> replace old icons step-by-step with TextIcon
+     -> TextIcon + glow effect + pressed effect
     [ ] document? (would have to be stored in db :(
 
-* threat arrows
-    -> like hint, but with reversed color
-    - take care to never play a threat move, actually !
+* threat analysis
+    - insert variation with *pass* move
+    4.a (4.a pass,threatens: 5.b)
+    -> little impact on dom mechanics
+    -> can be exported to db, pdf, html, styleddoc
+    -> in pgn export embrace with {}
 
 * Figurines in Opening names (like from Eco)
   - heuristic to detect moves

@@ -48,7 +48,7 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME selected="true"> 2000 </TIME>
+		<TIME selected="true"> 5000 </TIME>
 		<DEPTH> 10 </DEPTH>
 		<NODES> 1 </NODES>
 		<TIME_CONTROL/>

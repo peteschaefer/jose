@@ -9,10 +9,15 @@ import java.awt.geom.Rectangle2D;
 
 public class TextIcon implements Icon
 {
-    private String text;
-    private Font font;
-    private Color color;
-    private float width,height,ascent;
+    protected String text;
+    protected Font font;
+    protected Color color;
+    protected float width;
+    protected  float height;
+    protected float ascent;
+
+    protected Paint savePaint;
+    protected Font saveFont;
 
     public TextIcon(String text, Font font, Color color) {
         this.text = text;
@@ -32,15 +37,13 @@ public class TextIcon implements Icon
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D g2 = (Graphics2D) g;
-        Font oldFont = g2.getFont();
-        Color oldColor = g2.getColor();
-
+        save(g2);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setFont(font);
         g2.setColor(color);
         g2.drawString(text,x,y+ascent);
-
-        g2.setFont(oldFont);
-        g2.setColor(oldColor);
+        restore(g2);
     }
 
     @Override
@@ -51,6 +54,16 @@ public class TextIcon implements Icon
     @Override
     public int getIconHeight() {
         return (int)(height+0.5);
+    }
+
+    protected void save(Graphics2D g2) {
+        savePaint = g2.getPaint();
+        saveFont = g2.getFont();
+    }
+
+    protected void restore(Graphics2D g2) {
+        g2.setPaint(savePaint);
+        g2.setFont(saveFont);
     }
 
     private static FontRenderContext frc = null;

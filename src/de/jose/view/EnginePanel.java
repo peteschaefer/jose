@@ -28,10 +28,7 @@ import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
 import de.jose.plugin.*;
 import de.jose.profile.LayoutProfile;
-import de.jose.util.FontUtil;
-import de.jose.util.StringUtil;
-import de.jose.util.AWTUtil;
-import de.jose.util.ClipboardUtil;
+import de.jose.util.*;
 import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.JoButton;
 import de.jose.view.input.JoStyledLabel;
@@ -123,8 +120,8 @@ public class EnginePanel
 	/** status info    */
 	protected JLabel    lStatus;
 
-    protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
-	protected static ImageIcon[] iPause, iHint, iAnalyze;
+    protected static Icon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
+	protected static Icon[] iPause, iHint, iAnalyze;
 	protected static Icon iBook, iEngine;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
@@ -210,14 +207,14 @@ public class EnginePanel
 
 	private void createIcons()
 	{
-		iGoGreen = new ImageIcon[4];
-		iGoYellow = new ImageIcon[4];
-		iGoRed = new ImageIcon[4];
-		iGoBlue = new ImageIcon[4];
-		iGoOrange = new ImageIcon[4];
-		iPause = new ImageIcon[4];
-		iHint = new ImageIcon[4];
-		iAnalyze = new ImageIcon[4];
+		iGoGreen = new Icon[4];
+		iGoYellow = new Icon[4];
+		iGoRed = new Icon[4];
+		iGoBlue = new Icon[4];
+		iGoOrange = new Icon[4];
+		iPause = new Icon[4];
+		iHint = new Icon[4];
+		iAnalyze = new Icon[4];
 
 		iGoGreen[0] =
 		iGoYellow[0] =
@@ -241,9 +238,11 @@ public class EnginePanel
 		iGoBlue[2] = ImgUtil.getIcon("nav","arrow.blue.hot");
 		iGoBlue[3] = ImgUtil.getIcon("nav","arrow.blue.pressed");
 
-		iGoOrange[1] = ImgUtil.getIcon("nav","arrow.orange.cold");
-		iGoOrange[2] = ImgUtil.getIcon("nav","arrow.orange.hot");
-		iGoOrange[3] = ImgUtil.getIcon("nav","arrow.orange.pressed");
+		int iconSize=26;
+		iGoOrange[0] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.lightGray);
+		iGoOrange[1] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange);
+		iGoOrange[2] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange).hilited();
+		iGoOrange[3] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange).pushed();
 
 		iPause[0] = ImgUtil.getIcon("nav","engine.stop.off");
 		iPause[1] = ImgUtil.getIcon("nav","engine.stop.cold");

@@ -63,7 +63,14 @@ public class Util
 		for (int i=0; i<array.length; i +=2 )
 			map.put(array[i], array[i+1]);
 	}
-	
+
+	public static void swap(Object a, Object b)
+	{
+		Object aux=a;
+		a=b;
+		b=aux;
+	}
+
 	public static void swap(Object[] array, int a, int b)
 	{
 		Object aux = array[a];
