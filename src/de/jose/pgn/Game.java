@@ -732,7 +732,8 @@ public class Game
 
 	public MoveNode insertNullMove()
 	{
-		MoveNode nullNode = new MoveNode(currentMove.ply+1,Move.NULLMOVE);
+		Move nullmove = new Move(Move.NULLMOVE);
+		MoveNode nullNode = new MoveNode(currentMove.ply+1, nullmove);
 		if (currentMove.parent().level()==1 || currentMove.nextMove()!=null) {
 			//	insert new variation
 			MoveNode copy = (MoveNode)currentMove.clone();
@@ -759,7 +760,7 @@ public class Game
 		else {
 			//	just append null move
             try {
-                insertMove(-1,Move.NULLMOVE,NEW_LINE);
+                insertMove(-1,nullmove,NEW_LINE);
             } catch (BadLocationException e) {
                 throw new RuntimeException(e);
             }

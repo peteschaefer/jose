@@ -28,6 +28,7 @@ import de.jose.util.style.MarkupWriter;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.plaf.TextUI;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -128,13 +129,55 @@ public class DocumentEditor
 
         try {
             Highlighter.HighlightPainter painter =
-					new DefaultHighlighter.DefaultHighlightPainter(MOVE_HILITE_COLOR);
+					new DefaultHighlighter.DefaultHighlightPainter(MOVE_HILITE_COLOR) {
+					//new Highlighter.HighlightPainter() {
+						@Override
+						public Shape paintLayer(Graphics g, int offs0, int offs1,
+												Shape bounds, JTextComponent c, View view) {
+							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c);
+						}
+					};
             hiliteCurrentMove = getHighlighter().addHighlight(0,0, painter);
         } catch (BadLocationException e) {
             Application.error(e);
         }
 
         setupActions();
+	}
+
+	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c)
+	{
+		Color color = MOVE_HILITE_COLOR;
+		g.setColor(color);
+
+		TextUI mapper = c.getUI();
+        try {
+			Rectangle p0 = mapper.modelToView(c, offs0);
+			Rectangle p1 = mapper.modelToView(c, offs1);
+			Rectangle r1 = p0.union(p1);
+			Rectangle r2 = new Rectangle(r1);
+
+			//	check ascent/descent of adjacent regions
+			if (offs0 > 0)
+			try {
+				Rectangle p2 = mapper.modelToView(c, offs0 - 1);
+				r2 = r2.union(p2);
+			} catch (BadLocationException e) {
+			}
+			
+			if ((offs1+1) < theGame.getLength())
+			try {
+				Rectangle p3 = mapper.modelToView(c, offs1 + 1);
+				r2 = r2.union(p3);
+			} catch (BadLocationException e) {
+			}
+
+			Rectangle r = new Rectangle(r1.x, r2.y, r1.width, r2.height);
+			g.fillRect(r.x,r.y,r.width,r.height);
+			return r;
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
 	}
 
 	public void setDocument(Game doc)

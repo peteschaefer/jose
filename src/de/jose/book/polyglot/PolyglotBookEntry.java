@@ -55,7 +55,7 @@ public class PolyglotBookEntry extends BookEntry
 	public static Move createMove(int imove, boolean isTransposedColor)
 	{
 		if (imove==MoveNone) return null;
-		if (imove==MoveNull) return Move.NULLMOVE;
+		if (imove==MoveNull) return new Move(Move.NULLMOVE);
 
 		int from64 = (imove>>6) & 0x3f;
 		int to64 = (imove & 0x3f);

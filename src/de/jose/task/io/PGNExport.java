@@ -256,6 +256,7 @@ public class PGNExport
 		formatter.stalemate	= "";
 		formatter.draw3		= "";
 		formatter.draw50	= "";
+		formatter.nullmove 	= "--";
 	}
 
 	public int work() throws Exception

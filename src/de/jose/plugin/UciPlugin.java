@@ -743,7 +743,7 @@ public class UciPlugin
         while (i < len && Character.isWhitespace(text.charAt(i))) i++;
 
 	    if (text.startsWith("0000",i))
-	        return Move.NULLMOVE;       //  UCI-2
+	        return new Move(Move.NULLMOVE);       //  UCI-2
 
 	    if (text.equals("O-O") || text.equals("0-0"))
 	    {

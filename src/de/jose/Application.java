@@ -989,7 +989,7 @@ public class Application
 				if (!theGame.canInsertNullMove()) return;
 
 				theGame.insertNullMove();
-				cmd = new Command("move.notify",null,Move.NULLMOVE);
+				cmd = new Command("move.notify",null,new Move(Move.NULLMOVE));
 				broadcast(cmd);
 
 				//	turn on analysis
@@ -2440,8 +2440,11 @@ public class Application
 			invokeWithPlugin(new Runnable() {
 				public void run() {	//  (2) enter engine analysis mode
 					//pausePlugin(true);
-					engine.analyze(theGame.getPosition());	//	right?
-					setMode(AppMode.ANALYSIS);
+					Position pos = theGame.getPosition();
+					if (engine.canAnalyze(pos)) {
+						engine.analyze(pos);    //	right?
+						setMode(AppMode.ANALYSIS);
+					}
 				}
 			});
 //		}

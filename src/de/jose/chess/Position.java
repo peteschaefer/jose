@@ -305,7 +305,7 @@ public class Position
 	 */
 	public void doMove(Move move)
 	{
-		//	fill in new stack fram
+		//	fill in new stack frame
 		StackFrame frame = theMoveStack[thePly];
 		if (frame==null) frame = theMoveStack[thePly] = new StackFrame();
 		int oldFlags = theFlags;
@@ -317,8 +317,10 @@ public class Position
 		frame.whiteSignature = theMatSignature.wsig;
 		frame.blackSignature = theMatSignature.bsig;
 
-		if (move.moving==null) {
+		if (move.isNullMove()) {
 			//  NULLMOVE
+			theFlags = Util.minus(theFlags,EN_PASSANT_FILE);
+			theSilentPlies++;
 		}
 		else {
 			Piece piece = piece(move.from);
@@ -437,7 +439,7 @@ public class Position
 		/*	undo move	*/
 		StackFrame frame = theMoveStack[--thePly];
 
-		if (frame.moving==null) {
+		if (frame.isNullMove()) {
 			//  NULLMOVE
 		}
 		else {

@@ -774,7 +774,7 @@ public class Parser
 
 		//	null move shorthand
 		if (len==2 && peek(0)=='-' && peek(1)=='-') {
-			moves[0] = NULLMOVE;
+			moves[0] = new Move(NULLMOVE);
 			checkMoves(1, strictlyLegal, false);
 			return;
 		}

@@ -1736,7 +1736,7 @@ public class Board
 	{
 		//	find the moving piece
 		if (code==SHORT_NULLMOVE)
-			return Move.NULLMOVE;
+			return new Move(Move.NULLMOVE);
 		Piece p = null;
 		switch (code & 0x00f0)
 		{
@@ -1778,7 +1778,7 @@ public class Board
 			}
 			break;
 		case 0x009a:    //  null move
-			return Move.NULLMOVE;
+			return new Move(Move.NULLMOVE);
 		}
 
 		if (p==null)    //  error in move encoding; couldn't find appropriate piece !
