@@ -51,6 +51,24 @@
 
 ==== Project
 
+Release 1.5.2 checklist
+
+                        Win     Lin     Mac Intel   Mac Arm
+
+JRE 21                  [ ]     [ ]     [ ]         [ ]
+Java 3D                 [ ]     [ ]     [ ]         [-]
+Hi-dpi                  [ ]     [ ]     [ ]         [ ]
+Mysql 5.0.67            [ ]     [ ]     [ ]         [ ]
+myisamchk               [ ]     [ ]     [ ]         [ ]
+Repair Tool             [ ]     [ ]     [ ]         [ ]
+Arrows                  [ ]     [ ]     [ ]         [ ]
+Eval Bar                [ ]     [ ]     [ ]         [ ]
+Leela                   [ ]     [ ]     [ ]         [ ]
+Stockfish               [ ]     [ ]     [ ]         [ ]
+Lichess Explorer        [ ]     [ ]     [ ]         [ ]
+Easylink                [ ]     [ ]     [-]         [-]
+
+
 [x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
@@ -113,15 +131,39 @@ Alternative JREs:
     [x] eval bar
     [x] font awesome
      -> replace old icons step-by-step with TextIcon
-     -> TextIcon + glow effect + pressed effect
     [ ] document? (would have to be stored in db :(
 
 * threat analysis
-    - insert variation with *pass* move
-    4.a (4.a pass,threatens: 5.b)
-    -> little impact on dom mechanics
-    -> can be exported to db, pdf, html, styleddoc
-    -> in pgn export embrace with {}
+    [ ] insert variation with null, pass move
+    [ ] Position play, unplay
+    [ ] store in DB
+    [ ] type --
+    [ ] export pgn
+    [ ] export text
+    [ ] export html
+    [ ] export pdf
+
+    - compatible with Scid and Chessbase
+    - little impact on dom mechanics
+    - can be exported to db, pdf, html, styleddoc
+    - but should we escape them on pgn export?!
+        %nullmove-variation
+        {( -- ... )}
+    - Chessbase et al. allow nullmoves in the main line. we don't
+    - Chessbase et al. interpret "--" as a variation after the opponents move:
+
+        4.a b (-- 5.c)
+
+    Keeps with tree structure, but I find it confusing because the threat
+    comes after the refutation. It should be closer to 4.a.
+
+        4.a (4.a -- threatens($140) 5.c) 4...b
+
+    Is more logical, but it repeats 4.a
+
+* Foldable variations.
+    - Use LineLabelNode as buttons
+    - no need for extra gui real estate
 
 * Figurines in Opening names (like from Eco)
   - heuristic to detect moves
@@ -161,7 +203,7 @@ Alternative JREs:
   * eval bar **must** use white pov [0..1]
   * suggestions arrows **must** use current pov * [0..1]
 
-? commentary arrows and highlights
+* commentary arrows and highlights
 
 
 ==== Misc Errors

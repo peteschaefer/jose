@@ -135,6 +135,8 @@
 		<item id="menu.game.setup"	key="F11"/>
 		<item id="menu.game.animate"/>
 		<!--<item id="menu.game.nalimov.online"/>-->
+		<separator/>
+		<item id="menu.game.threat"/>
 	</menu>
 	<!-- - - - - - - - - - -->
 	<!-- Window Menu       -->

@@ -71,10 +71,12 @@ public class EnginePanel
 	protected JButton   bGo;
 	/** pause button    */
 	protected JButton   bPause;
-	/** hint button */
-	protected JoButton bHint;
 	/** anaylze button  */
 	protected JButton   bAnalyze;
+	/** hint button */
+	protected JoButton 	bHint;
+	/**	threat button */
+	protected JButton 	bThreat;
 
 	/** label for current move  */
 	protected JLabel lCurrentMove, tCurrentMove;
@@ -121,7 +123,7 @@ public class EnginePanel
 	protected JLabel    lStatus;
 
     protected static Icon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
-	protected static Icon[] iPause, iHint, iAnalyze;
+	protected static Icon[] iPause, iHint, iAnalyze, iBolt;
 	protected static Icon iBook, iEngine;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
@@ -223,6 +225,7 @@ public class EnginePanel
 		iPause = awesomeIconSet('\uf04c',iconSize,Font.PLAIN,green);
 		iHint = awesomeIconSet('?',iconSize,Font.PLAIN,blue);
 		iAnalyze = awesomeIconSet('\uf013',iconSize,Font.BOLD,yellow);
+		iBolt = awesomeIconSet('\ue0b7',iconSize,Font.BOLD,orange);
 	}
 
 	private Icon[] awesomeIconSet(char c, int size, int style, Color color)
@@ -262,11 +265,14 @@ public class EnginePanel
 			public void mouseReleased(MouseEvent e) { hideHint(); }
 		};
 		newButton("menu.game.hint",bHint);
+		bThreat			= newButton("menu.game.threat");
+		bThreat.addActionListener(Application.theApplication);
 
 		setIcon(bGo, iGoBlue);
 		setIcon(bPause,iPause);
 		setIcon(bHint,iHint);
 		setIcon(bAnalyze,iAnalyze);
+		setIcon(bThreat,iBolt);
 
 		int tborder = JoLineBorder.LEFT+JoLineBorder.RIGHT+JoLineBorder.TOP;
 		int lborder = JoLineBorder.LEFT+JoLineBorder.RIGHT+JoLineBorder.BOTTOM;
@@ -356,6 +362,7 @@ public class EnginePanel
 		buttonBox.add(bAnalyze);
 		buttonBox.add(Box.createHorizontalStrut(12));
 		buttonBox.add(bHint);
+		buttonBox.add(bThreat);
         buttonBox.add(Box.createHorizontalStrut(12));
 
 		JPanel buttonPanel = new JPanel(new GridBagLayout());

@@ -18,7 +18,6 @@ package de.jose.pgn;
 
 import de.jose.Application;
 import de.jose.Util;
-import de.jose.Version;
 import de.jose.Language;
 import de.jose.sax.JoContentHandler;
 import de.jose.chess.*;
@@ -721,6 +720,37 @@ public class Game
 			return mainLine.firstMove();
 		else
 			return currentMove.nextMove();
+	}
+
+	public MoveNode insertNullMove(MoveNode current)
+	{
+		MoveNode nullNode = new MoveNode(current.ply+1,Move.NULLMOVE);
+		if (current.parent().level()==1 || current.nextMove()!=null) {
+			//	insert new variation
+			MoveNode copy = (MoveNode)current.clone();
+			AnnotationNode nagNode = new AnnotationNode(140);
+
+			LineNode variation = new LineNode(this);
+			copy.insertAfter(variation.first());	//	skip prefix
+			nullNode.insertAfter(copy);
+			nagNode.insertAfter(nullNode);
+
+			insertIntoCurrentLine(variation, current);	//	insert into structure
+			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
+			/**	insert variation at end of current line	*/
+			insertNode(variation);	//	insert into document
+			currentMove = nullNode;
+			currentMove.play(position);
+
+			updateLabels(variation);
+			updateMoveCount(variation);
+			setDirty();
+		}
+		else {
+			//	just append null move
+			insertIntoCurrentLine(nullNode,current);
+		}
+		return nullNode;
 	}
 
 	protected void insertIntoCurrentLine(Node newNode, MoveNode after)

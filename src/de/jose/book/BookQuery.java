@@ -55,7 +55,7 @@ public class BookQuery
         this.lastMove = lastMove;
         addMessageListener(Application.theApplication);
 
-        System.err.println("["+seqNo+"] "+appMode+" "+MoveNode.toString(appMove));
+        //System.err.println("["+seqNo+"] "+appMode+" "+MoveNode.toString(appMove));
     }
 
     public boolean isValid()
@@ -86,7 +86,7 @@ public class BookQuery
 
         if (isValid() && (onCompletion!=0))
             sendMessage(onCompletion,this);
-        else
-            System.err.println("["+seqNo+"] dropped");
+        //else
+        //    System.err.println("["+seqNo+"] dropped");
     }
 }

@@ -224,6 +224,7 @@ menu.game.copy.line = Variante Kopieren
 menu.game.copy.line.tip = Variante in die Zwischenablage kopieren
 menu.game.paste.line = Variante Einfügen
 menu.game.paste.line.tip = Variante in die Partie einfügen
+menu.game.threat = Drohungen Analysieren...
 
 tab.place = Tab Position
 tab.place.top = Oben

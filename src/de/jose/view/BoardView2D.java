@@ -624,7 +624,6 @@ public class BoardView2D
 	public void move(Move mv, float time)
 	{
 		long millis = calcMillis(time);
-		int piece = mv.moving.piece();
 
 		if (showAnimationHints) showHint(mv, millis, ANIM_HINT_COLOR);
 

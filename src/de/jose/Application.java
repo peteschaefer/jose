@@ -979,6 +979,23 @@ public class Application
 		};
 		map.put("menu.game.paste.line",action);
 
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				MoveNode mvnd = theGame.getCurrentMove();
+				if (mvnd==null) return;
+				if (theGame.getPosition().isGameFinished(false)) return;
+
+				MoveNode nullnd = theGame.insertNullMove(mvnd);
+				//	goto to move
+				cmd = new Command("move.goto", null, nullnd);
+				theCommandDispatcher.forward(cmd, Application.this);
+				//	turn on analysis
+				cmd = new Command("menu.game.analysis");
+				theCommandDispatcher.forward(cmd,enginePanel());
+			}
+		};
+		map.put("menu.game.threat",action);
+
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception
             {

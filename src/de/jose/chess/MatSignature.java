@@ -289,7 +289,7 @@ public class MatSignature
 				}
 			}
 		}
-		if (mv.moving.isPawn()) {
+		if (mv.moving!=null && mv.moving.isPawn()) {
 			int color = mv.moving.color();
 			//  adjust pawn home row
 			if (Pawn.isOnHomeRow(color,mv.from))
