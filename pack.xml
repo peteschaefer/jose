@@ -492,7 +492,7 @@
 	<target name="linux-jre" depends="init">
 		<description> installation package for linux (including JRE) </description>
 
-		<property name="zip-file" location="${target-dir}/jose-${version}-linux-jre.zip"/>
+		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
 		<property name="appldir" value="jose"/>
 		<delete dir="${appldir}"/>
 

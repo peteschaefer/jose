@@ -85,6 +85,8 @@
 		</delete>
 	</target>
 
+	<!-- this stuff is really @deprecated - and creates confusion when packing. -->
+	<!-- Only WinUtils is still needed -->
     <target name="bootClasses">
 		<mkdir dir="${java.classes}"/>
 		<!-- some classes are 1.5 specific -->
@@ -161,7 +163,7 @@
 
 		<jar jarfile="jose.jar" basedir="${java.classes}"
 			index="false"
-			excludes="**/Bootstrap.class .dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/**">
+			excludes="**/Bootstrap.class .dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/** production/**">
 			<manifest>
 				<!-- please DON'T use index="true" it will break the Class-Path (java bug) -->
 

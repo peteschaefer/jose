@@ -3512,7 +3512,9 @@ public class Application
 		}
 
 		for (int i = openFrames.size()-1; i >= 0; i--) {
-			((JoFrame)openFrames.get(i)).setVisible(true);
+			JoFrame frame = (JoFrame) openFrames.get(i);
+			frame.setVisible(true);
+			frame.revalidate();
         }
 			/**	ATTENTION don't call JFrame.setVisible() from the constructor
 			 * 	leads to strange lock-ups
