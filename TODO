@@ -75,6 +75,10 @@ Stockfish               [x]     [x]     [x]         [ ]
 Lichess Explorer        [x]     [x]     [x]         [ ]
 Easylink                [x]     [-]     [-]         [-]
 
+[x] Java 3D
+    1.5 from Oracle. Works well for Windows and Linux. Not for Mac
+    1.6 from jogamp. better choice for Mac (but not really tested :(
+    1.7 massive API changes. is it worth a try??
 
 [x] mysql 5.0.67 x64 + myisamchk
     [x] Windows (x) stand-alone

@@ -14,6 +14,7 @@ package de.jose.jo3d;
 
 //import com.sun.j3d.utils.timer.J3DTimer;
 import de.jose.Application;
+import de.jose.Version;
 import de.jose.comm.msg.MessageListener;
 import de.jose.view.BoardView;
 import de.jose.image.ImgUtil;
@@ -107,9 +108,16 @@ public class JoCanvas3D extends Canvas3D
 		/*	Canvas3D has difficulties adjusting to hi-dpi environments
 			let's help out:
 		 */
-		Graphics2D g = (Graphics2D)getGraphics();
-		double scalex = g.getTransform().getScaleX();
-		double scaley = g.getTransform().getScaleY();
+		double scalex, scaley;
+		if (Version.mac) {
+			scalex = scaley = 1.0;
+		//	Java3D 1.6 doesn't need this fix
+		}
+		else {
+			Graphics2D g = (Graphics2D)getGraphics();
+			scalex = g.getTransform().getScaleX();
+			scaley = g.getTransform().getScaleY();
+		}
 
 		super.setBounds(x,y-(int)((scaley-1.0)*height),(int)(scalex*width), (int)(scaley*height));
 	}
