@@ -140,6 +140,7 @@ public abstract class EBoardConnector
     public void disconnect()
     {
         connected = false;
+        doShowLeds(NO_LEDS);
         doDisconnect();
     }
 

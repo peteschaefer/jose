@@ -100,7 +100,7 @@ public class Application
 	public static final int USER_INPUT		= 1;
 	/**	User input with background analysis	*/
 	public static final int ANALYSIS		= 2;
-	/**	User vs. Rngine	*/
+	/**	User vs. Engine	*/
 	public static final int USER_ENGINE		= 3;
 	/**	Engine 1 vs. Rngine 2 (not implemented)	*/
 	public static final int ENGINE_ENGINE	= 4;
@@ -1506,7 +1506,7 @@ public class Application
 					Sound.play("sound.error");
 				else if (selectBookMove()) {
 					/* move chosen from book,alright */
-					setGameDefaultInfo();
+					//setGameDefaultInfo();
 					theMode = USER_ENGINE;
 				}
 				else

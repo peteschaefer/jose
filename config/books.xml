@@ -5,15 +5,15 @@
 		<FORMAT>Polyglot</FORMAT>
 		<AUTHOR>Dann Corbit</AUTHOR>
 		<URL pack="zip">http://osdn.dl.sourceforge.net/sourceforge/jose-chess/DCbook_large.zip</URL>
-		<COMMENT>a very large book with a broad range of openings, useful for analysis.
-		(an Internet connection is required)</COMMENT>
+		<COMMENT>a very large book with a broad range of openings, useful for analysis.</COMMENT>
 	</BOOK>
 	<BOOK>
-		<FILE>LiChess Opening Explorer</FILE>
+		<FILE>Lichess Opening Explorer</FILE>
 		<FORMAT>LiChess</FORMAT>
 		<AUTHOR>-</AUTHOR>
 		<URL>https://explorer.lichess.ovh/masters</URL>
-		<COMMENT>explore openings from the LiChess Masters database</COMMENT>
+		<COMMENT>explore openings from the Lichess Masters database.
+			(an Internet connection is required)</COMMENT>
 	</BOOK>
 	<BOOK>
 		<FILE>book.bin</FILE>

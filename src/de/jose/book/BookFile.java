@@ -38,6 +38,7 @@ public class BookFile /*implements Selectable*/
 {
 	/** XML config element  */
 	public Element config;
+	public String format;
 	/** disk file, may not be available */
 	public File file;
 	/** the opening book    */
@@ -48,6 +49,9 @@ public class BookFile /*implements Selectable*/
 		this.config = config;
 		this.file = getFile();
 		this.book = null;   //  call open()
+		this.format = (String)Util.nvl(
+				XMLUtil.getChildValue(this.config,"FORMAT"),
+				"Polyglot" );
 	}
 
 	public BookFile(File file, Config config)
@@ -57,6 +61,9 @@ public class BookFile /*implements Selectable*/
 			this.config = config.getDocument("books.xml",false).createElement("BOOK"); //  make an empty, unused config element
 		this.file = file;
 		this.book = null;   //  call open()
+		this.format = (String)Util.nvl(
+				XMLUtil.getChildValue(this.config,"FORMAT"),
+				"Polyglot" );
 	}
 
 	private Element getBook(Config config, String fileName)
@@ -80,20 +87,12 @@ public class BookFile /*implements Selectable*/
 		return that;
 	}
 
-	public String format()
-	{
-		return (String)Util.nvl(
-				XMLUtil.getChildValue(config,"FORMAT"),
-				"Polyglot" );
-	}
-
-
 	public boolean open()
 	{
 		if (book!=null) return true;
 
 	//	usually format=="Polyglot"
-		if (format().equalsIgnoreCase("LiChess"))
+		if (format.equalsIgnoreCase("LiChess"))
 		{
 			//	LiChess online query
 			book = new LiChessOpeningExplorer(config);
@@ -142,7 +141,7 @@ public class BookFile /*implements Selectable*/
 
 	public String getInfoText()
 	{
-		if (format().equalsIgnoreCase("LiChess"))
+		if (format.equalsIgnoreCase("LiChess"))
 			return LiChessOpeningExplorer.getInfoText(config, this.isEnabled());
 
 		StringBuffer buf = new StringBuffer();
@@ -197,7 +196,7 @@ public class BookFile /*implements Selectable*/
 
 	public String getTitle()
 	{
-		if (format().equalsIgnoreCase("LiChess"))
+		if (format.equalsIgnoreCase("LiChess"))
 			return LiChessOpeningExplorer.getTitle(config);
 		else
 			return file.getName();
@@ -205,7 +204,7 @@ public class BookFile /*implements Selectable*/
 
 	public boolean isEnabled()
 	{
-		if (format().equalsIgnoreCase("LiChess")) {
+		if (format.equalsIgnoreCase("LiChess")) {
 			return true;    // Network is available?
 		}
 		else {

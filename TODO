@@ -26,16 +26,6 @@ libraries needed:
 
 ==== New Features
 
-* LiChess Opening Explorer
-    https://lichess.org/api#tag/Opening-Explorer/operation/openingExplorerMaster
-    - query master games
-    - or all Lichess games (with various, too many, filter options)
-  example:
-    https://explorer.lichess.ovh/masters?play=d2d4,d7d5,c2c4,c7c6&topGames=0
-   * response is json: javax.json.JsonReader
-   * wdl scores !
-
-
 * BUG? Leela keeps analyzing while playing from book
 * BUG? Leela diagnostics not always associated correctly
 
@@ -44,7 +34,6 @@ libraries needed:
   - if possible, redraw only modified arrows
 
 * "New Game from here"
-  - player names update
   - turn board on engine start
   - BUG fixed ?? engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0.
 
