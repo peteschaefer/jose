@@ -239,10 +239,23 @@ public class SymbolBar
         //comboButton.setVisible(i>=0);
         comboPane.setVisible(i>=0);
         //comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
-        if (preferredAxis==BoxLayout.X_AXIS)
-            comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
-        else
-            comboLayout = new BoxLayout(comboPane,BoxLayout.Y_AXIS);
+        if (preferredAxis==BoxLayout.X_AXIS) {
+            comboLayout = new BoxLayout(comboPane, BoxLayout.X_AXIS);
+            comboVerb.setBorder(new EmptyBorder(2,4,2,4));
+            comboSelector.setBorder(new EmptyBorder(4,0,2,0));
+            comboSubst.setBorder(new EmptyBorder(4,0,2,0));
+            comboColor.setBorder(new EmptyBorder(4,0,2,0));
+            comboAdjective.setBorder(new EmptyBorder(4,0,2,0));
+        }
+        else {
+            comboLayout = new BoxLayout(comboPane, BoxLayout.Y_AXIS);
+            comboVerb.setBorder(null);
+            comboSelector.setBorder(null);
+            comboSubst.setBorder(null);
+            comboColor.setBorder(null);
+            comboAdjective.setBorder(null);
+
+        }
 
         comboPane.setLayout(comboLayout);
 
@@ -315,10 +328,14 @@ public class SymbolBar
         //comboPane.add(comboVerb = new JLabel("="));
         comboPane.add(comboColor = new JComboBox<>());
         comboPane.add(comboVerb = new JLabel());
-        comboVerb.setBorder(new EmptyBorder(0,4,2,4));
         comboPane.add(comboAdjective = new JComboBox<>());
         comboPane.add(comboSubst = new JComboBox<>());
         comboPane.add(comboSelector = new JComboBox<>(ComboNag.ALL_SELECTORS));
+
+        comboColor.setMaximumSize(new java.awt.Dimension(980,24));
+        comboAdjective.setMaximumSize(new java.awt.Dimension(980,24));
+        comboSubst.setMaximumSize(new java.awt.Dimension(980,24));
+        comboSelector.setMaximumSize(new java.awt.Dimension(980,24));
 
         comboColor.addActionListener(this);
         comboAdjective.addActionListener(this);
