@@ -891,10 +891,12 @@ public class Game
 		return variation;
 	}
 
-	public void insertNewLine(LineNode variation, MoveNode next)
+	public void insertNewLine(LineNode variation, MoveNode mv)
 	{
+		MoveNode next = mv.nextMove();	// ?
 		assert(variation.getGame()==this);
-		insertIntoCurrentLine(variation, next);	//	insert into structure
+		insertIntoCurrentLine(variation, next);    //	insert into structure
+
 		//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
 		/**	insert variation at end of current line	*/
 		insertNode(variation);	//	insert into document

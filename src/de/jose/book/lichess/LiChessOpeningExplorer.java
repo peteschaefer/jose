@@ -295,17 +295,20 @@ public class LiChessOpeningExplorer extends OpeningBook
 
         Game orig = Application.theApplication.theGame;
         LineNode subline = new LineNode(orig);
+        new LineLabelNode(0).insertFirst(subline);
         subline.cloneFrom(cut.first(),cut.last());
+        new LineLabelNode(0).insertLast(subline);
 
         CommentNode comment = new CommentNode(label);
         comment.insertLast(subline);
 
         //  insert into original Game
-        MoveNode next = mvnd.nextMove();
-        orig.insertNewLine(subline,next);
+        orig.insertNewLine(subline,mvnd);
+    //todo whatif next==null? insert subline behind mvnd
 
     // todo think about alternative: print line to plain text, then paste
     //  (-> no need for cloning and node subleties)
+    //  BUT GameUtil.UtilParser is limited. No full pgn support!
 
         //  trigger update, etc.
         Command cmd = new Command("edit.game.paste",null, mvnd, subline);
