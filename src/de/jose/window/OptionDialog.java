@@ -155,6 +155,9 @@ public class OptionDialog
 		addSpacer(10);
 		addButton(HELP);
 
+		if (!Version.hasJava3d(true,false))
+			getTabbedPane().setEnabledAt(6,false);
+
 		IntHashSet mnemonicsInUse = new IntHashSet();
 		JoMenuBar.assignMnemonics(buttonPane,mnemonicsInUse);
 		JoMenuBar.assignMnemonics(getTabbedPane(),mnemonicsInUse);
@@ -509,8 +512,7 @@ public class OptionDialog
 	protected void initTab6(Component comp6)
 	{
 		if (!Version.hasJava3d(false,false)) {
-			JPanel tab6 = (JPanel)comp6;
-			add(tab6,0,new JLabel(Language.get("dialog.option.board.3d.na")));
+			getTabbedPane().setEnabledAt(6,false);
 			return;
 		}
 
