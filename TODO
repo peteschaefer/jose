@@ -36,13 +36,11 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [ ] db: expected data on row ?
 
+[ ] Annotation: layout in small panels
+    [ ] ScrollPane without bars; use mouse wheel scrolling
+    [ ] remember location when hidden
+
 [x] FlatLaf
-    [x] popup window out of screen (Windows only?)
-        [x] write mode
-        [x] promotion
-    [x] export dialog, spurios 'false' label
-    [x] always embed TTF into PDF
-    [x] apply Selection Color on Linux
     [?] bug TextPaneUI: jagged selection
     [?] wdl label height; adjust to font
     [?] 3D?

@@ -49,6 +49,7 @@ public class SymbolBar
 
     //protected JPanel boxPane;
     //protected GridLayout boxGrid;
+    protected JPanel content;
     protected GridBagLayout gridLayout;
     protected int gridRows,gridCols;
 
@@ -105,8 +106,37 @@ public class SymbolBar
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
     {
         super(profile,withContextMenu,withBorder);
-        setLayout(gridLayout=new GridBagLayout());
+        content = new JPanel();
+        content.setLayout(gridLayout=new GridBagLayout());
+
+        JScrollPane scroller = new JScrollPane(content,
+                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroller.setWheelScrollingEnabled(true);
+
+        setLayout(new BorderLayout());
+        add(scroller,BorderLayout.CENTER);
         gridRows=gridCols=1;
+    }
+
+    public void init()
+    {
+        Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
+        textFont = new Font("Dialog", Font.PLAIN, 16);
+        smallFont = new Font("Dialog", Font.PLAIN, 9);
+        labelFont = new Font("Dialog", Font.PLAIN, 10);
+        fontEncoding = null;
+
+        if (symbolStyle != null) {
+            String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
+            fontEncoding = FontEncoding.getEncoding(fontFamily);
+            symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 16);
+        }
+
+        makeSymbolButtons();
+        makeComboPane();
+
+        relayout();
     }
 
     @Override
@@ -239,26 +269,6 @@ public class SymbolBar
         }
     }
 
-    public void init()
-    {
-        Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
-        textFont = new Font("Dialog", Font.PLAIN, 16);
-        smallFont = new Font("Dialog", Font.PLAIN, 9);
-        labelFont = new Font("Dialog", Font.PLAIN, 10);
-        fontEncoding = null;
-
-        if (symbolStyle != null) {
-            String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
-            fontEncoding = FontEncoding.getEncoding(fontFamily);
-            symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 16);
-        }
-
-        makeSymbolButtons();
-        makeComboPane();
-
-        relayout();
-    }
-
 
     private void makeComboPane()
     {
@@ -293,8 +303,8 @@ public class SymbolBar
 
         //comboPane.setBorder(new LineBorder(Color.lightGray,2,true));
 
-        this.add(comboButton);
-        this.add(comboPane);    //  grid constraints are added later
+        content.add(comboButton);
+        content.add(comboPane);    //  grid constraints are added later
         setComboNag(ComboNag.ALL[0]);
     }
 
@@ -386,7 +396,7 @@ public class SymbolBar
         for (int i = 0; i < codes.length; ++i) {
             JButton button = makeSymbolButton(codes[i]);
             result.add(button);
-            this.add(button);   // constraints are attached later
+            content.add(button);   // constraints are attached later
         }
     }
 

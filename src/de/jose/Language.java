@@ -19,10 +19,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 public class Language
 		extends de.jose.util.Properties
@@ -59,7 +56,7 @@ public class Language
 	protected File fallBackFile;
 
     /** reported errors */
-    protected static Set missingKeys;
+    //protected static Set missingKeys;
 
 
 	//-------------------------------------------------------------------------------------------
@@ -408,14 +405,22 @@ public class Language
 		return a.equals(b);
 	}
 
-    protected void warnMissing(String key, String lang)
-    {
-		if (missingKeys==null)
-			missingKeys = new HashSet();
-		if (lang!=null)
-			key = lang+", "+key;
-		if (missingKeys.contains(key)) return;   //  already reported
-		Application.warning("missing translation: "+key);
-		missingKeys.add(key);
-    }
+	public static void main(String[] args) throws IOException {
+		//	diff between two languages
+		File wd = new File(".");
+		Language left = new Language(wd,"lang.properties",args[0],false);
+		Language right = new Language(wd,"lang.properties",args[1],false);
+
+		Enumeration keys = left.keys();
+		ArrayList<String> diffs = new ArrayList<>();
+		while (keys.hasMoreElements()) {
+			String key = (String)keys.nextElement();
+			if (!right.containsKey(key)) {
+				diffs.add(key+"="+left.get1(key,null));
+			}
+		}
+		diffs.sort(String.CASE_INSENSITIVE_ORDER);
+		for(String diff : diffs)
+			System.out.println(diff);
+	}
 }

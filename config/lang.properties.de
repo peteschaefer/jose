@@ -48,6 +48,7 @@ dialog.about.gpl = dieses Programm wird unter den Bedingungen der GNU General Pu
 
 dialog.about.2	=	<b>%dbname%</b> <br> %dbversion% <br><br> \
 					Server-URL: %dburl%
+dialog.about.2.2=Schema-Version: %schema%
 
 
 dialog.about.3	=	<b>Übersetzungen:</b><br>\
@@ -97,6 +98,7 @@ dialog.about.5.native.unknown = unbekannt
 collection.trash = Mülleimer
 collection.autosave = Auto Speichern
 collection.clipboard = Zwischenablage
+collection.downloads = Downloads
 # default name for new folders
 collection.new = Neuer Ordner
 # name of starter database
@@ -126,6 +128,8 @@ menu.file.save		= Sichern
 menu.file.save.tip  = Aktuelle Partie in die Datenbank sichern
 menu.file.save.as	= Sichern Als...
 menu.file.save.as.tip = eine neue Kopie speichern
+menu.file.save.copy     = Kopie Sichern
+menu.file.save.copy.tip	= Speichert die aktuelle Partie als neue Kopie in der Datenbank
 menu.file.save.all	= Alle Sichern
 menu.file.save.all.tip	= Alle offenen Partien sichern
 menu.file.revert	= Wiederherstellen
@@ -225,6 +229,8 @@ menu.game.copy.line.tip = Variante in die Zwischenablage kopieren
 menu.game.paste.line = Variante Einfügen
 menu.game.paste.line.tip = Variante in die Partie einfügen
 menu.game.threat = Drohungen Analysieren...
+menu.game.suggestions=Analyse-Züge
+menu.game.suggestions.tip=zeigt die besten Züge der Analyse an
 
 tab.place = Tab Position
 tab.place.top = Oben
@@ -320,7 +326,7 @@ plugin.protocol.uci = UCI-Protokoll
 plugin.protocol.xboard = XBoard-Protokoll
 plugin.startup = Start-Sequenz
 
-plugin.option.Ponder = Permanent Brain
+plugin.option.Ponder = Ponder ("Permanent Brain")
 plugin.option.Random  = Zufall
 plugin.option.Hash    = Hash Tabelle (MB)
 plugin.option.BookFile = Eröffnungsbuch
@@ -335,6 +341,32 @@ plugin.option.UCI_ShowRefutations = Widerlegungen Anzeigen
 plugin.option.UCI_LimitStrength = Spielstärke Begrenzen
 plugin.option.UCI_Elo       = ELO
 
+plugin.option.group.2=Bewertung
+plugin.option.group.3=Berechnung
+plugin.option.group.4=Contempt
+plugin.option.group.5=Endspiel-Tabellen
+plugin.option.group.6=Weitere Einstellungn
+plugin.option.ScoreType=Bewertung
+plugin.option.UCI_EngineAbout=
+plugin.option.UCI_ShowMovesLeft=Moves Left
+plugin.option.UCI_ShowWDL=WDL-Bewertung
+plugin.option.VerboseMoveStats=Ausführliche Daten
+plugin.options.wait=Lade Engine-Einstellungen...
+plugin.percentage.tip=Gewinn-Erwartung ist %eval%
+plugin.pv.tooltips=Tooltips anzeigen
+plugin.score.wdl=WDL-Bewertung
+plugin.search.depth=Tiefe
+plugin.search.nodes.suffix=Knoten
+plugin.search.nodes=Knoten
+plugin.search.plies.suffix=Halbzüge
+plugin.search.time.control=Zeitkontrolle
+plugin.search.time.fixed=feste Zeit
+plugin.search.title=Suche
+plugin.verbose.stats=Engine-Daten
+plugin.wdl.tip=Weiß gewinnt ca. %win% Partien, %draw% remis, Schwarz gewinnt %lose% Partien 
+plugin.wdl=%win%:%draw%:%lose%
+time.control.link=Zeit...
+
 menu.window			= Fenster
 menu.window.fullscreen	= Bildschirm
 menu.window.reset   = Layout Zurücksetzen
@@ -346,6 +378,7 @@ menu.help.license	= Lizenz...
 menu.help.context	= Kontext-Hilfe
 menu.help.manual    = Handbuch
 menu.help.web		= jose im Netz
+menu.help.repair 	= Datenbank Reparieren...
 
 menu.web.home		= Homepage
 menu.web.update		= Online-Update
@@ -369,6 +402,7 @@ message.draw50			= 50 Züge ohne Schlagzug. \n Das Spiel endet unentschieden.
 message.resign			= %player% gibt auf. \n Sie gewinnen.
 message.time.draw		= Die Zeit ist abgelaufen. \n Das Spiel endet unentschieden.
 message.time.lose		= Die Zeit ist abgelaufen. \n %player% gewinnt.
+message.drawmat	= Zu wenig Material. Das Spiel endet unentschieden.
 
 ##############################################################################
 # 	Context Menu
@@ -494,6 +528,9 @@ dialog.export.games.? = Sie haben eine <b>unbekannte</b> Zahl von Partien zum Dr
 dialog.export.confirm = Sind sie sicher ?
 dialog.export.yes = Alle Drucken
 
+dialog.export.iso8859=ISO (PGN-Standard)
+dialog.export.utf8=Unicode (utf-8)
+
 # xsl stylesheet options
 
 export.pgn = PGN Datei
@@ -545,6 +582,9 @@ xsl.pdf.font.dir = Zusätzliche Fonts:
 
 default.file.name = Partie
 
+dialog.export.charset = Zeichensatz:
+dialog.export.iso8859 = ISO (PGN-Standard)
+dialog.export.utf8 = Unicode (utf-8)
 
 ##############################################################################
 #	Print Preview Dialog
@@ -581,6 +621,7 @@ dialog.option.tab.6     = Eröffnungsbücher
 dialog.option.tab.7     = 3D-Brett
 dialog.option.tab.8		= Schriften
 
+dialog.option.user.title=Einstellungen
 dialog.option.user.name	= Name
 dialog.option.user.language	= Sprache
 dialog.option.ui.look.and.feel	= Design
@@ -596,11 +637,19 @@ figurine.usefont.true = Graphische Figurine
 figurine.usefont.false = Text Figurine
 doc.panel.antialias	= Text-Antialias
 
+dialog.option.dark.explain = <html>\
+  Textfarben werden für den Druck dargestellt (d.h. schwarz auf weiß). <br>\
+  Auf dem Bildschirm sehen die Farben so aus:
+
 board.hilite.squares = Felder anzeigen
 board.animation.hints = Züge anzeigen
 
+dialog.option.appearance = Ansicht
+dialog.option.notation = Notation
 dialog.option.animation = Animation
 dialog.option.animation.speed = Animations-Geschwindigkeit
+dialog.option.board = Brett
+dialog.option.board.title = Brett-Farben
 
 dialog.option.sound = Sound
 dialog.option.sound.moves.dir = Zugansagen:
@@ -636,6 +685,20 @@ move.format.algebraic			= Algebraisch
 move.format.correspondence		= Fernschach
 move.format.english				= Englisch
 move.format.telegraphic			= Telegraphisch
+
+
+dialog.option.lnf.title = Anwendung
+dialog.option.lnf.accent.color = Akzent-Farbe
+dialog.option.lnf.select.color = Auswahl-Farbe
+dialog.option.lnf.theme.editor = Design-Editor
+
+lnf.accent.color = Akzent-Farbe
+lnf.select.color = Auswahl-Farbe
+lnf.theme.editor = Design-Editor...
+
+accent.color.system = System Accent Colors
+accent.color.user = Override Accent Colors
+
 
 dialog.option.time.control          = Zeitkontrolle
 
@@ -673,6 +736,7 @@ dialog.option.board.3d.surface.frame		= Rahmen
 dialog.option.board.3d.light.ambient		= Diffuses Licht
 dialog.option.board.3d.light.directional	= Direktes Licht
 dialog.option.board.3d.knight.angle         = Springer
+dialog.option.board.3d.na=3D-Funktionen sind für diese Plattform nicht verfügbar. Bitte lesen Sie die Installationsanweisungen.
 
 plugin.add =
 plugin.add.tip = neue Engine
@@ -704,6 +768,7 @@ error.bad.uci = Dieses Programm ist vermutlich keine UCI-Engine.\n Sind Sie sich
 error.engine.title = Engine-Fehler
 error.engine = %engine% hat ein Problem:\n %message%
 error.engine.fatal = %engine% hat ein Problem:\n %message%. \n Die Engine startet neu.
+error.engine.not.found = Engine-Programm fehlt. \n Prüfen Sie bitte den Pfad in den Einstellungen (F9).
 
 warning.engine = Warnung
 warning.engine.no.frc = Diese Engine kann kein <b>Fischer Random Chess</b> spielen. <br><br>\
@@ -712,8 +777,28 @@ Wenn Sie während der Partie eine Warnmeldung sehen, starten Sie einfach die Engi
 <a href="http://uciengines.de/UCI-Engines/FRC/hauptteil_frc.html">Hier</a> finden Sie eine Übersicht FRC-tauglicher Engines.
 warning.engine.off = Diese Nachricht nicht mehr anzeigen.
 
+
+dialog.option.eboard = Elektronisches Brett
+eboard.connect = Chessnut Verbinden
+eboard.disconnect = Chessnut Trennen
+
+eboard.off = Getrennt
+eboard.on = Verbunden
+eboard.na = N/A
+
+eboard.orientation = Aufbau:
+eboard.orientation.auto = Auto
+eboard.orientation.white = Weiß unten
+eboard.orientation.black = Schwarz unten
+
+eboard.synch = Synch
+eboard.synch.leads = führt
+eboard.synch.follows = folgt
+
+
 # Opening Book settings
 
+book.list.title=Eröffnungs-Bücher und Dienste
 book.list.add =
 book.list.add.tip = ein Buch hinzufügen
 book.list.download =
@@ -738,6 +823,7 @@ book.engine.no.book.tip = Gar kein Eröffnungsbuch verwenden. Züge werden immer v
 book.author = zusammengestellt von %author%
 book.download = Download
 
+board.3d.title				= 3D-Einstellungen
 board.3d.clock              = Uhr
 board.3d.surface.frame		= Rahmen
 board.3d.light.ambient		= Diffuses Licht
@@ -748,6 +834,7 @@ board.3d.reflection			= Reflektionen
 board.3d.anisotropic        = Anisotropische Filterung
 board.3d.fsaa               = Antialiasing
 board.3d.defaultview        = Ausgangslage
+board.3d.ogl=Open GL (nach Neustart)
 
 board.surface.light	= Helle Felder
 board.surface.dark	= Dunkle Felder
@@ -786,6 +873,9 @@ download.error.version.missing	= Version nicht gefunden: %p%.
 download.error.os.missing		= Kein Paket für dieses Betriebssystem.
 download.error.browser.fail		= %p% kann nicht angezeigt werden.
 download.error.update			= Fehler beim Update.\n Bitte führen Sie das Update manuell durch.
+
+network.error.lichess = jose konnte nicht zum Lichess-Server verbinden.\nPrüfen Sie bitte Ihre Internet-Verbindung.\n\n(Hinweis: dieser Fehler ist nicht kritisch.\nSie können weitermachen, lediglich ohne Lichess-Eröffnungen). 
+download.error.lichess = Could not download game "%game%" from the Lichess server.\n\nSorry, can't help it.
 
 download.message.up.to.date		= Die installierte Version ist auf dem neuesten Stand.
 download.message.success		= jose wurde auf Version %p% upgedatet\n. Bitte starten Sie das Programm erneut.
@@ -1069,6 +1159,25 @@ dialog.paste.title = Partien Einfügen
 dialog.paste.same = Verschieben
 dialog.paste.copy = Kopieren
 
+
+#
+#   Database Repair Dialog
+#
+
+dialog.repair.title = Datenbank Reparieren
+dialog.repair.explain = Dieses Hilfsprogramm repariert eine beschädigte Datenbank. \n \
+     Es wird alle nötigen Datenstrukturen wieder herstellen ohne Ihre Partie-Daten zu verlieren. \n \
+     Mit 'Weiter' gehen Sie durch die Stufen des Vorgangs. \n \
+     Am Ende wird sich'jose' beenden und neu starten. 
+
+dialog.repair.1 = Datenbank-Fenster schließen
+dialog.repair.2 = (Repair Tables) ignoreiert
+dialog.repair.3 = Datenbank-Prozess beenden
+dialog.repair.4 = Index-Dateien prüfen
+dialog.repair.5 = Index-Dateien wieder herstellen (dauert etwas länger)
+dialog.repair.6 = Datenbank-Prozess neu starten
+dialog.repair.7 = Verlorene Referenzen herstellen (dauert etwas länger)
+dialog.repair.8 = Beenden
 
 ##############################################################################
 #	foreign language names

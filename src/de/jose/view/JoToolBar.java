@@ -302,7 +302,7 @@ public class JoToolBar
 	private static void padButtonMargin(JButton button, Dimension iconSize, int size) {
 		int hmargin = size - iconSize.width;
 		int vmargin = size - iconSize.height;
-		button.setMargin(new Insets(vmargin/2,hmargin/2, (vmargin+1)/2, (hmargin+1)/2));
+		button.setMargin(new Insets(vmargin/2,(hmargin+1)/2, (vmargin+1)/2, hmargin/2));
 	}
 
 	static class IconSpec {

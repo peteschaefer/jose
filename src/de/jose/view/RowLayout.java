@@ -59,7 +59,6 @@ public class RowLayout
 
     @Override
     public Dimension minimumLayoutSize(Container parent) {
-
         return forEach(parent, Component::getMinimumSize, false);
     }
 
