@@ -3520,16 +3520,8 @@ public class Application
         }
 	}
 
-	/*
-		todo
-		invokeWithPlugin starts an engine plugin, then executes a lambda.
-		The mechanims seems very fragile, since we don't know when the lambda
-		is executed & whether the application state still fits with it.
-
-		Better: trigger a deferred Command, similar to MySqlLauncher.
-		"postCommandWithPlugin"
-	 */
-	public void invokeWithPlugin(final Runnable work)
+/*
+	public void invokeWithPlugin1(final Runnable work)
 	{
 		if (getEnginePlugin()!=null) {
 			//  invoke at once
@@ -3549,6 +3541,26 @@ public class Application
 				}
 			};
 			Application.theExecutorService.submit(task);
+		}
+	}
+*/
+	public void invokeWithPlugin(final Runnable lambda) {
+		EnginePlugin plugin = getEnginePlugin();
+		if (plugin==null)
+		try {
+			plugin = createEnginePlugin();
+			if (plugin==null)
+				return;
+			plugin.setLaunchHook(lambda);
+			openEnginePlugin();
+		} catch(IOException e) {
+			error(e);
+		}
+		else if (!plugin.isOpen()) {
+			plugin.setLaunchHook(lambda);
+		}
+		else {
+			lambda.run();
 		}
 	}
 
@@ -3660,65 +3672,68 @@ public class Application
 		return (shownFRCWarning=true);
 	}
 
-	public boolean openEnginePlugin()
-		throws IOException
+	public EnginePlugin createEnginePlugin() throws IOException
 	{
-		if (getEnginePlugin() == null) {
-			/**	setup plugin		 */
-            String name = theUserProfile.getString("plugin.1");
-			engine = (EnginePlugin)Plugin.getPlugin(name,Version.osDir,true);
+		/**	setup plugin		 */
+		String name = theUserProfile.getString("plugin.1");
+		engine = (EnginePlugin)Plugin.getPlugin(name,Version.osDir,true);
 
-            if (getEnginePlugin() == null) {
-				EnginePlugin defaultPlugin = (EnginePlugin)Plugin.getDefaultPlugin(Version.osDir,true);
-				if (defaultPlugin==null) {
-					//	no plugin available !
-					JoDialog.showErrorDialog(null,"error.engine.not.found", "plugin.1",name);
-					theMode = USER_INPUT;   //  no use bothering the user with more errors
-					return false;
-				}
-				else {
-					//	use default plugin instead
-					engine = defaultPlugin;
-					JoDialog.showErrorDialog(null, "error.plugin.revert.default",
-							"plugin.1",name,
-							"plugin.2",defaultPlugin.getName());
-				}
+		if (engine==null) {
+			EnginePlugin defaultPlugin = (EnginePlugin) Plugin.getDefaultPlugin(Version.osDir, true);
+			if (defaultPlugin == null) {
+				//	no plugin available !
+				JoDialog.showErrorDialog(null, "error.engine.not.found", "plugin.1", name);
+				theMode = USER_INPUT;   //  no use bothering the user with more errors
+				return null;
+			} else {
+				//	use default plugin instead
+				engine = defaultPlugin;
+				JoDialog.showErrorDialog(null, "error.plugin.revert.default",
+						"plugin.1", name,
+						"plugin.2", defaultPlugin.getName());
 			}
+		}
 
-            try {
-                getEnginePlugin().init(theGame.getPosition(), Version.osDir);
-				engine.addInputListener(this,1);
+		try {
+			engine.init(theGame.getPosition(), Version.osDir);
+			engine.addInputListener(this,1);
 
-                //	set real time
-                broadcast(new Command("new.plugin", null, getEnginePlugin()));
+			//	set real time
+			broadcast(new Command("new.plugin", null, getEnginePlugin()));
+		} catch (IOException ioex) {
+			if (getEnginePlugin().print()!=null)
+				getEnginePlugin().print().println(ioex.getMessage());
+			throw ioex;
+		}
+		return engine;
+	}
+
+	public boolean openEnginePlugin() throws IOException
+	{
+		if ((getEnginePlugin() == null) && (createEnginePlugin()==null))
+				return false;
 
 //	            showPanel("window.eval");
-				showPanel("window.engine");
+		showPanel("window.engine");
 
-                getEnginePlugin().open(Version.osDir);
-                getEnginePlugin().addMessageListener(this);
+		engine.open(Version.osDir);
+		engine.addMessageListener(this);
 
-                TimeControl tc = theUserProfile.getTimeControl();
-                getEnginePlugin().setTimeControls(tc.getPhase(0));
-            } catch (IOException ioex) {
-                if (getEnginePlugin().print()!=null)
-                    getEnginePlugin().print().println(ioex.getMessage());
-                throw ioex;
-            }
-		}
+		TimeControl tc = theUserProfile.getTimeControl();
+		engine.setTimeControls(tc.getPhase(0));
 
 		//  adjust book settings
 		switch (theOpeningLibrary.engineMode)
 		{
-		case OpeningLibrary.GUI_BOOK_ONLY:
-		case OpeningLibrary.NO_BOOK:
-			//  disable the engine book
-			getEnginePlugin().disableBook();
-			break;
+			case OpeningLibrary.GUI_BOOK_ONLY:
+			case OpeningLibrary.NO_BOOK:
+				//  disable the engine book
+				engine.disableBook();
+				break;
 		}
-
-		return getEnginePlugin() != null;
+		return true;
 	}
+
 
 	private void pausePlugin(boolean analyze)
 	{

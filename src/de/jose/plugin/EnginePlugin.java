@@ -52,6 +52,8 @@ abstract public class EnginePlugin
 	protected boolean userOfferedDraw;
 	/**	user requested a hint */
 	protected boolean userRequestedHint;
+	/**	called upon launch */
+	protected Runnable launchHook = null;
 
     /**	current mode	 */
 	protected int mode;
@@ -698,6 +700,10 @@ abstract public class EnginePlugin
 		analysis.modified = AnalysisRecord.NEW_MOVE;
 		//  clear analysis content for next
 		sendMessage(mode);
+	}
+
+	public void setLaunchHook(Runnable lambda) {
+		launchHook = lambda;
 	}
 
 

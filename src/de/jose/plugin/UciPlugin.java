@@ -18,6 +18,7 @@ import de.jose.chess.*;
 import de.jose.util.StringUtil;
 import org.w3c.dom.Element;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -263,6 +264,9 @@ public class UciPlugin
 		//useWDL(true);	//	use WDL, if available (or maybe not?)
 
         setMode(PAUSED);
+		if (launchHook!=null)
+			SwingUtilities.invokeLater(launchHook);
+
 		return false;
 	}
 
