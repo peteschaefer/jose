@@ -26,9 +26,9 @@ libraries needed:
 
 ==== New Features
 
-* BUG: black evals during (after) book phase
-* BUG: Leela keeps analyzing while playing from book
-* BUG: Leela diagnostics not always associated correctly
+* BUG? black evals during (after) book phase
+* BUG? Leela keeps analyzing while playing from book
+* BUG? Leela diagnostics not always associated correctly
 
 * arrows + text label
   - font size?

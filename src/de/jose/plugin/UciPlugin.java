@@ -962,18 +962,25 @@ public class UciPlugin
 				StringUtil.parseInt(tok.nextToken());     //  TODO CPU load (per mille); low priority. there are not likely many engines that can report this
 			else if (t.equals("string")) {
 				if (leelaMoveStats) {
-					String info = input.substring(14);
-					info = LeelaMoveStats.reformat(info);
 					t = tok.nextToken();
 					if (t.equals("node")) {
 						//	summary
+						String info = input.substring(14);
+						info = LeelaMoveStats.reformat(info);
+
 						rec.info = info;
 						rec.info_ttl = System.currentTimeMillis()+5000;
 						rec.modified |= AnalysisRecord.INFO;
 					}
 					else {
 						Move mv = parseMove(t,0);
-						rec.addMoveInfo(mv,info);
+						int i = rec.findPvMoveIdx(mv);
+						if (i >= 0) {
+							String info = input.substring(14);
+							info = LeelaMoveStats.reformat(info);
+							rec.addMoveInfo(i,info);
+						}
+						//	else: System.out.println("Failed to associate move info: "+input);
 					}
 				}
 				else {

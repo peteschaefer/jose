@@ -330,8 +330,12 @@
 			</zipfileset>
 			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-*"/>
+				<exclude name="stockfish-ubuntu-*"/>
 				<exclude name="src"/>
 				<exclude name="wiki"/>
+			</zipfileset>
+			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish" filemode="777">
+				<include name="stockfish-ubuntu-*"/>
 			</zipfileset>
 		</zip>
 	</target>

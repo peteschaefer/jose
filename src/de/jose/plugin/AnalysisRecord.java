@@ -155,26 +155,29 @@ public class AnalysisRecord
 			pvmodified[i] = 0L;
 	}
 
-	public void addMoveInfo(Move mv, String info)
+	public int findPvMoveIdx(Move mv)
 	{
 		for(int i=0; i < maxpv; ++i)
 		{
 			if (moves[i]!=null && !moves[i].isEmpty() && mv.equals(moves[i].get(0)))
-			{
-				Score sc = eval[i];
-				StringBuffer liinfo = getLineInfo(i);
-				liinfo.setLength(0);
-				liinfo.append("  {");
-				liinfo.append(info);
-				if (sc!=null && sc.moves_left > 0) {
-					liinfo.append(", ml: ");
-					liinfo.append(sc.moves_left);
-				}
-				liinfo.append("}");
-				setPvModified(i);
-				return;
-			}
+				return i;
 		}
+		return -1;
+	}
+
+	public void addMoveInfo(int i, String info)
+	{
+		Score sc = eval[i];
+		StringBuffer liinfo = getLineInfo(i);
+		liinfo.setLength(0);
+		liinfo.append("  {");
+		liinfo.append(info);
+		if (sc!=null && sc.moves_left > 0) {
+			liinfo.append(", ml: ");
+			liinfo.append(sc.moves_left);
+		}
+		liinfo.append("}");
+		setPvModified(i);
 	}
 
 	public void clear()

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd `dirname "$0"`
 
@@ -7,8 +7,8 @@ cd `dirname "$0"`
 # otherwise use java from path
 #
 
-localJava=jre-linux/bin/java
+localJava="jre-linux/bin/java"
 
-vmargs = -Xmx1200M -Djava.library.path=lib/Linux_i386
+vmargs="-Xmx1200M -Djava.library.path=lib/Linux_i386"
 
 $localJava $vmargs -jar jose.jar $*
