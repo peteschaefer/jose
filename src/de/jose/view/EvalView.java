@@ -45,6 +45,7 @@ public class EvalView
         implements MessageListener
 {
 	/** array of evaulations    */
+	// @deprecated retrieve evaluations directly from Game tree (branch, below)
 	protected EvalArray       values;
 	/**	the plugin engine	*/
 	protected EnginePlugin    engine;

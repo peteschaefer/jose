@@ -22,6 +22,8 @@ import de.jose.Util;
 /**
  * Maintains an array of position evaluations
  * @author Peter Sch�fer
+ *
+ * @deprecated use Game instead to retrieve evals for one tree path
  */
 
 public class EvalArray {

@@ -2442,23 +2442,23 @@ public class Application
 				break;
 
 			case ANALYSIS:
-					invokeWithPlugin(new Runnable() {
-						public void run() {
-							EnginePlugin engine = getEnginePlugin();
-							boolean supportsFRC = engine.supportsFRC();
-							if (isFrcCastling && !supportsFRC) {
-								showFRCWarning(true);
-								pausePlugin(false);
-							}
-							else {
-								if (!isClassic && !supportsFRC)
-									showFRCWarning(false);
-									//  but keep on playing (you have been warned ;-)
-								engine.analyze(theGame.getPosition(), mv);
-							}
+				invokeWithPlugin(new Runnable() {
+					public void run() {
+						EnginePlugin engine = getEnginePlugin();
+						boolean supportsFRC = engine.supportsFRC();
+						if (isFrcCastling && !supportsFRC) {
+							showFRCWarning(true);
+							pausePlugin(false);
 						}
-					});
-					break;
+						else {
+							if (!isClassic && !supportsFRC)
+								showFRCWarning(false);
+								//  but keep on playing (you have been warned ;-)
+							engine.analyze(theGame.getPosition(), mv);
+						}
+					}
+				});
+				break;
 			}
 		}
 
