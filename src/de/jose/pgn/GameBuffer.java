@@ -493,7 +493,7 @@ public class GameBuffer
 
 				//	fill in parameters
 				for (int j=0; j<fill; j++) {
-					System.err.println("insert id="+buffer[j].Id);
+					//System.err.println("insert id="+buffer[j].Id);
 					setParameters(buffer[j],
 							pstm1, 1 + j * COUNT_VALUES_1,
 							pstm2, 1 + j * COUNT_VALUES_2,
