@@ -613,7 +613,7 @@ public class PGNImport
 				if (Version.getSystemProperty("jose.asynch.import",false)) {
 					if (writer.sleeping) {
 						writer.wakeUp();
-						yield();
+						Thread.yield();
 					}
 				} else
 					gm.update(null);

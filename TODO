@@ -102,9 +102,11 @@ Alternative JREs:
     - docking is great
     - table needs to be 2d
     - custom sorting (some important ones first)
-    - mouse hover
+    - mouse hover, or tool tip
     - most recent list
     - $202: reversed Diagram
+    -> FIG-SB-2 Unicode mapping is broken. why?
+    -> goal: a complete set of symbols
 
 * font awesome icons
 

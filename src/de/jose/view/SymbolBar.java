@@ -101,10 +101,11 @@ public class SymbolBar
 {
     private static final Insets margin = new Insets(0,2,0,2);
 
+    protected GridLayout elementGrid;
     protected JPanel elementPane;
     protected Font symbolFont, textFont, labelFont;
 	protected JButton[] buttons;
-	protected JoBigLabel[] labels;
+	//protected JoBigLabel[] labels;
 
 /*
  *  [1..6]  ! ? !! ?? !? ?!
@@ -128,7 +129,7 @@ public class SymbolBar
  *  [201] Diagram
  *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
  */
-    protected static final int[] COMMON = new int[] {
+    protected static final int[] CODES = new int[] {
             1,2,3,4,5,6,
             7,8,9,
             10,11,12,13,
@@ -146,11 +147,41 @@ public class SymbolBar
         setLayout(new BorderLayout());
         setBackground(Color.white);
 
-        elementPane = new JPanel(new GridBagLayout());
+        elementGrid = new GridLayout();
+        elementPane = new JPanel(elementGrid);
 
         JScrollPane scroller = new JScrollPane(elementPane);
         scroller.getVerticalScrollBar().setUnitIncrement(20);
         add(scroller, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height)
+    {
+        onResize(width,height);
+        super.setBounds(x, y, width, height);
+    }
+
+    private void onResize(int width, int height)
+    {
+        int n = CODES.length+1;
+        int rows,cols;
+        if (width > height) {
+            //  prefer horizontal
+            rows = height / 32;
+            cols = (n+rows-1) / rows;
+        }
+        else {
+            //  prefer vertical
+            cols = width / 32;
+            rows = (n+cols-1) / cols;
+        }
+
+        if (rows!=elementGrid.getRows() || cols!=elementGrid.getColumns()) {
+            elementGrid.setRows(rows);
+            elementGrid.setColumns(cols);
+            elementPane.invalidate();
+        }
     }
 
     public void init()
@@ -166,39 +197,40 @@ public class SymbolBar
             symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
         }
 
-		buttons = new JButton[256];
-		labels = new JoBigLabel[256];
+		buttons = new JButton[CODES.length];
+//		labels = new JoBigLabel[256];
 
-        int col = 0;
-        for (int nag=1; nag <= NAG_MAX; nag++)
+        for (int i=0; i < CODES.length; ++i)
         {
-	        if (nag==NAG_DIAGRAM_DEPRECATED) continue;
+            int nag = CODES[i];
+	        //if (nag==NAG_DIAGRAM_DEPRECATED) continue;
             String tip = Language.getTip("pgn.nag."+nag);
-            if (tip==null) continue;    //  not a valid annotation
+            tip += " ($"+nag+")";
+            //if (tip==null) continue;    //  not a valid annotation
 
             String text = null;
             if (fontEncoding != null)
                 text = fontEncoding.getSymbol(nag);
 
             if (text != null)
-                addButton(nag, symbolFont,text, tip, col++ % 2);
+                buttons[i] = addButton(nag, symbolFont,text, tip);
             else {
                 text = Language.get("pgn.nag."+nag);
                 if (text.length() > 4)
                     text = "$"+nag;
-                addButton(nag, textFont, text, tip, col++ % 2);
+                buttons[i] = addButton(nag, textFont, text, tip);
             }
         }
     }
 
 	public void updateLanguage()
 	{
-		for (int nag=1; nag <= NAG_MAX; nag++)
-			if (labels[nag]!=null) {
-				String tip = Language.getTip("pgn.nag."+nag);
-				buttons[nag].setToolTipText(tip);
-				labels[nag].setText(tip);
-			}
+		for (int i=0; i < CODES.length; ++i) {
+            int nag = CODES[i];
+            String tip = Language.getTip("pgn.nag." + nag);
+            buttons[i].setToolTipText(tip);
+            //labels[nag].setText(tip);
+        }
 	}
 
 	public void reformat()
@@ -214,25 +246,26 @@ public class SymbolBar
 			symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
 		}
 
-		for (int nag=1; nag <= NAG_MAX; nag++)
+		for (int i=0; i < CODES.length; ++i)
 		{
-			if (buttons[nag]==null) continue;
+			if (buttons[i]==null) continue;
 
+            int nag = CODES[i];
 			String text = null;
 			if (fontEncoding != null)
 				text = fontEncoding.getSymbol(nag);
 
 			if (text != null) {
-				buttons[nag].setFont(symbolFont);
-				buttons[nag].setText(text);
+				buttons[i].setFont(symbolFont);
+				buttons[i].setText(text);
 			}
 			else {
 				text = Language.get("pgn.nag."+nag);
 				if (text.length() > 4)
 					text = "$"+nag;
 
-				buttons[nag].setFont(textFont);
-				buttons[nag].setText(text);
+				buttons[i].setFont(textFont);
+				buttons[i].setText(text);
 			}
 		}
 
@@ -283,7 +316,7 @@ public class SymbolBar
 	    map.put("styles.modified",action);
     }
 
-    public void addButton(int nag, Font font, String text, String tip, int column)
+    public JButton addButton(int nag, Font font, String text, String tip)
     {
         String name = String.valueOf(nag);
         JButton button = new JButton();
@@ -293,21 +326,22 @@ public class SymbolBar
         button.setText(text);
         button.setToolTipText(tip);
         button.addActionListener(this);
-        button.setBorderPainted(false);
+        button.setBorderPainted(true);
         button.setBackground(Color.white);
-        button.setBorder(new LineBorder(Color.black,1,true));
+        button.setBorder(new LineBorder(Color.lightGray,1,true));
         button.setMargin(margin);
 
-        JoBigLabel label = new JoBigLabel(tip,1,40);
-        label.setFont(labelFont);
+        //JoBigLabel label = new JoBigLabel(tip,1,40);
+        //label.setFont(labelFont);
 
-		buttons[nag] = button;
-		labels[nag] = label;
+		//buttons[nag] = button;
+		//labels[nag] = label;
 
 //        elementPane.add(button, (column==0) ? JoDialog.ELEMENT_ONE : JoDialog.ELEMENT_THREE);
 //        elementPane.add(label, (column==0) ? JoDialog.ELEMENT_TWO : JoDialog.ELEMENT_FOUR);
-		elementPane.add(button, JoDialog.ELEMENT_ONE);
-		elementPane.add(label, JoDialog.ELEMENT_TWO);
+		elementPane.add(button);
+		//elementPane.add(label, JoDialog.ELEMENT_TWO);
+        return button;
     }
 
 }
