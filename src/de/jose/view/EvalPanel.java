@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import de.jose.plugin.Score;
 import de.jose.profile.LayoutProfile;
 import de.jose.Application;
 import de.jose.CommandAction;
@@ -98,7 +99,7 @@ public class EvalPanel
 			view.setGame(Application.theHistory.getCurrent());
 	}
 
-	public void setValue(int ply, float[] val) {
+	public void setValue(int ply, Score val) {
 		view.setValue(ply, val);
 	}
 }

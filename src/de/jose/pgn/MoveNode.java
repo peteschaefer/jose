@@ -44,7 +44,7 @@ public class MoveNode
 	protected Move move;
     protected long hashKey;
 	protected int moveCountLen;
-	public float[] engineValue;
+	public Score engineValue;
 
     protected static MoveNodeFormatter formatter = new MoveNodeFormatter();
 	protected static SAXMoveFormatter saxFormatter = new SAXMoveFormatter();

@@ -13,6 +13,7 @@
 package de.jose.book;
 
 import de.jose.chess.Move;
+import de.jose.plugin.Score;
 
 import java.util.Comparator;
 
@@ -174,6 +175,21 @@ public class BookEntry
 			break;
 		}
 		return score;
+	}
+
+	public void toScore(Score score, int cap)
+	{
+		score.flags = Score.EVAL_GAME_COUNT;
+		score.cp = score.cp_current = BookEntry.nvl(count);
+		if (countWhite != IUNKNOWN) score.win = countWhite;
+		if (countDraw != IUNKNOWN) score.draw = countDraw;
+		if (countBlack != IUNKNOWN) score.lose = countBlack;
+		if (count > cap) {
+			//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
+			score.win = score.win * cap / count;
+			score.draw = score.draw * cap / count;
+			score.lose = cap-score.win-score.draw;//score.lose * 1000 / entry.count;
+		}
 	}
 
 	public static int add(int a, int b)

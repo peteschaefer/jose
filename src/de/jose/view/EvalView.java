@@ -124,7 +124,7 @@ public class EvalView
 		if (game!=null) setGame(game);
 	}
 
-	public void setValue(int ply, float[] value)
+	public void setValue(int ply, Score value)
 	{
         if (ply >= 0)
 		    values.setPlyValue(ply,value);
@@ -361,25 +361,25 @@ public class EvalView
 			EnginePlugin plugin = (EnginePlugin)source;
 			AnalysisRecord a = (AnalysisRecord)data;
 			if (a!=null && a.ply>=0) {
-				plugin.mapUnit(a.eval[0]);
-				float[] value = a.eval[0].mapWDL(svalue);
-				updateMoveNode(a.ply-1, value);
+				Score sc = a.eval[0];
+				if (!sc.hasWDL()) plugin.mapUnit(sc); // todo alread done. remove?
+				updateMoveNode(a.ply-1, sc);
 			}
 			break;
 
 		case EnginePlugin.PLUGIN_MOVE:
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
-			updateMoveNode(emv.getPly(), emv.mappedValue());
+			updateMoveNode(emv.getPly(), emv.score);
 			break;
 		}
 	}
 
-	private void updateMoveNode(int ply, float[] value)
+	private void updateMoveNode(int ply, Score value)
 	{
 		setValue(ply, value);
 
 		if (game==null) return;
-		if (!EvalArray.isValid(value)) return;
+		if (value==null || !value.hasWDL()) return;
 
 		MoveNode mvnd = game.getCurrentMove();
 		if (mvnd==null) return;
@@ -394,8 +394,8 @@ public class EvalView
 			values.setBranch(branch=new_branch);
 		}
 
-		if (! EvalArray.equals(mvnd.engineValue,value)) {
-			mvnd.engineValue = value.clone();
+		if (! value.equals(mvnd.engineValue)) {
+			mvnd.engineValue = new Score(value);
 			if (this.isVisible())
 				game.setDirty(true);
 		}

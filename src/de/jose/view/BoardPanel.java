@@ -563,11 +563,11 @@ public class BoardPanel
 			case EnginePlugin.THINKING:
 			case EnginePlugin.PONDERING:
 				AnalysisRecord a = (AnalysisRecord)data;
-				EnginePlugin plugin = (EnginePlugin)who;
+				//EnginePlugin plugin = (EnginePlugin)who;
 				if (a==null || a.maxpv==0)
 					theView.resetScore();	//	nothing to be done
 				else
-					theView.setScore(a.eval[0],plugin);
+					theView.setEval(a.eval[0]);
 				theView.repaint();
 				break;
 

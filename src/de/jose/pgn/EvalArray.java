@@ -95,7 +95,7 @@ public class EvalArray {
 		if (maxPly<0) maxPly = Integer.MAX_VALUE;
 
 		for (int ply=ply0; node != null && ply < maxPly; node = node.nextMove(),ply++)
-			if (EvalArray.isValid(node.engineValue))
+			if (node.engineValue!=null && node.engineValue.hasWDL())
 				setPlyValue(ply, node.engineValue);
 			else
 				setPlyValue(ply, null);
@@ -142,7 +142,7 @@ public class EvalArray {
 		return (v1!=Float.MAX_VALUE) && (v2!=Float.MAX_VALUE);
 	}
 
-	public void setPlyValue(int ply, float[] value) {
+	public void setPlyValue(int ply, Score value) {
 		if (ply < firstPly) throw new ArrayIndexOutOfBoundsException(ply + " < " + firstPly);
 		ply -= firstPly;
 
@@ -151,16 +151,17 @@ public class EvalArray {
 			values.set(2*ply+1,Float.MAX_VALUE);
 		}
 		else {
-			values.set(2 * ply, value[0]);
-			values.set(2 * ply + 1, value[1]);
+			values.set(2 * ply, value.rel(value.win));
+			values.set(2 * ply + 1, value.rel(value.draw));
 		}
 	}
-
+/*
 	public void setMoveValue(int move, int color, float[] value) {
 		if (EngUtil.isWhite(color))
 			setPlyValue(2 * move, value);
 		else
 			setPlyValue(2 * move + 1, value);
 	}
+ */
 }
 

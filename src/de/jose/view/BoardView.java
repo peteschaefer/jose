@@ -88,7 +88,7 @@ abstract public class BoardView
 	//protected EBoardConnector eboard;
 
 	//	score for eval bar
-	protected float[] eval = null;
+	protected Score eval = null;
 
 	public BoardView(IBoardAdapter theBoard)
 	{
@@ -342,31 +342,18 @@ abstract public class BoardView
 
 	abstract protected void doRepaintHints();
 
-	public void setScore(Score sc, EnginePlugin plugin)
+	public void setEval(Score sc)
 	{
-		float[] val;	//	todo use Score instead. use Game.currentMove().score instead
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
-			val = null;	//	Score object contains no useful info. Ignore.
-		else if (sc==null)
-			val = null;
-		else if (plugin==null)
-			val = null;
-		else {
-			plugin.mapUnit(sc);
-			val = sc.mapWDL(null);
-		}
-		setEval(val);
-	}
-
-	public void setEval(float[] val)
-	{
-		this.eval = val;
+			this.eval = null;
+		else
+			this.eval = sc;
 	}
 
 	public void resetScore()
 	{
 		//	fall back to game value (if present)
-		float[] val = null;
+		Score val = null;
 		Game gm = Application.theApplication.theGame;
 		if (gm!=null) {
 			MoveNode mv = gm.getCurrentMove();

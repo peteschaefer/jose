@@ -69,12 +69,18 @@ public class Score
         return sumWDL() > 0;
     }
 
+    public float rel(int val) {
+        int sum = sumWDL();
+        return (sum==0) ? 0.0f : (float)val/sum;
+    }
+
     public void swapWDL() {
         int temp = win;
         win = lose;
         lose = temp;
     }
 
+    //  @deprecated use Score object instead
     public float[] mapWDL(float[] result)
     {
         if (result==null) result = new float[3];

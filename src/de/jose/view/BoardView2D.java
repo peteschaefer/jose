@@ -16,6 +16,7 @@ import de.jose.*;
 import de.jose.chess.*;
 import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
+import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 import javafx.scene.transform.Affine;
@@ -189,7 +190,7 @@ public class BoardView2D
 	}
 
 	@Override
-	public void setEval(float[] val)
+	public void setEval(Score val)
 	{
 		boolean hadeval = (showEvalbar && this.eval!=null);
 		super.setEval(val);
@@ -1007,9 +1008,8 @@ public class BoardView2D
 
 		int boardSize = 8*devSquareSize;
 
-		assert(eval.length==3);
-		int hwhite = (int)(boardSize * eval[0]+0.5);
-		int hgrey =  (int)(boardSize * eval[1]+0.5);
+		int hwhite = (int)(boardSize * eval.rel(eval.win)+0.5);
+		int hgrey =  (int)(boardSize * eval.rel(eval.draw)+0.5);
 		int hblack = boardSize - hwhite-hgrey;
 
 		int x2 = devInset.x+boardSize;

@@ -836,14 +836,14 @@ abstract public class EnginePlugin
 		//	@deprecated use score instead
 		public float[] mappedScore = new float[2];	// todo use Score instead
 
-		public EvaluatedMove(Move move, int ply, Score score, EnginePlugin plugin)
+		public EvaluatedMove(Move move, int ply, Score ascore, EnginePlugin plugin)
 		{
 			super(move);
 			this.ply = ply;
-			//score.copy(ascore);
+			this.score.copy(ascore);
 			if (plugin!=null)
 				plugin.mapUnit(score);
-			else if (score.hasWDL())
+			if (score.hasWDL())
 				score.mapWDL(mappedScore);
 			else
 				mappedScore[0] = mappedScore[1] = Float.MAX_VALUE;
@@ -885,7 +885,7 @@ abstract public class EnginePlugin
 	{
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			float[] value = node.engineValue;
+			Score value = node.engineValue;
 			//  value is from white's point of view !
 			if (value==null)
 				return false; //  unknown value
@@ -893,9 +893,10 @@ abstract public class EnginePlugin
 
 			double dont_lose;
 			if (EngUtil.isBlack(engineColor))
-				dont_lose = 1.0f - value[0];
+				dont_lose = 1.0f - value.rel(value.win);
 			else
-				dont_lose = value[0]+value[1];
+				dont_lose = value.rel(value.win+value.draw);
+			//	todo correct perspective ???
 			if (dont_lose >= EnginePlugin.RESIGN_THRESHOLD)
 				return false; //  above threshold; no reason to resign
 
@@ -915,19 +916,19 @@ abstract public class EnginePlugin
 
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			float[] value = node.engineValue;
+			Score value = node.engineValue;
 			//	todo mapUnitWDL(Score) !!
 
 			if (value == null)
 				return false; //  unknown value
 
-			if (value[1] != 0.0) {
-				if (value[1] < DRAW_WDL_THRESHOLD)
+			if (value.draw != 0) {
+				if (value.rel(value.draw) < DRAW_WDL_THRESHOLD)
 					return false;
 			}
 			else
 			{
-				if (Math.abs(2*value[0] + value[1] - 1.0f) > DRAW_THRESHOLD)
+				if (Math.abs(value.rel(2*value.win + value.draw) - 1.0f) > DRAW_THRESHOLD)
 					return false;
 			}
 
