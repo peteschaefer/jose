@@ -52,32 +52,16 @@ public class PGNExport
 
 	class PGNExportBinReader extends BinReader
 	{
-	    PGNExportBinReader(Position pos)
-	    {
+	    PGNExportBinReader(Position pos) {
 	        super(pos);
 	    }
 
-		public void replayError(Move mv, int ply)
-		{
-			throw new RuntimeException("illegal move "+(ply/2+1)+ (((ply%2)==0) ? ". ":"...")+
-		                                EngUtil.square2String(mv.from)+"-"+
-		                                EngUtil.square2String(mv.to)+" in replay");
-		}
-
 	    public void annotation(int nagCode) {
-	        if (nagCode >= 1 && nagCode <= 6) {
-		         //	!,?, etc. these MUST be defined in the translation
-	            out.print(Language.get("pgn.nag."+nagCode));
-	        }
-	        else {
-	            out.print("$");
-	            out.print(String.valueOf(nagCode));
-	        }
-	        out.print(" ");
+			PGNExport.this.annotation(nagCode);
 	    }
 
 	    public void result(int resultCode) {
-	        out.print(PgnUtil.resultString(resultCode));
+	        PGNExport.this.result(resultCode);
 	    }
 
 	    public void startOfLine(int nestLevel) {
@@ -89,129 +73,79 @@ public class PGNExport
 	    }
 
 	    public void beforeMove(Move mv, int ply, boolean displayHint) {
-	        if ((ply%2)==0)  {
-	            out.print(String.valueOf(ply/2+1));
-	            out.print(".");
-	        } else if (displayHint) {
-	            out.print(String.valueOf(ply/2+1));
-	            out.print("...");
-	        }
-		    formatter.format(mv,pos);
-		    /**	format must be called before the move to detect ambigutities in short formatting	*/
+	        PGNExport.this.beforeMove(mv, ply, displayHint);
 	    }
 
 		public void afterMove(Move mv, int ply) {
-			if (mv.isCheck())
-				out.print(formatter.check);
-				/**	checks can only be detected after the move */
-	        out.print(" ");
-			out.breakIf(80);
+			PGNExport.this.afterMove(mv, ply);
 	    }
 
         public void comment(StringBuffer buf)
         {
-            if (out.column() > 0) out.print(" ");
-            out.print("{");
-
-            for (int i=0; i<buf.length(); i++)
-            {
-                char c = buf.charAt(i);
-                switch (c)
-                {
-                case '{':   out.print('('); break;  //  got to escape braces
-                case '}':   out.print(')'); break;  //  got to escape braces
-		        case ' ':
-		        case '\t':  if (out.breakIf(80)) {
-			                    while ((i+1) < buf.length() && buf.charAt(i+1)==' ') i++;
-		                    }
-		                    else
-			                    out.print(' ');
-			                break;
-                default:    out.print(c); break;
-                }
-            }
-
-            out.print("} ");
+            PGNExport.this.comment(buf);
         }
-/*
-	    public void comment(StringBuffer buf, StyleRun styles)
-	    {
-            //  print style runs
-            if (styles!=null)
-            {
-                out.newLine();
-                out.print("%jose:styles:");
-                styles.print(out);
-                out.println();
-            }
+	}
 
-            String text = escapeCommentText(buf);
-	        out.print(" {");
+	public void result(int resultCode) {
+		out.print(PgnUtil.resultString(resultCode));
+	}
 
-            /**
-             * ATTENTION: when breaking lines
-             * make sure that the comment will be imported
-             * exactly like it was; otherwise style runs could get out of synch
-             * /
-		    int i = 0;
-		    int j= findBreak(text,0);
-		    while (j >= 0)
-		    {
-				out.write(text,i,j-i);
-
-                if (text.charAt(j)=='\n')
-                {
-                    //  intentional line break; write TWO breaks which will be imported as one
-                    j++;
-                    out.println();
-                    out.println();
-                    //  write consecutive line breaks, too
-                    while ((j < text.length()) && text.charAt(j)=='\n') {
-                        j++;
-                        out.println();
-                    }
-                }
-                else if (out.column() >= 80) {
-                    j++;    //  eat whitespace, will be inserted again on import
-                    out.println();
-                }
-
-			    i = j;
-			    j = findBreak(text,j+1);
-		    }
-
-		    if (i < text.length()) out.write(text,i,text.length()-i);
-	        out.print("} ");
-		    out.breakIf(80);
-
-	    }
-
-        private int findBreak(String text, int i)
-        {
-            while (i < text.length())
-            {
-                char c = text.charAt(i);
-                if (c==' '||c=='\n')
-                    return i;
-                else
-                    i++;
-            }
-            return -1;
-        }
-
-		protected String escapeCommentText(StringBuffer text)
-		{
-			int k0 = text.indexOf("{");
-			int k1 = text.indexOf("}");
-
-			if (k0<0 && k1<0) return text.toString();
-
-			if (k0>=0) StringUtil.replace(text,"{","(");
-			if (k1>=0) StringUtil.replace(text,"}",")");
-			return text.toString();
+	public void annotation(int nagCode) {
+		if (nagCode >= 1 && nagCode <= 6) {
+			//	!,?, etc. these MUST be defined in the translation
+			out.print(Language.get("pgn.nag."+nagCode));
 		}
-*/
+		else {
+			out.print("$");
+			out.print(String.valueOf(nagCode));
+		}
+		out.print(" ");
+	}
 
+	public void beforeMove(Move mv, int ply, boolean displayHint) {
+		if ((ply%2)==0)  {
+			out.print(String.valueOf(ply/2+1));
+			out.print(".");
+		} else if (displayHint) {
+			out.print(String.valueOf(ply/2+1));
+			out.print("...");
+		}
+		formatter.format(mv,pos);
+		/**	format must be called before the move to detect ambigutities in short formatting	*/
+	}
+
+	public void afterMove(Move mv, int ply) {
+		if (mv.isCheck())
+			out.print(formatter.check);
+		/**	checks can only be detected after the move */
+		out.print(" ");
+		out.breakIf(80);
+	}
+
+	public void comment(CharSequence buf)
+	{
+		if (out.column() > 0) out.print(" ");
+		out.print("{");
+
+		for (int i=0; i<buf.length(); i++)
+		{
+			char c = buf.charAt(i);
+			switch (c)
+			{
+				case '{':   out.print('('); break;  //  got to escape braces
+				case '}':   out.print(')'); break;  //  got to escape braces
+				case ' ':
+				case '\t':  if (out.breakIf(80)) {
+					while ((i+1) < buf.length() && buf.charAt(i+1)==' ') i++;
+				}
+				else
+					out.print(' ');
+					break;
+				default:    out.print(c); break;
+			}
+		}
+
+		out.print("} ");
 	}
 
 	// ---------------------------------------------------------
@@ -265,83 +199,6 @@ public class PGNExport
 			throw new IllegalArgumentException();
 	}
 
-	// ---------------------------------------------------------
-	//  overrides MaintenanceTask
-	// ---------------------------------------------------------
-/*
-	public void processCollection(int CId) throws Exception
-	{
-		processCollectionContents(CId);
-	}
-*/
-/*
-	public void processCollectionContents(int CId) throws Exception
-	{
-		/**
-		 * use MySQL HANDLER to traverse the Game table
-		 * it is vastly more efficient with large tables
-		 *
-		 * we could use a SELECT with LIMIT but, unfortunately, the LIMIT clause
-		 * causes a full index scan that gets more and more expensive.
-		 * (working with large result sets in MySQL is a pain in the ass !!)
-		 *
-		 * the drawback is now, that we have to fetch data from MoreGame manually
-		 * /
-		try {
-		    getConnection().executeUpdate("HANDLER Game OPEN AS PGNExportRead");
-
-			JoStatement stm = new JoStatement(getConnection());
-			StringBuffer buf = new StringBuffer("HANDLER PGNExportRead ");
-			buf.append("READ Game_15 = ("+CId+") ");
-			buf.append(" WHERE CId = "+CId+" ");
-			buf.append(" LIMIT "+HANDLER_LIMIT);
-
-			stm.executeQuery(buf.toString());
-			//  INDEX Game_15 ON Game(CId,Id)
-
-			buf.setLength(0);
-			buf.append("HANDLER PGNExportRead READ Game_15 NEXT ");
-			buf.append(" WHERE CId = "+CId+" ");
-			buf.append(" LIMIT "+HANDLER_LIMIT);
-			String sql = buf.toString();
-
-			while (processGames(stm.selectIntArray()))
-			{
-				stm.executeQuery(sql);
-				if (isAbortRequested()) break;
-			}
-
-		} finally {
-			getConnection().executeUpdate("HANDLER PGNExportRead CLOSE");
-		}
-	}
-*/
-/*
-	public void processGame(int GId) throws Exception
-	{
-		StringBuffer sql = new StringBuffer("SELECT * FROM Game WHERE Id = ");
-		sql.append(String.valueOf(GId));
-
-		processGames(sql.toString());
-	}
-*/
-/*
-	public void processGames(int[] GId, int from, int to) throws Exception
-	{
-		StringBuffer sql = new StringBuffer("SELECT * FROM Game WHERE Id IN (");
-
-		sql.append(GId[from++]);
-		while (from < to) {
-		    sql.append(",");
-		    sql.append(GId[from++]);
-		}
-
-		sql.append(")");
-
-		processGames(sql.toString());
-	}
-*/
-
 	public void prepare() throws Exception
 	{
         OutputStream fout = null;
@@ -375,42 +232,6 @@ public class PGNExport
                 fout = bzout = FileUtil.createBZipOutputStream(fout);
             }
         }
-/*
-		writing TAR files: we cant write TAR headers because we don't know the actual file size ;-(
-
-		else if (FileUtil.hasExtension(trimmedName,"tar"))
-		{
-			//  tar (unzipped)
-			fout = tarout = new TarOutputStream(fout);
-			String entryName = FileUtil.trimExtension(trimmedName)+".pgn";
-			TarEntry entry = new TarEntry(entryName);
-			tarout.putNextEntry(entry);
-		}
-		else if (FileUtil.hasExtension(trimmedName,"tgz") || FileUtil.hasExtension(trimmedName,"tgzip") ||
-		        FileUtil.hasExtension(trimmedName,"tar") && FileUtil.hasExtension(fileName,"gz") ||
-		        FileUtil.hasExtension(trimmedName,"tar") && FileUtil.hasExtension(fileName,"gzip"))
-		{
-			//  tar.gz
-			gzout = new GZIPOutputStream(fout);
-			fout = tarout = new TarOutputStream(gzout);
-
-			String entryName = FileUtil.trimExtension(trimmedName)+".pgn";
-			TarEntry entry = new TarEntry(entryName);
-			tarout.putNextEntry(entry);
-		}
-		else if (FileUtil.hasExtension(trimmedName,"tbz") || FileUtil.hasExtension(trimmedName,"tbz2") ||
-		        FileUtil.hasExtension(trimmedName,"tar") && FileUtil.hasExtension(fileName,"bz") ||
-		        FileUtil.hasExtension(trimmedName,"tar") && FileUtil.hasExtension(fileName,"bz2"))
-		{
-			//  tar.bz2
-			bzout = new CBZip2OutputStream(fout);
-			fout = tarout = new TarOutputStream(bzout);
-
-			String entryName = FileUtil.trimExtension(trimmedName)+".pgn";
-			TarEntry entry = new TarEntry(entryName);
-			tarout.putNextEntry(entry);
-		}
-*/
 
 		pos = new Position();
 		pos.setOption(Position.INCREMENT_HASH, false);
@@ -501,63 +322,6 @@ public class PGNExport
 
 		return SUCCESS;
 	}
-
-	// ---------------------------------------------------------
-	//  Private Parts
-	// ---------------------------------------------------------
-/*
-	protected boolean processGames(String sql) throws SQLException
-	{
-		JoPreparedStatement pstm = null;
-		try {
-			pstm = getConnection().getPreparedStatement(sql);
-			pstm.execute();
-			return processGames(pstm.selectIntArray());
-		} finally {
-			if (pstm!=null) pstm.close();
-		}
-	}
-*/
-/*
-	protected boolean processGames(IntArray GIds) throws SQLException
-	{
-		if (GIds==null || GIds.isEmpty()) return false;
-
-		ParamStatement pstm = new ParamStatement();
-		pstm.select.append(Game.DISPLAY_SELECT);
-		pstm.from.append(Game.DISPLAY_FROM);
-		pstm.where.append(Game.DISPLAY_WHERE);
-		pstm.where.append(" AND Game.Id IN (");
-		pstm.where.append(String.valueOf(GIds.get(0)));
-		for (int i=1; i<GIds.size(); i++) {
-			pstm.where.append(",");
-			pstm.where.append(String.valueOf(GIds.get(i)));
-		}
-		pstm.where.append(")");
-
-		JoPreparedStatement prepStm = null;
-		try {
-			prepStm = pstm.execute(getConnection());
-			return processGames(prepStm.getResultSet());
-		} finally {
-			if (prepStm!=null) prepStm.close();
-		}
-	}
-*/
-/*
-	protected boolean processGames(ResultSet res) throws SQLException
-	{
-		boolean any = false;
-		while (res.next())
-		{
-			printGame(res);
-			processedGames++;
-			any = true;
-		}
-		return any;
-	}
-*/
-
 
 	private void printGame(ResultSet res)   throws SQLException
 	{
@@ -805,16 +569,6 @@ public class PGNExport
 	    if (blackTitle != null)
 	        printHeader(TAG_BLACK_TITLE,  blackTitle);
 
-/*
-		short dateFlags = res.getShort(i++);
-
-		if (gameDate!=null)
-			gameDate = new PgnDate(gameDate, (short)(dateFlags & 0xff));
-		if (eventDate != null)
-			eventDate = new PgnDate(eventDate, (short)((dateFlags>>8) & 0xff));
-		//  dateflags are already set, right ?
-*/
-
 	    //  <HEADER info="EventDate">
 	    if (eventDate != null)
 	        printHeader(TAG_EVENT_DATE,  eventDate.toString());
@@ -902,6 +656,66 @@ public class PGNExport
 			be able to export them too (though it is not required by the PGN spec)
 		  */
 	    out.println("\"]");
+	}
+
+	/**
+	 * 	Print Game DOM
+	 *
+	 */
+	public void print(Node node)
+	{
+		switch(node.type())
+		{
+			case ANNOTATION_NODE:
+				AnnotationNode a = (AnnotationNode) node;
+				annotation(a.getCode());
+				break;
+			case COMMENT_NODE:
+				CommentNode c = (CommentNode) node;
+				comment(c.getText());
+				break;
+			case DIAGRAM_NODE:
+				annotation(250);
+				break;
+			case LINE_NODE:
+				printLine((LineNode)node,true);
+				break;
+			case MOVE_NODE:
+				MoveNode m = (MoveNode)node;
+				beforeMove(m.getMove(),m.getPly(),false);
+				break;
+			case RESULT_NODE:
+				ResultNode r = (ResultNode)node;
+				result(r.getResult());
+				break;
+			case STATIC_TEXT_NODE:
+				break;
+			case TAG_NODE:
+				TagNode tn = (TagNode) node;
+				printHeader(tn.getKey(),tn.getValue().toString());
+				break;
+		}
+	}
+
+	public void printLine(LineNode l, boolean nested)
+	{
+		if (nested)
+			out.print(" (");
+		print(l.first(),l.last());
+		if (nested)
+			out.print(") ");
+	}
+
+	public void print(Node n1, Node n2)
+	{
+		while(n1!=null)
+		{
+			print(n1);
+			out.print(" ");
+
+			if (n1==n2) break;
+			n1 = n1.next();
+		}
 	}
 
 

@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
 <PLUGIN ID="stockfish" type="uci">
-	<NAME> Stockfish </NAME>
+	<NAME> Stockfish A </NAME>
 	<EXEC os="Windows">
 		<COMMAND> %dir%\stockfish-windows-x86-64-sse41-popcnt.exe </COMMAND>
 	</EXEC>
@@ -20,8 +19,8 @@
 	<EXEC os="Mac_arm">
 		<COMMAND> %dir%/stockfish-macos-m1-apple-silicon </COMMAND>
 	</EXEC>
-	<DIR> %local%/engines/stockfish </DIR>
-	<LOGO> %dir%/Stockfish-large.bmp </LOGO>
+	<DIR> %local%\engines\stockfish </DIR>
+	<LOGO> %dir%\Stockfish-large.bmp </LOGO>
 	<VERSION> 17 </VERSION>
 	<AUTHOR> the Stockfish developers (see AUTHORS file) </AUTHOR>
 	<OPTIONS>
@@ -49,10 +48,10 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME> 2000 </TIME>
+		<TIME selected="true"> 2000 </TIME>
 		<DEPTH> 10 </DEPTH>
 		<NODES> 1 </NODES>
-		<TIME_CONTROL selected="true"/>
+		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

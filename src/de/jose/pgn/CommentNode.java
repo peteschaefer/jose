@@ -70,6 +70,11 @@ public class CommentNode
 		text.append(c,start,len);
 	}
 
+    public CharSequence getText()
+    {
+        return text;
+    }
+
     @Override
     public Node clone() {
         CommentNode clone = new CommentNode(text.toString());

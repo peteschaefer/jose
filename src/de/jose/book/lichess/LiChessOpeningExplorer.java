@@ -304,6 +304,9 @@ public class LiChessOpeningExplorer extends OpeningBook
         MoveNode next = mvnd.nextMove();
         orig.insertNewLine(subline,next);
 
+    // todo think about alternative: print line to plain text, then paste
+    //  (-> no need for cloning and node subleties)
+
         //  trigger update, etc.
         Command cmd = new Command("edit.game.paste",null, mvnd, subline);
         AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
