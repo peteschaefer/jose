@@ -14,17 +14,40 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *  todo
+ *      1. closeDBWindow
+ *
+ *      choose one of:
+ *      online track
+ *          repair tables
+ *
+ *      offline track
+ *          process shutdown
+ *          myisamchk -c -f
+ *          myisamchk -o -f
+ *          launch process
+ *      game repair
+ *      quit
+ *
+ */
 public class DBRepairTool
     extends JoDialog {
     private int stage = 0;
-    private JLabel[] labels = new JLabel[8];
+    private JLabel[] labels = new JLabel[9];
     private JTextArea tail;
     private PrintStream wasOut,wasErr,tailStream;
     private JButton nextButton;
+    private static String[] tables = {
+            "MetaInfo",
+            "Collection", "Game", "MoreGame",
+            "Player", "Event", "Site", "Opening"
+    };
 
     public DBRepairTool() {
         super(null, "menu.help.repair", true);
@@ -61,7 +84,7 @@ public class DBRepairTool
         comp.add(explain,ELEMENT_ROW);
         comp.add(Box.createVerticalStrut(20));
 
-        for (stage=1; stage <= 7; stage++)
+        for (stage=1; stage <= 8; stage++)
             comp.add(newLabel(stage,"dialog.repair."+stage),ELEMENT_ROW_SMALL);
 
         tail = newTextArea(120,40);
@@ -167,7 +190,7 @@ public class DBRepairTool
         action = new CommandAction() {
             @Override
             public void Do(Command cmd) throws Exception {
-                if (++stage >= 8) {
+                if (++stage >= 9) {
                     hide();
                     return;
                 }
@@ -181,16 +204,18 @@ public class DBRepairTool
                 try {
                     switch (stage) {
                         case 1: done=closeDBWindow(); break;
-                        case 2: done=shutdownDB(); break;
-                        case 3: done=checkIndexes("-c"); break;
-                        case 4: done=checkIndexes("-o -f"); break;
-                        case 5: done=launchDB(); break;
-                        case 6: done=gameRepair(); break;
+                        case 2: /*done=repairTables()*/done=true; break;    // considered harmful
+                        case 3: done=shutdownDB(); break;
+                        case 4: done=checkIndexes(new String[]{"-c"}); break;
+                        case 5: done=checkIndexes(new String[]{"-o","-f"}); break;
+                        case 6: done=launchDB(); break;
+                        case 7: done=gameRepair(); break;
                         //case 7: done=openDBWindow(); break;
-                        case 7: done=quitApplication(); break;
+                        case 8: done=quitApplication(); break;
                     }
                 } catch (Throwable e) {
                     System.err.println(e.getMessage());
+                    //e.printStackTrace();
                 }
 
                 updateLabels(stage, !done);
@@ -220,6 +245,18 @@ public class DBRepairTool
             }
         });
         return true;
+    }
+
+    protected void printResults(ResultSet res) throws SQLException
+    {
+        int cols = res.getMetaData().getColumnCount();
+        while(res.next()) {
+            for(int i=1; i <= cols; ++i) {
+                if (i > 1) System.out.print(", ");
+                System.out.print(res.getString(i));
+            }
+            System.out.println();
+        }
     }
 
     protected boolean closeDBWindow() {
@@ -255,6 +292,45 @@ public class DBRepairTool
         return false;
     }
 
+    protected class RepairThread extends Thread
+    {
+        @Override
+        public void run() {
+            JoConnection conn=null;
+            try {
+                conn = JoConnection.get();
+                for (String table : tables) {
+                    String sql = "REPAIR TABLE " + table + " EXTENDED USE_FRM";
+                    System.out.println(sql);
+                    JoStatement stm = new JoStatement(conn);
+                    ResultSet res = stm.executeQuery(sql);
+                    printResults(res);
+                    stm.close();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            } finally {
+                if (conn!=null) conn.release();
+            }
+        }
+    }
+
+    protected boolean repairTables() throws SQLException
+    {
+        /*
+            in place, no need to shutdown server, myisamchk, etc.
+
+            repair table XXX extended use_frm
+                (takes very long, but does supposedly the same as myisamchk)
+            show table status
+                (unreliable, might still be broken)
+         */
+        RepairThread repair = new RepairThread();
+        repair.start();
+        waitFor(repair);
+        return false;
+    }
+
     /**
      *
      * @param switches
@@ -266,8 +342,7 @@ public class DBRepairTool
      * @throws IOException
      * @throws InterruptedException
      */
-    protected boolean checkIndexes(String switches) throws IOException, InterruptedException {
-        String[] tables = { "MetaInfo", "Collection", "Game", "MoreGame", "Player", "Event", "Site", "Opening" };
+    protected boolean checkIndexes(String[] switches) throws IOException, InterruptedException {
         Process proc = MySQLAdapter.repairIndexes(tables,switches);
         Thread pipeThread = new PipeThread(proc, tailStream);
         pipeThread.start();

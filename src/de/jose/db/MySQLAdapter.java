@@ -433,7 +433,7 @@ public class MySQLAdapter
 		return result.toString();
 	}
 
-	public static Process repairIndexes(String[] tables, String switches) throws IOException, InterruptedException
+	public static Process repairIndexes(String[] tables, String[] switches) throws IOException, InterruptedException
 	{
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
@@ -445,7 +445,8 @@ public class MySQLAdapter
 		String execPath = binPath+File.separator+Version.osDir+File.separator+"myisamchk";
 
 		command.add(execPath);
-		command.add(switches);
+		for(String sw:switches)
+			command.add(sw);
 
 		for(String table : tables)
 			command.add(table);
