@@ -4234,7 +4234,7 @@ public class Application
 		else if (EngUtil.isDrawMat(flags)) {
 			message = Language.get("message.drawmat");
 			if (mainLine)
-wor				resultDirty = theGame.setResult(Game.DRAW);
+				resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else
 			return;
