@@ -53,15 +53,6 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [ ] Fork flatlaf
     	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
     	[x] SplitPaneUI: individual style=plain
-    	[ ] map dark text colors, but how
-    	    How does this work? A Theory
-    	    StyleContext / "default" / foreground = black, or grey in dark mode
-    	    JoStyleContext / "base" / forerground = empty, inherits from "default"
-
-    	    When user selects color "base".foreground = black (in style chooser), it takes precedence and sticks
-    	    -> the mechanisms fails as soon as the user sets the color explicitly.
-    	    [ ] select black -> empty = fall back
-
     	[ ] TextPaneUI: fix jumping characters
     	[ ] TextPaneUI: nicer selection
     	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
@@ -77,12 +68,16 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [x] in-component folder button
     [ ] add flatlaf to jar classpath; + theme-editor
     [x] from command line
+
     [x] dark mode
         [ ] buttons + icons
         [ ] EnginePanel background
         [ ] board auto, or manually?
-    [ ] BUG: empty windows on Linux. with fresh UserProfile.
-    [ ] StyleChooser: left panel layout
+        [ ] StyleChooser: left panel layout
+    	[x] StyleContext / "default" / foreground = black, or grey in dark mode. Set by system.
+    	    [x] choosing black = default (which may be gray in dark mode).
+    	        Fallback mechanism already implemented :)
+
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?

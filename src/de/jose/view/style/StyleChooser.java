@@ -18,6 +18,7 @@ import de.jose.Language;
 import de.jose.Util;
 import de.jose.profile.UserProfile;
 import de.jose.view.colorchooser.JoColorButton;
+import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.MoveFormatList;
 import de.jose.view.input.LanguageList;
 import de.jose.view.input.JoButtonGroup;
@@ -131,6 +132,7 @@ public class StyleChooser
 		styleTree.setVisibleRowCount(12);
 		styleTree.setRootVisible(true);
 		styleTree.setShowsRootHandles(false);
+		styleTree.setBackground(Color.WHITE);
 
 		JScrollPane scroll = new JScrollPane(styleTree,
 		            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -181,6 +183,14 @@ public class StyleChooser
 		JComponent preview = createPreview();
 
 		JPanel rightPanel = new JPanel(new BorderLayout());
+		if (Application.theApplication.isDarkLookAndFeel()) {
+			JLabel explainLabel = new JLabel(Language.get("dialog.option.dark.explain"));
+			explainLabel.setBorder(
+					new CompoundBorder(
+						new BevelBorder(BevelBorder.LOWERED),
+						new EmptyBorder(8,8,8,8)));
+			rightPanel.add(explainLabel, BorderLayout.NORTH);
+		}
 		rightPanel.add(editPanel,BorderLayout.CENTER);
 		rightPanel.add(preview,BorderLayout.SOUTH);
 		return rightPanel;
@@ -199,10 +209,12 @@ public class StyleChooser
 		fontSize.setPreferredSize(new Dimension(64,24));
 
         editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE);
-        editPanel.add(new JScrollPane(fontList,
+		GridBagConstraints constr = JoDialog.gridConstraint(JoDialog.ELEMENT_TWO, 1, 0, 1, GridBagConstraints.BOTH);
+		constr.weighty = 20.0;
+		editPanel.add(new JScrollPane(fontList,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
-                JoDialog.gridConstraint(JoDialog.ELEMENT_TWO,1,0,1));
+				constr);
 
         editPanel.add(JoDialog.newLabel("font.size"), JoDialog.LABEL_ONE);
         editPanel.add(fontSize, JoDialog.gridConstraint(JoDialog.ELEMENT_TWO_SMALL,1,1,1));
@@ -467,8 +479,12 @@ public class StyleChooser
 		styleTree.repaint();
 		fontPreview.repaint();
 	}
-
 	protected boolean updateAttribute(Style style, Object key, Object value)
+	{
+		return updateAttribute(style,key,value,null);
+	}
+
+	protected boolean updateAttribute(Style style, Object key, Object value, Object defaultValue)
 	{
 		Object thisValue = style.getAttribute(key);
 		if (Util.equals(thisValue,value))
@@ -476,6 +492,8 @@ public class StyleChooser
 
 		style.removeAttribute(key);
 		Object parentValue = style.getAttribute(key);
+		if (parentValue==null)
+			parentValue = defaultValue;
 
 		boolean isdefined = ! Util.equals(parentValue,value);
 		if (isdefined)
@@ -567,7 +585,7 @@ public class StyleChooser
 		}
 		if (e.getSource()==fontColor) {
 			Color color = fontColor.getColor();
-			updateAttribute(currentStyle, StyleConstants.Foreground, color);
+			updateAttribute(currentStyle, StyleConstants.Foreground, color, Color.black);
 		}
 	}
 
