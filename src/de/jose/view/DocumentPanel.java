@@ -16,6 +16,8 @@ import de.jose.*;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
+import de.jose.util.FontUtil;
+import de.jose.util.icon.TextIcon;
 import de.jose.window.JoMenuBar;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.*;
@@ -65,7 +67,7 @@ public class DocumentPanel
 
 //	protected static ImageIcon tabIcon 		= ImgUtil.getIcon(null,"tab.close");
 //	protected static ImageIcon tabIconOff 	= ImgUtil.getIcon(null,"tab.close.off");
-	protected static ImageIcon dirtyIcon    = ImgUtil.getIcon(null,"tab.dirty");
+	protected static Icon dirtyIcon    = null;
 
 	class DocumentPanelLayout extends OverlayLayout
 	{
@@ -162,6 +164,9 @@ public class DocumentPanel
 
 		adjustTabs(Application.theHistory.currentIndex());
 		theTextPane.adjustHighlight();
+
+		if (dirtyIcon==null)
+			dirtyIcon = new TextIcon("\uf303", FontUtil.fontAwesome(),12,Color.decode("#9c0000"));
 	}
 
     protected void modifyFontSize(float factor, int min)
