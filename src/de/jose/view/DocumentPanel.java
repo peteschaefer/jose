@@ -628,7 +628,7 @@ public class DocumentPanel
 			theTabPane.setTabPlacement(tabPlacement);
 		if (tabLayout > 0)
 			theTabPane.setTabLayoutPolicy(tabLayout);
-		theTextPane.setTextAntialising(prf.getBoolean("doc.panel.antialias"));
+		theTextPane.setTextAntialising(true);
 	}
 
 	public void reformat()

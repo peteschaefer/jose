@@ -631,7 +631,7 @@ public class OptionDialog
 	{
 		JPanel tab7 = (JPanel)comp7;
 
-		theStyleChooser = new StyleChooser(true);
+		theStyleChooser = new StyleChooser();
 		add(tab7, theStyleChooser, ELEMENT_NEXTROW_REMAINDER);
 	}
 
@@ -1044,8 +1044,6 @@ public class OptionDialog
 			theStyleChooser.expand("body");
 			theStyleChooser.expand("body.line");
 		}
-
-		theStyleChooser.setAntiAliasing(profile.getBoolean("doc.panel.antialias"));
 	}
 
 	public void readTab5()
@@ -1134,7 +1132,7 @@ public class OptionDialog
 		if (isInited(7))
 		{
 			styleDirty = styleDirty || theStyleChooser.isDirty();
-			profile.set("doc.panel.antialias", theStyleChooser.getAntiAliasing());
+			profile.set("doc.panel.antialias", true);	//	@deprecated
 			profile.set("doc.move.format",theStyleChooser.getMoveFormat());
 		}
 
@@ -1190,8 +1188,7 @@ public class OptionDialog
 				if (Application.theApplication.clockPanel() != null)
 					Application.theApplication.clockPanel().repaint();
 			if (profile.changed("doc.panel.tab.placement",oldValues) ||
-				profile.changed("doc.pabel.tab.layout",oldValues) ||
-			    profile.changed("doc.panel.antialias",oldValues))
+				profile.changed("doc.pabel.tab.layout",oldValues))
 				if (Application.theApplication.docPanel() != null)
 					Application.theApplication.docPanel().updateFromProfile(profile);
 			if (profile.changed("doc.associate.pgn",oldValues))

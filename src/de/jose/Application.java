@@ -12,8 +12,6 @@
 
 package de.jose;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.mysql.jdbc.CommunicationsException;
 import de.jose.book.BookQuery;

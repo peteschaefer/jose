@@ -561,7 +561,7 @@ public class ExportDialog
 	{
 		JPanel tab2 = (JPanel)comp2;
 
-		styleChooser = new StyleChooser(false);
+		styleChooser = new StyleChooser();
 
 		add(tab2, styleChooser, ELEMENT_NEXTROW_REMAINDER);
 	}
