@@ -31,6 +31,7 @@ import de.jose.util.map.IntHashSet;
 import de.jose.view.BoardPanel;
 import de.jose.view.BoardView2D;
 import de.jose.view.BoardView3D;
+import de.jose.view.JoToolBar;
 import de.jose.view.colorchooser.JoChessSurfaceButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
 import de.jose.view.input.*;
@@ -77,6 +78,8 @@ public class OptionDialog
 	private EngineOptionReader engOptionReader;
 	private de.jose.eboard.DialogComponent eboardCtrl;
 
+	protected static String yellowIcon = ":#dddd00:#444444";
+	protected static String greenIcon = ":#22cc00:#444444";
 	//
  	//	Sort options by *Importance*
  	//
@@ -354,9 +357,13 @@ public class OptionDialog
 			add(tab3, box, gridConstraint(ELEMENT_ROW,0,1+phase,2));
 		}
 
+		float iconSize = 22f;
+		Icon addIcon 		= JoToolBar.create1AwesomeIcon("\uf0fe"+yellowIcon,iconSize);
+		Icon removeIcon 	= JoToolBar.create1AwesomeIcon("\uf146"+yellowIcon,iconSize);
+
 		box = Box.createHorizontalBox();
-		add(box,newButton("time.control.new","add"),null);
-		add(box,newButton("time.control.delete","remove"),null);
+		add(box,newButton("time.control.new",addIcon,(String)null),null);
+		add(box,newButton("time.control.delete",removeIcon,(String)null),null);
 		add(tab3, box, gridConstraint(ELEMENT_ROW,0,4,2));
 
 		tab3.add(new JLabel(""), ELEMENT_REMAINDER);
@@ -454,6 +461,7 @@ public class OptionDialog
 		return p3;
 	}
 
+
 	private JComponent createPluginListPanel()
 	{
 		//		pluginList = new JComboBox(EnginePlugin.getEngineNames(Version.osDir));
@@ -471,9 +479,13 @@ public class OptionDialog
 		Box vbox = Box.createVerticalBox();
 		Box hbox = Box.createHorizontalBox();
 
-		JButton addButton = newButton("plugin.add","add");
-		JButton duplButton = newButton("plugin.duplicate","duplicate");
-		JButton delButton = newButton("plugin.delete","remove");
+		float iconSize = 24f;
+		Icon addIcon 		= JoToolBar.create1AwesomeIcon("\uf0fe"+yellowIcon,iconSize);
+		Icon duplicateIcon 	= JoToolBar.create1AwesomeIcon("\uf24d"+greenIcon,iconSize);
+		Icon removeIcon 	= JoToolBar.create1AwesomeIcon("\uf146"+yellowIcon,iconSize);
+		JButton addButton 	= newButton("plugin.add",addIcon,(String)null);
+		JButton duplButton 	= newButton("plugin.duplicate",duplicateIcon,(String)null);
+		JButton delButton 	= newButton("plugin.delete",removeIcon,(String)null);
 
 		Border border = new EmptyBorder(4,8,4,8);
 		addButton.setBorder(border);
@@ -631,18 +643,26 @@ public class OptionDialog
 		add(tab5, "book.list", new JScrollPane(bookList),
 		        gridConstraint(ELEMENT_ONE, 0,0,1, GridBagConstraints.BOTH));
 
+		float iconSize = 24f;
+		Icon addIcon 		= JoToolBar.create1AwesomeIcon("\uf0fe"+yellowIcon,iconSize);
+		Icon removeIcon 	= JoToolBar.create1AwesomeIcon("\uf146"+yellowIcon,iconSize);
+		Icon upIcon 		= JoToolBar.create1AwesomeIcon("\uf151"+yellowIcon,iconSize);
+		Icon downIcon 		= JoToolBar.create1AwesomeIcon("\uf150"+yellowIcon,iconSize);
+
 		//  buttons:
 		JPanel buttonBox = newGridPane();
-		buttonBox.add(reg(newButton("book.list.add","add")), ELEMENT_ONE_ROW);
-		buttonBox.add(reg(newButton("book.list.remove","remove")), ELEMENT_ONE_ROW);
+		buttonBox.add(reg(newButton("book.list.add",addIcon,(String)null)), ELEMENT_ONE_ROW);
+		buttonBox.add(reg(newButton("book.list.remove",removeIcon,(String)null)), ELEMENT_ONE_ROW);
 //		buttonBox.add(Box.createVerticalGlue());
 //		buttonBox.add(reg(newButton("book.list.enable")), ELEMENT_ONE_ROW);
 //		buttonBox.add(reg(newButton("book.list.disable")), ELEMENT_ONE_ROW);
 		buttonBox.add(Box.createVerticalGlue());
-		buttonBox.add(reg(newButton("book.list.up","moveUp")), ELEMENT_ONE_ROW);
-		buttonBox.add(reg(newButton("book.list.down","moveDown")), ELEMENT_ONE_ROW);
+		buttonBox.add(reg(newButton("book.list.up",upIcon,(String)null)), ELEMENT_ONE_ROW);
+		buttonBox.add(reg(newButton("book.list.down",downIcon,(String)null)), ELEMENT_ONE_ROW);
 		buttonBox.add(Box.createVerticalGlue());
-		buttonBox.add(reg(newButton("book.list.download","download")), ELEMENT_ONE_ROW);
+		JButton downloadButton = newButton("book.list.download", "download");
+		buttonBox.add(reg(downloadButton), ELEMENT_ONE_ROW);
+		downloadButton.setVisible(false);
 
 		add(tab5, "book.buttons", buttonBox,
 				gridConstraint(LABEL_ONE, 1,0,1));

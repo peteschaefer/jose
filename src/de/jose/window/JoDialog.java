@@ -546,7 +546,7 @@ public class JoDialog
         if (iconName != null)
             return newButton(name,ImgUtil.getMenuIcon(iconName),"icon");
         else
-            return newButton(name,(ImageIcon)null,(String)null);
+            return newButton(name,(Icon)null,(String)null);
     }
 
 	public final JButton getButton(String name)
@@ -1680,8 +1680,12 @@ public class JoDialog
 
     public static JButton newLinkButton(String name, String iconName, ActionListener listener)
     {
+		Icon icon = null;
 		String iconSpec = JoMenuBar.ICON_SPECS.get(iconName);
-		Icon icon = JoToolBar.create1AwesomeIcon(iconSpec,20);
+		if (iconSpec!=null)
+			icon = JoToolBar.create1AwesomeIcon(iconSpec,20);
+		if (icon==null)
+			icon = ImgUtil.getMenuIcon(iconName);
 
         JButton button = newButton(name, icon, listener);
 		button.setBorderPainted(false);

@@ -19,6 +19,7 @@ import de.jose.export.ExportContext;
 import de.jose.pgn.Game;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
+import de.jose.view.JoToolBar;
 import de.jose.view.input.UciSpinner;
 import de.jose.view.input.JoButtonGroup;
 import de.jose.view.JoPanel;
@@ -113,10 +114,13 @@ public class PrintPreviewDialog
 		currentPage = new UciSpinner(1,99,1);
 		currentPage.addChangeListener(this);
 
+		float iconSize = 24f;
+		Icon prevIcon = JoToolBar.create1AwesomeIcon("\uf30a:#dddd00:#000000",iconSize); // ImgUtil.getMenuIcon("page.previous"); //
+		Icon nextIcon = JoToolBar.create1AwesomeIcon("\uf30b:#dddd00:#000000",iconSize); // ImgUtil.getMenuIcon("page.next"); //
 		buttonPane.add(JoDialog.newLabel("dialog.export.paper.format"));
-		buttonPane.add(prevPage = JoDialog.newButton("print.preview.previous.page",ImgUtil.getMenuIcon("page.previous"),this));
+		buttonPane.add(prevPage = JoDialog.newButton("print.preview.previous.page",prevIcon,this));
 		buttonPane.add(currentPage);
-		buttonPane.add(nextPage = JoDialog.newButton("print.preview.next.page",ImgUtil.getMenuIcon("page.next"),this));
+		buttonPane.add(nextPage = JoDialog.newButton("print.preview.next.page",nextIcon,this));
 		buttonPane.add(Box.createHorizontalStrut(10));
 		buttonPane.add(onePage);
 		buttonPane.add(twoPage);
@@ -131,9 +135,10 @@ public class PrintPreviewDialog
 		buttonPane.add(Box.createHorizontalStrut(10));
 		buttonPane.setBorder(new EmptyBorder(4,4,4,4));
 
+		Icon printIcon = JoToolBar.createAwesomeIconLike("menu.file.print",iconSize);
 		buttonPane.add(Box.createHorizontalStrut(10));
 		buttonPane.add(JoDialog.newButton("menu.file.print.setup",this));
-		buttonPane.add(JoDialog.newButton("menu.file.print",ImgUtil.getMenuIcon("menu.file.print"),this));
+		buttonPane.add(JoDialog.newButton("menu.file.print",printIcon,this));
 //		buttonPane.add(Box.createHorizontalStrut(10));
 //		buttonPane.add(JoDialog.newButton(JoDialog.CANCEL,this));
 //		buttonPane.add(Box.createHorizontalStrut(10));

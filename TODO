@@ -18,6 +18,8 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 	at de.jose.view.list.IntervalCacheModel.getRowAt(IntervalCacheModel.java:601)
 	at de.jose.view.list.IntervalCacheModel.getValueAt(IntervalCacheModel.java:567)
 
+[ ] Context Help
+
 
 ? Charter buggy
 
@@ -109,10 +111,10 @@ Alternative JREs:
      [x]fall back 3: images/menu (already existing)
     [x] <menu> <item icon="unicode;color"> optional
     [x] animation dialog
-    [ ] print preview icon (awesome print = \uf02f)
+    [x] print preview icon (awesome print = \uf02f)
     search for ImgUtil.getMenuIcon:
-    [ ] PrintPreview
-    [ ] ExportDialog
+    [-] PrintPreview
+    [x] ExportDialog
     [ ] FileInput
 
 * Undo. It's complicated...

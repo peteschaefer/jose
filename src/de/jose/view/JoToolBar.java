@@ -322,6 +322,15 @@ public class JoToolBar
 		return create1AwesomeIcon(new IconSpec(spec,size));
 	}
 
+	public static Icon createAwesomeIconLike(String iconName, float size)
+	{
+		String iconSpec = JoMenuBar.ICON_SPECS.get(iconName);
+		if (iconSpec!=null)
+			return JoToolBar.create1AwesomeIcon(iconSpec,size);
+		else
+			return ImgUtil.getMenuIcon(iconName);
+	}
+
 	public static final int BUTTON = 4;
 
 	private static Icon[] create7AwesomeIcons(IconSpec spec)

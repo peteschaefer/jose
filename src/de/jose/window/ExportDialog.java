@@ -156,19 +156,22 @@ public class ExportDialog
 		addButton(HELP);
 
         if (!Version.mac) {
-			int iconSize = 26;
-			Icon printIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.print"),iconSize);
-			Icon saveIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.save"),iconSize);
-			Icon saveAsIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.save.as"),iconSize);
-			Icon clearIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.edit.clear"),iconSize);
+			int iconSize = 24;
+			Icon printIcon = JoToolBar.createAwesomeIconLike("menu.file.print",iconSize);
+			Icon saveIcon = JoToolBar.createAwesomeIconLike("menu.file.save",iconSize);
+			Icon saveAsIcon = JoToolBar.createAwesomeIconLike("menu.file.save.as",iconSize);
+			Icon clearIcon = JoToolBar.createAwesomeIconLike("menu.edit.clear",iconSize);
 			Icon browserIcon = JoToolBar.create1AwesomeIcon("\uf0ac:#000080",iconSize);
-			Icon printPreviewIcon = ImgUtil.getMenuIcon("menu.file.print.preview");	//	todo find, or make a better one
+			Icon printPreviewIcon = JoToolBar.createAwesomeIconLike("menu.file.print.preview",iconSize);
+			Icon helpIcon = JoToolBar.createAwesomeIconLike("menu.help.context",iconSize);
+
             getButton(PRINT).setIcon(printIcon);
             getButton(CANCEL).setIcon(clearIcon);
             getButton(SAVE).setIcon(saveIcon);
             getButton(SAVEAS).setIcon(saveAsIcon);
             getButton(PREVIEW).setIcon(printPreviewIcon);
             getButton(BROWSER).setIcon(browserIcon);
+			getButton(HELP).setIcon(helpIcon);
         }
 
 		JoDialog.rescaleFonts(getElementPane());
@@ -450,8 +453,10 @@ public class ExportDialog
 		tLeft.getDocument().addDocumentListener(this);
 		tRight.getDocument().addDocumentListener(this);
 
-		reg(rPortrait = newToggleButton("dialog.export.ori.port",ImgUtil.getMenuIcon("print.preview.port")));
-		reg(rLandscape = newToggleButton("dialog.export.ori.land",ImgUtil.getMenuIcon("print.preview.land")));
+		Icon portraitIcon = ImgUtil.getMenuIcon("print.preview.port");	//	todo find a ttf icon.
+		Icon landscapeIcon = ImgUtil.getMenuIcon("print.preview.land");
+		reg(rPortrait = newToggleButton("dialog.export.ori.port",portraitIcon));
+		reg(rLandscape = newToggleButton("dialog.export.ori.land",landscapeIcon));
 		newButtonGroup("dialog.export.ori");
 
 //		rPortrait.setVerticalTextPosition(JLabel.BOTTOM);

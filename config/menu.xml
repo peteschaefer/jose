@@ -21,9 +21,9 @@
 		<item id="menu.file.save.as" 		icon="\uf0bd:#0000bb"	key="control shift S"/>
 		<item id="menu.file.revert"/>
 		<separator/>
-		<item id="menu.file.print"			icon="\uf02f:#4040ff" key="control P"/>
-		<item id="menu.file.print.setup" key="control shift P"/>
-		<item id="menu.file.print.preview"/>
+		<item id="menu.file.print"			icon="\uf900:#4040ff" 	key="control P"/>
+		<item id="menu.file.print.setup" 							key="control shift P"/>
+		<item id="menu.file.print.preview"	icon="\uf901:#8080ff"/>
 		<separator hide="mac"/>
 		<item id="menu.file.quit"	key="control Q" hide="mac"/>
 	</menu>
@@ -69,7 +69,7 @@
         <separator/>
         <item id="menu.edit.larger" 	icon="\uf034" key="control PLUS"/>
         <item id="menu.edit.smaller" 	icon="\uf034:%70" key="control MINUS"/>
-        <item id="menu.edit.color"		icon="\uf53f:#c0c040"/>
+        <item id="menu.edit.color"		icon="\uf53f:#dddd40"/>
         <separator/>
         <menu id="move.format">
             <item id="move.format.short" check="false"/>
@@ -172,7 +172,7 @@
 	<!-- Help Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.help">
-		<item id="menu.help.context"		key="F1"/>
+		<item id="menu.help.context"	icon="?:#008000"	key="F1"/>
 		<item id="menu.help.manual"/>
 		<separator/>
 		<item id="menu.help.about"			key="control H" hide="mac"/>

@@ -14,8 +14,10 @@ package de.jose.view.input;
 
 import de.jose.image.ImgUtil;
 import de.jose.util.file.FileUtil;
+import de.jose.view.JoToolBar;
 import de.jose.window.JoFileChooser;
 import de.jose.window.JoFrame;
+import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,7 +35,7 @@ import java.util.Iterator;
  *
  * all instance share a single JFileChooser (for efficiency)
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class FileInput
         extends JPanel
@@ -58,7 +60,8 @@ public class FileInput
 	{
 		super(new BorderLayout());
 		textInput = new JTextField();
-		button = new JButton(ImgUtil.getMenuIcon("menu.file.open"));
+		Icon icon = JoToolBar.createAwesomeIconLike("menu.file.open",20);
+		button = new JButton(icon);
 		button.addActionListener(this);
         button.setBorder(new EmptyBorder(2,2,2,2));
 
