@@ -1917,7 +1917,7 @@ public class Application
 
 				if (eng_panel.inBook) {
 					//	switch from Book to Engine analysis
-					startEngineAnalysis(true);
+					startEngineAnalysis();//true);
 				}
 				else {
 					updateBook(false,true);
@@ -2360,7 +2360,7 @@ public class Application
 					eng.exitBook();
 					//	when out of book, switch to Engine analysis
 					if (query.onCompletion == BOOK_ANALYSIS)
-						startEngineAnalysis(true);
+						startEngineAnalysis();//true);
 				}
 				break;
 
@@ -2395,9 +2395,9 @@ public class Application
 		}
 	}
 
-	private void startEngineAnalysis(boolean engine_analysis)
+	private void startEngineAnalysis()
 	{
-		if (engine_analysis) {
+//		if (engine_analysis) {
 			invokeWithPlugin(new Runnable() {
 				public void run() {	//  (2) enter engine analysis mode
 					//pausePlugin(true);
@@ -2405,12 +2405,12 @@ public class Application
 					theMode = AppMode.ANALYSIS;
 				}
 			});
-		}
-		else {
-			//  (2) leave engine analysis mode
-			pausePlugin(false);
-			theMode = AppMode.USER_INPUT;
-		}
+//		}
+//		else {
+//			//  (2) leave engine analysis mode
+//			pausePlugin(false);
+//			theMode = AppMode.USER_INPUT;
+//		}
 	}
 
 	public void handleUserMove(Move move, boolean animate)
