@@ -67,7 +67,14 @@ abstract public class Node
 				return n;
 		return null;
 	}
-	
+
+	public final Node previous(int nodeClass1, int nodeClass2) {
+		for (Node n = previous(); n != null; n = n.previous())
+			if (n.is(nodeClass1) || n.is(nodeClass2))
+				return n;
+		return null;
+	}
+
 	public final Node next(int nodeClass) {
 		for (Node n = next(); n != null; n = n.next())
 			if (n.is(nodeClass))
@@ -184,6 +191,30 @@ abstract public class Node
 			previous().nextNode = next();
 		if (hasNext())
 			next().previousNode = previous();
+	}
+
+	public void swap(Node that)
+	{
+		if(this.nextNode==that) {
+			Node a = this.previousNode;
+			Node b = that.nextNode;
+			this.previousNode = that;
+			this.nextNode = b;
+			that.previousNode = a;
+			that.nextNode = this;
+		}
+		else if (that.nextNode==this) {
+			that.swap(this);
+		}
+		else {
+			Node aux = this.previousNode;
+			this.previousNode = that.previousNode;
+			that.previousNode = aux;
+
+			aux = this.nextNode;
+			this.nextNode = that.nextNode;
+			that.nextNode = aux;
+		}
 	}
 
 	/**

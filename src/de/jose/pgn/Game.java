@@ -845,33 +845,43 @@ public class Game
 			return INSERT_NEW_NODE;
 
 		case NEW_MAIN_LINE:
-			LineNode variation = new LineNode(this);
+			//	todo this should be effectively NEW_LINE, followed by promotoLine()
+			/*LineNode variation = new LineNode(this);
 			move.insertAfter(variation.first());
 			insertIntoCurrentLine(variation, next);
 			(currentMove = move).play(position);
 
 			promoteLine(variation);
 			reformat(); //  side effect: currentMove=null
-			gotoMove(move);
+			gotoMove(move);*/
+			LineNode variation = createNewLine(move,next);
+			promoteLine(variation);
 			return INSERT_NEW_NODE;
 
 		case NEW_LINE:
-			variation = new LineNode(this);
-			move.insertAfter(variation.first());	//	skip prefix
-			insertIntoCurrentLine(variation, next);	//	insert into structure
-			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
-			/**	insert variation at end of current line	*/
-			insertNode(variation);	//	insert into document
-			currentMove = move;  //  DON'T replay. already done by insertNode() !
-			if (variation.level()>=2) currentMove.play(position);
-			updateLabels(variation);
-			updateMoveCount(variation);
-			setDirty();
+			createNewLine(move, next);
 			return INSERT_NEW_NODE;
 
 		case CANCEL:
 			return INSERT_USER_ABORT;
 		}
+	}
+
+	private LineNode createNewLine(MoveNode move, MoveNode next)
+	{
+		LineNode variation = new LineNode(this);
+		move.insertAfter(variation.first());	//	skip prefix
+		insertIntoCurrentLine(variation, next);	//	insert into structure
+		//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
+		/**	insert variation at end of current line	*/
+		insertNode(variation);	//	insert into document
+		currentMove = move;  //  DON'T replay. already done by insertNode() !
+		if (variation.level()>=2) currentMove.play(position);
+
+		updateLabels(variation);
+		updateMoveCount(variation);
+		setDirty();
+		return variation;
 	}
 
 	public MoveNode getCurrentMove()	{ return currentMove; }
@@ -894,29 +904,90 @@ public class Game
     }
 
 
-	public void promoteLine (LineNode line) throws BadLocationException
+	public void promoteLine (LineNode V)
 	{
-		if (line.level()==0) throw new IllegalArgumentException("can't promote main line");
+		if (V.level()==0)
+			throw new IllegalArgumentException("can't promote main line");
 
-		/**	is there a sibling line ?	*/
+		LineNode P = V.parent();
+		Node a = V.previous(LINE_NODE,MOVE_NODE);
+		if (a.type==LINE_NODE) {
+			//	swap with sibling
+			V.swap(a);
+
+			updateLabels(V);
+			updateLabels((LineNode)a);
+			updateMoveCount(V.first());
+			updateMoveCount(a);
+			return;
+		}
+
+		/**
+		 * see doc/Promotion.drawio.svg
+		 *
+		 * identify four sections
+		 */
+		NodeSection A,B, C=null,D=null;
+		assert(a instanceof MoveNode);
+
+		A = new NodeSection(a,V.previous());
+		B = new NodeSection(V.first(),V.last());
+
+		MoveNode d = (MoveNode)V.next(MOVE_NODE);
+		if (d!=null) {
+			D = new NodeSection(d,P.last());
+
+			MoveNode c = V.firstMove();
+			if (c!=null) {
+				assert(c.ply==d.ply);
+				C = new NodeSection(c, V.last());
+				B.last = c.previous();
+			}
+		}
+
+		A.trim(STATIC_TEXT_NODE);
+		B.trim(STATIC_TEXT_NODE);
+		if (C!=null) C.trim(STATIC_TEXT_NODE);
+		if (D!=null) {
+			D.trim(STATIC_TEXT_NODE);
+			D.trim(RESULT_NODE);
+		}
+
+		//	swap A with B
+		A.swap(B);
+
+		//	swap C with D
+		if (C!=null && D!=null)
+			C.swap(D);
+		else if (D!=null)
+			A.append(D);
+
+		updateLabels(P);
+		updateLabels(V);
+		updateMoveCount(B.first);
+		updateMoveCount(A.first);
+
+		setDirty();
+/*
+		/**	is there a sibling line ?	* /
 		LineNode sibling = line.previousSibling();
 		if (sibling!=null) {
-			/**	if so, change order	*/
+			/**	if so, change order	* /
 			line.remove();
 			line.insertBefore(sibling);
 		}
 		else {
 			LineNode parent = line.parent();
-			/**	replace parent with this line (more complicated)	*/
+			/**	replace parent with this line (more complicated)	* /
 			MoveNode pmv = (MoveNode)line.previous(MOVE_NODE);
 			//	this move node must exist
 			Node cut = pmv.previous();
 			if (cut==null) throw new NullPointerException();    //  must not happen
-			/**	extract all siblings	*/
+			/**	extract all siblings	* /
 			Node[] siblings = parent.extractSubLines(line.next());
 			line.remove();
 			LineNode oldMainLine = parent.extractLine(pmv);
-			/**	insert new main line (line) */
+			/**	insert new main line (line) * /
 			Node after = line.first(MOVE_NODE);
 			while (after.next()!=null && after.next().is(ANNOTATION_NODE)) after = after.next();
 			//  keep annotation with move
@@ -926,6 +997,7 @@ public class Game
 			oldMainLine.insertAfter(after);
 		}
 		setDirty();
+*/
 	}
 
 
