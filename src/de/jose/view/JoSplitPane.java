@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import com.formdev.flatlaf.ui.FlatSplitPaneUI;
 import de.jose.AbstractApplication;
 import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
@@ -19,6 +20,8 @@ import de.jose.Util;
 import de.jose.window.JoFrame;
 
 import javax.swing.*;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.metal.MetalSplitPaneUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -342,10 +345,7 @@ public class JoSplitPane
 		int dividerSize = (int)Util.nvl(value,Integer.valueOf(DIVIDER_SIZE));
 		setDividerSize(movable ? dividerSize:2);
 		//	following has no effect, sadly...
-		putClientProperty("SplitPaneDivider.style", movable ? "grip":"plain");
-		putClientProperty("SplitPaneDivider.gripDotCount", movable ? 3:0);
-		//putClientProperty("SplitPaneDivider.gripColor", movable ? Color.black : Color.white);
-		//updateUI();
+		//putClientProperty("style", movable ? "grip":"plain");
 	}
 
 	public void startContinuousResize()

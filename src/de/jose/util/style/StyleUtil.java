@@ -125,14 +125,22 @@ public class StyleUtil
     public static Color getSystemAccentColor()
     {
         if (Version.windows) {
-            Object value = WinRegistry.getValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
-            if (value!=null) {
-                int i = ((Number) value).intValue();
-                return new Color(i);
-            }
+            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
+            if (value != Integer.MIN_VALUE)
+                return new Color(value);
         }
         //  else {
         return SystemColor.activeCaption;
+    }
+
+    public static boolean getSystemDarkMode() {
+         if (Version.windows) {
+             int value = WinRegistry.getIntValue(
+                "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize","AppsUseLightTheme");
+             if (value != Integer.MIN_VALUE)
+                 return (value==0);
+         }
+        return false;
     }
 
     /**

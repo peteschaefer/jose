@@ -19,7 +19,6 @@ import de.jose.util.FontUtil;
 import de.jose.util.print.Triplet;
 
 import javax.swing.text.*;
-import javax.swing.text.html.StyleSheet;
 import javax.swing.text.html.CSS;
 import java.util.*;
 import java.util.List;
@@ -66,6 +65,56 @@ public class JoStyleContext
 		return copy();
 	}
 
+	public void setDarkMode(boolean dark) {
+		Style base = getStyle("base");
+		base.addAttribute("dark.mode", dark);
+		//	all other attributes will inherit "dark.mode"
+		//	and return inverted colors dynamically. At least that's what I want to happen ...
+		//	OR
+		//	persist inverted colors in all attributes? but that has dangers...
+	}
+
+	public boolean isDarkMode() {
+		Style base = getStyle("base");
+		Boolean b = (Boolean) base.getAttribute("dark.mode");
+		return Boolean.TRUE.equals(b);
+	}
+
+	@Override
+	protected MutableAttributeSet createLargeAttributeSet(AttributeSet a) {
+		return super.createLargeAttributeSet(a);
+		//	todo invert colors in dark mode:
+		//return new JoSimpleAttributeSet(a);
+	}
+
+	@Override
+	protected SmallAttributeSet createSmallAttributeSet(AttributeSet a) {
+		return super.createSmallAttributeSet(a);
+		//	todo invert colors in dark mode:
+		//return new JoSmallAttributeSet(a);
+	}
+
+	class JoSmallAttributeSet extends SmallAttributeSet
+	{
+		public JoSmallAttributeSet(AttributeSet attrs) {
+			super(attrs);
+		}
+
+		@Override
+		public Object getAttribute(Object name) {
+			if (name.equals(StyleConstants.Foreground))
+			{
+				Color color = (Color)super.getAttribute(name);
+				Boolean dark = (Boolean)getAttribute("dark.mode");
+				boolean isDark = Boolean.TRUE.equals(dark);
+				if (isDark)
+					return JoSimpleAttributeSet.invert(color);
+				else
+					return color;
+			}
+			return super.getAttribute(name);
+		}
+	}
 
 	public float getFontScale()     	        { return fontScale; }
 
@@ -270,8 +319,9 @@ public class JoStyleContext
 	{
 		copyTree((StyleContext.NamedStyle)that.getStyle("base"),null);
 
-		if (that instanceof JoStyleContext)
-			this.fontScale = ((JoStyleContext)that).fontScale;
+		if (that instanceof JoStyleContext) {
+			this.fontScale = ((JoStyleContext) that).fontScale;
+		}
 	}
 
 	private void clearAttributes(MutableAttributeSet style)

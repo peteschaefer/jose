@@ -590,36 +590,29 @@ public class Application
 			JoDialog.showErrorDialog("error.lnf.not.supported");
 		else
 			try {
-                //UIManager.setLookAndFeel(className);
-				FlatLaf.setSystemColorGetter(name -> {
-					if (name.equals("accent"))
-						return StyleUtil.getSystemAccentColor();
-					return null;
-				});
+				Class<?> lnfClass = Class.forName(className);
+				LookAndFeel lnf = (LookAndFeel) (lnfClass.newInstance());
 
-				FlatLaf.registerCustomDefaultsSource(
-						"themes",
-						new ResourceClassLoader("config"));
-				//	uses a set of custom themes
+				if (lnf instanceof FlatLaf) {
+					FlatLaf.setSystemColorGetter(name -> {
+						if (name.equals("accent"))
+							return StyleUtil.getSystemAccentColor();
+						return null;
+					});
 
-				FlatLightLaf.setup();
-				UIManager.setLookAndFeel(new FlatLightLaf());
+					FlatLaf.registerCustomDefaultsSource(
+							"themes",
+							new ResourceClassLoader("config"));
+					//	uses a set of custom themes
 
-//				UIManager.put( "ScrollBar.showButtons", true );
-//				UIManager.put( "TabbedPane.showTabSeparators", true );
-//				UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
-//				UIManager.put( "TabbedPane.selectedBackground", Color.white );
-//				UIManager.put("TabbedPane.tabColor", Color.white);
+					FlatLaf.setup(lnf);
 
-//				UIManager.put("SplitPane.background", Color.decode("#dddddd"));
-//				UIManager.put("SplitPane.dividerSize",16);	see updateContinuousLayout()
-//				UIManager.put("SplitPane.border", Color.white);
-//				UIManager.put("SplitPaneDivider.gripColor", Color.black);
-//				UIManager.put("SplitPaneDivider.style", "grip");
-//				UIManager.put("SplitPaneDivider.gripDotCount",3);
+					boolean isdark = ((FlatLaf) lnf).isDark();
+					theUserProfile.styles.setDarkMode(isdark);
+				}
 
-//				UIManager.put("TextPane.selectionForeground",Color.black);
-//				UIManager.put("TextPane.selectionBackground",Color.decode("#ddddff"));
+				UIManager.setLookAndFeel(lnf);
+
 				broadcast(new Command("update.ui", null, lookAndFeel));
 			} catch (UnsupportedLookAndFeelException usex) {
 				JoDialog.showErrorDialog("error.lnf.not.supported");
@@ -3581,17 +3574,7 @@ public class Application
 		TextureCache.setDirectory(new File(theWorkingDirectory, "images/textures"));
 
 		/**	set look & feel	 */
-        String lnfClassName = Version.getSystemProperty("jose.look.and.feel");
-		if ("default".equalsIgnoreCase(lnfClassName))
-			lnfClassName = LookAndFeelList.getDefaultClassName();
-		if (lnfClassName==null)
-            lnfClassName = theUserProfile.getString("ui.look.and.feel");
-        if (lnfClassName==null) {
-            lnfClassName = UserProfile.getFactoryLookAndFeel();
-            if (lnfClassName==null)
-                lnfClassName = LookAndFeelList.getDefaultClassName();
-            theUserProfile.set("ui.look.and.feel",lnfClassName);
-        }
+		String lnfClassName = getLookAndFeelClassName();
 		setLookAndFeel(lnfClassName);
 
 		if (Version.mac) new MacAdapter();      //  listens to application menu
@@ -3645,6 +3628,27 @@ public class Application
 		setMode(firstMode);	//	set now so that it can be broadcast
 
 		SwingUtilities.invokeLater(new Startup());
+	}
+
+	private static String getLookAndFeelClassName()
+	{
+		/*
+			1. from cli -Djose.look.and.feel
+			2. from user profile "ui.look.and.feel.new"
+			3. from factory setting
+		 */
+		String lnfClassName = Version.getSystemProperty("jose.look.and.feel");
+		if ("default".equalsIgnoreCase(lnfClassName))
+			lnfClassName = LookAndFeelList.getDefaultClassName();
+		if (lnfClassName==null)
+            lnfClassName = theUserProfile.getString("ui.look.and.feel2");
+		if (lnfClassName==null) {
+			lnfClassName = UserProfile.getFactoryLookAndFeel();
+			if (lnfClassName==null)
+				lnfClassName = LookAndFeelList.getDefaultClassName();
+			theUserProfile.set("ui.look.and.feel2",lnfClassName);
+		}
+		return lnfClassName;
 	}
 
 

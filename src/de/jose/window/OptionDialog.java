@@ -201,7 +201,7 @@ public class OptionDialog
 		addWithLabel(tab0,0,0,4, "user.name", new JTextField(24));
 		addWithLabel(tab0,0,1,4, "user.language", new LanguageList(
 						Language.getAvailableLanguages(Application.theApplication.theLanguageDirectory)));
-		addWithLabel(tab0,0,2,4, "ui.look.and.feel", new LookAndFeelList());
+		addWithLabel(tab0,0,2,4, "ui.look.and.feel2", new LookAndFeelList());
 
 		//  load recent games
 		addWithLabel(tab0, 0,3,4, null, newCheckBox("doc.load.history"));
@@ -1157,8 +1157,8 @@ public class OptionDialog
 		try {
 			if (profile.changed("user.language", oldValues))
 				Application.theApplication.setLanguage(profile.getString("user.language"));
-			if (profile.changed("ui.look.and.feel", oldValues))
-				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel"));
+			if (profile.changed("ui.look.and.feel2", oldValues))
+				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel2"));
 			if (profile.changed("font.diagram",oldValues) ||
 			    profile.changed("board.surface.light",oldValues) ||
 				profile.changed("board.surface.dark",oldValues) ||

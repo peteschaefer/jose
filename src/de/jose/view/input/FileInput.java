@@ -12,6 +12,7 @@
 
 package de.jose.view.input;
 
+import com.formdev.flatlaf.ui.FlatTextFieldUI;
 import de.jose.image.ImgUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.view.JoToolBar;
@@ -63,10 +64,16 @@ public class FileInput
 		Icon icon = JoToolBar.createAwesomeIconLike("menu.file.open",20);
 		button = new JButton(icon);
 		button.addActionListener(this);
-        button.setBorder(new EmptyBorder(2,2,2,2));
 
 		add(textInput,BorderLayout.CENTER);
-		add(button,BorderLayout.EAST);
+		if (textInput.getUI() instanceof FlatTextFieldUI) {
+			// show button inside of text field
+			textInput.putClientProperty("JTextField.trailingComponent", button);
+		}
+		else {
+			button.setBorder(new EmptyBorder(2,2,2,2));
+			add(button,BorderLayout.EAST);
+		}
 
 		listeners = new ArrayList();
 		filters = new ArrayList();

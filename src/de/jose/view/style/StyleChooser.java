@@ -447,7 +447,7 @@ public class StyleChooser
 
 			fontList.setSelectedFont(JoFontConstants.getFontFamily(currentStyle));
 
-			fontSize.setValue(new Integer(JoFontConstants.getFontSize(currentStyle)));
+			fontSize.setValue(JoFontConstants.getFontSize(currentStyle));
 			fontBold.setSelected(JoFontConstants.isBold(currentStyle));
 			fontItalic.setSelected(JoFontConstants.isItalic(currentStyle));
 			fontColor.setColor(JoFontConstants.getForeground(currentStyle));

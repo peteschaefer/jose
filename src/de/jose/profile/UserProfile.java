@@ -20,6 +20,7 @@ import de.jose.chess.MoveFormatter;
 import de.jose.chess.TimeControl;
 import de.jose.image.Surface;
 import de.jose.pgn.Game;
+import de.jose.util.style.StyleUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.XObjectInputStream;
 import de.jose.util.print.SerializablePageFormat;
@@ -69,12 +70,18 @@ public class UserProfile
 	public static final int GZIP	= 3;
 
 	public static String getFactoryLookAndFeel() {
-		if (Version.mac)
-			return null;    //  default = Aqua
-            //return "ch.randelshofer.quaqua.QuaquaManager";  //  improved Aqua
-			//return "org.violetlib.aqua.AquaLookAndFeel";	//	VAqua
-		else
-			return "net.sourceforge.mlf.metouia.MetouiaLookAndFeel";
+		if (Version.mac) {
+			if (StyleUtil.getSystemDarkMode())
+				return "com.formdev.flatlaf.themes.FlatMacDarkLaf";
+			else
+				return "com.formdev.flatlaf.themes.FlatMacLightLaf";
+		}
+		else {
+			if (StyleUtil.getSystemDarkMode())
+				return "com.formdev.flatlaf.FlatLightLaf";
+			else
+				return "com.formdev.flatlaf.FlatDarkLaf";
+		}
 		/**
 		 * Metouia on Windows & Linux
 		 * Metouia doesn't work on OS X, that's why we use the default, Aqua
@@ -263,7 +270,7 @@ public class UserProfile
 				//	in versions up to ... toolbars are not editable (though they are stored in the preferences)
 				//	always revert to factory settings
 				if (Version.getSystemProperty("jose.discard.lnf",false))
-					set("ui.look.and.feel", getFactoryLookAndFeel());
+					set("ui.look.and.feel2", getFactoryLookAndFeel());
 				if (Version.getSystemProperty("jose.discard.font.map",false)) {
 					set("font.map",new HashMap());
 					set("sys.font.map",new HashMap());
@@ -447,12 +454,12 @@ public class UserProfile
         if (oldVersion <= 1007) {
             //  new default l6f on Macs
             if (Version.mac) {
-                String lnf = getString("ui.look.and.feel");
+                String lnf = getString("ui.look.and.feel2");
                 if ("apple.laf.AquaLookAndFeel".equals(lnf) ||
                     "com.apple.mrj.swing.MacLookAndFeel".equals(lnf))
                 {
                     lnf = getFactoryLookAndFeel();
-                    set("ui.look.and.feel",lnf);
+                    set("ui.look.and.feel2",lnf);
                 }
             }
         }
