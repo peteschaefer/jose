@@ -116,11 +116,11 @@
 
 					<xsl:apply-templates select="//game"/>
 
-					<fo:block text-align="center" vertical-align="bottom">
+					<fo:block text-align="center" vertical-align="bottom" hyphenate="false">
 						<xsl:attribute name="font-family"><xsl:value-of select="$styles//style[name='body.comment.4']/a[key='family']/value"/></xsl:attribute>
 						<xsl:attribute name="font-size"><xsl:value-of select="$styles//style[name='body.comment.4']/a[key='size']/value"/>pt</xsl:attribute>
 						<xsl:attribute name="color"><xsl:value-of select="$styles//style[name='body.comment.4']/a[key='foreground']/value"/></xsl:attribute>
-			
+
 			                  			created with jose Chess: hrimfaxi.bitbucket.io/jose
 					</fo:block>
 

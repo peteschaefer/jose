@@ -1673,7 +1673,7 @@ public class JoDialog
 	public static Font rescaleFont(Font f)
 	{
 		/*	this is used to scale Fonts on HiDPI displays.
-			some platforms can do this out-of-the-box, some don't
+			some LnFs can do this out-of-the-box, some don't
 
 			setting a font explicitly should have the desired effect,
 			but some Components have funny default font sizes.
@@ -1693,7 +1693,7 @@ public class JoDialog
 	public static void rescaleFonts(Component root)
 	{
 		/*	this is used to scale Fonts on HiDPI displays.
-			some platforms can do this out-of-the-box, some don't
+			some LnFs can do this out-of-the-box, some don't
 
 			setting a font explicitly should have the desired effect,
 			but some Components have funny default font sizes.
