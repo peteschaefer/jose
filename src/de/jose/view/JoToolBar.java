@@ -229,7 +229,7 @@ public class JoToolBar
 		Icon[] icons = null;
 		if (spec != null) {
 			//	(1) create from Font Awesome
-			icons = createAwesomeIcons(spec,16);
+			icons = createAwesomeIcons(spec,28);
 		}
 		if (icons==null) {
 			//	(2) lookup .gif in images/nav
@@ -325,6 +325,7 @@ public class JoToolBar
 			}
 		}
 		else {
+			size*=0.7f;
 			result[0] = new TextIcon(s,font,size,Color.lightGray);
 			result[1] = new TextIcon(s,font,size,color1);
 			result[2] = new TextIcon(s,font,size,color1);

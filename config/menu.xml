@@ -6,19 +6,19 @@
 	<!-- File Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.file">
-		<item id="menu.file.new"	key="control N"/>
-		<item id="menu.file.new.from.here"	key="control shift N"/>
+		<item id="menu.file.new"			icon="\uf15b:#cccc80" 	key="control N"/>
+		<item id="menu.file.new.from.here"	icon="\uf56d:#cccc80" 	key="control shift N"/>
 		<item id="menu.file.new.frc" key="control alt N"/>
 		<item id="menu.file.new.shuffle"/>
 		<separator/>
 		<item id="menu.file.open"	key="control O"/>
 		<item id="menu.file.open.url"/>
 		<separator/>
-		<item id="menu.file.close"	key="control W"/>
-		<item id="menu.file.save"	key="control S"/>
-		<item id="menu.file.save.all"	key="F2"/>
-		<item id="menu.file.save.copy"/>
-		<item id="menu.file.save.as" key="control shift S"/>
+		<item id="menu.file.close"									key="control W"/>
+		<item id="menu.file.save"			icon="\uf0ba:#000080"	key="control S"/>
+		<item id="menu.file.save.all"		icon="\uf0bb:#800080"	key="F2"/>
+		<item id="menu.file.save.copy"		icon="\uf0ba:#800000"/>
+		<item id="menu.file.save.as" 		icon="\uf0ba:#0000dd"	key="control shift S"/>
 		<item id="menu.file.revert"/>
 		<separator/>
 		<item id="menu.file.print"	key="control P"/>
@@ -94,15 +94,17 @@
 	<menu id="menu.game">
 		<item id="menu.game.details"		key="F4"/>
 
+		<!-- #009900 = green -->
+		<!-- #b30000 = red -->
 		<menu id="menu.game.navigate">
-			<item id="move.first" key="ctrl BEGIN"/>
-			<item id="move.backward" key="ctrl LEFT"/>
-			<item id="move.delete" key="ctrl BACKSPACE"/>
-			<item id="engine.stop"		key="PAUSE"/>
-			<item id="move.forward" key="ctrl RIGHT"/>
-			<item id="move.start" key="ctrl G"/>
-			<item id="move.animate"/>
-			<item id="move.last" key="ctrl END"/>
+			<item id="move.first" 		icon="\uf048:button:#009900"			key="ctrl BEGIN"/>
+			<item id="move.backward" 	icon="\uf04f:button:#009900"			key="ctrl LEFT"/>
+			<item id="move.delete" 		icon="\uf04f:button:#b30000"			key="ctrl BACKSPACE"/>
+			<item id="engine.stop"		icon="\uf04c:button:#009900:#b30000"	key="PAUSE"/>
+			<item id="move.forward" 	icon="\uf04b:button:#009900:#b30000"	key="ctrl RIGHT"/>
+			<item id="move.start" 		icon="\uf04b:button:#b30000"			key="ctrl G"/>
+			<item id="move.animate"		icon="\uf04e:button:#009900"/>
+			<item id="move.last" 		icon="\uf051:button:#009900"			key="ctrl END"/>
 		</menu>
 
 		<menu id="menu.game.time.controls">
@@ -115,7 +117,7 @@
 		<separator/>
 		<item id="menu.game.2d"		check="true"/>
 		<item id="menu.game.3d"		check="false"/>
-		<item id="menu.game.flip"	check="true"/>
+		<item id="menu.game.flip"	icon="\uf2f1:#808080" check="true"/>
 		<item id="menu.game.coords"	check="true"/>
 		<item id="menu.game.evalbar"	check="true"/>
 		<item id="menu.game.suggestions"	check="true"/>
