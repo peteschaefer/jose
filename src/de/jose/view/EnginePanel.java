@@ -606,9 +606,9 @@ public class EnginePanel
 		return label;
 	}
 
-	protected void broadcastMoveValue(Score score)
+	protected void broadcastMoveValue(int ply, Score score)
 	{
-		Command cmd = new Command("move.value", null, score);
+		Command cmd = new Command("move.value", null, score, ply);
 		Game game = Application.theApplication.theGame;
 		if (game!=null) {
 			MoveNode mvnd = game.getCurrentMove();
@@ -668,7 +668,7 @@ public class EnginePanel
 					setVariation(idx, rec.line[idx], rec.line_info[idx]);
 
 					if (idx==0)
-						broadcastMoveValue(rec.eval[idx]);
+						broadcastMoveValue(rec.ply, rec.eval[idx]);
 
 					if (! inBook) {
                     if (countPvLines() > 1)
@@ -733,6 +733,7 @@ public class EnginePanel
 		bookmoves.clear();
 		bookmoves.modified = 0;
 		bookmoves.clearPvModified();
+		bookmoves.ply = pos.ply();
 
 		for (int i=0; i < bookEntries.size(); i++)
 		{

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import static de.jose.book.BookEntry.IUNKNOWN;
+
 /**
  * Book
  *
@@ -159,6 +161,7 @@ public class PolyglotBook extends OpeningBook
 		entry.move = PolyglotBookEntry.createMove((int) read_integer(disk, 2), isTransposedColor);
 		entry.isTransposedColor = isTransposedColor;
 		entry.count = (int) read_integer(disk, 2);
+		entry.countWhite = entry.countDraw = entry.countBlack = IUNKNOWN;
 		entry.n = (int) read_integer(disk, 2);
 		entry.sum = (int) read_integer(disk, 2);
 		/* todo the meaning of count, n, sum is not clear

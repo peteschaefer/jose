@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import de.jose.pgn.MoveNode;
 import de.jose.plugin.Score;
 import de.jose.profile.LayoutProfile;
 import de.jose.Application;
@@ -50,8 +51,6 @@ public class EvalPanel
 		setLayout(new BorderLayout());
 		add(scroller,BorderLayout.CENTER);
 
-		if (Application.theApplication.getEnginePlugin() != null)
-			view.connectTo(Application.theApplication.getEnginePlugin());
 		view.setGame(Application.theHistory.getCurrent());
 	}
 
@@ -62,25 +61,10 @@ public class EvalPanel
 
 		CommandAction action = new CommandAction() {
 			public void Do(Command cmd) {
-				view.connectTo((EnginePlugin)cmd.data);
-//				repaint();
-			}
-		};
-		map.put("new.plugin", action);
-
-		action = new CommandAction() {
-			public void Do(Command cmd) {
 				view.setGame((Game)cmd.data);
 			}
 		};
 		map.put("switch.game", action);
-
-		action = new CommandAction() {
-			public void Do(Command cmd) {
-				view.disconnect();
-			}
-		};
-		map.put("close.plugin", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
@@ -90,6 +74,24 @@ public class EvalPanel
 			}
 		};
 		map.put("move.notify", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd)
+			{
+				Score score = (Score) cmd.data;
+				MoveNode mvnd = null;
+				int ply = 0;
+				if (cmd.moreData instanceof Integer)
+					ply = (Integer)cmd.moreData;
+				if (cmd.moreData instanceof MoveNode) {
+					mvnd = (MoveNode) cmd.moreData;
+					ply = mvnd.getPly();
+				}
+
+				view.updateValue(ply, mvnd, score);
+			}
+		};
+		map.put("move.value", action);
 	}
 
 	@Override

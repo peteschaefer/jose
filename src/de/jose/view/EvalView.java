@@ -42,13 +42,10 @@ import java.awt.geom.Rectangle2D;
 
 public class EvalView
         extends JComponent
-        implements MessageListener
 {
 	/** array of evaulations    */
 	// @deprecated retrieve evaluations directly from Game tree (branch, below)
 	protected EvalArray       values;
-	/**	the plugin engine	*/
-	protected EnginePlugin    engine;
 	/** current game    */
 	protected Game          game;
 	protected LineNode		branch;
@@ -333,73 +330,20 @@ public class EvalView
 		g.fillRect(x, p2, width, height);
 	}
 
-
-	protected void connectTo(EnginePlugin plugin)
-	{
-		if (engine!=plugin) {
-			disconnect();
-			engine = plugin;
-			if (engine!=null)
-				engine.addMessageListener(this);
-		}
-	}
-
-	protected void disconnect()
-	{
-		if (engine!=null) engine.removeMessageListener(this);
-		engine = null;
-	}
-
-	private static float[] svalue = new float[2];
-
-	public void handleMessage(Object source, int what, Object data)
-	{
-		switch (what)
-		{
-		case EnginePlugin.THINKING:
-//		case EnginePlugin.PONDERING:
-		case EnginePlugin.ANALYZING:
-			EnginePlugin plugin = (EnginePlugin)source;
-			AnalysisRecord a = (AnalysisRecord)data;
-			if (a!=null && a.ply>=0) {
-				Score sc = a.eval[0];
-				if (!sc.hasWDL()) plugin.mapUnit(sc); // todo alread done. remove?
-				updateMoveNode(a.ply-1, sc);
-			}
-			break;
-
-		case EnginePlugin.PLUGIN_MOVE:
-			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
-			updateMoveNode(emv.getPly(), emv.score);
-			break;
-		}
-	}
-
-	//	todo this should happen at EnginePanel, then broadcasted to all interested parties
-	private void updateMoveNode(int ply, Score value)
+	protected void updateValue(int ply, MoveNode mvnd, Score value)
 	{
 		setValue(ply, value);
 
-		if (game==null) return;
-		if (value==null || !value.hasWDL()) return;
-
-		MoveNode mvnd = game.getCurrentMove();
-		if (mvnd==null) return;
-
-		LineNode new_branch = mvnd.parent();
-		if (new_branch!=branch) {
-			/**
-			 * whenever the tree branch changes
-			 * - trace back tree path from new_branch to top
-			 * - update the eval data accordingly.
-			 */
-			values.setBranch(branch=new_branch);
-		}
-
-		if (! value.equals(mvnd.engineValue)) {
-			mvnd.engineValue = new Score(value);
-			if (this.isVisible())
-				game.setDirty(true);
+		if (mvnd!=null) {
+			LineNode new_branch = mvnd.parent();
+			if (new_branch != branch) {
+				/**
+				 * whenever the tree branch changes
+				 * - trace back tree path from new_branch to top
+				 * - update the eval data accordingly.
+				 */
+				values.setBranch(branch = new_branch);
+			}
 		}
 	}
 }

@@ -139,8 +139,8 @@ public class BookEntry
 
 		this.count = add(this.count, that.count);
 		this.countWhite = add(this.countWhite, that.countWhite);
-		this.countDraw = add(this.countWhite, that.countDraw);
-		this.countBlack = add(this.countWhite, that.countBlack);
+		this.countDraw = add(this.countDraw, that.countDraw);
+		this.countBlack = add(this.countBlack, that.countBlack);
 		this.isTransposedColor = this.isTransposedColor && that.isTransposedColor;
 		this.learnValue = first(this.learnValue, that.learnValue);
 		this.userValue = first(this.userValue, that.userValue);
@@ -181,9 +181,9 @@ public class BookEntry
 	{
 		score.flags = Score.EVAL_GAME_COUNT;
 		score.cp = score.cp_current = BookEntry.nvl(count);
-		if (countWhite != IUNKNOWN) score.win = countWhite;
-		if (countDraw != IUNKNOWN) score.draw = countDraw;
-		if (countBlack != IUNKNOWN) score.lose = countBlack;
+		score.win = (countWhite != IUNKNOWN) ? countWhite : 0;
+		score.draw = (countDraw != IUNKNOWN) ? countDraw : 0;
+		score.lose = (countBlack != IUNKNOWN) ? countBlack : 0;
 		if (count > cap) {
 			//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
 			score.win = score.win * cap / count;
