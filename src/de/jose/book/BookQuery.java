@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 public class BookQuery
         extends MessageProducer
@@ -30,7 +30,7 @@ public class BookQuery
     protected long seqNo; // sequence number for each query
     protected Game appGame;
     protected MoveNode appMove;
-    protected int appMode;
+    protected Application.AppMode appMode;
     public Move lastMove;
 
     // Query argument
@@ -54,6 +54,8 @@ public class BookQuery
         this.onCompletion = completionMessage;
         this.lastMove = lastMove;
         addMessageListener(Application.theApplication);
+
+        System.err.println("["+seqNo+"] "+appMode+" "+MoveNode.toString(appMove));
     }
 
     public boolean isValid()
@@ -85,6 +87,6 @@ public class BookQuery
         if (isValid() && (onCompletion!=0))
             sendMessage(onCompletion,this);
         else
-            System.err.println("lost query");
+            System.err.println("["+seqNo+"] dropped");
     }
 }

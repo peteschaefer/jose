@@ -103,15 +103,27 @@ public class Application
 	public static final String DEFAULT_DATABASE = "MySQL";
 
 	/**	Game Mode	*/
+	//	todo enum
+	public enum AppMode {
+		/**	User input, no engine analysis (default)	*/
+		USER_INPUT (1),
+		/**	User input with background analysis	*/
+		ANALYSIS (2),
+		/**	User vs. Engine	*/
+		USER_ENGINE	(3),
+		/**	Engine 1 vs. Rngine 2 (not implemented)	*/
+		ENGINE_ENGINE (4);
 
-	/**	User input, no engine analysis (default)	*/
-	public static final int USER_INPUT		= 1;
-	/**	User input with background analysis	*/
-	public static final int ANALYSIS		= 2;
-	/**	User vs. Engine	*/
-	public static final int USER_ENGINE		= 3;
-	/**	Engine 1 vs. Rngine 2 (not implemented)	*/
-	public static final int ENGINE_ENGINE	= 4;
+		AppMode(int numval) { this.numval = numval; }
+		public final int numval;
+
+		static AppMode valueOf(Object val) {
+			if (val instanceof Number)
+				return values() [((Number)val).intValue()];
+			else
+				return AppMode.valueOf(val.toString());
+		}
+	}
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -127,7 +139,7 @@ public class Application
 //	public int					theDatabaseMode;
 
 	/**	game mode	*/
-	public int					theMode;
+	public AppMode				theMode;
 
 	/**	database directory (for embeded databases only)
 	 * 	default is <working directory> / database
@@ -1331,7 +1343,7 @@ public class Application
 				if (theGame.first()) {
 					updateClock();
 	                getAnimation().pause();
-					pausePlugin(theMode==ANALYSIS);
+					pausePlugin(theMode== AppMode.ANALYSIS);
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -1350,7 +1362,7 @@ public class Application
 				updateClock();
 				if (mv != null) {
 					getAnimation().pause();
-					pausePlugin(theMode==ANALYSIS);
+					pausePlugin(theMode==AppMode.ANALYSIS);
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -1365,7 +1377,7 @@ public class Application
                 theGame.gotoMove(mv);
                 theClock.halt();
                 getAnimation().pause();
-                pausePlugin(theMode==ANALYSIS);
+                pausePlugin(theMode==AppMode.ANALYSIS);
 
                 cmd = new Command("move.notify",null,mv.getMove());
                 broadcast(cmd);
@@ -1415,7 +1427,7 @@ public class Application
 				updateClock();
 
 				if (mv != null) {
-					 pausePlugin(theMode==ANALYSIS);
+					 pausePlugin(theMode==AppMode.ANALYSIS);
 				     if (boardPanel() != null) {
 				         float speed = (float)(mv.distance()*0.2);
 				         boardPanel().move(mv, speed);
@@ -1474,7 +1486,7 @@ public class Application
 			public void Do(Command cmd) {
 				getAnimation().pause();
 				pausePlugin(false);
-				theMode = USER_INPUT;
+				theMode = AppMode.USER_INPUT;
 			}
 		};
 		map.put("engine.stop", action);
@@ -1501,7 +1513,7 @@ public class Application
 				if (theGame.last()) {
 					updateClock();
 	                getAnimation().pause();
-					pausePlugin(theMode==ANALYSIS);
+					pausePlugin(theMode==AppMode.ANALYSIS);
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -2223,10 +2235,10 @@ public class Application
 					switch (theMode) {
 						case USER_ENGINE:
 						case ENGINE_ENGINE:
-							theMode = USER_INPUT;
+							theMode = AppMode.USER_INPUT;
 							break;
 					}
-					pausePlugin(theMode == ANALYSIS);
+					pausePlugin(theMode == AppMode.ANALYSIS);
 //                    broadcast(cmd);
 				}
 
@@ -2259,7 +2271,7 @@ public class Application
 				int GId = theGame.getId();
 				theGame.reread(GId);
 
-				pausePlugin(theMode==ANALYSIS);
+				pausePlugin(theMode==AppMode.ANALYSIS);
 				//  forward to ourself
 				theCommandDispatcher.forward(new Command("move.last"),Application.this);
 			}
@@ -2388,14 +2400,14 @@ public class Application
 			invokeWithPlugin(new Runnable() {
 				public void run() {	//  (2) enter engine analysis mode
 					pausePlugin(true);
-					theMode = ANALYSIS;
+					theMode = AppMode.ANALYSIS;
 				}
 			});
 		}
 		else {
 			//  (2) leave engine analysis mode
 			pausePlugin(false);
-			theMode = USER_INPUT;
+			theMode = AppMode.USER_INPUT;
 		}
 	}
 
@@ -2502,7 +2514,7 @@ public class Application
 					//	adjust time ? or rely on engine's time keeping ?
 					setGameDefaultInfo();
 					engine.go();
-					theMode = USER_ENGINE;
+					theMode = AppMode.USER_ENGINE;
 				}
 			}
 		});
@@ -2540,7 +2552,7 @@ public class Application
 
 		theClock.halt();
 		getAnimation().pause();
-		pausePlugin(theMode==ANALYSIS);
+		pausePlugin(theMode==AppMode.ANALYSIS);
 
 		if (cutCurrent) {
 			Command cmd = new Command("move.notify",null,closeMove,Boolean.TRUE);
@@ -2664,7 +2676,7 @@ public class Application
         theGame.gotoMove(theGame.getCurrentMove(),true);
 		//  TODO each of the above calls Board.setupFEN(); three times in a row.
 		//  potential for optimisation...
-		pausePlugin(theMode==ANALYSIS);
+		pausePlugin(theMode==AppMode.ANALYSIS);
 
 		Command cmd = new Command("switch.game",null, theGame, new Integer(tabIndex));
 		broadcast(cmd);
@@ -3472,7 +3484,7 @@ public class Application
 
 		if (Version.mac) new MacAdapter();      //  listens to application menu
 
-		theMode = theUserProfile.getInt("game.mode",USER_ENGINE);
+		theMode = AppMode.valueOf(theUserProfile.get("game.mode", AppMode.USER_ENGINE));
 
 		//	create DB adapter
 		JoConnection.getAdapter(true);
@@ -3670,7 +3682,7 @@ public class Application
 			default:
 			case OpeningLibrary.GUI_BOOK_ONLY:
 			case OpeningLibrary.PREFER_GUI_BOOK:
-				theMode = USER_ENGINE;
+				theMode = AppMode.USER_ENGINE;
 				submitBookQuery(BOOK_PLAY,lastMove);
 				return true;
 
@@ -3769,7 +3781,7 @@ public class Application
 			if (defaultPlugin == null) {
 				//	no plugin available !
 				JoDialog.showErrorDialog(null, "error.engine.not.found", "plugin.1", name);
-				theMode = USER_INPUT;   //  no use bothering the user with more errors
+				theMode = AppMode.USER_INPUT;   //  no use bothering the user with more errors
 				return null;
 			} else {
 				//	use default plugin instead
@@ -3821,15 +3833,18 @@ public class Application
 	}
 
 
-	private void pausePlugin(boolean analyze)
+	public void pausePlugin(boolean analyze)
 	{
 		EnginePlugin engine = getEnginePlugin();
 		Position position = theGame.getPosition();
 		if (engine!=null) {
 			if ( analyze && !position.isGameFinished(true))
 				engine.analyze(position);
-			if (!analyze && !engine.isPaused())
+			if (!analyze && !engine.isPaused()) {
 				engine.pause();
+				if (enginePanel()!=null)
+					enginePanel().exitBook();	// right?
+			}
 		}
 	}
 

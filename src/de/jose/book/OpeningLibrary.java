@@ -25,8 +25,8 @@ import java.io.IOException;
 import de.jose.util.ListUtil;
 import org.w3c.dom.Element;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 /**
  * OpeningLibrary

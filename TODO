@@ -6,7 +6,8 @@
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
 [-] Application.selectBookMove needs to be asynchronized.
-    [ ] update book when navigating
+    [?] update/don't update book when navigating
+    [ ] pause button should pause Book, too. Or?
 
 === Database Bugs
 
@@ -89,6 +90,11 @@ Alternative JREs:
  of Application.
 
 ==== Interesting New Features
+
+* Threat Analysis: show threats (arrows; analysis from other color)
+    - for a fixed amount of time
+    - while button is pressed
+    -> similarly for hint?
 
 * LiChess Opening Explorer
     [x] download top games for a variation

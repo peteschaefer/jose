@@ -41,8 +41,8 @@ import java.util.Map;
 import java.util.Random;
 import java.awt.Graphics2D;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 public class BoardView2D
 		extends BoardView

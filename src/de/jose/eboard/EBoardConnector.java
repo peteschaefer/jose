@@ -12,8 +12,8 @@ import de.jose.view.MoveGesture;
 
 import java.util.Stack;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 public abstract class EBoardConnector
 {
