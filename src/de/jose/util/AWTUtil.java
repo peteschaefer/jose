@@ -155,11 +155,12 @@ public class AWTUtil
 	{
 		if (normTransform==null) {
 /*
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gd = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gd.getDefaultConfiguration();
-            normTransform = gc.getDefaultTransform();
-            normTransform = gc.getNormalizingTransform();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        normTransform = gc.getDefaultTransform();
+        normTransform = gc.getNormalizingTransform();
+*/
 /*
 		nice try, but this doesn't work.
 		on Windows, getGraphicsConfiguration().getNormalizingTransform()
@@ -172,7 +173,19 @@ public class AWTUtil
 */
 			int screenRes = getScreenResolution();
 //          int screenRes = 112;
-			normTransform = AffineTransform.getScaleInstance((double)screenRes/72.0,(double)screenRes/72.0);
+/*
+			normTransform = AffineTransform.getScaleInstance(
+                    (double)screenRes/72.0,
+                    (double)screenRes/72.0);
+ */
+            /*  I doubt that this is needed in 2025.
+                the JRE should do proper scaling. at least jbr 21 does a good job at it.
+                the reference coordinate system is 96 dpi (is it?)
+                and we scale it here to 72 dpi
+
+                hope this makes sense
+             */
+            normTransform = AffineTransform.getScaleInstance(96.f/72.f, 96.f/72.f);
 		}
 		return normTransform;
 

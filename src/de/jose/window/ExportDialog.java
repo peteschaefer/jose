@@ -157,6 +157,9 @@ public class ExportDialog
             getButton(PREVIEW).setIcon(ImgUtil.getMenuIcon("menu.file.print.preview"));
             getButton(BROWSER).setIcon(ImgUtil.getMenuIcon("menu.help.web"));
         }
+
+		JoDialog.rescaleFonts(getElementPane());
+		JoDialog.rescaleFonts(getButtonPane());
 	}
 
 	public void forExport(GameSource src)
@@ -638,6 +641,9 @@ public class ExportDialog
 		adjustButtons(tab);
 		getTab(tab).invalidate();
 		/*getCurrentTab().*/frame.repaint();
+
+		JoDialog.rescaleFonts(exportPanel);
+		JoDialog.rescaleFonts(exportOptions);
 		return true;
 	}
 

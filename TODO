@@ -108,10 +108,15 @@ BUG: Print Preview does not work
     - compile with jdk 8
     - run with jbr 21 (32 or 64 bit?)
       https://github.com/JetBrains/JetBrainsRuntime
+
       [x] fixes hidpi on Linux :)
+      [x] ...and on Windows
+            after dialog elements are adjusted (maybe flaw of Windows LnF?)
+      [ ] bug: touch screen and drag not recognized.
+            which is a pity. moving pieces with your finger is a good feature
       [ ] deprecate ClassPathUtil, but that's ok
       [x] fix sprite rendering
-      [ ] maybe some reflection bugs, but they can be fixed
+      [ ] maybe some reflection bugs, but they can be fixed/deprecated
 
 * launch mysqld earlier (?)
 

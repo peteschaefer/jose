@@ -1669,4 +1669,89 @@ public class JoDialog
 		button.setForeground(Color.BLUE);
 		return button;
     }
+
+	public static Font rescaleFont(Font f)
+	{
+		/*	this is used to scale Fonts on HiDPI displays.
+			some platforms can do this out-of-the-box, some don't
+
+			setting a font explicitly should have the desired effect,
+			but some Components have funny default font sizes.
+			let's fix them
+		 */
+		if (Version.windows)
+		{
+			int screenResolution = Toolkit.getDefaultToolkit().getScreenResolution();
+			if (screenResolution <= 96) return f;
+
+			float scaleFactor = screenResolution/96.f;
+			return f.deriveFont(f.getSize()*scaleFactor);
+		}
+		return f;
+	}
+
+	public static void rescaleFonts(Component root)
+	{
+		/*	this is used to scale Fonts on HiDPI displays.
+			some platforms can do this out-of-the-box, some don't
+
+			setting a font explicitly should have the desired effect,
+			but some Components have funny default font sizes.
+			let's fix them
+		 */
+		if (Version.windows)
+		{
+			int screenResolution = Toolkit.getDefaultToolkit().getScreenResolution();
+			if (screenResolution <= 96) return;
+
+			float scaleFactor = screenResolution/96.f;
+			rescaleFonts(root,9,scaleFactor);
+		}
+	}
+
+	private static void rescaleFonts(Component comp, int minSize, float scaleFactor)
+	{
+		Font f = comp.getFont();
+		if (f!=null && f.getSize() < minSize) {
+			f = f.deriveFont(f.getSize()*scaleFactor);
+			comp.setFont(f);
+		}
+
+		if (comp instanceof JComponent) {
+			Border b = ((JComponent)comp).getBorder();
+			if (b instanceof TitledBorder) {
+				TitledBorder tb = (TitledBorder)b;
+				rescaleFont(tb, minSize, scaleFactor);
+			}
+		}
+
+		if (comp instanceof JSlider) {
+			rescaleSliderFonts((JSlider)comp, minSize, scaleFactor);
+		}
+
+		if (comp instanceof Container) {
+			Container cont = (Container)comp;
+			for(int i=0; i<cont.getComponentCount(); i++)
+				rescaleFonts(cont.getComponent(i),minSize,scaleFactor);
+		}
+	}
+
+	private static void rescaleSliderFonts(JSlider slider, int minSize, float scaleFactor)
+	{
+		Dictionary<Integer,JComponent> labels = slider.getLabelTable();
+		for(Enumeration<Integer> i = labels.keys(); i.hasMoreElements(); ) {
+			JComponent label = labels.get(i.nextElement());
+			if (label!=null)
+				rescaleFonts(label,minSize,scaleFactor);
+		}
+	}
+
+	private static void rescaleFont(TitledBorder border, int minSize, float scaleFactor)
+	{
+		Font f = border.getTitleFont();
+		if (f!=null && f.getSize() < minSize) {
+			f = f.deriveFont(f.getSize()*scaleFactor);
+			border.setTitleFont(f);
+		}
+	}
 }

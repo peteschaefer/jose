@@ -70,7 +70,9 @@ public class JoStyleContext
 
 	public void setFontScale(float fontScale)   { this.fontScale = fontScale; }
 
-	public void setNormFontScale()              { setFontScale((float)AWTUtil.getNormalizingTransform().getScaleX()); }
+	public void setNormFontScale()              {
+		setFontScale((float)AWTUtil.getNormalizingTransform().getScaleX());
+	}
 
 	public void setScreenResolution(float dpi)  { setFontScale(dpi/72.0f); }
 

@@ -24,6 +24,7 @@ import de.jose.util.AWTUtil;
 import de.jose.view.dnd.GameTransferHandler;
 import de.jose.view.list.IDBTableModel;
 import de.jose.view.list.IntervalCacheModel;
+import de.jose.window.JoDialog;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -502,6 +503,8 @@ public class ListPanel
             model.addTableModelListener(qpanel);
             model.fireTableDataChanged();
         }
+
+		JoDialog.rescaleFonts(this);
 	}
 
 	public void stopResult() throws SQLException

@@ -161,6 +161,9 @@ public class OptionDialog
 		IntHashSet mnemonicsInUse = new IntHashSet();
 		JoMenuBar.assignMnemonics(buttonPane,mnemonicsInUse);
 		JoMenuBar.assignMnemonics(getTabbedPane(),mnemonicsInUse);
+
+		rescaleFonts(elementPane);
+		rescaleFonts(buttonPane);
 	}
 
 	protected void initTab0(Component comp0)
@@ -1444,6 +1447,8 @@ public class OptionDialog
 
 				component = text;
 			}
+			component.setMinimumSize(new Dimension(40,20));
+			component.setPreferredSize(new Dimension(80,20));
 			break;
 		}
 

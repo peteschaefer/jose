@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import de.jose.window.JoDialog;
 
 /**
  *  Wrapper for JavaHelp stuff: HelpSet and HelpBroker, in particular
@@ -96,6 +97,8 @@ public class HelpSystem
             JoFrame.adjustBounds(windowBounds,true);
             broker.setLocation(windowBounds.getLocation());
             broker.setSize(windowBounds.getSize());
+
+            broker.setFont(JoDialog.rescaleFont(broker.getFont()));
         }
     }
 

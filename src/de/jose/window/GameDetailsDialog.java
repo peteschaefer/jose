@@ -65,6 +65,9 @@ public class GameDetailsDialog
 
 		JoMenuBar.assignMnemonics(getTabbedPane());
 		JoMenuBar.assignMnemonics(buttonPane);
+
+		JoDialog.rescaleFonts(getTabbedPane());
+		JoDialog.rescaleFonts(buttonPane);
 	}
 
 	public void initTab0(Component comp0)

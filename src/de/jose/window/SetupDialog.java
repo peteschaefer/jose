@@ -267,6 +267,9 @@ public class SetupDialog
 		addButton(HELP);
 
 		JoMenuBar.assignMnemonics(buttonPane);
+
+		rescaleFonts(getElementPane());
+		rescaleFonts(getButtonPane());
 	}
 
 	/**	update when shown	*/

@@ -88,6 +88,9 @@ public class AnimationDialog
 	    getElementPane().add(hintCheckbox,ELEMENT_ONE);
 
         addButton("dialog.button.close");
+
+		JoDialog.rescaleFonts(getButtonPane());
+		JoDialog.rescaleFonts(getElementPane());
     }
 
 	public static JSlider createSlider(String name)

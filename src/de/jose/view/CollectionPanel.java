@@ -24,6 +24,7 @@ import de.jose.task.DBTask;
 import de.jose.util.map.IntHashSet;
 import de.jose.util.IntArray;
 import de.jose.view.dnd.GameTransferHandler;
+import de.jose.window.JoDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -107,6 +108,8 @@ public class CollectionPanel
         scroll.getViewport().setBackground(Color.white);
 
         add(scroll, BorderLayout.CENTER);
+
+		JoDialog.rescaleFonts(this);
     }
 
 	public void postInit() throws Exception

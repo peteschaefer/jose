@@ -17,8 +17,8 @@ public class UciSpinner
 	public UciSpinner(int minValue, int maxValue, int defaultValue)
 	{
 		super(new SpinnerNumberModel(defaultValue, minValue, maxValue, +1));
-		setMinimumSize(new Dimension(80,30));
-		setPreferredSize(new Dimension(80,30));
+		setMinimumSize(new Dimension(80,20));
+		setPreferredSize(new Dimension(80,20));
 		//	keep width of UCI spinners consistent (not so easy with GridBayLayout !!)
 	}
 
