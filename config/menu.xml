@@ -8,8 +8,8 @@
 	<menu id="menu.file">
 		<item id="menu.file.new"			icon="\uf016:#ffffff:#000000:%80" 	key="control N"/>
 		<item id="menu.file.new.from.here"	icon="\uf56d:#ffffff:#000000:%80" 	key="control shift N"/>
-		<item id="menu.file.new.frc" key="control alt N"/>
-		<item id="menu.file.new.shuffle"/>
+		<item id="menu.file.new.frc" 		icon="\uf524:#ffffff:#000000"		key="control alt N"/>
+		<item id="menu.file.new.shuffle"	icon="\uf527:#00ee00:#000000"/>
 		<separator/>
 		<item id="menu.file.open"			icon="\uf07c:#cece63:#000000:%80"	key="control O"/>
 		<item id="menu.file.open.url"/>

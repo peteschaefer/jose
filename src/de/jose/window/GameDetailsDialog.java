@@ -23,6 +23,7 @@ import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.TagNode;
 import de.jose.view.DocumentPanel;
+import de.jose.view.JoToolBar;
 import de.jose.view.input.JDateField;
 
 import javax.swing.*;
@@ -162,7 +163,8 @@ public class GameDetailsDialog
 		field.setColumns(4);
 
 		JButton add_button;
-		add(moreTags, add_button=newButton("dialog.details.add","add"), ELEMENT_ROW_SMALL);
+		Icon addIcon = JoToolBar.create1AwesomeIcon("\uf0fe:#dddd00:#444444",24f);
+		add(moreTags, add_button=newButton("dialog.details.add",addIcon,(String)null), ELEMENT_ROW_SMALL);
 		add_button.setBorder(new EmptyBorder(0,0,0,0));
 
 		moreTags.add(newLabel("dialog.details.opening"),LABEL_ONE);
@@ -391,7 +393,7 @@ public class GameDetailsDialog
 		try {
 			//	save directly to database
 			game.saveInfo(resultDirty);
-			Application.theApplication.broadcast(new Command("game.modified",null,new Integer(game.getId())));
+			Application.theApplication.broadcast(new Command("game.modified",null,game.getId()));
 			return true;
 		} catch (Exception ex) {
 			Application.error(ex);

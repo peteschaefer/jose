@@ -22,6 +22,7 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.view.BoardEditView;
+import de.jose.view.JoToolBar;
 import de.jose.view.QueryPanel;
 import de.jose.view.SetupBoardAdapter;
 
@@ -233,8 +234,11 @@ public class SetupDialog
 		frc.setBorder(new TitledBorder(Language.get("dialog.setup.shuffle.title")));
 		frc.add(reg(spinner));
 //		frc.add(newSmallButton("dialog.setup.frc",       null));
-		frc.add(newIconButton("dialog.setup.frc", "menu.file.new.frc"));
-		frc.add(newIconButton("dialog.setup.shuffle", "menu.file.new.shuffle"));
+		float iconSize = 20f;
+		Icon frcIcon = JoToolBar.createAwesomeIconLike("menu.file.new.frc",iconSize);
+		Icon shuffleIcon = JoToolBar.createAwesomeIconLike("menu.file.new.shuffle",iconSize);
+		frc.add(newIconButton("dialog.setup.frc", frcIcon));
+		frc.add(newIconButton("dialog.setup.shuffle", shuffleIcon));
 
 		getElementPane().add(frc, gridConstraint(ELEMENT_TWO_SMALL, 1,2,1));
 

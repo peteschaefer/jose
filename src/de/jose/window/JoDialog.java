@@ -1667,9 +1667,9 @@ public class JoDialog
         return button;
     }
 
-	protected JButton newIconButton(String command, String icon)
+	protected JButton newIconButton(String command, Icon icon)
 	{
-	    JButton button = newButton(command,icon);
+	    JButton button = newButton(command,icon,(String)null);
 	    Font font = new Font("dialog",Font.PLAIN,10);
 	    button.setFont(font);
 	    button.setBorderPainted(false);

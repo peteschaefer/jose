@@ -297,6 +297,7 @@ public class OptionDialog
 		if (eboardCtrl.eboard.isAvailable())
 			addBox(tab1, 0,4,4, ebox);
 
+
 		tab1.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
 

@@ -319,7 +319,7 @@ public class ListUtil
 			if (currentIndex < 0)
 				throw new IllegalStateException("must not call next after iterator is done");
 
-			Integer result = new Integer(model.getDBId(currentIndex));
+			Integer result = model.getDBId(currentIndex);
 			currentIndex = fetchNext(currentIndex+1);
 			return result;
 		}
