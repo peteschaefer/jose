@@ -69,7 +69,14 @@ public class Util
 		array[a] = array[b];
 		array[b] = aux;
 	}
-	
+
+	public static void swap(int[] array, int a, int b)
+	{
+		int aux = array[a];
+		array[a] = array[b];
+		array[b] = aux;
+	}
+
 	public static void swap(List list, int a, int b)
 	{
 		Object aux = list.get(a);

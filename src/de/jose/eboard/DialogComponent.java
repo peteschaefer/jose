@@ -47,6 +47,7 @@ public class DialogComponent extends JComponent implements ActionListener
         ori.addItem(Language.get("eboard.orientation.white"));
         ori.addItem(Language.get("eboard.orientation.black"));
         ori.addItem(Language.get("eboard.orientation.auto"));
+        ori.setSelectedIndex(2);
 
         add(Box.createHorizontalStrut(12));
         add(JoDialog.newLabel("eboard.orientation"));
@@ -116,7 +117,7 @@ public class DialogComponent extends JComponent implements ActionListener
             connect.setEnabled(true);
             connect.setActionCommand("eboard.connect");
 
-            ori.setSelectedIndex(0);
+            ori.setSelectedIndex(2);
             ori.setEnabled(false);
         }
 

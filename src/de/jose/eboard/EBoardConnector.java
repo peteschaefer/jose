@@ -303,7 +303,6 @@ public abstract class EBoardConnector
 
     private Move[] guessDoubleTake(BoardState st, StringBuilder appXfen, Position pos)
     {
-        //  todo
         //  guess take-take combination with diff_cnt = 2 or 3
         //  two origin squares empty, one occupied square
         if (st.diff_cnt < 2 || st.diff_cnt > 3) return null;

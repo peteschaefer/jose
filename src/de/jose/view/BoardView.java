@@ -57,6 +57,7 @@ abstract public class BoardView
 	protected Point mouseStartPoint = null;
 	/**	square where mouse click appeared */
 	protected int mouseStartSquare = 0;
+	protected int mouseClickSquare = 0;
 	/**	current mouse move	 */
 	protected Move mouseMove;
 

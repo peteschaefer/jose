@@ -13,13 +13,9 @@
 package de.jose.view;
 
 import de.jose.*;
-import de.jose.chess.EngUtil;
-import de.jose.chess.Move;
-import de.jose.chess.Rook;
+import de.jose.chess.*;
 import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
-import de.jose.plugin.EnginePlugin;
-import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 import javafx.scene.transform.Affine;
@@ -37,13 +33,16 @@ import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.awt.Graphics2D;
+
+import static de.jose.Application.ANALYSIS;
+import static de.jose.Application.USER_INPUT;
 
 public class BoardView2D
 		extends BoardView
@@ -580,8 +579,6 @@ public class BoardView2D
 		if (showAnimationHints) showHint(mv, millis, ANIM_HINT_COLOR);
 
 		/*	set up sprite */
-		sprite1.pickUp(mv.from, piece);
-
 		finishMove(mv, millis);
 	}
 
@@ -758,6 +755,10 @@ public class BoardView2D
 
 	protected void finishMove(Move mv, long millis)
 	{
+		if (!sprite1.isPickedUp())
+			sprite1.pickUp(mv.from, mv.moving.piece());
+		//	maybe picked up by mouseStart(), maybe here
+
 		int piece = sprite1.pc;
 		if (mv.isPromotion())
 			piece = mv.getPromotionPiece() + EngUtil.colorOf(piece);
@@ -1164,7 +1165,8 @@ public class BoardView2D
 
 	public void mouseClicked(MouseEvent e)
 	{
-/*      no need to intercept mouseClicked. mousePressed/Released is better  */
+		if (! ContextMenu.isTrigger(e) && ! promoPopupShowing)
+			mouseClickSquare = mouseClick(e.getPoint());
 	}
 
 	public void mousePressed(MouseEvent e)
@@ -1213,6 +1215,123 @@ public class BoardView2D
 		mouseEnd(p,0);
 	}
 
+	public int mouseClick(Point point)
+	{
+		int square = findSquare(point,true);
+		if (square==0 || mouseClickSquare==square)
+			return 0;
+		if (mouseClickSquare==0) {
+			if (guessMove1(square,board.getPosition()))
+				return 0;
+		}
+		else {
+			if (guessMove2(new int[]{mouseClickSquare,square}))
+				return 0;
+			if ((Application.theApplication.theMode==USER_INPUT || Application.theApplication.theMode==ANALYSIS))
+			{
+				Move[] mvs = guessDoubleTake(mouseClickSquare,square,board.getPosition());
+				if (mvs!=null
+						&& tryMouseMove(mvs[0])
+						&& tryMouseMove(mvs[1]))
+					return 0;
+			}
+		}
+		//	otherwise: memorize square for second click
+		return square;
+	}
+
+	protected boolean guessMove1(int square, Position pos)
+	{
+		MoveIterator moves = new MoveIterator(pos);
+		Move candidate = null;
+		while(moves.next())
+		{
+			Move mv = moves.getMove();
+			if ((MoveGesture.origSquare(mv)==square || MoveGesture.destSquare(mv)==square) && pos.checkMove(mv))
+				if (!mv.isPromotion() || mv.getPromotionPiece()==Constants.QUEEN) {
+					if (candidate!=null)
+						return false;	//	ambiguous
+					candidate = new Move(mv);
+					candidate.setPromotionPiece(0);	//	yet
+				}
+		}
+		return (candidate!=null) && tryMouseMove(candidate);
+	}
+
+	protected boolean tryMouseMove(int s1, int s2, int promoPiece) {
+		Move mv = new Move(s1,s2);
+		mv.setPromotionPiece(promoPiece);
+		return tryMouseMove(mv);
+	}
+
+	protected boolean tryMouseMove(Move mv)
+	{
+		mouseMove = mv;
+		if (board.isLegal(mouseMove)) {
+			/*	legal move	*/
+			finishMove(mouseMove, calcMillis(0.1f));
+			board.userMove(mouseMove);
+			return true;
+		}
+
+		if (couldBePromotion(mouseMove)) {
+			/*	show popup	*/
+			mouseStartSquare = mouseMove.from;
+			showPromotionPopup(board.movesNext(), origin(mouseMove.to,true));
+			/*	when the user selects an item, mouseEnd will be called again	*/
+			return true;	//	important: keep mouseMove
+		}
+		return false;
+	}
+
+	protected boolean guessMove2(int[] s)
+	{
+		if (EngUtil.colorOf(board.pieceAt(s[1])) == board.movesNext())
+			Util.swap(s,0,1);
+
+		int p0 = board.pieceAt(s[0]);
+		int p1 = board.pieceAt(s[1]);
+		return (EngUtil.colorOf(p0) == board.movesNext())
+			&& (EngUtil.colorOf(p1) != EngUtil.colorOf(p0))
+			&& tryMouseMove(s[0],s[1],0);
+	}
+
+	protected Move[] guessDoubleTake(int s1, int s2, Position pos)
+	{
+		//  guess take-take combination
+		int s3;
+		MoveIterator moves = new MoveIterator(pos);
+		while(moves.next())
+		{
+			Move mv = moves.getMove();
+			if (mv.from==s1)
+				s3 = s2;
+			else if (mv.from==s2)
+				s3 = s1;
+			else
+				continue;
+
+			if (!pos.checkMove(mv)) continue;
+			//  if the intermediate move is a promotion, prefer a queen
+			//  (it will be captured, anyway)
+			if (mv.isPromotion() && mv.getPromotionPiece()!=Constants.QUEEN) continue;
+
+			if (pos.tryMove(mv))
+				try {
+					MoveIterator moves2 = new MoveIterator(pos);
+					while(moves2.next()) {
+						Move mv2 = moves2.getMove();
+						if (mv2.from==s3 && mv.to==mv2.to && pos.checkMove(mv2))
+							return new Move[] { mv,mv2 };
+					}
+				} finally {
+					pos.undoMove();
+				}
+		}
+		return null;
+	}
+
+
 	public void promotionPopup(int promoPiece)
 	{
 		if (promoPiece <= 0)
@@ -1244,23 +1363,8 @@ public class BoardView2D
 				break;
 			}
 
-			//	end dragging
-			mouseMove = new Move(mouseStartSquare,destSquare[i]);
-			mouseMove.setPromotionPiece(promoPiece);
-
-			if (board.isLegal(mouseMove)) {
-				/*	legal move	*/
-				finishMove(mouseMove, calcMillis(0.1f));
-				board.userMove(mouseMove);
+			if (tryMouseMove(mouseStartSquare,destSquare[i],promoPiece))
 				break;
-			}
-
-			if (couldBePromotion(mouseMove)) {
-				/*	show popup	*/
-				showPromotionPopup(board.movesNext(), origin(mouseMove.to,true));
-				/*	when the user selects an item, mouseEnd will be called again	*/
-				return;	//	important: keep mouseMove
-			}
 		}
 
 		/*	illegal move	*/
@@ -1270,6 +1374,7 @@ public class BoardView2D
 		}
 
 		mouseStartSquare = 0;
+		//mouseClickSquare = 0;
 		mouseMove = null;
 	}
 
@@ -1329,6 +1434,11 @@ public class BoardView2D
 		{
 			pickUp(startSquare,movingPiece);
 			dropTo(endSquare,destPiece, duration,frameRate,true);
+		}
+
+		public boolean isPickedUp()
+		{
+			return pc!=0;
 		}
 
 		public void pickUp(int startSquare, int movingPiece)
