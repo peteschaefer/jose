@@ -1344,7 +1344,7 @@ public class Application
 				if (theGame.first()) {
 					updateClock();
 	                getAnimation().pause();
-					pausePlugin(theMode== AppMode.ANALYSIS);
+					pausePlugin();
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -1363,7 +1363,7 @@ public class Application
 				updateClock();
 				if (mv != null) {
 					getAnimation().pause();
-					pausePlugin(theMode==AppMode.ANALYSIS);
+					pausePlugin();
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -1375,10 +1375,14 @@ public class Application
         action = new CommandAction() {
             public void Do(Command cmd) {
                 MoveNode mv = (MoveNode)cmd.data;
-                theGame.gotoMove(mv);
-                theClock.halt();
+				if (mv==theGame.getCurrentMove()) return;	//	nothing to be done
+
+				theGame.gotoMove(mv);
+				theClock.halt();
+				theMode = AppMode.USER_INPUT;	//	right?
+
                 getAnimation().pause();
-                pausePlugin(theMode==AppMode.ANALYSIS);
+                pausePlugin();
 
                 cmd = new Command("move.notify",null,mv.getMove());
                 broadcast(cmd);
@@ -1428,7 +1432,7 @@ public class Application
 				updateClock();
 
 				if (mv != null) {
-					 pausePlugin(theMode==AppMode.ANALYSIS);
+					 pausePlugin();
 				     if (boardPanel() != null) {
 				         float speed = (float)(mv.distance()*0.2);
 				         boardPanel().move(mv, speed);
@@ -1486,8 +1490,8 @@ public class Application
 
 			public void Do(Command cmd) {
 				getAnimation().pause();
-				pausePlugin(false);
 				theMode = AppMode.USER_INPUT;
+				pausePlugin(false);
 			}
 		};
 		map.put("engine.stop", action);
@@ -1499,6 +1503,7 @@ public class Application
 
 			public void Do(Command cmd) throws Exception {
 				openDialog("dialog.animate");
+				theMode = AppMode.USER_INPUT;
 				pausePlugin(false);
 				getAnimation().start();
 			}
@@ -1514,7 +1519,7 @@ public class Application
 				if (theGame.last()) {
 					updateClock();
 	                getAnimation().pause();
-					pausePlugin(theMode==AppMode.ANALYSIS);
+					pausePlugin();
 					cmd.code = "move.notify";
 					cmd.moreData = null;
 					broadcast(cmd);
@@ -2239,12 +2244,14 @@ public class Application
 							theMode = AppMode.USER_INPUT;
 							break;
 					}
-					pausePlugin(theMode == AppMode.ANALYSIS);
+					pausePlugin();
 //                    broadcast(cmd);
 				}
 
-				if (!showPanel && oldTabIndex>=0) {
+				if (!showPanel && oldTabIndex>=0 && oldTabIndex!=theHistory.currentIndex()) {
 					//	back to original panel
+					//	(Lichess download: open downloaded game, then switch back.
+					//   not elegant, but necessary?)
 					switchGame(oldTabIndex);
 				}
 			}
@@ -2272,7 +2279,7 @@ public class Application
 				int GId = theGame.getId();
 				theGame.reread(GId);
 
-				pausePlugin(theMode==AppMode.ANALYSIS);
+				pausePlugin();
 				//  forward to ourself
 				theCommandDispatcher.forward(new Command("move.last"),Application.this);
 			}
@@ -2554,7 +2561,7 @@ public class Application
 
 		theClock.halt();
 		getAnimation().pause();
-		pausePlugin(theMode==AppMode.ANALYSIS);
+		pausePlugin();
 
 		if (cutCurrent) {
 			Command cmd = new Command("move.notify",null,closeMove,Boolean.TRUE);
@@ -2678,7 +2685,7 @@ public class Application
         theGame.gotoMove(theGame.getCurrentMove(),true);
 		//  TODO each of the above calls Board.setupFEN(); three times in a row.
 		//  potential for optimisation...
-		pausePlugin(theMode==AppMode.ANALYSIS);
+		pausePlugin();
 
 		Command cmd = new Command("switch.game",null, theGame, new Integer(tabIndex));
 		broadcast(cmd);
@@ -3340,7 +3347,8 @@ public class Application
 		case EnginePlugin.PLUGIN_ERROR:
 			dialogText = Language.get("error.engine");
 			//  recoverable error, stop calculating
-			pausePlugin(false);
+			theMode = AppMode.USER_INPUT;
+			pausePlugin();
 			break;
 		default:
 		case EnginePlugin.PLUGIN_FATAL_ERROR:
@@ -3834,6 +3842,10 @@ public class Application
 		return true;
 	}
 
+	public void pausePlugin()
+	{
+		pausePlugin(theMode==AppMode.ANALYSIS);
+	}
 
 	public void pausePlugin(boolean analyze)
 	{

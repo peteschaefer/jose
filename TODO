@@ -7,8 +7,11 @@
         -> get one from current AnalysisRecord
 [-] Application.selectBookMove needs to be asynchronized.
     [?] update/don't update book when navigating
-    [ ] pause button should pause engine;
+    [x] pause button should pause engine;
         book is shown in both, USER_INPUT and ANALYSIS
+    [ ] duplicate Book Queries
+[ ] paint eval bar frame
+[ ] fix pause button
 
 === Database Bugs
 
@@ -77,6 +80,13 @@ Alternative JREs:
 
 ==== Refactorings
 
+* PLUGIN_REQUESTED_HINT is outdated. Hints should work like:
+    switch(engine state)
+    case THINKING:  no hint available
+    case PONDERING: hint = pondermove
+    case ANALYZING: show current analysis (already implemented)
+    case PAUSED:    start analyszing (until the button is released?)
+
 * fine-grained BoardView2D updates
     - 64+2 bits instead of fRedraw
     - set bits selectively when painting/undoing arrows
@@ -92,10 +102,16 @@ Alternative JREs:
 
 ==== Interesting New Features
 
+* Foldable variations
+    - LineLabelNode "[" clicked
+    -> [ firstmove ... ]
+    - manipulate StyledDocument, Game DOM stays unmodified
+
 * Threat Analysis: show threats (arrows; analysis from other color)
     - for a fixed amount of time
     - while button is pressed
-    -> similarly for hint?
+    -> similar mechanism as for hints
+    (caution: never ever execute a threat move, keep Game.position legal)
 
 * LiChess Opening Explorer
     [x] download top games for a variation

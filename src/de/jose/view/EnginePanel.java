@@ -1206,7 +1206,7 @@ public class EnginePanel
 		if (Application.theApplication.getEnginePlugin() != null)
 			connectTo(Application.theApplication.getEnginePlugin());
 
-		Application.theApplication.updateBook(false,false);   //  is this the right place ?
+		//Application.theApplication.updateBook(false,false);   //  well be called by "switch.game", finally
 	}
 
 	protected void connectTo(EnginePlugin plugin)
@@ -1680,38 +1680,6 @@ public class EnginePanel
 
 	}
 
-	//	todo move to Application. Submit BookQuery to executor services.
-/*
-	public boolean updateBook(boolean onEngineMove)
-			throws IOException
-	{
-		//  show opening book moves
-		Position pos = Application.theApplication.theGame.getPosition();
-		OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
-
-		List<BookEntry> bookMoves=null;
-		boolean inBook;
-		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
-		{	//	don't update book after an engine move, if this is not desired
-			inBook = false;
-		}
-		else {
-			// note: collectMoves can be slow b/c of Lichess queries
-			// todo for long-running queries, don't rely on pos. compute fen, hash key before.
-			bookMoves = lib.collectMoves(pos, Application.theApplication.theMode,true,false);
-			inBook = (bookMoves!=null) && !bookMoves.isEmpty();
-		}
-
-		//	todo do this when collectMoves returns (plus: switch to engine analysis on failure)
-		//	time coordination is a bit tricky
-		if (inBook)
-			showBook(bookMoves,pos);
-		else
-			exitBook();
-
-		return inBook;
-	}
-*/
 	public void lostOwnership(Clipboard clipboard, Transferable contents)
 	{
 		//  implements ClipboardOwner
