@@ -31,9 +31,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.FileNotFoundException;
@@ -257,6 +255,9 @@ public class BoardView2D
 				AffineTransform save_tf = g2.getTransform();
 				g2.setTransform(scale);
 
+				AffineTransform ident = new AffineTransform();
+				g2.setTransform(ident);
+
 				g2.drawImage(buffer, 0,0, null);
 				//	todo sprites !! ?? !!
 				if (sprite1.isMoving()) sprite1.paint(g2);
@@ -316,11 +317,20 @@ public class BoardView2D
 	/**	calculate square size and inset after resize	 */
 	public void recalcSize()
 	{
+		//	todo widgetSize = ...
+		//	todo copyTransform = ...
+
 		// in user-space coordinates, used by Graphics2D
 		userSquareSize = calcUserSquareSize();
 
-		float scale = getBufferScaleFactor();
+		double scale = getBufferScaleFactor();
 		devSquareSize = (int)(userSquareSize*scale+0.5);
+
+		//	todo round userSquareSize to multiples of 2,4
+		//	s.t. both sizes are integral
+		// -> copy 1 square does not create round-off pixels
+		//	(but maybe that isn't a problem, after all)
+		//	how do sprites handle this?
 
 		userInset = calcInsetPoint(true);
 		devInset = calcInsetPoint(false);
@@ -346,17 +356,12 @@ public class BoardView2D
 		return inset;
 	}
 
-	protected float getBufferScaleFactor()
+	protected double getBufferScaleFactor()
 	{
-		int screenRes = Toolkit.getDefaultToolkit().getScreenResolution();
-		if (screenRes <= 96) {
-			//	lo-res screen: buffer equals screen size
-			return 1.0f;
-		}
-		else {
-			//	hi-res screen: buffer is enlarged
-			return (float)screenRes/96.f;
-		}
+		AffineTransform tf2 =
+				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+						getDefaultConfiguration().getDefaultTransform();
+		return tf2.getScaleX();
 	}
 
 	private int calcUserSquareSize()
@@ -807,12 +812,15 @@ public class BoardView2D
 		showSuggestions(prf.getBoolean("board.suggestions"));
 	}
 
-	private boolean sizeChanged() {
-		return buffer!=null &&
-			(getWidth() != buffer.getWidth() ||
-			 getHeight() != buffer.getHeight());
-		//	todo we would also like to recognize resolution changes
-		//	(e.g. when the window is moved to a hi-dpi screen)
+	private boolean sizeChanged(Graphics2D screeng) {
+		AffineTransform tf = screeng.getTransform();
+//		AffineTransform devtf = screeng.getDeviceConfiguration().getDefaultTransform();
+//		AffineTransform normtf = screeng.getDeviceConfiguration().getNormalizingTransform();
+		Point2D widgetSize = new Point2D.Double(getWidth(), getHeight());
+		Point2D bufferSize = new Point2D.Double();
+		tf.transform(widgetSize, bufferSize);
+
+		return (buffer==null) || (buffer.getWidth()!=bufferSize.getX() || (buffer.getHeight()!=buffer.getHeight()));
 	}
 
 	private BufferedImage createBuffer(Graphics2D screeng, int width, int height)
@@ -833,11 +841,11 @@ public class BoardView2D
 		boolean redraw = forceRedraw;
 		forceRedraw = false;
 
-		if (buffer==null || sizeChanged())
+		if (buffer==null || sizeChanged(screeng))
 		{
 			/*	size has changed	*/
 			recalcSize();
-			float scaleFactor = getBufferScaleFactor();
+			double scaleFactor = getBufferScaleFactor();
 			buffer = createBuffer(screeng,
 					(int)(getWidth()*scaleFactor+0.5),
 					(int)(getHeight()*scaleFactor+0.5));
@@ -1087,6 +1095,7 @@ public class BoardView2D
 
 			Graphics2D g = (Graphics2D)img.getGraphics();
 			prepareImage(g);
+			//	 todo why? why not copy buffer directly ??
 
 			if (sprite1.isMoving()) sprite1.paint(g);
 			if (sprite2.isMoving()) sprite2.paint(g);
