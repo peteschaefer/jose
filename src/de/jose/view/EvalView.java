@@ -361,7 +361,8 @@ public class EvalView
 			EnginePlugin plugin = (EnginePlugin)source;
 			AnalysisRecord a = (AnalysisRecord)data;
 			if (a!=null && a.ply>=0) {
-				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
+				plugin.mapUnit(a.eval[0]);
+				float[] value = a.eval[0].mapWDL(svalue);
 				updateMoveNode(a.ply-1, value);
 			}
 			break;

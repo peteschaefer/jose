@@ -832,7 +832,8 @@ abstract public class EnginePlugin
 	public static class EvaluatedMove extends Move
 	{
 		public int ply;
-//		public Score score = new Score();	//	todo still needed ? Yes.
+		public Score score = new Score();	//	todo still needed ? Yes.
+		//	@deprecated use score instead
 		public float[] mappedScore = new float[2];	// todo use Score instead
 
 		public EvaluatedMove(Move move, int ply, Score score, EnginePlugin plugin)
@@ -841,7 +842,7 @@ abstract public class EnginePlugin
 			this.ply = ply;
 			//score.copy(ascore);
 			if (plugin!=null)
-				plugin.mapUnitWDL(score, mappedScore);
+				plugin.mapUnit(score);
 			else if (score.hasWDL())
 				score.mapWDL(mappedScore);
 			else
@@ -1058,43 +1059,27 @@ abstract public class EnginePlugin
 	 * @param sc
 	 * @return value in [0..1]
 	 */
-	public float mapUnit(Score sc) {
+	public void mapUnit(Score sc) {
 		assert(sc.cp >= Score.UNKNOWN);
-		//	we assume arbitrary, but practicable, upper limits for centipawns
-		//	fitting the eval bar (4 squares = 4 pawn units = 400 centipawns
-		return mapUnit(sc.cp,-400,+400);
-	}
-
-	protected float mapUnit(int cp, int cpmin, int cpmax) {
-		if (cp >= cpmax) return 1.0f;
-		if (cp <= cpmin) return 0.0f;
-		//	derived classes may implement different mappings, e.g. for percentage scores, etc.
-		return (float) (cp - cpmin) / (cpmax - cpmin);
-	}
-
-	/**
-	 * map WDL scores to intervals [0..1]
-	 * @param sc
-	 * @return double[3] for white wins, draw, black wins
-	 */
-	public float[] mapUnitWDL(Score sc, float[] result)
-	{
-		if (result==null)
-			result = new float[2];
-		if (!sc.hasWDL()) {
-			//	use linear score
-			if (sc.cp==Score.UNKNOWN) {
-				result[0] = result[1] = Float.MAX_VALUE;
-			}
-			else {
-				result[0] = mapUnit(sc);
-				result[1] = 0.0f;
-			}
-			return result;
-		}
+		if (sc.cp==Score.UNKNOWN)
+			sc.win = sc.draw = sc.lose = 0;
 		else {
-			sc.mapWDL(result);
+			//	we assume arbitrary, but practicable, upper limits for centipawns
+			//	fitting the eval bar (4 squares = 4 pawn units = 400 centipawns
+			mapUnit(sc, sc.cp, -400, +400);
 		}
-		return result;
 	}
+
+	protected void mapUnit(Score sc, int cp, int cpmin, int cpmax) {
+		int span = cpmax-cpmin;
+		if (cp >= cpmax)
+			sc.win = span;
+		else if (cp <= cpmin)
+			sc.win =0;
+		else
+			sc.win = (cp-cpmin) / span;
+		sc.draw = 0;
+		sc.lose = span-sc.win;
+	}
+
 }
