@@ -14,7 +14,6 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.book.GameRef;
-import de.jose.book.lichess.LiChessBookEntry;
 import de.jose.book.lichess.LiChessGameRef;
 import de.jose.book.lichess.LiChessOpeningExplorer;
 import de.jose.chess.*;
@@ -37,7 +36,6 @@ import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.JoStyledLabel;
 import de.jose.view.input.WdlLabel;
 import de.jose.view.style.JoStyleContext;
-import javafx.stage.PopupWindow;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -155,6 +153,9 @@ public class EnginePanel
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 	}
 
+	private static final Color GREY_INFO = Color.darkGray;
+	private static final Color BLUE_LINK = new Color(0,0,196);
+
 	private void setupStyles()
 	{
 		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
@@ -176,11 +177,11 @@ public class EnginePanel
 
 		Style infoStyle = styles.addStyle("engine.pv.info",textStyle);
 		StyleConstants.setFontSize(infoStyle, 10);
-		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
+		StyleConstants.setForeground(infoStyle, GREY_INFO);
 
 		Style linkStyle = styles.addStyle("engine.pv.link",textStyle);
 		StyleConstants.setFontSize(linkStyle, 10);
-		StyleConstants.setForeground(linkStyle, Color.blue);
+		StyleConstants.setForeground(linkStyle, BLUE_LINK);
 		StyleConstants.setUnderline(linkStyle, true);
 
 		Style userFigStyle = userStyles.getStyle("body.figurine");
