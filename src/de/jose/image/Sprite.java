@@ -87,7 +87,7 @@ public class Sprite
 		backg = (Graphics2D)theBackground.getGraphics();
 
 		current = start;
-		offset = new Point(offx,offy);
+		offset = new Point(offx,offy);	//	user-space, dev-space ?
 
 		updateBuffer();
 	}

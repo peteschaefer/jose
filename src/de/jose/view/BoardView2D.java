@@ -54,9 +54,11 @@ public class BoardView2D
 	/**	background double buffer (we DO NOT use the Java double buffering)	 */
 	protected BufferedImage buffer = null;
 	/**	left and top inset	 */
-	protected Point inset;
+	protected Point userInset=new Point(0,0);
+	protected Point devInset=new Point(0,0);
 	/**	size of one square	 */
-	protected int squareSize;
+	protected int userSquareSize;
+	protected int devSquareSize;
 	protected boolean isResizing;
 	/**	todo thoughts on HiDpi displays.
 	 * 	to take advantage of high-res screens, we would need to
@@ -124,7 +126,6 @@ public class BoardView2D
 		addMouseListener(this);
 		addMouseMotionListener(this);
 
-		inset = new Point();
 		this.lockImgCache = lockImgCache;
 		recalcSize();
 	}
@@ -178,7 +179,7 @@ public class BoardView2D
 	{
 		//	store image data
 		//	TO DO
-		Map map = FontCapture.getAllImages(currentFont, squareSize, null, currentWhite, currentBlack);
+		Map map = FontCapture.getAllImages(currentFont, devSquareSize, null, currentWhite, currentBlack);
 		Iterator i = map.entrySet().iterator();
 		FontCapture.MapEntry fety = null;
 
@@ -239,12 +240,30 @@ public class BoardView2D
 */
 		else {
 			/*	paint off screen	*/
-            prepareImage((Graphics2D)g);
+			Graphics2D g2 = (Graphics2D)g;
+            prepareImage(g2);
             /*	then copy	*/
-			g.drawImage(buffer,0,0,null);
+			if (buffer.getWidth()==this.getWidth() && buffer.getHeight()==this.getHeight()) {
+				//	low resolution buffer size == screen size
+				g2.drawImage(buffer, 0, 0, null);
+				if (sprite1.isMoving()) sprite1.paint(g2);
+				if (sprite2.isMoving()) sprite2.paint(g2);
+			}
+			else {
+				//	todo hi-dpi
+				double sx = (double)this.getWidth()/buffer.getHeight();
+				double sy = (double)this.getHeight()/buffer.getWidth();
+				AffineTransform scale = AffineTransform.getScaleInstance(sx,sy);
+				AffineTransform save_tf = g2.getTransform();
+				g2.setTransform(scale);
 
-			if (sprite1.isMoving()) sprite1.paint(g);
-			if (sprite2.isMoving()) sprite2.paint(g);
+				g2.drawImage(buffer, 0,0, null);
+				//	todo sprites !! ?? !!
+				if (sprite1.isMoving()) sprite1.paint(g2);
+				if (sprite2.isMoving()) sprite2.paint(g2);
+
+				g2.setTransform(save_tf);
+			}
 		}
 	}
 
@@ -258,7 +277,7 @@ public class BoardView2D
 		Rectangle screen = new Rectangle(0,0,getWidth(),getHeight());
 		Rectangle dst = new Rectangle(0,0,getWidth(),getHeight());
 
-		double scale = (double)calcSquareSize() / (double)squareSize;
+		double scale = (double)calcUserSquareSize() / (double)userSquareSize;
 
 		dst.width = (int)Math.round(src.width*scale);
 		dst.height = (int)Math.round(src.height*scale);
@@ -297,8 +316,18 @@ public class BoardView2D
 	/**	calculate square size and inset after resize	 */
 	public void recalcSize()
 	{
-		squareSize = calcSquareSize();
+		// in user-space coordinates, used by Graphics2D
+		userSquareSize = calcUserSquareSize();
 
+		float scale = getBufferScaleFactor();
+		devSquareSize = (int)(userSquareSize*scale+0.5);
+
+		userInset = calcInsetPoint(true);
+		devInset = calcInsetPoint(false);
+	}
+
+	protected Point calcInsetPoint(boolean userSpace)
+	{
 		float divx = 8.0f, divy = 8.0f;
 		if (showCoords) {
 			divx += 0.4f;
@@ -307,13 +336,30 @@ public class BoardView2D
 		if (showEvalbar)
 			divx += 0.4f;
 
+		Point inset = new Point(0,0);
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
+
 		inset.x = (int)(getWidth()-divx*squareSize) / 2;
-		if (showCoords) inset.x += 0.4*squareSize;
+		if (showCoords) userInset.x += 0.4*squareSize;
 
 		inset.y = (int)(getHeight()-divy*squareSize) / 2;
+		return inset;
 	}
 
-	private int calcSquareSize()
+	protected float getBufferScaleFactor()
+	{
+		int screenRes = Toolkit.getDefaultToolkit().getScreenResolution();
+		if (screenRes <= 96) {
+			//	lo-res screen: buffer equals screen size
+			return 1.0f;
+		}
+		else {
+			//	hi-res screen: buffer is enlarged
+			return (float)screenRes/96.f;
+		}
+	}
+
+	private int calcUserSquareSize()
 	{
 		float divx = 8.0f, divy = 8.0f;
 		if (showCoords) {
@@ -341,14 +387,14 @@ public class BoardView2D
 
 	protected void paintImmediate(Graphics2D g, int square)
 	{
-		Point p = origin(square);
-		g.drawImage(buffer, p.x,p.y, p.x+squareSize, p.y+squareSize,
-					p.x,p.y, p.x+squareSize, p.y+squareSize, null);
+		Point p = origin(square,false);
+		g.drawImage(buffer, p.x,p.y, p.x+devSquareSize, p.y+devSquareSize,
+					p.x,p.y, p.x+devSquareSize, p.y+devSquareSize, null);
 	}
 
 	public Point getScreenLocation (int square)
 	{
-		Point pt = origin(square);
+		Point pt = origin(square,true);
 		SwingUtilities.convertPointToScreen(pt,this);
 		return pt;
 	}
@@ -357,19 +403,22 @@ public class BoardView2D
 	 *	@param p a point on the screen
 	 *	@return the square index (or 0, if off the board)
 	 * */
-	public final int findSquare(Point p)
+	public final int findSquare(Point p, boolean userSpace)
 	{
-		return findSquare(p.x,p.y);
+		return findSquare(p.x,p.y, userSpace);
 	}
 
 	/**
 	 *	@param x
-     *  @param y a point on the screen
+     *  @param y a point on the screen (in user-space coordinates)
 	 *	@return the square index (or 0, if off the board)
 	 * */
 
-	public int findSquare(int x, int y)
+	public int findSquare(int x, int y, boolean userSpace)
 	{
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point inset = userSpace ? userInset : devInset;
+
 		if (squareSize==0 || x<inset.x || y<inset.y)
 			return 0;
 
@@ -395,15 +444,15 @@ public class BoardView2D
 	{
 		int[] result = new int[6];
 		/**	1. choice: mouse location	*/
-		result[0] = findSquare(mousePoint);
+		result[0] = findSquare(mousePoint,true);
 		/**	2. choice: intersection with sprite (sorted by area)	*/
 		if (spriteBounds!=null) {
-			result[1] = findSquare(ViewUtil.center(spriteBounds));
+			result[1] = findSquare(ViewUtil.center(spriteBounds),false);
 			/**	next choice: any intersection with sprite	*/
-			result[2] = findSquare(ViewUtil.topLeft(spriteBounds));
-			result[3] = findSquare(ViewUtil.topRight(spriteBounds));
-			result[4] = findSquare(ViewUtil.bottomLeft(spriteBounds));
-			result[5] = findSquare(ViewUtil.bottomRight(spriteBounds));
+			result[2] = findSquare(ViewUtil.topLeft(spriteBounds),false);
+			result[3] = findSquare(ViewUtil.topRight(spriteBounds),false);
+			result[4] = findSquare(ViewUtil.bottomLeft(spriteBounds),false);
+			result[5] = findSquare(ViewUtil.bottomRight(spriteBounds),false);
 			/* remove duplicates */
 			for (int i=0; i < 5; i++)
 				for (int j=i+1; j < 6; j++)
@@ -416,8 +465,10 @@ public class BoardView2D
 	/**
 	 *	@return the screen location of the upper left corner of a given square
 	 * */
-	protected Point origin(int file, int row)
+	protected Point origin(int file, int row, boolean userSpace)
 	{
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point inset = userSpace ? userInset : devInset;
 		if (flipped)
 			return new Point((FILE_H-file) * squareSize + inset.x,
 						 (row-ROW_1) * squareSize + inset.y);
@@ -429,23 +480,26 @@ public class BoardView2D
 	/**
 	 *	@return the screen location of the upper left corner of a given square
 	 * */
-	protected final Point origin(int square)
+	protected final Point origin(int square, boolean userSpace)
 	{
 		return origin(EngUtil.fileOf(square),
-					  EngUtil.rowOf(square));
+					EngUtil.rowOf(square),
+					userSpace);
 	}
 
-    protected final Point lowerRight(int square)
+    protected final Point lowerRight(int square, boolean userSpace)
     {
-        Point p = origin(square);
+        Point p = origin(square,userSpace);
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
         p.x += squareSize;
         p.y += squareSize;
         return p;
     }
 
-    protected final Point center(int square)
+    protected final Point center(int square, boolean userSpace)
     {
-        Point p = origin(square);
+        Point p = origin(square,userSpace);
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
         p.x += squareSize/2;
         p.y += squareSize/2;
         return p;
@@ -564,8 +618,8 @@ public class BoardView2D
 				Hint hnt = (Hint) hints.get(i);
 				if (hnt != null) {
 					Graphics2D g = getBufferGraphics();
-					paintArrow(g, center(hnt.from), center(hnt.to),
-							squareSize / 16, hnt.color, hnt.label);
+					paintArrow(g, center(hnt.from,false), center(hnt.to,false),
+							devSquareSize / 16, hnt.color, hnt.label);
 					painted++;
 				}
 			}
@@ -757,6 +811,8 @@ public class BoardView2D
 		return buffer!=null &&
 			(getWidth() != buffer.getWidth() ||
 			 getHeight() != buffer.getHeight());
+		//	todo we would also like to recognize resolution changes
+		//	(e.g. when the window is moved to a hi-dpi screen)
 	}
 
 	private BufferedImage createBuffer(Graphics2D screeng, int width, int height)
@@ -781,7 +837,10 @@ public class BoardView2D
 		{
 			/*	size has changed	*/
 			recalcSize();
-			buffer = createBuffer(screeng, getWidth(),getHeight());
+			float scaleFactor = getBufferScaleFactor();
+			buffer = createBuffer(screeng,
+					(int)(getWidth()*scaleFactor+0.5),
+					(int)(getHeight()*scaleFactor+0.5));
 
 			if (sprite1==null)
 				sprite1 = new Board2DSprite(buffer);
@@ -799,32 +858,37 @@ public class BoardView2D
 		Graphics2D g = (Graphics2D)buffer.getGraphics();
 		ImgUtil.setRenderingHints(g);
 
-		int boardSize = 8*squareSize;
-		int x2 = inset.x+boardSize;
-		int y2 = inset.y+boardSize;
+		int boardSize = 8*devSquareSize;
+		int x2 = devInset.x+boardSize;
+		int y2 = devInset.y+boardSize;
 		Border b = new SoftBevelBorder(BevelBorder.RAISED);
 
 		if (redraw) {
 			if (lockImgCache) FontCapture.unlock();    //	make outdated images available for gc
 
+			int devWidth = buffer.getWidth();
+			int devHeight = buffer.getHeight();
 			if (currentBackground.useTexture()) {
+				//	paint background around board
 				Image txtr = TextureCache.getTexture(currentBackground.texture, TextureCache.LEVEL_MAX);
-				TextureCache.paintTexture(g, 0, 0, getWidth(), inset.y, txtr);
-				TextureCache.paintTexture(g, 0, inset.y, inset.x, boardSize, txtr);
-				TextureCache.paintTexture(g, x2, inset.y, getWidth() - x2, boardSize, txtr);
-				TextureCache.paintTexture(g, 0, y2, getWidth(), getHeight() - y2, txtr);
+				TextureCache.paintTexture(g, 0, 0, devWidth, devInset.y, txtr);
+				TextureCache.paintTexture(g, 0, devInset.y, devInset.x, boardSize, txtr);
+				TextureCache.paintTexture(g, x2, devInset.y, devWidth - x2, boardSize, txtr);
+				TextureCache.paintTexture(g, 0, y2, devWidth, devHeight - y2, txtr);
 			} else {
-				g.setPaint(currentBackground.getPaint(getWidth(), getHeight()));
-				g.fillRect(0, 0, getWidth(), inset.y);
-				g.fillRect(0, inset.y, inset.x, boardSize);
-				g.fillRect(x2, inset.y, getWidth() - x2, boardSize);
-				g.fillRect(0, y2, getWidth(), getHeight() - y2);
+				//	paint background around board
+				g.setPaint(currentBackground.getPaint(devWidth, devHeight));
+				g.fillRect(0, 0, devWidth, devInset.y);
+				g.fillRect(0, devInset.y, devInset.x, boardSize);
+				g.fillRect(x2, devInset.y, devWidth - x2, boardSize);
+				g.fillRect(0, y2, devWidth, devHeight - y2);
 			}
 
 
 			g.setColor(Color.black);
 			//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
-			b.paintBorder(this, g, inset.x - 2, inset.y - 2, boardSize + 4, boardSize + 4);
+			b.paintBorder(this, g, devInset.x - 2, devInset.y - 2,
+					boardSize + 4, boardSize + 4);
 
 			if (showCoords)/** draw coordinates    */
 				drawCoordinates(g);
@@ -843,21 +907,21 @@ public class BoardView2D
 
 	private void drawCoordinates(Graphics2D g) {
 		char[] c = new char[2];
-		int fontSize = (int) (squareSize * 0.3f);
+		int fontSize = (int) (devSquareSize * 0.3f);
 		Font f = new Font("SansSerif", Font.PLAIN, fontSize);
 		g.setFont(f);
 		FontMetrics fmx = g.getFontMetrics();
 
-		int drop = Math.max(squareSize / 48, 1);
+		int drop = Math.max(devSquareSize / 48, 1);
 
 		for (int i = 0; i < 8; i++) {
 			c[0] = (char) (flipped ? ('1' + i) : ('8' - i));
-			int x0 = inset.x - fmx.charWidth(c[0]) * 9 / 8 - 4;
-			int y0 = inset.y + squareSize * i + (squareSize + fmx.getAscent()) / 2;
+			int x0 = devInset.x - fmx.charWidth(c[0]) * 9 / 8 - 4;
+			int y0 = devInset.y + devSquareSize * i + (devSquareSize + fmx.getAscent()) / 2;
 
 			c[1] = (char) (flipped ? ('h' - i) : ('a' + i));
-			int x1 = inset.x + squareSize * i + (squareSize - fmx.charWidth(c[1])) / 2;
-			int y1 = inset.y + 8 * squareSize + fmx.getAscent();
+			int x1 = devInset.x + devSquareSize * i + (devSquareSize - fmx.charWidth(c[1])) / 2;
+			int y1 = devInset.y + 8 * devSquareSize + fmx.getAscent();
 
 			g.setColor(SHADOW_64);
 			g.drawChars(c, 0, 1, x0 + drop, y0 + drop);
@@ -877,25 +941,25 @@ public class BoardView2D
 		if (!showEvalbar) return;	//	that was easy
 		if (this.eval==null) return;	//	no useful score
 
-		int boardSize = 8*squareSize;
+		int boardSize = 8*devSquareSize;
 
 		assert(eval.length==3);
 		int hwhite = (int)(boardSize * eval[0]+0.5);
 		int hgrey =  (int)(boardSize * eval[1]+0.5);
 		int hblack = boardSize - hwhite-hgrey;
 
-		int x2 = inset.x+boardSize;
-		int y2 = inset.y+boardSize;
-		int gap = (int)(squareSize*0.1f);
-		int wid = (int)(squareSize*0.25f);
+		int x2 = devInset.x+boardSize;
+		int y2 = devInset.y+boardSize;
+		int gap = (int)(devSquareSize*0.1f);
+		int wid = (int)(devSquareSize*0.25f);
 
 		if (b!=null)
-			b.paintBorder(this, g, x2+gap - 2, inset.y - 2, wid + 4, boardSize + 4);
+			b.paintBorder(this, g, x2+gap - 2, devInset.y - 2, wid + 4, boardSize + 4);
 
 		if (hwhite > 0) {
 			g.setColor(Color.white);
 			if (flipped)
-				g.fillRect(x2+gap, inset.y, wid, hwhite);
+				g.fillRect(x2+gap, devInset.y, wid, hwhite);
 			else
 				g.fillRect(x2+gap, y2-hwhite, wid, hwhite);
 		}
@@ -911,7 +975,7 @@ public class BoardView2D
 			if (flipped)
 				g.fillRect(x2+gap, y2-hblack, wid, hblack);
 			else
-				g.fillRect(x2+gap, inset.y, wid, hblack);
+				g.fillRect(x2+gap, devInset.y, wid, hblack);
 		}
 	}
 
@@ -925,7 +989,7 @@ public class BoardView2D
 
 	public final BufferedImage getPieceImage(int piece, Rectangle bounds)
 	{
-		return getPieceImage(currentFont,squareSize, piece,
+		return getPieceImage(currentFont, devSquareSize, piece,
 							currentWhite, currentBlack, 
 							bounds,lockImgCache);
 	}
@@ -964,7 +1028,7 @@ public class BoardView2D
 		drawBackground(g, square);
 
 		if (piece != EMPTY) {
-			Point p = origin(square);
+			Point p = origin(square,false);
 			Rectangle imgBounds = new Rectangle();
 			Image img = getPieceImage(piece,imgBounds);
 			g.drawImage(img, p.x+imgBounds.x, p.y+imgBounds.y, null);
@@ -979,17 +1043,17 @@ public class BoardView2D
 
 	protected void drawBackground(Graphics2D g, int square)
 	{
-		Point p = origin(square);
+		Point p = origin(square,false);
 		Surface surf = getBackground(square);
 		if (surf.useTexture())
 			try {
 				if (randomTxtrOffset)
-					TextureCache.paintTexture(g, p.x,p.y, squareSize,squareSize,
+					TextureCache.paintTexture(g, p.x,p.y, devSquareSize,devSquareSize,
 								 surf.texture, TextureCache.LEVEL_MAX,
 								 textureOffsets[2*square],
 								 textureOffsets[2*square+1]);
 				else
-					TextureCache.paintTexture(g, p.x,p.y, squareSize,squareSize,
+					TextureCache.paintTexture(g, p.x,p.y, devSquareSize,devSquareSize,
 								surf.texture, TextureCache.LEVEL_MAX,
 								p.x, p.y);
 			} catch (IOException fnex) {
@@ -997,8 +1061,8 @@ public class BoardView2D
 			}
 		else {
 			/*	color	*/
-			g.setPaint(surf.getPaint(p.x,p.y, squareSize,squareSize));
-			g.fillRect(p.x,p.y, squareSize,squareSize);
+			g.setPaint(surf.getPaint(p.x,p.y, devSquareSize,devSquareSize));
+			g.fillRect(p.x,p.y, devSquareSize,devSquareSize);
 		}
 	}
 
@@ -1076,7 +1140,7 @@ public class BoardView2D
 	 */
 	public void mouseStart(Point startPoint)
 	{
-		int square = findSquare(mouseStartPoint = startPoint);
+		int square = findSquare(mouseStartPoint = startPoint,true);
 
 		if (board.canMove(square)) {
 			mouseStartSquare = square;
@@ -1095,9 +1159,9 @@ public class BoardView2D
 	public void promotionPopup(int promoPiece)
 	{
 		if (promoPiece <= 0)
-			mouseEnd(origin(mouseMove.from), 0);				//	cancel move
+			mouseEnd(origin(mouseMove.from,true), 0);				//	cancel move
 		else
-			mouseEnd(origin(mouseMove.to), promoPiece);			//	make move
+			mouseEnd(origin(mouseMove.to,true), promoPiece);			//	make move
 	}
 
 	/**
@@ -1109,6 +1173,7 @@ public class BoardView2D
 
 		int[] destSquare = findPreferredSquares(endPoint,
 							sprite1.isMoving() ? sprite1.getCurrentBounds():null);
+		//	careful: sprite.getCurrentBounds() needs to be interpreted in device-space coordinates
 
 		int i=0;
 		for (i=0; i<destSquare.length; i++)
@@ -1135,7 +1200,7 @@ public class BoardView2D
 
 			if (couldBePromotion(mouseMove)) {
 				/*	show popup	*/
-				showPromotionPopup(board.movesNext(), origin(mouseMove.to));
+				showPromotionPopup(board.movesNext(), origin(mouseMove.to,true));
 				/*	when the user selects an item, mouseEnd will be called again	*/
 				return;	//	important: keep mouseMove
 			}
@@ -1225,7 +1290,8 @@ public class BoardView2D
 			BufferedImage img = getPieceImage(pc,imgBounds);
 
 			init(buffer,getGraphics2D(), BoardView2D.this.getBounds(),
-					img, origin(src), imgBounds.x, imgBounds.y);
+					img, origin(src,true), imgBounds.x, imgBounds.y);
+			//	todo offset in user-space (screen), or dev-space (buffer) ?? !! ??
 		}
 
 		public void dropTo(Move mv, int destPiece, long duration, int frameRate, boolean clear)
@@ -1257,7 +1323,7 @@ public class BoardView2D
 			dstpc = destPiece;
 			clearOnDrop = clear;
 
-			moveTo(origin(dst), duration,frameRate);
+			moveTo(origin(dst,false), duration,frameRate);
 		}
 
 
@@ -1278,7 +1344,7 @@ public class BoardView2D
 	{
 		/*	drag along	*/
 		if ((mouseStartSquare!=0) && sprite1.isMoving()) {
-			Point orig = origin(mouseStartSquare);
+			Point orig = origin(mouseStartSquare,true);
 			Point pt = e.getPoint();
 			int dx = pt.x - mouseStartPoint.x;
 			int dy = pt.y - mouseStartPoint.y;
@@ -1294,7 +1360,7 @@ public class BoardView2D
 
 	public void mouseMovement(Point p)
 	{
-		int square = findSquare(p);
+		int square = findSquare(p,true);
 
 		if (board.canMove(square))
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

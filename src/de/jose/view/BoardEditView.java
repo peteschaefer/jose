@@ -179,12 +179,13 @@ public class BoardEditView
 		int width = getWidth();
 		int height = getHeight();
 
-		squareSize = (int)Math.min((width-32)/WIDTH_RATIO, (height-4)/HEIGHT_RATIO);
+		userSquareSize = (int)Math.min((width-32)/WIDTH_RATIO, (height-4)/HEIGHT_RATIO);
+		devSquareSize = (int)(userSquareSize*getBufferScaleFactor()+0.5);
 
-		inset.y = 0;
-		inset.x = Math.round(0.4f*squareSize);	//	board is always left aligned
-
-		Point p0 = origin(KING,0);
+		devInset.y = userInset.y = 0;
+		userInset.x = Math.round(0.4f*userSquareSize);	//	board is always left aligned
+		devInset.x = Math.round(0.4f*devSquareSize);	//	board is always left aligned
+		//Point p0 = origin(KING,0);
 	}
 
 
@@ -199,8 +200,9 @@ public class BoardEditView
 
 			g.setColor(Color.black);
 			Border b = new SoftBevelBorder(BevelBorder.RAISED);
-			Point p0 = origin(PAWN,0);
-			b.paintBorder(this,g, p0.x-2, p0.y-2, 2*squareSize+4,6*squareSize+4);
+			Point p0 = origin(PAWN,0,false);
+			b.paintBorder(this,g, p0.x-2, p0.y-2,
+					2*devSquareSize+4,6*devSquareSize+4);
 
 			for (int pc = PAWN; pc <= KING; pc++) {
 				paint(g, WHITE+pc, EngUtil.square(pc,0));
@@ -228,9 +230,10 @@ public class BoardEditView
 			super.set(g,piece,square);
 	}
 
-	public int findSquare(int x, int y)
+	public int findSquare(int x, int y, boolean userSpace)
 	{
-		Point p0 = origin(PAWN,0);
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point p0 = origin(PAWN,0,userSpace);
 		if (x >= p0.x && y >= p0.y) {
 			int pc = PAWN+(y-p0.y)/squareSize;
 			int col = (x-p0.x)/squareSize;
@@ -239,14 +242,17 @@ public class BoardEditView
 				return EngUtil.square(pc,col);
 		}
 		//	else
-		int result = super.findSquare(x,y);
+		int result = super.findSquare(x,y,userSpace);
 		if (result==0)
 			result = EngUtil.square(0,KING+1); //	= delete piece
 		return result;
 	}
 
-	protected Point origin(int file, int row)
+	protected Point origin(int file, int row, boolean userSpace)
 	{
+		int squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point inset = userSpace ? userInset : devInset;
+
 		switch (row) {
 		case 0:
 				if ((file==0) || (file>KING))
@@ -256,7 +262,7 @@ public class BoardEditView
 		case 1:
 				return new Point(inset.x+9*squareSize+24, inset.y+(file-PAWN)*squareSize);
 		default:
-				return super.origin(file,row);
+				return super.origin(file,row,userSpace);
 		}
 	}
 
