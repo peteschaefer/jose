@@ -8,6 +8,13 @@
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
 ==== Project
+
+* pick a Leela executable with minimal hardware requirements. Lc0 seems to be quite sensitive to that
+
+- cuda for very recent nvidia gpus
+- cudnn for older nvidia gpus
+- onnx-dml for older gpus
+
 compile sources against 1.8 32bit [x]
 libraries needed:
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
