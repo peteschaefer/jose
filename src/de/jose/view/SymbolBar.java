@@ -112,11 +112,13 @@ public class SymbolBar
     protected ArrayList<JButton> boxButtons;
 
     protected ComboNag comboNag;
-    protected LayoutManager comboLayout;
+    protected BoxLayout comboLayout;
     protected JButton comboButton;
     protected JPanel comboPane;
     protected JComboBox<String> comboColor,comboAdjective,comboSubst,comboSelector;
     protected JLabel comboVerb;
+
+    protected JScrollPane boxScroller,comboScroller;
 
     protected Font symbolFont, textFont, labelFont;
     protected FontEncoding fontEncoding = null;
@@ -145,9 +147,10 @@ public class SymbolBar
  *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
  */
     protected static final int[] CODES = new int[] {
-            1,2,3,4,5,6,
+            // 1,2,3,4,5,6, ! ? can be typed more easily
             7,8,9,
             10,11,12,13,
+            // 14,15,16,17,18,19,  +/- can be typed more easily
             140,141,142,143,144,145,146,147,
             148,149,150,
             151,152,153,154,
@@ -176,13 +179,25 @@ public class SymbolBar
         int rows,cols;
         if (width > height) {
             //  prefer horizontal
-            rows = height / 32;
+            rows = height / 20;
             cols = (n+rows-1) / rows;
+
+            boxScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            comboScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+            boxScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+            comboScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         }
         else {
             //  prefer vertical
-            cols = width / 32;
+            cols = width / 20;
             rows = (n+cols-1) / cols;
+
+            boxScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            comboScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+            boxScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            comboScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         }
 
         if (rows!= boxGrid.getRows() || cols!= boxGrid.getColumns()) {
@@ -205,10 +220,6 @@ public class SymbolBar
         comboPane = new JPanel();
         comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
 
-        //JScrollPane scroller = new JScrollPane(cardPanel);
-        //scroller.getVerticalScrollBar().setUnitIncrement(20);
-        //add(scroller, BorderLayout.CENTER);
-
         Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
         textFont = new Font("Dialog", Font.PLAIN, 14);
         labelFont = new Font("Dialog", Font.PLAIN, 10);
@@ -223,11 +234,16 @@ public class SymbolBar
         makeBoxPane();
         makeComboPane();
 
-        add(boxPane);
-        add(comboPane);
+        boxScroller = new JScrollPane(boxPane);
+        boxScroller.getVerticalScrollBar().setUnitIncrement(20);
+        add(boxScroller);
 
-        cardLayout.addLayoutComponent(boxPane,"box");
-        cardLayout.addLayoutComponent(comboPane,"combo");
+        comboScroller = new JScrollPane(comboPane);
+        //boxScroller.getVerticalScrollBar().setUnitIncrement(20);
+        add(comboScroller);
+
+        cardLayout.addLayoutComponent(boxScroller,"box");
+        cardLayout.addLayoutComponent(comboScroller,"combo");
 
         //cardLayout.show(this,"box");
         //cardLayout.show(comboPane,"combo");
@@ -472,6 +488,10 @@ public class SymbolBar
         button.setBackground(Color.white);
         button.setBorder(new LineBorder(Color.lightGray,2,true));
         button.setMargin(margin);
+
+        button.setMinimumSize(new Dimension(20,20));
+        button.setPreferredSize(new Dimension(20,20));
+        button.setMaximumSize(new Dimension(20,20));
 
         //JoBigLabel label = new JoBigLabel(tip,1,40);
         //label.setFont(labelFont);
