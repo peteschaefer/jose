@@ -18,8 +18,7 @@ import de.jose.util.map.IntHashSet;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class
-		StringUtil
+public class StringUtil
 {
 	public static final int length(Object string)
 	{

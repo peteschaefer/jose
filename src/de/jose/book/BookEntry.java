@@ -102,7 +102,7 @@ public class BookEntry
 		return merged_entry;
 	}
 
-	protected BookEntry()                       { }
+	public BookEntry()                       { }
 
 	public int centipawnValue(	)
 	{

@@ -12,6 +12,8 @@
 
 package de.jose.book;
 
+import de.jose.Util;
+import de.jose.book.lichess.LiChessOpeningExplorer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
 
@@ -26,6 +28,7 @@ import de.jose.util.StringUtil;
 import de.jose.Application;
 import de.jose.Config;
 import de.jose.Language;
+import org.w3c.dom.NodeList;
 
 /**
  * TODO select moves based on "style" (IF the implementation store some style info !?)
@@ -77,16 +80,33 @@ public class BookFile /*implements Selectable*/
 		return that;
 	}
 
+	public String format()
+	{
+		return (String)Util.nvl(
+				XMLUtil.getChildValue(config,"FORMAT"),
+				"Polyglot" );
+	}
+
 
 	public boolean open()
 	{
 		if (book!=null) return true;
-		if (!file.exists()) return false;
 
-		try {
-			book = OpeningBook.open(file);
-		} catch (IOException e) {
-			book = null;
+	//	usually format=="Polyglot"
+		if (format().equalsIgnoreCase("LiChess"))
+		{
+			//	LiChess online query
+			book = new LiChessOpeningExplorer(config);
+		}
+		else
+		{
+			//	disk file
+			if (!file.exists()) return false;
+			try {
+				book = OpeningBook.open(file);
+			} catch (IOException e) {
+				book = null;
+			}
 		}
 		return book!=null;
 	}
@@ -123,6 +143,9 @@ public class BookFile /*implements Selectable*/
 
 	public String getInfoText()
 	{
+		if (format().equalsIgnoreCase("LiChess"))
+			return LiChessOpeningExplorer.getInfoText(config, this.isEnabled());
+
 		StringBuffer buf = new StringBuffer();
 
 		boolean enabled = this.isEnabled();
@@ -175,7 +198,12 @@ public class BookFile /*implements Selectable*/
 
 	public boolean isEnabled()
 	{
-		return file!=null && file.exists();
+		if (format().equalsIgnoreCase("LiChess")) {
+			return true;    // Network is available?
+		}
+		else {
+			return file != null && file.exists();
+		}
 	}
 
 }

@@ -203,6 +203,16 @@ public class Move
 	    return StringMoveFormatter.getDefaultFormatter().toString(StringMoveFormatter.LONG, this);
 	}
 
+	public static Move fromString(String ucistr)
+	{
+		Move mv = new Move();
+		mv.from = EngUtil.char2Square(ucistr.charAt(0),ucistr.charAt(1));
+		mv.to = EngUtil.char2Square(ucistr.charAt(2),ucistr.charAt(3));
+		if (ucistr.length() > 4)
+			mv.setPromotionPiece(EngUtil.char2Piece(ucistr.charAt(4)));
+		return mv;
+	}
+
 	public final short encode()
 	{
 		if (this==NULLMOVE)

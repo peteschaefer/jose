@@ -635,7 +635,7 @@ public class BoardPanel
 			Move mv = a.moves[idx].get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
-			hint.label = plugin.printScore(a.eval[idx],false, a.white_next);	//	todo apply pov
+			hint.label = EnginePlugin.printScore(a.eval[idx], plugin, false, a.white_next);	//	todo apply pov
 
 			//	update color
 			if (cpmin==cpmax)

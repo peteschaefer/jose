@@ -72,7 +72,7 @@ public abstract class OpeningBook
 	 *
 	 * @throws IOException
 	 */
-	abstract public boolean getBookMoves(Position pos, boolean ignoreColors, List result)
+	abstract public boolean getBookMoves(Position pos, boolean ignoreColors, List<BookEntry> result)
 			throws IOException;
 
 	/**

@@ -994,7 +994,9 @@ abstract public class EnginePlugin
 		return "plugin.evaluation";
 	}
 
-	private String printScoreText(Score score, boolean tooltip, boolean with_wdl, boolean white_pov)
+	private static DecimalFormat NUM1 = new DecimalFormat("###.#;-###.#");
+
+	private static String printScoreText(Score score, EnginePlugin plug, boolean tooltip, boolean with_wdl, boolean white_pov)
 	{
 		if (score.cp <=  Score.UNKNOWN) {
 			return "";
@@ -1008,7 +1010,7 @@ abstract public class EnginePlugin
 			if (score.cp<=0)
 				pmap.put("count","-");
 			else
-				pmap.put("count", Integer.toString(score.cp));
+				pmap.put("count", StringUtil.formatLargeInt(score.cp,NUM1));
 			key = "plugin.gamecount";
 		}
 		else if (score.cp > Score.WHITE_MATES)
@@ -1023,8 +1025,11 @@ abstract public class EnginePlugin
 			pmap.put("eval",String.valueOf((plies+1)/2));
 			key = "plugin.black.mates";
 		}
+		else if (plug!=null) {
+			key = plug.prepareCentipawnScore(score,pmap,white_pov);
+		}
 		else {
-			key = prepareCentipawnScore(score,pmap,white_pov);
+			key = "?";
 		}
 
 		String result = tooltip ? Language.argsTip(key,pmap) : Language.args(key,pmap);
@@ -1047,12 +1052,12 @@ abstract public class EnginePlugin
 			return result;
 	}
 
-	public String printScore(Score score, boolean with_wdl, boolean white_pov) {
-		return printScoreText(score, false, with_wdl, white_pov);
+	public static String printScore(Score score, EnginePlugin plug, boolean with_wdl, boolean white_pov) {
+		return printScoreText(score, plug, false, with_wdl, white_pov);
 	}
 
-	public String printScoreTooltip(Score score, boolean with_wdl) {
-		return printScoreText(score, true, with_wdl, true);
+	public static String printScoreTooltip(Score score, EnginePlugin plug, boolean with_wdl) {
+		return printScoreText(score, plug, true, with_wdl, true);
 	}
 
 	/**

@@ -26,6 +26,16 @@ libraries needed:
 
 ==== New Features
 
+* LiChess Opening Explorer
+    https://lichess.org/api#tag/Opening-Explorer/operation/openingExplorerMaster
+    - query master games
+    - or all Lichess games (with various, too many, filter options)
+  example:
+    https://explorer.lichess.ovh/masters?play=d2d4,d7d5,c2c4,c7c6&topGames=0
+   * response is json: javax.json.JsonReader
+   * wdl scores !
+
+
 * BUG? Leela keeps analyzing while playing from book
 * BUG? Leela diagnostics not always associated correctly
 
@@ -105,3 +115,18 @@ java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\m
 	at de.jose.pgn.Game.save(Game.java:1372)
 	at de.jose.pgn.Game.save(Game.java:1329)
 	at de.jose.pgn.Game.save(Game.java:1312)
+
+java.lang.RuntimeException: Invalid insert
+	at de.jose.pgn.MoveNode$MoveNodeFormatter.flush(MoveNode.java:229)
+	at de.jose.pgn.MoveNode$MoveNodeFormatter.figurine(MoveNode.java:207)
+	at de.jose.chess.MoveFormatter.doFormatShort(MoveFormatter.java:246)
+	at de.jose.chess.MoveFormatter.doFormat(MoveFormatter.java:188)
+	at de.jose.chess.MoveFormatter.format(MoveFormatter.java:140)
+	at de.jose.chess.MoveFormatter.format(MoveFormatter.java:127)
+	at de.jose.chess.MoveFormatter.format(MoveFormatter.java:119)
+	at de.jose.pgn.MoveNode.insert(MoveNode.java:151)
+	at de.jose.pgn.Game.insertNode(Game.java:1008)
+	at de.jose.pgn.Game.insertNode(Game.java:908)
+	at de.jose.pgn.Game.doInsertMove(Game.java:797)
+	at de.jose.pgn.Game.insertMove(Game.java:782)
+	at de.jose.Application.handleUserMove(Application.java:2401)

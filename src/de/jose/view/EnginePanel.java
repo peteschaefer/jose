@@ -46,6 +46,8 @@ import java.util.*;
 import java.util.List;
 import java.io.IOException;
 
+import static de.jose.book.BookEntry.IUNKNOWN;
+
 public class EnginePanel
 		extends JoPanel
 		implements MessageListener, ClipboardOwner, MouseListener {
@@ -737,6 +739,15 @@ public class EnginePanel
 			Score score = bookmoves.eval[i];
 			score.flags = Score.EVAL_GAME_COUNT;
 			score.cp = score.cp_current = BookEntry.nvl(entry.count);
+			if (entry.countWhite != IUNKNOWN) score.win = entry.countWhite;
+			if (entry.countDraw != IUNKNOWN) score.draw = entry.countDraw;
+			if (entry.countBlack != IUNKNOWN) score.lose = entry.countBlack;
+			if (entry.count > 1000) {
+				//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
+				score.win = score.win * 1000 / entry.count;
+				score.draw = score.draw * 1000 / entry.count;
+				score.lose = score.lose * 1000 / entry.count;
+			}
 		}
 
 		//  always show hint that these are book moves
@@ -859,13 +870,12 @@ public class EnginePanel
 		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
-		if (plugin!=null) {
-			String text = plugin.printScore(score, true,true);
-			String tooltip = plugin.printScoreTooltip(score, true);
+		String text = EnginePlugin.printScore(score, plugin,true,true);
+		String tooltip = EnginePlugin.printScoreTooltip(score, plugin,true);
+		/* note: even though the methods are located at EnginePlugin, they work just as well for opening books */
 
-			leval.setText(text);
-			leval.setToolTipText(tooltip);
-		}
+		leval.setText(text);
+		leval.setToolTipText(tooltip);
 	}
 
 	public void setNodeCount(long nodes, HashMap pmap)

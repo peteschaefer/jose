@@ -101,7 +101,7 @@ public class OpeningLibrary
 		selectMode = profile.getInt("book.select",SELECT_IMPLEMENTATION);
 
 		//  get files and selection bitflags
-		File[] files = (File[]) profile.get("book.files");
+		File[] files = (File[]) profile.get("book.files.2");
 		boolean[] isopen = (boolean[]) profile.get("book.isopen");
 		boolean openfirst = false;
 
@@ -230,25 +230,29 @@ public class OpeningLibrary
 		return selectMove(moves, scores, random);
 	}
 
-	public BookEntry selectMove (List moves, double[] scores, Random random)
+
+	private static double sum(double[] array) {
+		double total = 0.0;
+		for (double v : array) total += v;
+		return total;
+	}
+
+	public BookEntry selectMove (List<BookEntry> moves, double[] scores, Random random)
 	{
 		if (moves.isEmpty()) return null;
 
-		double totalScore = 0.0;
-		for (int i=0; i < scores.length; i++)
-			totalScore += scores[i];
-
-		totalScore = random.nextDouble() * totalScore;
+		double selectedScore = random.nextDouble() * sum(scores);
 		// note: random.nextDouble() in [0..1]
 
-		for (int i=0; i < scores.length; i++)
+		int i=0;
+		for (; i < Math.min(scores.length,moves.size()); i++)
 		{
-			totalScore -= scores[i];
-			if (totalScore <= 0.0)
-				return (BookEntry) moves.get(i);
+			selectedScore -= scores[i];
+			if (selectedScore <= 0.0)
+				return moves.get(i);
 		}
 
-		return (BookEntry) moves.get(moves.size()-1);
+		return moves.get(Math.min(i,moves.size()-1));
 	}
 /*
 	public boolean addBook(File file)
@@ -307,7 +311,7 @@ public class OpeningLibrary
 			isopen[i] = fentry.isOpen();
 		}
 
-		profile.set("book.files",files);
+		profile.set("book.files.2",files);
 		profile.set("book.isopen",isopen);
 	}
 

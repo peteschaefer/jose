@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <APPLICATION_SETTINGS>
 	<BOOK>
+		<FILE>LiChess Opening Explorer</FILE>
+		<FORMAT>LiChess</FORMAT>
+		<AUTHOR>-</AUTHOR>
+		<URL>https://explorer.lichess.ovh/masters</URL>
+		<COMMENT>explore openings from the LiChess Masters database</COMMENT>
+	</BOOK>
+	<BOOK>
 		<FILE>DCbook_large.bin</FILE>
 		<FORMAT>Polyglot</FORMAT>
 		<AUTHOR>Dann Corbit</AUTHOR>
