@@ -418,16 +418,16 @@ public class EvalView
 			paintBackground(g,x,width,pal);
 		}
 		else {
-			int p1 = (int) (height * (1.0f - value.rel(value.win - value.draw)));
-			int p2 = (int) (height * (1.0f - value.rel(value.win)));
+			int p1 = (int) (height * value.rel(value.lose));
+			int p2 = (int) (height * value.rel(value.draw));
 
-			g.setColor(pal[0]);
+			g.setColor(pal[0]);	//	black
 			g.fillRect(x, 0, width, p1);
 
-			g.setColor(pal[2]);
+			g.setColor(pal[2]);	//	grey
 			g.fillRect(x, p1, width, p2);
 
-			g.setColor(pal[4]);
+			g.setColor(pal[4]);	//	white
 			g.fillRect(x, p2, width, height);
 		}
 

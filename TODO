@@ -4,6 +4,11 @@
 
 ? Charter buggy
 
+* navigating quickly with Lichess on
+    -> slow response (b/cause Lichess queries are synch :( )
+    -> we need:
+[ ] asynch book lookups
+
 === Database Bugs
 
 [x] database cut/copy/paste (-> --tmpdir)
@@ -14,10 +19,10 @@
 [x] MoreGame missing? detect on start; use more robust sequence, at least
 
 === Database Repair Tool
-[ ] what's the best setting for myisamchk? -r -f, -o -f ?
+[x] what's the best setting for myisamchk? (-r -f), -o -f ?
 [-] repair table Game extended use_frm
     -> no need for myisamchk, process contortions, ...
-    -> results are not as good as myisamchk !
+    -> results are not convincing
 
 ==== Project
 
@@ -68,6 +73,13 @@ Alternative JREs:
 * BUG: engine configurations
   - absolute path to directories?
   - can't delete? (Apply !!)
+
+==== Refactorings
+
+* fine-grained BoardView2D updates
+    - 64+2 bits instead of fRedraw
+    - set bits selectively when painting/undoing arrows
+* double buffering still needed ? (probably)
 
 ==== Interesting New Features
 

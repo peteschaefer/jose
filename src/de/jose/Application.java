@@ -110,28 +110,6 @@ public class Application
 	/**	Engine 1 vs. Rngine 2 (not implemented)	*/
 	public static final int ENGINE_ENGINE	= 4;
 
-
-	/**
-	 * the following message is printed to std out if the application appears to be locked
-	 * this can either be caused by running two instances of jose at the same time
-	 * or by a previous crash
-	 *
-	 * it is definitely not recommended to run two instances at the same time to avoid
-	 * an inconsistent database
-	 *
-	private static final String LOCKED_MESSAGE =
-			"-------------------------------------------------------\n"+
-			" if another instance of jose is running on your system,\n"+
-			" please quit it now\n"+
-			"\n"+
-			" if no other instance is running, \n"+
-			" you should ignore this message\n"+
-			"-------------------------------------------------------\n"+
-			" please note: you should never run two instances at the \n"+
-			" same time to ensure the integrity of the database \n"+
-			"-------------------------------------------------------\n";
-*/
-
 	//-------------------------------------------------------------------------------
 	//	Fields
 	//-------------------------------------------------------------------------------
@@ -307,10 +285,6 @@ public class Application
             //  important since, among others, engines are stored in jose's bundle
             UIManager.put("JFileChooser.appBundleIsTraversable","always");
 //          UIManager.put("JFileChooser.packageIsTraversable","always"); // don't navigate in packages
-
-//		System.out.println("apple.laf.useScreenMenuBar="+Version.getSystemProperty("apple.laf.useScreenMenuBar"));
-//		System.out.println("apple.awt.showGrowBox="+Version.getSystemProperty("apple.awt.showGrowBox"));
-//		System.out.println("com.apple.mrj.application.apple.menu.about.name="+Version.getSystemProperty("com.apple.mrj.application.apple.menu.about.name"));
         }
 
 		if (theDatabaseId == null)
@@ -343,11 +317,6 @@ public class Application
 				Version.getSystemProperty("jose.2d.light.popup",
 						!Version.hasJava3d(false,false)));
 	}
-
-    protected void initSplashscreen(SplashScreen splash)
-    {
-    }
-
 
     public static void parseProperties(String[] args)
     {
@@ -3571,30 +3540,6 @@ public class Application
         }
 	}
 
-/*
-	public void invokeWithPlugin1(final Runnable work)
-	{
-		if (getEnginePlugin()!=null) {
-			//  invoke at once
-			work.run();
-		}
-		else {
-			//  open plugin and invoke later
-			Callable task = new Callable() {
-				public Object call() {
-					try {
-						if (openEnginePlugin())
-							SwingUtilities.invokeLater(work);
-					} catch (IOException e) {
-						Application.error(e);
-					}
-					return null;
-				}
-			};
-			Application.theExecutorService.submit(task);
-		}
-	}
-*/
 	public void invokeWithPlugin(final Runnable lambda) {
 		EnginePlugin plugin = getEnginePlugin();
 		if (plugin==null)
@@ -4118,123 +4063,6 @@ public class Application
         }
     }
 
-/*
-    protected JoFileChooser showSaveDialog(String preferredName, int preferredType)
-    {
-        File[] preferredDirs = new File[] {
-             (File)theUserProfile.get("filechooser.save.dir"),
-//             new File(Application.theWorkingDirectory, "pgn"),
-			 new File (Version.getSystemProperty("user.home")),
-             Application.theWorkingDirectory,
-         };
-
-         int[] preferredFilters = new int[] {
-             theUserProfile.getInt("filechooser.save.filter"),
-             JoFileChooser.PGN,
-			 JoFileChooser.JOSE_GAMES,
-			 JoFileChooser.JOSE_MYSQL_GAMES,
-			 //	TODO choose the best of these two
-         };
-
-        JoFileChooser chooser = JoFileChooser.forSave(preferredDirs, preferredFilters,
-														preferredName);
-
-        if (chooser.showSaveDialog(JoFrame.theActiveFrame) != JFileChooser.APPROVE_OPTION)
-            return null; //  cancelled
-
-        File file = chooser.getSelectedFile();
-        theUserProfile.set("filechooser.save.dir",  chooser.getCurrentDirectory());
-        theUserProfile.set("filechooser.save.filter",   chooser.getCurrentFilter());
-
-        String defExt = JoFileChooser.getFileExtension(chooser.getCurrentFilter());
-        if (defExt != null)
-             file = FileUtil.appendExtension(file,defExt);
-	    else if (! FileUtil.hasExtension(file.getName())) {
-	        //  append preferred extension
-	        String newName = FileUtil.setExtension(file.getName(),
-	                                    JoFileChooser.getFileExtension(preferredType));
-	        file = new File(file.getParentFile(), newName);
-	    }
-
-        if (file.exists() && !JoFileChooser.confirmOverwrite(file))
-            return null; //  don't overwrite
-        //  else:
-        chooser.setSelectedFile(file);
-        return chooser;
-    }
-*/
-	public String getPreferredFileName(GameSource src)
-	{
-		int firstId = src.firstId();
-
-		if (src.isCollection())
-		try {
-			Collection coll = Collection.readCollection(firstId);
-			return coll.Name;
-		} catch (Exception ex) {
-
-		}
-
-		return null;
-	}
-/*
-    public void exportGames(GameSource src)
-        throws Exception
-	{
-        JoFileChooser chooser = showSaveDialog(getPreferredFileName(src),JoFileChooser.PGN);
-        File xslFile = null;
-        if (chooser==null) return;
-
-        File file = chooser.getSelectedFile();
-        int type = chooser.getCurrentFilter();
-		if (type==0) type = JoFileChooser.PGN;
-
-        DBTask task;
-        switch (type) {
-	    default:
-        case JoFileChooser.PGN:
-                task = new PGNExport(file);
-                break;
-
-        case JoFileChooser.JOSE_GAMES:
-                task = new GenericBinaryExport(file);
-                break;
-
-		case JoFileChooser.JOSE_MYSQL_GAMES:
-				task = new ArchiveExport(file);
-				break;
-
-        case JoFileChooser.HTML:
-                task = null;// TODO new XSLExport(file,type, new File(Application.theWorkingDirectory,"xsl/html.xsl"));
-                break;
-        case JoFileChooser.PDF:
-                task = null;// TODO new XSLExport(file,type, new File(Application.theWorkingDirectory,"xsl/pdf.xsl"));
-                break;
-        case JoFileChooser.TEXT:
-                task = null;// TODO new XSLExport(file,type, new File(Application.theWorkingDirectory,"xsl/text.xsl"));
-                break;
-        case JoFileChooser.XML:
-		        /** @deprecated * /
-		        ExportContext context = new ExportContext();
-		        context.source = src;
-		        context.profile = theUserProfile;
-	            context.styles = (JoStyleContext)theUserProfile.getStyleContext().clone();
-		        context.target = file;
-                task = new XMLExport(context);
-                break;
-        }
-
-		if (task instanceof GameTask)
-			((GameTask)task).setSource(src);
-		else if (task instanceof MaintenanceTask)
-			((MaintenanceTask)task).setSource(src);
-		//	TODO unify
-
-        task.start();
-        return;
-    }
-*/
-
 	protected void openHistory()
 	{
 		int[] gids = theUserProfile.getHistory();
@@ -4300,14 +4128,7 @@ public class Application
 		} catch (Throwable thr) {
 			Application.error(thr);
 		}
-/*
-        try {
-            File lockfile = new File(theWorkingDirectory,"lock."+theDatabaseId);
-            lockfile.delete();
-        } catch (Exception e) {
-            /* can't help it *
-        }
-*/
+
 		//  close engine plugin
 		try {
 			closePlugin();

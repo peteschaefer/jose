@@ -601,6 +601,9 @@ public class BoardPanel
 			AnalysisRecord.LineData data = a.data[idx];
 			if (data.moves==null || data.moves.isEmpty())
 				continue;
+			int cp = data.eval.cp_current;
+			if (cp==Score.UNKNOWN) continue;
+
 			cpmin = Math.min(cpmin, data.eval.cp_current);
 			cpmax = Math.max(cpmax, data.eval.cp_current);
 		}
@@ -616,8 +619,9 @@ public class BoardPanel
 			AnalysisRecord.LineData data = a.data[idx];
 			if (data.moves==null || data.moves.isEmpty())
 				continue;
-
 			int cp = data.eval.cp_current;
+			if (cp==Score.UNKNOWN) continue;
+
 			if (cpprev!=Score.UNKNOWN) {
 				int gap = Math.abs(cp-cpprev);
 				if (gap > (cpmax-cpmin)*SCORE_DROP)
