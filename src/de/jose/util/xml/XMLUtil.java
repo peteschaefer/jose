@@ -238,6 +238,26 @@ public class XMLUtil
 			return buf.toString();
 	}
 
+	public static boolean setAttribute(Element node, String attr, String newValue)
+	{
+		String oldValue = node.getAttribute(attr);
+		if (newValue.equals(oldValue))
+			return false;
+		//else {
+		node.setAttribute(attr, newValue);
+		return true;
+	}
+
+	public static boolean removeAttribute(Element node, String attr)
+	{
+		String oldValue = node.getAttribute(attr);
+		if (oldValue==null)
+			return false;
+		//	else
+		node.removeAttribute(attr);
+		return true;
+	}
+
 	public static boolean setTextValue(Node node, Object value)
 	{
 		String oldValue = getTextValue(node);

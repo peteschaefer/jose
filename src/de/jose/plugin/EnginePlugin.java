@@ -741,22 +741,43 @@ abstract public class EnginePlugin
 		return XMLUtil.getChildBooleanAttributeValue(search,type.name(),"selected");
 	}
 
+	public static Element getSearchControlElement(Element search, SearchType type)
+	{
+		Element child = XMLUtil.getChild(search,type.name());
+		if (child==null)
+			child = XMLUtil.appendChild(search,type.name());
+		return child;
+	}
+
+	static int[] searchDefaultValues = { 0, 10, 10, 10000 };
 
 	public static int getSearchControlArgument(Element search, SearchType type)
 	{
-		Element child = XMLUtil.getChild(search,type.name());
-		return XMLUtil.getIntValue(child);
+		Element child = getSearchControlElement(search,type);
+		return XMLUtil.intValue(XMLUtil.getTextValue(child), searchDefaultValues[type.ordinal()]);
 	}
 
-	public static void setSearchControlArgument(Element search, SearchType type, boolean selected, Integer value)
+	public static boolean setSearchControlArgument(Element search, SearchType type, SearchType selected, Long value)
 	{
+		boolean changed = false;
 		Element child = XMLUtil.getChild(search,type.name());
-		if (selected)
-			child.setAttribute("selected", Boolean.toString(selected));
-		else
-			child.removeAttribute("selected");
-		if (value!=null)
-			child.setNodeValue(Integer.toString(value));
+		if (child==null) {
+			child = getSearchControlElement(search,type);
+			changed = true;
+		}
+
+		if (type==selected) {
+			if (XMLUtil.setAttribute(child,"selected",Boolean.toString(true)))
+				changed = true;
+		}
+		else {
+			if (XMLUtil.removeAttribute(child,"selected"))
+				changed = true;
+		}
+
+		if (value!=null && XMLUtil.setTextValue(child,Long.toString(value)))
+			changed = true;
+		return changed;
 	}
 
 

@@ -1581,7 +1581,9 @@ public class Application
 		map.put("menu.game.animate", action);
 
 		action = new CommandAction() {
-			public void Do(Command cmd) throws Exception {
+			public void Do(Command cmd) throws Exception
+			{
+				boolean flipped = Util.toboolean(cmd.data);
 				prepareNewGame();
 				switchGame(theHistory.currentIndex());
 
@@ -1606,7 +1608,7 @@ public class Application
 					setupMoves = theGame.getPosition().snapshot();
 				}
 
-				prepareNewGame(setupFen,setupMoves);	//	todo
+				prepareNewGame(setupFen,setupMoves,false);	//	todo
 				switchGame(theHistory.currentIndex());
 
 				cmd.code = "move.notify";
@@ -1648,7 +1650,7 @@ public class Application
 			{
 				String fen = cmd.data.toString();
 				if (! theGame.isEmpty()) {
-					prepareNewGame(fen,null);
+					prepareNewGame(fen,null,false);
 					switchGame(theHistory.currentIndex());
 				}
 				else
@@ -2651,10 +2653,10 @@ public class Application
 
 	protected void prepareNewGame() throws Exception
 	{
-		prepareNewGame(null,null);
+		prepareNewGame(null,null,false);
 	}
 
-    protected void prepareNewGame(String setupFen, ArrayList<Move> setupMoves) throws Exception
+    protected void prepareNewGame(String setupFen, ArrayList<Move> setupMoves, boolean flipped) throws Exception
     {
 	    boolean createNew=true;
 		/*	save new game into autosave ?	*/
@@ -2668,9 +2670,21 @@ public class Application
 	    if (createNew)
 	    {
 		    //  create new Game object
+			String white = null;
+			String black = null;
+			Position pos = null;
+
+			if (theGame != null) {
+			/* ??
+				white = (String)theGame.getTagValue(flipped ? PgnConstants.TAG_BLACK:PgnConstants.TAG_WHITE);
+				black = (String)theGame.getTagValue(flipped ? PgnConstants.TAG_WHITE:PgnConstants.TAG_BLACK);
+			 */
+				pos = theGame.getPosition();
+			}
+
 			theGame = new Game(theUserProfile.getStyleContext(),
-							   null,null, null/*PgnUtil.currentDate()*/, setupFen,
-							   (theGame!=null) ? theGame.getPosition() : null);
+							   white,black, null/*PgnUtil.currentDate()*/, setupFen,
+							   pos);
 
 			theHistory.add(theGame);
 	    }
@@ -3172,6 +3186,25 @@ public class Application
 		JOptionPane.showMessageDialog(JoFrame.getActiveFrame(),
 			  dialogText, Language.get("error.engine.title"),
 			  JOptionPane.ERROR_MESSAGE);
+	}
+
+	public boolean askNewGame(boolean reversed)
+	{
+		JCheckBox reverseCheckBox = new JCheckBox(Language.get("new.game.reverse"));
+		reverseCheckBox.setSelected(reversed);
+		Object[] params = { "Start new game?", reverseCheckBox };
+
+		int result = JOptionPane.showConfirmDialog(null,
+				params, "New Game",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
+		if (result!=JOptionPane.YES_OPTION)
+			return false;
+
+		Command cmd = new Command("menu.file.new");
+		cmd.data = reverseCheckBox.isSelected();
+		theCommandDispatcher.handle(cmd,this);
+		return true;
 	}
 
 

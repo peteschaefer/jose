@@ -144,10 +144,11 @@ public class EngineOptionReader
 			EnginePlugin.setAuthor(new_cfg,uciplug.getEngineAuthor());
 
 			Element search = EnginePlugin.getSearchControls(new_cfg);
-			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.TIME_CONTROL,true,null);
-			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.TIME,false,10);
-			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.DEPTH,false,10);
-			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.NODES,false,10000);
+			EnginePlugin.SearchType deflt = EnginePlugin.SearchType.TIME_CONTROL;
+			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.TIME_CONTROL,deflt,null);
+			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.TIME,deflt, (long)10);
+			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.DEPTH,deflt, (long)10);
+			EnginePlugin.setSearchControlArgument(search, EnginePlugin.SearchType.NODES,deflt, (long)10000);
 
 			for (UciPlugin.Option option : uciplug.getUciOptions())
 				if (option.type!=UciPlugin.BUTTON)

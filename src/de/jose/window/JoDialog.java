@@ -763,7 +763,12 @@ public class JoDialog
 
 	public static final JRadioButton newRadioButton(String name)
 	{
-		return newRadioButton(name,null);
+		return newRadioButton(name,(Icon)null);
+	}
+
+	public static final JRadioButton newRadioButton(String groupName, String value)
+	{
+		return newRadioButton(groupName+"."+value,(Icon)null);
 	}
 
 	public static final JPanel newGridPane()
@@ -1095,7 +1100,11 @@ public class JoDialog
 		else if (comp instanceof JSpinner)
 			return ((JSpinner)comp).getValue();
 		else if (comp instanceof JSlider)
-			return new Integer(((JSlider)comp).getValue());
+			return ((JSlider)comp).getValue();
+		else if (comp instanceof JTimeField)
+			return ((JTimeField)comp).getValue();
+		else if (comp instanceof JIntegerField)
+			return ((JIntegerField)comp).getValue();
 		else if (comp instanceof String)
 			return getValueByName((String)comp);
 		else

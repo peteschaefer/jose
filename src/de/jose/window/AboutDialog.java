@@ -107,7 +107,7 @@ public class AboutDialog
 	private static final String RIGHT_PANEL =
 	        "<table>" +
 	        "<tr><td valign=top>"+MAIN_LOGO+"</td></tr>"+
-	        "<tr><td valign=bottom align=right>"+CUSTOM+"</td></tr>"+
+	        //"<tr><td valign=bottom align=right>"+CUSTOM+"</td></tr>"+
 	        "</table>";
 
 	private static final String FIRST_ROW =

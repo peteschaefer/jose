@@ -80,17 +80,18 @@ public abstract class EBoardConnector
         if (appXFen==null)
             return;   //  nothing to do, yet
 
-        computeDiff();
+        boolean flipped = computeDiff();
         BoardState st = board[currentOri.ordinal()];
         showLeds(st.diff,currentOri);
 
         if (st.diff_cnt==0)
             wasAcked = true;    //  App changed was replicated on the E-Board
 
-        /*  todo
-            IF diff==empty AND currentOri changed
-            THEN turn application board view to reflect currentOri
-         */
+        if (mode==Mode.PLAY && board[currentOri.ordinal()].fen.equals(START_XFEN)) {
+            //  start a new game?
+            if (Application.theApplication.askNewGame(flipped))
+                return;
+        }
 
         switch(mode) {
             case PLAY:
@@ -259,25 +260,36 @@ public abstract class EBoardConnector
 
     protected static String NO_LEDS = "00000000/00000000/00000000/00000000/00000000/00000000/00000000/00000000";
     protected String lastLeds = NO_LEDS;
+    protected static StringBuilder START_XFEN = new StringBuilder(EMPTY_X_FEN);
+    static {
+        setExplodedFen(Constants.START_POSITION,START_XFEN);
+    }
 
-    private void computeDiff()
+    private boolean computeDiff()
     {
         setReversed(board[0].fen,board[1].fen);
-
+        boolean flipped = false;
         switch (inputOri) {
             case WHITE_UP:
             case BLACK_UP:
                 computeDiff(board[inputOri.ordinal()]);
+                flipped = (currentOri!=inputOri);
                 currentOri=inputOri;
-                return;
+                break;
             case AUTO_DETECT:
                 int d0 = computeDiff(board[0]);
                 int d1 = computeDiff(board[1]);
-                if (d0 < d1)
-                    currentOri=Orientation.WHITE_UP;
-                if (d0 > d1)
-                    currentOri=Orientation.BLACK_UP;
+                if (d0 < d1) {
+                    flipped = (currentOri!=Orientation.WHITE_UP);
+                    currentOri = Orientation.WHITE_UP;
+                }
+                if (d0 > d1) {
+                    flipped = (currentOri!=Orientation.BLACK_UP);
+                    currentOri = Orientation.BLACK_UP;
+                }
+                break;
         }
+        return flipped;
     }
 
     private int computeDiff(BoardState state)
@@ -327,6 +339,8 @@ public abstract class EBoardConnector
         for(int i=0; i<fen.length(); i++)
         {
             char c = fen.charAt(i);
+            if (c==' ')
+                break;
             if (c=='/') {
                 assert(exploded.charAt(xat)=='/');
                 xat++;

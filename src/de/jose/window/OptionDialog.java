@@ -35,6 +35,7 @@ import de.jose.view.colorchooser.JoSurfaceButton;
 import de.jose.view.input.*;
 import de.jose.view.style.FontList;
 import de.jose.view.style.StyleChooser;
+import de.jose.plugin.EnginePlugin.SearchType;
 import org.w3c.dom.Element;
 
 import javax.swing.*;
@@ -50,6 +51,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.text.BreakIterator;
+
 
 public class OptionDialog
 		extends JoTabDialog
@@ -106,6 +108,8 @@ public class OptionDialog
 				"SyzygyPath", "SyzygyProbeDepth", "Syzygy50MoveRule", "SyzygyProbeLimit",
 				null,
 	};
+
+	private static String[] searchRadioValues = { "time.control", "time.fixed", "depth", "nodes" };
 
 	private static int importance(String option, int inputOrder)
 	{
@@ -342,7 +346,8 @@ public class OptionDialog
 	{
 		JPanel p2 = newGridBox("plugin.search.title");
 
-		addWithLabel(p2, 0,0,2, null, newRadioButton("plugin.search.time.control"));
+		addWithLabel(p2, 0,0,2, null,
+				reg(newRadioButton("plugin.search",searchRadioValues[SearchType.TIME_CONTROL.ordinal()])));
 
 		StringBuffer buf = new StringBuffer();
 		buf.append("<div style='font-size:12pt;'>");
@@ -353,19 +358,29 @@ public class OptionDialog
 		button.addActionListener(this);
 		p2.add(button, ELEMENT_THREE_SMALL);
 
+		JTimeField timeField = newTimeField("plugin.search.time.fixed.value");
+		JIntegerField pliesField = newIntegerField("plugin.search.depth.value");
+		JIntegerField nodesField = newIntegerField("plugin.search.nodes.value");
 
-		addWithLabel(p2, 0,1,2, null, newRadioButton("plugin.search.time.fixed"));
-		p2.add(newTimeField("plugin.search.time.fixed.value"), ELEMENT_THREE_SMALL);
+		//pliesField.setMinimumSize(timeField.getMinimumSize());
+		//nodesField.setMinimumSize(timeField.getMinimumSize());
+
+		addWithLabel(p2, 0,1,2, null,
+				reg(newRadioButton("plugin.search",searchRadioValues[SearchType.TIME.ordinal()])));
+		p2.add(reg(timeField), ELEMENT_THREE);
 
 		GridBagConstraints suffix = (GridBagConstraints) ELEMENT_FOUR_SMALL.clone();
 
-		addWithLabel(p2, 0,2,2, null, newRadioButton("plugin.search.depth"));
-		p2.add(newIntegerField("plugin.search.depth.value"), ELEMENT_THREE_SMALL);
+		addWithLabel(p2, 0,2,2, null,
+				reg(newRadioButton("plugin.search",searchRadioValues[SearchType.DEPTH.ordinal()])));
+		p2.add(reg(pliesField), ELEMENT_THREE);
 		suffix.gridy=2;
 		p2.add(newLabel("plugin.search.plies.suffix"), suffix);
 
-		addWithLabel(p2, 0,3,2, null, newRadioButton("plugin.search.nodes"));
-		p2.add(newIntegerField("plugin.search.nodes.value"), ELEMENT_THREE_SMALL);
+		addWithLabel(p2, 0,3,2, null,
+				reg(newRadioButton("plugin.search",searchRadioValues[SearchType.NODES.ordinal()])));
+
+		p2.add(reg(nodesField), ELEMENT_THREE);
 		suffix.gridy=3;
 		p2.add(newLabel("plugin.search.nodes.suffix"), suffix);
 
@@ -914,6 +929,20 @@ public class OptionDialog
 		}
 
 		adjustFileInputs((File)getValueByName("plugin.dir"));
+
+		/*
+		Element searchConfig = EnginePlugin.getSearchControls(pluginConfig);
+		SearchType searchType = EnginePlugin.getSelectedSearchControl(searchConfig);
+
+		setValueByName("plugin.search.time.control", searchType==SearchType.TIME_CONTROL);
+		setValueByName("plugin.search.time.fixed", searchType==SearchType.TIME);
+		setValueByName("plugin.search.depth", searchType==SearchType.DEPTH);
+		setValueByName("plugin.search.nodes", searchType==SearchType.NODES);
+
+		setValueByName("plugin.search.time.fixed.value", EnginePlugin.getSearchControlArgument(searchConfig,SearchType.TIME));
+		setValueByName("plugin.search.depth.value", EnginePlugin.getSearchControlArgument(searchConfig,SearchType.DEPTH));
+		setValueByName("plugin.search.nodes.value", EnginePlugin.getSearchControlArgument(searchConfig,SearchType.NODES));
+		 */
 	}
 
     protected void adjustFileInputs(File dir)
@@ -1016,10 +1045,11 @@ public class OptionDialog
 			if (profile.changed("plugin.1",oldValues))
 				engineDirty |= EnginePlugin.OPTIONS_NEW_ENGINE;    //  new plugin
 
-            engineDirty |= EnginePlugin.updateDirtyElements((PluginListModel)pluginList.getModel(),
-				                            Application.theApplication.getEnginePlugin());
-
 			pluginConfig = pluginList.getSelectedConfig();    //  might be invalidated, now
+
+			//	write changes to disk
+			engineDirty |= EnginePlugin.updateDirtyElements((PluginListModel)pluginList.getModel(),
+					Application.theApplication.getEnginePlugin());
 		}
 
 		if (isInited(7))
@@ -1436,16 +1466,13 @@ public class OptionDialog
 		Element search = EnginePlugin.getSearchControls(cfg);
 		EnginePlugin.SearchType selected = EnginePlugin.getSelectedSearchControl(search);
 
-		//	radio button
-		setValueByName("plugin.search.time.control", selected==EnginePlugin.SearchType.TIME_CONTROL);	//	radio
-		setValueByName("plugin.search.time.fixed", selected==EnginePlugin.SearchType.TIME);	//	radio
-		setValueByName("plugin.search.depth", selected==EnginePlugin.SearchType.DEPTH);	//	radio
-		setValueByName("plugin.search.nodes", selected==EnginePlugin.SearchType.NODES);	//	radio
-
-		setValueByName("plugin.search.time.fixed", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.TIME));
-		setValueByName("plugin.search.depth", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.DEPTH));
-		setValueByName("plugin.search.nodes", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.NODES));
-
+		setValueByName("plugin.search", searchRadioValues[selected.ordinal()]);
+		setValueByName("plugin.search.time.fixed.value",
+				new Date(EnginePlugin.getSearchControlArgument(search,SearchType.TIME)));
+		setValueByName("plugin.search.depth.value",
+				EnginePlugin.getSearchControlArgument(search, SearchType.DEPTH));
+		setValueByName("plugin.search.nodes.value",
+				EnginePlugin.getSearchControlArgument(search, SearchType.NODES));
 
 		setPluginOptions(cfg);
 
@@ -1584,6 +1611,20 @@ public class OptionDialog
 		if (startup!=null) startup = startup.trim();
 
 		if (EnginePlugin.setStartup(cfg, startup)) dirty = true;
+
+		String radioString = (String)getValueByName("plugin.search");
+		SearchType selected = SearchType.values() [ListUtil.indexOf(searchRadioValues, radioString)];
+
+		Date timeValue = (Date)getValueByName("plugin.search.time.fixed.value");
+		long pliesValue = (int)getValueByName("plugin.search.depth.value");
+		long nodesValue = (int)getValueByName("plugin.search.nodes.value");
+
+		Element searchConfig = EnginePlugin.getSearchControls(pluginConfig);
+
+		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.TIME_CONTROL, selected, null);
+		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.TIME, selected, timeValue.getTime());
+		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.DEPTH, selected, pliesValue);
+		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.NODES, selected, nodesValue);
 
 		if (dirty) {
 			Config.setDirtyElement(cfg,true);
