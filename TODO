@@ -9,9 +9,6 @@
 
 ==== Project
 
-* TODO check lc0.xml and stockfish.xml to have factory setings
- (tricky because they are modified at each run)
-
 compile sources against 1.8 32bit [x]
 libraries needed:
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
@@ -24,9 +21,40 @@ libraries needed:
     - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
 * todo cross-compile easylink for i386. Which extra libaries are needed?
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
+
 ==== macOS
-* which JDK is running on recent macOS ?
-* do we need a 64bit version of mysql-je? Do we already have one?
+
+[x] macOS 15 Sequoia VM
+[x] jdk1.8 (64 bit)
+[ ] 64 bit binaries for stockfish and lc0
+[ ] plan A: fix dependencies for libmysqlje 32 bit ?
+    most unlikely because 32bit support is missing completely from MacOS
+[ ] plan B: get libmysqld 64 bit
+    -> requires upgrading to 5.0.67 ?
+    mysql upgrades are notoriously painful :(
+[ ] plan C: compile libmysqld+je for 64 bit (on my Mac Pro) ?
+    CFLAGS=-m64, configure --host=x86_64
+[ ] plan D: compile mysqld standalone
+
+Q: is the db already running in standalone mode?
+
+[ ] compile easylink
+[ ] libquaqua 64 bit --> try: https://violetlib.org/vaqua
+
+
+==== Deprecated Stuff
+
+* version check at startup
+* Version.java15orLater
+* BootError
+* NalimovOnlineQuery -> replace with LichessTablebaseQuery
+
+* Positional Index !!
+  - db fields are NOT USED at all
+    -> makes sense because they would increase the db size x8
+  - position search is performed exhaustively !?!
+    - with shortcut for mat signature
+    -> which is pretty dumb but effective
 
 ==== New Features
 
