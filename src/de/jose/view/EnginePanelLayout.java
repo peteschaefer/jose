@@ -45,6 +45,7 @@ public class EnginePanelLayout
                 getPreferredHeight(pvLabel,width-MIN_EVAL_WIDTH));
     }
 
+    @Override
 	public void layoutContainer(Container parent)
 	{
         if (engPanel.showHistory) {
@@ -122,12 +123,13 @@ public class EnginePanelLayout
             return MIN_HEIGHT;
 	}
 
+    @Override
 	public Dimension minimumLayoutSize(Container parent)
 	{
 		return calcSize(MIN_EVAL_WIDTH+MIN_LINE_WIDTH,0);
 	}
 
-
+    @Override
 	public Dimension preferredLayoutSize(Container parent)
 	{
 //		return calcSize(Math.max(parent.getWidth(), MIN_EVAL_WIDTH+MIN_LINE_WIDTH), parent.getHeight());
@@ -138,6 +140,7 @@ public class EnginePanelLayout
 		return calcSize(Math.max(preferredWidth, MIN_EVAL_WIDTH+MIN_LINE_WIDTH), 0);
 	}
 
+    @Override
 	public Dimension maximumLayoutSize(Container target)
 	{
 		return calcSize(target.getWidth(),target.getHeight());
