@@ -64,10 +64,6 @@ Leela
 * BUG: engine configurations
   - absolute path to directories?
   - can't delete? (Apply !!)
-* BUG: update eval bar
-  - don't show in opening book
-  - when switching moves, games
-  - opening book moves in eval graph?
 
 ==== Postponed
 
