@@ -279,6 +279,9 @@
 			<zipfileset dir="fonts" prefix="fonts">
 				<include name="FIG-??-2.TTF"/>
 			</zipfileset>
+			<zipfileset dir="fop" prefix="fop">
+				<include name="FIG-??-2.XML"/>
+			</zipfileset>
 			<zipfileset dir="xsl" prefix="xsl">
 				<include name="dhtml.xsl"/>
 				<include name="html.xsl"/>
