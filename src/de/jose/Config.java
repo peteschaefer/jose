@@ -376,32 +376,7 @@ public class Config
 		FileUtil.restoreFrom(target, temp);
 	}
 
-/*
-	public String createFontPath(File workingDirectory)
-	{
-		StringBuffer path = new StringBuffer();
-		//  chess fonts that are distributed with jose
-		File joseFontPath = new File(workingDirectory,"fonts");
-		path.append(joseFontPath.getAbsolutePath());
-
-		//  user font path (e.g. truetype fonts on Liunx)
-		Enumeration elems = enumerateElements("FONT-PATH");
-		while (elems.hasMoreElements())
-		{
-			Element xml = (Element)elems.nextElement();
-			String os = xml.getAttribute("os");
-			if (os==null || os.equals(Version.osName)) {
-				File userFontPath = new File(XMLUtil.getTextValue(xml));
-				if (userFontPath.exists() && userFontPath.isDirectory()) {
-					path.append(File.pathSeparator);
-					path.append(userFontPath.getAbsolutePath());
-				}
-			}
-		}
-		return path.toString();
-	}
-*/
-	protected class ElementEnumeration
+fal	protected class ElementEnumeration
 		implements Enumeration
 	{
 		protected String tagName;

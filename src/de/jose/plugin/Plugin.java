@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -178,6 +178,12 @@ abstract public class Plugin
 			Element exec = (Element)execs.item(i);
 			if (os.equalsIgnoreCase(exec.getAttribute("os")))
 				return exec;
+		}
+		//	cross-over rule for Mac_intel (was "Mac")
+		if (os.equalsIgnoreCase("mac_intel")) {
+			Element result = getExecElement(config, "mac");
+			result.setAttribute("os",os);
+			return result;
 		}
 		return null;
 	}
