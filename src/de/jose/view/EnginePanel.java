@@ -468,7 +468,7 @@ public class EnginePanel
 
 	public UciPlugin getUciPlugin() {
 		EnginePlugin plugin = getPlugin();
-		if (plugin!=null && plugin instanceof UciPlugin)
+		if (plugin instanceof UciPlugin)
 			return (UciPlugin)plugin;
 		else
 			return null;
@@ -558,7 +558,7 @@ public class EnginePanel
 
 		while (vidx >= v.size()) v.add(null);
 
-		JoStyledLabel result = (JoStyledLabel)v.get(vidx);
+		JoStyledLabel result = v.get(vidx);
 		if (result==null && create)
 		{
 			//  create new label
@@ -668,7 +668,12 @@ public class EnginePanel
 		}
 		// else: switch on suggestions arrows temporarily
 		hintMode = null;
-		if (plugin!=null)
+		if (plugin==null) {
+			//	launch analysis
+			Command cmd = new Command("menu.game.analysis");
+			Application.theCommandDispatcher.forward(cmd,this);
+		}
+		else
 			switch(hintMode = plugin.getMode())
 			{
 				case THINKING:
@@ -1633,7 +1638,7 @@ public class EnginePanel
 		list.add(ContextMenu.SEPARATOR);
 
 		list.add("menu.edit.option");
-		list.add(new Integer(4));
+		list.add(4);
 	}
 
 	public void updateLanguage()

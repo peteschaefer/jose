@@ -38,17 +38,18 @@
     <!-- class path at runtime (as it appears in manifest) -->
 	<property name="classpath.mysql" value="lib/jdbc/mysql-je.jar lib/jdbc/mysql.jar"/>
 	<property name="classpath.plaf" value="lib/plaf/metouia.jar"/>
-	<property name="classpath.java3d" value="lib/j3d/j3dcore.jar lib/j3d/j3dutils.jar lib/j3d/vecmath.jar"/>
+	<property name="classpath.java3d"
+			  value="lib/j3d/j3dcore.jar lib/j3d/j3dutils.jar lib/j3d/vecmath.jar lib/j3d/jogamp-fat.jar"/>
 
 	<property name="java.runtime.path"
 			  value="lib/jh.jar lib/json.jar lib/fop-plus.jar ${classpath.mysql} ${classpath.java3d} ${classpath.plaf}"/>
 
 	<!-- class path for compilation -->
 	<path id="java.build.path">
-		<pathelement location="lib/Windows/j3dcore.jar"/>
+		<pathelement location="lib/j3d/j3dcore.jar"/>
 <!--		<pathelement location="lib/Windows/j3daudio.jar"/>-->
-		<pathelement location="lib/Windows/j3dutils.jar"/>
-		<pathelement location="lib/Windows/vecmath.jar"/>
+		<pathelement location="lib/j3d/j3dutils.jar"/>
+		<pathelement location="lib/j3d/vecmath.jar"/>
 		<pathelement location="lib/com.sun.jar"/>	<!-- deprecated jpeg codecs -->
 
 		<pathelement location="lib/fop-plus.jar"/>

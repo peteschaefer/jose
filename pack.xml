@@ -182,18 +182,21 @@
 				<include name="Windows/UnRAR.exe"/>
 			</zipfileset>
 			<zipfileset dir="lib/Windows" prefix="${appldir}/lib/Windows">
+				<!--
 				<include name="libmysqld.dll"/>
 				<include name="libmysqlje.dll"/>
+				-->
 				<include name="easylink.dll"/>
 				<include name="metaphone.dll"/>
 				<include name="winUtils.dll"/>
-				<!--Java3D libraries-->
-				<include name="j3dcore.jar"/>
+				<!--Java3D libraries-->>
+<!--			<include name="j3dcore.jar"/>
 				<include name="j3dcore-d3d.dll"/>
-				<include name="j3dcore-ogl.dll"/>
 				<include name="j3dutils.jar"/>
 				<include name="J3DUtils.dll"/>
 				<include name="vecmath.jar"/>
+-->
+				<include name="j3dcore-ogl.dll"/>
 			</zipfileset>
 		</zip>
 	</target>
@@ -250,7 +253,7 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-j3d">
+		<antcall target="zip-j3d-15">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
@@ -278,7 +281,7 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-j3d">
+		<antcall target="zip-j3d-15">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
@@ -384,13 +387,25 @@
 		</zip>
 	</target>
 
-	<target name="zip-j3d">
+	<target name="zip-j3d-15">
 		<description> add Mac OS X specific stuff to zip </description>
 
 		<zip destfile="${zip-file}" update="true">
 			<!-- OS X specific stuff -->
 			<!-- application bundle -->
-			<zipfileset dir="${dist-dir}/common/lib/j3d"
+			<zipfileset dir="lib/j3d"
+						prefix="${appldir}/lib/j3d">
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="zip-j3d-16">
+		<description> add Mac OS X specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- OS X specific stuff -->
+			<!-- application bundle -->
+			<zipfileset dir="lib/j3d-1.6"
 						prefix="${appldir}/lib/j3d">
 			</zipfileset>
 		</zip>
@@ -407,10 +422,11 @@
 			<!--deprecated jose.app/lib/Mac/mrjadapter.jar -->
 		</zip>
 
-		<!-- Java3D 1.7 for Mac -->
-		<zipfileset dir="lib/Mac" prefix="${appldir}/lib/j3d">
-			<include name="*.jar"/>
-		</zipfileset>
+		<!-- Java3D 1.6 for Mac -->
+		<antcall target="zip-j3d-16">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
 	</target>
 
 	<target name="zip-macos-arm">

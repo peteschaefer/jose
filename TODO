@@ -60,29 +60,26 @@ Release 1.5.2 checklist
 
                         Win     Lin     Mac Intel   Mac Arm
 
-Launcher                [x]     [x]     [ ]         [ ]
-JRE 21                  [x]     [x]     [ ]         [ ]
-Java 3D                 [x]     [x]     [ ]         [-]
-Hi-dpi                  [x]     [x]     [ ]         [ ]
-Mysql 5.0.67            [x]     [x]     [ ]         [ ]
-myisamchk               [x]     [x]     [ ]         [ ]
-Repair Tool             [x]     [x]     [ ]         [ ]
-Arrows                  [x]     [x]     [ ]         [ ]
-Eval Bar                [x]     [x]     [ ]         [ ]
-Leela                   [x]     [x]     [ ]         [ ]
-Stockfish               [x]     [x]     [ ]         [ ]
-Lichess Explorer        [x]     [x]     [ ]         [ ]
+Launcher                [x]     [x]     [x]         [ ]
+JRE 21                  [x]     [x]     [x]         [ ]
+Java 3D                 [ ] 1.5 [ ] 1.5 [ ] 1.6     [ ] 1.6
+clean prefs             [ ]     [ ]     [ ]         [ ]
+Hi-dpi                  [x]     [x]     [?]         [ ]
+Mysql 5.0.67            [x]     [x]     [x]         [ ]
+myisamchk               [x]     [x]     [x]         [ ]
+Repair Tool             [x]     [x]     [x]         [ ]
+Arrows                  [x]     [x]     [x]         [ ]
+Eval Bar                [x]     [x]     [x]         [ ]
+Leela                   [x]     [x]     [x]         [ ]
+Stockfish               [x]     [x]     [x]         [ ]
+Lichess Explorer        [x]     [x]     [x]         [ ]
 Easylink                [x]     [-]     [-]         [-]
 
 
-[x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
-    [x] Windows
-    [x] Linux
-    [ ] Mac Intel
 [x] mysql 5.0.67 x64 + myisamchk
     [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
-    [ ] Mac intel
+    [x] Mac intel
     [ ] Mac arm
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
