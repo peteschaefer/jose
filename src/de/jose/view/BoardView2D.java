@@ -311,16 +311,16 @@ public class BoardView2D
 
 		devSquareSize = (int)calcSquareSize(bufferSize);
 
-		Point2D.Double dins = calcInsetPoint(bufferSize,devSquareSize);
-		devInset.x = (int)dins.x;
-		devInset.y = (int)dins.y;
+		Point2D dins = calcInsetPoint(bufferSize,devSquareSize);
+		devInset.x = (int)dins.getX();
+		devInset.y = (int)dins.getY();
 
 		userSquareSize = devSquareSize / Math.max(scale.getX(),scale.getY());
 		userInset.x = devInset.x / scale.getX();
 		userInset.y = devInset.y / scale.getY();
 	}
 
-	protected Point2D.Double calcInsetPoint(Point2D viewportSize,double squareSize)
+	protected Point2D calcInsetPoint(Point2D viewportSize,double squareSize)
 	{
 		float divx = 8.0f, divy = 8.0f;
 		if (showCoords) {
@@ -333,7 +333,8 @@ public class BoardView2D
 		Point2D.Double inset = new Point2D.Double(0,0);
 
 		inset.x = (viewportSize.getX()-divx*squareSize) / 2;
-		if (showCoords) userInset.x += 0.4*userSquareSize;
+		if (showCoords)
+			inset.x += 0.4*squareSize;
 
 		inset.y = (viewportSize.getY()-divy*squareSize) / 2;
 		return inset;
