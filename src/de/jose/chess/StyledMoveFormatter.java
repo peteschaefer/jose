@@ -1,7 +1,6 @@
 package de.jose.chess;
 
 import de.jose.Application;
-import de.jose.image.FontCapture;
 import de.jose.profile.FontEncoding;
 import de.jose.view.style.JoFontConstants;
 import de.jose.view.style.JoStyleContext;
@@ -40,6 +39,7 @@ public class StyledMoveFormatter extends StringMoveFormatter
         if (figStyle != null) {
             String fontName = JoFontConstants.getFontFamily(figStyle);
             this.enc = FontEncoding.getEncoding(fontName);
+            figStyle.addAttribute("figurine",true);
         }
     }
 
@@ -80,7 +80,7 @@ public class StyledMoveFormatter extends StringMoveFormatter
         return -1;
     }
 
-    public String reformatTo(StyledDocument doc)
+    public String reformat(StyledDocument doc)
     {
         String text;
         try {

@@ -52,8 +52,6 @@ import java.util.*;
 import java.util.List;
 import java.io.IOException;
 
-import static de.jose.book.BookEntry.IUNKNOWN;
-
 public class EnginePanel
 		extends JoPanel
 		implements MessageListener, ClipboardOwner, MouseListener {
@@ -189,7 +187,6 @@ public class EnginePanel
 
 		Style figStyle = styles.addStyle("engine.pv.figurine",textStyle);
 		StyleConstants.setFontFamily(figStyle,figFontName);
-		figStyle.addAttribute("figurine",true);
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
@@ -572,7 +569,7 @@ public class EnginePanel
 
 		String line;
 		if (formatter!=null && formatter.getFigStyle()!=null)
-			line = formatter.reformatTo(pvlabel.getStyledDocument());
+			line = formatter.reformat(pvlabel.getStyledDocument());
 		else
 			line = pvlabel.getText();
 		if (line==null || StringUtil.isWhitespace(line)) return null;   //  no PV
