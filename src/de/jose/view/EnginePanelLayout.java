@@ -24,7 +24,7 @@ public class EnginePanelLayout
         implements LayoutManager2
 {
 	protected static final int MIN_HEIGHT       = 20;
-	protected static final int MIN_EVAL_WIDTH   = 56;
+	protected static final int MIN_EVAL_WIDTH   = 80;
 	protected static final int MIN_LINE_WIDTH   = 48;
 
 	protected EnginePanel engPanel;
@@ -72,6 +72,7 @@ public class EnginePanelLayout
             if (engPanel.showInfoLabel())
             {
                 JoBigLabel infoLabel = engPanel.getInfoLabel(false);
+                if (infoLabel != null)
                 infoheight = getPreferredHeight(infoLabel,width);
             }
 
@@ -80,20 +81,24 @@ public class EnginePanelLayout
                 JoBigLabel evalLabel = engPanel.getEvalLabel(max-1,false,false);
                 JoBigLabel pvLabel = engPanel.getPvLabel(max-1,false,false);
 
-                int linewidth = width-MIN_EVAL_WIDTH;
-                int lineheight = Math.max(getPreferredHeight(pvLabel,linewidth), parent.getHeight()-infoheight-y);
+                if (evalLabel != null && pvLabel != null) {
+                    int linewidth = width - MIN_EVAL_WIDTH;
+                    int lineheight = Math.max(getPreferredHeight(pvLabel, linewidth), parent.getHeight() - infoheight - y);
 
-                evalLabel.setBounds(0,y, MIN_EVAL_WIDTH,lineheight);
-                pvLabel.setBounds(MIN_EVAL_WIDTH,y, linewidth,lineheight);
-                y += lineheight;
+                    evalLabel.setBounds(0, y, MIN_EVAL_WIDTH, lineheight);
+                    pvLabel.setBounds(MIN_EVAL_WIDTH, y, linewidth, lineheight);
+                    y += lineheight;
+                }
             }
 
             /** lay out info line   */
             if (engPanel.showInfoLabel())
             {
                 JoBigLabel infoLabel = engPanel.getInfoLabel(false);
-                infoLabel.setBounds(0,y, width, infoheight);
-                y += infoheight;
+                if (infoLabel != null) {
+                    infoLabel.setBounds(0, y, width, infoheight);
+                    y += infoheight;
+                }
             }
         }
 	}

@@ -120,7 +120,7 @@ public class NalimovOnlineQuery
 			{
 				if (!pos.tryMove(move)) break;
 				moveList.add(move);
-System.err.println(move);
+				//	System.err.println(move);
 				if (pos.isGameFinished()) break;
 				//  retrieve next
 				move = getBestMove(pos.toString());

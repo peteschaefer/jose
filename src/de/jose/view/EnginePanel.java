@@ -86,13 +86,13 @@ public class EnginePanel
 	/** pv evaluation
 	 *  Vector<JLabel>
 	 *   */
-	protected Vector lEval;
+	protected Vector<JLabel> lEval;
 	/** primary variation
 	 *  Vector<JLabel>
 	 *  0 = general info
 	 *  1 = first pv, ...
 	 * */
-	protected Vector lPrimaryVariation;
+	protected Vector<JLabel> lPrimaryVariation;
 	/** number of displayed primary variations  */
 	protected int pvCount;
 	protected boolean showInfoLabel;
@@ -617,8 +617,8 @@ public class EnginePanel
             boolean scrollhist = false;
 			for (int idx=0; idx <= rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
-					setEvaluation(idx,rec.eval[idx].cp,rec.eval[idx].flags, pmap);	//	todo pass Score object
-					setVariation(idx,rec.line[idx]);
+					setEvaluation(idx, rec.eval[idx], pmap);	//	todo pass Score object
+					setVariation(idx, rec.line[idx]);
 
 					if (! inBook) {
                     if (countPvLines() > 1)
@@ -647,7 +647,7 @@ public class EnginePanel
 
 			for (int idx=0; idx < pvCount; idx++)
 			{
-				setEvaluation(idx,Score.UNKNOWN,0,pmap);
+				setEvaluation(idx,new Score(), pmap);
 				setVariation(idx,null);
 			}
 
@@ -810,91 +810,91 @@ public class EnginePanel
 
 	protected void setValue(JLabel value, String key, HashMap pmap)
 	{
-		if (key==null) {
-			value.setText("");
-			value.setToolTipText(null);
-		}
-		else {
-			String text = Language.get(key);
-			String tip = Language.getTip(key);
-			text = StringUtil.replace(text,pmap);
-			tip = StringUtil.replace(tip,pmap);
-			value.setText(text);
-			value.setToolTipText(tip);
-		}
+		String text = textValue(key,pmap);
+		String tip = tipValue(key,pmap);
+		value.setText(text);
+		value.setToolTipText(tip);
 	}
 
-	protected void setValue(JTextComponent value, String key, HashMap pmap)
-	{
-		if (key==null) {
-			value.setText("");
-			value.setToolTipText(null);
-		}
-		else {
-			String text = Language.get(key);
-			String tip = Language.getTip(key);
-			text = StringUtil.replace(text,pmap);
-			tip = StringUtil.replace(tip,pmap);
-			value.setText(text);
-			value.setToolTipText(tip);
-		}
+	protected String textValue(String key, HashMap pmap) {
+		if (key==null) return "";
+		String text = Language.get(key);
+		return StringUtil.replace(text,pmap);
+	}
+
+	protected String tipValue(String key, HashMap pmap) {
+		if (key==null) return "";
+		String text = Language.getTip(key);
+		return StringUtil.replace(text,pmap);
 	}
 
 	/**
 	 * @param idx
-	 * @param eval (from whites point of view)
-	 * @param flags
+	 * @param score (from whites point of view)
 	 * @param pmap
 	 *
 	 * todo use Score object with WDL info
 	 */
-	public void setEvaluation(int idx, int eval, int flags, HashMap pmap)
+	public void setEvaluation(int idx, Score score, HashMap pmap)
 	{
-		JTextComponent leval = getEvalLabel(idx, (eval > Score.UNKNOWN), true);
+		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN), true);
 		if (leval==null) return;
 
 		String key;
-		if (flags==Score.EVAL_GAME_COUNT)
+		if (score.flags==Score.EVAL_GAME_COUNT)
 		{
 			//  book move, game count
-			if (eval<=0)
+			if (score.cp<=0)
 				pmap.put("count","-");
 			else
-				pmap.put("count", Integer.toString(eval));
+				pmap.put("count", Integer.toString(score.cp));
 			key = "plugin.gamecount";
 		}
-		else if (eval <=  Score.UNKNOWN)
+		else if (score.cp <=  Score.UNKNOWN)
 			key = null;
-		else if (eval > Score.WHITE_MATES)
+		else if (score.cp > Score.WHITE_MATES)
 		{
-			int plies = eval-Score.WHITE_MATES;
+			int plies = score.cp-Score.WHITE_MATES;
 			pmap.put("eval",String.valueOf((plies+1)/2));
 			key = "plugin.white.mates";
 		}
-		else if (eval < Score.BLACK_MATES)
+		else if (score.cp < Score.BLACK_MATES)
 		{
-			int plies = Score.BLACK_MATES-eval;
+			int plies = Score.BLACK_MATES-score.cp;
 			pmap.put("eval",String.valueOf((plies+1)/2));
 			key = "plugin.black.mates";
 		}
 		else {
 			String text;
-			if (eval==0)
+			if (score.cp==0)
 				text = "0";
 			else
-				text = EVAL_FORMAT.format((double)eval/100.0);
+				text = EVAL_FORMAT.format((double)score.cp/100.0);
 
-			switch (flags)
+			switch (score.flags)
 			{
-			case Score.EVAL_LOWER_BOUND:     text = "\u2265 "+text; break;  //  ?
-			case Score.EVAL_UPPER_BOUND:     text = "\u2264 "+text; break;  //  ?
+			case Score.EVAL_LOWER_BOUND:     text = "\u2265 "+text; break;  //  >=
+			case Score.EVAL_UPPER_BOUND:     text = "\u2264 "+text; break;  //  <=
 			}
 
 			pmap.put("eval",text);
 			key = "plugin.evaluation";
 		}
 
-		setValue(leval, key,pmap);
+		String text = textValue(key,pmap);
+		String tip = tipValue(key,pmap);
+
+		if (score.hasWDL()) {
+			pmap.put("win",Integer.toString(score.win));
+			pmap.put("draw",Integer.toString(score.draw));
+			pmap.put("lose",Integer.toString(score.lose));
+			key = "plugin.wdl";
+			text += "\n"+textValue(key,pmap);
+			tip += "<br>"+tipValue(key,pmap);
+		}
+
+		leval.setText(text);
+		leval.setToolTipText(tip);
 	}
 
 	public void setNodeCount(long nodes, HashMap pmap)

@@ -25,13 +25,12 @@ score cp 12 wdl 1 1 998 movesleft 27
 ? commentary arrows and highlights
 ? score graph??
 
-? push to Bitbucket (incl. jre 1.8, Stockfish, Leela)
-
-? Linux build: requires mysql-embedded to be re-compiled for 64 bit.
+==== Linux build
+? : requires mysql-embedded to be re-compiled for 64 bit.
 Don't think I want to do that...
 ? clobber Ubuntu on xps 15?
 
-Interesting Leela settings.
+==== Interesting Leela settings.
 ? temperature for more variations in the opening
 ? contempt for sharp/dull play
 ? UCI_showWDL always on
