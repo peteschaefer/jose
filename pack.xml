@@ -318,6 +318,22 @@
 		</zip>
 	</target>
 
+	<target name="leela-mac">
+		<description> Leela (Lc0) engine for MacOS </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="lc0.xml"/>
+			</zipfileset>
+		</zip>
+
+		<zip destfile="${zip-file}" update="true">
+			<zipfileset src="engines/lc0-mac.zip" prefix="${appldir}/engines/lc0" excludes="lc0"/>
+			<zipfileset src="engines/lc0-mac.zip" prefix="${appldir}/engines/lc0" filemode="775">
+				<include name="lc0"/>
+			</zipfileset>
+		</zip>
+	</target>
+
 	<target name="leela-linux">
 		<description> Leela (Lc0) engine for Linux </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
@@ -348,10 +364,11 @@
 			<zipfileset dir="config" prefix="${appldir}/config">
 				<include name="stockfish.xml"/>
 			</zipfileset>
-			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
+			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-x86-64-avx2.*"/>
 				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="src"/>
+				<exclude name="stockfish-mac-*"/>
+				<!--exclude name="src"/-->
 				<exclude name="wiki"/>
 			</zipfileset>
 		</zip>
@@ -363,14 +380,34 @@
 			<zipfileset dir="config" prefix="${appldir}/config">
 				<include name="stockfish.xml"/>
 			</zipfileset>
-			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
+			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-*"/>
 				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="src"/>
+				<exclude name="stockfish-mac-*"/>
+				<!--exclude name="src"/-->
 				<exclude name="wiki"/>
 			</zipfileset>
-			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish" filemode="775">
+			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish" filemode="775">
 				<include name="stockfish-ubuntu-*"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="stockfish-mac">
+		<description> Stockfish engine for Linux </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="stockfish.xml"/>
+			</zipfileset>
+			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
+				<exclude name="stockfish-windows-*"/>
+				<exclude name="stockfish-ubuntu-*"/>
+				<exclude name="stockfish-mac-*"/>
+				<!--exclude name="src"/-->
+				<exclude name="wiki"/>
+			</zipfileset>
+			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish" filemode="775">
+				<include name="stockfish-mac-*"/>
 			</zipfileset>
 		</zip>
 	</target>
@@ -667,18 +704,14 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-<!--
-		<antcall target="stockfish-macosx">
+		<antcall target="stockfish-mac">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
--->
-<!--
-		<antcall target="leela-macosx">
+		<antcall target="leela-mac">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
--->
 		<delete dir="${appldir}"/>
 	</target>
 
@@ -937,6 +970,9 @@
 		</antcall>
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-linux.zip"/>
+		</antcall>
+		<antcall target="upload-file">
+			<param name="file" value="jose-${version}-macosx.zip"/>
 		</antcall>
 	</target>
 

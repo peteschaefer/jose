@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
 <PLUGIN ID="lc0" type="uci">
 	<NAME> Lc0 </NAME>
 	<EXEC os="Windows">
@@ -10,8 +11,11 @@
 		*akshually* run in 64 bit mode -->
 		<COMMAND> %dir%/lc0 </COMMAND>
 	</EXEC>
+	<EXEC os="Mac">
+		<COMMAND> %dir%/lc0 </COMMAND>
+	</EXEC>
 	<DIR> %local%/engines/lc0 </DIR>
-	<LOGO> /home/schaefer/src/jose/images/jose32.bmp </LOGO>
+	<LOGO> %dir%/Leela_Chess_Zero_logo.png </LOGO>
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
@@ -86,7 +90,6 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
-		<OPTION name="Backend"> eigen </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>

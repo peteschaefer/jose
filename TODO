@@ -50,18 +50,15 @@ mysqld 5.0.24a i686 from 11-07-2005
 [?] https://violetlib.org/vaqua. Problems! More modern but not overwhelmingly beautiful :(
 
 [ ] Application Bundle vs. Java
-   - neither Apple's nor Oracle's launcher work :(
-   - we need a new launcher stub
      see: https://github.com/tofi86/universalJavaApplicationStub
-   - good news: jre can be bundled
-   [ ] bundle leela
-   [ ] bundle stockfish
+   [x] bundle leela
+   [x] bundle stockfish
    [-] Quaqua
    [-] VAqua
    [x] default lnf
-   [ ] Print Preview
+   [-] Print Preview
    [x] make jose.sh executable: shc
-   [-] port JavaLauncher
+   [-] port JavaLauncher -> use shc instead
    [x] upgrade mrjadapter 1.3
 
 [ ] "Apple Silicon"
