@@ -138,7 +138,8 @@ public class OpeningLibrary
 		for(int i=0; i < size(); i++) {
 			BookFile bfile = (BookFile)get(i);
 			if (bfile!=null && bfile.isOpen()) {
-				if (buf.length()==0) {
+				if (buf.length() <= 60) {
+					if (buf.length() > 0) buf.append(", ");
 					buf.append(bfile.getTitle());
 				}
 				else {
