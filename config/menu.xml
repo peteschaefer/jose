@@ -53,6 +53,7 @@
 
 		<separator hide="mac"/>
 		<item id="menu.edit.option"	icon="\uf0ad:#808080"		key="F9" hide="mac"/>
+		<item id="eboard.connect"	icon="\uf1cc:#000000:#ffffff"/>
 	</menu>
     <!-- - - - - - - - - - -->
     <!-- Format Menu       -->

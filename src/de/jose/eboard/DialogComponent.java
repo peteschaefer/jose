@@ -5,6 +5,7 @@ import de.jose.comm.CommandListener;
 import de.jose.Language;
 import de.jose.image.ImgUtil;
 import de.jose.view.IBoardAdapter;
+import de.jose.view.JoToolBar;
 import de.jose.window.JoDialog;
 
 import javax.swing.*;
@@ -40,8 +41,9 @@ public class DialogComponent extends JComponent implements ActionListener
             synchFollow.addActionListener(this);
         }
 
+        Icon eboardIcon = JoToolBar.createAwesomeIconLike("eboard.connect",24f);
         add(status = JoDialog.newLabel("eboard.na"));
-        add(connect = JoDialog.newButton("eboard.connect", ImgUtil.getMenuIcon("eboard.connect"),this));
+        add(connect = JoDialog.newButton("eboard.connect", eboardIcon,this));
 
         ori = new JComboBox<String>();
         ori.addItem(Language.get("eboard.orientation.white"));
