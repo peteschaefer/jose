@@ -634,7 +634,7 @@
 				<include name="mysqladmin"/>
 			</zipfileset>
 			<zipfileset dir="lib/Mac" prefix="${appldir}/lib/Mac">
-				<include name="MRJAdapter.jar"/>
+				<include name="mrjadapter-1.3.jar"/>
 				<!--<include name="libmysqlje.jnilib"/>-->
                 <!--include name="libquaqua.jnilib"/-->
 				<!--include name="libquaqua64.jnilib"/-->
