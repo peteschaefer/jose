@@ -9,45 +9,37 @@
 
 ==== Project
 
-move on to 64bit land
+1.5.1: move on to 64-bit land
 
-[ ] compile against jdk 1.8
+[x] compile against jdk 1.8
 [ ] run with JBR 21 x64
     [x] Windows
     [x] Linux
     [ ] Mac Intel
     [ ] Mac arm
 [ ] fixes hi-dpi issues
-    [x] fonts
+    [x] dialogs
     [x] 2d board
-    [ ] 3d board (fix: mouse arithmetics)
+    [ ] 3d board (todo: fix mouse arithmetics)
 [ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
     [ ] Mac Intel
 [ ] JavaLauncher -> needs server/jvm.dll
 [ ] mysql 5.0.15
+    !! patch: https://bugs.mysql.com/bug.php?id=12070
     [ ] Windows ( ) embedded (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
-    (MacOS already standalone, 64 bit)
-    patch: https://bugs.mysql.com/bug.php?id=12070
-[ ] easylink: 64 bit, use lates hidapi
-    [ ] fixes BLE
-
-==== Linux build (!!)
-* requires jre 1.8 (i386)
-* requires some extra libraries (i386)
-    - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
-* todo cross-compile easylink for i386. Which extra libaries are needed?
-* bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
-
-[-] port JavaLauncher, or use shc
-[x] java.desktop
+    [ ] Mac intel
+    [ ] Mac arm
+[ ] easylink: 64 bit, use latest hidapi
+    [ ] Windows: fixes BLE?
+    [ ] Linux ?
 
 ==== macOS
 
 [ ] Java3D 1.5.1 for Mac Intel
-
+[ ] mysql-je for Mac
 
 ==== Deprecated Stuff
 
