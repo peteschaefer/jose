@@ -65,7 +65,14 @@ public class PopupBoardWindow
             //label.setText("Helllo World");
             //pbw.insertDiagramText(label);
             int ply = pbw.trackMouse();
-            String fen = pbw.replay(ply);
+            String fen;
+            try {
+                fen = pbw.replay(ply);
+            } catch (Throwable e) {
+                //  Position out of synch. Can not always avoid it :(
+                return;
+            }
+
             boolean flip = AbstractApplication.theUserProfile.getBoolean("board.flip");
             if (flip)
                 fen = StringUtil.reverse(fen);

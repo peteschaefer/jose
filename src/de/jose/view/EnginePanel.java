@@ -427,7 +427,7 @@ public class EnginePanel
 			 Object source = e.getSource();
 			 if (source instanceof GameRef) {
 				 LiChessGameRef ref = (LiChessGameRef) source;
-                 LiChessOpeningExplorer.startDownload(ref.id);
+                 LiChessOpeningExplorer.startDownload(ref);
 			 }
 		 }
 		 else {

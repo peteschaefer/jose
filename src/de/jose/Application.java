@@ -2264,6 +2264,9 @@ public class Application
 				if (listPanel()!=null)
 					posFilter = listPanel().getSearchRecord().makePositionFilter();
 
+				boolean showPanel = (cmd.moreData==null) || ((Boolean)cmd.moreData).booleanValue();
+				int oldTabIndex = theHistory.currentIndex();
+
 				boolean posChanged;
                 if (cmd.code.equals("edit.game")) {
 				    int GId = src.firstId();
@@ -2282,25 +2285,29 @@ public class Application
                     posChanged = prepareEditGames(src,posFilter);
                 }
 
-				boolean showPanel = (cmd.moreData==null) || ((Boolean)cmd.moreData).booleanValue();
 				if (showPanel) showPanel("window.game");
+
 				switchGame(theHistory.currentIndex());
 
 				cmd.code = "broadcast.edit.game";
-                broadcast(cmd);
+				broadcast(cmd);
 
 				if (posChanged) {
 					//	new game: goto last move
 //                    cmd = new Command("move.last", null, null);
-                    switch (theMode)
-                    {
-	                case USER_ENGINE:
-		            case ENGINE_ENGINE:
-		                    theMode=USER_INPUT;
-		                    break;
-                    }
-					pausePlugin(theMode==ANALYSIS);
+					switch (theMode) {
+						case USER_ENGINE:
+						case ENGINE_ENGINE:
+							theMode = USER_INPUT;
+							break;
+					}
+					pausePlugin(theMode == ANALYSIS);
 //                    broadcast(cmd);
+				}
+
+				if (!showPanel && oldTabIndex>=0) {
+					//	back to original panel
+					switchGame(oldTabIndex);
 				}
 			}
 		};

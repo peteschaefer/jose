@@ -1,6 +1,9 @@
 package de.jose.book.lichess;
 
+import de.jose.AbstractApplication;
 import de.jose.Application;
+import de.jose.Command;
+import de.jose.Language;
 import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
@@ -10,8 +13,10 @@ import de.jose.pgn.Collection;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.ResultNode;
+import de.jose.task.GameSource;
 import de.jose.task.io.PGNImport;
 import de.jose.util.HttpsUtil;
+import de.jose.util.ListUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
@@ -28,6 +33,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LiChessOpeningExplorer extends OpeningBook
 {
@@ -201,7 +207,7 @@ public class LiChessOpeningExplorer extends OpeningBook
         return null;
     }
 
-    public static void startDownload(String lichessId)     {
+    public static void startDownload(LiChessGameRef gameRef)     {
         Runnable job = new Runnable() {
             @Override
             public void run() {
@@ -216,23 +222,25 @@ public class LiChessOpeningExplorer extends OpeningBook
                         if (conn!=null) conn.release();
                     }
 
-                    String urlStr = downloadUrl+"/"+lichessId+"?evals=false&literate=true";
+                    String urlStr = downloadUrl+"/"+gameRef.id+"?evals=false&literate=true";
                     URL url = new URL(urlStr);
 
                     reader = PGNImport.newPgnImporter(CId,url);
                     reader.setSilentTime(2000);
 
-                    //  todo choose Idx
                     reader.start();
                     reader.join();
-
-                    //  todo wait for reader to finish
+                    //  wait for reader to finish
                     //  fetch inserted Game.Id
-                    int GId = reader.getLastGameId();
+                    int GId1 = reader.getFirstGameId();
+                    int GId2 = reader.getLastGameId();
+                    if (GId2 > 0) editLater(GId1,GId2);
+
                     //  open in Tab
                 } catch(FileNotFoundException e) {
                   //    this can happen if the advertised ID is not available
                   //    not our fault :(
+                    excuseLater(gameRef.toString());
                 } catch (Exception e) {
                     Application.error(e);
                 }
@@ -240,5 +248,32 @@ public class LiChessOpeningExplorer extends OpeningBook
         };
 
         Application.theExecutorService.submit(job);
+    }
+
+    protected static void excuseLater(String game)
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                HashMap args = new HashMap();
+                args.put("game", game);
+                String msg = Language.args("download.error.lichess", args);
+                JoDialog.showErrorDialog(msg);
+            }
+        });
+    }
+
+    protected static void editLater(int GId1,int GId2)
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int[] gids = ListUtil.intRange(GId1,GId2);
+                Command cmd = new Command("edit.game", null,
+                        GameSource.gameArray(gids),
+                        Boolean.FALSE);
+                AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+            }
+        });
     }
 }

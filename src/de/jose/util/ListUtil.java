@@ -276,6 +276,15 @@ public class ListUtil
 		return false;
 	}
 
+	public static int[] intRange(int from, int toInclusive)
+	{
+		assert(from <= toInclusive);
+		int[] result = new int[toInclusive-from+1];
+		for(int i=0; i < result.length; i++)
+			result[i] = from+i;
+		return result;
+	}
+
 	static class DBSelectionIterator implements Iterator
 	{
 		private DBSelectionModel model;
@@ -308,7 +317,6 @@ public class ListUtil
 		{
 			throw new UnsupportedOperationException();
 		}
-
 
 		private int fetchNext(int idx)
 		{

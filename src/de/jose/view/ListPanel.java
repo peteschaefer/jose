@@ -624,7 +624,9 @@ public class ListPanel
 			if (rowNum >= 0 && rowNum < table.getRowCount()) {
 				int GId = ((ListTableModel)model).getId(rowNum);
 
-				Command cmd = new Command("edit.game", e, GameSource.singleGame(GId));
+				Command cmd = new Command("edit.game", e,
+						GameSource.singleGame(GId),
+						Boolean.TRUE);
 				AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
 			}
 		}

@@ -346,7 +346,7 @@ public class GameBuffer
 	protected void initRow(Row r)
 		throws SQLException
 	{
-		if (conn!=null)
+		if (conn!=null && r.Id==0)
 			r.Id = getSequence(conn);
 		else
 			r.Id = 0;
