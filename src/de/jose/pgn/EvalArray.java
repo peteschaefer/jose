@@ -64,16 +64,41 @@ public class EvalArray {
 		firstPly = 0;
 	}
 
+	/**
+	 * initializes from Game main line
+	 * @param gm
+	 */
 	public void setGame(Game gm) {
 		clear();
 
-		int ply = firstPly = gm.getPosition().firstPly();
-		MoveNode node = gm.getMainLine().firstMove();
-		for (; node != null; node = node.nextMove())
+		firstPly = gm.getPosition().firstPly();
+		copyBranch(gm.getMainLine(),firstPly,-1);
+	}
+
+	public void setBranch(LineNode branch)
+	{
+		clear();
+		//	todo
+		//	copy branch
+		int ply0 = copyBranch(branch,-1,-1);
+		//	climb to root
+		for(branch = branch.parent(); branch!=null; branch = branch.parent())
+			ply0 = copyBranch(branch,-1,ply0);
+	}
+
+	private int copyBranch(LineNode branch, int ply0, int maxPly)
+	{
+		MoveNode node = branch.firstMove();
+		if (node==null) return -1;
+		if (ply0<0) ply0 = node.ply;
+		if (maxPly<0) maxPly = Integer.MAX_VALUE;
+
+		for (int ply=ply0; node != null && ply < maxPly; node = node.nextMove(),ply++)
 			if (EvalArray.isValid(node.engineValue))
-				setPlyValue(ply++, node.engineValue);
+				setPlyValue(ply, node.engineValue);
 			else
-				setPlyValue(ply++, null);
+				setPlyValue(ply, null);
+		return ply0;
 	}
 
 	public float[] plyValue(int ply, float[] result) {

@@ -64,6 +64,7 @@ public class GameDetailsDialog
 		values = new HashMap();
 
 		JoMenuBar.assignMnemonics(getTabbedPane());
+		JoMenuBar.assignMnemonics(buttonPane);
 	}
 
 	public void initTab0(Component comp0)

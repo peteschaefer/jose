@@ -116,7 +116,14 @@ public class LineNode
 	}
 
 	public final MoveNode firstMove()	{ return (MoveNode)first(MOVE_NODE); }
-	
+	public final MoveNode secondMove()	{
+		MoveNode m = firstMove();
+		if (m==null)
+			return null;
+		else
+			return (MoveNode)m.next(MOVE_NODE);
+	}
+
 	public final MoveNode lastMove()	{ return (MoveNode)last(MOVE_NODE); }
 
 	public final boolean contains(Node nd)
@@ -137,7 +144,7 @@ public class LineNode
     public final Node firstLeaf()
     {
         for (Node n = first(); n != null; n = n.next()) {
-            if (n.type==LINE_NODE) {
+            if (n.is(LINE_NODE)) {
                 Node r = ((LineNode)n).firstLeaf();
                 if (r!=null) return r;
             }
@@ -150,7 +157,7 @@ public class LineNode
     public final Node lastLeaf()
     {
         for (Node n = last(); n != null; n = n.previous()) {
-            if (n.type==LINE_NODE) {
+            if (n.is(LINE_NODE)) {
                 Node r = ((LineNode)n).lastLeaf();
                 if (r!=null) return r;
             }
@@ -220,18 +227,21 @@ public class LineNode
 
 	public void removeComments()
 	{
-		for (Node nd = first(); nd!=null; nd = nd.next())
+		for (Node nd = first(); nd!=null; )
+		{
+			Node nn = nd.next();
 			switch (nd.type()) {
-			case COMMENT_NODE:
-			case ANNOTATION_NODE:
-			case DIAGRAM_NODE:
-					nd.remove();
-					//	please note that nd.next() is still valid after remove()
+				case COMMENT_NODE:
+				case ANNOTATION_NODE:
+				case DIAGRAM_NODE:
+					nd.remove();	//	nd.next() is still valid. but better not rely on it
 					break;
-			case LINE_NODE:
-					((LineNode)nd).removeComments();
+				case LINE_NODE:
+					((LineNode) nd).removeComments();
 					break;
 			}
+			nd = nn;
+		}
 	}
 
 	public void updateLabels(Game doc) throws BadLocationException
@@ -600,66 +610,6 @@ public class LineNode
         }
         if (level() >= 2)
     		pos.undoVariation();
-	}
-
-	public Node[] extractSubLines(Node from)
-	{
-		Vector collect = new Vector();
-		while (from != null)
-		{
-			if (from.is(RESULT_NODE)) break;
-			if (from.is(STATIC_TEXT_NODE)) break;   //  end-of-line
-			if (from.is(MOVE_NODE)) break;          //  line changes
-
-			Node next = from.next();
-			if (from.is(LINE_NODE)) {
-				from.remove();
-				collect.add(from);
-			}
-
-			from = next;
-		}
-		return (Node[])ListUtil.toArray(collect,Node.class);
-	}
-
-	public LineNode previousSibling()
-	{
-		for (Node nd=previous(); nd!=null; nd = nd.previous())
-			if (nd.is(LINE_NODE))
-				return (LineNode)nd;
-			else if (nd.is(MOVE_NODE))
-				return null;
-		return null;
-	}
-
-	public LineNode extractLine(Node start)
-	{
-		Node end = last(RESULT_NODE);
-		if (end !=null)
-			end = end.previous().previous();      //  skip result and line suffix
-		else
-			end = last().previous();       //  skip line suffix
-
-		return remove(start,end);
-	}
-
-	public void moveLine(Node after, LineNode line)
-	{
-		move(after, line.first().next(), line.last().previous());
-	}
-
-	public void move(Node after, Node from, Node to)
-	{
-		while (to!=null && to!=from) {
-			Node prev = to.previous();
-			to.remove();
-			to.insertAfter(after);
-			to = prev;
-		}
-		if (to!=null) {
-			to.remove();
-			to.insertAfter(after);
-		}
 	}
 
 	public String debugString()

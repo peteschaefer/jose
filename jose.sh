@@ -9,7 +9,9 @@ cd `dirname "$0"`
 
 localJava=jre-linux/bin/java
 
+switches=-Xmx2G -Djava.library.path=lib/Linux_i386
+
 if test -x $localJava;
-then $localJava -jar jose.jar $*;
-else java -jar jose.jar $*;
+then $localJava $switches -jar jose.jar $*;
+else java $switches -jar jose.jar $*;
 fi

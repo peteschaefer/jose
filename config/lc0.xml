@@ -36,7 +36,7 @@
 		<OPTION name="MaxOutOfOrderEvalsFactor"> 2.400000 </OPTION>
 		<OPTION name="StickyEndgames"> true </OPTION>
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
-		<OPTION name="MultiPV"> 10 </OPTION>
+		<OPTION name="MultiPV"> 6 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
 		<OPTION name="ScoreType"> Q </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
@@ -84,7 +84,7 @@
 	<SEARCH>
 		<TIME> 0 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES selected="true"> 1 </NODES>
+		<NODES selected="true"> 400 </NODES>
 		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>

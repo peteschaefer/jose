@@ -30,6 +30,8 @@ import de.jose.util.ReflectionUtil;
 import de.jose.util.StringUtil;
 import de.jose.view.style.JoStyleContext;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -845,33 +847,46 @@ public class Game
 			return INSERT_NEW_NODE;
 
 		case NEW_MAIN_LINE:
-			LineNode variation = new LineNode(this);
+			/*LineNode variation = new LineNode(this);
 			move.insertAfter(variation.first());
 			insertIntoCurrentLine(variation, next);
 			(currentMove = move).play(position);
 
 			promoteLine(variation);
+			*/
+			//	todo this should be effectively NEW_LINE, followed by promotoLine()
+			LineNode variation = createNewLine(move,next);
+			promoteLine(variation);
+
 			reformat(); //  side effect: currentMove=null
 			gotoMove(move);
+			// todo or? updateLabels(...)
 			return INSERT_NEW_NODE;
 
 		case NEW_LINE:
-			variation = new LineNode(this);
-			move.insertAfter(variation.first());	//	skip prefix
-			insertIntoCurrentLine(variation, next);	//	insert into structure
-			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
-			/**	insert variation at end of current line	*/
-			insertNode(variation);	//	insert into document
-			currentMove = move;  //  DON'T replay. already done by insertNode() !
-			if (variation.level()>=2) currentMove.play(position);
-			updateLabels(variation);
-			updateMoveCount(variation);
-			setDirty();
+			createNewLine(move, next);
 			return INSERT_NEW_NODE;
 
 		case CANCEL:
 			return INSERT_USER_ABORT;
 		}
+	}
+
+	private LineNode createNewLine(MoveNode move, MoveNode next)
+	{
+		LineNode variation = new LineNode(this);
+		move.insertAfter(variation.first());	//	skip prefix
+		insertIntoCurrentLine(variation, next);	//	insert into structure
+		//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
+		/**	insert variation at end of current line	*/
+		insertNode(variation);	//	insert into document
+		currentMove = move;  //  DON'T replay. already done by insertNode() !
+		if (variation.level()>=2) currentMove.play(position);
+
+		updateLabels(variation);
+		updateMoveCount(variation);
+		setDirty();
+		return variation;
 	}
 
 	public MoveNode getCurrentMove()	{ return currentMove; }
@@ -894,36 +909,66 @@ public class Game
     }
 
 
-	public void promoteLine (LineNode line) throws BadLocationException
+	public void promoteLine (LineNode V)
 	{
-		if (line.level()==0) throw new IllegalArgumentException("can't promote main line");
+		if (V.level()==0)
+			throw new IllegalArgumentException("can't promote main line");
 
-		/**	is there a sibling line ?	*/
-		LineNode sibling = line.previousSibling();
-		if (sibling!=null) {
-			/**	if so, change order	*/
-			line.remove();
-			line.insertBefore(sibling);
+		LineNode P = V.parent();
+		Node a = V.previous(LINE_NODE,MOVE_NODE);
+		if (a.is(LINE_NODE)) {
+			//	swap with sibling
+			V.swap(a);
+			return;
 		}
-		else {
-			LineNode parent = line.parent();
-			/**	replace parent with this line (more complicated)	*/
-			MoveNode pmv = (MoveNode)line.previous(MOVE_NODE);
-			//	this move node must exist
-			Node cut = pmv.previous();
-			if (cut==null) throw new NullPointerException();    //  must not happen
-			/**	extract all siblings	*/
-			Node[] siblings = parent.extractSubLines(line.next());
-			line.remove();
-			LineNode oldMainLine = parent.extractLine(pmv);
-			/**	insert new main line (line) */
-			Node after = line.first(MOVE_NODE);
-			while (after.next()!=null && after.next().is(ANNOTATION_NODE)) after = after.next();
-			//  keep annotation with move
-			parent.moveLine(cut,line);
-			for (int i=siblings.length-1; i >= 0; i--)
-				siblings[i].insertAfter(after);
-			oldMainLine.insertAfter(after);
+
+		/**
+		 * see doc/Promotion.drawio.svg
+		 * identify four sections:
+		 */
+		NodeSection A,B, C=null,D=null;
+		assert(a.is(MOVE_NODE) && a instanceof MoveNode);
+
+		A = new NodeSection(a,V.previous());
+		B = new NodeSection(V.first(),V.last());
+
+		MoveNode d = (MoveNode)V.next(MOVE_NODE);
+		if (d!=null)
+			D = new NodeSection(d,P.last());
+
+		MoveNode c = V.secondMove();
+		if (c!=null) {
+			assert(d==null || c.ply==d.ply);
+			C = new NodeSection(c, V.last());
+			B.setLast(c.previous());
+		}
+
+		A.trim(STATIC_TEXT_NODE);
+		B.trim(STATIC_TEXT_NODE);
+		if (C!=null) C.trim(STATIC_TEXT_NODE);
+		if (D!=null) D.trim(STATIC_TEXT_NODE,RESULT_NODE);
+
+		//	swap A with B (A and B must not be empty)
+		A.swap(B);
+		//	swap C with D (border cases if C or D are empty)
+		if (C!=null && D!=null) {
+			C.swap(D);
+		}
+		else if (D!=null) {
+			D.remove();
+			A.append(D);
+		}
+		else if (C!=null) {
+			//	put C in place of (empty) D
+			C.remove();
+			//	put C at the end of P. but before static text and result
+			//	todo can we model an *empty* NodeSection better ?
+			D = new NodeSection(V.next(),P.last());
+			Node d1 = D.trimRight(STATIC_TEXT_NODE,RESULT_NODE).last();
+			if (d1.is(STATIC_TEXT_NODE) || d1.is(RESULT_NODE))
+				C.insertBefore(d1);
+			else
+				C.insertAfter(d1);
 		}
 		setDirty();
 	}
@@ -963,7 +1008,7 @@ public class Game
 			node.insert(this, at);
 		} catch (BadLocationException blex) {
 			Application.error(blex);
-//			throw new RuntimeException(blex.getMessage());
+			throw new RuntimeException(blex.getMessage());
 		}
 	}
 /*
@@ -1983,11 +2028,17 @@ public class Game
 		binResult[blen[0]++] = (byte)SHORT_END_OF_DATA;
 	}
 
-	public void printDocStructure(PrintWriter out, StyledDocument doc)
-	{
+	public void printDocStructure(String logfile) throws IOException, BadLocationException {
+		FileWriter fout = new FileWriter(logfile);
+		PrintWriter pout = new PrintWriter(fout);
+		printDocStructure(pout,null);
+	}
+
+	public void printDocStructure(PrintWriter out, StyledDocument doc) throws BadLocationException {
 		if (out==null) out = new PrintWriter(System.out,true);
 
 		printLineStructure(out,0, root,doc);
+		out.flush();
 	}
 
 	protected void indent(PrintWriter out, int i)
@@ -2099,8 +2150,13 @@ public class Game
 		}
 	}
 
-	protected void printLineStructure(PrintWriter out, int ind, LineNode line, StyledDocument doc)
-	{
+	protected void printLineStructure(PrintWriter out, int ind, LineNode line, StyledDocument doc) throws BadLocationException {
+		//	sanity check
+		if (line.previous() != null && line.previous().next() != line)
+			out.println(">> bad prev linking");
+		if (line.next() != null && line.next().previous() != line)
+			out.println(">> bad next linking");
+
 		indent(out,ind);
 		out.print("[");
 		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,line.type()));
@@ -2119,8 +2175,13 @@ public class Game
 		out.println("]");
 	}
 
-	protected void printNodeStructure(PrintWriter out, int ind, Node node, StyledDocument doc)
-	{
+	protected void printNodeStructure(PrintWriter out, int ind, Node node, StyledDocument doc) throws BadLocationException {
+		//	sanity check
+		if (node.previous() != null && node.previous().next() != node)
+			out.println(">> bad prev linking");
+		if (node.next() != null && node.next().previous() != node)
+			out.println(">> bad next linking");
+
 		indent(out,ind);
 		out.print("[");
 		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,node.type()));
@@ -2130,7 +2191,15 @@ public class Game
 		out.print(node.getLength());
 		out.print(" \"");
 		try {
-			out.print(doc.getText(node.getStartOffset(),node.getLength()));
+			String text;
+			if (doc!=null)
+				text = doc.getText(node.getStartOffset(),node.getLength());
+			else
+				text = node.toString();
+			text = text.replace("\n","\\n");
+			text = text.replace("\t","\\t");
+			text = text.replace(" ","_");
+			out.print(text);
 		} catch (BadLocationException e) {
 			e.printStackTrace();  //To change body of catch statement use Options | File Templates.
 		}

@@ -16,6 +16,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import de.jose.MessageListener;
 import de.jose.Util;
 import de.jose.Application;
+import de.jose.pgn.LineNode;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.util.FontUtil;
@@ -47,7 +48,8 @@ public class EvalView
 	/**	the plugin engine	*/
 	protected EnginePlugin    engine;
 	/** current game    */
-	protected Game            game;
+	protected Game          game;
+	protected LineNode		branch;
 
 
 	/** y-value of middle line  */
@@ -96,9 +98,14 @@ public class EvalView
 		repaint();
 	}
 
+	/**
+	 * initialize from game main line
+	 * @param gm
+	 */
 	public void setGame(Game gm)
 	{
 		game = gm;
+		branch = gm.getMainLine();
 		//values.setAdjustMax(EvalArray.ADJUST_LOW_HIGH);
 		values.setGame(gm);
 
@@ -339,27 +346,36 @@ public class EvalView
 			AnalysisRecord a = (AnalysisRecord)data;
 			if (a!=null && a.ply>=0) {
 				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
-				setValue(a.ply-1, value);
-				updateMoveNode(value);
+				updateMoveNode(a.ply-1, value);
 			}
 			break;
 
 		case EnginePlugin.PLUGIN_MOVE:
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
-			int ply = emv.getPly();
-			setValue(ply, emv.mappedValue());
-			updateMoveNode(emv.mappedScore);
+			updateMoveNode(emv.getPly(), emv.mappedValue());
 			break;
 		}
 	}
 
-	private void updateMoveNode(float[] value)
+	private void updateMoveNode(int ply, float[] value)
 	{
+		setValue(ply, value);
+
 		if (game==null) return;
 		if (!EvalArray.isValid(value)) return;
 
 		MoveNode mvnd = game.getCurrentMove();
 		if (mvnd==null) return;
+
+		LineNode new_branch = mvnd.parent();
+		if (new_branch!=branch) {
+			/**
+			 * whenever the tree branch changes
+			 * - trace back tree path from new_branch to top
+			 * - update the eval data accordingly.
+			 */
+			values.setBranch(branch=new_branch);
+		}
 
 		if (! EvalArray.equals(mvnd.engineValue,value)) {
 			mvnd.engineValue = value.clone();

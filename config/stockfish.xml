@@ -15,14 +15,14 @@
 		<OPTION name="Threads"> 7 </OPTION>
 		<OPTION name="Hash"> 1024 </OPTION>
 		<OPTION name="Ponder"> true </OPTION>
-		<OPTION name="MultiPV"> 8 </OPTION>
+		<OPTION name="MultiPV"> 6 </OPTION>
 		<OPTION name="Skill Level"> 20 </OPTION>
 		<OPTION name="Move Overhead"> 10 </OPTION>
 		<OPTION name="nodestime"> 0 </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_LimitStrength"> false </OPTION>
 		<OPTION name="UCI_Elo"> 1320 </OPTION>
-		<OPTION name="UCI_ShowWDL"> false </OPTION>
+		<OPTION name="UCI_ShowWDL"> true </OPTION>
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
 		<OPTION name="Syzygy50MoveRule"> true </OPTION>
@@ -34,10 +34,10 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME> 0 </TIME>
+		<TIME selected="true"> 2000 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES> 10000 </NODES>
-		<TIME_CONTROL selected="true"/>
+		<NODES> 1 </NODES>
+		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

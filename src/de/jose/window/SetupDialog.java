@@ -158,7 +158,7 @@ public class SetupDialog
 
 	public SetupDialog(String name) {
 		super(name, false);
-		frame.setMinimumSize(new Dimension(720,640));
+		frame.setMinimumSize(new Dimension(720,580));
 
 		readOnFailedSave = false;    //	keep data when save fails
 
@@ -184,7 +184,7 @@ public class SetupDialog
 		view.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
 		GridBagConstraints constr = new GridBagConstraints(0, 0,
-				1, /*GridBagConstraints.REMAINDER*/3,
+				1, /*GridBagConstraints.REMAINDER*/4,
 				20.0, 2.0,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				INSETS_NORMAL, 0, 0);
@@ -203,7 +203,7 @@ public class SetupDialog
 		spinner.setMinimumSize(new Dimension(48, 18));
 		add(controls, 0, 2, 1, newLabel("dialog.setup.move.no"), LABEL_ONE_LEFT);
 		add(controls, 1, 2, 1, reg(spinner), ELEMENT_TWO);
-		getElementPane().add(controls, ELEMENT_TWO_SMALL);
+		getElementPane().add(controls, gridConstraint(ELEMENT_TWO_SMALL, 1,0,1));
 
 //		getElementPane().add(Box.createVerticalStrut(10),ELEMENT_TWO);
 
@@ -218,7 +218,7 @@ public class SetupDialog
 		JCheckBox frc_castl = (JCheckBox) castl.add(reg(newCheckBox("dialog.setup.castling.frc", null, this)));
 		frc_castl.addChangeListener(this);
 
-		getElementPane().add(castl, ELEMENT_TWO_SMALL);
+		getElementPane().add(castl, gridConstraint(ELEMENT_TWO_SMALL, 1,1,1));
 
 		//  frc spinner
 		spinner = newSpinner("dialog.setup.frc.index");
@@ -234,18 +234,19 @@ public class SetupDialog
 		frc.add(newIconButton("dialog.setup.frc", "menu.file.new.frc"));
 		frc.add(newIconButton("dialog.setup.shuffle", "menu.file.new.shuffle"));
 
-		getElementPane().add(frc, ELEMENT_TWO_SMALL);
+		getElementPane().add(frc, gridConstraint(ELEMENT_TWO_SMALL, 1,2,1));
 
 		//  Edit buttons
 		JComponent buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+		buttons.add(Box.createVerticalStrut(20));
 		buttons.add(JoDialog.newLinkButton("dialog.setup.clear", "menu.edit.clear", this));
 		buttons.add(JoDialog.newLinkButton("dialog.setup.initial", "menu.web.home", this));
 		buttons.add(JoDialog.newLinkButton("dialog.setup.copy", "menu.edit.copy", this));
 		buttons.add(JoDialog.newLinkButton("menu.edit.copy.fen", "menu.edit.copy", this));
 		buttons.add(JoDialog.newLinkButton("menu.edit.paste", "menu.edit.paste", this));
 
-		getElementPane().add(buttons, ELEMENT_TWO);
+		getElementPane().add(buttons, gridConstraint(ELEMENT_TWO_SMALL,1,3,1));
 
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
@@ -253,7 +254,7 @@ public class SetupDialog
 		//eboardCtrl.eboard.readProfile(Application.theUserProfile);
 		ebox.add(eboardCtrl,	gridConstraint(LABEL_ONE_LEFT,1,1,1));
 
-		GridBagConstraints econst = new GridBagConstraints(0,3, 1,1, 1.0,0.0,
+		GridBagConstraints econst = new GridBagConstraints(0,5, 1,1, 1.0,0.0,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 				INSETS_NORMAL, 0,0);
 		getElementPane().add(ebox, econst);

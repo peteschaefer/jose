@@ -31,10 +31,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
@@ -294,6 +291,18 @@ public class JoDialog
 
 		elementPane = createElementPane();
 		buttonPane = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+
+		Action action = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				hide();
+				wasCancelled = true;
+			}
+		};
+		KeyStroke keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+		elementPane.getActionMap().put(CANCEL,action);
+		elementPane.getInputMap().put(keystroke,CANCEL);
 
         Container contentPane = ((RootPaneContainer)frame).getContentPane();
 		contentPane.setLayout(new BorderLayout());
