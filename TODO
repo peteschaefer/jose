@@ -38,7 +38,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [x] FlatLaf
     [x] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
-    [ ] System/Custom option, Theme Editor button
+    [x] System/Custom option, Theme Editor button
     [x] F9 layout, Chessnut
     [x] F9 Board / Notation -> Appearance
     [x] tool button Annotations

@@ -31,6 +31,7 @@ import de.jose.export.ExportConfig;
 import de.jose.export.ExportContext;
 import de.jose.export.HtmlUtil;
 import de.jose.help.HelpSystem;
+import de.jose.image.Surface;
 import de.jose.image.TextureCache;
 import de.jose.pgn.Collection;
 import de.jose.pgn.*;
@@ -598,12 +599,8 @@ public class Application
 	{
 		if (lnf instanceof FlatLaf) {
 			FlatLaf.setSystemColorGetter(name -> {
-				if (name.equals("accent")) {
-					Color accColor = StyleUtil.getSystemAccentColor();
-					if (accColor==null) accColor = StyleUtil.getProfileAccentColor();
-					if (accColor==null) accColor = StyleUtil.getDefaultAccentColor();
-					return accColor;
-				}
+				if (name.equals("accent"))
+					return theUserProfile.getAccentColors()[1];
 				return null;
 			});
 
@@ -618,11 +615,7 @@ public class Application
 		}
 
 		UIManager.setLookAndFeel(lnf);
-
-		Color selColor = StyleUtil.getSystemSelectionColor();
-		if (selColor==null) selColor = StyleUtil.getProfileSelectionColor();
-		if (selColor!=null)
-			UIManager.put("TextPane.selectionBackground",selColor);
+		UIManager.put("TextPane.selectionBackground", theUserProfile.getAccentColors()[0]);
 
 		broadcast(new Command("update.ui", null, /*lnfName*/null, isDarkLookAndFeel()));
 	}

@@ -150,8 +150,24 @@ public class StyleUtil
             return null;
     }
 
-    public static Color getDefaultAccentColor() {
-        return Color.decode("#2675BF");
+    public static boolean supportsSystemAccentColors()
+    {
+        if (Version.windows)
+        {
+            return getWindowsSystemColor("AccentColor") != null;
+        }
+        if (Version.linux) {
+            //  getting a usable accent color from Linux is hopeless
+            //  there *are* accent colors in Gnome and KDE, but there is no useful
+            //  API to retrieve them. Linux Desktop is fucked, believe me.
+            //  Use our own profile store instead.
+            return false;
+        }
+        if (Version.mac) {
+            //  TODO
+            return true;
+        }
+        return false;
     }
 
     public static Color getSystemAccentColor()
@@ -175,10 +191,6 @@ public class StyleUtil
             //  not "AccentColor"
         }
         if (Version.linux) {
-            //  getting a usable accent color from Linux is hopeless
-            //  there *are* accent colors in Gnome and KDE, but there is no useful
-            //  API to retrieve them. Linux Desktop is fucked, believe me.
-            //  Use our own profile store instead.
             return null;
         }
         if (Version.mac) {

@@ -69,6 +69,9 @@ public class UserProfile
 	public static final int ZIP		= 2;
 	public static final int GZIP	= 3;
 
+	public static final Color DEFAULT_SELECTION_COLOR = Color.decode("#2675BF");
+	public static final Color DEFAULT_ACCENT_COLOR = Color.decode("#2675BF");
+
 	public static String getFactoryLookAndFeel() {
 		if (Version.mac) {
 			if (StyleUtil.getSystemDarkMode())
@@ -124,8 +127,9 @@ public class UserProfile
 		"board.surface.coords",		Surface.newColor(Color.black, "marble02.jpg"),
         "board.hilite.squares",		Boolean.FALSE,
 		"board.animation.hints",    Boolean.FALSE,
-		"lnf.select.color",			Surface.newColor(Color.decode("#2675BF")),
-		"lnf.accent.color",			Surface.newColor(Color.decode("#2675BF")),
+		"lnf.select.color",			Surface.newColor(DEFAULT_SELECTION_COLOR),
+		"lnf.accent.color",			Surface.newColor(DEFAULT_ACCENT_COLOR),
+		"accent.color",				"system",
 
 //		"board.3d.model",				"std2.j3df",
 		"board.3d.model",				"fab100.j3df",
@@ -404,6 +408,32 @@ public class UserProfile
         return result;
     }
 
+
+	public Color[] getAccentColors()
+	{
+		Color[] result = new Color[2];
+
+		if (StyleUtil.supportsSystemAccentColors()) {
+			String accent = getString("accent.color", "system");
+			if (accent.equals("system")) {
+				//	use system accent colors
+				result[0] = StyleUtil.getSystemSelectionColor();
+				result[1] = StyleUtil.getSystemAccentColor();
+			}
+		}
+		//	otherwise: use profile accent colors
+		if (result[0]==null) {
+			Surface srf = (Surface)get("lnf.select.color");
+			if (srf!=null) result[0] = srf.color;
+		}
+		if (result[1]==null) {
+			Surface srf = (Surface)get("lnf.accent.color");
+			if (srf!=null) result[1] = srf.color;
+		}
+		if (result[0]==null) result[0] = DEFAULT_SELECTION_COLOR;
+		if (result[1]==null) result[1] = DEFAULT_ACCENT_COLOR;
+		return result;
+	}
 
 
 	public void crossover()

@@ -167,10 +167,7 @@ public class DocumentEditor
 
 	public void setSelectionColor(boolean dark)
 	{
-		Color selColor = StyleUtil.getSystemSelectionColor();
-		if (selColor==null) selColor = StyleUtil.getProfileSelectionColor();
-		//if (selColor==null) selColor = UIManager.getColor( "TextPane.selectionBackground");
-		if (selColor==null) selColor = MOVE_HILITE_COLOR;
+		Color selColor = Application.theUserProfile.getAccentColors()[0];
 		if (dark) selColor = StyleUtil.mapDarkTextColor(selColor);
 
 		moveHiliteColor = StyleUtil.pastelize(selColor,0.6f);

@@ -47,6 +47,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -341,9 +342,22 @@ public class OptionDialog
 		sbutton2.setTexturesEnabled(false);
 		sbutton2.setGradientsEnabled(false);
 
-		addWithLabel(sbox, 1, "lnf.select.color", sbutton1);
-		addWithLabel(sbox, 1, "lnf.accent.color", sbutton2);
-		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
+		JRadioButton radSystem = newRadioButton("accent.color.system");
+		JRadioButton radUser = newRadioButton("accent.color.user");
+		JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		radioPanel.add(reg(radSystem));
+		radioPanel.add(reg(radUser));
+		radSystem.addActionListener(this);
+		radUser.addActionListener(this);
+
+		add(sbox, radioPanel, ELEMENT_TWO);
+		newButtonGroup("accent.color");
+
+		radioPanel.setVisible(StyleUtil.supportsSystemAccentColors());
+
+		add(sbox, sbutton1, ELEMENT_TWO);
+		add(sbox, sbutton2, ELEMENT_TWO);
+		add(sbox, newButton("lnf.theme.editor",null,null,this), ELEMENT_TWO);
 		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
 		addBox(tab2, 0,1,4, sbox);
@@ -1035,20 +1049,43 @@ public class OptionDialog
 	public void readTab2()  {
 		read(2,profile.settings);
 
-		Color selColor = StyleUtil.getSystemSelectionColor();
-		Color accColor = StyleUtil.getSystemAccentColor();
-		if (selColor!=null) {
-			//	disable edit
-			JoSurfaceButton button = (JoSurfaceButton) getElement("lnf.select.color");
-			button.setColor(selColor);
-			button.setEnabled(false);
+		if (StyleUtil.supportsSystemAccentColors()) {
+			String accent = profile.getString("accent.color", "system");
+			useSystemAccentColors(accent.equals("system"));
 		}
-		if (accColor!=null) {
-			//	disable edit
-			JoSurfaceButton button = (JoSurfaceButton) getElement("lnf.accent.color");
-			button.setColor(accColor);
-			button.setEnabled(false);
+		else {
+			useSystemAccentColors(false);
 		}
+	}
+
+	private void useSystemAccentColors(boolean system)
+	{
+		JoSurfaceButton button1 = (JoSurfaceButton) getElement("lnf.select.color");
+		JoSurfaceButton button2 = (JoSurfaceButton) getElement("lnf.accent.color");
+
+		if (system) {
+			button1.setColor(StyleUtil.getSystemSelectionColor());
+			button2.setColor(StyleUtil.getSystemAccentColor());
+		}
+		//	else: retrieve from profile
+		button1.setEnabled(!system);
+		button2.setEnabled(!system);
+
+		JRadioButton radsys = (JRadioButton)getElement("accent.color.system");
+		JRadioButton radusr = (JRadioButton)getElement("accent.color.user");
+
+		if (radsys!=null) radsys.setSelected(  system);
+		if (radusr!=null) radusr.setSelected(! system);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("accent.color.system"))
+			useSystemAccentColors(true);
+		if (e.getActionCommand().equals("accent.color.user"))
+			useSystemAccentColors(false);
+
+		super.actionPerformed(e);
 	}
 
 	public void readTab3()  {
@@ -1255,6 +1292,7 @@ public class OptionDialog
 				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel2"));
 			if (profile.changed("lnf.accent.color", oldValues) ||
 				profile.changed("lnf.select.color", oldValues) ||
+				profile.changed("accent.color", oldValues) ||
 				(lnfTouched!=null) && FileUtil.wasFileTouched(new File("config/themes"),lnfTouched))
 				Application.theApplication.resetLookAndFeel();
 			if (profile.changed("font.diagram",oldValues) ||
