@@ -21,6 +21,7 @@ import java.util.*;
 import java.io.File;
 import java.io.IOException;
 
+import de.jose.util.ListUtil;
 import org.w3c.dom.Element;
 
 import static de.jose.Application.ANALYSIS;
@@ -100,29 +101,31 @@ public class OpeningLibrary
 		selectMode = profile.getInt("book.select",SELECT_IMPLEMENTATION);
 
 		//  get files and selection bitflags
-		File[] files = (File[]) profile.get("book.files.2");
+		File[] userFiles = (File[]) profile.get("book.files.2");
 		boolean[] isopen = (boolean[]) profile.get("book.isopen");
 		boolean openfirst = false;
 
-		if (files==null) {
-			//  factory settings
-			Enumeration elems = config.enumerateElements("BOOK");
-			while (elems.hasMoreElements())
+		if (userFiles!=null) {
+			//  user settings
+			for (int i=0; i < userFiles.length; i++)
 			{
-				Element elem = (Element)elems.nextElement();
-				BookFile fentry = new BookFile(elem);
-
+				BookFile fentry = new BookFile(userFiles[i],Application.theApplication.theConfig);
 				add(fentry);
-				if (!openfirst) openfirst = fentry.open();
+				if (isopen[i]) openfirst = fentry.open();
 			}
 		}
-		else {
-			//  user settings
-			for (int i=0; i < files.length; i++)
-			{
-				BookFile fentry = new BookFile(files[i],Application.theApplication.theConfig);
+
+		//	add all files from the factory settings that are missing
+		//	in the user settings
+		Enumeration elems = config.enumerateElements("BOOK");
+		while (elems.hasMoreElements())
+		{
+			Element elem = (Element)elems.nextElement();
+			BookFile fentry = new BookFile(elem);
+
+			if (userFiles==null || !ListUtil.contains(userFiles,fentry.file)) {
 				add(fentry);
-				if (isopen[i]) fentry.open();
+				if (!openfirst) openfirst = fentry.open();
 			}
 		}
 	}

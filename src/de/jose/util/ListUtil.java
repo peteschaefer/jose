@@ -268,6 +268,13 @@ public class ListUtil
 			coll.add(values[i]);
 	}
 
+	public static boolean contains(Object[] array, Object value)
+	{
+		for(Object item : array)
+			if (value.equals(item))
+				return true;
+		return false;
+	}
 
 	static class DBSelectionIterator implements Iterator
 	{

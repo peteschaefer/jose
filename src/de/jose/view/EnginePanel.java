@@ -746,7 +746,7 @@ public class EnginePanel
 				//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
 				score.win = score.win * 1000 / entry.count;
 				score.draw = score.draw * 1000 / entry.count;
-				score.lose = score.lose * 1000 / entry.count;
+				score.lose = 1000-score.win-score.draw;//score.lose * 1000 / entry.count;
 			}
 		}
 

@@ -11,7 +11,7 @@
 		<FILE>Lichess Opening Explorer</FILE>
 		<FORMAT>LiChess</FORMAT>
 		<AUTHOR>-</AUTHOR>
-		<URL>https://explorer.lichess.ovh/masters</URL>
+		<URL>http://explorer.lichess.ovh/masters</URL>
 		<COMMENT>explore openings from the Lichess Masters database.
 			(an Internet connection is required)</COMMENT>
 	</BOOK>

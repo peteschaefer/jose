@@ -35,7 +35,8 @@
 	<property name="java.plaf.path" value="lib/plaf/3DLF.jar lib/plaf/gtkswing.jar lib/plaf/kunststoff.jar lib/plaf/metouia.jar lib/plaf/nextlf.jar lib/plaf/oalnf.jar lib/plaf/skinlf.jar lib/plaf/teknolust.jar lib/plaf/quaqua.jar"/>
 
     <!-- class path at runtime (as it appears in manifest) -->
-	<property name="java.runtime.path" value="lib/jh.jar lib/jdbc/mysql-je.jar lib/plaf/metouia.jar lib/Mac/MRJAdapter.jar"/>
+	<property name="java.runtime.path"
+			  value="lib/jh.jar lib/json.jar lib/jdbc/mysql-je.jar lib/plaf/metouia.jar lib/Mac/MRJAdapter.jar"/>
 
 	<!-- class path for compilation -->
 	<path id="java.build.path">
@@ -164,7 +165,7 @@
 
 		<jar jarfile="jose.jar" basedir="${java.classes}"
 			index="false"
-			excludes="**/Bootstrap.class .dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/** production/**">
+			excludes=".dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/** production/**">
 			<manifest>
 				<!-- please DON'T use index="true" it will break the Class-Path (java bug) -->
 

@@ -34,7 +34,7 @@ libraries needed:
   - if possible, redraw only modified arrows
 
 * "New Game from here"
-  - turn board on engine start
+  - turn board on engine start (or don't)
   - BUG fixed ?? engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0.
 
 * keep playing after flagging ?
@@ -54,12 +54,15 @@ libraries needed:
     - mark current move
     - tooltips
     - click navigate
+* show wdl scores with bars (instead of plain text)
 
 * LiChess Opening Explorer
     - download top games for a variation
-    1. copy to local db?
-    2. open in tabs?
-    3. inserts as sub-lines (most convenient, but a lot of text)
+    1. show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)
+    2. insert as sub-lines (most convenient, but a lot of text)
+    3. open in tabs?
+    4. copy to local db?
+* replace Nalimov query with Lichess tablebase query
 
 * Refactor Scoring !!
     - no more float[]. Use Score.wdl instead.
