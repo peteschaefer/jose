@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="jose-deploy" basedir="." default="windows-jre">
+<project name="jose-deploy" basedir="." default="windows">
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="15"/>
+	<property name="version" value="151"/>
 
 	<!-- target directory -->
 
@@ -98,6 +98,7 @@
 				<include name="fop-plus.jar"/>
 				<include name="jai_codec.jar"/>
 				<include name="jh.jar"/>
+				<include name="jdbc/mysql.jar"/>
 				<include name="jdbc/mysql-je.jar"/>
 				<include name="plaf/metouia.jar"/>
 				<include name="com.sun.jar" />
@@ -135,6 +136,29 @@
 			</zipfileset>
 
 		</zip>
+	</target>
+
+	<target name="zip-windows-x64">
+		<description>add Windos specific files to zip</description>
+
+		<zip destfile="${zip-file}" update="true">
+			<zipfileset dir="${dist-dir}/windows_x64"
+						prefix="${appldir}">
+				<!--include name="JavaApplicationStub"/-->
+				<include name="jose.exe"/>
+				<include name="jose.ini"/>
+
+				<include name="bin/Windows/*"/>
+				<include name="lib/Windows/*"/>
+
+				<include name="engines/lc0/lc0.exe"/>
+				<include name="engines/stockfish/stockfish-windows-x86-64-sse41-popcnt.exe"/>
+			</zipfileset>
+			<!-- add JRE -->
+			<zipfileset src="${dist-dir}/windows_x64/jdk-21_windows-x64_bin.zip"
+						prefix="${appldir}/jre"/>
+		</zip>
+
 	</target>
 
 	<target name="zip-windows">
@@ -448,7 +472,7 @@
 	</target>
 -->
 	<!-- Windows plus JRE -->
-	<target name="windows-jre" depends="init">
+	<target name="windows" depends="init">
 		<description> installation package for windows (including JRE) </description>
 
 		<property name="zip-file" location="${target-dir}/jose-${version}-windows.zip"/>
@@ -459,38 +483,19 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-windows">
+		<antcall target="zip-common">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-<!--
-		<antcall target="spike-windows">
+		<antcall target="zip-j3d">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="toga-windows">
+		<antcall target="zip-windows-x64">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
--->
-<!--
-		<antcall target="crafty-windows">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
--->
-		<antcall target="leela-windows">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="stockfish-windows">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<!-- add JRE -->
-		<zip destfile="${zip-file}" update="true">
-			<zipfileset src="${jre-dir}/jre1.8-win-x86.zip" prefix="${appldir}/jre-windows"/>
-		</zip>
+
 		<delete dir="${appldir}"/>
 	</target>
 
@@ -562,7 +567,7 @@
 	</target>
 -->
 	<!-- Linux plus JRE -->
-	<target name="linux-jre" depends="init">
+	<target name="linux" depends="init">
 		<description> installation package for linux (including JRE) </description>
 
 		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
@@ -675,9 +680,8 @@
 			<!-- config/lc0.xml, stockfish.xml -->
 			<!-- engines/** -->
 			<!-- lib/**.jar -->
-				<exclude name="lib/j3dcore.jar"/>
-				<exclude name="lib/j3dutils.jar"/>
-				<exclude name="lib/vecmath.jar"/>
+			<exclude name="lib/j3d/*"/>
+			<exclude name="bin/share-unused"/>
 			</zipfileset>
 		</zip>
 	</target>
@@ -688,14 +692,8 @@
 		<zip destfile="${zip-file}" update="true">
 			<!-- OS X specific stuff -->
 			<!-- application bundle -->
-			<zipfileset dir="${dist-dir}/common" prefix="${appldir}">
-				<!-- bin/share -->
-				<!-- config/lc0.xml, stockfish.xml -->
-				<!-- engines/** -->
-				<!-- lib/**.jar -->
-				<include name="lib/j3dcore.jar"/>
-				<include name="lib/j3dutils.jar"/>
-				<include name="lib/vecmath.jar"/>
+			<zipfileset dir="${dist-dir}/common/lib/j3d 1.5"
+						prefix="${appldir}/lib/j3d">
 			</zipfileset>
 		</zip>
 	</target>
@@ -1014,9 +1012,9 @@
 		<description>create packages for all platforms</description>
 
 		<!--antcall target="windows"/-->
-		<antcall target="windows-jre"/>
+		<antcall target="windows"/>
 		<!--antcall target="linux"/-->
-		<antcall target="linux-jre"/>
+		<antcall target="linux"/>
 		<antcall target="macos-intel"/>
 		<antcall target="macos-arm"/>
 		<!--antcall target="source"/-->

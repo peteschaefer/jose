@@ -55,6 +55,14 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_ICON1               ICON                    "jose.ico"
+//IDI_ICON1               ICON                    "jose256.ico"
+//IDI_ICON2               ICON                    "jose128.ico"
+//IDI_ICON3               ICON                    "jose96.ico"
+//IDI_ICON4               ICON                    "jose64.ico"
+//IDI_ICON5               ICON                    "jose48.ico"
+//IDI_ICON6               ICON                    "jose32.ico"
+//IDI_ICON7               ICON                    "jose24.ico"
+//IDI_ICON8               ICON                    "jose16.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

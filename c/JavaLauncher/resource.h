@@ -3,6 +3,13 @@
 // Used by resources.rc
 //
 #define IDI_ICON1                       101
+#define IDI_ICON2                       102
+#define IDI_ICON3                       103
+#define IDI_ICON4                       104
+#define IDI_ICON5                       105
+#define IDI_ICON6                       106
+#define IDI_ICON7                       107
+#define IDI_ICON8                       108
 #define IDB_BITMAP2                     104
 
 // Next default values for new objects

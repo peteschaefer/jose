@@ -97,8 +97,6 @@ public class HelpSystem
             JoFrame.adjustBounds(windowBounds,true);
             broker.setLocation(windowBounds.getLocation());
             broker.setSize(windowBounds.getSize());
-
-            broker.setFont(JoDialog.rescaleFont(broker.getFont()));
         }
     }
 

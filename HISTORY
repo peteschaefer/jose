@@ -126,7 +126,7 @@ the first production release.
 
 ... 18 years go by ...
 
-=== 1.5 (2006-01)
+=== 1.5 (2025-01)
 * support for modern OSes like Windows 10,11, Ubuntu 24.04, ...
 * bundled with JRE 1.8
 * bundled with Stockfish and Leela (Linux users have to compile Leela themselves...)
@@ -138,5 +138,12 @@ the first production release.
 * "New game from here" starts a new game from current position
 * support for Chessnut Air, Air+, Pro electronic boards (only USB, currently. Bluetooth not yet realiably supported)
 
+=== 1.5.1 (2025-02)
+* support for Hi-DPI screens on Windows and Linux
+* upgrade *64-bit* binaries:
+    * JRE 21
+    * MySQL 5.0.19
+    * Java3D 1.5
+* MySQL running in standalone mode (i.e. as a separate process)
 
 ==========================
