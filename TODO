@@ -106,7 +106,9 @@ Alternative JREs:
     - most recent list
     - $202: reversed Diagram
     -> FIG-SB-2 Unicode mapping is broken. why?
-    -> goal: a complete set of symbols
+    -> goal: a complete set of symbols in one font
+    - insert into text: fix, goal: insert symbols, no text
+     (but keep composable nags, like ! ?)
 
 * font awesome icons
 

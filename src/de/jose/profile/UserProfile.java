@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.zip.*;
 
 import static de.jose.Application.AppMode.USER_ENGINE;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 /**
  *	stores user specific sessions
@@ -913,7 +914,9 @@ public class UserProfile
 			panel.calcLocation();
 		}
 
-		set("game.mode", Application.theApplication.theMode.numval);
+		Application.AppMode appmode = (Application.AppMode)
+				Util.nvl(Application.theApplication.theMode,USER_INPUT);
+		set("game.mode", appmode.numval);
         set("animation.speed", (int)Application.theApplication.getAnimation().getSpeed());
 
 		Command cmd = new Command("update.user.profile", null, this);

@@ -36,7 +36,7 @@ public class ComboNag
     protected static ComboNag initiative    = new ComboNag(36, "has", lasting, "initiative" );
     protected static ComboNag attack        = new ComboNag(40, "has the", "attack" );
     //  [42..47] w/b has insufficient/sufficient/more than adequate compentsion for material deficit
-    protected static ComboNag compensation  = new ComboNag(42,  "has", suff, "compensation for material deficit" );
+    protected static ComboNag compensation  = new ComboNag(42,  "has", suff, "compensation" );
     //  [48..65] w/b has slight/moderate/decisive center/kingside/queenside control advantage
     protected static ComboNag control       = new ComboNag(48, "has a", grd2, side, "control advantage" );
     //   [66..69] w/b has a vulnerable/well protected first rank
@@ -54,7 +54,7 @@ public class ComboNag
     //  [130..135] w/b has slight/moderate/decisive counterplay
     protected static ComboNag counterplay   = new ComboNag(130,"has", grd2, "counterplay" );
     //  [136..139] w/b has moderate/severe time control pressure
-    protected static ComboNag timecontrol   = new ComboNag(136,"has", moderate, "time control pressure" );
+    protected static ComboNag timecontrol   = new ComboNag(136,"has", moderate, "time pressure" );
 
     protected static AdvantageNag advantage = new AdvantageNag();
 
@@ -66,18 +66,32 @@ public class ComboNag
             play, counterplay, timecontrol
     };
 
+    public static String[] ALL_SELECTORS = new String[ALL.length];
+
+    public static ComboNag findBySelector(String selector) {
+        for (ComboNag nag : ALL)
+            if (nag.selector.equals(selector))
+                return nag;
+        return null;
+    }
+
+    static {
+        for(int i=0; i < ALL.length; ++i)
+            ALL_SELECTORS[i] = ALL[i].selector;
+    }
+
     //  --------------------- fields ----------------
 
     private final int base;
-    private final String[] color;
+    public final String[] color;
     public final String verb;
     public final String[] adjective;
     public final String[] subst;
     public final String selector;
     //  current selection
-    protected int selcol = 0;
-    protected int seladj = 0;
-    protected int selsubst = 0;
+    public int selcol = 0;
+    public int seladj = 0;
+    public int selsubst = 0;
 
     public ComboNag(int base, String verb, String selector) {
         this(base, verb, null, null, selector);
@@ -96,7 +110,7 @@ public class ComboNag
         this.selector = aselector;
     }
 
-    void select(int col, int adj, int subst) {
+    public void select(int col, int adj, int subst) {
         assert (col < color.length);
         assert (adj < adjective.length);
         assert (subst < this.subst.length);
@@ -105,7 +119,7 @@ public class ComboNag
         selsubst = subst;
     }
 
-    int code() {
+    public int code() {
         return base
                 + selsubst * adjective.length * color.length
                 + seladj * color.length
@@ -182,7 +196,7 @@ class AdvantageNag extends ComboNag
     }
 
     @Override
-    void select(int col, int adj, int subst) {
+    public void select(int col, int adj, int subst) {
         //  "crushing" is only available for advantage1
         if (subst >= 1)
             adj = Math.min(adj, grd2.length-1);
@@ -191,7 +205,7 @@ class AdvantageNag extends ComboNag
     }
 
     @Override
-    int code() {
+    public int code() {
         switch(selsubst) {
             case 0:
                 advantage1.select(selcol,seladj,0);
