@@ -116,15 +116,15 @@ public class EvalView
 		if (game!=null) setGame(game);
 	}
 
-	public void setValue(int move, int color, float[] value)
+	public void setValue(int ply, float[] value)
 	{
-        if (move >= 0)
-		    values.setMoveValue(move,color,value);
+        if (ply >= 0)
+		    values.setPlyValue(ply,value);
 
 		adjustWidth();
-		scrollVisible(move);
+		scrollVisible(ply/2);
 
-		repaint1(move);
+		repaint1(ply/2);
 	}
 
 
@@ -269,34 +269,45 @@ public class EvalView
 	{
 		//  paint bars !
 		int first = values.firstMove();
-		int last = values.moveCount();
-		float[] svalue = new float[2];
+		int last = first + values.moveCount();
+		float[] wvalue = new float[2];
+		float[] bvalue = new float[2];
 
 		for (int p = first; p < last; p++)
 		{
-			float[] value = values.moveValue(p,svalue);
-			paint1Value((Graphics2D)g, p-first, value);
+			float[] value1 = values.moveValue(p,Constants.WHITE,wvalue);
+			float[] value2 = values.moveValue(p,Constants.BLACK,bvalue);
+
+			if (EvalArray.isValid(value1) && EvalArray.isValid(value2)) {
+				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH/2, value1);
+				paint1Value(g, (int)((p-first+0.5f)*BAR_WIDTH), BAR_WIDTH/2, value2);
+			}
+			else if (EvalArray.isValid(value1)) {
+				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, value1);
+			}
+			else if (EvalArray.isValid(value2)) {
+				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, value2);
+			}
 		}
 	}
 
-	protected void paint1Value(Graphics2D g, int offset, float[] value)
+	protected void paint1Value(Graphics g, int x, int width, float[] value)
 	{
-		if (value==null || Float.isNaN(value[0]) || Float.isNaN(value[1])) return;
+		if (!EvalArray.isValid(value)) return;
 
-		int x = offset*BAR_WIDTH;
 		int height = getHeight();
 
 		int p1 = (int)(height*(1.0f - value[0]-value[1]));
 		int p2 = (int)(height*(1.0f - value[0]));
 
-		g.setPaint(Color.black);
-		g.fillRect(x, 0, BAR_WIDTH, p1);
+		g.setColor(Color.black);
+		g.fillRect(x, 0, width, p1);
 
-		g.setPaint(Color.gray);
-		g.fillRect(x, p1, BAR_WIDTH, p2);
+		g.setColor(Color.gray);
+		g.fillRect(x, p1, width, p2);
 
-		g.setPaint(Color.white);
-		g.fillRect(x, p2, BAR_WIDTH, height);
+		g.setColor(Color.white);
+		g.fillRect(x, p2, width, height);
 	}
 
 
@@ -327,17 +338,16 @@ public class EvalView
 		case EnginePlugin.ANALYZING:
 			EnginePlugin plugin = (EnginePlugin)source;
 			AnalysisRecord a = (AnalysisRecord)data;
-			if (a!=null) {
+			if (a!=null && a.ply>=0) {
 				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
-				setValue(a.ply/2, a.white_next ? Constants.BLACK:Constants.WHITE, value);
+				setValue(a.ply-1, value);
 			}
 			break;
 
 		case EnginePlugin.PLUGIN_MOVE:
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
 			int ply = emv.getPly();
-
-			setValue(ply/2, (ply%2==0) ? Constants.WHITE: Constants.BLACK, emv.mappedValue());
+			setValue(ply, emv.mappedValue());
 
 			if (game!=null) {
 				//  is this the right place to do this ??

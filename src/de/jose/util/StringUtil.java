@@ -1350,6 +1350,25 @@ public class
         return text.indexOf(' ',i);
     }
 
+	public static int compare(StringBuilder a, StringBuilder b)
+	{
+		int i=0;
+		int j=0;
+
+		for( ; i < a.length() && j < b.length(); ++i,++j)
+		{
+			char c = a.charAt(i);
+			char d = b.charAt(j);
+			if (c!=d)
+				return c-d;
+		}
+		if (a.length() < b.length())
+			return -1;
+		if (b.length() < a.length())
+			return +1;
+		return 0;
+	}
+
 	public static int compareVersion(String va, String vb)
 	{
 	    StringTokenizer toka = new StringTokenizer(va,". -/_");

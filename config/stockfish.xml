@@ -15,7 +15,7 @@
 		<OPTION name="Threads"> 7 </OPTION>
 		<OPTION name="Hash"> 1024 </OPTION>
 		<OPTION name="Ponder"> true </OPTION>
-		<OPTION name="MultiPV"> 10 </OPTION>
+		<OPTION name="MultiPV"> 8 </OPTION>
 		<OPTION name="Skill Level"> 20 </OPTION>
 		<OPTION name="Move Overhead"> 10 </OPTION>
 		<OPTION name="nodestime"> 0 </OPTION>
@@ -33,5 +33,11 @@
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>
+	<SEARCH>
+		<TIME> 0 </TIME>
+		<DEPTH> 10 </DEPTH>
+		<NODES> 10000 </NODES>
+		<TIME_CONTROL selected="true"/>
+	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

@@ -491,7 +491,7 @@ public class UciPlugin
 		printOut.println(currentLine.toString());
 	}
 
-	public void analyze(Position pos)
+	public synchronized void analyze(Position pos)
 	{
 		if (!canAnalyze(pos)) throw new IllegalArgumentException("game already finished");
 		/**
@@ -823,7 +823,7 @@ public class UciPlugin
 		return Integer.parseInt(multipv);
 	}
 
-	public void parseAnalysis(String input, AnalysisRecord rec)
+	public synchronized void parseAnalysis(String input, AnalysisRecord rec)
 	{
 		if (input==null || input.length()==0) {
 			rec.clear();

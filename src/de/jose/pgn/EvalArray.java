@@ -80,35 +80,13 @@ public class EvalArray {
 		if (ply < firstPly)
 			return null;
 		ply -= firstPly;
-		if (ply >= values.size())
+		if ((2*ply+1) >= values.size())
 			return null;
-		else {
-			if (result == null)
-				result = new float[2];
-			result[0] = values.get(2 * ply);
-			result[1] = values.get(2 * ply + 1);
-		}
-		return result;
-	}
 
-	public float[] addPlyValue(int ply, float[] result) {
-		if (ply < firstPly)
-			return null;
-		ply -= firstPly;
-		if (ply >= values.size())
-			return null;
-		else {
-			if (result == null)
-				result = new float[2];
-
-			float v0 = values.get(2 * ply);
-			float v1 = values.get(2 * ply + 1);
-			if (Float.isNaN(v0) || Float.isNaN(v1))
-				return null;
-
-			result[0] += v0;
-			result[1] += v1;
-		}
+		if (result == null)
+			result = new float[2];
+		result[0] = values.get(2 * ply);
+		result[1] = values.get(2 * ply + 1);
 		return result;
 	}
 
@@ -119,26 +97,14 @@ public class EvalArray {
 			return plyValue(2 * move + 1, result);
 	}
 
-	public float[] moveValue(int move, float[] result) {
-		float[] whiteValue = plyValue(2 * move, result);
-		if (whiteValue != null) return whiteValue;
+	public static boolean isValid(float[] value)
+	{
+		return value!=null && (value[0]!=Float.MAX_VALUE) && (value[1]!=Float.MAX_VALUE);
+	}
 
-		float[] blackValue = plyValue(2 * move + 1, result);
-		return blackValue;
-
-		/*
-		if (result==null) result = new float[2];
-			result[0] = result[1] = 0.0f;
-
-		float[] whiteValue = addPlyValue(2 * move, result);
-		float[] blackValue = addPlyValue(2 * move + 1, result);
-
-		if (whiteValue != null && blackValue != null) {
-			result[0] = result[0] / 2.0f;
-			result[1] = result[1] / 2.0f;
-		}
-
-		return result;		 */
+	public static boolean isValid(float v1, float v2)
+	{
+		return (v1!=Float.MAX_VALUE) && (v2!=Float.MAX_VALUE);
 	}
 
 	public void setPlyValue(int ply, float[] value) {
@@ -146,8 +112,8 @@ public class EvalArray {
 		ply -= firstPly;
 
 		if (value==null) {
-			values.set(2*ply,Float.NaN);
-			values.set(2*ply+1,Float.NaN);
+			values.set(2*ply,Float.MAX_VALUE);
+			values.set(2*ply+1,Float.MAX_VALUE);
 		}
 		else {
 			values.set(2 * ply, value[0]);

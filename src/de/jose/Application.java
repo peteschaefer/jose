@@ -3188,10 +3188,10 @@ public class Application
 			  JOptionPane.ERROR_MESSAGE);
 	}
 
-	public boolean askNewGame(boolean reversed)
+	public boolean askNewGame()
 	{
 		JCheckBox reverseCheckBox = new JCheckBox(Language.get("new.game.reverse"));
-		reverseCheckBox.setSelected(reversed);
+		reverseCheckBox.setSelected(false);
 		Object[] params = { "Start new game?", reverseCheckBox };
 
 		int result = JOptionPane.showConfirmDialog(null,

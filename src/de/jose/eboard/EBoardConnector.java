@@ -87,9 +87,10 @@ public abstract class EBoardConnector
         if (st.diff_cnt==0)
             wasAcked = true;    //  App changed was replicated on the E-Board
 
-        if (mode==Mode.PLAY && board[currentOri.ordinal()].fen.equals(START_XFEN)) {
+        if (mode==Mode.PLAY && StringUtil.compare(board[currentOri.ordinal()].fen,START_XFEN)==0) {
+            //  note that StringBuilder does not overwrite equals()
             //  start a new game?
-            if (Application.theApplication.askNewGame(flipped))
+            if (Application.theApplication.askNewGame())
                 return;
         }
 

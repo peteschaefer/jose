@@ -850,7 +850,7 @@ abstract public class EnginePlugin
 			else if (score.hasWDL())
 				score.mapWDL(mappedScore);
 			else
-				mappedScore[0] = mappedScore[1] = Float.NaN;
+				mappedScore[0] = mappedScore[1] = Float.MAX_VALUE;
 		}
 
 		protected EvaluatedMove(Move move, AnalysisRecord a, EnginePlugin plugin)
@@ -861,7 +861,7 @@ abstract public class EnginePlugin
 		public int getPly()             { return ply; }
 //		public int centipawnValue()		{ return score.cp;}
 		public float[] mappedValue()    { return mappedScore; }
-		public boolean isValid()        { return mappedScore!=null && !Float.isNaN(mappedScore[0]); }
+		public boolean isValid()        { return mappedScore!=null && (mappedScore[0]!=Float.MAX_VALUE) && (mappedScore[1]!=Float.MAX_VALUE); }
 //		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
 //		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
 //		public boolean isUpperBound()   { return score.flags == Score.EVAL_UPPER_BOUND; }
