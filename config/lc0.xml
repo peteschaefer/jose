@@ -21,7 +21,7 @@
 		<OPTION name="CPuctBase"> 38739.000000 </OPTION>
 		<OPTION name="CPuctFactor"> 3.894000 </OPTION>
 		<OPTION name="TwoFoldDraws"> true </OPTION>
-		<OPTION dirty="true" name="VerboseMoveStats"> true </OPTION>
+		<OPTION name="VerboseMoveStats"> true </OPTION>
 		<OPTION name="LogLiveStats"> true </OPTION>
 		<OPTION name="FpuStrategy"> reduction </OPTION>
 		<OPTION name="FpuValue"> 0.330000 </OPTION>
@@ -38,7 +38,7 @@
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
 		<OPTION name="MultiPV"> 10 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
-		<OPTION name="ScoreType"> WDL_mu </OPTION>
+		<OPTION name="ScoreType"> win_percentage </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
 		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
 		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>
@@ -69,8 +69,8 @@
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
-		<OPTION dirty="true" name="UCI_ShowWDL"> true </OPTION>
-		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
+		<OPTION name="UCI_ShowWDL"> true </OPTION>
+		<OPTION dirty="true" name="UCI_ShowMovesLeft"> true </OPTION>
 		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
 		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>
 		<OPTION name="RamLimitMb"> 0 </OPTION>

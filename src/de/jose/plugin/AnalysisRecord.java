@@ -161,10 +161,15 @@ public class AnalysisRecord
 		{
 			if (moves[i]!=null && !moves[i].isEmpty() && mv.equals(moves[i].get(0)))
 			{
+				Score sc = eval[i];
 				StringBuffer liinfo = getLineInfo(i);
 				liinfo.setLength(0);
 				liinfo.append("  {");
 				liinfo.append(info);
+				if (sc!=null && sc.moves_left > 0) {
+					liinfo.append(", ml: ");
+					liinfo.append(sc.moves_left);
+				}
 				liinfo.append("}");
 				setPvModified(i);
 				return;

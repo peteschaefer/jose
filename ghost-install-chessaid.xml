@@ -79,7 +79,7 @@
 					</shortcuts>
 				</component>
 				<!-- JRE -->
-				<component dst="%InstallPath%\jre-windows" id="jre" name="JRE 1.4.2">
+				<component dst="%InstallPath%\jre-windows" id="jre" name="JRE 1.8">
 					<files>
 						<file dst="*.*" src="jre-windows\*.*"/>
 					</files>

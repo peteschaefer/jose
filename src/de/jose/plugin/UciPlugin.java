@@ -942,6 +942,10 @@ public class UciPlugin
 				score_modified = true;
 			}
 			else if (t.equals("movesleft")) {
+				score.moves_left = StringUtil.parseInt(tok.nextToken());
+				score_modified = true;
+			}
+			else if (t.equals("movesleft")) {
 				int moves_left = StringUtil.parseInt(tok.nextToken());
 				//	ignore for now
 			}

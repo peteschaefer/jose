@@ -13,7 +13,7 @@
 	<!-- application main class -->
 	<property name="java.main.class" value="de.jose.Main"/>
 	<!-- build version -->
-	<property name="version" value="1.4.2"/>
+	<property name="version" value="1.8"/>
 
 	<!-- html docs -->
 	<property name="man.html" location="doc/man"/>
@@ -88,7 +88,7 @@
 		<javac fork="yes"
 			executable="C:/jdk1.5/bin/javac.exe"
 			srcdir="${java.src}" destdir="${java.classes}"
-			source="1.4" target="1.4" compiler="modern"
+			source="1.8" target="1.8" compiler="modern"
 			nowarn="on" optimize="on"
 			debug="on">
 
@@ -117,9 +117,9 @@
 	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
 
 		<javac fork="yes"
-            executable="C:/jdk1.4/bin/javac.exe"
+            executable="C:/jdk1.8/bin/javac.exe"
 			srcdir="${java.src}" destdir="${java.classes}"
-			source="1.4" target="1.4" compiler="modern"
+			source="1.8" target="1.8" compiler="modern"
 			nowarn="on" optimize="on"
 			includeantruntime="no"
 			includejavaruntime="yes"

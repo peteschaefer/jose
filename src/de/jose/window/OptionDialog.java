@@ -91,7 +91,7 @@ public class OptionDialog
 				//"UCI_LimitStrength", "UCI_Elo",
 				//	Scores and Info
 				null,
-				"ScoreType", "UCI_ShowWDL", "UCO_ShowMovesLeft",
+				"ScoreType", "UCI_ShowWDL", "UCI_ShowMovesLeft",
 				"VerboseMoveStats", "LogLiveStats",
 				//	Leela settings
 				null,
@@ -1685,9 +1685,14 @@ public class OptionDialog
 		for(int i=0; i<optionList.size(); i++)
 		{
 			UciPlugin.Option option = optionList.get(i);
-			if (i > 0 && importanceGroup(option.name)!=importanceGroup(optionList.get(i-1).name))
+			int g = importanceGroup(option.name);
+			if (i > 0 && g!=importanceGroup(optionList.get(i-1).name))
 			{
 				//	named separator
+				String text = Language.get("plugin.option.group."+g);
+				JLabel label = new JLabel(text);
+				label.setFont(label.getFont().deriveFont(Font.BOLD));
+				pluginOptions.add(label, LABEL_ONE_LEFT);
 				pluginOptions.add(new JSeparator(), ELEMENT_ONE_ROW);
 			}
 

@@ -233,7 +233,7 @@
 		<!--tracker-action>/tracker/index.php</tracker-action-->
 		<tracker-action>https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a&amp;statuses=new&amp;statuses=indeterminate&amp;sort=-updated&amp;page=1</tracker-action>
 		<!-- online update info -->
-		<online-update>http://jose-chess.sourceforge.net/download.xml</online-update>
+		<online-update>https://hrimfaxi.bitbucket.io/jose/download.xml</online-update>
         <!-- online donation -->
         <online-donate>http://jose-chess.sourceforge.net/main.html#donate</online-donate>
 		<!-- book download -->

@@ -18,7 +18,8 @@ libraries needed:
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
 ? TraceConnection probably not needed anyway
 * pack & upload jose-15b-win.zip
-* move old stuff from Sourceforge: databases, sounds, ...
+* check link (remove donate, update, help, ...)
+* update download.xml
 
 ==== Linux build
 ? : requires mysql-embedded to be re-compiled for 64 bit.

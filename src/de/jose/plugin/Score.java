@@ -30,6 +30,8 @@ public class Score
     public int flags;
     //  win-draw-lose evaluation (optional)
     public int win,draw,lose;
+    //  Leela moves-left
+    public int moves_left;
 
     public Score() { clear(); }
 
@@ -40,6 +42,7 @@ public class Score
         win = that.win;
         draw = that.draw;
         lose = that.lose;
+        moves_left = that.moves_left;
     }
 
     public void copy(Score that) {
@@ -49,12 +52,14 @@ public class Score
         this.win = that.win;
         this.draw = that.draw;
         this.lose = that.lose;
+        this.moves_left = that.moves_left;
     }
 
     public void clear() {
         cp=cp_current=UNKNOWN;
         flags=EVAL_EXACT;
         win=draw=lose=0;
+        moves_left=0;
     }
 
     public int sumWDL() {
