@@ -14,6 +14,7 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.*;
+import de.jose.eboard.EBoardConnector;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.UserProfile;
@@ -56,6 +57,8 @@ abstract public class BoardView
 	protected boolean promoPopupShowing;
 
 	protected IBoardAdapter board;
+	/** attached electronic chess board; optional */
+	protected EBoardConnector eboard;
 
 	//
  	//	User settings
@@ -86,6 +89,9 @@ abstract public class BoardView
 		setMinimumSize(new Dimension(48,48));
 		setOpaque(true);
 		hints = new ArrayList<Hint>();
+
+		// todo experimental:
+		eboard = new EBoardConnector(theBoard); // todo from UserProfile
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }

@@ -60,7 +60,8 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     @Override
     public void realTimeCallback(String fen) {
         //  called from E-Board
-        synchFromBoard(fen);
+        if (!fen.equals(lastFen))
+            synchFromBoard(lastFen=fen);
     }
 
 
@@ -77,6 +78,11 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
 
         computeDiff();
         showLeds(board[currentOri.ordinal()].diff,currentOri);
+
+        /*  todo
+            IF diff==empty AND currentOri changed
+            THEN turn application board view to reflect currentOri
+         */
 
         switch(mode) {
             case PLAY:
@@ -106,10 +112,11 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
             throw new IllegalStateException("don't modify position in follow mode");
     }
 
+    private static String EMPTY_X_FEN = "11111111/11111111/11111111/11111111/11111111/11111111/11111111/11111111";
 
     private class BoardState {
-        StringBuilder fen = new StringBuilder();
-        StringBuilder diff = new StringBuilder();
+        StringBuilder fen = new StringBuilder(EMPTY_X_FEN);
+        StringBuilder diff = new StringBuilder(EasyLink.NO_LEDS);
         int diff_cnt = 0;
     }
 
@@ -117,6 +124,8 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
 
     private BoardState[] board;
     private StringBuilder appFen = new StringBuilder();
+
+    private String lastFen = "";
     private String lastLeds = EasyLink.NO_LEDS;
 
     private void computeDiff()
@@ -174,7 +183,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         if (ori==Orientation.BLACK_UP)
             newLeds = StringUtil.reverse(newLeds);
         if (! newLeds.equals(lastLeds))
-            EasyLink.led(newLeds = lastLeds);
+            EasyLink.led(lastLeds = newLeds);
     }
 
     private static void setExplodedFen(String fen, StringBuilder exploded)

@@ -14,6 +14,7 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.EngUtil;
+import de.jose.eboard.EBoardConnector;
 import de.jose.pgn.DiagramNode;
 import de.jose.image.ImgUtil;
 import de.jose.chess.Constants;
