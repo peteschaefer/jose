@@ -21,6 +21,7 @@ import de.jose.pgn.Game;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.TagNode;
+import de.jose.view.BoardView2D;
 import de.jose.view.DocumentPanel;
 import de.jose.view.input.JDateField;
 
@@ -52,9 +53,19 @@ public class GameDetailsDialog
 		super(name,true);
         frame.setSize(SIZE.width,SIZE.height);
 
-		addTab(newGridPane());
-		addTab(newGridPane());
-		addTab(newGridPane());
+		int iconSize = 14;
+		Color iconColor = Color.lightGray;
+		ImageIcon event = BoardView2D.getFontAwesomeIcon('\uf073',iconSize,iconColor);	//	calendar
+		ImageIcon players = BoardView2D.getFontAwesomeIcon('\ue068',iconSize,iconColor);	// two people
+		ImageIcon more = BoardView2D.getFontAwesomeIcon('\uf4ad',iconSize,iconColor);	//
+
+		Font fnt = getTabbedPane().getFont();
+		fnt = fnt.deriveFont(Font.BOLD,13);
+		getTabbedPane().setFont(fnt);
+
+		addTab(newGridPane(),event);
+		addTab(newGridPane(),players);
+		addTab(newGridPane(),more);
 
 		addButtons(OK_CANCEL);
 		addSpacer(20);

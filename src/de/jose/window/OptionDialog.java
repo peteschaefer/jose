@@ -33,6 +33,7 @@ import de.jose.util.file.ExecutableFileFilter;
 import de.jose.util.file.ImageFileFilter;
 import de.jose.util.map.IntHashSet;
 import de.jose.view.BoardPanel;
+import de.jose.view.BoardView2D;
 import de.jose.view.BoardView3D;
 import de.jose.view.colorchooser.JoChessSurfaceButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
@@ -142,7 +143,7 @@ public class OptionDialog
 		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
 		center(Math.min(screensize.width,760), Math.min(screensize.height,620));
         profile = AbstractApplication.theUserProfile;
-
+/*
 		ImageIcon user = ImgUtil.getIcon("nav","user.regular");
 		ImageIcon board = ImgUtil.getIcon("nav","chess.board");
 		ImageIcon palette = ImgUtil.getIcon("nav","palette.solid");
@@ -150,6 +151,20 @@ public class OptionDialog
 		ImageIcon book = ImgUtil.getIcon("nav","book.solid");
 		ImageIcon gears = ImgUtil.getIcon("nav","gears.solid");
 		ImageIcon font = ImgUtil.getIcon("nav","font.solid");
+*/
+		int iconSize = 20;
+		Color iconColor= Color.lightGray;
+
+		ImageIcon user = BoardView2D.getFontAwesomeIcon(BoardView2D.cUser,iconSize,iconColor);
+		ImageIcon board = BoardView2D.getFontAwesomeIcon('\uf43c',iconSize,iconColor);
+		ImageIcon palette = BoardView2D.getFontAwesomeIcon('\uf5c3',iconSize,iconColor); // swatchbook :)
+		ImageIcon clock = BoardView2D.getFontAwesomeIcon('\uf2f2',iconSize,iconColor);
+				//ImgUtil.getIcon("nav","chess.clock");
+				// the chess clock icon is nicer, but unfortunately, not in font-awesome
+		ImageIcon book = BoardView2D.getFontAwesomeIcon(BoardView2D.cBook,iconSize,iconColor);
+		ImageIcon gears = BoardView2D.getFontAwesomeIcon(BoardView2D.cGears,iconSize,iconColor);
+		ImageIcon cubes = BoardView2D.getFontAwesomeIcon('\uf1b3',iconSize,iconColor);
+		ImageIcon font = BoardView2D.getFontAwesomeIcon('\uf031',iconSize,iconColor);
 
 		addTab(newGridPane(),user);   // tab0
 		addTab(newGridPane(),board);   // tab1
@@ -157,7 +172,7 @@ public class OptionDialog
 		addTab(newGridPane(),clock);   // tab3
         addTab(newGridPane(),gears);   // tab4
         addTab(newGridPane(),book);   // tab5
-		addTab(newGridPane());   // tab6
+		addTab(newGridPane(),cubes);   // tab6
 		addTab(newGridPane(),font);  //  tab7
 
 		addButtons(OK_CANCEL);

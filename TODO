@@ -109,10 +109,10 @@ Alternative JREs:
 ==== Interesting New Features
 
 * Logos: Engine, Lichess, User
-    - in engine panel (info label)
-    - eval bar
-    - svg
-    - document? (would have to be stored in db :(
+    [x] in engine panel (info label)
+    [x] eval bar
+    [x] font awesome
+    [ ] document? (would have to be stored in db :(
 
 * threat arrows
     -> like hint, but with reversed color

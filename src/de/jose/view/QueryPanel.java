@@ -56,6 +56,7 @@ public class QueryPanel
     protected static SearchRecord tempSearch = new SearchRecord();
     protected static ImageIcon searchIcon = ImgUtil.getIcon(null,"search");
     protected static ImageIcon dirtyIcon = ImgUtil.getIcon(null,"tab.dirty");
+	protected static ImageIcon[] tabIcon = new ImageIcon[3];
 
 	protected static final GridBagConstraints LABEL_ONE =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
@@ -210,6 +211,12 @@ public class QueryPanel
 
 	public void init()
 	{
+		int iconSize = 16;
+		Color iconColor = Color.lightGray;
+		tabIcon[0] = BoardView2D.getFontAwesomeIcon('\uf05a',iconSize,iconColor);	//	info
+		tabIcon[1] = BoardView2D.getFontAwesomeIcon('\uf086',iconSize,iconColor);
+		tabIcon[2] = BoardView2D.getFontAwesomeIcon('\uf43c',iconSize,iconColor);
+
 		//	set up layout
 		cardPanel = new JTabbedPane();
 
@@ -337,7 +344,7 @@ public class QueryPanel
 		infoPanel.add(new JLabel(""), JoDialog.gridConstraint(JoDialog.ELEMENT_REMAINDER,0,2,3));
 
 		//	add info panel to tabbed pane
-		addTab("dialog.query.info", infoPanel, true);
+		addTab("dialog.query.info", infoPanel, tabIcon[0],  true);
 	}
 
 	protected void initCommentPanel()
@@ -360,7 +367,7 @@ public class QueryPanel
 		commentText.setBorder(new LineBorder(Color.black));
 
 		//	add comments panel to tabbed pane
-		addTab("dialog.query.comments", commentPanel, true);
+		addTab("dialog.query.comments", commentPanel, tabIcon[1], true);
 	}
 
 	protected void initPosPanel()
@@ -389,10 +396,10 @@ public class QueryPanel
         posPanel.add(posEditor, BorderLayout.CENTER);
 		posPanel.add(controls, BorderLayout.WEST);
 
-		addTab("dialog.query.position", posPanel, true);
+		addTab("dialog.query.position", posPanel, tabIcon[2],true);
 	}
 
-	protected void addTab(String id, JComponent component, boolean scrollable)
+	protected void addTab(String id, JComponent component, Icon icon, boolean scrollable)
 	{
 		if (scrollable) {
 			JScrollPane scroller = new JScrollPane(component,
@@ -402,7 +409,7 @@ public class QueryPanel
 			component = scroller;
 		}
         component.setName(id);
-		cardPanel.addTab(Language.get(id), null, component, Language.getTip(id));
+		cardPanel.addTab(Language.get(id), icon, component, Language.getTip(id));
 	}
 
 	protected void initButtonPanel()
@@ -720,7 +727,7 @@ public class QueryPanel
 
 	protected void activateTab(int idx, boolean on)
 	{
-		cardPanel.setIconAt(idx, on ? dirtyIcon:null);
+		cardPanel.setIconAt(idx, on ? dirtyIcon:tabIcon[idx]);
 	}
 
     public void searchCurrentPosition()
