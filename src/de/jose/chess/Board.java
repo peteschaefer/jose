@@ -1140,9 +1140,11 @@ public class Board
 			p.setVacant();
 			p.setPawnFile(0);
 		}
-		if (list.size() > max)
-			throw new IllegalStateException("warning: piece list exceeds max. length, "+(list.size())+" > "+max);
+		while (list.size() > max) {
+			//throw new IllegalStateException("warning: piece list exceeds max. length, " + (list.size()) + " > " + max);
 			//	indicates inconsistency in piece list
+			list.remove(max);
+		}
 	}
 
 	/** FRC */

@@ -75,6 +75,7 @@ public class OptionDialog
 	private Element pluginConfig;
 	private OpeningBookList bookList;
 	private EngineOptionReader engOptionReader;
+	private de.jose.eboard.DialogComponent eboardCtrl;
 
 	//
  	//	Sort options by *Importance*
@@ -252,7 +253,8 @@ public class OptionDialog
 		//ebox.add( new JLabel("         "), 												gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
 //		ebox.add( newLabel("eboard.connected"), 											gridConstraint(LABEL_INDENTED,1,1,1));
 //		ebox.add( newButton("eboard.connect","eboard.connect"), 				gridConstraint(LABEL_ONE_LEFT,2,1,1));
-		ebox.add( new de.jose.eboard.DialogComponent(false), gridConstraint(ELEMENT_ROW_SMALL,0,1,1) );
+		eboardCtrl = new de.jose.eboard.DialogComponent(false);
+		ebox.add(eboardCtrl, gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
 
 
 //		ebox.add( newLabel("eboard.orientation"), 										gridConstraint(LABEL_INDENTED,1,2,1));
@@ -889,6 +891,8 @@ public class OptionDialog
 		read(1,profile.settings);
 
 		setValueByName("font.diagram", profile.getString("font.diagram"));
+		setValueByName("eboard.chessnut", profile.getBoolean("eboard.chessnut",false));
+		eboardCtrl.eboard.readProfile(profile);
 	}
 
 	public void readTab2()  { read(2,profile.settings); }
@@ -1035,6 +1039,8 @@ public class OptionDialog
        	if (isInited(1))
 		{
 			profile.set("font.diagram", getValueByName("font.diagram"));
+			profile.set("eboard.chessnut", getBooleanValue("eboard.chessnut"));
+			eboardCtrl.eboard.storeProfile(profile);
 		}
 
 		if (isInited(3))

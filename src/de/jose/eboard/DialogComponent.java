@@ -3,6 +3,7 @@ package de.jose.eboard;
 import de.jose.Application;
 import de.jose.Language;
 import de.jose.image.ImgUtil;
+import de.jose.profile.UserProfile;
 import de.jose.view.IBoardAdapter;
 import de.jose.window.JoDialog;
 
@@ -34,6 +35,9 @@ public class DialogComponent extends JComponent implements ActionListener
             synchGroup.add(synchLead);
             synchGroup.add(synchFollow);
             add(Box.createHorizontalStrut(12));
+
+            synchLead.addActionListener(this);
+            synchFollow.addActionListener(this);
         }
 
         add(status = JoDialog.newLabel("eboard.na"));
@@ -48,11 +52,32 @@ public class DialogComponent extends JComponent implements ActionListener
         add(JoDialog.newLabel("eboard.orientation"));
         add(ori);
 
+        ori.addActionListener(this);
+
         updateStatus();
     }
 
+    public void lead()
+    {
+        //  switch to setup-follow mode
+        eboard.setMode(EBoardConnector.Mode.SETUP_LEAD);
+        eboard.synchFromBoard();
 
-    protected void updateStatus()
+        if (synchLead!=null) synchLead.setSelected(true);
+        if (synchFollow!=null) synchFollow.setSelected(false);
+    }
+
+    public void follow()
+    {
+        //  switch to setup-follow mode
+        eboard.setMode(EBoardConnector.Mode.SETUP_FOLLOW);
+        eboard.synchFromApp();
+
+        if (synchLead!=null) synchLead.setSelected(false);
+        if (synchFollow!=null) synchFollow.setSelected(true);
+    }
+
+    public void updateStatus()
     {
         setEnabled(eboard!=null && eboard.isAvailable());
 
@@ -62,6 +87,7 @@ public class DialogComponent extends JComponent implements ActionListener
 
             connect.setText(Language.get("eboard.connect"));
             connect.setEnabled(false);
+            ori.setEnabled(false);
         }
         else if (eboard.connected) {
             status.setText(Language.get("eboard.on"));
@@ -87,15 +113,30 @@ public class DialogComponent extends JComponent implements ActionListener
         }
 
         if (synchLead!=null)
-            synchLead.setSelected(eboard.connected && eboard.mode==EBoardConnector.Mode.SETUP_LEAD);
+            synchLead.setSelected(eboard.connected && eboard.getMode()==EBoardConnector.Mode.SETUP_LEAD);
         if (synchFollow!=null)
-            synchFollow.setSelected(eboard.connected && eboard.mode==EBoardConnector.Mode.SETUP_FOLLOW);
+            synchFollow.setSelected(eboard.connected && eboard.getMode()==EBoardConnector.Mode.SETUP_FOLLOW);
     }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        Application.theCommandDispatcher.handle(e,Application.theApplication);
+        if (e.getSource()==synchLead && synchLead.isSelected())
+            lead();
+        if (e.getSource()==synchFollow && synchFollow.isSelected())
+            follow();
+
+        if (e.getSource()==ori) {
+            eboard.inputOri = EBoardConnector.Orientation.values()[ori.getSelectedIndex()];
+            //  todo is this sufficient ?
+            if (eboard.connected) eboard.synchFromBoard();
+        }
+
+        if (e.getSource()==connect) {
+            //  "eboard.connect" is handled on Application scope
+            Application.theCommandDispatcher.handle(e, Application.theApplication);
+        }
+
         updateStatus();
     }
 }

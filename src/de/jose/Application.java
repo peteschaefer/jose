@@ -1588,7 +1588,7 @@ public class Application
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
 			{
-				boolean flipped = Util.toboolean(cmd.data);
+				//boolean flipped = Util.toboolean(cmd.data);
 				prepareNewGame();
 				switchGame(theHistory.currentIndex());
 
@@ -3226,9 +3226,9 @@ public class Application
 
 	public boolean askNewGame()
 	{
-		JCheckBox reverseCheckBox = new JCheckBox(Language.get("new.game.reverse"));
-		reverseCheckBox.setSelected(false);
-		Object[] params = { "Start new game?", reverseCheckBox };
+//		JCheckBox reverseCheckBox = new JCheckBox(Language.get("new.game.reverse"));
+//		reverseCheckBox.setSelected(false);
+		Object[] params = { "Start new game?" /*, reverseCheckBox*/ };
 
 		int result = JOptionPane.showConfirmDialog(null,
 				params, "New Game",
@@ -3238,7 +3238,7 @@ public class Application
 			return false;
 
 		Command cmd = new Command("menu.file.new");
-		cmd.data = reverseCheckBox.isSelected();
+		//cmd.data = reverseCheckBox.isSelected();
 		theCommandDispatcher.handle(cmd,this);
 		return true;
 	}
@@ -3745,8 +3745,10 @@ public class Application
 	}
 
 	public EBoardConnector getEBoardConnector() {
-		if (eboard==null)
+		if (eboard==null) {
 			eboard = new ChessNutConnector();
+			eboard.readProfile(theUserProfile);
+		}
 		return eboard;
 	}
 
@@ -4189,6 +4191,9 @@ public class Application
 		} catch (Throwable thr) {
 			Application.error(thr);
 		}
+
+		if (eboard!=null)
+			eboard.storeProfile(theUserProfile);
 
 		//  close connection pool
 		try {

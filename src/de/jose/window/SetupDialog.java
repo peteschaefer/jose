@@ -36,11 +36,15 @@ import java.util.Map;
  */
 public class SetupDialog
 		extends JoDialog
-        implements ChangeListener
+        implements ChangeListener, CommandListener
 {
 	protected SetupBoardAdapter setup;
 	protected BoardEditView view;
 	private de.jose.eboard.DialogComponent eboardCtrl;
+
+	/**
+	 * implements CommandListener
+	 */
 
     public void setupActionMap(Map map)
     {
@@ -48,7 +52,12 @@ public class SetupDialog
 
         CommandAction action = new CommandAction() {
             public void Do(Command cmd) throws Exception {
-                view.clearPosition();
+				view.clearPosition();
+				eboardCtrl.follow();
+				/**	whenever the user changes the position actively, the e-board goes to passive mode
+				 * 	..until the position is synched.
+				 * 	..then, the e-board may switch again to active (lead) mode
+				 */
             }
         };
         map.put("dialog.setup.clear",action);
@@ -59,6 +68,7 @@ public class SetupDialog
 	            checkBoxListen = false;
 	            setValue("dialog.setup.frc.index",518);
 	            checkBoxListen = true;
+				eboardCtrl.follow();
             }
         };
         map.put("dialog.setup.initial",action);
@@ -71,6 +81,7 @@ public class SetupDialog
 		        enableAllCastlings();
 		        setFRCIndex(Board.SHUFFLE_CHESS, -1);
 		        checkBoxListen = true;
+				eboardCtrl.follow();
 	        }
 	    };
 	    map.put("dialog.setup.shuffle",action);
@@ -83,6 +94,7 @@ public class SetupDialog
 		        enableAllCastlings();
 		        setFRCIndex(Board.FISCHER_RANDOM, -1);
 		        checkBoxListen = true;
+				eboardCtrl.follow();
 	        }
 	    };
 	    map.put("dialog.setup.frc",action);
@@ -90,6 +102,7 @@ public class SetupDialog
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception {
                 view.defaultPosition();
+				eboardCtrl.follow();
             }
         };
         map.put("dialog.setup.copy",action);
@@ -112,9 +125,26 @@ public class SetupDialog
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception {
                 view.pasteFromClipboard();
+				eboardCtrl.follow();
             }
         };
         map.put("menu.edit.paste",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				//	new position cam in from eboard
+				String fen = (String)cmd.data;
+				setFEN(fen);
+			}
+		};
+		map.put("eboard.changed",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				eboardCtrl.updateStatus();
+			}
+		};
+		map.put("eboard.mode.changed",action);
     }
 
 	public void enableAllCastlings()
@@ -144,6 +174,7 @@ public class SetupDialog
 			public void userMove(Move mv) {
 				super.userMove(mv);
 				adjustControls();
+				eboardCtrl.follow();	//	app board takes the lead, until e-board is re-synched
 			}
 		};
 
@@ -218,6 +249,7 @@ public class SetupDialog
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
 		eboardCtrl = new de.jose.eboard.DialogComponent(true);
+		eboardCtrl.eboard.readProfile(Application.theUserProfile);
 		ebox.add(eboardCtrl,	gridConstraint(LABEL_ONE_LEFT,1,1,1));
 
 		GridBagConstraints econst = new GridBagConstraints(0,3, 1,1, 1.0,0.0,
@@ -240,16 +272,14 @@ public class SetupDialog
 		super.show();
 		read();
 
-		eboardCtrl.eboard.useBoard(view.board);
-		eboardCtrl.eboard.mode = EBoardConnector.Mode.SETUP_LEAD;
+		eboardCtrl.eboard.useAppBoard(view.board,EBoardConnector.Mode.SETUP_LEAD,this);
 	}
 
 	@Override
 	public void hide() {
 		super.hide();
 
-		eboardCtrl.eboard.reuseBoard();
-		eboardCtrl.eboard.mode = EBoardConnector.Mode.PLAY;
+		eboardCtrl.eboard.reuseAppBoard();
 	}
 
 	public void setFEN(String fen)

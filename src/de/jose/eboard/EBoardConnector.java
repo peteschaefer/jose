@@ -1,10 +1,8 @@
 package de.jose.eboard;
 
-import de.jose.AbstractApplication;
-import de.jose.Application;
-import de.jose.Command;
-import de.jose.CommandAction;
+import de.jose.*;
 import de.jose.chess.*;
+import de.jose.profile.UserProfile;
 import de.jose.util.StringUtil;
 import de.jose.view.IBoardAdapter;
 import de.jose.view.MoveGesture;
@@ -25,19 +23,45 @@ public abstract class EBoardConnector
     }
 
     public boolean connected;
-    public Mode mode;
+    //public Mode mode;
 
     Orientation inputOri;
     private Orientation currentOri;
 
-    private Stack<IBoardAdapter> oldBoards = new Stack<>();
-    private IBoardAdapter appBoard;
+    static class AppState implements Cloneable {
+        IBoardAdapter board;
+        Mode mode;
+        CommandListener listener;
+
+        public void clear() {
+            board = null;
+            mode = Mode.PLAY;
+            listener = null;
+        }
+        @Override
+        public AppState clone() {
+            AppState appState = new AppState();
+            appState.board = board;
+            appState.mode = mode;
+            appState.listener = listener;
+            return appState;
+        }
+    }
+
+    private Stack<AppState> oldAppStates = new Stack<>();
+    private AppState app = new AppState();
     private boolean wasAcked = false;
+
+    protected abstract boolean doAvailable();
+    protected abstract boolean doConnect();
+    protected abstract void doDisconnect();
+    protected abstract void doShowLeds(String leds);
+    protected abstract void doBeep(int freq, int ms);
 
     public EBoardConnector()
     {
         connected = false;
-        mode = Mode.PLAY;
+        app.mode = Mode.PLAY;
         inputOri = Orientation.AUTO_DETECT;  // todo read from UserProfile
         currentOri = Orientation.WHITE_UP;  // todo read from UserProfile
 
@@ -46,16 +70,44 @@ public abstract class EBoardConnector
         board[1] = new BoardState();
     }
 
-    public void useBoard(IBoardAdapter anAppBoard) {
-        if (appBoard != null) oldBoards.push(appBoard);
-        appBoard = anAppBoard;
+    public Mode getMode() { return app.mode; }
+    public void setMode(Mode mode) { app.mode=mode; }
+
+    public void useAppBoard(IBoardAdapter anAppBoard, Mode anMode, CommandListener anListener) {
+        oldAppStates.push(app.clone());
+        app.board = anAppBoard;
+        app.mode = anMode;
+        app.listener = anListener;
+
+        switch (app.mode) {
+            case SETUP_LEAD: if (connected) synchFromBoard(); break;
+            case SETUP_FOLLOW: synchFromApp (); break;
+        }
     }
 
-    public void reuseBoard() {
-        if (oldBoards.isEmpty())
-            appBoard = null;
+    public void reuseAppBoard() {
+        if (oldAppStates.isEmpty())
+            app.clear();
         else
-            appBoard = oldBoards.pop();
+            app = oldAppStates.pop();
+    }
+
+    public void readProfile(UserProfile prf) {
+        boolean enabled = prf.getBoolean("eboard.chessnut",false);
+        this.inputOri = orientationFromProfile(prf, "eboard.orientation", this.inputOri);
+        this.currentOri = orientationFromProfile(prf, "eboard.orientation", this.currentOri);
+        if (enabled) connect();
+    }
+
+    public void storeProfile(UserProfile prf) {
+        prf.set("eboard.orientation", this.inputOri.toString());
+        prf.set("eboard.orientation", this.currentOri.toString());
+    }
+
+    private static Orientation orientationFromProfile(UserProfile prf, String key, Orientation deflt)
+    {
+        String value = prf.getString(key,deflt.toString());
+        return Orientation.valueOf(value);
     }
 
     public boolean isAvailable()
@@ -77,12 +129,6 @@ public abstract class EBoardConnector
             connected = false;
         return connected;
     }
-
-    protected abstract boolean doAvailable();
-    protected abstract boolean doConnect();
-    protected abstract void doDisconnect();
-    protected abstract void doShowLeds(String leds);
-    protected abstract void doBeep(int freq, int ms);
 
     public void disconnect()
     {
@@ -111,55 +157,68 @@ public abstract class EBoardConnector
         if (st.diff_cnt==0)
             wasAcked = true;    //  App changed was replicated on the E-Board
 
-        if (mode==Mode.PLAY && StringUtil.compare(board[currentOri.ordinal()].fen,START_XFEN)==0) {
+        if (app.mode==Mode.PLAY && StringUtil.compare(board[currentOri.ordinal()].fen,START_XFEN)==0) {
             //  note that StringBuilder does not overwrite equals()
             //  start a new game?
             if (Application.theApplication.askNewGame())
                 return;
         }
 
-        switch(mode) {
+        switch(app.mode) {
             case PLAY:
-                //  look for (a) legal move,
-                Move mv = guessMove(st,appXFen,appBoard.getPosition());
-                if (mv!=null /*&& appBoard.isLegal(mv)*/) {
-                    userMove(mv);
-                    break;
-                }
-                //  (b) retract last _human_ move
-                if (st.diff_cnt < 2) break;
-                if (!canUndoMove()) break;
-
-                Position pos = appBoard.getPosition();
-                Move m1 = pos.getLastMove(1);
-                if (wasAcked && guessUndone(st,m1)) {
-                    //  last engine move was replicated on board
-                    //  may be taken back
-                    undoMove();
-                    break;
-                }
-
-                Move m2 = pos.getLastMove(2);
-                if (!wasAcked && guessUndone(st,m1) && guessUndone(st,m2)) {
-                    //  last two moves may be taken back
-                    undoMove();
-                    undoMove();
-                    break;
-                }
+                findUserMove(st);
                 break;
             case SETUP_LEAD:
-                //  todo send board[currentOri].fen to application
+                //  send board[currentOri].fen to setup dialog
+                Command cmd = new Command("eboard.changed",null,board[currentOri.ordinal()].fen);
+                Application.theCommandDispatcher.handle(cmd,app.listener);
                 break;
             case SETUP_FOLLOW:
-                //  ignore
+                //  when the position has been synched succesfully, we switch back to LEAD mode
+                boolean resynched = (board[currentOri.ordinal()].diff_cnt==0);
+                if (resynched) {
+                    app.mode = Mode.SETUP_LEAD;
+                    cmd = new Command("eboard.mode.changed",null,this);
+                    Application.theCommandDispatcher.handle(cmd,app.listener);
+                }
                 break;
+        }
+    }
+
+    private void findUserMove(BoardState st)
+    {
+        //  look for (a) legal move,
+        Move mv = guessMove(st,appXFen,app.board.getPosition());
+        if (mv!=null /*&& appBoard.isLegal(mv)*/) {
+            userMove(mv);
+            return;
+        }
+        //  (b) retract last _human_ move
+        if (st.diff_cnt < 2) return;
+        if (!canUndoMove()) return;
+
+        Position pos = app.board.getPosition();
+        Move m1 = pos.getLastMove(1);
+        if (wasAcked && guessUndone(st,m1)) {
+            //  last engine move was replicated on board
+            //  may be taken back
+            undoMove();
+            return;
+        }
+
+        Move m2 = pos.getLastMove(2);
+        if (!wasAcked && guessUndone(st,m1) && guessUndone(st,m2)) {
+            //  last two moves may be taken back
+            undoMove();
+            undoMove();
+            return;
         }
     }
 
     private void userMove(Move mv)
     {
         Command cmd = new Command("move.user", null, mv);
-        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+        AbstractApplication.theCommandDispatcher.handle(cmd,app.listener);
     }
 
 
@@ -168,7 +227,7 @@ public abstract class EBoardConnector
 
     private boolean canUndoMove()
     {
-        CommandAction delAction = Application.theCommandDispatcher.findTargetAction(MOVE_UNDO,Application.theApplication);
+        CommandAction delAction = Application.theCommandDispatcher.findTargetAction(MOVE_UNDO,app.listener);
         return delAction!=null && delAction.isEnabled(MOVE_UNDO);
     }
 
@@ -176,7 +235,7 @@ public abstract class EBoardConnector
     {
         if (canUndoMove()) {
             Command cmd = new Command(MOVE_UNDO);
-            Application.theCommandDispatcher.handle(cmd, Application.theApplication);
+            Application.theCommandDispatcher.handle(cmd,app.listener);
         }
     }
 
@@ -197,13 +256,7 @@ public abstract class EBoardConnector
     private Move guessMove(BoardState st, StringBuilder appXfen, Position pos)
     {
         if (st.diff_cnt < 2 || st.diff_cnt > 4) return null;
-/**
- * todo move gesture
- *  * origin square,piece
- *  * dest square,piece
- *
- * todo extra case: FRC castling, FRC castling with king on G1
- */
+
         MoveIterator moves = new MoveIterator(pos);
         while(moves.next())
         {
@@ -232,7 +285,7 @@ public abstract class EBoardConnector
 
     public synchronized void synchFromApp()
     {
-        if (setExplodedFen(appBoard,appXFen)==0)
+        if (setExplodedFen(app.board,appXFen)==0)
             return;
 
         if (!connected)
@@ -245,7 +298,7 @@ public abstract class EBoardConnector
         if (st.diff_cnt > 0)
             wasAcked = false;    //  App changed was not yet replicated on the E-Board
 
-        if(mode==Mode.SETUP_FOLLOW)
+        if(app.mode==Mode.SETUP_FOLLOW)
             throw new IllegalStateException("don't modify position in follow mode");
     }
 

@@ -93,7 +93,7 @@ abstract public class BoardView
 		hints = new ArrayList<Hint>();
 
 		eboard = Application.theApplication.getEBoardConnector();
-		eboard.useBoard(theBoard);
+		eboard.useAppBoard(theBoard, EBoardConnector.Mode.PLAY, Application.theApplication);
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }
