@@ -367,7 +367,7 @@
 			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-x86-64-avx2.*"/>
 				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="stockfish-mac-*"/>
+				<exclude name="stockfish-macos-*"/>
 				<!--exclude name="src"/-->
 				<exclude name="wiki"/>
 			</zipfileset>
@@ -383,7 +383,7 @@
 			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-*"/>
 				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="stockfish-mac-*"/>
+				<exclude name="stockfish-macos-*"/>
 				<!--exclude name="src"/-->
 				<exclude name="wiki"/>
 			</zipfileset>
@@ -402,12 +402,12 @@
 			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-*"/>
 				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="stockfish-mac-*"/>
+				<exclude name="stockfish-macos-*"/>
 				<!--exclude name="src"/-->
 				<exclude name="wiki"/>
 			</zipfileset>
 			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish" filemode="775">
-				<include name="stockfish-mac-*"/>
+				<include name="stockfish-macos-*"/>
 			</zipfileset>
 		</zip>
 	</target>

@@ -12,20 +12,11 @@
 
 package de.jose.view;
 
-import de.jose.util.ReflectionUtil;
 import de.jose.view.input.StyledToolTip;
-import org.jetbrains.annotations.NotNull;
-import org.violetlib.aqua.AquaAppearance;
-import org.violetlib.aqua.AquaComponentUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.plaf.TabbedPaneUI;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 
 /**

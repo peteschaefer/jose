@@ -2,12 +2,8 @@ package de.jose.view;
 
 import de.jose.util.ReflectionUtil;
 import de.jose.Version;
-import org.jetbrains.annotations.NotNull;
-import org.violetlib.aqua.AquaAppearance;
-import org.violetlib.aqua.AquaComponentUI;
 
 import javax.swing.plaf.TabbedPaneUI;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.*;
 import javax.accessibility.Accessible;
@@ -27,7 +23,9 @@ import java.lang.reflect.InvocationTargetException;
  * @author Peter Schäfer
  */
 public class JoTabbedPaneUI
-        extends BasicTabbedPaneUI  implements AquaComponentUI
+        extends BasicTabbedPaneUI
+        // implements org.violetlib.aquq.AquaComponentUI
+        // would be required for VAqua. But we don't want that platform-specific dependency
 {
     /** delegate to... */
     protected TabbedPaneUI delegate;
@@ -143,7 +141,7 @@ public class JoTabbedPaneUI
                   delegate.mousePressed(e);
           }
       }
-
+/*
     @Override
     public void appearanceChanged(@NotNull JComponent c, @NotNull AquaAppearance appearance) {
         c.repaint();
@@ -153,4 +151,5 @@ public class JoTabbedPaneUI
     public void activeStateChanged(@NotNull JComponent c, boolean isActive) {
         c.repaint();
     }
+ */
 }

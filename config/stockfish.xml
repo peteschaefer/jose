@@ -12,7 +12,7 @@
 		<COMMAND> %dir%/stockfish-ubuntu-x86-64-sse41-popcnt </COMMAND>
 	</EXEC>
 	<EXEC os="Mac">
-		<COMMAND> %dir%/stockfish-macos-ubuntu-x86-64-sse41-popcnt </COMMAND>
+		<COMMAND> %dir%/stockfish-macos-x86-64-sse41-popcnt </COMMAND>
 	</EXEC>
 	<DIR> %local%/engines/stockfish </DIR>
 	<LOGO> %dir%/Stockfish-large.bmp </LOGO>
