@@ -5,6 +5,8 @@ import de.jose.Language;
 import java.io.File;
 import java.io.IOException;
 
+import static de.jose.pgn.PgnConstants.NAG_MAX;
+
 public class ComboNag
 {
     protected static final String[] wb = {"White","Black"};
@@ -162,6 +164,28 @@ public class ComboNag
     {
         Language.setLanguage(new File("config"),"en");
 
+        //printAllCombos();
+        for(int nag=0; nag <= NAG_MAX; ++nag)
+        {
+            String text = Language.get("pgn.nag."+nag,null);
+            String tip = Language.get("pgn.nag."+nag+".tip",null);
+            if (text==null && tip==null) continue;
+
+            System.out.print("{<br> $");
+            System.out.print(nag);
+            System.out.print(" = } $");
+            System.out.print(nag);
+            System.out.print(" { ");
+            if (text!=null) System.out.print(text);
+            if (text!=null && tip!=null)
+                System.out.print(" = ");
+            if (tip!=null) System.out.print(tip);
+            System.out.println("}\n");
+        }
+    }
+
+    private static void printAllCombos()
+    {
         for(ComboNag cn : ALL) {
             for(int s3=0; s3 < Math.max(1,cn.subst.length); s3++) {
                 for(int s2=0; s2 < Math.max(1,cn.adjective.length); s2++) {

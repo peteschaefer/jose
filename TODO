@@ -99,16 +99,12 @@ Alternative JREs:
 ==== Interesting New Features
 
 * nicer annotation palette
-    - docking is great
-    - table needs to be 2d
-    - custom sorting (some important ones first)
-    - mouse hover, or tool tip
-    - most recent list
-    - $202: reversed Diagram
-    -> FIG-SB-2 Unicode mapping is broken. why?
-    -> goal: a complete set of symbols in one font
-    - insert into text: fix, goal: insert symbols, no text
-     (but keep composable nags, like ! ?)
+    [x] figurinesymbol: $141 against
+    [-] most recent list
+    [x] make a demo pgn with all nags.
+    [x] print preview
+    [ ] prints as pdf (font is recognized, but wrong Unicodes !)
+    [ ] print as html (copy glyphs to disk)
 
 * font awesome icons
 

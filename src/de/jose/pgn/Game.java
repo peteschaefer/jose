@@ -1429,6 +1429,12 @@ public class Game
 		        (getTagValue(TAG_FEN)==null);
 	}
 
+	public boolean hasContents()
+	{
+		return (mainLine!=null) && !mainLine.isEmpty()
+				|| (tags!=null) && !tags.isEmpty();
+	}
+
 	public final void save()	throws Exception
 	{
 		save(true);

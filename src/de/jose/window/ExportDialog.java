@@ -677,7 +677,7 @@ public class ExportDialog
 		add(exportOptions, newRadioButton("xsl.html.figs.img"), gridConstraint(ELEMENT_TWO_SMALL,1,2,3));  //  use Images for figurines
 		newButtonGroup("xsl.html.figs");
 		//  target screen resolution
-		Object[] dpis = { new Integer(72), new Integer(96), new Integer(120), };
+		Integer[] dpis = { 72, 96, 120 };
 		JComboBox screenRes = new JComboBox(dpis);
 		screenRes.setEditable(true);
 		screenRes.setName("xsl.html.screenres");

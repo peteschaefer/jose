@@ -3025,7 +3025,7 @@ public class Application
 		if (preferredPanel==docPanel)
         {
 			if (theHistory.size()==1) {
-				if (!theGame.isEmpty())
+				if (theGame.hasContents())
 					return GameSource.gameObject(theGame);  //  one open game
 			}
 			else {
