@@ -36,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.awt.Graphics2D;
 
 public class BoardView3D
 		extends BoardView
@@ -284,7 +285,7 @@ public class BoardView3D
 
 //		updateProfile(prf);
 		//	computes the LOD parameters suitable for the current window size
-		recalcSize();
+		recalcSize(getGraphics2D());
 	}
 
 	public void closeScene()
@@ -450,7 +451,7 @@ public class BoardView3D
 
 	public void componentResized(ComponentEvent e)
 	{
-		recalcSize();
+		recalcSize(getGraphics2D());
 	}
 
 	/**	called after the view is resized
@@ -458,7 +459,7 @@ public class BoardView3D
 	 *
 	 * 	the LOD thresholds are adapted
 	 */
-	public void recalcSize()
+	public void recalcSize(Graphics2D unused)
 	{
 //		System.err.println("graphics memory: "+ FileUtil.formatFileSize(canvas.availableGraphicsMemory()));
 		Point2d screenSize = getCanvasSize();

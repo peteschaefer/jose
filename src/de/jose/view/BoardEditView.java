@@ -174,13 +174,13 @@ public class BoardEditView
 	}
 
 	/**	calculate square size and inset after resize	 */
-	public void recalcSize()
+	public void recalcSize(Graphics2D g)
 	{
 		int width = getWidth();
 		int height = getHeight();
 
 		userSquareSize = (int)Math.min((width-32)/WIDTH_RATIO, (height-4)/HEIGHT_RATIO);
-		devSquareSize = (int)(userSquareSize*getBufferScaleFactor()+0.5);
+		devSquareSize = (int)(userSquareSize*getBufferScaleFactor(g)+0.5);
 
 		devInset.y = userInset.y = 0;
 		userInset.x = Math.round(0.4f*userSquareSize);	//	board is always left aligned

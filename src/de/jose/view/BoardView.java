@@ -31,6 +31,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -129,7 +130,7 @@ abstract public class BoardView
 	/**	called when the view is resized
 	 *	to recalc buffer sizes, etc.
 	 */
-	abstract public void recalcSize();
+	abstract public void recalcSize(Graphics2D g);
 
 	/**
 	 * capture an image asyncrhoneously

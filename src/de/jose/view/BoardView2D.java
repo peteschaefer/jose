@@ -33,6 +33,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.awt.Graphics2D;
 
 public class BoardView2D
 		extends BoardView
@@ -127,7 +129,7 @@ public class BoardView2D
 		addMouseMotionListener(this);
 
 		this.lockImgCache = lockImgCache;
-		recalcSize();
+		recalcSize(getGraphics2D());
 	}
 
 	public void init()
@@ -251,12 +253,7 @@ public class BoardView2D
 			}
 			else {
 				//	todo hi-dpi
-				double sx = (double)this.getWidth()/buffer.getHeight();
-				double sy = (double)this.getHeight()/buffer.getWidth();
-				AffineTransform scale = AffineTransform.getScaleInstance(sx,sy);
 				AffineTransform save_tf = g2.getTransform();
-				g2.setTransform(scale);
-
 				AffineTransform ident = new AffineTransform();
 				g2.setTransform(ident);
 
@@ -317,12 +314,12 @@ public class BoardView2D
 	}
 
 	/**	calculate square size and inset after resize	 */
-	public void recalcSize()
+	public void recalcSize(Graphics2D g)
 	{
 		// in user-space coordinates, used by Graphics2D
 		userSquareSize = calcUserSquareSize();
 
-		float scale = getBufferScaleFactor();
+		double scale = getBufferScaleFactor(g);
 		devSquareSize = (int)(userSquareSize*scale+0.5);
 
 		userInset = calcUserInsetPoint();
@@ -341,7 +338,6 @@ public class BoardView2D
 			divx += 0.4f;
 
 		Point inset = new Point(0,0);
-		int squareSize = userSpace ? userSquareSize : devSquareSize;
 
 		inset.x = (int)(getWidth()-divx*userSquareSize) / 2;
 		if (showCoords) userInset.x += 0.4*userSquareSize;
@@ -350,17 +346,14 @@ public class BoardView2D
 		return inset;
 	}
 
-	protected float getBufferScaleFactor()
+	protected double getBufferScaleFactor(Graphics2D g)
 	{
-		int screenRes = Toolkit.getDefaultToolkit().getScreenResolution();
-		if (screenRes <= 96) {
-			//	lo-res screen: buffer equals screen size
-			return 1.0f;
-		}
-		else {
-			//	hi-res screen: buffer is enlarged
-			return (float)screenRes/96.f;
-		}
+		AffineTransform tf;
+		if (g!=null)
+			tf = g.getTransform();
+		else
+			tf = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getDefaultTransform();
+		return tf.getScaleX();
 	}
 
 	private int calcUserSquareSize()
@@ -745,19 +738,19 @@ public class BoardView2D
 
 	public void doFlip(boolean on)
 	{
-		recalcSize();
+		recalcSize(getGraphics2D());
 		forceRedraw = true;
 	}
 
 	public void doShowCoords(boolean on)
 	{
-		recalcSize();
+		recalcSize(getGraphics2D());
 		forceRedraw = true;
 	}
 
 	public void doShowEvalbar(boolean on)
 	{
-		recalcSize();
+		recalcSize(getGraphics2D());
 		forceRedraw = true;
 	}
 
@@ -843,8 +836,8 @@ public class BoardView2D
 		if (buffer==null || sizeChanged(screeng))
 		{
 			/*	size has changed	*/
-			recalcSize();
-			double scaleFactor = getBufferScaleFactor();
+			recalcSize(screeng);
+			double scaleFactor = getBufferScaleFactor(screeng);
 			buffer = createBuffer(screeng,
 					(int)(getWidth()*scaleFactor+0.5),
 					(int)(getHeight()*scaleFactor+0.5));
