@@ -417,6 +417,6 @@ public class FontUtil
 	//	todo move to FontUtil or something
 	public static Icon awesomeIcon(char c, float size, Color color)
 	{
-		return new TextIcon(Character.toString(c), fontAwesome(),Font.PLAIN,size,color);
+		return new TextIcon(Character.toString(c), fontAwesome(),size,color);
 	}
 }

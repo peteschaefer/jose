@@ -27,11 +27,7 @@ public class TextIcon implements Icon
     }
 
     public TextIcon(String text, Font font, float size, Color color) {
-        this(text,font.deriveFont(Font.PLAIN,size),color);
-    }
-
-    public TextIcon(String text, Font font, int style, float size, Color color) {
-        this(text,font.deriveFont(style,size),color);
+        this(text,font.deriveFont(size),color);
     }
 
     protected static Color white(float f)

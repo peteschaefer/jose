@@ -314,25 +314,25 @@ public class JoToolBar
 		TextIcon[] result = new TextIcon[7];
 
 		if ((style&BUTTON) != 0) {
-			result[0] = new ButtonIcon(s, font, size).fixedColor(Color.lightGray);
-			result[1] = new ButtonIcon(s, font, size).huedColor(color1);
-			result[2] = new ButtonIcon(s, font, size).huedColor(color1);
-			result[3] = new ButtonIcon(s, font, size).huedColor(color1);
+			result[0] = new ButtonIcon(s,font,size).fixedColor(Color.lightGray);
+			result[1] = new ButtonIcon(s,font,size).huedColor(color1);
+			result[2] = new ButtonIcon(s,font,size).huedColor(color1);
+			result[3] = new ButtonIcon(s,font,size).huedColor(color1);
 			if (color2!=null) {
-				result[4] = new ButtonIcon(s, font, size).huedColor(color2);
-				result[5] = new ButtonIcon(s, font, size).huedColor(color2);
-				result[6] = new ButtonIcon(s, font, size).huedColor(color2);
+				result[4] = new ButtonIcon(s,font,size).huedColor(color2);
+				result[5] = new ButtonIcon(s,font,size).huedColor(color2);
+				result[6] = new ButtonIcon(s,font,size).huedColor(color2);
 			}
 		}
 		else {
-			result[0] = new TextIcon(s,font,style,size,Color.lightGray);
-			result[1] = new TextIcon(s,font,style,size,color1);
-			result[2] = new TextIcon(s,font,style,size,color1);
-			result[3] = new TextIcon(s,font,style,size,color1);
+			result[0] = new TextIcon(s,font,size,Color.lightGray);
+			result[1] = new TextIcon(s,font,size,color1);
+			result[2] = new TextIcon(s,font,size,color1);
+			result[3] = new TextIcon(s,font,size,color1);
 			if (color2!=null) {
-				result[4] = new TextIcon(s,font,style,size,color2);
-				result[5] = new TextIcon(s,font,style,size,color2);
-				result[6] = new TextIcon(s,font,style,size,color2);
+				result[4] = new TextIcon(s,font,size,color2);
+				result[5] = new TextIcon(s,font,size,color2);
+				result[6] = new TextIcon(s,font,size,color2);
 			}
 		}
 
