@@ -1238,10 +1238,10 @@ public class UciPlugin
 	{
 		String scoreType = getOptionValue(config,"ScoreType");
 		//float perc = (float)score.cp/100.0f;
+		final int max = 10000;
 
 		if (scoreType!=null && scoreType.equals("win_percentage"))
 		{
-			final int max = 10000;
 			int perc = score.cp;
 			if (perc < 0) perc = max+perc;
 			//	note that negative percentages do not come from the engine.
@@ -1256,7 +1256,7 @@ public class UciPlugin
 		else if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
 		{
 			//	clamp at +- 100%
-			mapUnit(score, score.cp,-10000,+10000);
+			mapUnit(score, score.cp,-max,+max);
 		}
 		else
 		{
