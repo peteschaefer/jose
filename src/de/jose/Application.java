@@ -598,8 +598,12 @@ public class Application
 	{
 		if (lnf instanceof FlatLaf) {
 			FlatLaf.setSystemColorGetter(name -> {
-				if (name.equals("accent"))
-					return StyleUtil.getSystemAccentColor();
+				if (name.equals("accent")) {
+					Color accColor = StyleUtil.getSystemAccentColor();
+					if (accColor==null) accColor = StyleUtil.getProfileAccentColor();
+					if (accColor==null) accColor = StyleUtil.getDefaultAccentColor();
+					return accColor;
+				}
 				return null;
 			});
 
@@ -614,7 +618,11 @@ public class Application
 		}
 
 		UIManager.setLookAndFeel(lnf);
-		UIManager.put("TextPane.selectionBackground",StyleUtil.getSystemSelectionColor());
+
+		Color selColor = StyleUtil.getSystemSelectionColor();
+		if (selColor==null) selColor = StyleUtil.getProfileSelectionColor();
+		if (selColor!=null)
+			UIManager.put("TextPane.selectionBackground",selColor);
 
 		broadcast(new Command("update.ui", null, /*lnfName*/null, isDarkLookAndFeel()));
 	}

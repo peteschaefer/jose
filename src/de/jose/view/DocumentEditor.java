@@ -12,7 +12,6 @@
 
 package de.jose.view;
 
-import com.formdev.flatlaf.ui.FlatTextPaneUI;
 import de.jose.Application;
 import de.jose.comm.Command;
 import de.jose.Util;
@@ -26,7 +25,6 @@ import de.jose.util.ClipboardUtil;
 import de.jose.util.style.StyleUtil;
 import de.jose.util.style.MarkupWriter;
 
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -130,9 +128,7 @@ public class DocumentEditor
 		docPanel = owner;
 		docPanel.getMessageProducer().addMessageListener(Application.theApplication);
 
-        setSelectionColor(
-				StyleUtil.getSystemSelectionColor(),
-				Application.theApplication.isDarkLookAndFeel());
+        setSelectionColor(Application.theApplication.isDarkLookAndFeel());
 
 		try {
             Highlighter.HighlightPainter painter =
@@ -145,6 +141,10 @@ public class DocumentEditor
 							//return super.paintLayer(g, offs0, offs1, bounds, c, view);
 							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
 						}
+						@Override
+						public void paint(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c) {
+							DocumentEditor.this.paintHighlight(g,offs0,offs1,bounds,c,moveHiliteColor);
+						}
 					};
             hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
 			((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
@@ -156,20 +156,18 @@ public class DocumentEditor
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
-	public void setSelectionColor(Color selColor, boolean dark)
+	public void setSelectionColor(boolean dark)
 	{
-/*		moveHiliteColor = UIManager.getColor( "TextPane.selectionBackground");
-		if (moveHiliteColor!=null)
-			moveHiliteColor = moveHiliteColor.brighter();
-		else
-			moveHiliteColor = MOVE_HILITE_COLOR;
-*/
+		Color selColor = StyleUtil.getSystemSelectionColor();
+		if (selColor==null) selColor = StyleUtil.getProfileSelectionColor();
+		//if (selColor==null) selColor = UIManager.getColor( "TextPane.selectionBackground");
+		if (selColor==null) selColor = MOVE_HILITE_COLOR;
 		if (dark) selColor = StyleUtil.mapDarkTextColor(selColor);
 
-		moveHiliteColor = selColor;
-		setSelectionColor(StyleUtil.pastelize(selColor,0.6f));
+		moveHiliteColor = StyleUtil.pastelize(selColor,1.4f);
+		setSelectionColor(selColor);
 
-		UIManager.put("TextPane.selectionBackground",selColor);
+	//	UIManager.put("TextPane.selectionBackground",selColor);
 		((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
@@ -202,6 +200,37 @@ public class DocumentEditor
 			int y1 = Math.max(r.y+r.height,p.y+p.height);
 			r.y = Math.min(r.y,p.y);
 			r.height = y1-r.y;
+		}
+	}
+
+	public void paintHighlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, Color color) {
+		Rectangle alloc = bounds.getBounds();
+		try {
+			// --- determine locations ---
+			TextUI mapper = c.getUI();
+			Rectangle p0 = mapper.modelToView(c, offs0);
+			Rectangle p1 = mapper.modelToView(c, offs1);
+
+			//	todo adjust descent/ascent
+
+			g.setColor(color);
+			// --- render ---
+			if (p0.y == p1.y) {
+				// same line, render a rectangle
+				Rectangle r = p0.union(p1);
+				g.fillRect(r.x, r.y, r.width, r.height);
+			} else {
+				// different lines
+				int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
+				g.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
+				if ((p0.y + p0.height) != p1.y) {
+					g.fillRect(alloc.x, p0.y + p0.height, alloc.width,
+							p1.y - (p0.y + p0.height));
+				}
+				g.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
+			}
+		} catch (BadLocationException e) {
+			// can't render
 		}
 	}
 

@@ -41,7 +41,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [ ] for dark mode
     [ ] bug TextPaneUI: jagged selection
     [ ] layout in F9, F11
-    [ ] bug: Board coordinates in F9
+    [x] bug: Board coordinates in F9
     [ ] scroll engine panel to top
     [?] wdl label height; adjust to font
     [?] 3D?

@@ -295,8 +295,7 @@ public class DocumentPanel
 		action = new CommandAction() {
 			public void Do(Command cmd) {
 				boolean dark = (Boolean)cmd.moreData;
-				DocumentPanel.this.theTextPane.setSelectionColor(
-						StyleUtil.getSystemSelectionColor(), dark);
+				DocumentPanel.this.theTextPane.setSelectionColor(dark);
 			}
 		};
 		map.put("update.ui", action);

@@ -903,7 +903,8 @@ public class JoDialog
 					label = newLabel(getName()+"."+labelName);
 				if (component!=null) {
 					label.setLabelFor(component);
-					component.setName((String)labelName);
+					if (!((String) labelName).isEmpty())
+						component.setName((String)labelName);
 				}
 				labelComponent = label;
 			}

@@ -125,53 +125,67 @@ public class StyleUtil
         return !Util.equals(StyleConstants.getFontFamily(style), StyleConstants.getFontFamily(base));
     }
 
+    private static Color getWindowsSystemColor(String key)
+    {
+        int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM",key);
+        if (value != Integer.MIN_VALUE)
+            return new Color(value);
+        else
+            return null;
+    }
+
+    public static Color getProfileAccentColor() {
+        Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
+        if (sf!=null)
+            return sf.color;
+        else
+            return null;
+    }
+
+    public static Color getProfileSelectionColor() {
+        Surface sf = (Surface)Application.theUserProfile.get("lnf.select.color");
+        if (sf!=null)
+            return sf.color;
+        else
+            return null;
+    }
+
+    public static Color getDefaultAccentColor() {
+        return Color.decode("#2675BF");
+    }
+
     public static Color getSystemAccentColor()
     {
         if (Version.windows) {
             //  get system accent color from registry
-            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
-            if (value != Integer.MIN_VALUE)
-                return new Color(value);
-        }
-        if (Version.linux) {
-            Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
-            if (sf!=null) return sf.color;
+            return getWindowsSystemColor("AccentColor");
         }
         if (Version.mac) {
             //  todo does this work ?
             return SystemColor.activeCaption;
         }
-
-        //  else {
-        return Color.decode("#2675BF");
+        return null;
     }
 
     public static Color getSystemSelectionColor()
     {
         if (Version.windows) {
             //  get system accent color from registry
-            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","ColorizationColor");
+            return getWindowsSystemColor("ColorizationColor");
             //  not "AccentColor"
-            if (value != Integer.MIN_VALUE)
-                return new Color(value);
         }
         if (Version.linux) {
             //  getting a usable accent color from Linux is hopeless
             //  there *are* accent colors in Gnome and KDE, but there is no useful
             //  API to retrieve them. Linux Desktop is fucked, believe me.
             //  Use our own profile store instead.
-            Surface sf = (Surface)Application.theUserProfile.get("lnf.select.color");
-            if (sf!=null) return sf.color;
+            return null;
         }
         if (Version.mac) {
             //  todo does this work ?
             return SystemColor.textHighlight;
         }
-
-        //  else {
-        Color col = UIManager.getColor("TextPane.selectionBackground");
-        if (col==null) col = Color.decode("#2675BF");
-        return col;
+        return null;
     }
 
     public static boolean getSystemDarkMode() {
