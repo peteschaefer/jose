@@ -105,14 +105,14 @@ public class AnalysisRecord
 
 	public StringBuffer getLine(int pv)
 	{
-		if (pv > maxpv) maxpv = pv;
+		if (pv >= maxpv) maxpv = pv+1;
 		if (line[pv]==null) line[pv] = new StringBuffer();
 		return line[pv];
 	}
 
 	public ArrayList<Move> getMoves(int pv)
 	{
-		if (pv > maxpv) maxpv = pv;
+		if (pv >= maxpv) maxpv = pv+1;
 		if (moves[pv]==null) moves[pv] = new ArrayList<Move>();
 		return moves[pv];
 	}
@@ -135,7 +135,7 @@ public class AnalysisRecord
 
 	public void setPvModified(int pv)
 	{
-		if (pv > maxpv) maxpv = pv;
+		if (pv >= maxpv) maxpv = pv+1;
 		pvmodified[pv>>6] |= 1<<(pv&0x3f);
 	}
 
@@ -143,6 +143,21 @@ public class AnalysisRecord
 	{
 		for (int i=0; i < pvmodified.length; i++)
 			pvmodified[i] = 0L;
+	}
+
+	public void addMoveInfo(Move mv, String info)
+	{
+		for(int i=0; i < maxpv; ++i)
+		{
+			if (moves[i]!=null && !moves[i].isEmpty() && mv.equals(moves[i].get(0)))
+			{
+				StringBuffer line = getLine(i);
+				line.append("\n");
+				line.append(info);
+				setPvModified(i);
+				return;
+			}
+		}
 	}
 
 	public void clear()
@@ -156,7 +171,7 @@ public class AnalysisRecord
 		elapsedTime = UNKNOWN;
 		nodes = UNKNOWN;
 		nodesPerSecond = UNKNOWN;
-		for (int i=0; i<=maxpv; i++) {
+		for (int i=0; i<maxpv; i++) {
 			eval[i].clear();
 			if (line[i]!=null) line[i].setLength(0);
 			if (moves[i]!=null) moves[i].clear();

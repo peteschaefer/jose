@@ -67,6 +67,7 @@ public class UciPlugin
 	protected boolean hasAnalyseOption = false;
 	protected boolean readOptions = false;
 	protected boolean frcMode = false;
+	protected boolean leelaMoveStats = false;
 
 	protected Vector<Option> options = new Vector<Option>();
 
@@ -186,10 +187,11 @@ public class UciPlugin
 	public boolean supportsOption(String optionName)
 	{
 		Option option = getOption(options,optionName);
-		if (option==null)
+		return option!=null;
+		/*if (option==null)
 			return false;
 		else
-			return option.defaultBooleanValue();
+			return option.defaultBooleanValue();*/
 	}
 
 
@@ -256,6 +258,11 @@ public class UciPlugin
 		readOptions = true;
 		hasAnalyseOption = supportsOption("UCI_AnalyseMode");
 		if (!waitFor("uci","uciok",10000)) throw new IOException("uciok expected");
+
+		//	"hidden" Leela option
+		leelaMoveStats = supportsOption("VerboseMoveStats");
+		if (leelaMoveStats && !supportsOption("LogLiveStats"))
+			parseOption("name LogLiveStats type check default true");
 
         //  set options
 		setOptions(false);
@@ -967,9 +974,25 @@ public class UciPlugin
 			else if (t.equals("cpuload"))
 				StringUtil.parseInt(tok.nextToken());     //  TODO CPU load (per mille); low priority. there are not likely many engines that can report this
 			else if (t.equals("string")) {
-				rec.info = input;
-				rec.info_ttl = System.currentTimeMillis()+5000;
-				rec.modified |= AnalysisRecord.INFO;
+				if (leelaMoveStats) {
+					String info = input.substring(20);
+					t = tok.nextToken();
+					if (t.equals("node")) {
+						//	summary
+						rec.info = info;
+						rec.info_ttl = System.currentTimeMillis()+5000;
+						rec.modified |= AnalysisRecord.INFO;
+					}
+					else {
+						Move mv = parseMove(t,0);
+						rec.addMoveInfo(mv,info);
+					}
+				}
+				else {
+					rec.info = input;
+					rec.info_ttl = System.currentTimeMillis()+5000;
+					rec.modified |= AnalysisRecord.INFO;
+				}
 			}
 			else if (ispv) {
 				Move mv = parseMove(t,0);       //  parse & format move

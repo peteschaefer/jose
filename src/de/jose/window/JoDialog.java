@@ -72,7 +72,7 @@ public class JoDialog
 	public static final GridBagConstraints LABEL_ONE =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
 							   GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
-							   INSETS_NORMAL, 0,0);
+							   INSETS_NORMAL, 90,0);
 
 	public static final GridBagConstraints LABEL_INDENTED =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,

@@ -614,7 +614,7 @@ public class EnginePanel
 				setNodesPerSecond(rec.nodesPerSecond,pmap);
 
             boolean scrollhist = false;
-			for (int idx=0; idx <= rec.maxpv; idx++)
+			for (int idx=0; idx < rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
 					assert(rec.eval[idx]!=null);
 					assert(rec.line[idx]!=null);
@@ -829,12 +829,13 @@ public class EnginePanel
 		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
-		assert(plugin!=null);
-		String text = plugin.printScore(score,true);
-		String tooltip = plugin.printScoreTooltip(score,true);
+		if (plugin!=null) {
+			String text = plugin.printScore(score, true);
+			String tooltip = plugin.printScoreTooltip(score, true);
 
-		leval.setText(text);
-		leval.setToolTipText(tooltip);
+			leval.setText(text);
+			leval.setToolTipText(tooltip);
+		}
 	}
 
 	public void setNodeCount(long nodes, HashMap pmap)

@@ -21,8 +21,22 @@ libraries needed:
  -> find a *working* copy of libmysqld for 64 bit ??
 (? resize Ubuntu partition on xps 15)
 
+=== Factory Settings
+
+* eval bar
+* suggestions
+
+Leela
+* logo
+* MultiPV = 8 (?)
+* VerboseMoveStats = true
+* LogLiveStats = true
+
+
 ==== New Features
 
+* Format Leela Move Stats
+* Suggestions check box
 * Contempt Slider
 
         White seeks a draw - neutral - Black seeks a draw - Armageddon
@@ -31,9 +45,35 @@ libraries needed:
 
     Armageddon = Black seeks a draw at any cost; white avoids a draw at any cost.
 
+WDLDrawRateReference = 0.58
+        draw rate in initial position. Depends on trained net and should not change much
+WDLCalibrationELO = 2700
+        should be transparent, but is not quite. Contempt has stronger effect on smaller elos
+WDLEvalObjectivity = 0.0, or  1 ?
+
+Contempt = 400
+        elo difference. this is the main control variable !!
+        +100 for Armageddon (is this sufficient? why not more?)
+
+ContemptMode = play, white_side_analysis, black_side_analysis.
+        switch to 'play' when actually playing against Leela
+
+WDLContemptAtenuation = 1.0
+        should be left at 1.0. Scales Contempt, but why should we?
+
+ScoreType = WDL_mu
+        (for compatibilty with Stockfish)
+
+
 * mouse hover PV: display position (on main board? no. in tooltip is better)
 
-* score POV adjustable? (uci provides current pov; always adjusted for white)
+* score POV adjustable?
+  * uci reports current pov
+  * UciPlugin "adjusts" pov to white (in the process creating artifacts, like negative win-percentage)
+  * panel shows always white pov (might be user-adjustable)
+  * eval bar **must** use white pov [0..1]
+  * suggestions arrows **must** use current pov * [0..1]
+
 ? score graph??
 * eval bar 3D
 ? commentary arrows and highlights

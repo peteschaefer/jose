@@ -21,7 +21,8 @@
 		<OPTION name="CPuctBase"> 38739.000000 </OPTION>
 		<OPTION name="CPuctFactor"> 3.894000 </OPTION>
 		<OPTION name="TwoFoldDraws"> true </OPTION>
-		<OPTION name="VerboseMoveStats"> false </OPTION>
+		<OPTION dirty="true" name="VerboseMoveStats"> true </OPTION>
+		<OPTION dirty="true" name="LogLiveStats"> true </OPTION>
 		<OPTION name="FpuStrategy"> reduction </OPTION>
 		<OPTION name="FpuValue"> 0.330000 </OPTION>
 		<OPTION name="CacheHistoryLength"> 0 </OPTION>
@@ -35,9 +36,9 @@
 		<OPTION name="MaxOutOfOrderEvalsFactor"> 2.400000 </OPTION>
 		<OPTION name="StickyEndgames"> true </OPTION>
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
-		<OPTION dirty="true" name="MultiPV"> 10 </OPTION>
+		<OPTION name="MultiPV"> 10 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
-		<OPTION name="ScoreType"> win_percentage </OPTION>
+		<OPTION name="ScoreType"> WDL_mu </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
 		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
 		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>
@@ -47,9 +48,9 @@
 		<OPTION name="MovesLeftQuadraticFactor"> -0.652100 </OPTION>
 		<OPTION name="MaxConcurrentSearchers"> 1 </OPTION>
 		<OPTION name="DrawScore"> 0.000000 </OPTION>
-		<OPTION name="ContemptMode"> play </OPTION>
-		<OPTION name="Contempt"/>
-		<OPTION name="WDLCalibrationElo"> 0.000000 </OPTION>
+		<OPTION name="ContemptMode"> white_side_analysis </OPTION>
+		<OPTION name="Contempt"> 100 </OPTION>
+		<OPTION name="WDLCalibrationElo"> 2300 </OPTION>
 		<OPTION name="WDLEvalObjectivity"> 1.000000 </OPTION>
 		<OPTION name="WDLDrawRateReference"> 0.500000 </OPTION>
 		<OPTION name="NodesPerSecondLimit"> 0.000000 </OPTION>

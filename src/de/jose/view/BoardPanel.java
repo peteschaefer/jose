@@ -579,25 +579,24 @@ public class BoardPanel
 		if (a.maxpv==0) return;
 
 		int pov = (a.white_next) ? 1 : -1;
-		double cplast = plugin.mapUnit(a.eval[0])*pov;
-		double cpmin = cplast;
-		double cpmax = cplast;
+		int cp = a.eval[0].cp*pov;
+		int cpmin = cp;
+		int cpmax = cp;
 
 		int MAX_HINTS = 6;	//	don't show too many
-		double SCORE_DROP = 0.15;	//	don't shaw bad moves
+		int SCORE_DROP = 15;	//	don't shaw bad moves
 
 		//	find interesting moves from PV list
-		for (int idx=0; idx <= a.maxpv && hints.size() < MAX_HINTS; idx++)
+		for (int idx=0; idx < a.maxpv && hints.size() < MAX_HINTS; idx++)
 		{
 			if (a.moves[idx]==null || a.moves[idx].isEmpty())
 				continue;
-			double cp = plugin.mapUnit(a.eval[idx])*pov;
-			if (cp < (cplast-SCORE_DROP))
+			cp = a.eval[idx].cp*pov;
+			if (cp < (cpmin-SCORE_DROP))
 				break;	//	move is not interesting
 
 			if (cp > cpmax) cpmax = cp;
 			if (cp < cpmin) cpmin = cp;
-			cplast = cp;
 
 			Move mv = a.moves[idx].get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
@@ -607,13 +606,14 @@ public class BoardPanel
 		//	update colors
 		for(Hint hint : hints)
 		{
-			double cp = (Double)hint.implData;
+			cp = (Integer)hint.implData;
 			assert(cp>=cpmin && cp<=cpmax);
+			float cp1;
 			if (cpmin==cpmax)
-				cp = 1.0;
+				cp1 = 1.0f;
 			else
-				cp = (cp-cpmin) / (cpmax-cpmin);
-			hint.color = suggestionColor((float)cp);
+				cp1 = (float)(cp-cpmin) / (cpmax-cpmin);
+			hint.color = suggestionColor(cp1);
 		}
 		//	sort by Z order
 		Collections.sort(hints,new CompareHintsByZorder());
@@ -701,16 +701,6 @@ public class BoardPanel
 
 	public static Color suggestionColor(float val)
 	{
-		//	0 = red, 1 = green
-		/*float[] hsbRed = Color.RGBtoHSB(255,0,0, null);
-		float[] hsbGreen = Color.RGBtoHSB(0,255,0, null);
-		float hueRed = hsbRed[0];
-		float hueGreen = hsbGreen[0];
-		float hue = hueRed + val * (hueGreen-hueRed);
-		int col = Color.HSBtoRGB(hue,0.8f,0.8f);
-		//	alpha
-		col += 32<<24;
-		return new Color(col,true);*/
 		Color base;
 		if (val >= 0.95)
 			base = Color.blue;
