@@ -657,15 +657,18 @@ public class DocumentEditor
 
 	private void splitReplaceNode(Node node1, Node node2, DocUpdate d) throws BadLocationException {
 		int pos2 = d.pos2;
+		Node next = node1.next(); // advance *before* editing
 		d.pos2 = node1.getEndOffset();
 		doReplaceNode(node1,d,PADDING_NONE);
 
 		//	delete the rest
 		d.newText = "";
 		d.nag = -1;
-		for(Node n = node1.next(); n!=null && n!=node2; n = n.next()) {
-			d.pos1 = n.getStartOffset();
-			d.pos2 = n.getEndOffset();
+		while(next!=null && next!=node2) {
+			d.pos1 = next.getStartOffset();
+			d.pos2 = next.getEndOffset();
+			Node n = next;
+			next = next.next();	// advance *before* editing
 			doReplaceNode(n, d, PADDING_NONE);
 		}
 
