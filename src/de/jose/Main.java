@@ -12,6 +12,8 @@
 
 package de.jose;
 
+import de.jose.window.JoDialog;
+
 import java.lang.reflect.Method;
 
 /**
@@ -54,7 +56,7 @@ public class Main
 			Application.main(args);
 
 		} catch (Throwable ex) {
-			BootError.showError(ex);
+			JoDialog.showErrorDialog(null,ex.getMessage());
 		} finally {
 	        try {
 				SplashScreen.close();
