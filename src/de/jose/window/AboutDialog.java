@@ -368,9 +368,10 @@ public class AboutDialog
 		}
 
 		String dbid = getDBIdentifier(Application.theApplication.theDatabaseId);
-		String s1 = StringUtil.replace(Language.get("dialog.about.2"), placeholders);
-		String s2 = Language.get("dialog.about."+dbid);
-		return s1+" <br><br> <b>"+s2+"</b>";
+		String s2 = StringUtil.replace(Language.get("dialog.about.2"), placeholders);
+		String s22 = StringUtil.replace(Language.get("dialog.about.2.2"), placeholders);
+		String s3 = Language.get("dialog.about."+dbid);
+		return s2+" <br> "+s22+" <br><br> <b>"+s3+"</b>";
 	}
 
 	private String createJ3DInfoText()
