@@ -1930,7 +1930,7 @@ public class Application
 					startEngineAnalysis(true);
 				}
 				else try {
-					updateBook(true);
+					updateBook(false,true);
 					//	todo call asynch, switch to engine analysis on completion
 				} catch (IOException e) {
 					error(e);
@@ -2348,14 +2348,22 @@ public class Application
 		map.put("eboard.connect",action);
 	}
 
-	public void updateBook(boolean onEngineMove)
+	public void updateBook(boolean onEngineMove, boolean switchAnalysis)
 			throws IOException
 	{
-		//  show opening book moves
-		Position pos = Application.theApplication.theGame.getPosition();
-		BookQuery query = new BookQuery(pos,onEngineMove);
-		theExecutorService.submit(query);
-		//	will call back with message BOOK_RESPONSE
+		boolean inBook;
+		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
+		{	//	don't update book after an engine move, if this is not desired
+			enginePanel().exitBook();
+		}
+		else
+		{
+			//  show opening book moves
+			Position pos = Application.theApplication.theGame.getPosition();
+			BookQuery query = new BookQuery(pos,switchAnalysis);
+			theExecutorService.submit(query);
+			//	will call back with message BOOK_RESPONSE
+		}
 	}
 
 	private void startEngineAnalysis(boolean engine_analysis)

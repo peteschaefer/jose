@@ -1205,7 +1205,7 @@ public class EnginePanel
 			connectTo(Application.theApplication.getEnginePlugin());
 
 		try {
-			Application.theApplication.updateBook(false);   //  is this the right place ?
+			Application.theApplication.updateBook(false,false);   //  is this the right place ?
 		} catch (IOException e) {
 			Application.error(e);
 	}
@@ -1530,7 +1530,7 @@ public class EnginePanel
 				bGo.setEnabled(true);
 				bPause.setEnabled(plugin!=null);
 
-				Application.theApplication.updateBook(false);
+				Application.theApplication.updateBook(false,false);
 			}
 		};
 		map.put("switch.game", action);
@@ -1542,7 +1542,7 @@ public class EnginePanel
 					/* stay in engine mode */;
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					Application.theApplication.updateBook(wasEngineMove);
+					Application.theApplication.updateBook(wasEngineMove,true); // todo switchAnalysis ??
 				}
 			}
 		};
