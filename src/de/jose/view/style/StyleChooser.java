@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 
 package de.jose.view.style;
 
+import de.jose.Application;
 import de.jose.Language;
 import de.jose.Util;
 import de.jose.profile.UserProfile;
@@ -44,7 +45,7 @@ import java.util.Map;
 /**
  * A panel for editing text styles.
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class StyleChooser
 		extends JPanel
@@ -194,7 +195,7 @@ public class StyleChooser
 		fontList.setVisibleRowCount(9);
 
         fontSize = new JSpinner();
-		((SpinnerNumberModel)fontSize.getModel()).setMinimum(new Integer(1));
+		((SpinnerNumberModel)fontSize.getModel()).setMinimum(1);
 		fontSize.setPreferredSize(new Dimension(64,24));
 
         editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE);
@@ -247,9 +248,9 @@ public class StyleChooser
 		fontList.addListSelectionListener(this);
 
 		fontSize.addChangeListener(this);
-		fontBold.addChangeListener(this);
-		fontItalic.addChangeListener(this);
-		fontColor.addChangeListener(this);
+		fontBold.addItemListener(this);
+		fontItalic.addItemListener(this);
+		fontColor.addItemListener(this);
 		if (antiAliasing!=null) antiAliasing.addChangeListener(this);
 
 		useFontTrue.addChangeListener(this);
@@ -503,18 +504,6 @@ public class StyleChooser
 			updateAttribute(currentStyle, StyleConstants.FontSize, size);
 			JoFontConstants.removeFontScaleFactor(currentStyle);
 		}
-		if (e.getSource()==fontBold) {
-			boolean isBold = fontBold.isSelected();
-			updateAttribute(currentStyle, StyleConstants.Bold, Boolean.valueOf(isBold));
-		}
-		if (e.getSource()==fontItalic) {
-			boolean isItalic = fontItalic.isSelected();
-			updateAttribute(currentStyle, StyleConstants.Italic, Boolean.valueOf(isItalic));
-		}
-		if (e.getSource()==fontColor) {
-			Color color = fontColor.getColor();
-			updateAttribute(currentStyle, StyleConstants.Foreground, color);
-		}
 		if (e.getSource()==antiAliasing)
 			updateViews();
 		if (e.getSource()==useFontTrue) {
@@ -558,6 +547,8 @@ public class StyleChooser
 
 	public void itemStateChanged(ItemEvent e)
 	{
+		if (e.getStateChange()!=ItemEvent.SELECTED) return;
+
 		if (e.getSource()==moveLanguage)
 		{
 			String language = moveLanguage.getSelectedLanguage();
@@ -565,6 +556,18 @@ public class StyleChooser
 				styles.setFigurineLanguage(language);
 				dirty = true;
 			}
+		}
+		if (e.getSource()==fontBold) {
+			boolean isBold = fontBold.isSelected();
+			updateAttribute(currentStyle, StyleConstants.Bold, Boolean.valueOf(isBold));
+		}
+		if (e.getSource()==fontItalic) {
+			boolean isItalic = fontItalic.isSelected();
+			updateAttribute(currentStyle, StyleConstants.Italic, Boolean.valueOf(isItalic));
+		}
+		if (e.getSource()==fontColor) {
+			Color color = fontColor.getColor();
+			updateAttribute(currentStyle, StyleConstants.Foreground, color);
 		}
 	}
 

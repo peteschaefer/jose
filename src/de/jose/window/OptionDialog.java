@@ -201,7 +201,9 @@ public class OptionDialog
 		addWithLabel(tab0,0,0,4, "user.name", new JTextField(24));
 		addWithLabel(tab0,0,1,4, "user.language", new LanguageList(
 						Language.getAvailableLanguages(Application.theApplication.theLanguageDirectory)));
-		addWithLabel(tab0,0,2,4, "ui.look.and.feel2", new LookAndFeelList());
+		LookAndFeelList lookAndFeelList = new LookAndFeelList();
+		JLabel label = (JLabel)addWithLabel(tab0,0,2,4, "ui.look.and.feel2", lookAndFeelList);
+		label.setText(Language.get("ui.look.and.feel"));
 
 		//  load recent games
 		addWithLabel(tab0, 0,3,4, null, newCheckBox("doc.load.history"));

@@ -853,14 +853,14 @@ public class JoDialog
 		add(cont,component,constraint);
 	}
 
-	public final void addWithLabel(Container cont, int column,
+	public final JLabel addWithLabel(Container cont, int column,
 										  String compName,
 										  Component component)
 	{
-		addWithLabel(cont,column,compName,component,-1,-1);
+		return addWithLabel(cont,column,compName,component,-1,-1);
 	}
 
-	public final void addWithLabel(Container cont, int column,
+	public final JLabel addWithLabel(Container cont, int column,
 										  String compName,
 										  Component component,
 	                                      int vsbPolicy, int hsbPolicy)
@@ -869,26 +869,27 @@ public class JoDialog
 		label.setLabelFor(component);
 		component.setName(compName);
 		addWith(cont,column, label, component, vsbPolicy,hsbPolicy);
+		return label;
 	}
 
-	public final void addWithLabel(Container cont,
+	public final Component addWithLabel(Container cont,
 	                               int x, int y, int colspan,
 	                               Object labelName, Component component)
 	{
-		addWithLabel(cont, x,y,colspan, 0.0,0.0, labelName,component, -1,-1);
+		return addWithLabel(cont, x,y,colspan, 0.0,0.0, labelName,component, -1,-1);
 	}
 
-	public final void addWithLabel(Container cont,
+	public final Component addWithLabel(Container cont,
 	                               int x, int y, int colspan, double weightx, double weighty,
 	                               Object labelName, Component component,
 	                               int vsbPolicy, int hsbPolicy)
 	{
 		GridBagConstraints lconst = (GridBagConstraints)LABEL_ONE.clone();
 		GridBagConstraints cconst = (GridBagConstraints)ELEMENT_TWO.clone();
+		Component labelComponent = null;
 
 		if (labelName!=null)
 		{
-			Component labelComponent;
 			if (labelName instanceof String) {
 				JLabel label = newLabel(getName()+"."+labelName);
 				if (component!=null) {
@@ -923,6 +924,7 @@ public class JoDialog
 
 			cont.add(component,cconst);
 		}
+		return labelComponent;
 	}
 
 	public final void addBox(Container cont,
