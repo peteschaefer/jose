@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -649,9 +649,15 @@ abstract public class DBAdapter
 	        if (version < 1007)
 	            try {
 		            version = CrossOver1007.crossOver(version,connection,config);
-	            }catch (Exception e) {
+	            } catch (Exception e) {
 		            Application.error(e);
 	            }
+			if (version < 1008)
+				try {
+					version = Crossover1008.crossOver(version,connection,config);
+				} catch (Exception e) {
+					Application.error(e);
+				}
         }
 
 	    if (schema.equalsIgnoreCase("META"))

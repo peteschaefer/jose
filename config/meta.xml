@@ -4,7 +4,7 @@
 		<!--	Database Definition	-->
 		<!-- - - - - - - - - - - -  -->
 		<NAME> MAIN </NAME>
-		<VERSION> 1006 </VERSION>
+		<VERSION> 1008 </VERSION>
 		<TABLE>
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!--	Opening Index (maps positions to opening codes and names)  -->
@@ -438,7 +438,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<TABLE>
 			<NAME> MoreGame </NAME>
-			<VERSION> 101 </VERSION>
+			<VERSION> 102 </VERSION>
 			<COLUMN>
 				<NAME> GId </NAME>
 				<TYPE> INTEGER </TYPE>
@@ -538,6 +538,11 @@
                 <TYPE> LONG VARCHAR </TYPE>
                 <INDEX type="full-text"/>
             </COLUMN>
+			<COLUMN>
+				<!-- Engine evaluation W-D, 16 bit fixed point -->
+				<NAME> Eval </NAME>
+				<TYPE> LONG VARBINARY </TYPE>
+			</COLUMN>
 		</TABLE>
 
 		<!-- - - - - - - - - - - - - - - - -->
