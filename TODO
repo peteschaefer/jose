@@ -15,6 +15,9 @@
 
 === Database Repair Tool
 [ ] what's the best setting for myisamchk? -r -f, -o -f ?
+[ ] repair table Game extended use_frm
+    -> no need for myisamchk, process contortions, ...
+    -> restart required
 
 ==== Project
 
@@ -79,9 +82,10 @@ Alternative JREs:
 * replace Nalimov query with Lichess tablebase query
 
 * Graph View interactive
-    [x] mark current move. todo: no flicker?!
+    [x] mark current move.
     [ ] tooltips
     [ ] click navigate
+    [ ] use paintImmediately for BoardView2D score?  (instead of repaint!)
 
 * Comment search
     * regex

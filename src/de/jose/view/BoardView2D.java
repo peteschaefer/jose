@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import de.jose.*;
 import de.jose.chess.*;
 import de.jose.eboard.EBoardConnector;
@@ -110,6 +111,7 @@ public class BoardView2D
 	protected Surface currentBackground;
 
 	protected boolean forceRedraw = false;
+	protected Rectangle2D drawEval = null;
 	/**	lock cached images (i.e. prevent them from Garbage collection)	*/
 	protected boolean lockImgCache;
 
@@ -196,9 +198,48 @@ public class BoardView2D
 		this.eval = score;
 		if (modified) {
 			//	when eval bar switches state, a redraw is necessary
-			forceRedraw = true;
-			repaint();
+//			forceRedraw = true;
+//			repaint();
+
+			//	use paintImmediately() and paint()
+			//	some care has to be taken to run it in the main event thread
+			//	but it avoids the cost of repaint() !
+			if (SwingUtilities.isEventDispatchThread())
+				paintEvalImmediately();
+			else SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					paintEvalImmediately();
+				}
+			});
 		}
+	}
+
+	public void paintEvalImmediately()
+	{
+		drawEval = evalRect(true);
+		paintImmediately(drawEval.getBounds());
+		//	should call back to paint(), below
+		drawEval = null;
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		if (drawEval!=null) {
+//			g.setClip(drawEval);
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setClip(drawEval);
+			AffineTransform save_tf = null;
+			try {
+				save_tf = ImgUtil.setIdentityTransform(g2,true);
+				//g2.setClip(evalRect(false));
+				drawEvalbar((Graphics2D)g,null,false);
+			}
+			finally {
+				if (save_tf != null) g2.setTransform(save_tf);
+			}
+		}
+		else
+			super.paint(g);
 	}
 
 	@Override
@@ -959,7 +1000,7 @@ public class BoardView2D
 		}
 
 		if (showEvalbar)
-			drawEvalbar(g,b);	//	always draw it
+			drawEvalbar(g,b,false);	//	always draw it
 
 		synch(redraw);
 
@@ -1002,45 +1043,86 @@ public class BoardView2D
 		}
 	}
 
-	public void drawEvalbar(Graphics2D g, Border b)
+	public Rectangle2D evalRect(boolean userSpace)
+	{
+		double squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point2D inset = userSpace ? userInset : devInset;
+
+		double boardSize = 8*squareSize;
+		double x2 = inset.getX()+boardSize;
+		double gap = squareSize*0.1f;
+		double wid = squareSize*0.25f;
+
+//		if (b!=null)
+//			b.paintBorder(this, g, x2+gap - 2, devInset.y - 2, wid + 4, boardSize + 4);
+
+		Rectangle2D rect = new Rectangle2D.Double();
+		rect.setRect(x2+gap, inset.getY(),	wid, boardSize);
+		return rect;
+	}
+
+	public void drawEvalbar(Graphics2D g, Border b, boolean userSpace)
 	{
 		if (!showEvalbar) return;	//	that was easy
 		if (this.eval==null) return;	//	no useful score
 
-		int boardSize = 8*devSquareSize;
+		//double squareSize = userSpace ? userSquareSize : devSquareSize;
+		//Point2D inset = userSpace ? userInset : devInset;
 
+		int boardSize, x2,y0,gap,wid;
+		if (userSpace)
+		{
+			boardSize = (int)(8*userSquareSize);
+			x2 = (int)(userInset.x+boardSize);
+			y0 = (int)userInset.y;
+			gap = (int)(userSquareSize*0.1f);
+			wid = (int)(userSquareSize*0.25f);
+		}
+		else
+		{
+			boardSize = 8*devSquareSize;
+			x2 = devInset.x+boardSize;
+			y0 = devInset.y;
+			gap = (int)(devSquareSize*0.1f);
+			wid = (int)(devSquareSize*0.25f);
+		}
+
+		doDrawEvalbar(g, b, x2, gap, y0, wid, boardSize);
+	}
+
+	private void doDrawEvalbar(Graphics2D g, Border b,
+							   int x2, int gap,
+							   int y0, int wid,
+							   int boardSize)
+	{
+		int y2 = y0 +boardSize;
 		int hwhite = (int)(boardSize * eval.rel(eval.win)+0.5);
 		int hgrey =  (int)(boardSize * eval.rel(eval.draw)+0.5);
 		int hblack = boardSize - hwhite-hgrey;
 
-		int x2 = devInset.x+boardSize;
-		int y2 = devInset.y+boardSize;
-		int gap = (int)(devSquareSize*0.1f);
-		int wid = (int)(devSquareSize*0.25f);
-
-		if (b!=null)
-			b.paintBorder(this, g, x2+gap - 2, devInset.y - 2, wid + 4, boardSize + 4);
+		if (b !=null)
+			b.paintBorder(this, g, x2 + gap - 2, y0 - 2, wid + 4, boardSize + 4);
 
 		if (hwhite > 0) {
 			g.setColor(Color.white);
 			if (flipped)
-				g.fillRect(x2+gap, devInset.y, wid, hwhite);
+				g.fillRect(x2 + gap, y0, wid, hwhite);
 			else
-				g.fillRect(x2+gap, y2-hwhite, wid, hwhite);
+				g.fillRect(x2 + gap, y2 - hwhite, wid, hwhite);
 		}
 		if (hgrey > 0) {
 			g.setColor(Color.gray);
 			if (flipped)
-				g.fillRect(x2+gap, y2-hblack-hgrey, wid, hgrey);
+				g.fillRect(x2 + gap, y2 - hblack - hgrey, wid, hgrey);
 			else
-				g.fillRect(x2+gap, y2-hwhite-hgrey, wid, hgrey);
+				g.fillRect(x2 + gap, y2 - hwhite - hgrey, wid, hgrey);
 		}
 		if (hblack > 0) {
 			g.setColor(Color.black);
 			if (flipped)
-				g.fillRect(x2+gap, y2-hblack, wid, hblack);
+				g.fillRect(x2 + gap, y2 - hblack, wid, hblack);
 			else
-				g.fillRect(x2+gap, devInset.y, wid, hblack);
+				g.fillRect(x2 + gap, y0, wid, hblack);
 		}
 	}
 
