@@ -3,9 +3,9 @@
 <PLUGIN ID="stockfish" type="uci">
 	<NAME> Stockfish </NAME>
 	<EXEC os="Windows">
-		<COMMAND> C:\dev\jose\work\engines\stockfish\stockfish-windows-x86-64-sse41-popcnt.exe </COMMAND>
+		<COMMAND> %dir%\stockfish-windows-x86-64-sse41-popcnt.exe </COMMAND>
 	</EXEC>
-	<DIR> C:\dev\jose\work\engines\stockfish </DIR>
+	<DIR> %local%\engines\stockfish </DIR>
 	<LOGO> %dir%\Stockfish-large.bmp </LOGO>
 	<VERSION> 17 </VERSION>
 	<AUTHOR> the Stockfish developers (see AUTHORS file) </AUTHOR>
@@ -22,7 +22,7 @@
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_LimitStrength"> false </OPTION>
 		<OPTION name="UCI_Elo"> 1320 </OPTION>
-		<OPTION dirty="true" name="UCI_ShowWDL"> false </OPTION>
+		<OPTION name="UCI_ShowWDL"> false </OPTION>
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
 		<OPTION name="Syzygy50MoveRule"> true </OPTION>

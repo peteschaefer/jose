@@ -1386,4 +1386,9 @@ public class
 				++count;
 		return count;
 	}
+
+	public static String reverse(String str)
+	{
+		return new StringBuilder(str).reverse().toString();
+	}
 }

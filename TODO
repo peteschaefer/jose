@@ -57,6 +57,10 @@ Leela
   - BUG: Lc0 resigns too early ???
   - BUG: opening book, "plugin.eval.1"
 
+java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
+	at java.util.ArrayList.get(ArrayList.java:433)
+
 * Chessnut
   >> https://github.com/chessnutech/EasyLinkSDK
    + jni interface

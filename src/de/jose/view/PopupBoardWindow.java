@@ -8,6 +8,7 @@ import de.jose.chess.Position;
 import de.jose.pgn.DiagramNode;
 import de.jose.profile.FontEncoding;
 import de.jose.util.FontUtil;
+import de.jose.util.StringUtil;
 import de.jose.view.input.JoBigLabel;
 import de.jose.view.style.JoFontConstants;
 import de.jose.view.style.JoStyleContext;
@@ -66,7 +67,7 @@ public class PopupBoardWindow
             String fen = pbw.replay(ply);
             boolean flip = AbstractApplication.theUserProfile.getBoolean("board.flip");
             if (flip)
-                fen = new StringBuilder(fen).reverse().toString();
+                fen = StringUtil.reverse(fen);
 
             String[] old_border = pbw.enc.setBorder(null);
             String text = DiagramNode.toString(fen, pbw.enc);
