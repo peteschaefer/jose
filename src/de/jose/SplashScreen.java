@@ -96,42 +96,6 @@ public class SplashScreen
         if (theSplashScreen!=null) theSplashScreen.hide();
     }
 
-
-	public void setDatabase(String dbname)
-	{
-/*
-		File imageFile = new File(imageDir,"db."+dbname+".small.gif");
-		if (!imageFile.exists())
-			imageFile = new File(imageDir,"db."+dbname+".gif");
-		if (imageFile.exists()) {
-            addLogo(imageFile, getWidth()-83, -1);
-            drawLogo(getGraphics(),logos.size()-1);
-		}
-*/
-	}
-
-	public void set3d(boolean on)
-	{
-/*
-		if (on) {
-			File imageFile = new File(imageDir,"j3d.logo3.gif");
-			if (imageFile.exists()) {
-                addLogo(imageFile, getWidth()-83, -1);
-				drawLogo(getGraphics(),logos.size()-1);
-			}
-		}
-*/
-	}
-
-    public void showSponsor(String logo)
-    {
-/*
-       File imageFile = new File(imageDir,logo);
-       addLogo(imageFile, getWidth()-229, -1);
-	   drawLogo(getGraphics(),logos.size()-1);
-*/
-    }
-
 	public void paint(Graphics g)
 	{
 /*		String db = AboutDialog.getDBIdentifier(Application.theApplication.theDatabaseId);
@@ -199,52 +163,4 @@ public class SplashScreen
 		}
 
 	}
-/*
-    protected void addLogo(File file, int x, int y)
-    {
-        if (file.exists())
-        {
-            if (x < 0) {
-                if (logos.size()>=1) {
-                    Logo prev = (Logo)logos.get(logos.size()-1);
-                    x = prev.bounds.x+prev.bounds.width;
-                }
-                else
-                    x = 0;
-            }
-            if (y < 0) {
-                if (logos.size()>=1) {
-                    Logo prev = (Logo)logos.get(logos.size()-1);
-                    y = prev.bounds.y+prev.bounds.height;
-                }
-                else
-                    y = 0;
-            }
-
-            Logo logo = new Logo();
-            logo.icon = new ImageIcon(file.getAbsolutePath());
-            logo.bounds = new Rectangle(x,y, logo.icon.getIconWidth(), logo.icon.getIconHeight());
-            logos.add(logo);
-        }
-    }
-
-    protected void drawLogo(Graphics g, int i)
-    {
-        if (i < 0 || i >= logos.size()) return;
-
-        Logo logo = (Logo)logos.get(i);
-        g.drawImage(logo.icon.getImage(),
-                logo.bounds.x, logo.bounds.y,
-                logo.bounds.width, logo.bounds.height, null);
-    }
-*/
-
-/*
-	public void toFront()
-	{	
-		super.toFront();
-//		paint(getGraphics());
-		repaint();
-	}
-*/
 }

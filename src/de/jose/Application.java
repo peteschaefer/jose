@@ -312,8 +312,6 @@ public class Application
 		if (theDatabaseDirectory==null)
 			theDatabaseDirectory = new File(theWorkingDirectory,"database");
 
-		initSplashscreen(SplashScreen.get());
-
 //		splashToFront();
 
 		if (showSystemProperties) {
@@ -340,13 +338,6 @@ public class Application
 
     protected void initSplashscreen(SplashScreen splash)
     {
-        if (splash != null) {
-            splash.setDatabase(theDatabaseId);
-            splash.set3d(Version.hasJava3d(false,false));
-            String[] logos = theConfig.getPaths("sponsor-splash");
-            for (int i=0; i < logos.length; i++)
-                splash.showSponsor(logos[i]);
-        }
     }
 
 
