@@ -218,7 +218,8 @@ public class DocumentEditor
   	public void scrollTo(int p0,int p1)
 		throws BadLocationException
 	{
-		if (isShowing()) {
+		if (isShowing())
+		try {
 			int max = getDocument().getLength();
 			p0 = Util.inBounds(0,p0,max-1);
 			p1 = Util.inBounds(0,p1,max-1);
@@ -231,6 +232,8 @@ public class DocumentEditor
 			Rectangle r = r0.union(r1);
 
 			AWTUtil.scrollRectToVisible(this,r);
+		} catch(Exception ex) {
+			//	accept; can happen at very early stage of application, when components are not yet layed out
 		}
 	}
 
