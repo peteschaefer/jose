@@ -3176,11 +3176,12 @@ public class Application
 			EnginePanel eng = enginePanel();
 			if (!query.result.isEmpty())
 				eng.showBook(query.result,pos);
-			else
+			else {
 				eng.exitBook();
-
-			if (query.switchEngineAnalysis)
-				startEngineAnalysis(true);
+				//	when out of book, switch to Engine
+				if (query.switchEngineAnalysis)
+					startEngineAnalysis(true);
+			}
 			break;
 		}
 	}
