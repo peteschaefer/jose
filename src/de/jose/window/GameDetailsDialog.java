@@ -45,8 +45,7 @@ public class GameDetailsDialog
 								   GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL,
 								   INSETS_NORMAL, 0,0);
 
-    protected static final Dimension SIZE = Version.mac ?
-                    new Dimension(420,280) : new Dimension(420,240);
+    protected static final Dimension SIZE = new Dimension(400,260);
 
 	public GameDetailsDialog(String name)
 	{
@@ -78,23 +77,25 @@ public class GameDetailsDialog
 		JTextField field;
 
 		tab0.add(newLabel("dialog.details.event"),LABEL_ONE);
-		add(tab0, newTextField(TAG_EVENT), ELEMENT_ROW);
+		add(tab0, field=newTextField(TAG_EVENT), ELEMENT_ROW);
 
 		tab0.add(newLabel("dialog.details.site"),LABEL_ONE);
 		add(tab0, newTextField(TAG_SITE), ELEMENT_ROW);
 
 		tab0.add(newLabel("dialog.details.date"),LABEL_ONE);
-		add(tab0, field=newPgnDateField(TAG_DATE), ELEMENT_TWO_SMALL);
+		add(tab0, field=newPgnDateField(TAG_DATE), ELEMENT_TWO);
+		setColumns(field,10);
 
 		tab0.add(newLabel("dialog.details.round"),LABEL_THREE);
-		add(tab0, field=newTextField(TAG_ROUND), ELEMENT_FOUR_SMALL);
+		add(tab0, field=newTextField(TAG_ROUND), ELEMENT_FOUR);
 		setColumns(field,8);
 
 		tab0.add(newLabel("dialog.details.eventdate"), LABEL_ONE);
 		add(tab0, field=newPgnDateField(TAG_EVENT_DATE), ELEMENT_TWO);
+		setColumns(field,10);
 
 		tab0.add(newLabel("dialog.details.board"), LABEL_THREE);
-		add(tab0, field=newTextField(TAG_BOARD), ELEMENT_FOUR_SMALL);
+		add(tab0, field=newTextField(TAG_BOARD), ELEMENT_FOUR);
 		setColumns(field,8);
 
 		tab0.add(new JLabel(""),ELEMENT_REMAINDER);

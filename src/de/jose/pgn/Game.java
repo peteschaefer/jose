@@ -527,6 +527,19 @@ public class Game
 
 			setTagValue(key, ety.getValue(), doc);
 		}
+		//	remove extra Tags that are not in map
+		HashMap oldMap = new HashMap();
+		getTagValues(oldMap);
+		Iterator j = oldMap.keySet().iterator();
+		while(j.hasNext()) {
+			String key = (String)j.next();
+			if (!map.containsKey(key)) {
+				if (DEFAULT_TAGS.contains(key))
+					setTagValue(key, null);
+				else
+					removeTag(key);
+			}
+		}
 	}
 
 	protected final void updateTag(StyledDocument doc, TagNode t) throws BadLocationException
@@ -552,7 +565,13 @@ public class Game
 	public void removeTag(String key)
 	{
 		TagNode t = getTag(key);
-		if (t!=null) t.remove();
+		if (t!=null) {
+			Node p1 = t.previous();
+			Node p2 = t.next();
+			if (p1!=null && (p1 instanceof TagLabelNode)) p1.remove();
+			if (p1!=null && (p1 instanceof TagLabelNode)) p1.remove();
+			t.remove();
+		}
 	}
 
 
