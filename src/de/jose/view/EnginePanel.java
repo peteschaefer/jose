@@ -1873,6 +1873,7 @@ public class EnginePanel
 				if (label==e.getSource())
 				{
 					String text = getPvText(i);
+					//	todo problem with non-ascii piece characters (like Russian). Use English instead!
 					if (text!=null) {
 						Command cmd = new Command("menu.game.paste.line", e, text, Boolean.TRUE);
 						Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);

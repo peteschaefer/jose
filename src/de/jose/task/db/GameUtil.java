@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 abstract public class GameUtil
@@ -1089,6 +1089,7 @@ abstract public class GameUtil
 			gm.gotoMove(after);
 
 			GameUtilOldImpl.UtilParser parser = new GameUtil.UtilParser(gm.getPosition(),gm,after);
+			//	todo allow for various languages (like English)
 			parser.setLanguage(Application.theUserProfile.getFigurineLanguage(),true);
 			parser.parse(text.toCharArray(), null,null, false);
 			//  calls back, eventually

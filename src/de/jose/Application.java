@@ -961,6 +961,7 @@ public class Application
 //					NalimovOnlineQuery nq = (NalimovOnlineQuery)cmd.data;
 //					mvnd = GameUtil.pasteLine(nq.getGame(), nq.getMoveNode(), nq.getText());
 //				}
+				//	todo allow various languages for encoding (English, local, ...)
 				mvnd = GameUtil.pasteLine(theGame, theGame.getCurrentMove(), cmd.data.toString());
 
 				if (Util.toboolean(cmd.moreData) && mvnd!=null) {
