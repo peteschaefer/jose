@@ -7,7 +7,8 @@
 
 	<!-- target directory -->
 
-	<property name="target-dir" location="C:/dev/Release/${version}"/>
+	<property name="dist-dir" location="C:/dev/jose/dist"/>
+	<property name="target-dir" location="${dist-dir}/packages"/>
 	<property name="jre-dir" location="C:/dev/jose"/>
 
 <!--
@@ -663,6 +664,93 @@
        	</zip>
 	</target>
 
+	<target name="zip-common">
+		<description> platform independent stuff to zip (jar files) </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- OS X specific stuff -->
+			<!-- application bundle -->
+			<zipfileset dir="${dist-dir}/common" prefix="${appldir}">
+			<!-- bin/share -->
+			<!-- config/lc0.xml, stockfish.xml -->
+			<!-- engines/** -->
+			<!-- lib/**.jar -->
+				<exclude name="lib/j3dcore.jar"/>
+				<exclude name="lib/j3dutils.jar"/>
+				<exclude name="lib/vecmath.jar"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="zip-j3d">
+		<description> add Mac OS X specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- OS X specific stuff -->
+			<!-- application bundle -->
+			<zipfileset dir="${dist-dir}/common" prefix="${appldir}">
+				<!-- bin/share -->
+				<!-- config/lc0.xml, stockfish.xml -->
+				<!-- engines/** -->
+				<!-- lib/**.jar -->
+				<include name="lib/j3dcore.jar"/>
+				<include name="lib/j3dutils.jar"/>
+				<include name="lib/vecmath.jar"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="zip-macos-common">
+		<description> add Mac OS X specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- OS X specific stuff -->
+			<!-- application bundle -->
+			<zipfileset dir="${dist-dir}/mac_common" prefix="${appldir}"/>
+			<!-- jose.app/Contents/Resources/** -->
+			<!-- jose.app/lib/Mac/mrjadapter.jar -->
+		</zip>
+	</target>
+
+	<target name="zip-macos-arm">
+		<description> add Mac OS X specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<zipfileset dir="${dist-dir}/mac_arm64/Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
+				<!--include name="JavaApplicationStub"/-->
+				<include name="jose.sh"/>
+				<include name="jose"/>
+				<include name="shc"/>
+			</zipfileset>
+
+			<zipfileset dir="${dist-dir}/mac_arm64/bin/Mac_arm" prefix="${appldir}/bin/Mac_arm" filemode="775">
+				<!--include name="Mac/unrar"/-->
+				<include name="mysqld"/>
+				<!--include name="mysqladmin"/-->
+			</zipfileset>
+
+			<zipfileset dir="${dist-dir}/mac_arm64/engines" prefix="${appldir}/engines" filemode="775">
+				<!--include name="Mac/unrar"/-->
+				<include name="lc0/lc0"/>
+				<include name="stockfish/stockfish-macos-m1-apple-silicon"/>
+				<!--include name="mysqladmin"/-->
+			</zipfileset>
+
+			<!-- the jre -->
+			<zipfileset dir="${dist-dir}/mac_arm64/jre"
+						prefix="${appldir}/jre">
+				<exclude name="bin/java"/>
+				<exclude name="lib/jspawnhelper"/>
+			</zipfileset>
+			<zipfileset dir="${dist-dir}/mac_arm64/jre"
+						prefix="${appldir}/jre"
+						filemode="775">
+				<include name="bin/java"/>
+				<include name="lib/jspawnhelper"/>
+			</zipfileset>
+		</zip>
+	</target>
+
 	<!-- Mac OS X application bundle -->
 <!--
 	<taskdef name="jarbundler"
@@ -690,7 +778,7 @@
 -->
 	<!-- MacOSX w/out JRE -->
 	<target name="macos-intel">
-		<description> installation package for Mac OS X (not including JRE) </description>
+		<description> installation package for macOS on Intel </description>
 		
 		<property name="zip-file" location="${target-dir}/jose-${version}-macos-intel.zip"/>
 		<property name="appldir" value="jose.app"/>
@@ -712,6 +800,33 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+		<delete dir="${appldir}"/>
+	</target>
+
+	<target name="macos-arm">
+		<description>installation package for macOS on Apple Sillion (arm 64 bit) </description>
+
+		<property name="zip-file" location="${target-dir}/jose-${version}-macos-arm.zip"/>
+		<property name="appldir" value="jose.app"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-common">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-macos-common">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-macos-arm">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+
 		<delete dir="${appldir}"/>
 	</target>
 
@@ -902,7 +1017,8 @@
 		<antcall target="windows-jre"/>
 		<!--antcall target="linux"/-->
 		<antcall target="linux-jre"/>
-		<antcall target="macosx"/>
+		<antcall target="macos-intel"/>
+		<antcall target="macos-arm"/>
 		<!--antcall target="source"/-->
 		<!--antcall target="windows-install"/-->
 		<!--antcall target="windows-jre-install"/-->
@@ -973,8 +1089,11 @@
 			<param name="file" value="jose-${version}-linux.zip"/>
 		</antcall>
 		-->
-		<antcall target="upload-file">
+		<!--antcall target="upload-file">
 			<param name="file" value="jose-${version}-macos-intel.zip"/>
+		</antcall-->
+		<antcall target="upload-file">
+			<param name="file" value="jose-${version}-macos-arm.zip"/>
 		</antcall>
 	</target>
 

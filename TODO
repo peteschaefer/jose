@@ -23,7 +23,7 @@ libraries needed:
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 
 [ ] port JavaLauncher, or use shc
-[ ] java.desktop
+[x] java.desktop
 
 ==== macOS
 
@@ -50,30 +50,21 @@ libraries needed:
    [-] VAqua
    [x] default lnf
    [-] Print Preview
-   [-] port JavaLauncher :(
-   [x] upgrade mrjadapter 1.3
+   [-] port JavaLauncher :(   [x] upgrade mrjadapter 1.3
 
 [ ] "Apple Silicon" = arm64
-    [ ] jdk1.8_431, 11 (not 9?) is available from Oracle :)
-    [-] MySQL >= 8.0.30. difficult to get running (at least on Linux) :(
-    [ ] MySQL 5.0.67 compile from source
+    [x] jdk1.8_431, 11 (not 9?) is available from Oracle :)
+    [x] MySQL 5.0.67 compile from source
         [x] Ubuntu x86_64
-        [ ] macOS x86_64 standalone
-        [ ] macOS x86_64 embedded. if unstable, try
-            [ ] 5.0.15 instead
-        [ ] macOS arm64
-    [ ] MySQL 5.7 from brew (disabled but maybe works anyway ?)
-    [ ] MySQL <= 5.0.x  difficult to find for macOS arm64
-    [ ] shc
-        brew cask install gcc-arm-embedded ?
-        clang hello.c -target arm64-apple-darwin20.1.0
-    [ ] stockfish
-    [ ] Lc0
+        [x] macOS x86_64 standalone (+libgcc)
+        [-] macOS x86_64 embedded. unstable, 5.0.15 too
+        [x] macOS arm64
+    [x] shc
+    [x] jose-arm.sh
+    [x] stockfish
+    [x] Lc0
+    [ ] test bundle
 
--> if we have a stable MySQL build (5.0.15, or 5.0.67)
--> and, if mysql-je is stable
--> we can move on to 64bit-land for all platforms :)
--> jdk upgrades are not an obstacle anymore
 
 ==== Deprecated Stuff
 

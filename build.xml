@@ -20,7 +20,8 @@
 	<!-- JavaHelp directory -->
 	<property name="javahelp" location="C:\jh1.1.3\javahelp\lib"/>
 
-	<property name="jdk-dir" location="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home"/>
+	<property name="jdk-dir" location="C:\Program Files (x86)\Java\jdk1.8.0_202"/>
+	<!--property name="jdk-dir" location="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home"/-->
 
 	<target name="init">
 		<description> setup initial properties</description>
