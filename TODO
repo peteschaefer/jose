@@ -118,7 +118,8 @@ BUG: Print Preview does not work
       [x] fix sprite rendering
       [ ] maybe some reflection bugs, but they can be fixed/deprecated
       [.] BoardView2D support for HiDPI. On the way.
-      [ ] check out Java3D 64bit versions
+      [ ] check out Java3D 64bit versions (1.4)
+            --add-exports java.desktop/sun.awt=ALL-UNNAMED
 
 * launch mysqld earlier (?)
 

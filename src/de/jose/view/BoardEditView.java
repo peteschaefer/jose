@@ -33,6 +33,7 @@ import javax.swing.text.TextAction;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -176,15 +177,14 @@ public class BoardEditView
 	/**	calculate square size and inset after resize	 */
 	public void recalcSize(Graphics2D g)
 	{
-		int width = getWidth();
-		int height = getHeight();
+		super.recalcSize(g);
 
-		userSquareSize = (int)Math.min((width-32)/WIDTH_RATIO, (height-4)/HEIGHT_RATIO);
-		devSquareSize = (int)(userSquareSize*getBufferScaleFactor(g)+0.5);
+		Point2D.Double scale = getBufferScaleFactor(g);
+		devInset.y = 0;
+		userInset.y = 0;
 
-		devInset.y = userInset.y = 0;
-		userInset.x = Math.round(0.4f*userSquareSize);	//	board is always left aligned
 		devInset.x = Math.round(0.4f*devSquareSize);	//	board is always left aligned
+		userInset.x = devInset.x / scale.getX();
 		//Point p0 = origin(KING,0);
 	}
 
@@ -200,8 +200,8 @@ public class BoardEditView
 
 			g.setColor(Color.black);
 			Border b = new SoftBevelBorder(BevelBorder.RAISED);
-			Point p0 = origin(PAWN,0,false);
-			b.paintBorder(this,g, p0.x-2, p0.y-2,
+			Point2D p0 = origin(PAWN,0,false);
+			b.paintBorder(this,g, (int)p0.getX()-2, (int)p0.getY()-2,
 					2*devSquareSize+4,6*devSquareSize+4);
 
 			for (int pc = PAWN; pc <= KING; pc++) {
@@ -230,13 +230,13 @@ public class BoardEditView
 			super.set(g,piece,square);
 	}
 
-	public int findSquare(int x, int y, boolean userSpace)
+	public int findSquare(double x, double y, boolean userSpace)
 	{
-		int squareSize = userSpace ? userSquareSize : devSquareSize;
-		Point p0 = origin(PAWN,0,userSpace);
-		if (x >= p0.x && y >= p0.y) {
-			int pc = PAWN+(y-p0.y)/squareSize;
-			int col = (x-p0.x)/squareSize;
+		double squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point2D p0 = origin(PAWN,0,userSpace);
+		if (x >= p0.getX() && y >= p0.getY()) {
+			int pc = PAWN + (int)((y-p0.getY())/squareSize);
+			int col = (int)((x-p0.getX())/squareSize);
 
 			if ((pc>=PAWN) && (pc<=KING) && (col>=0) && (col<=1))
 				return EngUtil.square(pc,col);
@@ -248,19 +248,19 @@ public class BoardEditView
 		return result;
 	}
 
-	protected Point origin(int file, int row, boolean userSpace)
+	protected Point2D origin(int file, int row, boolean userSpace)
 	{
-		int squareSize = userSpace ? userSquareSize : devSquareSize;
-		Point inset = userSpace ? userInset : devInset;
+		double squareSize = userSpace ? userSquareSize : devSquareSize;
+		Point2D inset = userSpace ? userInset : devInset;
 
 		switch (row) {
 		case 0:
 				if ((file==0) || (file>KING))
-					return new Point(-squareSize,-squareSize);
+					return new Point2D.Double(-squareSize,-squareSize);
 				else
-					return new Point(inset.x+8*squareSize+24, inset.y+(file-PAWN)*squareSize);
+					return new Point2D.Double(inset.getX()+8*squareSize+24, inset.getY()+(file-PAWN)*squareSize);
 		case 1:
-				return new Point(inset.x+9*squareSize+24, inset.y+(file-PAWN)*squareSize);
+				return new Point2D.Double(inset.getX()+9*squareSize+24, inset.getY()+(file-PAWN)*squareSize);
 		default:
 				return super.origin(file,row,userSpace);
 		}

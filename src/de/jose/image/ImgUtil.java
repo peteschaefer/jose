@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.image.*;
@@ -55,6 +56,8 @@ public class ImgUtil
 	{
 		return (red+green+blue) <= (3*thresh);
 	}
+
+	public static final AffineTransform IDENTITY = new AffineTransform();
 
 	public static final boolean isDark(BufferedImage img)
 	{

@@ -18,8 +18,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+
+import static de.jose.image.ImgUtil.IDENTITY;
 
 public class Sprite
 		implements ActionListener
@@ -106,7 +109,7 @@ public class Sprite
 		paint(current.x, current.y, screeng);
 	}
 
-	public final void paint(Graphics g)
+	public final void paint(Graphics2D g)
 	{
 		paint(current.x, current.y, g);
 	}
@@ -135,7 +138,7 @@ public class Sprite
 		paint(x,y,screeng);
 	}
 
-	public void paint(int x, int y, Graphics g)
+	public void paint(int x, int y, Graphics2D g)
 	{
 		//	restore background to buffer
 		Rectangle r = getBounds(x,y);
@@ -144,7 +147,13 @@ public class Sprite
 		//	paint sprite into buffer
 		ImgUtil.copy(theSprite, bufferg);
 		//	show buffer on screen
-		ImgUtil.copy(theBuffer, 0,0, g, r.x,r.y, r.width,r.height);
+		AffineTransform save_tf = g.getTransform();
+		try {
+			g.setTransform(IDENTITY);
+			ImgUtil.copy(theBuffer, 0,0, g, r.x,r.y, r.width,r.height);
+		} finally {
+			g.setTransform(save_tf);
+		}
 	}
 
 	public void updateBuffer()
@@ -158,7 +167,14 @@ public class Sprite
 	public void hide()
 	{
 		Rectangle r = getBounds(current.x,current.y);
-		ImgUtil.copy(theBackground, r.x, r.y, screeng, r.x, r.y, r.width, r.height);
+		//	todo reset g.transform
+		AffineTransform save_tf = screeng.getTransform();
+		try {
+			screeng.setTransform(IDENTITY);
+			ImgUtil.copy(theBackground, r.x, r.y, screeng, r.x, r.y, r.width, r.height);
+		} finally {
+			screeng.setTransform(save_tf);
+		}
 	}
 
 	public boolean moveTo(int x, int y)
@@ -177,25 +193,32 @@ public class Sprite
 
 		paint(current.x = x, current.y = y);
 
-		r1.x += offset.x;
-		r1.y += offset.y;
-		r1.width = Math.min(r1.width, screenBounds.width-r1.x);
-		r1.height = Math.min(r1.height, screenBounds.height-r1.y);
-		if (r1.width > 0 && r1.height > 0)
-			ImgUtil.copy(theBackground, r1.x,r1.y,
-					screeng, r1.x,r1.y,
-					r1.width,r1.height);
-		//screeng.drawRect(r1.x,r1.y,r1.width,r1.height);
-		//System.out.println(r1.x+","+r1.y+","+r1.width+","+r1.height);
+		AffineTransform save_tf = screeng.getTransform();
+		try {
+			screeng.setTransform(IDENTITY);
 
-		r2.x += offset.x;
-		r2.y += offset.y;
-		r2.width = Math.min(r2.width,screenBounds.width-r2.x);
-		r2.height = Math.min(r2.height,screenBounds.height-r2.y);
-		if (r2.width > 0 && r2.height > 0)
-			ImgUtil.copy(theBackground, r2.x,r2.y,
-					screeng, r2.x,r2.y,
-					r2.width,r2.height);
+			r1.x += offset.x;
+			r1.y += offset.y;
+			r1.width = Math.min(r1.width, screenBounds.width - r1.x);
+			r1.height = Math.min(r1.height, screenBounds.height - r1.y);
+			if (r1.width > 0 && r1.height > 0)
+				ImgUtil.copy(theBackground, r1.x, r1.y,
+						screeng, r1.x, r1.y,
+						r1.width, r1.height);
+			//screeng.drawRect(r1.x,r1.y,r1.width,r1.height);
+			//System.out.println(r1.x+","+r1.y+","+r1.width+","+r1.height);
+
+			r2.x += offset.x;
+			r2.y += offset.y;
+			r2.width = Math.min(r2.width, screenBounds.width - r2.x);
+			r2.height = Math.min(r2.height, screenBounds.height - r2.y);
+			if (r2.width > 0 && r2.height > 0)
+				ImgUtil.copy(theBackground, r2.x, r2.y,
+						screeng, r2.x, r2.y,
+						r2.width, r2.height);
+		} finally {
+			screeng.setTransform(save_tf);
+		}
 		//screeng.drawRect(r2.x,r2.y,r2.width,r2.height);
 		//System.out.println(r2.x+","+r2.y+","+r2.width+","+r2.height);
 		return true;
