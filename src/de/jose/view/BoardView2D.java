@@ -49,6 +49,7 @@ import java.awt.Graphics2D;
 
 import static de.jose.Application.AppMode.*;
 import static de.jose.Application.PlayState.BOOK;
+import static de.jose.image.Surface.COLOR;
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class BoardView2D
@@ -1078,6 +1079,7 @@ public class BoardView2D
 		char[] c = new char[2];
 		int fontSize = (int) (devSquareSize * 0.3f);
 		Font f = new Font("SansSerif", Font.PLAIN, fontSize);
+		//Font f = fontAwesome.deriveFont(Font.PLAIN, fontSize);
 		g.setFont(f);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -1205,28 +1207,35 @@ public class BoardView2D
 		if (blackIcon != 0 || whiteIcon != 0)
 		{
 			float fontSize = wid*0.75f;//devSquareSize * 0.2f;
-			Font font = fontAwesome.deriveFont(Font.PLAIN,fontSize);
-			FontMetrics fm = g.getFontMetrics(font);
-
-			g.setFont(font);
-			g.setColor(Color.lightGray);
 
 			int x3 = x2+gap+wid/2;
 			int y1 = y0+wid/2;
 			int y3 = y2-wid/2;
 
 			if (blackIcon != 0)
-				drawCentered(g, blackIcon, x3, flipped ? y3:y1, fm);
+				drawCentered(g, blackIcon, false, x3, flipped ? y3:y1, (int)fontSize);
 			if (whiteIcon != 0)
-				drawCentered(g, whiteIcon, x3, flipped ? y1:y3, fm);
+				drawCentered(g, whiteIcon, true, x3, flipped ? y1:y3, (int)fontSize);
 		}
 	}
 
-	protected void drawCentered(Graphics2D g2, char c, int xc, int yc, FontMetrics fm)
+	static final Surface light = new Surface(COLOR,Color.lightGray,null);
+	static final Surface dark = new Surface(COLOR,Color.darkGray,null);
+
+	protected void drawCentered(Graphics2D g2, char c, boolean whiteOnBlack, int xc, int yc, int fontSize)
 	{
 		String s = Character.toString(c);
-		Rectangle2D r = fm.getStringBounds(s,g2);
-		g2.drawString(s, (int)(xc-r.getWidth()/2), (int)(yc+r.getHeight()/2));
+        BufferedImage img = null;
+        try {
+            img = FontCapture.getImage(fontAwesome.getFontName(), fontSize, s,
+					whiteOnBlack ? light:dark,
+					whiteOnBlack ? dark:light,
+					null, false );
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        g2.drawImage(img, xc-img.getWidth()/2, yc-img.getHeight()/2,
+				img.getWidth(), img.getHeight(),null);
 	}
 
 	//	Unicode points for font-awesome characters
@@ -1238,14 +1247,17 @@ public class BoardView2D
 	public static ImageIcon getFontAwesomeIcon(char c, float size, Color color)
 	{
 		BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
-		Graphics g = buffer.getGraphics();
+		Graphics2D g = (Graphics2D) buffer.getGraphics();
+
 		Font font = fontAwesome.deriveFont(Font.PLAIN,size);
 		FontMetrics fm = g.getFontMetrics(font);
 		String s = Character.toString(c);
 		Rectangle2D bounds = fm.getStringBounds(s,g);
 
 		buffer = new BufferedImage((int)bounds.getWidth(),(int)bounds.getHeight(),TYPE_INT_ARGB);
-		g = buffer.getGraphics();
+		g = (Graphics2D) buffer.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font);
 		g.setColor(color);
 		g.drawString(s,0, buffer.getHeight()-fm.getDescent());
@@ -1279,9 +1291,10 @@ public class BoardView2D
 		int moveColor = Application.theApplication.theGame.getPosition().movesNext();
 		int engineColor=0;
 		boolean inBook = false;
-		if (Application.theApplication.thePlayState==BOOK) {
+		if (Util.allOf(eval.flags,Score.EVAL_GAME_COUNT))
+			inBook = true;	//	unfortunately, this info is not persisted
+		if (Application.theApplication.thePlayState==BOOK)
 			inBook = true;	//	book query in progress
-		}
 		else {
 			EnginePanel eng = Application.theApplication.enginePanel();
 			if (eng != null)
