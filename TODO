@@ -39,19 +39,19 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 [x] FlatLaf
     [x] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
     [ ] System/Custom option, Theme Editor button
-    [ ] F9 layout, Chessnut
+    [x] F9 layout, Chessnut
     [x] F9 Board / Notation -> Appearance
     [x] tool button Annotations
     [x] pack WinUtils.dll
-    [ ] more flexible pastellizing
+    [x] more flexible pastellizing
     [x] re-dock toolbar
         [x] wire menu events
         [x] docking targets shifted? contentPane()!
     [x] popup window out of screen (Windows only?)
         [x] write mode
         [x] promotion
-    [ ] export dialog, spurios 'false' label
-    [ ] always embed TTF into PDF
+    [x] export dialog, spurios 'false' label
+    [x] always embed TTF into PDF
     [x] apply Selection Color on Linux
     [?] bug TextPaneUI: jagged selection
     [?] wdl label height; adjust to font

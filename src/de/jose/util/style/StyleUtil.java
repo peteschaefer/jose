@@ -301,7 +301,7 @@ public class StyleUtil
         }
     }
 
-    public static Color mapDarkIconColor(Color acol)
+    public static Color mapDarkIconColor(Color acol, float pastel)
     {
         if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
             //  grey colors get inverted
@@ -309,7 +309,7 @@ public class StyleUtil
             return new Color(red,red,red);
         }
         else {
-           return pastelize(acol,0.5f);
+           return pastelize(acol,pastel);
         }
     }
 

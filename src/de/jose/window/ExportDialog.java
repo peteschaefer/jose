@@ -716,13 +716,13 @@ public class ExportDialog
 		 //  create images & css NOW
 		add(exportOptions, newButton("xsl.create.images"), gridConstraint(ELEMENT_TWO_SMALL,1,6,3));
 
-		add(exportOptions,newLabel(""),ELEMENT_REMAINDER);
+		add(exportOptions,newLabel(" "),ELEMENT_REMAINDER);
 	}
 
 	protected void createFOPanel()
 	{
-		//  embed fonts in PDF
-		add(exportOptions, newCheckBox("xsl.pdf.embed"), gridConstraint(ELEMENT_TWO_SMALL,1,1,3));
+		//  embed fonts in PDF. @deprecated. ALWAYS true
+		//add(exportOptions, newCheckBox("xsl.pdf.embed"), gridConstraint(ELEMENT_TWO_SMALL,1,1,3));
 		//  additional font path (optional)
 /*
 		FileInput dirInput = newFileInputField("xsl.pdf.font.dir");
@@ -732,7 +732,7 @@ public class ExportDialog
 		add(exportOptions,dirInput, gridConstraint(ELEMENT_TWO,1,2,3));    		//  image & css directory (optional)
 */
 
-		add(exportOptions,newLabel(""),ELEMENT_REMAINDER);
+		add(exportOptions,newLabel(" "),ELEMENT_REMAINDER);
 	}
 
 	protected JFileChooser getFileChooser(boolean embedded)

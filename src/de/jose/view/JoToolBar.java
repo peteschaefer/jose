@@ -366,7 +366,7 @@ public class JoToolBar
 	public static void makeDarkIcons(Icon[] icons) {
 		for(Icon icon : icons)
 			if (icon!=null)
-				makeDarkIcon(icon);
+				makeDarkIcon(icon,0.5f);
 	}
 
 
@@ -395,15 +395,15 @@ public class JoToolBar
 		makeDarkIcons(icons);
 	}
 
-	public static void makeDarkIcon(Icon icon) {
+	public static void makeDarkIcon(Icon icon, float pastel) {
 		if (icon instanceof TextIcon) {
 			TextIcon textIcon = (TextIcon)icon;
-			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor()) );
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor(),pastel) );
 		}
 		if (icon instanceof TextShapeIcon) {
 			TextShapeIcon textIcon = (TextShapeIcon)icon;
-			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor()) );
-			textIcon.setBackgroundColor( StyleUtil.mapDarkIconColor(textIcon.getBackgroundColor()) );
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor(),pastel) );
+			textIcon.setBackgroundColor( StyleUtil.mapDarkIconColor(textIcon.getBackgroundColor(),pastel) );
 		}
 	}
 
@@ -421,11 +421,11 @@ public class JoToolBar
 
 		if (dark) {
 			//	high contrast colors!
-			spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0)));
+			spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0),0.3f));
 			if (spec.colors.size() < 2)
 				spec.colors.add(Color.darkGray);
 			else
-				spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1)));
+				spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1),0.3f));
 		}
 		else {
 			if (spec.colors.size() < 2)

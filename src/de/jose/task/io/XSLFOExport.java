@@ -76,7 +76,9 @@ public class XSLFOExport
 		try {
 
 			File xslFile = ExportConfig.getFile(context.config);
-			boolean embed_fonts = context.profile.getBoolean("xsl.pdf.embed",true);
+			boolean embed_fonts = true;
+			//	there is no reason to disable it. We set it ALWAYS.
+			//context.profile.getBoolean("xsl.pdf.embed",true);
 
 			result = process(source, xslFile, outputStream,
 			        fileName,
