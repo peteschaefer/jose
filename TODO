@@ -36,6 +36,32 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [ ] db: expected data on row ?
 
+[ ] https://www.formdev.com/flatlaf is a must-have!
+    - great modern l&f
+    - embedded menu bar
+    - tab title
+    - dark mode
+    - file chooser
+
+[ ] Undo
+    which operations need to be recorded; and on which level of detail ?
+
+    [ ] Insert 1 Node
+        Move,Tag,Annotation,Line
+    [ ] Erase 1 Node
+    [ ] Cut line (store suffix)
+    [ ] Promote line (store reference, easy to undo)
+
+    [ ] Text insert in comment
+        -> conflate adjacent edits into one Entry
+    [ ] Text delete in comment
+        -> conflate adjacent edits into one Entry
+    -> start a new entry when switching from insert to delete; when jumping
+
+    [ ] Cut/Paste/Delete
+        - when affecting multiple nodes
+        - record edits in list
+
 
 
 ==== Project
@@ -97,38 +123,6 @@ Alternative JREs:
 * double buffering still needed ? (probably)
 
 ==== Interesting New Features
-
-* nicer annotation palette
-    [-] most recent list
-
-* font awesome icons
-    [x] <toolbar> <item icon="unicode;color;color">
-        unicode = font awesome code point
-        color = normal color, hilited color; disable color = light gray
-        with button ("nav") frame
-     [x]fall back 1: images/nav (already existing)
-     [x]fall back 2: <menu><item icon>  (reference needs to be found)
-     [x]fall back 3: images/menu (already existing)
-    [x] <menu> <item icon="unicode;color"> optional
-    [x] animation dialog
-    [x] print preview icon (awesome print = \uf02f)
-    search for ImgUtil.getMenuIcon:
-    [-] PrintPreview
-    [x] ExportDialog
-    [ ] FileInput
-
-* Undo. It's complicated...
-    * CommandAction has tentative support for undo. But, CommandAction is used as a general communication mechanism
-        and most Actions are not meant for Undo. Those that are (Cut/Copy/Paste) are too coarse-grained.
-    * CommandActions for DB operations can be made undoable (move to/from Clipboard,Trash,...)
-    * For text operations we need more fine-grained control. Record Game DOM modifications
-      - insert/remove Node
-      - cut line
-      - swap lines (easy to undo)
-      - edit node text (comment, tag text, annotation?)
-      - what else?
-    * Game.startRecording(), endRecording().
-    * maybe use UndoManager and UndoableEdit
 
 * RFT export? currently possible via copy/paste.
   - fop 0.20 does not support it
