@@ -56,6 +56,7 @@ public class ComboNag
     //  [136..139] w/b has moderate/severe time control pressure
     protected static ComboNag timecontrol   = new ComboNag(136,"has", moderate, "time control pressure" );
 
+    //  [14..139]
     public static ComboNag[] ALL = {
             advantage1, zugzwang, spaceadv, timeadv, initiative,
             attack, compensation, control, rank, king, pawns, placement,

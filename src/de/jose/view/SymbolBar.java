@@ -61,8 +61,15 @@ import java.util.Map;
  *
  *  [190..195] etc. double pawns, isolated pawns, connected pawns
  *
- *  --- "composable" nags ---
+ *  [201] Diagram
+ *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
+ *
+ *   = [1..13] [140..163] [190..195] [201][250]
+ *   = 43 nags. present in table
+ *
+ *  --- [14..139] "composable" nags ---
  *  --- how should we present them? with an array of combo boxes? ---
+ *  --- see class ComboNag ---
  *
  *  [14..21] white/black has a slight/moderate/decisive/crushing advantage
  *  [22..23] white/black is in Zugzwang
