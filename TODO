@@ -8,19 +8,36 @@
 
 ==== Project
 
+[ ] bug: hang on start
+    -> branch mysql-launch
+    * trigger dependent actions by ActionEvent
+    * listen for startup on std i/o
+
+[ ] bug: diacritics lost on save
+[ ] suggestion arrow updates
+
 1.5.1: move on to 64-bit land
 
 [x] compile against jdk 1.8
+[ ] run with Oracle 21 x64
+    [x] hidpi
+    [x] touch & drag
+    [x] Java3D 1.5
+    [ ] JavaLauncher (todo fix nOptions=0)
+
 [ ] run with JBR 21 x64
     [x] Windows
         [-] checkout JoFileChooser with Window l+f
     [x] Linux
     [ ] Mac Intel
     [ ] Mac arm
-[ ] fixes hi-dpi issues
+    [ ] bug: touch+drag not detected
+[ ] run with Azul Zulu 21
+    [x] touch & drag
+[x] fixes hi-dpi issues
     [x] dialogs
     [x] 2d board
-    [ ] 3d board (todo: fix mouse arithmetics)
+    [x] 3d board (todo: fix mouse arithmetics)
 [ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
