@@ -59,7 +59,7 @@
 				<br/><hr/><br/>
 			</xsl:for-each>
 
-			<center class="body_comment_4">created with <a href="http://jose-chess.sourceforge.net">jose-chess.sourceforge.net</a></center>
+			<center class="body_comment_4">created with <a href="http://hrimfaxi.bitbucket.io/jose">jose Chess</a></center>
 
 		</body>
 	</html>
