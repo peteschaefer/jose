@@ -354,13 +354,9 @@ outerloop:
 
     private boolean hasPseudoLegalMove(Position pos, int a, int b)
     {
-        MoveIterator moves = new MoveIterator(pos);
-        while(moves.next()) {
-            Move mv = moves.getMove();
-            if(mv.from==a && mv.to==b || mv.from==b && mv.to==a)
-                return true;
-        }
-        return false;
+        Move mv1 = new Move(a,b);
+        Move mv2 = new Move(b,a);
+        return pos.prepareMove(mv1) || pos.prepareMove(mv2);
     }
 
     private boolean guessUndone(BoardState st, Move m)
