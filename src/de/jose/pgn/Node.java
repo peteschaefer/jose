@@ -372,6 +372,9 @@ abstract public class Node
 		}
 	}
 
+	public String getToolTipText() {
+		return null;
+	}
 	
 	protected void setParent(LineNode line)				{ parentLine = line; }
 	protected final void setNext(Node node)				{ nextNode = node; }

@@ -1191,7 +1191,7 @@ pgn.nag.8.tip = egy lehetõség (nincs más értelmes lépés)
 pgn.nag.9 = a legrosszabb lépés
 pgn.nag.10.tip = döntetlen állás
 pgn.nag.11.tip = egyenlõ esélyek, nyugodt állás
-pgn.nag.12 = egyenlõ esélyek, élénk állás
+pgn.nag.12.tip = egyenlõ esélyek, élénk állás
 pgn.nag.13 = bizonytalan
 pgn.nag.13.tip = bizonytalan állás
 pgn.nag.14 = + =

@@ -1221,7 +1221,7 @@ pgn.nag.10      = =
 pgn.nag.10.tip   = remiartad position
 pgn.nag.11      = =
 pgn.nag.11.tip   = lika chancer, stilla position
-pgn.nag.12   = lika chancer, aktiv position
+pgn.nag.12.tip   = lika chancer, aktiv position
 pgn.nag.13   = oklar
 pgn.nag.13.tip   = oklar position
 pgn.nag.14	= +=

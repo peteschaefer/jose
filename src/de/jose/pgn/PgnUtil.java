@@ -162,9 +162,19 @@ public class PgnUtil
         return language.get1("pgn.nag."+code,null);
     }
 
+	public static final String annotationTip(int code, Language language)
+	{
+		return language.get1("pgn.nag."+code+".tip",null);
+	}
+
 	public static final String annotationString(int code)
 	{
 		return annotationString(code, Language.theLanguage);
+	}
+
+	public static final String annotationTip(int code)
+	{
+		return annotationTip(code, Language.theLanguage);
 	}
 
 	public static final int annotationCode(String text, Language language)

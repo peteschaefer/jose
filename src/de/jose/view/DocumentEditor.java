@@ -33,6 +33,7 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
@@ -145,6 +146,7 @@ public class DocumentEditor
         }
 
         setupActions();
+		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
 	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException
@@ -650,6 +652,19 @@ public class DocumentEditor
             caretListen = true;
         }
     }
+
+	@Override
+	public String getToolTipText(MouseEvent event)
+	{
+		if (theGame==null) return null;
+
+		int p = viewToModel2D(event.getPoint());
+		Node n = theGame.findNode(p);
+		if (n==null)
+			return null;
+		else
+			return n.getToolTipText();
+	}
 
 	protected void doReplaceNode(Node node1, DocUpdate d, int padding)
 	        throws BadLocationException

@@ -1236,7 +1236,7 @@ pgn.nag.10      = =
 pgn.nag.10.tip  = pozycja remisowa
 pgn.nag.11      = =
 pgn.nag.11.tip  = wyrównane szanse, bierna pozycja
-pgn.nag.12   = wyrównane szanse, aktywna pozycja
+pgn.nag.12.tip   = wyrównane szanse, aktywna pozycja
 pgn.nag.13   = niejasne
 pgn.nag.13.tip   = niejasna pozycja
 pgn.nag.14	= +=

@@ -6,6 +6,7 @@ import de.jose.Language;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 
+import javax.help.HelpSet;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -181,6 +182,13 @@ public class ComboNag
     {
         PrintWriter out = new PrintWriter("doc/annotations.pgn");
         out.println("[Event \"a list of all available annotation glyphs (NAG)\"]");
+        out.println("[Site \"font design by Armando H. Marroquin\"]");
+        out.println();
+        out.println("{ Please note that some mappings from NAG codes to symbols are... <br>");
+        out.println("  (1) ambiguous: similar codes may share the same symbol <br>");
+        out.println("  (2) incomplete: some codes are not associated with a symbol and print as $. Put the mouse over the symbol to reveal its intention. <br> ");
+        out.println("  (3) not perfectly standardized: codes from 140 upwards may be interpreted differently by other software. <br><br> ");
+        out.println("      Annotation symbols can be entered as text (!?, +-), from the Annotations toolbox, or simply by typing a code number ($123). <br> }");
         out.println();
 
         FontEncoding fontEncoding = FontEncoding.getEncoding(UserProfile.getFactorySymbolFont());
@@ -191,20 +199,18 @@ public class ComboNag
             if (text==null) continue;
 
             String tip = Language.get("pgn.nag." + nag + ".tip", null);
-            if (symbol == null && text.length() > 4) {
-                text = tip = null;
-                // jose will use text instead of symbol, anyway
-            }
 
             out.print("{<br> $");
             out.print(nag);
             out.print(" } $");
             out.print(nag);
             out.print(" { ");
-            if (text!=null) out.print(text);
-            if (text!=null && tip!=null)
-                out.print(", ");
-            if (tip!=null) out.print(tip);
+
+            if (tip!=null)
+                out.print(tip);
+            else
+                out.print(text);
+
             out.println("}\n");
         }
         out.println();

@@ -1109,7 +1109,7 @@ pgn.nag.8.tip    = coup unique (pas d'alternatives raisonables)
 pgn.nag.9    = le plus mauvais coup
 pgn.nag.10.tip   = position nulle
 pgn.nag.11.tip   = chances égales, position tranquille
-pgn.nag.12   = chances égales, position dynamique
+pgn.nag.12.tip   = chances égales, position dynamique
 pgn.nag.13   = pas clair
 pgn.nag.13.tip   = position peu claire
 pgn.nag.14	= +=

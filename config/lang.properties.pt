@@ -1196,7 +1196,7 @@ pgn.nag.8.tip    = jogada única (não há alternativas razoáveis)
 pgn.nag.9    = pior jogada
 pgn.nag.10.tip   = posição em empate
 pgn.nag.11.tip   = chances iguais, posição calma
-pgn.nag.12   = chances iguais, posição ativa
+pgn.nag.12.tip   = chances iguais, posição ativa
 pgn.nag.13   = obscuro
 pgn.nag.13.tip   = posição obscura
 pgn.nag.14	= +=

@@ -63,10 +63,10 @@
 						<xsl:value-of select="chr"/><xsl:text>.png</xsl:text>
 					</xsl:attribute>
 					<xsl:attribute name="alt">
-						<xsl:value-of select="text"/>
+						<xsl:value-of select="alt"/>
 					</xsl:attribute>
 					<xsl:attribute name="title">
-						<xsl:value-of select="text"/>
+						<xsl:value-of select="alt"/>
 					</xsl:attribute>
 				</img>
 			</xsl:when>

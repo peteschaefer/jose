@@ -100,9 +100,22 @@ public class AnnotationNode
 			StyleConstants.setItalic(symTextStyle, StyleConstants.isItalic(symStyle));
 
 			text = toString();
+			if (text.length() > 4) //	longish texts are replaced by a placeholder
+				text = "$";
 			doc.insertString(at, text, symTextStyle);
 		}
 		setLength(text.length()+1);
+	}
+
+	@Override
+	public String getToolTipText() {
+		if (code ==0)
+			return null;
+		String s = PgnUtil.annotationTip(code);
+		if (s!=null)
+			return s;
+		s = PgnUtil.annotationString(code);
+		return s;
 	}
 
 	public void replace(StyledDocument doc, int newCode)
@@ -169,7 +182,11 @@ public class AnnotationNode
 				handler.element("sym", symText);
 				handler.element("chr", Integer.toHexString(symText.charAt(0)));
 			}
-			handler.element("text",plainText);
+			if (plainText.length() > 4)
+				handler.element("text","$");
+			else
+				handler.element("text",plainText);
+			handler.element("alt",plainText);
 		handler.endElement("a");
 	}
  }

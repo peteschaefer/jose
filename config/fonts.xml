@@ -133,21 +133,22 @@
 		<FONT name="FigurineSymbol T3"/>
 		<!--CHARS bg="fig"> \u00A7\u00A4\u00A5\u00A6\u00A3\u00A2 todo wrong </CHARS -->
 		<SYM nag="40,41"> \uc7 </SYM><!-- with attack -->
-		<SYM nag="36,37"> \uc9 </SYM><!-- with initiave -->
-		<SYM nag="132-135"> \ud1 </SYM><!-- with counterplay -->
+		<SYM nag="36-39"> \uc9 </SYM><!-- with initiave -->
+		<SYM nag="130-135"> \ud1 </SYM><!-- with counterplay -->
 		<SYM nag="140"> \ud6 </SYM><!-- with the idea -->
 		<SYM nag="141"> \ud7 </SYM><!-- against -->
 		<SYM nag="24-29"> \udc </SYM><!-- greater board room -->
 		<SYM nag="22,23"> \ue1 </SYM><!-- zugzwang -->
-		<SYM nag="32-35"> \ue2 </SYM><!-- development advantage -->
+		<SYM nag="30-35"> \ue2 </SYM><!-- development advantage -->
 		<SYM nag="149,162"> \ueb </SYM><!-- file todo what's the proper NAG ?? -->
 		<SYM nag="150"> \ued </SYM><!-- diagonal -->
 		<SYM nag="136-139"> \uec </SYM><!-- time pressure -->
 		<SYM nag="48-53"> \uee </SYM><!-- center -->
 		<!--SYM nag="163"> \ud6 </SYM--><!-- rank todo is NAG 163 defined ?? -->
 		<SYM nag="161"> \uf3 </SYM><!-- see -->
-		<SYM nag="7,8,9"> \uf4 </SYM><!-- only move -->
-		<!-- todo fix colors for 40-47 -->
+		<SYM nag="7,8"> \uf4 </SYM><!-- only move -->
+		<SYM nag="9"> \ufa </SYM><!-- worst move -->
+
 		<SYM nag="42,44,46"> \u221e  </SYM><!-- with compensation for the material -->
 		<SYM nag="43,45,47"> \ua9  </SYM><!-- with compensation for the material -->
 		<SYM nag="158"> \u2122 </SYM><!-- with -->
@@ -165,7 +166,7 @@
 		<SYM nag="13"> \u2dc </SYM><!-- unclear(infinity) -->
 		<SYM nag="156"> \u2db </SYM><!-- passed pawn -->
 		<!--SYM nag="157"> \ufb02 </SYM> pawn majority -->
-		<SYM nag="126,127,148"> \u2c7 </SYM><!-- ending -->
+		<SYM nag="126-129,148"> \u2c7 </SYM><!-- ending -->
 		<!--SYM nag="142"> \ue1 </SYM>- is better (greater or equal) -->
 		<SYM nag="143"> \ue3 </SYM><!-- worse is (smaller or equal) -->
 		<SYM nag="147"> \u78 </SYM><!-- worse is (smaller or equal) -->

@@ -111,6 +111,15 @@
 	}
 	
 	
+	.body_symbol_text {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #990099;
+	}
+	
+	
 	.body_line_1 {
 		font-family: Arial;
 		font-size: 12pt;
@@ -205,9 +214,9 @@
 	.body_symbol {
 		font-family: "FigurineSymbol S2";
 		font-size: 16pt;
-		font-weight: normal;
+		font-weight: bold;
 		font-style: normal;
-		color: #000000;
+		color: #990099;
 	}
 	
 	
@@ -216,7 +225,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -225,7 +234,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -234,7 +243,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -243,7 +252,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -252,7 +261,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -261,7 +270,7 @@
 		font-size: 10pt;
 		font-weight: normal;
 		font-style: normal;
-		color: #000099;
+		color: #666666;
 	}
 	
 	
@@ -304,55 +313,66 @@
 			</style>
     </head>
     <body>
-        <font class="header"><font class="header_event">a list of all available annotation glyphs (NAG)</font>
+        <font class="header"><font class="header_event">a list of all available annotation glyphs (NAG), </font><font class="header_site">font design by Armando H. Marroquin</font>
             <br>
             <br>
         </font><font class="body"><font class="body_line"><font class="body_line_0">
-<font class="body_comment_0"> 
+<font class="body_comment_0"> Please note that some mappings from NAG codes to symbols are...
                         <br>
-                        $0 </font>$<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        (1) ambiguous: similar codes may share the same symbol
                         <br>
-                        $1 </font>!<font class="body_comment_0">  !, good move </font><font class="body_comment_0"> 
+                        (2) incomplete: some codes are not associated with a symbol and print as text.
                         <br>
-                        $2 </font>?<font class="body_comment_0">  ?, poor move </font><font class="body_comment_0"> 
+                        (3) not perfectly standardized: codes from 140 upwards may be interpreted differently by other software.
                         <br>
-                        $3 </font>!!<font class="body_comment_0">  !!, very good move </font><font class="body_comment_0"> 
                         <br>
-                        $4 </font>??<font class="body_comment_0">  ??, very poor move </font><font class="body_comment_0"> 
+                        Annotation symbols can be entered as text (!?, +-), from the Annotations toolbox, or simply by typing a code number ($123).
                         <br>
-                        $5 </font>!?<font class="body_comment_0">  !?, interesting move </font><font class="body_comment_0"> 
+                         </font><font class="body_comment_0"> 
                         <br>
-                        $6 </font>?!<font class="body_comment_0">  ?!, questionable move </font><font class="body_comment_0"> 
+                        $0 </font>$<font class="body_comment_0">  null annotation </font><font class="body_comment_0"> 
                         <br>
-                        $7 </font><img border="0" src="./Chess Berlin/16/nag-f4.png" alt="forced move" title="forced move"><font class="body_comment_0">  forced move, forced move (all others lose quickly)  </font><font class="body_comment_0"> 
+                        $1 </font>!<font class="body_comment_0">  good move </font><font class="body_comment_0"> 
                         <br>
-                        $8 </font><img border="0" src="./Chess Berlin/16/nag-f4.png" alt="singular move" title="singular move"><font class="body_comment_0">  singular move, singular move (no reasonable alternatives) </font><font class="body_comment_0"> 
+                        $2 </font>?<font class="body_comment_0">  poor move </font><font class="body_comment_0"> 
+                        <br>
+                        $3 </font>!!<font class="body_comment_0">  very good move </font><font class="body_comment_0"> 
+                        <br>
+                        $4 </font>??<font class="body_comment_0">  very poor move </font><font class="body_comment_0"> 
+                        <br>
+                        $5 </font>!?<font class="body_comment_0">  interesting move </font><font class="body_comment_0"> 
+                        <br>
+                        $6 </font>?!<font class="body_comment_0">  questionable move </font><font class="body_comment_0"> 
+                        <br>
+                        $7 </font><img border="0" src="./Chess Berlin/16/nag-f4.png" alt="forced move" title="forced move"><font class="body_comment_0">  forced move (all others lose quickly)  </font><font class="body_comment_0"> 
+                        <br>
+                        $8 </font><img border="0" src="./Chess Berlin/16/nag-f4.png" alt="singular move" title="singular move"><font class="body_comment_0">  singular move (no reasonable alternatives) </font><font class="body_comment_0"> 
                         <br>
                         $9 </font><img border="0" src="./Chess Berlin/16/nag-f4.png" alt="worst move" title="worst move"><font class="body_comment_0">  worst move </font><font class="body_comment_0"> 
                         <br>
-                        $10 </font>=<font class="body_comment_0">  =, drawish position </font><font class="body_comment_0"> 
+                        $10 </font>=<font class="body_comment_0">  drawish position </font><font class="body_comment_0"> 
                         <br>
-                        $11 </font>=<font class="body_comment_0">  =, equal chances, quiet position </font><font class="body_comment_0"> 
+                        $11 </font>=<font class="body_comment_0">  equal chances, quiet position </font><font class="body_comment_0"> 
                         <br>
-                        $12 </font>equal chances, active position<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $12 </font>=<font class="body_comment_0">  equal chances, active position </font><font class="body_comment_0"> 
                         <br>
-                        $13 </font><img border="0" src="./Chess Berlin/16/nag-2dc.png" alt="unclear" title="unclear"><font class="body_comment_0">  unclear, unclear position </font><font class="body_comment_0"> 
+                        $13 </font><img border="0" src="./Chess Berlin/16/nag-2dc.png" alt="unclear" title="unclear"><font class="body_comment_0">  unclear position </font><font class="body_comment_0"> 
                         <br>
-                        $14 </font><img border="0" src="./Chess Berlin/16/nag-2264.png" alt="+=" title="+="><font class="body_comment_0">  +=, White has a slight advantage </font><font class="body_comment_0"> 
+                        $14 </font><img border="0" src="./Chess Berlin/16/nag-2264.png" alt="+=" title="+="><font class="body_comment_0">  White has a slight advantage </font><font class="body_comment_0"> 
                         <br>
-                        $15 </font><img border="0" src="./Chess Berlin/16/nag-2265.png" alt="=+" title="=+"><font class="body_comment_0">  =+, Black has a slight advantage </font><font class="body_comment_0"> 
+                        $15 </font><img border="0" src="./Chess Berlin/16/nag-2265.png" alt="=+" title="=+"><font class="body_comment_0">  Black has a slight advantage </font><font class="body_comment_0"> 
                         <br>
-                        $16 </font><img border="0" src="./Chess Berlin/16/nag-b1.png" alt="+/-" title="+/-"><font class="body_comment_0">  +/-, White has a moderate advantage </font><font class="body_comment_0"> 
+                        $16 </font><img border="0" src="./Chess Berlin/16/nag-b1.png" alt="+/-" title="+/-"><font class="body_comment_0">  White has a moderate advantage </font><font class="body_comment_0"> 
                         <br>
-                        $17 </font><img border="0" src="./Chess Berlin/16/nag-b5.png" alt="-/+" title="-/+"><font class="body_comment_0">  -/+, Black has a moderate advantage </font><font class="body_comment_0"> 
+                        $17 </font><img border="0" src="./Chess Berlin/16/nag-b5.png" alt="-/+" title="-/+"><font class="body_comment_0">  Black has a moderate advantage </font><font class="body_comment_0"> 
                         <br>
-                        $18 </font>+-<font class="body_comment_0">  +-, White has a decisive advantage </font><font class="body_comment_0"> 
+                        $18 </font>+-<font class="body_comment_0">  White has a decisive advantage </font><font class="body_comment_0"> 
                         <br>
-                        $19 </font>-+<font class="body_comment_0">  -+, Black has a decisive advantage </font><font class="body_comment_0"> 
+                        $19 </font>-+<font class="body_comment_0">  Black has a decisive advantage </font><font class="body_comment_0"> 
                         <br>
-                        $20 </font>White has a crushing advantage (Black should resign)<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $20 </font>$<font class="body_comment_0">  White has a crushing advantage (Black should resign) </font><font class="body_comment_0"> 
                         <br>
-                        $21 </font>Black has a crushing advantage (White should resign)<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $21 </font>$<font class="body_comment_0">  Black has a crushing advantage (White should resign) </font><font class="body_comment_0"> 
                         <br>
                         $22 </font><img border="0" src="./Chess Berlin/16/nag-e1.png" alt="White is in zugzwang" title="White is in zugzwang"><font class="body_comment_0">  White is in zugzwang </font><font class="body_comment_0"> 
                         <br>
@@ -370,9 +390,9 @@
                         <br>
                         $29 </font><img border="0" src="./Chess Berlin/16/nag-dc.png" alt="Black has a decisive space advantage" title="Black has a decisive space advantage"><font class="body_comment_0">  Black has a decisive space advantage </font><font class="body_comment_0"> 
                         <br>
-                        $30 </font>White has a slight time (development) advantage<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $30 </font><img border="0" src="./Chess Berlin/16/nag-e2.png" alt="White has a slight time (development) advantage" title="White has a slight time (development) advantage"><font class="body_comment_0">  White has a slight time (development) advantage </font><font class="body_comment_0"> 
                         <br>
-                        $31 </font>Black has a slight time (development) advantage<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $31 </font><img border="0" src="./Chess Berlin/16/nag-e2.png" alt="Black has a slight time (development) advantage" title="Black has a slight time (development) advantage"><font class="body_comment_0">  Black has a slight time (development) advantage </font><font class="body_comment_0"> 
                         <br>
                         $32 </font><img border="0" src="./Chess Berlin/16/nag-e2.png" alt="White has a moderate time (development) advantage" title="White has a moderate time (development) advantage"><font class="body_comment_0">  White has a moderate time (development) advantage </font><font class="body_comment_0"> 
                         <br>
@@ -386,9 +406,9 @@
                         <br>
                         $37 </font><img border="0" src="./Chess Berlin/16/nag-c9.png" alt="Black has the initiative" title="Black has the initiative"><font class="body_comment_0">  Black has the initiative </font><font class="body_comment_0"> 
                         <br>
-                        $38 </font>White has a lasting initiative<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $38 </font><img border="0" src="./Chess Berlin/16/nag-c9.png" alt="White has a lasting initiative" title="White has a lasting initiative"><font class="body_comment_0">  White has a lasting initiative </font><font class="body_comment_0"> 
                         <br>
-                        $39 </font>Black has a lasting initiative<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $39 </font><img border="0" src="./Chess Berlin/16/nag-c9.png" alt="Black has a lasting initiative" title="Black has a lasting initiative"><font class="body_comment_0">  Black has a lasting initiative </font><font class="body_comment_0"> 
                         <br>
                         $40 </font><img border="0" src="./Chess Berlin/16/nag-c7.png" alt="White has the attack" title="White has the attack"><font class="body_comment_0">  White has the attack </font><font class="body_comment_0"> 
                         <br>
@@ -442,137 +462,137 @@
                         <br>
                         $65 </font><img border="0" src="./Chess Berlin/16/nag-b4.png" alt="Black has a decisive queenside control advantage" title="Black has a decisive queenside control advantage"><font class="body_comment_0">  Black has a decisive queenside control advantage </font><font class="body_comment_0"> 
                         <br>
-                        $66 </font>White has a vulnerable first rank<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $66 </font>$<font class="body_comment_0">  White has a vulnerable first rank </font><font class="body_comment_0"> 
                         <br>
-                        $67 </font>Black has a vulnerable first rank<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $67 </font>$<font class="body_comment_0">  Black has a vulnerable first rank </font><font class="body_comment_0"> 
                         <br>
-                        $68 </font>White has a well protected first rank<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $68 </font>$<font class="body_comment_0">  White has a well protected first rank </font><font class="body_comment_0"> 
                         <br>
-                        $69 </font>Black has a well protected first rank<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $69 </font>$<font class="body_comment_0">  Black has a well protected first rank </font><font class="body_comment_0"> 
                         <br>
-                        $70 </font>White has a poorly protected king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $70 </font>$<font class="body_comment_0">  White has a poorly protected king </font><font class="body_comment_0"> 
                         <br>
-                        $71 </font>Black has a poorly protected king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $71 </font>$<font class="body_comment_0">  Black has a poorly protected king </font><font class="body_comment_0"> 
                         <br>
-                        $72 </font>White has a well protected king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $72 </font>$<font class="body_comment_0">  White has a well protected king </font><font class="body_comment_0"> 
                         <br>
-                        $73 </font>Black has a well protected king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $73 </font>$<font class="body_comment_0">  Black has a well protected king </font><font class="body_comment_0"> 
                         <br>
-                        $74 </font>White has a poorly placed king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $74 </font>$<font class="body_comment_0">  White has a poorly placed king </font><font class="body_comment_0"> 
                         <br>
-                        $75 </font>Black has a poorly placed king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $75 </font>$<font class="body_comment_0">  Black has a poorly placed king </font><font class="body_comment_0"> 
                         <br>
-                        $76 </font>White has a well placed king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $76 </font>$<font class="body_comment_0">  White has a well placed king </font><font class="body_comment_0"> 
                         <br>
-                        $77 </font>Black has a well placed king<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $77 </font>$<font class="body_comment_0">  Black has a well placed king </font><font class="body_comment_0"> 
                         <br>
-                        $78 </font>White has a very weak pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $78 </font>$<font class="body_comment_0">  White has a very weak pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $79 </font>Black has a very weak pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $79 </font>$<font class="body_comment_0">  Black has a very weak pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $80 </font>White has a moderately weak pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $80 </font>$<font class="body_comment_0">  White has a moderately weak pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $81 </font>Black has a moderately weak pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $81 </font>$<font class="body_comment_0">  Black has a moderately weak pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $82 </font>White has a moderately strong pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $82 </font>$<font class="body_comment_0">  White has a moderately strong pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $83 </font>Black has a moderately strong pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $83 </font>$<font class="body_comment_0">  Black has a moderately strong pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $84 </font>White has a very strong pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $84 </font>$<font class="body_comment_0">  White has a very strong pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $85 </font>Black has a very strong pawn structure<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $85 </font>$<font class="body_comment_0">  Black has a very strong pawn structure </font><font class="body_comment_0"> 
                         <br>
-                        $86 </font>White has poor knight placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $86 </font>$<font class="body_comment_0">  White has poor knight placement </font><font class="body_comment_0"> 
                         <br>
-                        $87 </font>Black has poor knight placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $87 </font>$<font class="body_comment_0">  Black has poor knight placement </font><font class="body_comment_0"> 
                         <br>
-                        $88 </font>White has good knight placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $88 </font>$<font class="body_comment_0">  White has good knight placement </font><font class="body_comment_0"> 
                         <br>
-                        $89 </font>Black has good knight placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $89 </font>$<font class="body_comment_0">  Black has good knight placement </font><font class="body_comment_0"> 
                         <br>
-                        $90 </font>White has poor bishop placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $90 </font>$<font class="body_comment_0">  White has poor bishop placement </font><font class="body_comment_0"> 
                         <br>
-                        $91 </font>Black has poor bishop placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $91 </font>$<font class="body_comment_0">  Black has poor bishop placement </font><font class="body_comment_0"> 
                         <br>
-                        $92 </font>White has good bishop placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $92 </font>$<font class="body_comment_0">  White has good bishop placement </font><font class="body_comment_0"> 
                         <br>
-                        $93 </font>Black has good bishop placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $93 </font>$<font class="body_comment_0">  Black has good bishop placement </font><font class="body_comment_0"> 
                         <br>
-                        $94 </font>White has poor rook placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $94 </font>$<font class="body_comment_0">  White has poor rook placement </font><font class="body_comment_0"> 
                         <br>
-                        $95 </font>Black has poor rook placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $95 </font>$<font class="body_comment_0">  Black has poor rook placement </font><font class="body_comment_0"> 
                         <br>
-                        $96 </font>White has good rook placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $96 </font>$<font class="body_comment_0">  White has good rook placement </font><font class="body_comment_0"> 
                         <br>
-                        $97 </font>Black has good rook placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $97 </font>$<font class="body_comment_0">  Black has good rook placement </font><font class="body_comment_0"> 
                         <br>
-                        $98 </font>White has poor queen placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $98 </font>$<font class="body_comment_0">  White has poor queen placement </font><font class="body_comment_0"> 
                         <br>
-                        $99 </font>Black has poor queen placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $99 </font>$<font class="body_comment_0">  Black has poor queen placement </font><font class="body_comment_0"> 
                         <br>
-                        $100 </font>White has good queen placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $100 </font>$<font class="body_comment_0">  White has good queen placement </font><font class="body_comment_0"> 
                         <br>
-                        $101 </font>Black has good queen placement<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $101 </font>$<font class="body_comment_0">  Black has good queen placement </font><font class="body_comment_0"> 
                         <br>
-                        $102 </font>White has poor piece coordination<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $102 </font>$<font class="body_comment_0">  White has poor piece coordination </font><font class="body_comment_0"> 
                         <br>
-                        $103 </font>Black has poor piece coordination<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $103 </font>$<font class="body_comment_0">  Black has poor piece coordination </font><font class="body_comment_0"> 
                         <br>
-                        $104 </font>White has good piece coordination<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $104 </font>$<font class="body_comment_0">  White has good piece coordination </font><font class="body_comment_0"> 
                         <br>
-                        $105 </font>Black has good piece coordination<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $105 </font>$<font class="body_comment_0">  Black has good piece coordination </font><font class="body_comment_0"> 
                         <br>
-                        $106 </font>White has played the opening very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $106 </font>$<font class="body_comment_0">  White has played the opening very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $107 </font>Black has played the opening very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $107 </font>$<font class="body_comment_0">  Black has played the opening very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $108 </font>White has played the opening poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $108 </font>$<font class="body_comment_0">  White has played the opening poorly </font><font class="body_comment_0"> 
                         <br>
-                        $109 </font>Black has played the opening poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $109 </font>$<font class="body_comment_0">  Black has played the opening poorly </font><font class="body_comment_0"> 
                         <br>
-                        $110 </font>White has played the opening well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $110 </font>$<font class="body_comment_0">  White has played the opening well </font><font class="body_comment_0"> 
                         <br>
-                        $111 </font>Black has played the opening well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $111 </font>$<font class="body_comment_0">  Black has played the opening well </font><font class="body_comment_0"> 
                         <br>
-                        $112 </font>White has played the opening very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $112 </font>$<font class="body_comment_0">  White has played the opening very well </font><font class="body_comment_0"> 
                         <br>
-                        $113 </font>Black has played the opening very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $113 </font>$<font class="body_comment_0">  Black has played the opening very well </font><font class="body_comment_0"> 
                         <br>
-                        $114 </font>White has played the middlegame very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $114 </font>$<font class="body_comment_0">  White has played the middlegame very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $115 </font>Black has played the middlegame very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $115 </font>$<font class="body_comment_0">  Black has played the middlegame very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $116 </font>White has played the middlegame poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $116 </font>$<font class="body_comment_0">  White has played the middlegame poorly </font><font class="body_comment_0"> 
                         <br>
-                        $117 </font>Black has played the middlegame poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $117 </font>$<font class="body_comment_0">  Black has played the middlegame poorly </font><font class="body_comment_0"> 
                         <br>
-                        $118 </font>White has played the middlegame well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $118 </font>$<font class="body_comment_0">  White has played the middlegame well </font><font class="body_comment_0"> 
                         <br>
-                        $119 </font>Black has played the middlegame well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $119 </font>$<font class="body_comment_0">  Black has played the middlegame well </font><font class="body_comment_0"> 
                         <br>
-                        $120 </font>White has played the middlegame very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $120 </font>$<font class="body_comment_0">  White has played the middlegame very well </font><font class="body_comment_0"> 
                         <br>
-                        $121 </font>Black has played the middlegame very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $121 </font>$<font class="body_comment_0">  Black has played the middlegame very well </font><font class="body_comment_0"> 
                         <br>
-                        $122 </font>White has played the ending very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $122 </font>$<font class="body_comment_0">  White has played the ending very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $123 </font>Black has played the ending very poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $123 </font>$<font class="body_comment_0">  Black has played the ending very poorly </font><font class="body_comment_0"> 
                         <br>
-                        $124 </font>White has played the ending poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $124 </font>$<font class="body_comment_0">  White has played the ending poorly </font><font class="body_comment_0"> 
                         <br>
-                        $125 </font>Black has played the ending poorly<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $125 </font>$<font class="body_comment_0">  Black has played the ending poorly </font><font class="body_comment_0"> 
                         <br>
                         $126 </font><img border="0" src="./Chess Berlin/16/nag-2c7.png" alt="White has played the ending well" title="White has played the ending well"><font class="body_comment_0">  White has played the ending well </font><font class="body_comment_0"> 
                         <br>
                         $127 </font><img border="0" src="./Chess Berlin/16/nag-2c7.png" alt="Black has played the ending well" title="Black has played the ending well"><font class="body_comment_0">  Black has played the ending well </font><font class="body_comment_0"> 
                         <br>
-                        $128 </font>White has played the ending very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $128 </font><img border="0" src="./Chess Berlin/16/nag-2c7.png" alt="White has played the ending very well" title="White has played the ending very well"><font class="body_comment_0">  White has played the ending very well </font><font class="body_comment_0"> 
                         <br>
-                        $129 </font>Black has played the ending very well<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $129 </font><img border="0" src="./Chess Berlin/16/nag-2c7.png" alt="Black has played the ending very well" title="Black has played the ending very well"><font class="body_comment_0">  Black has played the ending very well </font><font class="body_comment_0"> 
                         <br>
-                        $130 </font>White has slight counterplay<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $130 </font><img border="0" src="./Chess Berlin/16/nag-d1.png" alt="White has slight counterplay" title="White has slight counterplay"><font class="body_comment_0">  White has slight counterplay </font><font class="body_comment_0"> 
                         <br>
-                        $131 </font>Black has slight counterplay<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $131 </font><img border="0" src="./Chess Berlin/16/nag-d1.png" alt="Black has slight counterplay" title="Black has slight counterplay"><font class="body_comment_0">  Black has slight counterplay </font><font class="body_comment_0"> 
                         <br>
                         $132 </font><img border="0" src="./Chess Berlin/16/nag-d1.png" alt="White has moderate counterplay" title="White has moderate counterplay"><font class="body_comment_0">  White has moderate counterplay </font><font class="body_comment_0"> 
                         <br>
@@ -598,11 +618,11 @@
                         <br>
                         $143 </font><img border="0" src="./Chess Berlin/16/nag-e3.png" alt="is worse" title="is worse"><font class="body_comment_0">  is worse </font><font class="body_comment_0"> 
                         <br>
-                        $144 </font><img border="0" src="./Chess Berlin/16/nag-2013.png" alt="=" title="="><font class="body_comment_0">  =, is equivalent </font><font class="body_comment_0"> 
+                        $144 </font><img border="0" src="./Chess Berlin/16/nag-2013.png" alt="=" title="="><font class="body_comment_0">  is equivalent </font><font class="body_comment_0"> 
                         <br>
-                        $145 </font>RR<font class="body_comment_0">  RR, editor's remark </font><font class="body_comment_0"> 
+                        $145 </font>RR<font class="body_comment_0">  editor's remark </font><font class="body_comment_0"> 
                         <br>
-                        $146 </font>N<font class="body_comment_0">  N, Novelty </font><font class="body_comment_0"> 
+                        $146 </font>N<font class="body_comment_0">  Novelty </font><font class="body_comment_0"> 
                         <br>
                         $147 </font><img border="0" src="./Chess Berlin/16/nag-78.png" alt="Weak Point" title="Weak Point"><font class="body_comment_0">  Weak Point </font><font class="body_comment_0"> 
                         <br>
@@ -622,7 +642,7 @@
                         <br>
                         $156 </font><img border="0" src="./Chess Berlin/16/nag-2db.png" alt="passed pawn" title="passed pawn"><font class="body_comment_0">  passed pawn </font><font class="body_comment_0"> 
                         <br>
-                        $157 </font>more pawns<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $157 </font>$<font class="body_comment_0">  more pawns </font><font class="body_comment_0"> 
                         <br>
                         $158 </font><img border="0" src="./Chess Berlin/16/nag-2122.png" alt="with" title="with"><font class="body_comment_0">  with </font><font class="body_comment_0"> 
                         <br>
@@ -640,9 +660,9 @@
                         <br>
                         $193 </font><img border="0" src="./Chess Berlin/16/nag-cc.png" alt="connected pawns" title="connected pawns"><font class="body_comment_0">  connected pawns </font><font class="body_comment_0"> 
                         <br>
-                        $194 </font>Hanging pawns<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $194 </font>$<font class="body_comment_0">  Hanging pawns </font><font class="body_comment_0"> 
                         <br>
-                        $195 </font>Backward pawns<font class="body_comment_0">   </font><font class="body_comment_0"> 
+                        $195 </font>$<font class="body_comment_0">  Backward pawns </font><font class="body_comment_0"> 
                         <br>
                         $201 </font><a href="javascript:go(-1)">
                         <table cellspacing="0" cellpadding="0" border="0" class="body_inline">
@@ -677,7 +697,7 @@
                                 <td><img border="0" src="./Chess Berlin/16/brdbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdbr.png"></td>
                             </tr>
                         </table>
-                    </a><font class="body_comment_0">   </font><font class="body_comment_0"> 
+                    </a><font class="body_comment_0">  Diagram </font><font class="body_comment_0"> 
                         <br>
                         $202 </font><img border="0" src="./Chess Berlin/16/nag-7e.png" alt="roughly level" title="roughly level"><font class="body_comment_0">  roughly level </font><font class="body_comment_0"> 
                         <br>
@@ -804,7 +824,7 @@
                                 <td><img border="0" src="./Chess Berlin/16/brdbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdbr.png"></td>
                             </tr>
                         </table>
-                    </a><font class="body_comment_0">   </font></font></font></font>
+                    </a><font class="body_comment_0">  Diagram </font></font></font></font>
         <br>
         <hr>
         <br>

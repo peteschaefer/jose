@@ -1097,7 +1097,7 @@ pgn.nag.8.tip    = Jugada singular (no hi ha alternatives raonables)
 pgn.nag.9    = La pitjor jugada
 pgn.nag.10.tip   = Posició taulífera
 pgn.nag.11.tip   = Igualtat, posició tranquila
-pgn.nag.12   = Igualtat, posició activa
+pgn.nag.12.tip   = Igualtat, posició activa
 pgn.nag.13   = Poc clar
 pgn.nag.13.tip   = Posició poc clara
 pgn.nag.14	= +=

@@ -1259,7 +1259,7 @@ pgn.nag.10      = =
 pgn.nag.10.tip   = Posición de tablas
 pgn.nag.11      = =
 pgn.nag.11.tip   = Chances iguales, posición pasiva
-pgn.nag.12   = Chances iguales, posición activa
+pgn.nag.12.tip   = Chances iguales, posición activa
 pgn.nag.13   = Incierto
 pgn.nag.13.tip   = Posición incierta
 pgn.nag.14	= +=
