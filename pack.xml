@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="jose-deploy" basedir="." default="release">
+<project name="jose-deploy" basedir="." default="windows-jre">
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
@@ -9,19 +9,6 @@
 
 	<property name="target-dir" location="C:/dev/jose/Release/${version}"/>
 	<property name="jre-dir" location="C:/jose/Release/extras"/>
-
-<!--
-	For uploading artifacts to Bitbucket we need an 'app password'
-	username = hrimfaxi
-	app password = ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA
-
-	REST call for uploading a file:
-
-	curl -s -u hrimfaxi -X POST https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads
-			-F files=@database-1700k.jose
-
--->
-
 
 <!--
 	<property name="target-dir" location="/windows/F/jose archive/release/${version}"/>
@@ -179,7 +166,7 @@
 			</zipfileset>
 		</zip>
 	</target>
-
+<!--
 	<target name="crafty-windows">
 		<description> Crafty engine for Windows </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
@@ -307,7 +294,7 @@
 			</zipfileset>
 		</zip>
 	</target>
-
+-->
 	<target name="leela-windows">
 		<description> Leela (Lc0) engine for Windows </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
@@ -334,7 +321,21 @@
 		</zip>
 	</target>
 
-	<!-- Windows w/out JRE -->
+	<target name="stockfish-linux">
+		<description> Stockfish engine for Linux </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="stockfish.xml"/>
+			</zipfileset>
+			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
+				<exclude name="*.exe"/>
+				<exclude name="src"/>
+				<exclude name="wiki"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<!-- Windows w/out JRE
 	<target name="windows-no-jre" depends="init">
 		<description> installation package for windows (not including JRE) </description>
 
@@ -358,16 +359,16 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-<!--
+<! - -
 		<antcall target="crafty-windows">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
--->
+- - >
 
 		<delete dir="${appldir}"/>
 	</target>
-	
+-->
 	<!-- Windows plus JRE -->
 	<target name="windows-jre" depends="init">
 		<description> installation package for windows (including JRE) </description>
@@ -433,6 +434,10 @@
 <!--				<include name="libjunixsocket.so"/>-->
 				<include name="libunixutils.so"/>
 				<include name="libmysqlje.so"/>
+				<include name="libstdc++.so.5"/>
+				<include name="libXi.so.6"/>
+				<include name="libXrender.so.1"/>
+				<include name="libXtst.so.6"/>
 				<!--Java3D-->
 				<include name="j3dcore.jar"/>
 				<include name="libj3dcore-ogl.so"/>
@@ -447,7 +452,7 @@
 	</target>
 
 
-	<!-- Linux w/out JRE -->
+	<!-- Linux w/out JRE - - >
 	<target name="linux">
 		<description> installation package for linux (not including JRE) </description>
 
@@ -463,19 +468,21 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+<! - -
 		<antcall target="toga-linux">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-<!--
+- - >
+<! - -
 		<antcall target="crafty-linux">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
--->
+- - >
 		<delete dir="${appldir}"/>
 	</target>
-	
+-->
 	<!-- Linux plus JRE -->
 	<target name="linux-jre" depends="init">
 		<description> installation package for linux (including JRE) </description>
@@ -492,10 +499,17 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+		<antcall target="stockfish-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+
+		<!--
 		<antcall target="toga-linux">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+-->
 <!--
 		<antcall target="crafty-linux">
 			<param name="zip-file" value="${zip-file}"/>
@@ -550,6 +564,7 @@
 	</target>
 
 	<!-- Mac OS X application bundle -->
+<!--
 	<taskdef name="jarbundler"
 		classname="com.loomcom.ant.tasks.jarbundler.JarBundler" />
 
@@ -570,9 +585,9 @@
 			screenmenu="true"
 			stubfile="JavaApplicationStub"
 			version="1.4.0"/>
-<!--		icon="Jose.icns"-->
+<! - -		icon="Jose.icns"- - >
 	</target>
-
+-->
 	<!-- MacOSX w/out JRE -->
 	<target name="macosx">
 		<description> installation package for Mac OS X (not including JRE) </description>
@@ -589,10 +604,12 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+<!--
 		<antcall target="toga-macosx">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+-->
 <!--
 		<antcall target="crafty-macosx">
 			<param name="zip-file" value="${zip-file}"/>
@@ -602,7 +619,7 @@
 		<delete dir="${appldir}"/>
 	</target>
 
-	<!-- source code -->
+	<!-- source code - - >
 	<target name="source">
 		<description>Java Sources</description>
 
@@ -619,22 +636,23 @@
 			</zipfileset>
 		</zip>
 	</target>
-
-	<!-- upgrade diffs -->
+	-->
+<!--
+	<! - - upgrade diffs - - >
 	<target name="diff-windows" depends="init">
         <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
         <property name="os" value="windows"/>
 
-		<!-- unzip the deployment package -->
+		<! - - unzip the deployment package - - >
 		<delete dir="${target-dir}/jose"/>
 		<unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
 			<patternset>
             <exclude name="jose/config/crafty.xml"/>
 			<exclude name="jose/engines/**"/>
             <exclude name="jose/database/**"/>
-<!--            font modificatios are not relevant for Windows    -->
+<! - -            font modificatios are not relevant for Windows    - - >
             <exclude name="jose/fonts/**"/>
-				<!--don't include 3D stuff in update package-->
+				<! - -don't include 3D stuff in update package- - >
 			<exclude name="jose/3d/**"/>
 			<exclude name="jose/lib/Windows/j3d*.jar"/>
 			<exclude name="jose/lib/Windows/J3DUtils.jar"/>
@@ -642,8 +660,8 @@
 			<exclude name="jose/lib/Windows/j3d*.dll"/>
 			</patternset>
 		</unzip>
-
-		<!-- compare to 1.0 -->
+- - >
+		<! - - compare to 1.0 - - >
 		<java classpath="classes" classname="de.jose.devtools.Diff">
 			<arg path="${clean-dir}"/>
 			<arg path="${target-dir}/jose"/>
@@ -651,15 +669,17 @@
 			<arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
 		</java>
 
-		<!-- clean up -->
+		<! - - clean up - - >
 		<delete dir="${target-dir}/jose"/>
 	</target>
+-->
 
+<!--
     <target name="diff-linux" depends="init">
         <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
         <property name="os" value="linux"/>
 
-	    <!-- unzip the deployment package -->
+	    <! - - unzip the deployment package - - >
 	    <delete dir="${target-dir}/jose"/>
 	    <unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
 		    <patternset>
@@ -667,9 +687,9 @@
             <exclude name="jose/config/crafty.xml"/>
 		    <exclude name="jose/engines/**"/>
             <exclude name="jose/database/**"/>
-	<!--            font modificatios are not relevant for Windows    -->
+	<! - -            font modificatios are not relevant for Windows    - - >
 			<exclude name="jose/fonts/**"/>
-			    <!--don't include 3D stuff in update package-->
+			    <! - - don't include 3D stuff in update package - - >
 			<exclude name="jose/3d/**"/>
 			<exclude name="jose/lib/Linux_i386/j3d*.jar"/>
 			<exclude name="jose/lib/Linux_i386/vecmath.jar"/>
@@ -677,7 +697,7 @@
 		    </patternset>
 	    </unzip>
 
-	    <!-- compare to 1.0 -->
+	    <! - - compare to 1.0 - - >
 	    <java classpath="classes" classname="de.jose.devtools.Diff">
 		    <arg path="${clean-dir}"/>
 		    <arg path="${target-dir}/jose"/>
@@ -685,15 +705,16 @@
 		    <arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
 	    </java>
 
-	    <!-- clean up -->
+	    <! - - clean up - - >
 		<delete dir="${target-dir}/jose"/>
     </target>
-
+-->
+	<!--
     <target name="diff-macosx" depends="init">
         <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
         <property name="os" value="macosx"/>
 
-	    <!-- unzip the deployment package -->
+	    <! - - unzip the deployment package - - >
 	    <delete dir="${target-dir}/jose.app"/>
 	    <unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
 		    <patternset>
@@ -701,12 +722,12 @@
 		    <exclude name="jose.app/engines/**"/>
             <exclude name="jose.app/database/**"/>
             <exclude name="jose.app/Contents/MacOS/**"/>
-			    <!--don't include 3D stuff in update package-->
+			    <! - -don't include 3D stuff in update package- - >
 			<exclude name="jose/3d/**"/>
 		    </patternset>
 	    </unzip>
 
-	    <!-- compare to 1.0 -->
+	    <! - - compare to 1.0 - - >
 	    <java classpath="classes" classname="de.jose.devtools.Diff">
 		    <arg path="${clean-dir}"/>
 		    <arg path="${target-dir}/jose.app"/>
@@ -714,41 +735,42 @@
 		    <arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
 	    </java>
 
-	    <!-- clean up -->
+	    <! - - clean up - - >
 		<delete dir="${target-dir}/jose.app"/>
     </target>
-
-	<!-- windows installer (ghost installer) w/out JRE -->
+-->
+	<!-- windows installer (ghost installer) w/out JRE
 	<target name="windows-install">
 		<antcall target="ghost-installer">
 			<param name="zip-file" value="jose-${version}-windows.zip"/>
 			<param name="exe-file" value="jose-${version}-windows.exe"/>
         </antcall>
 	</target>
-
-	<!-- windows installer (ghost installer) plus JRE -->
+-->
+	<!-- windows installer (ghost installer) plus JRE
 	<target name="windows-jre-install">
 		<antcall target="ghost-installer">
 			<param name="zip-file" value="jose-${version}-windows-jre.zip"/>
 			<param name="exe-file" value="jose-${version}-windows-jre.exe"/>
         </antcall>
 	</target>
-
+-->
+	<!--
 	<target name="ghost-installer">
 		<description> create Ghost Install installer for windows (w/out JRE) </description>
 
 		<delete file="${target-dir}/${exe-file}"/>
 
-		<!-- unzip -->
+		<! - - unzip - - >
 		<delete dir="${target-dir}/jose"/>
-		<!--delete dir="${target-dir}/fonts"/-->
+		<! - -delete dir="${target-dir}/fonts"/- - >
 		<unzip src="${target-dir}/${zip-file}" dest="${target-dir}">
-			<!--patternset>
+			<! - -patternset>
 			<exclude name="jose/fonts/*.ttf"/>
 			<exclude name="jose/fonts/*.TTF"/>
-			</patternset-->
+			</patternset- - >
 		</unzip>
-<!--
+<! - -
 		<mkdir dir="${target-dir}/fonts"/>
 		<copy  todir="${target-dir}/fonts">
 			<fileset dir="fonts">
@@ -756,50 +778,50 @@
 			<include name="*.TTF"/>
 			</fileset>
 		</copy>
--->
+- - >
 
-		<!-- copy installer config file -->
+		<! - - copy installer config file - - >
 		<copy file="ghost-install.xml" todir="${target-dir}"/>
-		<!-- call ghost installer -->
-		<!-- GhostInstaller version 4.0 -->
-<!--		<exec executable="C:\Programme\Ethalone\Ghost Installer\Bin\GIBuild.exe"-->
-		<!-- GhostInstaller version 3.7 - - PREFERRED -->
+		<! - - call ghost installer - - >
+		<! - - GhostInstaller version 4.0 - - >
+<! - -		<exec executable="C:\Programme\Ethalone\Ghost Installer\Bin\GIBuild.exe"- - >
+		<! - - GhostInstaller version 3.7 - - PREFERRED - - >
 		<exec executable="C:\Programme\gInstall\Ghost Installer\Bin\GIBuild.exe"
 			dir="${target-dir}">
 			<arg path="${target-dir}/ghost-install.xml"/>
 		</exec>
-		<!-- rename -->
+		<! - - rename - - >
 		<move file="${target-dir}/jose-windows.exe" tofile="${target-dir}/${exe-file}"/>
 
-		<!-- clean up -->
+		<! - - clean up - - >
 		<delete dir="${target-dir}/jose"/>
-		<!--delete dir="${target-dir}/fonts"/-->
+		<! - -delete dir="${target-dir}/fonts"/- - >
 		<delete file="${target-dir}/ghost-install.xml"/>
 	</target>
-
+-->
 	<target name="release">
 		<description>create packages for all platforms</description>
 
-		<antcall target="windows"/>
+		<!--antcall target="windows"/-->
 		<antcall target="windows-jre"/>
-		<antcall target="linux"/>
+		<!--antcall target="linux"/-->
 		<antcall target="linux-jre"/>
 		<antcall target="macosx"/>
-		<antcall target="source"/>
-		<antcall target="windows-install"/>
-		<antcall target="windows-jre-install"/>
+		<!--antcall target="source"/-->
+		<!--antcall target="windows-install"/-->
+		<!--antcall target="windows-jre-install"/-->
 		<!--<antcall target="diff-windows"/>-->
 		<!--<antcall target="diff-linux"/>-->
 		<!--<antcall target="diff-macosx"/>-->
 	</target>
-
+<!--
 	<target name="list-files">
 		<exec dir="${target-dir}" executable="cmd.exe" output="${target-dir}/dir.txt">
             <arg line="/c dir"/>
 		</exec>
 	</target>
-
-	<target name="upload">
+-->
+	<!--target name="upload-sf">
 		<description>upload to Sourceforge FTP server</description>
 		<ftp server="upload.sourceforge.net"
 			userid="anonymous"
@@ -823,6 +845,35 @@
 				<include name="jose-${version}-source.zip"/>
 			</fileset>
 		</ftp>
+	</target-->
+	<target name="upload-file">
+		<exec executable="curl" dir="${target-dir}">
+			<arg value="-s" />
+			<arg value="-u hrimfaxi:ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA"/>
+			<arg value="-X POST" />
+			<arg value="-F files=@${file}" />
+			<arg value="https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads" />
+		</exec>
+		<!--
+                For uploading artifacts to Bitbucket we need an 'app password'
+                username = hrimfaxi
+                app password = ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA
+
+                REST call for uploading a file:
+
+                curl -s -u hrimfaxi -X POST https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads
+                -F files=@database-1700k.jose
+        -->
+	</target>
+
+	<target name="upload-bitbucket">
+		<description>upload to bitbucket</description>
+		<antcall target="upload-file">
+			<param name="file" value="jose-${version}-windows.zip"/>
+		</antcall>
+		<antcall target="upload-file">
+			<param name="file" value="jose-${version}-linux.zip"/>
+		</antcall>
 	</target>
 
 </project>
