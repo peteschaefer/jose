@@ -72,27 +72,6 @@ public class StyledMoveFormatter extends StringMoveFormatter
         }
     }
 
-    private static boolean equals(String query, CharSequence str, int i)
-    {
-        if (i+query.length() > str.length()) return false;
-        for(int j=0; j < query.length(); j++)
-            if (str.charAt(i+j) != query.charAt(j)) return false;
-        return true;
-    }
-
-    private static int pieceFromChars(String[] pcs, CharSequence str, int start)
-    {
-        //  attention: multi-char encodings, and prefixes.
-        //  e.g. in Russian, there is "K" and "Kp". Find the **longest** match.
-        int pc=-1;
-        int match=0;
-        for(int i=0; i < pcs.length; i++)
-            if (pcs[i]!=null && equals(pcs[i],str,start) && (pcs[i].length() > match)) {
-                pc = (i - 1 + PAWN);
-                match = pcs[i].length();
-            }
-        return pc;
-    }
 
     /**
      * plain text from formatted text

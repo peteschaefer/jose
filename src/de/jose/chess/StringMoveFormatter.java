@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.chess;
 
 
+import de.jose.Language;
 
 public class StringMoveFormatter
            extends MoveFormatter
@@ -78,7 +79,29 @@ public class StringMoveFormatter
         buf = new StringBuffer();
     }
 
-    public String flush() {
+	private static boolean equals(String query, CharSequence str, int i)
+	{
+		if (i+query.length() > str.length()) return false;
+		for(int j=0; j < query.length(); j++)
+			if (str.charAt(i+j) != query.charAt(j)) return false;
+		return true;
+	}
+
+	protected static int pieceFromChars(String[] pcs, CharSequence str, int start)
+	{
+		//  attention: multi-char encodings, and prefixes.
+		//  e.g. in Russian, there is "K" and "Kp". Find the **longest** match.
+		int pc=-1;
+		int match=0;
+		for(int i=0; i < pcs.length; i++)
+			if (pcs[i]!=null && equals(pcs[i],str,start) && (pcs[i].length() > match)) {
+				pc = (i - 1 + PAWN);
+				match = pcs[i].length();
+			}
+		return pc;
+	}
+
+	public String flush() {
         if (buf.length()==0)
             return null;
         else {
@@ -119,6 +142,35 @@ public class StringMoveFormatter
 		for ( ; len-- > 0; offset++) {
 			int i = DEFAULT_PIECE_CHARACTERS.indexOf(c[offset]);
 			if (i >= 0) c[offset] = pieceChars[i+PAWN].charAt(0);
+		}
+	}
+
+	public String reformat(String text, String lang)
+	{
+		String[] newPieceCharArray = parsePieceChars(Language.getPieceChars(lang));
+		StringBuffer buf = new StringBuffer(text);
+		reformat(buf,this.getPieceCharArray(),newPieceCharArray);
+		return buf.toString();
+	}
+
+	private void reformat(StringBuffer buf, String[] from, String[] to)
+	{
+		boolean comment=false;
+		int i=0;
+		while(i < buf.length())
+		{
+			char c = buf.charAt(i);
+			if (c=='{') comment=true;
+			if (!comment && Character.isUpperCase(c)) {
+				int pc = pieceFromChars(from,buf,i);
+				if (pc>0) {
+					buf.replace(i,i+from[pc].length(), to[pc]);
+					i += to[pc].length();
+					continue;
+				}
+			}
+			if (c=='}') comment=false;
+			i++;
 		}
 	}
 

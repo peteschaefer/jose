@@ -6,11 +6,8 @@
 [ ] ...then there is awt (wysiwig) printing. But that has too little layout control, anyway.
     might become deprecated?
 
-[ ] paste line (double click pv) with Russian figurines
-    * movetext parser can not handle Unicode chars
-    * can not handle multi-char pieces (like Kp)
-    -> pimping the pgn parser would be a pathetic endeavor
-    -> better: use a fallback language (English) for pasting variations
+[x] copy-paste with non-ascii languages (like Russian)
+    -> fall back to English
 
 [x] bug:
     8/5Q1p/6p1/2n1N1Pk/5P1P/P6K/2q5/8 w - - 1 56

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -490,6 +490,23 @@ abstract public class MoveFormatter
 		else
 			pieceChars = chars;
 	}
+
+	public static boolean isAnsiChars(String[] chars)
+	{
+		for(String s : chars)
+			if (s!=null && (s.length() > 1 || s.charAt(0) >= 256))
+				return false;
+		return true;
+	}
+
+	public static boolean isAnsiChars(String chars)
+	{
+		if (chars.length() > 6) return false;
+		for(int i=0; i<chars.length(); i++)
+			if (chars.charAt(i) >= 256) return false;
+		return true;
+	}
+
 
 	public void setLanguage(String langCode)
     {

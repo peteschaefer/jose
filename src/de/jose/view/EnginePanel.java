@@ -583,10 +583,21 @@ public class EnginePanel
 		if (pvlabel==null) return null; //  no PV
 
 		String line;
-		if (formatter!=null && formatter.getFigStyle()!=null)
+		if (formatter!=null && formatter.getFigStyle()!=null) {
+			String[] wasPieceChars = formatter.getPieceCharArray();
+			if (!MoveFormatter.isAnsiChars(wasPieceChars)) //	can't handle multi-byte pieces; or Unicode. fallback to English
+				formatter.setLanguage("en");
 			line = formatter.reformat(pvlabel.getStyledDocument());
-		else
+			formatter.setPieceCharArray(wasPieceChars);
+		}
+		else {
 			line = pvlabel.getText();
+
+			StringMoveFormatter defaultFormatter = StringMoveFormatter.getDefaultFormatter();
+			String[] pieceChars = defaultFormatter.getPieceCharArray();	//	original language from UCI
+			if (!MoveFormatter.isAnsiChars(pieceChars))
+				line = defaultFormatter.reformat(line,"en");	//	translate to English
+		}
 		if (line==null || StringUtil.isWhitespace(line)) return null;   //  no PV
 
 		JoBigLabel elabel = getEvalLabel(idx,false, false);
@@ -1873,7 +1884,6 @@ public class EnginePanel
 				if (label==e.getSource())
 				{
 					String text = getPvText(i);
-					//	todo problem with non-ascii piece characters (like Russian). Use English instead!
 					if (text!=null) {
 						Command cmd = new Command("menu.game.paste.line", e, text, Boolean.TRUE);
 						Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);

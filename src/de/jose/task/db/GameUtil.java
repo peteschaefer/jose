@@ -12,6 +12,8 @@
 
 package de.jose.task.db;
 
+import de.jose.Language;
+import de.jose.chess.MoveFormatter;
 import de.jose.db.JoConnection;
 import de.jose.db.ParamStatement;
 import de.jose.db.JoPreparedStatement;
@@ -321,7 +323,6 @@ abstract public class GameUtil
 	 * @param CId the collection
 	 * @param targetCId target collection
 	 * @param setOId set Game.OCId (original collection Id) ?
-	 * @param diff records GameCount diffs
 	 * @throws SQLException
 	 */
 	public void moveCollectionContents(int CId, int targetCId, boolean setOId, boolean calcIdx)
@@ -390,7 +391,6 @@ abstract public class GameUtil
 	 * @param GIds an array of game Ids
 	 * @param from
 	 * @param to
-	 * @param diff records GameCount diffs
 	 * @throws SQLException
 	 */
 	 public void eraseGames(int[] GIds, int from, int to)
@@ -1090,7 +1090,13 @@ abstract public class GameUtil
 
 			GameUtilOldImpl.UtilParser parser = new GameUtil.UtilParser(gm.getPosition(),gm,after);
 			//	todo allow for various languages (like English)
-			parser.setLanguage(Application.theUserProfile.getFigurineLanguage(),true);
+			String figurineLanguage = Application.theUserProfile.getFigurineLanguage();
+			String piecechars = Language.getPieceChars(figurineLanguage);
+			if (!MoveFormatter.isAnsiChars(piecechars)) {
+				//	fallback to English
+				figurineLanguage = "en";
+			}
+			parser.setLanguage(figurineLanguage,true);
 			parser.parse(text.toCharArray(), null,null, false);
 			//  calls back, eventually
 			result = gm.getCurrentMove();
