@@ -12,8 +12,8 @@
 
 package de.jose.db;
 
-import com.mysql.jdbc.MiniAdmin;
 import com.mysql.embedded.jdbc.MyConnection;
+import com.mysql.jdbc.MiniAdmin;
 import de.jose.*;
 import de.jose.plugin.InputListener;
 import de.jose.util.KillProcess;
@@ -21,11 +21,10 @@ import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.window.JoDialog;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Vector;
@@ -171,7 +170,25 @@ public class MySQLAdapter
 		if (Util.allOf(mode, JoConnection.CREATE))
 			props.put("create","true");
 */
-		return super.createConnection(mode);
+		Connection conn = super.createConnection(mode);
+		return conn;
+	}
+
+	public int getConnectionId(Connection conn) throws SQLException {
+		Statement stm = null;
+		ResultSet res = null;
+		try {
+			stm = conn.createStatement();
+			res = stm.executeQuery("SELECT Connection_ID()");
+			if (res.next()) {
+				int connId = res.getInt(1);
+				return connId;
+			}
+		} finally {
+			if (res!=null) res.close();
+			if (stm!=null) stm.close();
+		}
+		return -1;
 	}
 
 	private void initEmbeddedServer()
@@ -774,7 +791,7 @@ public class MySQLAdapter
 
 	public boolean cancelQuery(JoConnection conn) throws SQLException
 	{
-		if (init_server)
+		if (init_server && getServerMode()==MySQLAdapter.MODE_EMBEDDED)
 			try {
 			((MyConnection)conn.jdbcConnection).killQuery();
 			return true;
@@ -782,10 +799,17 @@ public class MySQLAdapter
 				return false;
 		}
 		else {
-//			conn.executeUpdate("KILL QUERY");   //  TODO
-//			return true;
+			JoConnection adminConn = null;
+			int connId = conn.connectionId;
+			if (connId >= 0) try {
+				adminConn = JoConnection.get();
+				adminConn.executeUpdate("KILL QUERY "+connId);
+			} finally {
+				if (adminConn!=null) adminConn.release();
+			}
+			return true;
 		}
-		return false;
+		//return false;
 	}
 
 

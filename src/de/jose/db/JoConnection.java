@@ -38,6 +38,7 @@ public class JoConnection
 
 	/**	JDBC connection	 */
 	protected Connection jdbcConnection;
+	protected int connectionId;
     /** connection mode (usually READ_WRITE)    */
 //    protected int connectionMode;
 	/**	Map of Prepared Statements (maps String to JoPreparedStatement)	 */
@@ -119,6 +120,7 @@ public class JoConnection
 		if (adapter==null) adapter = theAdapter;	//	 = default database
 		name = aName;
 		jdbcConnection = adapter.createConnection(DBAdapter.READ_WRITE);
+		connectionId = adapter.getConnectionId(jdbcConnection);
 		preparedStatements = new HashMap();
 	}
 
@@ -126,6 +128,7 @@ public class JoConnection
 	{
 		name = aName;
 		jdbcConnection = dbconn;
+		connectionId = -1;
 		preparedStatements = new HashMap();
 	}
 

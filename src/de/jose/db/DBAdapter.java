@@ -260,6 +260,10 @@ abstract public class DBAdapter
             return DriverManager.getConnection(getURL(), props);
 	}
 
+	public int getConnectionId(Connection conn) throws SQLException {
+		return -1;
+	}
+
 	public String getDatabaseProductName(Connection jdbcConnection)
 		throws SQLException
 	{
