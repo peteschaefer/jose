@@ -169,6 +169,10 @@ public class EngUtil
 		return mirrorSquare(fileOf(square),rowOf(square));
 	}
 
+	public static int squareAdd(int a, int dfile, int drow) {
+		return a + dfile + drow * OUTER_BOARD_WIDTH;
+	}
+
 	/**
 	 * @return true if the given square is inside the proper board
 	 */
@@ -423,4 +427,5 @@ public class EngUtil
 	{
 		return Math.sqrt(squareDistance(a,b));	
 	}
+
 }

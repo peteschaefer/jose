@@ -718,27 +718,27 @@ public class BoardView2D
 				if (hnt != null) {
 					Point2D pfrom = center(hnt.from,false);
 					Point2D pto = center(hnt.to,false);
-					paintArrow(g, pfrom, pto,
-							devSquareSize / 16, hnt.color, hnt.label);
-					painted++;
+					int hmid = hnt.intermediateSquare();
+
+					if (hmid!=0) {
+						//	for knight moves
+						Point2D pmid = center(hmid,false);
+						paintLine(g, pfrom, pmid, devSquareSize / 16, hnt.color);
+						paintArrow(g, pmid, pto, devSquareSize / 16, hnt.color, false);
+						paintArrowLabel(g, pmid, pto, hnt.label);
+						painted++;
+					}
+					else {
+						paintArrow(g, pfrom, pto, devSquareSize / 16, hnt.color, false);
+						paintArrowLabel(g, pfrom, pto, hnt.label);
+						painted++;
+					}
 				}
 			}
 		}
 
 		sprite1.updateBuffer();
 		sprite2.updateBuffer();
-	}
-
-	public static final int[] createArrowXCoordinates(int length, int width, int tip)
-	{
-		int[] x = {  0,          0, length-tip, length-tip, length, length-tip, length-tip, /*text anchor: */ length-tip };
-		return x;
-	}
-
-	public static final int[] craeteArrowYCoordinates(int length, int width, int tip)
-	{
-		int[] y = { -width, +width,     +width,        tip,      0,       -tip,     -width, /*text anchor: */ 0 };
-		return y;
 	}
 
 	public static final float[] createArrowFloatCoordinates(float length, float width, float tip)
@@ -757,51 +757,104 @@ public class BoardView2D
 		return xyz;
 	}
 
+	private void paintLine(Graphics2D g, Point2D p1, Point2D p2,
+							int width, Color color)
+	{
+		/** set up a a polygon of normal width */
+		int length = (int)Math.round(p1.distance(p2));
+
+		/** rotate into place   */
+
+//		tf.scale(box.width/100.0, box.height/100.0);
+		g.setColor(color);
+		//g.fillPolygon(x,y, x.length-1);
+		g.setStroke(new BasicStroke(2*width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+		g.drawLine ((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
+	}
+
 	private void paintArrow(Graphics2D g, Point2D p1, Point2D p2,
-	                        int width, Color color, String label)
+	                        int width, Color color, boolean curved)
 	{
 		/** set up a a polygon of normal width */
 		int length = (int)Math.round(p1.distance(p2));
 		int tip = (int)(2*width);
 
-		int[] x = createArrowXCoordinates(length,width,tip);
-		int[] y = craeteArrowYCoordinates(length,width,tip);
+		//int[] x = createArrowXCoordinates(length,width,tip);
+		//int[] y = craeteArrowYCoordinates(length,width,tip);
 
 		/** rotate into place   */
-		AffineTransform oldTransform = g.getTransform();
-		AffineTransform rot1 = (AffineTransform)oldTransform.clone();
-		rot1.translate(p1.getX(),p1.getY());
+		AffineTransform oldTransform = null;
+		try {
+			oldTransform = g.getTransform();
+			AffineTransform rot1 = (AffineTransform) oldTransform.clone();
+			rot1.translate(p1.getX(), p1.getY());
 
 //		tf.scale(box.width/100.0, box.height/100.0);
-		double angle = Math.atan2(p2.getY()-p1.getY(), p2.getX()-p1.getX());
-		rot1.rotate(angle);    //  TODO
+			double angle = Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX());
+			rot1.rotate(angle);    //  TODO
 
-		g.setTransform(rot1);
-		g.setColor(color);
-		g.fillPolygon(x,y, x.length-1);
+			g.setTransform(rot1);
+			g.setColor(color);
+			//g.fillPolygon(x,y, x.length-1);
+			g.setStroke(new BasicStroke(2 * width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
-		g.setColor(Color.black);
-		//g.drawPolygon(x,y, x.length-1);
+			if (curved) {
+				int r1 = length;
+				int r2 = length;
 
-		if (label!=null) {
-			FontMetrics mtx = g.getFontMetrics();
-			Rectangle2D box = mtx.getStringBounds(label,g);
-			Point textAnchor = new Point(x[x.length-1],y[x.length-1]);
-			int texty = (int) (textAnchor.y + mtx.getAscent()/2 - devSquareSize*0.02);
-			if (angle >= -Math.PI/2 && angle <= Math.PI/2) {
-				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
+				//	todo curved arrows. need to figure out some trigonometry :)
+				//	it's not complicated but I don't have the nerves to do it right now
 			}
 			else {
+				g.drawLine(0, 0, length, 0);
+			}
+
+			g.drawLine(length, 0, length - tip, +tip);
+			g.drawLine(length, 0, length - tip, -tip);
+
+			//g.drawPolygon(x,y, x.length-1);
+		} finally {
+			g.setTransform(oldTransform);
+		}
+	}
+
+	private void paintArrowLabel(Graphics2D g, Point2D p1, Point2D p2, String label)
+	{
+		/** set up a a polygon of normal width */
+		int length = (int)Math.round(p1.distance(p2));
+
+		/** rotate into place   */
+		AffineTransform oldTransform = null;
+		try {
+			oldTransform = g.getTransform();
+			AffineTransform rot1 = (AffineTransform) oldTransform.clone();
+			rot1.translate(p1.getX(), p1.getY());
+
+//		tf.scale(box.width/100.0, box.height/100.0);
+			double angle = Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX());
+			rot1.rotate(angle);
+
+			g.setTransform(rot1);
+			g.setColor(Color.black);
+			//g.drawPolygon(x,y, x.length-1);
+
+			FontMetrics mtx = g.getFontMetrics();
+			Rectangle2D box = mtx.getStringBounds(label, g);
+			Point textAnchor = new Point(length, 0);
+			int texty = (int) (textAnchor.y + mtx.getAscent() / 2 - devSquareSize * 0.02);
+			if (angle >= -Math.PI / 2 && angle <= Math.PI / 2) {
+				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
+			} else {
 				//	rotate text box, too
 				AffineTransform rot2 = (AffineTransform) oldTransform.clone();
-				rot2.translate(p1.getX(),p1.getY());
-				rot2.rotate(angle-Math.PI);
+				rot2.translate(p1.getX(), p1.getY());
+				rot2.rotate(angle - Math.PI);
 				g.setTransform(rot2);
 				g.drawString(label, -textAnchor.x, texty);
 			}
+		} finally {
+			g.setTransform(oldTransform);
 		}
-
-		g.setTransform(oldTransform);
 	}
 
 	protected void finishMove(Move mv, long millis)
