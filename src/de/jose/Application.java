@@ -1762,54 +1762,10 @@ public class Application
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-				PrintableDocument prdoc = null;
-
-				if (cmd.data instanceof PrintableDocument)
-					prdoc = (PrintableDocument)cmd.data;	//	from PrintPreviewDialog. this is a StyledDocument (don't use it)
-				else if (cmd.data instanceof ExportContext) {
-					/*
-						avoid use of XSLFOExport.Preview
-						it's based on fop AWTRenderer and has generally poor word spacing.
-
-						Use PDF renderer instead. Print to temporary file.
-					 */
-					ExportContext context = (ExportContext)cmd.data;
-					if (context.preview!=null)
-						prdoc = context.preview;   // called from preview; print this document
-					else {
-						ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
-						if (dlg.confirmPrint(context.source,25)) {
-							if (context.getOutput()==ExportConfig.OUTPUT_XSL_FO)
-							{
-								context.target = File.createTempFile("jose",".pdf");
-								Version.loadFop();
-								XSLFOExport fotask = new XSLFOExport(context);
-								fotask.printOnCompletion = new Runnable() {
-									@Override
-									public void run() {
-                                        try {
-											Desktop desktop = Desktop.getDesktop();
-                                            desktop.open((File)context.target);
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                    }
-								};
-								fotask.start();
-								prdoc=null;
-							}
-							else {
-								prdoc = context.createPrintableDocument();   // create awt document then print
-							}
-                            dlg.hide();
-                        }
-					}
-				}
-				else
-					throw new IllegalArgumentException();
-
-				if (prdoc!=null)
-					prdoc.print();
+				ExportContext context = (ExportContext) cmd.data;
+				ExportDialog dlg = (ExportDialog) getDialog("dialog.export");
+				dlg.print(context);
+				dlg.hide();
 			}
 		};
 		map.put("export.print",action);
@@ -1928,6 +1884,7 @@ public class Application
 
 				if (cmd.data!=null && cmd.data instanceof ExportContext) {
 					//  called rom ExportDialog
+					//  todo move to ExportDialog
 					ExportContext context = (ExportContext)cmd.data;
 					boolean preferInternal = Util.toboolean(cmd.moreData);
 
@@ -1967,6 +1924,7 @@ public class Application
 					ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
 					dlg.forPrint(getGameSource(cmd,false,false));
 					openDialog(dlg,0);
+					//	todo open preview immediately
 				}
 			}
 		};

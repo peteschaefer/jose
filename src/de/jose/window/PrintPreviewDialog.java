@@ -41,6 +41,8 @@ import java.awt.print.PrinterJob;
 import java.util.Map;
 import java.util.Collection;
 
+import static de.jose.window.JoDialog.getDialog;
+
 /**
  *
  */
@@ -395,9 +397,12 @@ public class PrintPreviewDialog
 //				hidePanel();
 
 				//  forward
-				cmd.code = "export.print";
-				cmd.data = printView.getPrintableDocument();
-				Application.theCommandDispatcher.forward(cmd,Application.theApplication);
+				// todo
+				ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
+				dlg.print(dlg.createPrintContext());
+				//cmd.code = "export.print";
+				//cmd.data = printView.getPrintableDocument();
+				//Application.theCommandDispatcher.forward(cmd,Application.theApplication);
 			}
 		};
 		map.put("menu.file.print", action);

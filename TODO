@@ -127,6 +127,14 @@ Alternative JREs:
 
 ==== Deprecated Stuff
 
+* AWT Print
+    - can be replaced completely by PDF print
+    - FOP PDF backend has better layout.
+* PrintPreview
+    + can change paper size (buggy)
+    - but print should be always pdf
+    - open immediately from File menu
+
 * Positional Index !!
   - db fields are NOT USED at all
     -> makes sense because they would increase the db size x8

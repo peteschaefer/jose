@@ -106,11 +106,14 @@ public class ExportConfig
 	        "     <jose:output>pgn</jose:output>" +
 	        "  </jose:export>" +
 	        ""+
+		//	@deprecated use xsl.pdf only
+		/*
 	        "  <jose:export>" +
 	        "     <jose:title>print.awt</jose:title>" +
 	        "     <jose:input>list-of-games</jose:input>" +
 	        "     <jose:output>awt</jose:output>" +
 	        "  </jose:export>" +
+		*/
 	        "</export-config>";
 
 	public ExportConfig(File file) throws Exception

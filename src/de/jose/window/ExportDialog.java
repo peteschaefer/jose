@@ -23,6 +23,7 @@ import de.jose.export.ExportList;
 import de.jose.export.HtmlUtil;
 import de.jose.image.ImgUtil;
 import de.jose.task.GameSource;
+import de.jose.task.io.XSLFOExport;
 import de.jose.util.StringUtil;
 import de.jose.util.Units;
 import de.jose.util.file.FileUtil;
@@ -50,6 +51,7 @@ import java.awt.event.ItemListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
@@ -314,6 +316,27 @@ public class ExportDialog
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,
 		            null, buttons[JOptionPane.NO_OPTION]);
 		return result == JOptionPane.YES_OPTION;
+	}
+
+	public boolean print(ExportContext ctx) throws Exception
+	{
+		if (!confirmPrint(context.source,25))
+			return false;
+		if (context.getOutput()!=ExportConfig.OUTPUT_XSL_FO)
+			throw new IllegalStateException();
+
+		context.target = File.createTempFile("jose",".pdf");
+		Version.loadFop();
+		XSLFOExport fotask = new XSLFOExport(context);
+		fotask.printOnCompletion = () -> {
+			try {
+				Desktop desktop = Desktop.getDesktop();
+				desktop.open((File)context.target);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+		} };
+		fotask.start();
+		return true;
 	}
 
 
@@ -948,13 +971,15 @@ public class ExportDialog
 
 		CommandAction action = new CommandAction()
 		{
-			public void Do(Command cmd) {
+			public void Do(Command cmd) throws Exception {
 				save();
 				if (!ExportConfig.canPrint(context.config)) throw new IllegalStateException();
 
 				//  actually print (delegate to Application)
-				cmd = new Command("export.print",null,createPrintContext());
-				Application.theCommandDispatcher.forward(cmd,Application.theApplication);
+				//cmd = new Command("export.print",null,createPrintContext());
+				//Application.theCommandDispatcher.forward(cmd,Application.theApplication);
+				ExportContext context = createPrintContext();
+				print(context);
 			}
 		};
 		map.put("dialog.export.print",action);
