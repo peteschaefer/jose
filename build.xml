@@ -39,8 +39,9 @@
 	<path id="java.build.path">
 		<pathelement location="lib/Windows/j3dcore.jar"/>
 <!--		<pathelement location="lib/Windows/j3daudio.jar"/>-->
-<!--		<pathelement location="lib/Windows/j3dutils.jar"/>-->
-<!--		<pathelement location="lib/Windows/vecmath.jar"/>-->
+		<pathelement location="lib/Windows/j3dutils.jar"/>
+		<pathelement location="lib/Windows/vecmath.jar"/>
+		<pathelement location="lib/com.sun.jar"/>	<!-- deprecated jpeg codecs -->
 
 		<pathelement location="lib/fop-plus.jar"/>
 		<pathelement location="lib/jai_codec.jar"/>
@@ -52,8 +53,8 @@
         <pathelement location="lib/jh.jar"/>
 <!--		<pathelement location="lib/httpunit.jar"/>-->
 <!--		<pathelement location="lib/Tidy.jar"/>-->
-		<!--pathelement location="lib/xerces.jar"/-->
-        <!--pathelement location="lib/xalan.jar"/-->
+		<pathelement location="lib/xerces.jar"/>
+        <pathelement location="lib/xalan.jar"/>
 <!--        <pathelement location="lib/jl020.jar"/>-->
 		<pathelement location="lib/plaf/skinlf.jar"/>
 		<pathelement location="lib/plaf/quaqua.jar"/>
@@ -117,7 +118,7 @@
 	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
 
 		<javac fork="yes"
-            executable="C:/jdk1.8/bin/javac.exe"
+            executable="C:/Program Files (x86)/Java/jdk1.8.0_202/bin/javac.exe"
 			srcdir="${java.src}" destdir="${java.classes}"
 			source="1.8" target="1.8" compiler="modern"
 			nowarn="on" optimize="on"

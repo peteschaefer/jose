@@ -48,7 +48,7 @@ Leela
   - font size?
   - if possible, redraw only modified arrows
 
-* moves-left ?
+* "New Game from here"
 
 * Contempt Slider ?
 
@@ -94,4 +94,3 @@ ScoreType = WDL_mu
 
 ==== Interesting Leela settings.
 ? temperature for more variations in the opening
-? contempt for sharp/dull play

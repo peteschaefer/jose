@@ -1,9 +1,7 @@
 package de.jose.view;
 
-import com.sun.jnlp.ApiDialog;
 import de.jose.AbstractApplication;
 import de.jose.Application;
-import de.jose.Language;
 import de.jose.chess.Board;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
@@ -13,15 +11,11 @@ import de.jose.util.FontUtil;
 import de.jose.view.input.JoBigLabel;
 import de.jose.view.style.JoFontConstants;
 import de.jose.view.style.JoStyleContext;
-import de.jose.window.JoDialog;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
