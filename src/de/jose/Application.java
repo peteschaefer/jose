@@ -3842,8 +3842,8 @@ public class Application
 				engine.analyze(position);
 			if (!analyze && !engine.isPaused()) {
 				engine.pause();
-				if (enginePanel()!=null)
-					enginePanel().exitBook();	// right?
+//				if (enginePanel()!=null)
+//					enginePanel().exitBook();	// right?
 			}
 		}
 	}

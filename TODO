@@ -7,7 +7,8 @@
         -> get one from current AnalysisRecord
 [-] Application.selectBookMove needs to be asynchronized.
     [?] update/don't update book when navigating
-    [ ] pause button should pause Book, too. Or?
+    [ ] pause button should pause engine;
+        book is shown in both, USER_INPUT and ANALYSIS
 
 === Database Bugs
 

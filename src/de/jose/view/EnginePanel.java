@@ -1545,8 +1545,8 @@ public class EnginePanel
 						//	will play a move and hit the Book anyway
 						break;
 					case USER_INPUT:
-//						Application.theApplication.updateBook(wasEngineMove,false);
-						Application.theApplication.pausePlugin(false); // right?
+						Application.theApplication.updateBook(wasEngineMove,false);
+//						Application.theApplication.pausePlugin(false); // right?
 						break;
 					case ANALYSIS:
 						Application.theApplication.updateBook(wasEngineMove,!isPaused);
