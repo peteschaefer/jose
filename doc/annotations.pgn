@@ -1,341 +1,313 @@
 [Event "a list of all available annotation glyphs (NAG)"]
 
-{<br> $0 = } $0 { null annotation}
+{<br> $0 } $0 { }
 
-{<br> $1 = } $1 { ! = good move}
+{<br> $1 } $1 { !, good move}
 
-{<br> $2 = } $2 { ? = poor move}
+{<br> $2 } $2 { ?, poor move}
 
-{<br> $3 = } $3 { !! = very good move}
+{<br> $3 } $3 { !!, very good move}
 
-{<br> $4 = } $4 { ?? = very poor move}
+{<br> $4 } $4 { ??, very poor move}
 
-{<br> $5 = } $5 { !? = interesting move}
+{<br> $5 } $5 { !?, interesting move}
 
-{<br> $6 = } $6 { ?! = questionable move}
+{<br> $6 } $6 { ?!, questionable move}
 
-{<br> $7 = } $7 { forced move = forced move (all others lose quickly) }
+{<br> $7 } $7 { forced move, forced move (all others lose quickly) }
 
-{<br> $8 = } $8 { singular move = singular move (no reasonable alternatives)}
+{<br> $8 } $8 { singular move, singular move (no reasonable alternatives)}
 
-{<br> $9 = } $9 { worst move}
+{<br> $9 } $9 { worst move}
 
-{<br> $10 = } $10 { = = drawish position}
+{<br> $10 } $10 { =, drawish position}
 
-{<br> $11 = } $11 { = = equal chances, quiet position}
+{<br> $11 } $11 { =, equal chances, quiet position}
 
-{<br> $12 = } $12 { equal chances, active position}
+{<br> $12 } $12 { }
 
-{<br> $13 = } $13 { unclear = unclear position}
+{<br> $13 } $13 { unclear, unclear position}
 
-{<br> $14 = } $14 { += = White has a slight advantage}
+{<br> $14 } $14 { +=, White has a slight advantage}
 
-{<br> $15 = } $15 { =+ = Black has a slight advantage}
+{<br> $15 } $15 { =+, Black has a slight advantage}
 
-{<br> $16 = } $16 { +/- = White has a moderate advantage}
+{<br> $16 } $16 { +/-, White has a moderate advantage}
 
-{<br> $17 = } $17 { -/+ = Black has a moderate advantage}
+{<br> $17 } $17 { -/+, Black has a moderate advantage}
 
-{<br> $18 = } $18 { +- = White has a decisive advantage}
+{<br> $18 } $18 { +-, White has a decisive advantage}
 
-{<br> $19 = } $19 { -+ = Black has a decisive advantage}
+{<br> $19 } $19 { -+, Black has a decisive advantage}
 
-{<br> $20 = } $20 { White has a crushing advantage (Black should resign)}
+{<br> $20 } $20 { }
 
-{<br> $21 = } $21 { Black has a crushing advantage (White should resign)}
+{<br> $21 } $21 { }
 
-{<br> $22 = } $22 { White is in zugzwang}
+{<br> $22 } $22 { White is in zugzwang}
 
-{<br> $23 = } $23 { Black is in zugzwang}
+{<br> $23 } $23 { Black is in zugzwang}
 
-{<br> $24 = } $24 { White has a slight space advantage}
+{<br> $24 } $24 { White has a slight space advantage}
 
-{<br> $25 = } $25 { Black has a slight space advantage}
+{<br> $25 } $25 { Black has a slight space advantage}
 
-{<br> $26 = } $26 { White has a moderate space advantage}
+{<br> $26 } $26 { White has a moderate space advantage}
 
-{<br> $27 = } $27 { Black has a moderate space advantage}
+{<br> $27 } $27 { Black has a moderate space advantage}
 
-{<br> $28 = } $28 { White has a decisive space advantage}
+{<br> $28 } $28 { White has a decisive space advantage}
 
-{<br> $29 = } $29 { Black has a decisive space advantage}
+{<br> $29 } $29 { Black has a decisive space advantage}
 
-{<br> $30 = } $30 { White has a slight time (development) advantage}
+{<br> $30 } $30 { }
 
-{<br> $31 = } $31 { Black has a slight time (development) advantage}
+{<br> $31 } $31 { }
 
-{<br> $32 = } $32 { White has a moderate time (development) advantage}
+{<br> $32 } $32 { White has a moderate time (development) advantage}
 
-{<br> $33 = } $33 { Black has a moderate time (development) advantage}
+{<br> $33 } $33 { Black has a moderate time (development) advantage}
 
-{<br> $34 = } $34 { White has a decisive time (development) advantage}
+{<br> $34 } $34 { White has a decisive time (development) advantage}
 
-{<br> $35 = } $35 { Black has a decisive time (development) advantage}
+{<br> $35 } $35 { Black has a decisive time (development) advantage}
 
-{<br> $36 = } $36 { White has the initiative}
+{<br> $36 } $36 { White has the initiative}
 
-{<br> $37 = } $37 { Black has the initiative}
+{<br> $37 } $37 { Black has the initiative}
 
-{<br> $38 = } $38 { White has a lasting initiative}
+{<br> $38 } $38 { }
 
-{<br> $39 = } $39 { Black has a lasting initiative}
+{<br> $39 } $39 { }
 
-{<br> $40 = } $40 { White has the attack}
+{<br> $40 } $40 { White has the attack}
 
-{<br> $41 = } $41 { Black has the attack}
+{<br> $41 } $41 { Black has the attack}
 
-{<br> $42 = } $42 { White has insufficient compensation for material deficit}
+{<br> $42 } $42 { White has insufficient compensation for material deficit}
 
-{<br> $43 = } $43 { Black has insufficient compensation for material deficit}
+{<br> $43 } $43 { Black has insufficient compensation for material deficit}
 
-{<br> $44 = } $44 { White has sufficient compensation for material deficit}
+{<br> $44 } $44 { White has sufficient compensation for material deficit}
 
-{<br> $45 = } $45 { Black has sufficient compensation for material deficit}
+{<br> $45 } $45 { Black has sufficient compensation for material deficit}
 
-{<br> $46 = } $46 { White has more than adequate compensation for material deficit}
+{<br> $46 } $46 { White has more than adequate compensation for material deficit}
 
-{<br> $47 = } $47 { Black has more than adequate compensation for material deficit}
+{<br> $47 } $47 { Black has more than adequate compensation for material deficit}
 
-{<br> $48 = } $48 { White has a slight center control advantage}
+{<br> $48 } $48 { White has a slight center control advantage}
 
-{<br> $49 = } $49 { Black has a slight center control advantage}
+{<br> $49 } $49 { Black has a slight center control advantage}
 
-{<br> $50 = } $50 { White has a moderate center control advantage}
+{<br> $50 } $50 { White has a moderate center control advantage}
 
-{<br> $51 = } $51 { Black has a moderate center control advantage}
+{<br> $51 } $51 { Black has a moderate center control advantage}
 
-{<br> $52 = } $52 { White has a decisive center control advantage}
+{<br> $52 } $52 { White has a decisive center control advantage}
 
-{<br> $53 = } $53 { Black has a decisive center control advantage}
+{<br> $53 } $53 { Black has a decisive center control advantage}
 
-{<br> $54 = } $54 { White has a slight kingside control advantage}
+{<br> $54 } $54 { White has a slight kingside control advantage}
 
-{<br> $55 = } $55 { Black has a slight kingside control advantage}
+{<br> $55 } $55 { Black has a slight kingside control advantage}
 
-{<br> $56 = } $56 { White has a moderate kingside control advantage}
+{<br> $56 } $56 { White has a moderate kingside control advantage}
 
-{<br> $57 = } $57 { Black has a moderate kingside control advantage}
+{<br> $57 } $57 { Black has a moderate kingside control advantage}
 
-{<br> $58 = } $58 { White has a decisive kingside control advantage}
+{<br> $58 } $58 { White has a decisive kingside control advantage}
 
-{<br> $59 = } $59 { Black has a decisive kingside control advantage}
+{<br> $59 } $59 { Black has a decisive kingside control advantage}
 
-{<br> $60 = } $60 { White has a slight queenside control advantage}
+{<br> $60 } $60 { White has a slight queenside control advantage}
 
-{<br> $61 = } $61 { Black has a slight queenside control advantage}
+{<br> $61 } $61 { Black has a slight queenside control advantage}
 
-{<br> $62 = } $62 { White has a moderate queenside control advantage}
+{<br> $62 } $62 { White has a moderate queenside control advantage}
 
-{<br> $63 = } $63 { Black has a moderate queenside control advantage}
+{<br> $63 } $63 { Black has a moderate queenside control advantage}
 
-{<br> $64 = } $64 { White has a decisive queenside control advantage}
+{<br> $64 } $64 { White has a decisive queenside control advantage}
 
-{<br> $65 = } $65 { Black has a decisive queenside control advantage}
+{<br> $65 } $65 { Black has a decisive queenside control advantage}
 
-{<br> $66 = } $66 { White has a vulnerable first rank}
+{<br> $66 } $66 { }
 
-{<br> $67 = } $67 { Black has a vulnerable first rank}
+{<br> $67 } $67 { }
 
-{<br> $68 = } $68 { White has a well protected first rank}
+{<br> $68 } $68 { }
 
-{<br> $69 = } $69 { Black has a well protected first rank}
+{<br> $69 } $69 { }
 
-{<br> $70 = } $70 { White has a poorly protected king}
+{<br> $70 } $70 { }
 
-{<br> $71 = } $71 { Black has a poorly protected king}
+{<br> $71 } $71 { }
 
-{<br> $72 = } $72 { White has a well protected king}
+{<br> $72 } $72 { }
 
-{<br> $73 = } $73 { Black has a well protected king}
+{<br> $73 } $73 { }
 
-{<br> $74 = } $74 { White has a poorly placed king}
+{<br> $74 } $74 { }
 
-{<br> $75 = } $75 { Black has a poorly placed king}
+{<br> $75 } $75 { }
 
-{<br> $76 = } $76 { White has a well placed king}
+{<br> $76 } $76 { }
 
-{<br> $77 = } $77 { Black has a well placed king}
+{<br> $77 } $77 { }
 
-{<br> $78 = } $78 { White has a very weak pawn structure}
+{<br> $78 } $78 { }
 
-{<br> $79 = } $79 { Black has a very weak pawn structure}
+{<br> $79 } $79 { }
 
-{<br> $80 = } $80 { White has a moderately weak pawn structure}
+{<br> $80 } $80 { }
 
-{<br> $81 = } $81 { Black has a moderately weak pawn structure}
+{<br> $81 } $81 { }
 
-{<br> $82 = } $82 { White has a moderately strong pawn structure}
+{<br> $82 } $82 { }
 
-{<br> $83 = } $83 { Black has a moderately strong pawn structure}
+{<br> $83 } $83 { }
 
-{<br> $84 = } $84 { White has a very strong pawn structure}
+{<br> $84 } $84 { }
 
-{<br> $85 = } $85 { Black has a very strong pawn structure}
+{<br> $85 } $85 { }
 
-{<br> $86 = } $86 { White has poor knight placement}
+{<br> $86 } $86 { }
 
-{<br> $87 = } $87 { Black has poor knight placement}
+{<br> $87 } $87 { }
 
-{<br> $88 = } $88 { White has good knight placement}
+{<br> $88 } $88 { }
 
-{<br> $89 = } $89 { Black has good knight placement}
+{<br> $89 } $89 { }
 
-{<br> $90 = } $90 { White has poor bishop placement}
+{<br> $90 } $90 { }
 
-{<br> $91 = } $91 { Black has poor bishop placement}
+{<br> $91 } $91 { }
 
-{<br> $92 = } $92 { White has good bishop placement}
+{<br> $92 } $92 { }
 
-{<br> $93 = } $93 { Black has good bishop placement}
+{<br> $93 } $93 { }
 
-{<br> $94 = } $94 { White has poor rook placement}
+{<br> $94 } $94 { }
 
-{<br> $95 = } $95 { Black has poor rook placement}
+{<br> $95 } $95 { }
 
-{<br> $96 = } $96 { White has good rook placement}
+{<br> $96 } $96 { }
 
-{<br> $97 = } $97 { Black has good rook placement}
+{<br> $97 } $97 { }
 
-{<br> $98 = } $98 { White has poor queen placement}
+{<br> $98 } $98 { }
 
-{<br> $99 = } $99 { Black has poor queen placement}
+{<br> $99 } $99 { }
 
-{<br> $100 = } $100 { White has good queen placement}
+{<br> $100 } $100 { }
 
-{<br> $101 = } $101 { Black has good queen placement}
+{<br> $101 } $101 { }
 
-{<br> $102 = } $102 { White has poor piece coordination}
+{<br> $102 } $102 { }
 
-{<br> $103 = } $103 { Black has poor piece coordination}
+{<br> $103 } $103 { }
 
-{<br> $104 = } $104 { White has good piece coordination}
+{<br> $104 } $104 { }
 
-{<br> $105 = } $105 { Black has good piece coordination}
+{<br> $105 } $105 { }
 
-{<br> $106 = } $106 { White has played the opening very poorly}
+{<br> $106 } $106 { }
 
-{<br> $107 = } $107 { Black has played the opening very poorly}
+{<br> $107 } $107 { }
 
-{<br> $108 = } $108 { White has played the opening poorly}
+{<br> $108 } $108 { }
 
-{<br> $109 = } $109 { Black has played the opening poorly}
+{<br> $109 } $109 { }
 
-{<br> $110 = } $110 { White has played the opening well}
+{<br> $110 } $110 { }
 
-{<br> $111 = } $111 { Black has played the opening well}
+{<br> $111 } $111 { }
 
-{<br> $112 = } $112 { White has played the opening very well}
+{<br> $112 } $112 { }
 
-{<br> $113 = } $113 { Black has played the opening very well}
+{<br> $113 } $113 { }
 
-{<br> $114 = } $114 { White has played the middlegame very poorly}
+{<br> $114 } $114 { }
 
-{<br> $115 = } $115 { Black has played the middlegame very poorly}
+{<br> $115 } $115 { }
 
-{<br> $116 = } $116 { White has played the middlegame poorly}
+{<br> $116 } $116 { }
 
-{<br> $117 = } $117 { Black has played the middlegame poorly}
+{<br> $117 } $117 { }
 
-{<br> $118 = } $118 { White has played the middlegame well}
+{<br> $118 } $118 { }
 
-{<br> $119 = } $119 { Black has played the middlegame well}
+{<br> $119 } $119 { }
 
-{<br> $120 = } $120 { White has played the middlegame very well}
+{<br> $120 } $120 { }
 
-{<br> $121 = } $121 { Black has played the middlegame very well}
+{<br> $121 } $121 { }
 
-{<br> $122 = } $122 { White has played the ending very poorly}
+{<br> $122 } $122 { }
 
-{<br> $123 = } $123 { Black has played the ending very poorly}
+{<br> $123 } $123 { }
 
-{<br> $124 = } $124 { White has played the ending poorly}
+{<br> $124 } $124 { }
 
-{<br> $125 = } $125 { Black has played the ending poorly}
+{<br> $125 } $125 { }
 
-{<br> $126 = } $126 { White has played the ending well}
+{<br> $126 } $126 { White has played the ending well}
 
-{<br> $127 = } $127 { Black has played the ending well}
+{<br> $127 } $127 { Black has played the ending well}
 
-{<br> $128 = } $128 { White has played the ending very well}
+{<br> $128 } $128 { }
 
-{<br> $129 = } $129 { Black has played the ending very well}
+{<br> $129 } $129 { }
 
-{<br> $130 = } $130 { White has slight counterplay}
+{<br> $130 } $130 { }
 
-{<br> $131 = } $131 { Black has slight counterplay}
+{<br> $131 } $131 { }
 
-{<br> $132 = } $132 { White has moderate counterplay}
+{<br> $132 } $132 { White has moderate counterplay}
 
-{<br> $133 = } $133 { Black has moderate counterplay}
+{<br> $133 } $133 { Black has moderate counterplay}
 
-{<br> $134 = } $134 { White has decisive counterplay}
+{<br> $134 } $134 { White has decisive counterplay}
 
-{<br> $135 = } $135 { Black has decisive counterplay}
+{<br> $135 } $135 { Black has decisive counterplay}
 
-{<br> $136 = } $136 { White has moderate time control pressure}
+{<br> $136 } $136 { White has moderate time control pressure}
 
-{<br> $137 = } $137 { Black has moderate time control pressure}
+{<br> $137 } $137 { Black has moderate time control pressure}
 
-{<br> $138 = } $138 { White has severe time control pressure}
+{<br> $138 } $138 { White has severe time control pressure}
 
-{<br> $139 = } $139 { Black has severe time control pressure}
+{<br> $139 } $139 { Black has severe time control pressure}
 
-{<br> $140 = } $140 { with the idea}
+{<br> $140 } $140 { with the idea}
 
-{<br> $141 = } $141 { against}
+{<br> $141 } $141 { against}
 
-{<br> $142 = } $142 { is better}
+{<br> $142 } $142 { is better}
 
-{<br> $143 = } $143 { is worse}
+{<br> $143 } $143 { is worse}
 
-{<br> $144 = } $144 { = = is equivalent}
+{<br> $144 } $144 { =, is equivalent}
 
-{<br> $145 = } $145 { RR = editor's remark}
+{<br> $145 } $145 { RR, editor's remark}
 
-{<br> $146 = } $146 { N = Novelty}
+{<br> $146 } $146 { N, Novelty}
 
-{<br> $147 = } $147 { Weak Point}
+{<br> $147 } $147 { Weak Point}
 
-{<br> $148 = } $148 { Endgame}
+{<br> $148 } $148 { Endgame}
 
-{<br> $149 = } $149 { Line}
+{<br> $149 } $149 { Line}
 
-{<br> $150 = } $150 { Diagonal}
+{<br> $150 } $150 { Diagonal}
 
-{<br> $151 = } $151 { White has a pair of Bishops}
+{<br> $151 } $151 { White has a pair of Bishops}
 
-{<br> $152 = } $152 { Black has a  pair of Bishops}
+{<br> $152 } $152 { Black has a  pair of Bishops}
 
-{<br> $153 = } $153 { Bishops of opposite color}
+{<br> $153 } $153 { Bishops of opposite color}
 
-{<br> $154 = } $154 { Bishops of same color}
-
-{<br> $156 = } $156 { passed pawn}
-
-{<br> $157 = } $157 { more pawns}
-
-{<br> $158 = } $158 { with}
-
-{<br> $159 = } $159 { without}
-
-{<br> $161 = } $161 { see}
-
-{<br> $163 = } $163 { rank}
-
-{<br> $190 = } $190 { etc.}
-
-{<br> $191 = } $191 { doubled pawns}
-
-{<br> $192 = } $192 { isolated pawns}
-
-{<br> $193 = } $193 { connected pawns}
-
-{<br> $194 = } $194 { Hanging pawns}
-
-{<br> $195 = } $195 { Backward pawns}
-
-{<br> $201 = } $201 { Diagram}
-
-{<br> $250 = } $250 { Diagram}
+{<br> $154 } $154 { Bishops of same color}
 
 *

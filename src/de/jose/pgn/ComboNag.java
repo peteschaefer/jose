@@ -1,10 +1,15 @@
 package de.jose.pgn;
 
+import de.jose.Application;
+import de.jose.Config;
 import de.jose.Language;
+import de.jose.profile.FontEncoding;
+import de.jose.profile.UserProfile;
 
 import java.io.File;
 import java.io.IOException;
 
+import static de.jose.Application.theApplication;
 import static de.jose.pgn.PgnConstants.NAG_MAX;
 
 public class ComboNag
@@ -160,25 +165,32 @@ public class ComboNag
         return buf.toString();
     }
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws Exception
     {
+        args = new String[] { "splash=off", "console.output=true" };
+        Application.parseProperties(args);
+        new Application();
+        theApplication.theConfig = new Config(new File(".","config"));
         Language.setLanguage(new File("config"),"en");
-
+        FontEncoding fontEncoding = FontEncoding.getEncoding(UserProfile.getFactorySymbolFont());
         //printAllCombos();
-        for(int nag=0; nag <= NAG_MAX; ++nag)
-        {
-            String text = Language.get("pgn.nag."+nag,null);
-            String tip = Language.get("pgn.nag."+nag+".tip",null);
-            if (text==null && tip==null) continue;
+        for(int nag=0; nag <= NAG_MAX; ++nag) {
+            String symbol = fontEncoding.getSymbol(nag);
+            String text = Language.get("pgn.nag." + nag, null);
+            String tip = Language.get("pgn.nag." + nag + ".tip", null);
+            if (symbol == null && text.length() > 4) {
+                text = tip = null;
+                // jose will use text instead of symbol, anyway
+            }
 
             System.out.print("{<br> $");
             System.out.print(nag);
-            System.out.print(" = } $");
+            System.out.print(" } $");
             System.out.print(nag);
             System.out.print(" { ");
             if (text!=null) System.out.print(text);
             if (text!=null && tip!=null)
-                System.out.print(" = ");
+                System.out.print(", ");
             if (tip!=null) System.out.print(tip);
             System.out.println("}\n");
         }

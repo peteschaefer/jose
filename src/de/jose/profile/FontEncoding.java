@@ -181,8 +181,9 @@ public class FontEncoding
 	}
 
 	public final String getSymbol(int nagCode) {
-		if (chars[SYMBOLS]!=null)
-			return chars[SYMBOLS][nagCode];
+		String[] symbols = chars[SYMBOLS];
+		if (symbols !=null && nagCode < symbols.length)
+			return symbols[nagCode];
 		else
 			return null;
 	}
