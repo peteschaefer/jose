@@ -188,13 +188,19 @@ public class EnginePanel
 		StyleConstants.setForeground(linkStyle, BLUE_LINK);
 		StyleConstants.setUnderline(linkStyle, true);
 
+		formatter = new StyledMoveFormatter();
+		setupMoveFormatter(userStyles);
+	}
+
+	private void setupMoveFormatter(JoStyleContext userStyles)
+	{
+		Style textStyle = userStyles.getStyle("engine.pv");
 		Style userFigStyle = userStyles.getStyle("body.figurine");
 		String figFontName = StyleConstants.getFontFamily(userFigStyle);
 
-		Style figStyle = styles.addStyle("engine.pv.figurine",textStyle);
+		Style figStyle = styles.addStyle("engine.pv.figurine", textStyle);
 		StyleConstants.setFontFamily(figStyle,figFontName);
 
-		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
 		formatter.setPieceCharArray(
 				StringMoveFormatter.getDefaultFormatter().getPieceCharArray());
@@ -1223,6 +1229,10 @@ public class EnginePanel
             doc.remove(0,doc.getLength());
 			if (text!=null && text.length()>0) {
 				if (formatter.getFigStyle()!=null) {
+					//formatter.setLanguage();
+					String[] pieceChars = StringMoveFormatter.getDefaultFormatter().getPieceCharArray();
+					//	this one was used by UCI engine to print the moves
+					formatter.setPieceCharArray(pieceChars);
 					formatter.setDocument(doc,doc.getLength());
 					formatter.reformatFrom(text);
 				}
@@ -1768,6 +1778,8 @@ public class EnginePanel
         action = new CommandAction() {
             public void Do(Command cmd) {
                 StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
+				JoStyleContext styles = Application.theUserProfile.getStyleContext();
+				setupMoveFormatter(styles);
             }
         };
         map.put("styles.modified",action);

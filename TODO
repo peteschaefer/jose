@@ -9,13 +9,11 @@
 [x] bug:
     8/5Q1p/6p1/2n1N1Pk/5P1P/P6K/2q5/8 w - - 1 56
     -> lift Qf7 and Ph7
-    -> interpreted as take-take sequence
-    -> don't do that. Qxh7 is a likely (and legal) move
+    [x] don't interpret take-take sequence if there is a plausbile simple move
 
 [x] stop analysis on mate
-[ ] uci figurines:
-     [ ] use english
-     [ ] or: support multi letter (like russian)
+[x] uci figurines:
+     [x] support multi letter (like russian)
 [ ] Cut from text
 [x] Type N, ? at end of comment
 
