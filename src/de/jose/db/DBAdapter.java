@@ -12,10 +12,7 @@
 
 package de.jose.db;
 
-import de.jose.Application;
-import de.jose.Config;
-import de.jose.Language;
-import de.jose.Version;
+import de.jose.*;
 import de.jose.db.sqltrace.TraceDriverManager;
 import de.jose.db.crossover.*;
 import de.jose.pgn.Collection;
@@ -667,30 +664,30 @@ abstract public class DBAdapter
 	 * Launch process
 	 * @return
 	 */
-	protected HashSet<String> deferredActions = new HashSet<>();
+	protected HashMap<String,Command> deferredActions = new HashMap<>();
 
-	public void launchProcess() {
+	public void launchProcess(boolean boostrap) {
 	}
 
 	public boolean launchComplete() {
 		return true;
 	}
 
-	public boolean postAfterLaunch(String action) {
+	public boolean postAfterLaunch(Command cmd) {
 		if (launchComplete()) {
-			EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-			ActionEvent event = new ActionEvent(this,ActionEvent.ACTION_FIRST,action);
-			queue.postEvent(event);
+			//EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+			//ActionEvent event = new ActionEvent(this,ActionEvent.ACTION_FIRST, action);
+			//queue.postEvent(event);
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+				}
+			});
 			return true;
 		}
 		else{
-			deferredActions.add(action);
+			deferredActions.put(cmd.code,cmd);
 			return false;
 		}
-	}
-
-	protected void postAfterLaunch() {
-		for(String action : deferredActions)
-			postAfterLaunch(action);
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.db;
 
 import de.jose.Application;
+import de.jose.Command;
 import de.jose.Config;
 import de.jose.Util;
 import de.jose.util.IntArray;
@@ -89,10 +90,7 @@ public class JoConnection
 	public static void init(Config cfg, File wd, File dd, String database, int poolSize)
 		throws SQLException
 	{
-		if (theAdapter==null) {
-			theAdapter = DBAdapter.get(database, cfg, wd, dd);
-			theAdapter.launchProcess();
-		}
+		if (theAdapter==null) theAdapter = DBAdapter.get(database, cfg, wd, dd);
 		if (theConnections==null) theConnections = new ConnectionPool(poolSize);
 		if (theSequences==null) theSequences = new HashMap();
 	}
@@ -146,10 +144,8 @@ public class JoConnection
         if (conn!=null) conn.release();
     }
 
-	public static boolean postWithConnection(String action) throws SQLException {
-		if (theAdapter==null)
-			init();
-		return theAdapter.postAfterLaunch(action);
+	public static boolean postWithConnection(Command cmd) {
+		return theAdapter.postAfterLaunch(cmd);
 }
 
 	//-------------------------------------------------------------------------------

@@ -15,6 +15,7 @@ package de.jose;
 import de.jose.chess.*;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
+import de.jose.db.MySQLAdapter;
 import de.jose.eboard.ChessNutConnector;
 import de.jose.eboard.EBoardConnector;
 import de.jose.export.ExportConfig;
@@ -66,6 +67,7 @@ import java.awt.event.FocusEvent;
 import java.io.*;
 import java.net.*;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -3351,6 +3353,9 @@ public class Application
 
 		theMode = theUserProfile.getInt("game.mode",USER_ENGINE);
 
+		//	create DB adapter
+		JoConnection.getAdapter(true);
+
 		if (theUserProfile.getBoolean("doc.load.history"))
 			openHistory();
 
@@ -3399,7 +3404,14 @@ public class Application
 
 			getContextMenu();
 
-			//	todo if standalone db, launch it here !
+			//	launch DB process
+
+			//	bootstrap directory?
+			File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+			boolean bootstrap = MySQLAdapter.askBootstrap(mysqldir);
+			//	launch background process
+			DBAdapter adapter = JoConnection.getAdapter(true);
+			adapter.launchProcess(bootstrap);
 
 			//  deferred loading of ECO classificator & additional fonts
 			Thread deferredLoader = new DeferredStartup();
@@ -4169,7 +4181,7 @@ public class Application
 		if (gids != null && gids.length > 0)
 		{
 			GameSource src = GameSource.gameArray(gids);
-			theCommandDispatcher.forward(new Command("edit.all", null,src,Boolean.FALSE), theApplication);
+			JoConnection.postWithConnection(new Command("edit.all", null,src,Boolean.FALSE));
 		}
 	}
 

@@ -80,110 +80,76 @@ public class MySQLAdapter
     }
 
 	@Override
-	public void launchProcess() {
-		switch (getServerMode()) {
-			case MODE_STANDALONE:
-				new StandaloneLauncher().start();
-				break;
-			case MODE_EMBEDDED:
-				new EmbeddedLauncher().start();
-				break;
-		}
+	public void launchProcess(boolean bootstrap) {
+		this.bootstrap = bootstrap;
+		new MySqlLauncher().start();
 	}
 
 	@Override
 	public boolean launchComplete() {
-		switch (getServerMode()) {
-			case MODE_STANDALONE:
-				//	todo
-				break;
-			case MODE_EMBEDDED:
-				return init_embedded;
-		}
+		return init_embedded;
 	}
 
-	protected class EmbeddedLauncher extends Thread {
+	private boolean waitForStandaloneServer() throws IOException {
+		InputStream in1 = serverProcess.getInputStream();
+		InputStream in2 = serverProcess.getErrorStream();
+		BufferedReader bin = new BufferedReader(new InputStreamReader(in2));
+		for(int i=0; i<100; ++i) {
+			if (! serverProcess.isAlive())
+				return false;
+			String line = bin.readLine();
+			System.out.println(line);
+			if (line.contains("ready for connections"))
+				return true;
+		}
+		return false;
+	}
+
+	protected class MySqlLauncher extends Thread {
+		public MySqlLauncher() {
+			super("MySql Launcher");
+		}
+
 		@Override
 		public void run() {
-			if (!init_embedded)
-				synchronized (this)
-				{
-					if (!init_embedded) {
-						File mysqldir = initEmbeddedServer();
-						if (askBootstrap(mysqldir)) {
-							//	bootstrap new database
-							//	todo unify with standalone Launcher
-							Connection conn = super.createConnection(DBAdapter.READ_WRITE);
-							bootstrap(conn);
-						}
-						init_embedded = true;
+			switch(getServerMode()) {
+				case MODE_STANDALONE:
+					props.put("user","");
+					props.put("password","");
+					props.put("characterEncoding","UTF8");
+
+                    try {
+                        serverProcess = startStandaloneServer(true);
+						waitForStandaloneServer();
+                    } catch (IOException e) {
+						throw new RuntimeException(e);
 					}
-				}
+                   break;
+
+				case MODE_EMBEDDED:
+					initEmbeddedServer();
+					break;
+			}
+
+			watchDirectory();
+
+			init_embedded = true;
+
+			if (bootstrap) {
+                try {
+                    Connection connection = createConnection(READ_WRITE);
+					bootstrap(connection);
+					connection.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+			for(Command cmd : deferredActions.values())
+				postAfterLaunch(cmd);	// this should now post into the event loop
+			deferredActions.clear();
 		}
 	}
-
-	protected class StandaloneLauncher extends Thread {
-		@Override
-		public void run() {
-			if (serverProcess==null)
-				synchronized (this) {
-					if (serverProcess==null && killProcess==null)
-						try {
-							serverProcess = startStandaloneServer(true);
-							/**	since the server is running in a separate process,
-							 * 	this may take some time to complete.
-							 * 	to account for that, we sleep a bit, then try several connect requests
-							 * 	todo no, please. put this into Application.Startup
-							 */
-							try {
-								Thread.sleep(300);
-							} catch (InterruptedException e) {
-							}
-
-							int repeat = 4;
-							int sleep = 2000;
-							SQLException ex = null;
-
-							Connection result = null;
-							while (result == null && repeat-- > 0)
-								try {
-									props.put("user","");
-									props.put("password","");
-									props.put("characterEncoding","UTF8");
-									//props.put("connectionCollation","latin1_english_ci");
-									result = super.createConnection(mode);
-								} catch (SQLException sqlex) {
-									//	server not yet up ? try again ...
-									ex = sqlex;
-									try {
-										System.err.print(".");
-										Thread.sleep(sleep);
-									} catch (InterruptedException iex) {
-										//	don't care
-									}
-								}
-
-							watchDirectory();
-
-							if (result!=null) {
-								if (bootstrap) {
-									//	bootstrap new database
-									bootstrap(result);
-								}
-								return result;
-							}
-
-							//	timed out !
-							throw ex;
-
-						} catch (IOException ioex) {
-							throw new SQLException("failed to start MySQL server: "+
-									ioex.getLocalizedMessage());
-						}
-				}
-		}
-	}
-
 
 	public Connection createConnection(int mode)
 		throws SQLException
@@ -196,7 +162,7 @@ public class MySQLAdapter
 		return super.createConnection(mode);
 	}
 
-	private File initEmbeddedServer()
+	private void initEmbeddedServer()
 	{
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File bindir = new File(Application.theWorkingDirectory, "bin");
@@ -256,8 +222,6 @@ public class MySQLAdapter
 			 */
 
 		}
-		watchDirectory();
-		return mysqldir;
 	}
 
 	private void watchDirectory()
@@ -442,7 +406,6 @@ public class MySQLAdapter
 		 *  -u root
 		 */
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
-        askBootstrap(mysqldir);
 
 		Vector command = new Vector();
 		Vector env = new Vector();
@@ -462,8 +425,9 @@ public class MySQLAdapter
 		command.add("--skip-innodb");
 		command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
-		command.add("--default-character-set=utf8");
-		command.add("--default-collation=utf8_general_ci");
+		command.add("--character-set-server=utf8");
+		command.add("--collation-server=utf8_general_ci");
+		command.add("--console");	// do write to std-out
 		//	MySQL 8.0.x
 //		command.add("--upgrade=NONE");	//	don't upgrad old MyISAM tables
 //		command.add("--mysqld="+execPath);	//	used for "mysqld_safe"
@@ -554,7 +518,7 @@ public class MySQLAdapter
 			command.add("--port="+portno.trim());
 
 			props.put("url", "jdbc:mysql://localhost:"+portno+"/jose");
-			System.out.println(props.get("url"));
+			System.err.println(props.get("url"));
 		}
 
 		//	set data directory
@@ -579,7 +543,7 @@ public class MySQLAdapter
 			System.err.println();
 		}
 
-		Process result = Runtime.getRuntime().exec(commandArray);
+		Process result = Runtime.getRuntime().exec(commandArray,envArray);
 		Runtime.getRuntime().addShutdownHook(killProcess = new KillMySqlProcess(serverProcess));
 		return result;
 	}
@@ -655,7 +619,7 @@ public class MySQLAdapter
         }
     }
 
-	private boolean askBootstrap(File mysqldir)
+	public static boolean askBootstrap(File mysqldir)
 	{
 		File dbdir = new File(mysqldir, "jose");
 

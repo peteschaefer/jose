@@ -111,8 +111,6 @@ Alternative: JBR 21 x86
 
 ==== Postponed
 
-* launch mysqld earlier (?)
-
 * Graph View interactive
     - mark current move
     - tooltips
