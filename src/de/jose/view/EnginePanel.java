@@ -31,6 +31,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ClipboardUtil;
 import de.jose.view.input.JoBigLabel;
+import de.jose.view.input.JoStyledLabel;
 import de.jose.view.input.WdlLabel;
 import javafx.stage.PopupWindow;
 
@@ -101,7 +102,7 @@ public class EnginePanel
 	 *  0 = general info
 	 *  1 = first pv, ...
 	 * */
-	protected ArrayList<JoBigLabel> lPrimaryVariation;
+	protected ArrayList<JoStyledLabel> lPrimaryVariation;
 	/** number of displayed primary variations  */
 	protected int pvCount;
 	protected boolean showInfoLabel;
@@ -267,16 +268,16 @@ public class EnginePanel
 	{
 		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
 		WdlLabel label = new WdlLabel(""/*Language.get(name)*/,1,4);
-		makeBigLabel(label, name,normalFont,JLabel.LEFT,
+		makeLabel(label, name,normalFont,JLabel.LEFT,
 				JoLineBorder.ALL, 3,3,3,3);
 		return label;
 	}
 
-	private JoBigLabel createPvLineComponent(String name)
+	private JoStyledLabel createPvLineComponent(String name)
 	{
 		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
-		JoBigLabel label = new JoBigLabel(""/*Language.get(name)*/,1,4);
-		makeBigLabel(label, name,normalFont,JLabel.LEFT,
+		JoStyledLabel label = new JoStyledLabel(""/*Language.get(name)*/);
+		makeLabel(label, name,normalFont,JLabel.LEFT,
                                     JoLineBorder.ALL, 3,3,3,3);
 		return label;
 	}
@@ -391,9 +392,9 @@ public class EnginePanel
 			return null;
 	}
 
-	protected JoBigLabel getInfoLabel(boolean create)
+	protected JoStyledLabel getInfoLabel(boolean create)
 	{
-		JoBigLabel info = getDynamicLineLabel(0, create, true, "plugin.info");
+		JoStyledLabel info = getDynamicLineLabel(0, create, true, "plugin.info");
 		if (info!=null && !info.isShowing()) {
 //			info.setBackground(Color.lightGray);
 			info.setVisible(true);
@@ -403,9 +404,9 @@ public class EnginePanel
 		return info;
 	}
 
-	protected JoBigLabel getPvLabel(int idx, boolean create, boolean show)
+	protected JoStyledLabel getPvLabel(int idx, boolean create, boolean show)
 	{
-		JoBigLabel pv = getDynamicLineLabel( idx+1, create, show, "plugin.pv."+(idx+1));
+		JoStyledLabel pv = getDynamicLineLabel( idx+1, create, show, "plugin.pv."+(idx+1));
 		if (pv!=null && show && !pv.isShowing())
 		synchronized (this) {
 			WdlLabel eval = getDynamicEvalLabel( idx+1, true, show, "plugin.eval."+(idx+1));
@@ -420,7 +421,7 @@ public class EnginePanel
 		return pv;
 	}
 
-	public int findPly(JTextArea label, Point at)
+	public int findPly(JTextComponent label, Point at)
 	{
 		//	todo map to text position; count spaces and line breaks
 		int i = label.viewToModel(at);
@@ -433,7 +434,7 @@ public class EnginePanel
 		WdlLabel eval = getDynamicEvalLabel( idx+1, create, show, "plugin.eval."+(idx+1));
 		if (eval!=null && show && !eval.isShowing())
 		synchronized (this) {
-			JoBigLabel pv = getDynamicLineLabel( idx+1, true, show, "plugin.pv."+(idx+1));
+			JoStyledLabel pv = getDynamicLineLabel( idx+1, true, show, "plugin.pv."+(idx+1));
 			pv.setVisible(true);
 			showTooltip(idx);
 			pv.setToolTipText("?");
@@ -467,15 +468,15 @@ public class EnginePanel
 		return result;
 	}
 
-	private JoBigLabel getDynamicLineLabel(int vidx, boolean create, boolean show, String name)
+	private JoStyledLabel getDynamicLineLabel(int vidx, boolean create, boolean show, String name)
 	{
-		ArrayList<JoBigLabel> v = lPrimaryVariation;
+		ArrayList<JoStyledLabel> v = lPrimaryVariation;
 		if (vidx >= v.size() && !create)
 			return null;
 
 		while (vidx >= v.size()) v.add(null);
 
-		JoBigLabel result = (JoBigLabel)v.get(vidx);
+		JoStyledLabel result = (JoStyledLabel)v.get(vidx);
 		if (result==null && create)
 		{
 			//  create new label
@@ -491,7 +492,7 @@ public class EnginePanel
 
 	public String getPvText(int idx)
 	{
-		JoBigLabel pvlabel = getPvLabel(idx,false, false);
+		JoStyledLabel pvlabel = getPvLabel(idx,false, false);
 		if (pvlabel==null) return null; //  no PV
 
 		String line = pvlabel.getText();
@@ -615,7 +616,7 @@ public class EnginePanel
 		return label;
 	}
 
-	protected void makeBigLabel(JoBigLabel label,
+	protected void makeLabel(JTextComponent label,
 			String name, Font font, int aligment,
 			int border,
 			int paddingTop, int paddingLeft, int paddingBottom, int paddingRight)
@@ -992,7 +993,7 @@ public class EnginePanel
 			contents.append(text);
 		if (info!=null && info.length() > 0) {
 			if (contents.length() > 0)
-				contents.append("\n");
+				contents.append("<br>");
 			contents.append(info);
 		}
 		label.setText(contents.toString());
@@ -1180,7 +1181,7 @@ public class EnginePanel
         //  update visibility
         tPVHistory.setVisible(showHistory);
 
-        JoBigLabel label;
+        JoStyledLabel label;
 	    showLines(0, !showHistory);
 
 	    label = getInfoLabel(false);
@@ -1208,7 +1209,7 @@ public class EnginePanel
 
 	public void showTooltip(int idx)
 	{
-		JoBigLabel pv = getPvLabel(idx,false,false);
+		JoStyledLabel pv = getPvLabel(idx,false,false);
 		if (pv==null) return;
 		if (showTooltips)
 			pv.tooltip = new PopupBoardWindow(this,idx);
@@ -1218,17 +1219,18 @@ public class EnginePanel
 
 	private void showLines(int from, boolean visible)
 	{
-		JoBigLabel label;
+		WdlLabel label1;
+		JoStyledLabel label2;
 		int to = Math.max(lEval.size(), lPrimaryVariation.size());
 
 		for (int i=from; i < to; i++) {
-		    label = getEvalLabel(i,false,false);
+		    label1 = getEvalLabel(i,false,false);
 //			label = getDynamicLabel(lEval, i+1, false, false, null);
-		    if (label!=null) label.setVisible(visible);
+		    if (label1!=null) label1.setVisible(visible);
 
-		    label = getPvLabel(i,false,false);
+		    label2 = getPvLabel(i,false,false);
 //			label = getDynamicLabel(lPrimaryVariation, i+1, false, false, null);
-		    if (label!=null) label.setVisible(visible);
+		    if (label2!=null) label2.setVisible(visible);
 		}
 	}
 
@@ -1281,7 +1283,7 @@ public class EnginePanel
 		/** line specific commands  */
 		for (int i=0; i < pvCount; i++)
 		{
-			JoBigLabel label = getPvLabel(i,false, false);
+			JoStyledLabel label = getPvLabel(i,false, false);
 			if (label!=null && AWTUtil.isInside(event,label))
 			{
 				String text = getPvText(i);
@@ -1551,7 +1553,7 @@ public class EnginePanel
 			//  double click
 			for (int i=0; ; i++)
 			{
-				JoBigLabel label = getPvLabel(i,false, false);
+				JoStyledLabel label = getPvLabel(i,false, false);
 				if (label==null) break;
 				if (label==e.getSource())
 				{

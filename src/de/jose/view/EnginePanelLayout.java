@@ -13,7 +13,9 @@
 package de.jose.view;
 
 import de.jose.view.input.JoBigLabel;
+import de.jose.view.input.JoStyledLabel;
 
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
@@ -34,7 +36,7 @@ public class EnginePanelLayout
 		engPanel = engpanel;
 	}
 
-    protected int getPreferredLineHeight(JoBigLabel evalLabel, JoBigLabel pvLabel, int width)
+    protected int getPreferredLineHeight(PreferredHeightComponent evalLabel, PreferredHeightComponent pvLabel, int width)
     {
         assert(evalLabel!=null);
         assert(pvLabel!=null);
@@ -65,7 +67,7 @@ public class EnginePanelLayout
             for (int i=0; i < (max-1); i++)
             {
                 JoBigLabel evalLabel = engPanel.getEvalLabel(i,false, false);
-                JoBigLabel pvLabel = engPanel.getPvLabel(i,false, false);
+                JoStyledLabel pvLabel = engPanel.getPvLabel(i,false, false);
 
                 if (evalLabel != null && pvLabel != null) {
                     int linewidth = width-MIN_EVAL_WIDTH;
@@ -80,7 +82,7 @@ public class EnginePanelLayout
             /** measure info line   */
             if (engPanel.showInfoLabel())
             {
-                JoBigLabel infoLabel = engPanel.getInfoLabel(false);
+                JoStyledLabel infoLabel = engPanel.getInfoLabel(false);
                 if (infoLabel != null)
                 infoheight = getPreferredHeight(infoLabel,width);
             }
@@ -88,7 +90,7 @@ public class EnginePanelLayout
             /** expend remaining space for last pv   */
             if (max > 0) {
                 JoBigLabel evalLabel = engPanel.getEvalLabel(max-1,false,false);
-                JoBigLabel pvLabel = engPanel.getPvLabel(max-1,false,false);
+                JoStyledLabel pvLabel = engPanel.getPvLabel(max-1,false,false);
 
                 if (evalLabel != null && pvLabel != null) {
                     int linewidth = width - MIN_EVAL_WIDTH;
@@ -103,7 +105,7 @@ public class EnginePanelLayout
             /** lay out info line   */
             if (engPanel.showInfoLabel())
             {
-                JoBigLabel infoLabel = engPanel.getInfoLabel(false);
+                JoStyledLabel infoLabel = engPanel.getInfoLabel(false);
                 if (infoLabel != null) {
                     infoLabel.setBounds(0, y, width, infoheight);
                     y += infoheight;
@@ -112,7 +114,7 @@ public class EnginePanelLayout
         }
 	}
 
-	protected int getPreferredHeight(JoBigLabel label, int width)
+	protected int getPreferredHeight(PreferredHeightComponent label, int width)
 	{
         if (label != null)
 		    return Math.max(label.setPreferredHeight(width), MIN_HEIGHT);
@@ -158,7 +160,7 @@ public class EnginePanelLayout
             /** lay out info line   */
             if (engPanel.showInfoLabel())
             {
-                JoBigLabel infoLabel = engPanel.getInfoLabel(false);
+                JoStyledLabel infoLabel = engPanel.getInfoLabel(false);
                 if (infoLabel!=null)
                     height += getPreferredHeight(infoLabel,containerWidth);
             }
@@ -167,7 +169,7 @@ public class EnginePanelLayout
             for (int i=0; i < max; i++)
             {
                 JoBigLabel evalLabel = engPanel.getEvalLabel(i,false, false);
-                JoBigLabel pvLabel = engPanel.getPvLabel(i,false, false);
+                JoStyledLabel pvLabel = engPanel.getPvLabel(i,false, false);
                 if (evalLabel!=null && pvLabel!=null)
                     height += getPreferredLineHeight(evalLabel,pvLabel,containerWidth);
             }

@@ -13,6 +13,7 @@
 package de.jose.view.input;
 
 import de.jose.image.ImgUtil;
+import de.jose.view.PreferredHeightComponent;
 import de.jose.window.BrowserWindow;
 import de.jose.Application;
 import de.jose.Util;
@@ -28,10 +29,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.net.URL;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,11 +41,14 @@ import java.util.ArrayList;
  */
 
 public class JoStyledLabel
-		extends JTextPane implements HyperlinkListener, FocusListener
+		extends JTextPane
+        implements PreferredHeightComponent, HyperlinkListener, FocusListener
 {
 	protected static HTMLEditorKit htmlKit = null;
 	protected static StyleSheet theStyleSheet = null;
-	protected Popup tooltip = null;
+
+	public JToolTip tooltip = null;
+    public Point mouseLocation;
 
 	protected HTMLDocument doc;
     protected ArrayList actionListeners;
@@ -63,15 +64,15 @@ public class JoStyledLabel
 		if (htmlKit==null) {
 			htmlKit = new HTMLEditorKit();
 			theStyleSheet = htmlKit.getStyleSheet();
-			theStyleSheet.addRule("body { font-family: sans-serif; font-size: 12; }");
+			theStyleSheet.addRule("body { font-family: sans-serif; font-size: 12pt; }");
 		}
 
 		setEditorKit(htmlKit);
 		doc = (HTMLDocument)htmlKit.createDefaultDocument();
 		setStyledDocument(doc);
 
-        if (text==null || text.length()==0)
-            text = "<html><body id='body'></body></html>";
+//        if (text==null || text.length()==0)
+//            text = "<html><body id='body'></body></html>";
 
 		setText(text);
 		setName(text);
@@ -144,7 +145,7 @@ public class JoStyledLabel
 		ImgUtil.setTextAntialiasing((Graphics2D)g, true);
 		super.paintComponent(g);
 	}
-
+/*
 	protected void showToolTip(String text, Rectangle loc)
 	{
 		JToolTip tip = new JToolTip();
@@ -155,14 +156,14 @@ public class JoStyledLabel
         if (loc==null)
             p = new Point((getWidth()-tip.getWidth())/2, (getHeight()-tip.getHeight())/2);
         else
-            p = new Point(loc.x/*+loc.width-tip.getWidth()*/, loc.y+loc.height+4/*-tip.getHeight()*/);
+            p = new Point(loc.x/*+loc.width-tip.getWidth()* /, loc.y+loc.height+4/*-tip.getHeight()* /);
 
 		SwingUtilities.convertPointToScreen(p,this);
 		PopupFactory popf = PopupFactory.getSharedInstance();
 		tooltip = popf.getPopup(this, tip, p.x,p.y);		
 		tooltip.show();
 	}
-
+*/
     public void hyperlinkUpdate(HyperlinkEvent e)
     {
 	    URL url = e.getURL();
@@ -188,6 +189,7 @@ public class JoStyledLabel
         }
 		else if (e.getEventType()==HyperlinkEvent.EventType.ENTERED)
 		{
+/*
 			if (url!=null && !Util.equals(url.getProtocol(),"verbatim")) {
                 Element source = e.getSourceElement();
                 //  find location on screen
@@ -204,6 +206,7 @@ public class JoStyledLabel
                 }
             }
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+ */
 		}
     }
 
@@ -258,5 +261,27 @@ public class JoStyledLabel
         super.setVisible(aFlag);
     }
 
+
+    @Override
+    public JToolTip createToolTip() {
+        if (tooltip!=null)
+            return tooltip;
+        else
+            return super.createToolTip();
+    }
+
+    @Override
+    public Point getToolTipLocation(MouseEvent event) {
+        if (tooltip==null)
+            return super.getToolTipLocation(event);
+        else {
+            mouseLocation = event.getPoint();
+            Point tooltipLocation = (Point) mouseLocation.clone();
+            tooltipLocation.x = de.jose.Util.roundUp(tooltipLocation.x,20);
+            tooltipLocation.y = de.jose.Util.roundUp(tooltipLocation.y,20);
+            tooltipLocation.y += 30;
+            return tooltipLocation;
+        }
+    }
 
 }
