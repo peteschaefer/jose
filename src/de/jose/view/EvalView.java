@@ -375,6 +375,7 @@ public class EvalView
 		}
 	}
 
+	//	todo this should happen at EnginePanel, then broadcasted to all interested parties
 	private void updateMoveNode(int ply, Score value)
 	{
 		setValue(ply, value);

@@ -20,6 +20,8 @@ import de.jose.book.BookEntry;
 import de.jose.chess.Position;
 import de.jose.chess.StringMoveFormatter;
 import de.jose.image.ImgUtil;
+import de.jose.pgn.Game;
+import de.jose.pgn.MoveNode;
 import de.jose.plugin.Score;
 import de.jose.plugin.AnalysisRecord;
 import de.jose.plugin.EnginePlugin;
@@ -604,6 +606,24 @@ public class EnginePanel
 		return label;
 	}
 
+	protected void broadcastMoveValue(Score score)
+	{
+		Command cmd = new Command("move.value", null, score);
+		Game game = Application.theApplication.theGame;
+		if (game!=null) {
+			MoveNode mvnd = game.getCurrentMove();
+			if (mvnd!=null) {
+				if (!score.equals(mvnd.engineValue)) {
+					mvnd.engineValue = new Score(score);
+					game.setDirty(true);
+				}
+				cmd.moreData = mvnd;
+			}
+		}
+
+		Application.theCommandDispatcher.broadcast(cmd, Application.theApplication);
+	}
+
 	/**
 	 * @param state
 	 * @param rec
@@ -646,6 +666,9 @@ public class EnginePanel
 					assert(rec.line[idx]!=null);
 					setEvaluation(idx, rec.eval[idx]);
 					setVariation(idx, rec.line[idx], rec.line_info[idx]);
+
+					if (idx==0)
+						broadcastMoveValue(rec.eval[idx]);
 
 					if (! inBook) {
                     if (countPvLines() > 1)

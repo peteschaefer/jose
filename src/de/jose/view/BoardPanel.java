@@ -501,6 +501,14 @@ public class BoardPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
+				Score score = (Score) cmd.data;
+				theView.setEval(score);
+			}
+		};
+		map.put("move.value",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
 				UserProfile prf = (UserProfile)cmd.data;
 				if (view2d != null) view2d.storeProfile(prf);
 				if (view3d != null) view3d.storeProfile(prf);
@@ -556,25 +564,6 @@ public class BoardPanel
 
 		case EnginePlugin.THINKING:	mouseSelect = false; break;
 		default:				    mouseSelect = true; break;
-		}
-		//	update eval bar
-		switch(what) {
-			case EnginePlugin.ANALYZING:
-			case EnginePlugin.THINKING:
-			case EnginePlugin.PONDERING:
-				AnalysisRecord a = (AnalysisRecord)data;
-				//EnginePlugin plugin = (EnginePlugin)who;
-				if (a==null || a.maxpv==0)
-					theView.resetScore();	//	nothing to be done
-				else
-					theView.setEval(a.eval[0]);
-				theView.repaint();
-				break;
-
-			case EnginePlugin.PAUSED:
-				theView.resetScore();
-				theView.repaint();
-				break;
 		}
 
 		//	update suggestions (only in ANALYZTE mode, not during thinking and pondering)

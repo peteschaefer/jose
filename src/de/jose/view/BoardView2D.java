@@ -190,14 +190,15 @@ public class BoardView2D
 	}
 
 	@Override
-	public void setEval(Score val)
+	public void doSetEval(Score score)
 	{
-		boolean hadeval = (showEvalbar && this.eval!=null);
-		super.setEval(val);
-		boolean haseval = (showEvalbar && this.eval!=null);
-		if (hadeval!=haseval)
+		boolean modified = ! Score.equals(score,this.eval);
+		this.eval = score;
+		if (modified) {
+			//	when eval bar switches state, a redraw is necessary
 			forceRedraw = true;
-		//	when eval bar switches state, a redraw is necessary
+			repaint();
+		}
 	}
 
 	@Override

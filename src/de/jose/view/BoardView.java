@@ -14,11 +14,9 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.*;
-import de.jose.eboard.ChessNutConnector;
 import de.jose.eboard.EBoardConnector;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
-import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.UserProfile;
 import de.jose.view.input.StyledToolTip;
@@ -33,8 +31,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.awt.Graphics2D;
-import java.util.Collection;
-import java.util.Vector;
 
 import static de.jose.pgn.INodeConstants.MOVE_NODE;
 
@@ -150,7 +146,7 @@ abstract public class BoardView
 
 	public void refresh(boolean stopAnimation)	{
 		super.repaint();
-		resetScore();
+		resetEval();
 	}
 
 	public void flip(boolean on)
@@ -345,12 +341,17 @@ abstract public class BoardView
 	public void setEval(Score sc)
 	{
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
-			this.eval = null;
+			doSetEval(null);
 		else
-			this.eval = sc;
+			doSetEval(sc);
 	}
 
-	public void resetScore()
+	protected void doSetEval(Score score)
+	{
+		this.eval = score;
+	}
+
+	public void resetEval()
 	{
 		//	fall back to game value (if present)
 		Score val = null;

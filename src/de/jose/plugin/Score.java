@@ -1,5 +1,7 @@
 package de.jose.plugin;
 
+import java.util.Objects;
+
 /**
  * Contains the score of an engine PV
  */
@@ -43,6 +45,25 @@ public class Score
         draw = that.draw;
         lose = that.lose;
         moves_left = that.moves_left;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Score score = (Score) o;
+        return cp == score.cp && flags == score.flags && win == score.win && draw == score.draw && lose == score.lose;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cp, flags, win, draw, lose);
+    }
+
+    public static boolean equals(Score s1, Score s2)
+    {
+        if (s1 == null) return (s2==null);
+        if (s2 == null) return false;
+        return s1.equals(s2);
     }
 
     public void copy(Score that) {
