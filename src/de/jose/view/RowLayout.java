@@ -1,8 +1,7 @@
 package de.jose.view;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
+import java.util.function.Function;
 
 public class RowLayout
     implements LayoutManager2
@@ -16,38 +15,13 @@ public class RowLayout
         //this.rowHeight = rowHeight;
     }
 
-    interface ComponentVisitor {
-        Dimension visit(Component c);
-    }
-
-    ComponentVisitor GetPreferredSize = new ComponentVisitor() {
-        @Override
-        public Dimension visit(Component c) {
-            return c.getPreferredSize();
-        }
-    };
-    ComponentVisitor GetMinimumSize = new ComponentVisitor() {
-        @Override
-        public Dimension visit(Component c) {
-            return c.getMinimumSize();
-        }
-    };
-    ComponentVisitor GetMaximumSize = new ComponentVisitor() {
-        @Override
-        public Dimension visit(Component c) {
-            return c.getMaximumSize();
-        }
-    };
-    ComponentVisitor GetBestSize = new ComponentVisitor() {
-        @Override
-        public Dimension visit(Component c) {
+    Function<Component,Dimension> GetBestSize = (Component c) -> {
             Dimension d = c.getPreferredSize();
             Dimension d1 = c.getMinimumSize();
             Dimension d2 = c.getMaximumSize();
             return new Dimension(
                     Math.min(Math.max(d.width,d1.width),d2.width),
                     Math.min(Math.max(d.height,d1.height),d2.height));
-        }
     };
 
     void placeNext(Dimension d)
@@ -61,7 +35,7 @@ public class RowLayout
     }
 
     private Dimension forEach(Container target,
-                              ComponentVisitor visitor, boolean update)
+                              Function<Component,Dimension> visitor, boolean update)
     {
         current.setBounds(0, 0, 0,0);
         max.width = max.height = 0;
@@ -69,7 +43,7 @@ public class RowLayout
             Component c = target.getComponent(i);
             if (!c.isVisible()) continue;
 
-            Dimension d2 = visitor.visit(c);
+            Dimension d2 = visitor.apply(c);
             placeNext(d2);
             max.width = Math.max(max.width, current.x+current.width);
             max.height = Math.max(max.height, current.y+current.height);
@@ -80,17 +54,19 @@ public class RowLayout
 
     @Override
     public Dimension preferredLayoutSize(Container parent) {
-        return forEach(parent, GetPreferredSize, false);
+        return forEach(parent, Component::getPreferredSize, false);
     }
 
     @Override
     public Dimension minimumLayoutSize(Container parent) {
-        return forEach(parent, GetMinimumSize, false);
+
+        return forEach(parent, Component::getMinimumSize, false);
     }
 
     @Override
     public Dimension maximumLayoutSize(Container parent) {
-        return forEach(parent, GetMaximumSize, false);
+
+        return forEach(parent, Component::getMaximumSize, false);
     }
 
     @Override

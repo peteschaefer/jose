@@ -42,23 +42,6 @@ public class JoToolBar
 
 	protected Dimension minDimension = new Dimension(28,28);
 
-	public void actionPerformed(ActionEvent e)
-	{
-		/*	forward menu events to CommandDispatcher	*/
-		if (e.getSource() instanceof JButton) {
-			//	tppl buttons clicked
-			CommandListener target = getCommandListener();
-			/** forward all event to the target
-			 *  JoToolBar handles only "on.broadcast" commands by itself
-			 */
-			AbstractApplication.theCommandDispatcher.handle(e, target);
-		}
-		if (e.getSource() instanceof JMenuItem) {
-			//	from context menu
-			AbstractApplication.theCommandDispatcher.handle(e, this);
-		}
-	}
-
 	public JoToolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
 	{
         this(profile,
@@ -193,7 +176,7 @@ public class JoToolBar
 			for (int i=0; i < buttons.size(); i++) {
 				Object button = buttons.get(i);
 				if (button==null)
-					addSpacer(16);
+					addSpacer(10);
 				else 
 					addButton(button.toString(),dark);
 			}
@@ -220,17 +203,8 @@ public class JoToolBar
 			button.setActionCommand(name);
 
 			Dimension iconSize = createIcons(name, button, dark);
-
-			//button.setBorderPainted(false);
-			//button.setFocusPainted(false);
-
 			minDimension.width = Math.max(minDimension.width, iconSize.width);
 			minDimension.height = Math.max(minDimension.height, iconSize.height);
-			if (!button.isBorderPainted()) {
-				button.setBorder(new EmptyBorder(2, 2, 2, 2));
-				button.setMargin(margin);
-			}
-			//else: border already set in createIcons. clean this up !
 
 			button.setToolTipText(Language.getTip(name));
             if (Version.mac)
@@ -310,11 +284,9 @@ public class JoToolBar
 				button.setRolloverEnabled(true);
 				button.putClientProperty("JButton.buttonType","roundRect");
 				button.putClientProperty("Button.arc",999);
-
-				int hmargin = 24-iconSize.width;
-				int vmargin = 24-iconSize.height;
-				button.setMargin(new Insets(vmargin/2,hmargin/2, vmargin/2, hmargin/2));
 			}
+			//	pad
+			padButtonMargin(button, iconSize, 24);
 		}
 		else {
 			button.setIcon(null);
@@ -325,6 +297,12 @@ public class JoToolBar
 			iconSize.height = 16;
 		}
 		return iconSize;
+	}
+
+	private static void padButtonMargin(JButton button, Dimension iconSize, int size) {
+		int hmargin = size - iconSize.width;
+		int vmargin = size - iconSize.height;
+		button.setMargin(new Insets(vmargin/2,hmargin/2, (vmargin+1)/2, (hmargin+1)/2));
 	}
 
 	static class IconSpec {
@@ -567,6 +545,23 @@ public class JoToolBar
 		for (int i=0; i < getComponentCount(); i++)
 			if (getComponent(i) instanceof AbstractButton) 
 				((AbstractButton)getComponent(i)).addActionListener(listener);
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		/*	forward menu events to CommandDispatcher	*/
+		if (e.getSource() instanceof JButton) {
+			//	tppl buttons clicked
+			CommandListener target = getCommandListener();
+			/** forward all event to the target
+			 *  JoToolBar handles only "on.broadcast" commands by itself
+			 */
+			AbstractApplication.theCommandDispatcher.handle(e, target);
+		}
+		if (e.getSource() instanceof JMenuItem) {
+			//	from context menu
+			AbstractApplication.theCommandDispatcher.handle(e, this);
+		}
 	}
 
 	public float getWeightX()	{ return 0.0f; }

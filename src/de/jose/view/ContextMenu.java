@@ -336,7 +336,8 @@ public class ContextMenu
 		switch (event.getID()) {
 		case MouseEvent.MOUSE_MOVED:
 			MouseEvent mevent = (MouseEvent)event;
-			if (dockDragging) {
+			Component comp = (Component)event.getSource();
+			if (dockDragging && comp.isShowing()) {
 				DockingZone z = findCurrentZone(ViewUtil.globalPoint(mevent));
 				setCurrentZone(z, (MouseEvent)event);
 			}
