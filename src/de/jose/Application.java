@@ -72,11 +72,11 @@ import java.net.*;
 import java.sql.DriverManager;
 import java.text.ParseException;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static de.jose.chess.Board.XFEN;
+import static de.jose.plugin.Plugin.*;
 
 /**
  *	the main application class
@@ -2359,27 +2359,35 @@ public class Application
 			Position pos = Application.theApplication.theGame.getPosition();
 			// onEngineMove implies NOT analysis mode, right?
 			if (onEngineMove) switchAnalysis = false;
-			BookQuery query = new BookQuery(pos,switchAnalysis);
+			BookQuery query = new BookQuery(pos,
+					switchAnalysis ? BOOK_ANALYSIS : BOOK_SHOW);
 			theExecutorService.submit(query);
 			//	will call back with message BOOK_RESPONSE, onBookUpdate
 		}
 	}
 
-	private void onBookUpdate(BookQuery query, Position pos)
+	private void afterBookUpdate(BookQuery query, Position pos)
 	{
 		if (!query.isValid())
 			return;
 
 		EnginePanel eng = enginePanel();
-		if (!query.result.isEmpty()) {
-			pausePlugin(false);
-			eng.showBook(query.result, pos);
+		if (query.onCompletion==BOOK_SHOW || query.onCompletion==BOOK_ANALYSIS)
+		{
+			if (!query.result.isEmpty()) {
+				pausePlugin(false);
+				eng.showBook(query.result, pos);
+			} else {
+				eng.exitBook();
+				//	when out of book, switch to Engine
+				if (query.onCompletion == BOOK_ANALYSIS)
+					startEngineAnalysis(true);
+			}
 		}
-		else {
-			eng.exitBook();
-			//	when out of book, switch to Engine
-			if (query.switchEngineAnalysis)
-				startEngineAnalysis(true);
+		if (query.onCompletion==BOOK_PLAY)
+		{
+			//	todo
+			//	see playBookMove()
 		}
 	}
 
@@ -2419,6 +2427,14 @@ public class Application
 			return;
 		}
 
+		//	todo get an evaluation from current AnalysisRecord
+		//	and attach it to MoveNode
+		if (enginePanel()!=null)
+		{
+//			Score sc = enginePanel().getEvaluationFor(move);
+//			if (sc!=null)
+		}
+
 		updateClock();
 
 		if (animate && boardPanel() != null)
@@ -2432,8 +2448,6 @@ public class Application
 			theClock.halt();
 		}
 		else {
-			boolean isFrcCastling = mv.isFRCCastling();
-			boolean isClassic = theGame.getPosition().isClassic();
 			switch (theMode) {
 			case ENGINE_ENGINE:
 					//	TODO not yet implemented
@@ -2442,53 +2456,71 @@ public class Application
 			case USER_ENGINE:
 				boolean wasBook = false;
 				try {
+					// PLAY FROM BOOK
 					wasBook = selectBookMove();
+					//	todo make asynch; execute in onBookUpdate, later
 				} catch (Exception e) {
 					wasBook = false;
 				}
 
-				if (!wasBook) {
-					enginePanel().exitBook();
-					invokeWithPlugin(new Runnable() {
-						public void run() {
-							EnginePlugin engine = getEnginePlugin();
-							boolean supportsFRC = engine.supportsFRC();
-							if (isFrcCastling && !supportsFRC) {
-								showFRCWarning(true);
-								pausePlugin(false);
-							} else {
-								if (!isClassic && !supportsFRC)
-									showFRCWarning(false);
-								//  but keep on playing (you have been warned ;-)
-								engine.userMove(mv, true);
-							}
-						};
-					});
-				}
+				if (!wasBook)
+					enginePlay(mv);
 				break;
 
 			case ANALYSIS:
-				invokeWithPlugin(new Runnable() {
-					public void run() {
-						EnginePlugin engine = getEnginePlugin();
-						boolean supportsFRC = engine.supportsFRC();
-						if (isFrcCastling && !supportsFRC) {
-							showFRCWarning(true);
-							pausePlugin(false);
-						}
-						else {
-							if (!isClassic && !supportsFRC)
-								showFRCWarning(false);
-								//  but keep on playing (you have been warned ;-)
-							engine.analyze(theGame.getPosition(), mv);
-						}
-					}
-				});
+				engineAnalyze(mv);
 				break;
 			}
 		}
 
 		classifyOpening();
+	}
+
+	private void engineAnalyze(Move userMove)
+	{
+		boolean isFrcCastling = userMove.isFRCCastling();
+		boolean isClassic = theGame.getPosition().isClassic();
+
+		invokeWithPlugin(new Runnable() {
+			public void run() {
+				EnginePlugin engine = getEnginePlugin();
+				boolean supportsFRC = engine.supportsFRC();
+				if (isFrcCastling && !supportsFRC) {
+					showFRCWarning(true);
+					pausePlugin(false);
+				}
+				else {
+					if (!isClassic && !supportsFRC)
+						showFRCWarning(false);
+						//  but keep on playing (you have been warned ;-)
+					engine.analyze(theGame.getPosition(), userMove);
+				}
+			}
+		});
+	}
+
+	private void enginePlay(Move userMove)
+	{
+		boolean isFrcCastling = userMove.isFRCCastling();
+		boolean isClassic = theGame.getPosition().isClassic();
+
+		enginePanel().exitBook();
+		invokeWithPlugin(new Runnable() {
+			public void run() {
+				EnginePlugin engine = getEnginePlugin();
+				boolean supportsFRC = engine.supportsFRC();
+				if (isFrcCastling && !supportsFRC) {
+					showFRCWarning(true);
+					pausePlugin(false);
+				} else {
+					if (!isClassic && !supportsFRC)
+						showFRCWarning(false);
+					//  but keep on playing (you have been warned ;-)
+					// LET ENGINE PLAY
+					engine.userMove(userMove, true);
+				}
+			};
+		});
 	}
 
 	private void cutLine(Node node) throws BadLocationException
@@ -3193,9 +3225,11 @@ public class Application
 				boardPanel().showHint(data);
 			break;
 
-		case Plugin.BOOK_RESPONSE:
+		case BOOK_ANALYSIS:
+		case BOOK_SHOW:
+		case BOOK_PLAY:
 			BookQuery query = (BookQuery)data;
-			onBookUpdate(query, pos);
+			afterBookUpdate(query, pos);
 			break;
 		}
 	}
@@ -3618,6 +3652,7 @@ public class Application
 		default:
 		case OpeningLibrary.GUI_BOOK_ONLY:
 		case OpeningLibrary.PREFER_GUI_BOOK:
+			//	todo make asynch
 			BookEntry bookEntry = theOpeningLibrary.selectMove(
 					theGame.getPosition(), theMode, true,
 					theGame.getPosition().whiteMovesNext());

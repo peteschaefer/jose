@@ -224,11 +224,14 @@ public class OpeningLibrary
 				if (fentry.book==null) continue;
 
 				ArrayList one_result = new ArrayList();
+				//	some engines can play from their own book
 				BookEntry entry = fentry.book.selectBookMove(pos,ignoreColors,random);
 				if (entry!=null) return entry;
 			}
 
+		//	else: play from application books
 		boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
+		//	todo expensive; make asynch
 		List moves = collectMoves(pos,null,go_deep,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}

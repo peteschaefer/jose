@@ -18,7 +18,6 @@ import java.util.List;
 
 import static de.jose.Application.ANALYSIS;
 import static de.jose.Application.USER_INPUT;
-import static de.jose.plugin.Plugin.BOOK_RESPONSE;
 
 public class BookQuery
         extends MessageProducer
@@ -39,9 +38,9 @@ public class BookQuery
     public List<BookEntry> result;
 
     //  upon completion, send message to Application
-    public boolean switchEngineAnalysis;
+    public int onCompletion;
 
-    public BookQuery(Position pos, boolean switchEngineAnalysis)
+    public BookQuery(Position pos, int completionMessage)
     {
         seqNo = ++theSeqNo;
         appGame = Application.theApplication.theGame;
@@ -50,7 +49,7 @@ public class BookQuery
 
         fen = pos.toString();
 
-        this.switchEngineAnalysis = switchEngineAnalysis;
+        this.onCompletion = completionMessage;
         addMessageListener(Application.theApplication);
     }
 
@@ -80,7 +79,7 @@ public class BookQuery
             throw new RuntimeException(e);
         }
 
-        if (isValid())
-            sendMessage(BOOK_RESPONSE,this);
+        if (isValid() && (onCompletion!=0))
+            sendMessage(onCompletion,this);
     }
 }
