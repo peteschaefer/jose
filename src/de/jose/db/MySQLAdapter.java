@@ -679,22 +679,22 @@ public class MySQLAdapter
 			 */
 			try {
 				if (watch!=null) watch.finish();
-//				mysqladmin("shutdown");
+				//mysqladmin("shutdown");
 				if (conn==null)	conn = JoConnection.get();
 				MiniAdmin admin = new MiniAdmin(conn.jdbcConnection);
 				admin.shutdown();
 				done = true;
+				//serverProcess.waitFor();	// not necessary !?
 			} catch (Throwable thr) {
 				//	our last resort:
 				thr.printStackTrace();
 				super.run();
 			}
-			//	serverProcess.waitFor();	// not necessary !?
-			serverProcess = null;
+            serverProcess = null;
 		}
 	}
 
-	/**	test if mysql server is running
+	/**	test if mysql server is running*/
 	public boolean pingServer(Process serverProcess) throws IOException
 	{
 		Process proc = mysqladmin("ping");
@@ -751,7 +751,6 @@ public class MySQLAdapter
 //		System.err.println(commandStr);
 		return Runtime.getRuntime().exec(commandStr);
 	}
-	*/
 
 	/**
 	 * shut down the database

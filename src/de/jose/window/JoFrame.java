@@ -690,7 +690,7 @@ public class JoFrame
 			public void Do(Command cmd) {
 				if (countVisibleFrames() <= 1)
                 {
-                    if (!Version.mac)
+                    if (/*!Version.mac*/true)
                     {
 					    cmd.code = "menu.file.quit";
 					    AbstractApplication.theCommandDispatcher.forward(cmd, Application.theApplication);

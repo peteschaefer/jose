@@ -18,6 +18,12 @@
         <name>Quaqua</name>
         <class>ch.randelshofer.quaqua.QuaquaManager</class>
     </look-and-feel>
+	<!-- VAqua is the new default on Mac OS X -->
+	<look-and-feel>
+		<name>VAqua</name>
+		<class>org.violetlib.aqua.AquaLookAndFeel</class>
+	</look-and-feel>
+
 <!--
     <look-and-feel>
         <name>Quaqua Jaguar</name>

@@ -3,11 +3,12 @@ package de.jose.view.input;
 import de.jose.Util;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *  a JSpinner input box for use by the UCI dialog
  *
- *  @author Peter Schäfer
+ *  @author Peter Schï¿½fer
  */
 public class UciSpinner
         extends JSpinner
@@ -16,6 +17,9 @@ public class UciSpinner
 	public UciSpinner(int minValue, int maxValue, int defaultValue)
 	{
 		super(new SpinnerNumberModel(defaultValue, minValue, maxValue, +1));
+		setMinimumSize(new Dimension(80,30));
+		setPreferredSize(new Dimension(80,30));
+		//	keep width of UCI spinners consistent (not so easy with GridBayLayout !!)
 	}
 
 	public void setValue(Object value)

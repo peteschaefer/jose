@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,6 +71,7 @@ public class UserProfile
 		if (Version.mac)
 //			return null;    //  default = Aqua
             return "ch.randelshofer.quaqua.QuaquaManager";  //  improved Aqua
+			//return "org.violetlib.aqua.AquaLookAndFeel";
 		else
 			return "net.sourceforge.mlf.metouia.MetouiaLookAndFeel";
 		/**

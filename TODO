@@ -26,23 +26,22 @@ libraries needed:
 
 [x] macOS 15 Sequoia VM
 [x] jdk1.8 (64 bit)
-[ ] 64 bit binaries for stockfish and lc0
+[x] 64 bit binaries for stockfish
+[ ] and lc0
 [x] mysqld standalone
     5.0.67 for MacOS 64, (remember to copy share too)
-
-jose 1.4.4 is running mysqdld in standalone mode.
-I don't even know, if the embedded lib was ever compiled for MacOS.
-Which pretty much suggests plan D.
+[x] upgrade mysql.jar
 
 jose 1.4.4 setup on my MacPro
-
 MacOS 10.7.5 i386
 JRE 1.6.0_65 (Apple) "mixed mode"
 mysqld 5.0.24a i686 from 11-07-2005
 
 
 [ ] compile easylink
-[ ] libquaqua 64 bit --> try: https://violetlib.org/vaqua
+
+[x] upgrade libquaqua
+[?] https://violetlib.org/vaqua. Problems! More modern but not overwhelmingly beautiful :(
 
 [ ] Application Bundle vs. Java
    - neither Apple's nor Oracle's launcher work :(

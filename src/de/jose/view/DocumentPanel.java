@@ -82,7 +82,7 @@ public class DocumentPanel
 				Rectangle tabBounds = theTabPane.getBoundsAt(theTabPane.getSelectedIndex());
 
                 if (Version.mac)
-                    closeButton.setBounds(12,4, 15,15);
+                    closeButton.setBounds(12,4, 24,24);
                 else switch (theTabPane.getTabLayoutPolicy())
                 {
 				case JTabbedPane.SCROLL_TAB_LAYOUT:

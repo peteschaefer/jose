@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -339,8 +339,8 @@ public class JoMenuBar
 	public static JMenuItem addXMLItem(Object menu, Element itemElement, MenuListener listener)
 	{
         String hide = itemElement.getAttribute("hide");
-        if ("mac".equalsIgnoreCase(hide) && Version.mac)
-            return null; //  hide this menu item on Macs
+        //if ("mac".equalsIgnoreCase(hide) && Version.mac)
+        //    return null; //  hide this menu item on Macs
 
 		if (itemElement.getTagName().equals("menu")) {
 			//	submenu

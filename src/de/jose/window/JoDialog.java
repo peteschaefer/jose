@@ -864,11 +864,11 @@ public class JoDialog
 	                               int x, int y, int colspan,
 	                               Object labelName, Component component)
 	{
-		addWithLabel(cont, x,y,colspan, labelName,component, -1,-1);
+		addWithLabel(cont, x,y,colspan, 0.0,0.0, labelName,component, -1,-1);
 	}
 
 	public final void addWithLabel(Container cont,
-	                               int x, int y, int colspan,
+	                               int x, int y, int colspan, double weightx, double weighty,
 	                               Object labelName, Component component,
 	                               int vsbPolicy, int hsbPolicy)
 	{
@@ -902,6 +902,8 @@ public class JoDialog
 			cconst.gridx = x+1;
 			cconst.gridy = y;
 			cconst.gridwidth = colspan-1;
+			if (weightx > 0.0) cconst.weightx = weightx;
+			if (weighty > 0.0) cconst.weighty = weighty;
 
 			reg(component);
 
