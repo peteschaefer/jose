@@ -267,43 +267,56 @@ public class CharUtil
 			return hex.substring(0,2);
 	}
 
-	public static int utf8Len(char[] bytes, int offset, int maxlen) {
+	public static int utf8Len(char[] bytes, int offset, int maxlen)
+	{
+		if (maxlen <= 1)
+			return maxlen;
+		if ((bytes[offset] & 0x80) == 0x00)
+			return 1;	// ascii char
+		if ((bytes[offset] & 0xc0) == 0x80)
+			return 1;
+		// unexpected follow-up.
+		// normally this would be an utf-8 encoding error,
+		// but we interpret it as iso
+		if ((maxlen >= 2)
+			&& ((bytes[offset]   & 0xe0) == 0xc0)
+			&& ((bytes[offset+1] & 0xc0) == 0x80))
+			return 2;
+		if ((maxlen >= 3)
+			&& ((bytes[offset]   & 0xf0) == 0xe0)
+			&& ((bytes[offset+1] & 0xc0) == 0x80)
+			&& ((bytes[offset+2] & 0xc0) == 0x80))
+			return 3;
+/*
+		sequence len >= 4 would encode 21 bit. too many.
 		if ((maxlen >= 4)
 			&& ((bytes[offset]   & 0xf8) == 0xf0)
 			&& ((bytes[offset+1] & 0xc0) == 0x80)
 			&& ((bytes[offset+2] & 0xc0) == 0x80)
 			&& ((bytes[offset+3] & 0xc0) == 0x80))
 			return 4;
-		if ((maxlen >= 3)
-			&& ((bytes[offset]   & 0xf0) == 0xe0)
-			&& ((bytes[offset+1] & 0xc0) == 0x80)
-			&& ((bytes[offset+2] & 0xc0) == 0x80))
-			return 3;
-		if ((maxlen >= 2)
-			&& ((bytes[offset]   & 0xe0) == 0xc0)
-			&& ((bytes[offset+1] & 0xc0) == 0x80))
-			return 2;
-		if (maxlen >= 1)
-			return 1;
-		//else
-		return 0;
+ */
+		return 1;
 	}
 
 	public static char decodeUtf8(char[] bytes, int offset, int ulen) {
 		int i = 0;
 		switch(ulen) {
 			case 4:
+				//	note that 21 bits don't fit into a char
 				i |= (bytes[offset] & 0x07) << 18;
 				i |= (bytes[offset+1] & 0x3f) << 12;
 				i |= (bytes[offset+2] & 0x3f) << 6;
 				i |= (bytes[offset+3] & 0x3f);
 				break;
 			case 3:
+				//	16 valid bits
 				i |= (bytes[offset] & 0x0f) << 12;
 				i |= (bytes[offset+1] & 0x3f) << 6;
 				i |= (bytes[offset+2] & 0x3f);
 				break;
 			case 2:
+				//	11 valid bits
 				i |= (bytes[offset] & 0x1f) << 6;
 				i |= (bytes[offset+1] & 0x3f);
 				break;
