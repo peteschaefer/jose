@@ -401,9 +401,9 @@ public class ArchiveImport
 
 	    sql =
 	        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,Bin," +
-			"     Comments,PosMain,PosVar) "+
+			"     Comments,PosMain,PosVar,Eval) "+
 		        " SELECT @NextId:=(@NextId+1) AS GId," +
-			"        WhiteTitle,BlackTitle, Round,Board,FEN, Info,Bin,Comments, PosMain,PosVar"+
+			"        WhiteTitle,BlackTitle, Round,Board,FEN, Info,Bin,Comments, PosMain,PosVar,Eval"+
 	        " FROM "+tempdb+".IO_Game ";
 
 		    connection.executeUpdate("SET @NextId="+(nextId-1));

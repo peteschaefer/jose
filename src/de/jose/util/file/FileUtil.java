@@ -227,12 +227,12 @@ public class FileUtil
 	public static long copyStream(InputStream in, long length, File out)
 		throws IOException
 	{
-        if (Version.java14orLater) {
+        if (/*Version.java14orLater*/false) {
             return FileUtilNIO.copyStream(in,length,out);
         }
         else {
             FileOutputStream stream = new FileOutputStream(out);
-            long result = copyStream(in,length, stream);
+            long result = copyStream(in, length>=0 ? length : Long.MAX_VALUE, stream);
             stream.close();
 	        return result;
         }

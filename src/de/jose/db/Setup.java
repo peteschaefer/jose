@@ -946,14 +946,22 @@ public class Setup
 	 */
 	public static int getSchemaVersion(JoConnection conn, String schema) throws SQLException
 	{
-	    if (schema==null) schema = "MAIN";
-	    JoPreparedStatement pstm = conn.getPreparedStatement(
-	            "SELECT Version" +
-	            " FROM MetaInfo" +
-	            " WHERE BINARY Property = BINARY 'SCHEMA_VERSION'" +
-	            " AND BINARY SchemaName = BINARY ? ");
-	    pstm.setString(1,schema);
-	    return pstm.selectInt();
+	    return getSchemaVersion(conn,null,schema);
+	}
+
+	public static int getSchemaVersion(JoConnection conn, String db, String schema) throws SQLException
+	{
+		if (schema==null) schema = "MAIN";
+		String meta = "MetaInfo";
+		if (db!=null) meta = db+"."+meta;
+
+		JoPreparedStatement pstm = conn.getPreparedStatement(
+				"SELECT Version" +
+						" FROM " + meta +
+						" WHERE BINARY Property = BINARY 'SCHEMA_VERSION'" +
+						" AND BINARY SchemaName = BINARY ? ");
+		pstm.setString(1,schema);
+		return pstm.selectInt();
 	}
 
 	/**
@@ -980,18 +988,26 @@ public class Setup
 	/**
 	 * @return an entry from the MetaInfo table
 	 */
-	public static int getTableVersion(JoConnection conn, String schema, String table) throws SQLException
+	public static int getTableVersion(JoConnection conn, String db, String schema, String table) throws SQLException
 	{
 	    if (schema==null) schema = "MAIN";
+		String meta = "MetaInfo";
+		if (db!=null) meta = db+"."+meta;
+
 	    JoPreparedStatement pstm = conn.getPreparedStatement(
 	            "SELECT Version" +
-	            " FROM MetaInfo" +
+	            " FROM "+meta+
 	            " WHERE BINARY Property = BINARY 'TABLE_VERSION' "+
 	            "   AND BINARY SchemaName = BINARY ? " +
 	            "   AND BINARY TableName = BINARY ? ");
 	    pstm.setString(1,schema);
 	    pstm.setString(2,table);
 	    return pstm.selectInt();
+	}
+
+	public static int getTableVersion(JoConnection conn, String schema, String table) throws SQLException
+	{
+		return getTableVersion(conn, null, schema,table);
 	}
 
 	/**

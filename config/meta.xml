@@ -649,7 +649,7 @@
         <!--	Import/Export Schema	-->
         <!-- - - - - - - - - - - -  -->
         <NAME> IO </NAME>
-        <VERSION> 1002 </VERSION>
+        <VERSION> 1003 </VERSION>
         <TABLE pack="true">
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <!--	Opening Index (maps positions to opening codes and names)  -->
@@ -802,7 +802,7 @@
         <TABLE pack="true">
             <!-- models a single game in a pgn file -->
             <NAME> IO_Game </NAME>
-            <VERSION> 101 </VERSION>
+            <VERSION> 102 </VERSION>
 <!--
             <COLUMN>
                 <! - - primary key - - >
@@ -973,6 +973,11 @@
 	            <NAME> PosVar </NAME>
 	            <TYPE> LONG VARCHAR </TYPE>
 	        </COLUMN>
+			<COLUMN>
+				<!-- Engine evaluation W-D, 16 bit fixed point -->
+				<NAME> Eval </NAME>
+				<TYPE> LONG VARBINARY </TYPE>
+			</COLUMN>
         </TABLE>
     </SCHEMA>
     <SCHEMA>
