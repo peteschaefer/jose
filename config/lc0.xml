@@ -11,7 +11,7 @@
 		<COMMAND> %dir%/lc0 </COMMAND>
 	</EXEC>
 	<DIR> %local%/engines/lc0 </DIR>
-	<LOGO/>
+	<LOGO> %dir%/Leela_Chess_Zero_logo.png </LOGO>
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>

@@ -11,8 +11,8 @@
 		*akshually* run in 64 bit mode -->
 		<COMMAND> %dir%/stockfish-ubuntu-x86-64-sse41-popcnt </COMMAND>
 	</EXEC>
-	<DIR> %local%\engines\stockfish </DIR>
-	<LOGO> %dir%\Stockfish-large.bmp </LOGO>
+	<DIR> %local%/engines\stockfish </DIR>
+	<LOGO> %dir%/Stockfish-large.bmp </LOGO>
 	<VERSION> 17 </VERSION>
 	<AUTHOR> the Stockfish developers (see AUTHORS file) </AUTHOR>
 	<OPTIONS>
@@ -40,10 +40,10 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME selected="true"> 2000 </TIME>
+		<TIME> 2000 </TIME>
 		<DEPTH> 10 </DEPTH>
 		<NODES> 1 </NODES>
-		<TIME_CONTROL/>
+		<TIME_CONTROL selected="true"/>
 	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

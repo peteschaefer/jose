@@ -335,7 +335,7 @@
 		-->
 		<zip destfile="${zip-file}" update="true">
 			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
-			<zipfileset src="lc0-eigen.zip" prefix="${appldir}/engines/lc0"/>
+			<zipfileset src="lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0"/>
 		</zip>
 	</target>
 
