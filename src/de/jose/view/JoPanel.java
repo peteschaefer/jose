@@ -71,6 +71,16 @@ public class JoPanel
 		CLASS_MAP.put("window.print.preview",   de.jose.window.PrintPreviewDialog.class);
 	}
 
+	public static String[] panelNames()
+	{
+		String[] result = new String[CLASS_MAP.size()];
+		return (String[])CLASS_MAP.keySet().toArray(result);
+	}
+
+	public static Class classFor(String name) {
+		return (Class)CLASS_MAP.get(name);
+	}
+
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -174,7 +184,7 @@ public class JoPanel
 
         try {
 //            String className = (String)CLASS_MAP.get(name);
-            Class clazz = (Class)CLASS_MAP.get(profile.name);
+            Class clazz = classFor(profile.name);
             return create(clazz, profile,withContextMenu,false);
         } catch (Exception ex) {
             AbstractApplication.error(ex);

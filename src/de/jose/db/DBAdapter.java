@@ -31,12 +31,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -658,5 +661,36 @@ abstract public class DBAdapter
                 Application.error(e);
             }
         }
+	}
+
+	/**
+	 * Launch process
+	 * @return
+	 */
+	protected HashSet<String> deferredActions = new HashSet<>();
+
+	public void launchProcess() {
+	}
+
+	public boolean launchComplete() {
+		return true;
+	}
+
+	public boolean postAfterLaunch(String action) {
+		if (launchComplete()) {
+			EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+			ActionEvent event = new ActionEvent(this,ActionEvent.ACTION_FIRST,action);
+			queue.postEvent(event);
+			return true;
+		}
+		else{
+			deferredActions.add(action);
+			return false;
+		}
+	}
+
+	protected void postAfterLaunch() {
+		for(String action : deferredActions)
+			postAfterLaunch(action);
 	}
 }

@@ -79,17 +79,52 @@ public class MySQLAdapter
         return (StringUtil.compareVersion(getDatabaseProductVersion(jdbcConnection),"4.1") >= 0);
     }
 
-	public Connection createConnection(int mode)
-		throws SQLException
-	{
-/*		if (Util.allOf(mode, JoConnection.RECOVER))
-			props.put("force","true");
-		if (Util.allOf(mode, JoConnection.CREATE))
-			props.put("create","true");
-*/
-		switch (getServerMode())
-		{
-		case MODE_STANDALONE:
+	@Override
+	public void launchProcess() {
+		switch (getServerMode()) {
+			case MODE_STANDALONE:
+				new StandaloneLauncher().start();
+				break;
+			case MODE_EMBEDDED:
+				new EmbeddedLauncher().start();
+				break;
+		}
+	}
+
+	@Override
+	public boolean launchComplete() {
+		switch (getServerMode()) {
+			case MODE_STANDALONE:
+				//	todo
+				break;
+			case MODE_EMBEDDED:
+				return init_embedded;
+		}
+	}
+
+	protected class EmbeddedLauncher extends Thread {
+		@Override
+		public void run() {
+			if (!init_embedded)
+				synchronized (this)
+				{
+					if (!init_embedded) {
+						File mysqldir = initEmbeddedServer();
+						if (askBootstrap(mysqldir)) {
+							//	bootstrap new database
+							//	todo unify with standalone Launcher
+							Connection conn = super.createConnection(DBAdapter.READ_WRITE);
+							bootstrap(conn);
+						}
+						init_embedded = true;
+					}
+				}
+		}
+	}
+
+	protected class StandaloneLauncher extends Thread {
+		@Override
+		public void run() {
 			if (serverProcess==null)
 				synchronized (this) {
 					if (serverProcess==null && killProcess==null)
@@ -112,8 +147,8 @@ public class MySQLAdapter
 							Connection result = null;
 							while (result == null && repeat-- > 0)
 								try {
-                                    props.put("user","");
-                                    props.put("password","");
+									props.put("user","");
+									props.put("password","");
 									props.put("characterEncoding","UTF8");
 									//props.put("connectionCollation","latin1_english_ci");
 									result = super.createConnection(mode);
@@ -143,35 +178,21 @@ public class MySQLAdapter
 
 						} catch (IOException ioex) {
 							throw new SQLException("failed to start MySQL server: "+
-								ioex.getLocalizedMessage());
+									ioex.getLocalizedMessage());
 						}
 				}
-			break;
-
-		case MODE_EMBEDDED:
-			if (!init_embedded)
-			synchronized (this)
-			{
-				if (!init_embedded) {
-					File mysqldir = initEmbeddedServer();
-
-					init_embedded = true;
-
-					if (askBootstrap(mysqldir)) {
-						//	bootstrap new database
-						Connection result = super.createConnection(mode);
-						bootstrap(result);
-						return result;
-					}
-				}
-			}
-			break;
-
-		case MODE_EXTERNAL:
-			//  just as usual
-			break;
 		}
-		//	else
+	}
+
+
+	public Connection createConnection(int mode)
+		throws SQLException
+	{
+/*		if (Util.allOf(mode, JoConnection.RECOVER))
+			props.put("force","true");
+		if (Util.allOf(mode, JoConnection.CREATE))
+			props.put("create","true");
+*/
 		return super.createConnection(mode);
 	}
 
@@ -650,13 +671,13 @@ public class MySQLAdapter
         }
 
 		if (!dbdir.exists()) {
-					dbdir.mkdirs();
-					bootstrap = true;
-				}
-				else if (FileUtil.isEmptyDir(dbdir)) {
-					//	setup database (without asking)
-					bootstrap = true;
-				}
+			dbdir.mkdirs();
+			bootstrap = true;
+		}
+		else if (FileUtil.isEmptyDir(dbdir)) {
+			//	setup database (without asking)
+			bootstrap = true;
+		}
 		return bootstrap;
 	}
 

@@ -22,6 +22,7 @@ import java.util.Map;
 
 public class SQLQueryPanel
 		extends JoPanel
+		implements IDBPanel
 {
 	/**	contains the query text	 */
 	protected JTextArea input;

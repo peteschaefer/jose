@@ -11,6 +11,15 @@
 [ ] bug: hang on start
     -> branch mysql-launch
     * trigger dependent actions by ActionEvent
+        "edit.all" (game history)
+
+        "panel.init.*"
+            "window.gamelist"
+            "window.collectionlist"
+            "window.query"
+            "window.sqlquery"
+            "window.sqllist"
+
     * listen for startup on std i/o
 
 [ ] bug: diacritics lost on save

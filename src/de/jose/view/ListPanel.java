@@ -39,7 +39,7 @@ import java.sql.SQLException;
 
 public class ListPanel
 		extends DBTable
-		implements MouseListener
+		implements MouseListener, IDBPanel
 {
 	//-------------------------------------------------------------------------------
 	//	Constants

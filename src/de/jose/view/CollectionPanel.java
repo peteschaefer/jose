@@ -38,7 +38,7 @@ import java.sql.SQLException;
 
 public class CollectionPanel
         extends JoPanel
-        implements TreeSelectionListener, TreeExpansionListener, TreeModelListener, DBSelectionModel
+        implements IDBPanel, TreeSelectionListener, TreeExpansionListener, TreeModelListener, DBSelectionModel
 {
 	//-------------------------------------------------------------------------------
 	//	Constants

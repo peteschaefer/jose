@@ -17,6 +17,9 @@ import de.jose.Config;
 import de.jose.Util;
 import de.jose.util.IntArray;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.*;
 import java.util.HashMap;
@@ -86,7 +89,10 @@ public class JoConnection
 	public static void init(Config cfg, File wd, File dd, String database, int poolSize)
 		throws SQLException
 	{
-		if (theAdapter==null) theAdapter = DBAdapter.get(database, cfg, wd, dd);
+		if (theAdapter==null) {
+			theAdapter = DBAdapter.get(database, cfg, wd, dd);
+			theAdapter.launchProcess();
+		}
 		if (theConnections==null) theConnections = new ConnectionPool(poolSize);
 		if (theSequences==null) theSequences = new HashMap();
 	}
@@ -139,6 +145,12 @@ public class JoConnection
     {
         if (conn!=null) conn.release();
     }
+
+	public static boolean postWithConnection(String action) throws SQLException {
+		if (theAdapter==null)
+			init();
+		return theAdapter.postAfterLaunch(action);
+}
 
 	//-------------------------------------------------------------------------------
 	//	Methods

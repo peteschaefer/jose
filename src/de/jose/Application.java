@@ -2205,22 +2205,27 @@ public class Application
 				showPanel(cmd.code);
 			}
 		};
-		map.put("window.board", action);
-		map.put("window.list", action);
-		map.put("window.clock", action);
-		map.put("window.game", action);
-		map.put("window.toolbar.1", action);
-		map.put("window.toolbar.2", action);
-		map.put("window.toolbar.3", action);
-		map.put("window.console", action);
-		map.put("window.gamelist", action);
-		map.put("window.collectionlist", action);
-		map.put("window.query", action);
-		map.put("window.sqlquery", action);
-		map.put("window.sqllist", action);
-		map.put("window.engine", action);
-		map.put("window.eval",action);
-        map.put("window.toolbar.symbols", action);
+		for(String window : JoPanel.panelNames())
+			map.put(window,action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				String panelName = cmd.code.substring("panel.init.".length());
+				JoPanel panel = JoPanel.get(panelName);
+
+                try {
+					if (panel instanceof IDBPanel) {
+					// init withConnection
+					}
+                    panel.init();
+                } catch (Exception e) {
+                    Application.error(e);
+                }
+            }
+		};
+		for(String window : JoPanel.panelNames())
+			map.put("panel.init."+window,action);
+
 
 		action = new CommandAction() {
 			public void Do(Command cmd)	throws Exception
