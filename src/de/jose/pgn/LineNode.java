@@ -144,7 +144,7 @@ public class LineNode
     public final Node firstLeaf()
     {
         for (Node n = first(); n != null; n = n.next()) {
-            if (n.type==LINE_NODE) {
+            if (n.is(LINE_NODE)) {
                 Node r = ((LineNode)n).firstLeaf();
                 if (r!=null) return r;
             }
@@ -157,7 +157,7 @@ public class LineNode
     public final Node lastLeaf()
     {
         for (Node n = last(); n != null; n = n.previous()) {
-            if (n.type==LINE_NODE) {
+            if (n.is(LINE_NODE)) {
                 Node r = ((LineNode)n).lastLeaf();
                 if (r!=null) return r;
             }

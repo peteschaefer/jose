@@ -37,6 +37,17 @@ public class NodeSection
         setLast(last);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        if (first()!=null) sb.append(first().toString());
+        sb.append("..");
+        if (last()!=null) sb.append(last().toString());
+        sb.append("]");
+        return sb.toString();
+    }
+
     public int getLength() {
         int len=0;
         for(Node n=first(); ; ) {
@@ -48,24 +59,30 @@ public class NodeSection
     }
 
     public void trim(int type) {
-        while(first()!=last() && first().type==type) setFirst(first().next());
-        while(last()!=first() && last().type==type) setLast(last().previous());
+        while(first()!=last() && first().is(type)) setFirst(first().next());
+        while(last()!=first() && last().is(type)) setLast(last().previous());
+    }
+
+    public void trim(int type1, int type2) {
+        while(first()!=last() && (first().is(type1) || first().is(type2))) setFirst(first().next());
+        while(last()!=first() && (last().is(type1) || last().is(type2))) setLast(last().previous());
     }
 
     public void swap(NodeSection that) {
-        if (next()==that.first()) {
+        Node b = this.next();
+        Node d = that.next();
+
+        if (b==that.first()) {
             that.remove();
             that.insertBefore(this.first());
         }
-        else if (that.next()==this.first()) {
+        else if (d==this.first()) {
             that.remove();
             that.insertAfter(this.last());
         }
         else {
             Node a = this.previous();
-            Node b = this.next();
             Node c = that.previous();
-            Node d = that.next();
 
             this.remove();
             that.remove();

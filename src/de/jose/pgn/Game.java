@@ -30,6 +30,8 @@ import de.jose.util.ReflectionUtil;
 import de.jose.util.StringUtil;
 import de.jose.view.style.JoStyleContext;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -914,7 +916,7 @@ public class Game
 
 		LineNode P = V.parent();
 		Node a = V.previous(LINE_NODE,MOVE_NODE);
-		if (a.type==LINE_NODE) {
+		if (a.is(LINE_NODE)) {
 			//	swap with sibling
 			V.swap(a);
 
@@ -934,7 +936,7 @@ public class Game
 		 * identify four sections
 		 */
 		NodeSection A,B, C=null,D=null;
-		assert(a.type==MOVE_NODE && a instanceof MoveNode);
+		assert(a.is(MOVE_NODE) && a instanceof MoveNode);
 
 		A = new NodeSection(a,V.previous());
 		B = new NodeSection(V.first(),V.last());
@@ -954,11 +956,7 @@ public class Game
 		A.trim(STATIC_TEXT_NODE);
 		B.trim(STATIC_TEXT_NODE);
 		if (C!=null) C.trim(STATIC_TEXT_NODE);
-		if (D!=null) {
-			D.trim(STATIC_TEXT_NODE);
-			D.trim(RESULT_NODE);
-			D.trim(STATIC_TEXT_NODE);
-		}
+		if (D!=null) D.trim(STATIC_TEXT_NODE,RESULT_NODE);
 
 		//	swap A with B
 		A.swap(B);
@@ -966,8 +964,10 @@ public class Game
 		//	swap C with D
 		if (C!=null && D!=null)
 			C.swap(D);
-		else if (D!=null)
+		else if (D!=null) {
+			D.remove();
 			A.append(D);
+		}
 
 		/*	todo necessary ?
 		updateLabels(P);
@@ -2065,8 +2065,13 @@ public class Game
 		binResult[blen[0]++] = (byte)SHORT_END_OF_DATA;
 	}
 
-	public void printDocStructure(PrintWriter out, StyledDocument doc)
-	{
+	public void printDocStructure(String logfile) throws IOException, BadLocationException {
+		FileWriter fout = new FileWriter(logfile);
+		PrintWriter pout = new PrintWriter(fout);
+		printDocStructure(pout,null);
+	}
+
+	public void printDocStructure(PrintWriter out, StyledDocument doc) throws BadLocationException {
 		if (out==null) out = new PrintWriter(System.out,true);
 
 		printLineStructure(out,0, root,doc);
@@ -2182,8 +2187,13 @@ public class Game
 		}
 	}
 
-	protected void printLineStructure(PrintWriter out, int ind, LineNode line, StyledDocument doc)
-	{
+	protected void printLineStructure(PrintWriter out, int ind, LineNode line, StyledDocument doc) throws BadLocationException {
+		//	sanity check
+		if (line.previous() != null && line.previous().next() != line)
+			out.println(">> bad prev linking");
+		if (line.next() != null && line.next().previous() != line)
+			out.println(">> bad next linking");
+
 		indent(out,ind);
 		out.print("[");
 		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,line.type()));
@@ -2202,8 +2212,13 @@ public class Game
 		out.println("]");
 	}
 
-	protected void printNodeStructure(PrintWriter out, int ind, Node node, StyledDocument doc)
-	{
+	protected void printNodeStructure(PrintWriter out, int ind, Node node, StyledDocument doc) throws BadLocationException {
+		//	sanity check
+		if (node.previous() != null && node.previous().next() != node)
+			out.println(">> bad prev linking");
+		if (node.next() != null && node.next().previous() != node)
+			out.println(">> bad next linking");
+
 		indent(out,ind);
 		out.print("[");
 		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,node.type()));
@@ -2219,6 +2234,8 @@ public class Game
 			else
 				text = node.toString();
 			text = text.replace("\n","\\n");
+			text = text.replace("\t","\\t");
+			text = text.replace(" ","_");
 			out.print(text);
 		} catch (BadLocationException e) {
 			e.printStackTrace();  //To change body of catch statement use Options | File Templates.
