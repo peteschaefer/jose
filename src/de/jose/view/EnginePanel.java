@@ -649,9 +649,9 @@ public class EnginePanel
 
 					if (! inBook) {
                     if (countPvLines() > 1)
-							scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
                     else
-							scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
 				}
 			}
 
