@@ -45,14 +45,14 @@
 <!--		<menu id="menu.edit.games">-->
         <separator/>
         <item id="menu.edit.collection.new" icon="\uf65e:#cece63:#000000:%80"/>
-        <item id="menu.edit.empty.trash"	icon="\uf1f8:#404040"/>
+        <item id="menu.edit.empty.trash"	icon="\uf2ed:#404040"/>
 <!--			<item id="menu.edit.paste.copy"/>-->
 <!--			<item id="menu.edit.paste.same"/>-->
         <item id="menu.edit.restore"/>
         <item id="menu.edit.ecofy"/>
 
 		<separator hide="mac"/>
-		<item id="menu.edit.option"			key="F9" hide="mac"/>
+		<item id="menu.edit.option"	icon="\uf0ad:#808080"		key="F9" hide="mac"/>
 	</menu>
     <!-- - - - - - - - - - -->
     <!-- Format Menu       -->
@@ -85,7 +85,7 @@
             <item id="figurine.usefont.false" check="false"/>
         </menu>
         <separator/>
-        <item id="menu.edit.option" icon="\uf0ad:#808080" int="6"/>
+        <item id="menu.edit.option" int="6"/>
     </menu>
 
 	<!-- - - - - - - - - - -->
@@ -138,7 +138,7 @@
 		<item id="menu.game.animate"/>
 		<!--<item id="menu.game.nalimov.online"/>-->
 		<separator/>
-		<item id="menu.game.threat"/>
+		<item id="menu.game.threat" icon="\ue0b7:button:bold:#cc9900:#000000"/>
 	</menu>
 	<!-- - - - - - - - - - -->
 	<!-- Window Menu       -->

@@ -295,6 +295,8 @@ public class JoToolBar
 					style |= Font.BOLD;
 				if (specs[i].equalsIgnoreCase("italic"))
 					style |= Font.ITALIC;
+				if (specs[i].equalsIgnoreCase("flat"))
+					style |= FLAT;
 				if (specs[i].equalsIgnoreCase("button"))
 					style |= BUTTON;
 				if (specs[i].startsWith("#") || specs[i].startsWith("0x"))
@@ -332,6 +334,7 @@ public class JoToolBar
 	}
 
 	public static final int BUTTON = 4;
+	public static final int FLAT = 8;
 
 	private static Icon[] create7AwesomeIcons(IconSpec spec)
 	{
@@ -353,6 +356,17 @@ public class JoToolBar
 				result[6] = new ButtonIcon(spec.text,font,spec.size).huedColor(color2);
 			}
 		}
+		else if ((spec.style&FLAT) != 0) {
+			result[0] = new TextIcon(spec.text,font,spec.size,Color.lightGray);
+			result[1] = new TextIcon(spec.text,font,spec.size,color1);
+			result[2] = new TextIcon(spec.text,font,spec.size,color1);
+			result[3] = new TextIcon(spec.text,font,spec.size,color1);
+			if (color2!=null) {
+				result[4] = new TextIcon(spec.text,font,spec.size,color2);
+				result[5] = new TextIcon(spec.text,font,spec.size,color2);
+				result[6] = new TextIcon(spec.text,font,spec.size,color2);
+			}
+		}
 		else {
 			spec.size*=0.7f;
 			if (color2==null) color2 = Color.white;
@@ -366,16 +380,7 @@ public class JoToolBar
 				result[5] = new TextShapeIcon(s,font,size,color2,Color.white);
 				result[6] = new TextShapeIcon(s,font,size,color2,Color.white);
 			}*/
-/*			result[0] = new TextIcon(s,font,size,Color.lightGray);
-			result[1] = new TextIcon(s,font,size,color1);
-			result[2] = new TextIcon(s,font,size,color1);
-			result[3] = new TextIcon(s,font,size,color1);
-			if (color2!=null) {
-				result[4] = new TextIcon(s,font,size,color2);
-				result[5] = new TextIcon(s,font,size,color2);
-				result[6] = new TextIcon(s,font,size,color2);
-			}
-*/		}
+		}
 
 		for(TextIcon icon : result)
 			if (icon!=null)
@@ -397,15 +402,16 @@ public class JoToolBar
 		TextIcon result;
 
 		Color color1 = spec.colors.get(0);
-		Color color2 = (spec.colors.size() > 1) ? spec.colors.get(1) : null;
+		Color color2 = (spec.colors.size() > 1) ? spec.colors.get(1) : Color.white;
 
 		if ((spec.style&BUTTON) != 0) {
 			result = new ButtonIcon(spec.text,font,spec.size).huedColor(color1);
 		}
+		else if ((spec.style&FLAT) != 0) {
+			result = new TextIcon(spec.text,font,spec.size,color1);
+		}
 		else {
 			spec.size*=0.7f;
-			if (color2==null) color2 = Color.white;
-
 			result = new TextShapeIcon(spec.text,font,spec.size,color1,color2);
 		}
 

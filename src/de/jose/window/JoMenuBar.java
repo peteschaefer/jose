@@ -22,6 +22,7 @@ import de.jose.util.ListUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.map.IntHashSet;
 import de.jose.view.DocumentPanel;
+import de.jose.view.JoToolBar;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -366,6 +367,8 @@ public class JoMenuBar
 			//	todo evaluate icon. Also used by JoToolBar.
 
 			JMenuItem item;
+			if (iconSpec!=null && iconSpec.length()>0)
+				ICON_SPECS.put(name, iconSpec);
 			if (check!=null && check.length()>0)
 				item = createMenuItem(name, check.equals("true"));
 			else
@@ -376,9 +379,6 @@ public class JoMenuBar
 
 			if (intParam!=null && intParam.length()>0)
 				item.putClientProperty("action.data", Integer.valueOf(intParam));
-
-			if (iconSpec!=null && iconSpec.length()>0)
-				ICON_SPECS.put(name, iconSpec);
 
 			if (urlParam!=null && urlParam.length()>0)
 				try {
@@ -592,7 +592,17 @@ public class JoMenuBar
 		item.setName(name);
 		item.setActionCommand(name);
 
-		Icon icon = ImgUtil.getMenuIcon(name);
+		Icon icon;
+		String iconSpec = ICON_SPECS.get(name);
+		if (iconSpec!=null) {
+			//	we want it FLAT
+			iconSpec = iconSpec.replace(":button","");
+			//iconSpec += ":flat";
+			icon = JoToolBar.create1AwesomeIcon(iconSpec,20);
+		}
+		else {
+			icon = ImgUtil.getMenuIcon(name);
+		}
 		item.setIcon(icon);
 
 		item.setText(Language.get(name));

@@ -227,7 +227,7 @@ public class CollectionPanel
 			final Icon	EMPTY_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#a0a0a0:#000000", iconSize);
 			final Icon	CLIPBOARD_ICON	= JoToolBar.create1AwesomeIcon("\uf328:#808000:%120", iconSize);
 			final Icon	AUTOSAVE_ICON	= JoToolBar.create1AwesomeIcon("\uf0c7:#800000:%120", iconSize);
-			final Icon	TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf1f8:#666666:#aaaaaa", iconSize);
+			final Icon	TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf2ed:#666666:#eeeeee", iconSize);
 
 			switch (cid) {
 			case Collection.TRASH_ID:			setIcon(TRASH_ICON,leaf,expanded); break;

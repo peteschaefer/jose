@@ -280,6 +280,7 @@ public class UciPlugin
 			if(options[i]!=null && !isReadOnly(options[i]))
 				setOption(options[i],options[i+1]);
 
+		printOut.interrupt();
 		//  wait for options to be acknowledged
 		if (!waitFor("isready","readyok",10000))
 			throw new IOException("engine does not respond");
