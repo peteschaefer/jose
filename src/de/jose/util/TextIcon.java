@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 
 public class TextIcon implements Icon
@@ -35,6 +34,26 @@ public class TextIcon implements Icon
         this(text,font.deriveFont(style,size),color);
     }
 
+    protected static Color white(float f)
+    {
+        int v = (int)(255*f);
+        return new Color(v,v,v);
+    }
+
+    public static Color brighter(Color c, float fact)
+    {
+/*        float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+        hsb[2] = Math.min(1.0f,hsb[2]*fact);
+        return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+ */     int red = c.getRed();
+        int green = c.getGreen();
+        int blue = c.getBlue();
+        red = Math.min((int)(red*fact),255);
+        green = Math.min((int)(green*fact),255);
+        blue = Math.min((int)(blue*fact),255);
+        return new Color(red,green,blue);
+    }
+
     public TextIcon setInsets(Insets insets) {
         this.insets = insets;
         return this;
@@ -60,6 +79,16 @@ public class TextIcon implements Icon
     @Override
     public int getIconHeight() {
         return (int)(height+insets.top+insets.bottom+0.5);
+    }
+
+    public TextIcon pushed() {
+        color = brighter(color,0.5f);
+        return this;
+    }
+
+    public TextIcon hilited() {
+        color = brighter(color,1.5f);
+        return this;
     }
 
     protected void save(Graphics2D g2) {

@@ -311,31 +311,42 @@ public class JoToolBar
 	{
 		Font font = FontUtil.fontAwesome();
 		font = font.deriveFont(style & ~BUTTON);
-		Icon[] result = new Icon[7];
-		Insets insets = new Insets(2,2,2,2); // right ?
+		TextIcon[] result = new TextIcon[7];
 
 		if ((style&BUTTON) != 0) {
-			result[0] = new ButtonIcon(s, font, size).fixedColor(Color.lightGray).setInsets(insets);
-			result[1] = new ButtonIcon(s, font, size).huedColor(color1).setInsets(insets);
-			result[2] = new ButtonIcon(s, font, size).huedColor(color1).hilited().setInsets(insets);
-			result[3] = new ButtonIcon(s, font, size).huedColor(color1).pushed().setInsets(insets);
+			result[0] = new ButtonIcon(s, font, size).fixedColor(Color.lightGray);
+			result[1] = new ButtonIcon(s, font, size).huedColor(color1);
+			result[2] = new ButtonIcon(s, font, size).huedColor(color1);
+			result[3] = new ButtonIcon(s, font, size).huedColor(color1);
 			if (color2!=null) {
-				result[4] = new ButtonIcon(s, font, size).huedColor(color2).setInsets(insets);
-				result[5] = new ButtonIcon(s, font, size).huedColor(color2).hilited().setInsets(insets);
-				result[6] = new ButtonIcon(s, font, size).huedColor(color2).pushed().setInsets(insets);
+				result[4] = new ButtonIcon(s, font, size).huedColor(color2);
+				result[5] = new ButtonIcon(s, font, size).huedColor(color2);
+				result[6] = new ButtonIcon(s, font, size).huedColor(color2);
 			}
 		}
 		else {
-			result[0] = new TextIcon(s,font,style,size,Color.lightGray).setInsets(insets);
-			result[1] = new TextIcon(s,font,style,size,color1).setInsets(insets);
-			result[2] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,1.5f)).setInsets(insets);
-			result[3] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,0.5f)).setInsets(insets);
+			result[0] = new TextIcon(s,font,style,size,Color.lightGray);
+			result[1] = new TextIcon(s,font,style,size,color1);
+			result[2] = new TextIcon(s,font,style,size,color1);
+			result[3] = new TextIcon(s,font,style,size,color1);
 			if (color2!=null) {
-				result[4] = new TextIcon(s,font,style,size,color2).setInsets(insets);
-				result[5] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,1.5f)).setInsets(insets);
-				result[6] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,0.5f)).setInsets(insets);
+				result[4] = new TextIcon(s,font,style,size,color2);
+				result[5] = new TextIcon(s,font,style,size,color2);
+				result[6] = new TextIcon(s,font,style,size,color2);
 			}
 		}
+
+		Insets insets = new Insets(2,2,2,2); // right ?
+		for(TextIcon icon : result)
+			if (icon!=null)
+				icon.setInsets(insets);
+
+		result[2].hilited();
+		result[3].pushed();
+
+		if (result[5]!=null) result[5].hilited();
+		if (result[6]!=null) result[6].pushed();
+
 		return result;
 	}
 

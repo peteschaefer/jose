@@ -2,7 +2,6 @@ package de.jose.util;
 
 import de.jose.Util;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -90,37 +89,18 @@ public class ButtonIcon
         restore(g2);
     }
 
+    @Override
     public ButtonIcon pushed() {
         Util.swap(bg,0,4);
         Util.swap(bg,1,3);
         return this;
     }
 
+    @Override
     public ButtonIcon hilited() {
         fg[0] = brighter(fg[0],1.5f);
         fg[1] = brighter(fg[1],1.3f);
         fg[2] = brighter(fg[2],1.1f);
         return this;
-    }
-
-    protected static Color white(float f)
-    {
-        int v = (int)(255*f);
-        return new Color(v,v,v);
-    }
-
-
-    public static Color brighter(Color c, float fact)
-    {
-/*        float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-        hsb[2] = Math.min(1.0f,hsb[2]*fact);
-        return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
- */     int red = c.getRed();
-        int green = c.getGreen();
-        int blue = c.getBlue();
-        red = Math.min((int)(red*fact),255);
-        green = Math.min((int)(green*fact),255);
-        blue = Math.min((int)(blue*fact),255);
-        return new Color(red,green,blue);
     }
 }
