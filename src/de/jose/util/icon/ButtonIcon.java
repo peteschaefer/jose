@@ -24,6 +24,11 @@ public class ButtonIcon
     }
 
     @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new ButtonIcon(text, font, size);
+    }
+
+    @Override
     public int getIconHeight() {
         return size+insets.top+insets.bottom;
     }

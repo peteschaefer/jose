@@ -11,7 +11,7 @@
 		<item id="menu.file.new.frc" key="control alt N"/>
 		<item id="menu.file.new.shuffle"/>
 		<separator/>
-		<item id="menu.file.open"	key="control O"/>
+		<item id="menu.file.open"			icon="\uf07c:#cece63"	key="control O"/>
 		<item id="menu.file.open.url"/>
 		<separator/>
 		<item id="menu.file.close"									key="control W"/>
@@ -37,15 +37,15 @@
 		<item id="menu.edit.select.all"		key="control A" modal="true"/>
 		<item id="menu.edit.select.none"	key="control shift A" modal="true"/>
 		<separator/>
-		<item id="menu.edit.cut"			key="control X" modal="true"/>
-		<item id="menu.edit.copy"			key="control C" modal="true"/>
-		<item id="menu.edit.paste"			key="control V" modal="true"/>
-		<item id="menu.edit.clear"          modal="true"/>		<!--key="DELETE"-->
+		<item id="menu.edit.cut"	icon="\uf0c4"		key="control X" modal="true"/>
+		<item id="menu.edit.copy"	icon="\uf0c5:#aeae5e"		key="control C" modal="true"/>
+		<item id="menu.edit.paste"	icon="\uf0ea:#ae7e5e"		key="control V" modal="true"/>
+		<item id="menu.edit.clear"  icon="\uf55a:#a00000"        modal="true"/>		<!--key="DELETE"-->
 
 <!--		<menu id="menu.edit.games">-->
         <separator/>
-        <item id="menu.edit.collection.new"/>
-        <item id="menu.edit.empty.trash"/>
+        <item id="menu.edit.collection.new" icon="\uf65e:#cece63"/>
+        <item id="menu.edit.empty.trash"	icon="\uf1f8:#404040"/>
 <!--			<item id="menu.edit.paste.copy"/>-->
 <!--			<item id="menu.edit.paste.same"/>-->
         <item id="menu.edit.restore"/>
@@ -58,18 +58,18 @@
     <!-- Format Menu       -->
     <!-- - - - - - - - - - -->
     <menu id="menu.edit.style">
-        <item id="menu.edit.bold"  		icon="\uf032:bold" key="control B"/>
-        <item id="menu.edit.italic" 	icon="\uf033"  key="control I"/>
-        <item id="menu.edit.underline" 	icon="\uf0cd" key="control U"/>
-        <item id="menu.edit.plain" 		icon="\uf031"/>
+        <item id="menu.edit.bold"  		icon="\uf032:bold:%80" key="control B"/>
+        <item id="menu.edit.italic" 	icon="\uf033:%80"  key="control I"/>
+        <item id="menu.edit.underline" 	icon="\uf0cd:%80" key="control U"/>
+        <item id="menu.edit.plain" 		icon="\uf031:%80"/>
         <separator/>
-        <item id="menu.edit.left"		icon="\uf036"/>
-        <item id="menu.edit.center"		icon="\uf037"/>
-        <item id="menu.edit.right"		icon="\uf038"/>
+        <item id="menu.edit.left"		icon="\uf036:%80"/>
+        <item id="menu.edit.center"		icon="\uf037:%80"/>
+        <item id="menu.edit.right"		icon="\uf038:%80"/>
         <separator/>
         <item id="menu.edit.larger" 	icon="\uf034" key="control PLUS"/>
         <item id="menu.edit.smaller" 	icon="\uf034:%70" key="control MINUS"/>
-        <item id="menu.edit.color"		icon="\uf53f:#a0a040"/>
+        <item id="menu.edit.color"		icon="\uf53f:#c0c040"/>
         <separator/>
         <menu id="move.format">
             <item id="move.format.short" check="false"/>
@@ -125,7 +125,7 @@
 		<item id="menu.game.analysis" icon="\uf013:#cccc00"/>
 <!--		<item id="menu.game.hint"/> -->
 		<item id="menu.game.draw" 	icon="\uf2b5:#ddcc00"/>
-		<item id="menu.game.resign" icon="\uf28d:#aa0000"/> <!-- todo have a nicer stop symbol -->
+		<item id="menu.game.resign" icon="\uf165:#aa0000"/>
 		<separator/>
 <!--		<item id="menu.game.previous"/>
 		<item id="menu.game.next"/>

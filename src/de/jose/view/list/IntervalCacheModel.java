@@ -282,7 +282,13 @@ abstract public class IntervalCacheModel
                         if (rowCount > fired)
                             fireTableRowsInserted(fired, fired=rowCount);
                         fireStatusChange();
-                        if (res != null) res.close();
+                        if (res != null) try {
+                            res.close();
+                        } catch (SQLException e) {
+							//	happens, if query was killed. ok.
+							if (e.getErrorCode()!=MySqlError.ER_QUERY_INTERRUPTED)
+                            	throw e;
+                        }
                         //  fall-through intended
 
                     case WAITING:

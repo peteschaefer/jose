@@ -7,7 +7,7 @@ import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-public class TextIcon implements Icon
+public class TextIcon implements Icon, Cloneable
 {
     protected String text;
     protected Font font;
@@ -30,6 +30,19 @@ public class TextIcon implements Icon
 
     public TextIcon(String text, Font font, float size, Color color) {
         this(text,font.deriveFont(size),color);
+    }
+
+    public static TextIcon clone(TextIcon icon) {
+        try {
+            return (TextIcon)icon.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new TextIcon(this.text, this.font, this.color);
     }
 
     protected static Color white(float f)
@@ -86,6 +99,11 @@ public class TextIcon implements Icon
 
     public TextIcon hilited() {
         color = brighter(color,1.5f);
+        return this;
+    }
+
+    public TextIcon disabled() {
+        color = Color.lightGray;
         return this;
     }
 

@@ -21,6 +21,7 @@ import de.jose.image.ImgUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.WinUtils;
+import de.jose.util.icon.TextIcon;
 import de.jose.view.colorchooser.JoColorButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
 import de.jose.view.input.*;
@@ -485,7 +486,7 @@ public class JoDialog
 		return button;
 	}
 
-	public final JButton newButton(String name, ImageIcon icon, String style)
+	public final JButton newButton(String name, Icon icon, String style)
 	{
 		JButton button = newButton(name,icon,style,this);
 		buttons.put(name,button);
@@ -497,12 +498,12 @@ public class JoDialog
 		return newButton(name,null,listener);
 	}
 
-    public static final JButton newButton(String name, ImageIcon icon, ActionListener listener)
+    public static final JButton newButton(String name, Icon icon, ActionListener listener)
     {
         return newButton(name, icon, null, listener);
     }
 
-    public static final JButton newButton(String name, ImageIcon icon, String style, ActionListener listener)
+    public static final JButton newButton(String name, Icon icon, String style, ActionListener listener)
 	{
 		JButton button = new JButton();
 		button.setName(name);
@@ -527,8 +528,10 @@ public class JoDialog
                 button.putClientProperty("JButton.buttonType",style);
         }
         button.setIcon(icon);
-		if (icon!=null)
-			button.setDisabledIcon(ImgUtil.createDisabledIcon(icon));
+		if (icon!=null && (icon instanceof ImageIcon))
+			button.setDisabledIcon(ImgUtil.createDisabledIcon((ImageIcon)icon));
+		if (icon!=null && (icon instanceof TextIcon))
+			button.setDisabledIcon(TextIcon.clone((TextIcon)icon).disabled());
 		return button;
 	}
 

@@ -55,9 +55,7 @@ public class AnimationDialog
     private final Animation   animation;
 
 
-	private static final Dimension PREFERRED_SIZE = Version.mac ?
-              new Dimension(276,192)        //  optimized for Aqua L&F
-            : new Dimension(276,172);
+	private static final Dimension PREFERRED_SIZE = new Dimension(276,184);
 
     public AnimationDialog(String name)
     {
@@ -77,6 +75,7 @@ public class AnimationDialog
 						ListUtil.toVector(buttons), FlowLayout.CENTER,
                         true,false);
         //  buttons report directly to the application
+		buttonPanel.setMinimumSize(new Dimension(40,32));
         getElementPane().add(buttonPanel,CENTER_ONE);
 
 	    slider = createSlider("animation.speed");

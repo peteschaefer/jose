@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class PositionFilter
         extends BinReader
@@ -128,6 +128,7 @@ public class PositionFilter
 
 		String fen = res.getString(2);
 		byte[] bin = res.getBytes(3);
+		if (bin==null) return false;	//	todo why can this happen at all?
 
 		ignoreLine = inLine = false;
 		read(bin,0, null,0, fen,true);

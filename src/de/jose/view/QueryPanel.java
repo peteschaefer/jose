@@ -24,6 +24,8 @@ import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
+import de.jose.util.icon.TextIcon;
+import de.jose.util.icon.TextShapeIcon;
 import de.jose.view.list.IDBTableModel;
 import de.jose.window.JoDialog;
 import de.jose.window.JoMenuBar;
@@ -55,8 +57,7 @@ public class QueryPanel
 	protected static final Insets INSETS_TO = new Insets(0,8,0,8);
 
     protected static SearchRecord tempSearch = new SearchRecord();
-    protected static ImageIcon searchIcon = ImgUtil.getIcon(null,"search");
-    protected static ImageIcon dirtyIcon = ImgUtil.getIcon(null,"tab.dirty");
+    protected static Icon dirtyIcon = null;
 	protected static Icon[] tabIcon = new Icon[3];
 
 	protected static final GridBagConstraints LABEL_ONE =
@@ -419,11 +420,15 @@ public class QueryPanel
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		//	"Search"
+		Icon searchIcon = new TextShapeIcon("\uf002",FontUtil.fontAwesome(),18,Color.black,Color.white);
+		Icon clearIcon = new TextShapeIcon("\uf057",FontUtil.fontAwesome(),18,Color.red.darker(),Color.white);
+		Icon stopIcon = new TextShapeIcon("\uf28d",FontUtil.fontAwesome(),18,Color.red.darker(),Color.white);
+
 		searchButton = JoDialog.newButton("dialog.query.search",searchIcon,"icon",this);
 		searchButton.setDefaultCapable(true);
 		buttonPanel.add(searchButton);
 		//	"Clear"
-        clearButton = JoDialog.newButton("dialog.query.clear",ImgUtil.getMenuIcon("menu.edit.clear"),"icon",this);
+        clearButton = JoDialog.newButton("dialog.query.clear",clearIcon,"icon",this);
         buttonPanel.add(clearButton);
 
 		buttonPanel.add(Box.createHorizontalGlue());
@@ -434,7 +439,7 @@ public class QueryPanel
                 new EmptyBorder(2,8,2,8)));
         buttonPanel.add(rowCount);
 
-        stopButton = JoDialog.newButton("dialog.query.stop.results", ImgUtil.getMenuIcon("menu.game.resign"),this);
+        stopButton = JoDialog.newButton("dialog.query.stop.results", stopIcon,this);
         stopButton.setText(null);
 		stopButton.setVisible(false);
         buttonPanel.add(stopButton);
@@ -728,6 +733,8 @@ public class QueryPanel
 
 	protected void activateTab(int idx, boolean on)
 	{
+		if (on && dirtyIcon==null)
+			dirtyIcon = new TextIcon("\uf303", FontUtil.fontAwesome(),12,Color.decode("#9c0000"));
 		cardPanel.setIconAt(idx, on ? dirtyIcon:tabIcon[idx]);
 	}
 

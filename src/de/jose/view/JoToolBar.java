@@ -39,7 +39,7 @@ public class JoToolBar
 {
 	private static final Insets margin = new Insets(0,2,0,2);
 
-	protected Dimension minDimension = new Dimension(20,20);
+	protected Dimension minDimension = new Dimension(28,28);
 
 	public void actionPerformed(ActionEvent e)
 	{

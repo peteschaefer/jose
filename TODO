@@ -101,14 +101,14 @@ Alternative JREs:
     [-] most recent list
 
 * font awesome icons
-    [ ] <toolbar> <item icon="unicode;color;color">
+    [x] <toolbar> <item icon="unicode;color;color">
         unicode = font awesome code point
         color = normal color, hilited color; disable color = light gray
         with button ("nav") frame
-     [ ]fall back 1: images/nav (already existing)
-     [ ]fall back 2: <menu><item icon>  (reference needs to be found)
-     [ ]fall back 3: images/menu (already existing)
-    [ ] <menu> <item icon="unicode;color"> optional
+     [x]fall back 1: images/nav (already existing)
+     [x]fall back 2: <menu><item icon>  (reference needs to be found)
+     [x]fall back 3: images/menu (already existing)
+    [x] <menu> <item icon="unicode;color"> optional
     [ ] animation dialog
     [ ] buttons
 
