@@ -92,7 +92,12 @@ public class JoStyledLabel
         addFocusListener(this);
 	}
 
-	public static void appendLink(StringBuffer text, String iconPath, String label, String href)
+    @Override
+    public void setStyledDocument(StyledDocument doc) {
+        super.setStyledDocument(this.doc = doc);
+    }
+
+    public static void appendLink(StringBuffer text, String iconPath, String label, String href)
 	{
 		if (href!=null) {
 			text.append("<a href=\"");

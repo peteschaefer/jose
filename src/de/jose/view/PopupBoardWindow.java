@@ -106,9 +106,9 @@ public class PopupBoardWindow
 
         ArrayList<Move> moves = null;
         if (engpanel.analysis!=null)
-            moves = engpanel.analysis.moves[pvidx];
+            moves = engpanel.analysis.data[pvidx].moves;
         else if (engpanel.bookmoves!=null)
-            moves = engpanel.bookmoves.moves[pvidx];
+            moves = engpanel.bookmoves.data[pvidx].moves;
 
         if (moves==null || moves.isEmpty())
             return "?";

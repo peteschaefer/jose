@@ -603,10 +603,11 @@ public class BoardPanel
 		int cpmax = Integer.MIN_VALUE;
 
 		for (int idx=0; idx < a.maxpv; idx++) {
-			if (a.moves[idx]==null || a.moves[idx].isEmpty())
+			AnalysisRecord.LineData data = a.data[idx];
+			if (data.moves==null || data.moves.isEmpty())
 				continue;
-			cpmin = Math.min(cpmin,a.eval[idx].cp_current);
-			cpmax = Math.max(cpmax,a.eval[idx].cp_current);
+			cpmin = Math.min(cpmin, data.eval.cp_current);
+			cpmax = Math.max(cpmax, data.eval.cp_current);
 		}
 
 		int MAX_HINTS = 8;	//	don't show too many
@@ -617,20 +618,21 @@ public class BoardPanel
 		//	find interesting moves from PV list
 		for (int idx=0; idx < a.maxpv && hints.size() < MAX_HINTS; idx++)
 		{
-			if (a.moves[idx]==null || a.moves[idx].isEmpty())
+			AnalysisRecord.LineData data = a.data[idx];
+			if (data.moves==null || data.moves.isEmpty())
 				continue;
 
-			int cp = a.eval[idx].cp_current;
+			int cp = data.eval.cp_current;
 			if (cpprev!=Score.UNKNOWN) {
 				int gap = Math.abs(cp-cpprev);
 				if (gap > (cpmax-cpmin)*SCORE_DROP)
 					break;
 			}
 
-			Move mv = a.moves[idx].get(0);
+			Move mv = data.moves.get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
-			hint.label = EnginePlugin.printScore(a.eval[idx], plugin, false, a.white_next);	//	todo apply pov
+			hint.label = EnginePlugin.printScore(data.eval, plugin, false, a.white_next);	//	todo apply pov
 
 			//	update color
 			if (cpmin==cpmax)

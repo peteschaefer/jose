@@ -165,7 +165,7 @@ public class EnginePanel
 		Style textStyle = styles.addStyle("engine.pv",null);
 		StyleConstants.setFontFamily(textStyle, "sans-serif");
 		StyleConstants.setFontSize(textStyle, 12);
-		StyleConstants.setLineSpacing(textStyle, -12.f);
+		//StyleConstants.setLineSpacing(textStyle, -12.f);
 
 		Style boldStyle = styles.addStyle("bold",null);
 		StyleConstants.setBold(boldStyle, true);
@@ -748,19 +748,20 @@ public class EnginePanel
             boolean scrollhist = false;
 			for (int idx=0; idx < rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
-					assert(rec.eval[idx]!=null);
-					assert(rec.line[idx]!=null);
-					setEvaluation(idx, rec.eval[idx]);
-					setVariation(idx, rec.line[idx], rec.line_info[idx]);
+					AnalysisRecord.LineData data = rec.data[idx];
+					assert(data.eval!=null);
+					assert(data.line!=null);
+					setEvaluation(idx, data.eval);
+					setVariation(idx, data.line, data.info);
 
 					if (idx==0)
-						broadcastMoveValue(rec.ply, rec.eval[idx]);
+						broadcastMoveValue(rec.ply, data.eval);
 
 					if (! inBook) {
                     if (countPvLines() > 1)
-						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
                     else
-						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
 				}
 			}
 
@@ -841,12 +842,13 @@ public class EnginePanel
 				line.append("}");
 			}
 
-			if (bookmoves.moves[i]==null)
-				bookmoves.moves[i] = new ArrayList();
-			bookmoves.moves[i].clear();
-			bookmoves.moves[i].add(entry.move);	//	useful for tooltips
+			AnalysisRecord.LineData data = bookmoves.data[i];
+			if (data.moves==null)
+				data.moves = new ArrayList();
+			data.moves.clear();
+			data.moves.add(entry.move);	//	useful for tooltips
 
-			Score score = bookmoves.eval[i];
+			Score score = data.eval;
 			entry.toScore(score,1000);
 		}
 
