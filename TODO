@@ -112,6 +112,7 @@ Alternative JREs:
     [x] in engine panel (info label)
     [x] eval bar
     [x] font awesome
+     -> replace old icons step-by-step with TextIcon
     [ ] document? (would have to be stored in db :(
 
 * threat arrows
