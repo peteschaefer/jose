@@ -152,6 +152,8 @@ public class ArchiveImport
         map.createTables(tempdb,"MEMORY",true);
 
 	    //  compare MetaInfo (not yet necessary)
+		int inputVersion = Setup.getSchemaVersion(connection, tempdb, "MAIN");
+		int thisVersion = Setup.getSchemaVersion(connection, null, "MAIN");
 
 	    copyCollection();
 		setProgress(0.15);

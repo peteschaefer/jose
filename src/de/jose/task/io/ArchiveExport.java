@@ -281,8 +281,8 @@ public class ArchiveExport
 		//  Store Meta Info
 		String meta_copy =
 				"CREATE TABLE "+tempdb+".MetaInfo" +
-				" SELECT * FROM MetaInfo" +
-				" WHERE SchemaName IN ('META','IO')";
+				" SELECT * FROM MetaInfo";
+				//" WHERE SchemaName IN ('META','IO')";
 		connection.executeUpdate(meta_copy);
 		setProgress(0.01);
 
