@@ -17,7 +17,7 @@
         book is shown in both, USER_INPUT and ANALYSIS
     [?] no duplicate Book Queries
 [x] pause button activation
-[?] play button activation
+[x] play button activation
 [ ] hint button activation
 [ ] hint button behavior
     switch(engine state)

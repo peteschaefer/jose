@@ -118,7 +118,7 @@ public class EnginePanel
 
     protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
 	protected static ImageIcon[] iPause, iHint, iAnalyze;
-	protected static ImageIcon[] iBook, iEngine;
+	protected static ImageIcon iBook, iEngine;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
 
@@ -214,8 +214,6 @@ public class EnginePanel
 		iPause = new ImageIcon[4];
 		iHint = new ImageIcon[4];
 		iAnalyze = new ImageIcon[4];
-		iBook = new ImageIcon[4];
-		iEngine = new ImageIcon[4];
 
 		iGoGreen[0] =
 		iGoYellow[0] =
@@ -258,11 +256,8 @@ public class EnginePanel
 		iAnalyze[2] = ImgUtil.getIcon("nav","analyze.hot");
 		iAnalyze[3] = ImgUtil.getIcon("nav","analyze.pressed");
 
-		iBook[0] = iBook[1] = iBook[2] =
-		iBook[3] = ImgUtil.getIcon("svg","?");
-
-		iEngine[0] = iEngine[1] = iEngine[2] =
-		iEngine[3] = ImgUtil.getIcon("svg","?");
+		iBook = ImgUtil.getIcon("nav","book.solid");
+		iEngine = ImgUtil.getIcon("nav","gears.solid");
 	}
 
 	private void createComponents()
@@ -1180,20 +1175,25 @@ public class EnginePanel
 							   Application.PlayState playState,
 							   EngineState engineState)
 	{
-		if (engineState==null)
-			return iGoYellow;
-		switch (engineState) {
-		default:
-		case THINKING:	    		return iGoRed;
-		case PONDERING:				return iGoGreen;
-		case PAUSED:				return iGoBlue;
-		case ANALYZING:			//return iGoYellow;
-			switch(appState) {
-				case USER_INPUT: 	return iGoOrange;
-				case ANALYSIS:		return iGoYellow;
-			}
+		if (engineState!=null) switch (engineState) {
+		case THINKING:	    return iGoRed;
+		case PONDERING:		return iGoGreen;
 		}
-		//	todo honor playState (instead of/in addition to engineState)
+
+		if (playState!=null) switch(playState) {
+		case BOOK:
+		case ENGINE:		return iGoRed;
+		}
+
+		if (appState!=null) switch(appState) {
+		case USER_INPUT:	return iGoYellow;
+		case ANALYSIS:		return iGoOrange;
+		}
+
+		if (engineState!=null) switch (engineState) {
+		case PAUSED:		return iGoBlue;
+		}
+
 		return iGoYellow;
 	}
 
@@ -1214,24 +1214,27 @@ public class EnginePanel
 
 	protected void updateStatus(EngineState state)
 	{
-		String result = null;
-		if (state==null)
-			result = "book.title";
-		else
-		switch (state) {
-		default:
-		case PAUSED:	result = "engine.paused.title"; break;
-		case THINKING:	result = "engine.thinking.title"; break;
-		case PONDERING:	result = "engine.pondering.title"; break;
-		case ANALYZING:	result = "engine.analyzing.title"; break;
+		String text = null;
+		if (state==null) {
+			//text = "book.title";
+			//text = Language.get(text);
+			//text = StringUtil.replace(text,"%book%", Application.theApplication.theOpeningLibrary.getTitle());
+			text = Application.theApplication.theOpeningLibrary.getTitle();
+			lStatus.setIcon(iBook);
 		}
-
-		result = Language.get(result);
-		result = StringUtil.replace(result,"%engine%", (pluginName==null) ? "":pluginName);
-		result = StringUtil.replace(result,"%book%", Application.theApplication.theOpeningLibrary.getTitle());
-		lStatus.setText(result);
-		//	todo
-		//lStatus.setIcon();
+		else {
+			switch (state) {
+				default:
+				case PAUSED:	text = "engine.paused.title"; break;
+				case THINKING:	text = "engine.thinking.title"; break;
+				case PONDERING:	text = "engine.pondering.title"; break;
+				case ANALYZING:	text = "engine.analyzing.title"; break;
+			}
+			text = Language.get(text);
+			text = StringUtil.replace(text,"%engine%", (pluginName==null) ? "":pluginName);
+			lStatus.setIcon(iEngine);
+		}
+		lStatus.setText(text);
 	}
 
 	public void init()
