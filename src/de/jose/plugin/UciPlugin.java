@@ -1231,27 +1231,32 @@ public class UciPlugin
 	}
 
 	@Override
-	public float mapUnit(Score score)
+	public void mapUnit(Score score)
 	{
 		String scoreType = getOptionValue(config,"ScoreType");
-		float perc = (float)score.cp/100.0f;
+		//float perc = (float)score.cp/100.0f;
 
 		if (scoreType!=null && scoreType.equals("win_percentage"))
 		{
-			if (perc < 0.0) perc = 100.0f+perc;
+			final int max = 10000;
+			int perc = score.cp;
+			if (perc < 0) perc = max+perc;
 			//	note that negative percentages do not come from the engine.
 			//	they are an artifact of EnginePlugin.adjustPointOfView()
-			if (perc < 0.0) perc = 0.0f;
-			if (perc > 100.0) perc = 100.0f;
+			if (perc < 0) perc = 0;
+			if (perc > max) perc = max;
 
-			return perc/100.0f;
+			score.win = perc;
+			score.draw = 0;
+			score.lose = max-score.win;
 		}
-		if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
+		else if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
 		{
-			return mapUnit(score.cp,-100,+100);
+			mapUnit(score, score.cp,-100,+100);
 		}
-		//	else
-
-		return super.mapUnit(score);
+		else
+		{
+			super.mapUnit(score);
+		}
 	}
 }

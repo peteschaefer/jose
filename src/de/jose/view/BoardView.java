@@ -344,15 +344,17 @@ abstract public class BoardView
 
 	public void setScore(Score sc, EnginePlugin plugin)
 	{
-		float[] val;
+		float[] val;	//	todo use Score instead. use Game.currentMove().score instead
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
 			val = null;	//	Score object contains no useful info. Ignore.
 		else if (sc==null)
 			val = null;
 		else if (plugin==null)
 			val = null;
-		else
-			val = plugin.mapUnitWDL(sc,eval);
+		else {
+			plugin.mapUnit(sc);
+			val = sc.mapWDL(null);
+		}
 		setEval(val);
 	}
 

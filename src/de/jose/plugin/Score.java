@@ -75,10 +75,14 @@ public class Score
         lose = temp;
     }
 
-    public void mapWDL(float[] result)
+    public float[] mapWDL(float[] result)
     {
+        if (result==null) result = new float[3];
         int sum = sumWDL();
         result[0] = (float)win / sum;
         result[1] = (float)draw / sum;
+        if (result.length >= 3)
+            result[2] = (float)lose / sum;
+        return result;
     }
 }
