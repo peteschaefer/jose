@@ -6,6 +6,8 @@ import org.w3c.dom.Text;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import static java.awt.BasicStroke.CAP_ROUND;
+
 public class TextShapeIcon extends TextIcon
 {
     //private Shape glyph, strokedGlyph;
@@ -33,7 +35,7 @@ public class TextShapeIcon extends TextIcon
 
         int strokeWidth = (int) Math.round(font.getSize() / 6.0f);
         strokeWidth = Math.max(strokeWidth,1);
-        Stroke str = new BasicStroke(strokeWidth);
+        Stroke str = new BasicStroke(strokeWidth,CAP_ROUND,BasicStroke.JOIN_ROUND);
         Shape strokedGlyph = str.createStrokedShape(glyph);
         mask = ImgUtil.getMask(strokedGlyph, true);
     }

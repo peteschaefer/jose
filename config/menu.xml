@@ -11,7 +11,7 @@
 		<item id="menu.file.new.frc" key="control alt N"/>
 		<item id="menu.file.new.shuffle"/>
 		<separator/>
-		<item id="menu.file.open"			icon="\uf07c:#cece63"	key="control O"/>
+		<item id="menu.file.open"			icon="\uf07c:#cece63:#000000:%80"	key="control O"/>
 		<item id="menu.file.open.url"/>
 		<separator/>
 		<item id="menu.file.close"									key="control W"/>
@@ -44,7 +44,7 @@
 
 <!--		<menu id="menu.edit.games">-->
         <separator/>
-        <item id="menu.edit.collection.new" icon="\uf65e:#cece63"/>
+        <item id="menu.edit.collection.new" icon="\uf65e:#cece63:#000000:%80"/>
         <item id="menu.edit.empty.trash"	icon="\uf1f8:#404040"/>
 <!--			<item id="menu.edit.paste.copy"/>-->
 <!--			<item id="menu.edit.paste.same"/>-->

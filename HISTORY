@@ -29,7 +29,7 @@ the first production release.
  
 === 1.2 (2003-12-16) ===
 
-* Translations: French, Portuguese. Thanks to Frederic Raimbault and José da Paula !
+* Translations: French, Portuguese. Thanks to Frederic Raimbault and JosÃ© da Paula !
 * Support for UCI engines, including:
       - display multiple variations (only supported by few engines)
       - display current move, elapsed time, nodes per second
@@ -87,7 +87,7 @@ the first production release.
   adjust the font size.
 
 === 1.3.2 (2004-04-08) ===
-* Release for Macintosh OS X. Thanks to Andreas Güttinger and Randy Countryman for support.
+* Release for Macintosh OS X. Thanks to Andreas GÃ¼ttinger and Randy Countryman for support.
 === 1.3.3 (2004-04-10) ===
 * Hotfix for OS X. Option Dialog didn't work at all.
 
@@ -104,7 +104,7 @@ the first production release.
 === 1.3.5 (2005-02-24) ===
 * Completely new database integration.
 * UI fixes for Mac OS X
-* Polish Translation. Thanks to Tomasz Sokól.
+* Polish Translation. Thanks to Tomasz SokÃ³l.
 * bug fixes
 
 === 1.3.6 (2005-10-08) ===
@@ -115,7 +115,7 @@ the first production release.
 * Archive file format
 * Web Application
 * Database engine update: MySQL 5.0
-* bundled chess engines: Spike and Toga. Thanks to Volker Böhm, Ralf Schäfer and Thomas Gaksch.
+* bundled chess engines: Spike and Toga. Thanks to Volker BÃ¶hm, Ralf SchÃ¤fer and Thomas Gaksch.
 
 === 1.4.1 (2006-01-14) ===
 * Opening Books (support for Crafty and Polyglot book files)
@@ -156,6 +156,9 @@ the first production release.
 * some text editor fixes
 
 === 1.5.4 (2025-04)
-* nicer (scalable) icons
+* nicer (scalable) icons. Those pixelated 2000's icon have had their day ;)
+
+=== 1.5.5. (?)
+* undo in text editor?
 
 ==========================
