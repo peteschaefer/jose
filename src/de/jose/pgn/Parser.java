@@ -503,7 +503,7 @@ public class Parser
 
 	public void setLanguage(String lang, boolean caseSensitive)
 	{
-		String newchars = Language.get("fig."+lang,null);
+		String newchars = Language.getPieceChars(lang);
 		if (newchars==null) newchars = DEFAULT_PIECE_CHARACTERS;
 		if (!Util.equals(pieceChars,newchars)) {
 			pieceChars=newchars;

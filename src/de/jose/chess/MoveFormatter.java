@@ -496,7 +496,7 @@ abstract public class MoveFormatter
         if (langCode==null)
             setPieceChars(null);
         else
-            setPieceChars(Language.get("fig."+langCode, null));
+            setPieceChars(Language.getPieceChars(langCode));
     }
 
 	public String[] getPieceCharArray()

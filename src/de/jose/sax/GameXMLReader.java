@@ -347,7 +347,7 @@ public class GameXMLReader extends CSSXMLReader implements GameHandler
 
 			String langCode = Language.theLanguage.langCode;
 			handler.element("lang", langCode);
-			String[] pieceChars = StringMoveFormatter.parsePieceChars(Language.get("fig."+langCode, null));
+			String[] pieceChars = StringMoveFormatter.parsePieceChars(Language.getPieceChars(langCode));
 
 			for (int p = Constants.PAWN; p <= Constants.KING; p++)
 			{

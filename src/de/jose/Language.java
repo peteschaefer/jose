@@ -87,6 +87,12 @@ public class Language
 		init(file,DEFAULT, null);
 	}
 
+	public static String getPieceChars(String langCode) {
+		String str = Language.get("fig."+langCode,null);
+		if (str!=null) str = StringUtil.unescape(str);
+		return str;
+	}
+
 	private void init(File file, String code, File fallBackFile) throws IOException
 	{
 		if (file!=null && file.exists()) {

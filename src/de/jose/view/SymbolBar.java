@@ -99,7 +99,7 @@ public class SymbolBar
             210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
             /*220,*/ 221, 223, 222,  225, 224, 226, 227, 228, 229,
             230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
-            240, 241, 242, 243, 244, 245, 246, 247
+            /*240,*/ 241, 242, 243, 244, 245, 246, 247
     };
 
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)

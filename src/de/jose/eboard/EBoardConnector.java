@@ -198,6 +198,8 @@ public abstract class EBoardConnector
     private void findUserMove(BoardState st)
     {
         //  look for (a) legal move,
+        if (app.board==null) return;
+
         Position pos = app.board.getPosition();
         Move mv = guessMove(st,pos);
         if (mv!=null) {
