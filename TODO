@@ -9,10 +9,29 @@
 
 ==== Project
 
-compile sources against 1.8 32bit [x]
-libraries needed:
-? TraceConnection probably not needed anyway
-* get rid of some outdated stuff (customizing for jdk 1.4, 1.5, plafs, ...)
+move on to 64bit land
+
+[ ] compile against jdk 1.8
+[ ] run with JBR 21 x64
+    [x] Windows
+    [x] Linux
+    [ ] Mac Intel
+    [ ] Mac arm
+[ ] fixes hi-dpi issues
+    [x] fonts
+    [x] view2d
+    [ ] view3d
+[ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
+    [x] Windows
+    [x] Linux
+    [ ] Mac Intel
+[ ] JavaLauncher -> needs server/jvm.dll
+[ ] mysql 5.0.15
+    [ ] Windows ( ) embedded (x) stand-alone
+    [x] Linux (x) embeded (x) stand-alone
+    (MacOS already standalone, 64 bit)
+[ ] easylink: 64 bit, use lates hidapi
+    [ ] fixes BLE
 
 ==== Linux build (!!)
 * requires jre 1.8 (i386)
@@ -26,45 +45,7 @@ libraries needed:
 
 ==== macOS
 
-[x] macOS 15 Sequoia VM
-[x] jdk1.8 (64 bit)
-[x] 64 bit binaries for stockfish
-[x] and lc0. via brew
-[x] mysqld standalone 5.0.67 for MacOS 64, (remember to copy share too)
-[x] upgrade mysql.jar
-[-] Java3D
-
-BUG: Chess Berlin figurines print wrong. Other fonts seem to work.
-BUG: Print Preview does not work
-
-[-] compile easylink
- ### project compiles, but can't connect to chessboard)
-
-[x] upgrade libquaqua
-[?] https://violetlib.org/vaqua. Problems! More modern but not overwhelmingly beautiful :(
-
-[x] Application Bundle vs. Java
-   [x] .sh + shc. see: https://github.com/tofi86/universalJavaApplicationStub
-   [x] bundle leela
-   [x] bundle stockfish
-   [-] Quaqua
-   [-] VAqua
-   [x] default lnf
-   [-] Print Preview
-   [-] port JavaLauncher :(   [x] upgrade mrjadapter 1.3
-
-[x] "Apple Silicon" = arm64
-    [x] jdk1.8_431, 11 (not 9?) is available from Oracle :)
-    [x] MySQL 5.0.67 compile from source
-        [x] Ubuntu x86_64
-        [x] macOS x86_64 standalone (+libgcc)
-        [-] macOS x86_64 embedded. unstable, 5.0.15 too
-        [x] macOS arm64
-    [x] shc
-    [x] jose-arm.sh
-    [x] stockfish
-    [x] Lc0
-    [x] test bundle
+[ ] Java3D 1.5.1 for Mac Intel
 
 
 ==== Deprecated Stuff
@@ -103,20 +84,6 @@ BUG: Print Preview does not work
   - can't delete? (Apply !!)
 
 ==== Postponed
-
-* upgrade JDK
-    - compile with jdk 8
-    - run with jbr 21 (32 or 64 bit?)
-      https://github.com/JetBrains/JetBrainsRuntime
-
-      [x] fixes hidpi on Linux :)
-      [x] ...and on Windows
-            after dialog elements are adjusted (maybe flaw of Windows LnF?)
-      [ ] bug: touch screen and drag not recognized.
-            which is a pity. moving pieces with your finger is a good feature
-      [ ] deprecate ClassPathUtil, but that's ok
-      [x] fix sprite rendering
-      [ ] maybe some reflection bugs, but they can be fixed/deprecated
 
 * launch mysqld earlier (?)
 
