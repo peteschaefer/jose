@@ -16,12 +16,17 @@ import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickIntersection;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.PickTool;
+import de.jose.chess.EngUtil;
 
 import javax.media.j3d.*;
+import javax.sound.midi.SysexMessage;
+import javax.swing.*;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -231,6 +236,60 @@ public class PickBehavior
 		return result;
 	}
 
+	protected Point adjustShapeLocation(MouseEvent evt)
+	{
+//		System.out.println("["+evt.getSource()+"]");
+//		System.out.println("("+evt.getX()+","+evt.getY()+")");
+
+		JoCanvas3D canvas = (JoCanvas3D) evt.getSource();
+//		Rectangle2D bounds = canvas.getBounds();
+//		System.out.println("[bounds: "+bounds+"]");
+//		Point loc = canvas.getParent().getLocation();
+//		System.out.println("[loc: "+loc+"]");
+
+		JComponent comp = (JComponent) canvas.getParent();
+		Point p1 = comp.getLocationOnScreen();
+//		Point p0 = canvas.getLocationOnScreen();//canvas.getLocationOnScreen();
+		Graphics2D g2 = (Graphics2D)comp.getGraphics();
+		AffineTransform tf = g2.getTransform();
+//		Dimension d = canvas.getSize();
+
+		Point3d centerEye = new Point3d();
+		canvas.getCenterEyeInImagePlate(centerEye);
+//		System.out.println("[centerEye: "+centerEye+"]");
+
+		//	translate yoff in view coordinates?
+
+		//	CenterEye should always correspond the center point in View
+		Dimension vsize = comp.getSize();
+		int cx = (int)((vsize.width * tf.getScaleX())/2);
+		int cy = (int)((vsize.height * tf.getScaleY())/2);
+
+		Point3d centerloc = new Point3d();
+		canvas.getPixelLocationInImagePlate(cx,cy,centerloc);
+		System.out.println("[center loc: "+centerloc+"]");
+
+//		System.out.println("Canvas \"physical\" height: "+canvas.getPhysicalHeight());
+		int height = canvas.getHeight();
+		double physHeight = canvas.getPhysicalHeight();
+		double metersPerPixelY = physHeight / height;
+
+		double yoff = centerloc.y-centerEye.y;
+		double yoff_pixels = yoff/metersPerPixelY;
+		System.out.println("[yoff_pixels: "+yoff_pixels+"]");
+
+		int magicy = (int)yoff_pixels;
+		int mx = (int)((evt.getXOnScreen()-p1.x)*tf.getScaleX());
+		int my = (int)((evt.getYOnScreen()-p1.y+magicy)*tf.getScaleY());
+		System.out.println("["+mx+","+my+"]");
+/*
+		Point3d imloc = new Point3d();
+		canvas.getPixelLocationInImagePlate(mx,my,imloc);
+		System.out.println("[imloc: "+imloc+"]");
+*/
+		return new Point(mx,my);
+	}
+
 	/**
 	 * start dragging a piece
 	 */
@@ -238,21 +297,29 @@ public class PickBehavior
 	{
 		notifyListeners(ICallbackListener.ACTIVATE, evt);
 		//	pick a piece
-		pickCanvas.setShapeLocation(evt);
+		Point mp = adjustShapeLocation(evt);
+		pickCanvas.setShapeLocation(mp.x, mp.y);
 
 		int hits = 1;
 		PickResult closest = pickCanvas.pickClosest();
-		if (closest==null)
+		if (closest==null) {
+			System.out.println(" miss");
 			return 0;
+		}
 
 		Shape3D shape = (Shape3D)closest.getNode(PickResult.SHAPE3D);
 		PieceGroup piece = PieceGroup.getPieceGroup(shape);
 		if (piece==null) {
-			if (zoomHandles.contains(shape))
+			if (zoomHandles.contains(shape)) {
+				System.out.println(" = zoom handle");
 				return PICK_ZOOM_HANDLE;
-			else if (orbitHandles.contains(shape))
+			}
+			else if (orbitHandles.contains(shape)) {
+				System.out.println(" = orbit handle");
 				return PICK_ORBIT_HANDLE;
+			}
 			else
+				System.out.println(" = outside");
 				return 0;
 		}
 
@@ -266,7 +333,7 @@ public class PickBehavior
 			//	ambigous pick by bounds - disambiguate
 			System.out.println("ambiguous pick");
 			pickCanvas.setMode(PickTool.GEOMETRY);
-			pickCanvas.setShapeLocation(evt);
+			pickCanvas.setShapeLocation(mp.x,mp.y);
 			closest = pickCanvas.pickClosest();
 			shape = (Shape3D)closest.getNode(PickResult.SHAPE3D);
 			piece = PieceGroup.getPieceGroup(shape);
@@ -288,24 +355,28 @@ public class PickBehavior
 		else
 		{
 			//	bounds picking is much faster than geometry picking but it might be ambiguous
-			s = getPickPoint(evt, piece.getCurrentBounds());
+			s = getPickPoint(mp.x,mp.y, piece.getCurrentBounds());
 		}
 
-		if (s==null) return 0;	//	missed
+		if (s==null) {
+			System.out.println(" = outside");
+			return 0;	//	missed
+		}
 
 		draggedGroup = piece;
 		piece.location().get(pieceStartPoint);
 
-		dragStartPoint = getPickPoint(evt, s.z);
+		dragStartPoint = getPickPoint(mp.x,mp.y, s.z);
 		awtComponent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		notifyListeners(PICK_PIECE, piece);
+		System.out.println(" = " + EngUtil.pieceCharacter(piece.piece));
 		return PICK_PIECE;
 	}
 	
-	protected Point3d getPickPoint(MouseEvent evt, double z)
+	protected Point3d getPickPoint(int mx, int my, double z)
 	{
 		//	project the pick ray on the z plane
-		pickCanvas.setShapeLocation(evt);
+		pickCanvas.setShapeLocation(mx,my);
 		PickRay ray = (PickRay)pickCanvas.getPickShape();
 		
 		ray.get(pray,vray);
@@ -319,10 +390,10 @@ public class PickBehavior
 		return q;
 	}
 
-	protected Point3d getPickPoint(MouseEvent evt, Bounds box)
+	protected Point3d getPickPoint(int mx, int my, Bounds box)
 	{
 		//	project the pick ray on to a box
-		pickCanvas.setShapeLocation(evt);
+		pickCanvas.setShapeLocation(mx,my);
 		PickRay ray = (PickRay)pickCanvas.getPickShape();
 
 		ray.get(pray,vray);
@@ -344,7 +415,9 @@ public class PickBehavior
 	protected void drag(MouseEvent evt)
 	{
 		//	get intersection with z plane
-		Point3d p = getPickPoint(evt, dragStartPoint.z);
+		Point mp = adjustShapeLocation(evt);
+
+		Point3d p = getPickPoint(mp.x,mp.y, dragStartPoint.z);
 		if (p==null) return;
 			
 		p.sub(dragStartPoint);

@@ -143,6 +143,11 @@ public class BoardView3D
         view.setBackClipDistance(back);
     }
 
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+		super.setBounds(x, y, width, height);
+	}
+
 	public void init(GraphicsConfiguration gc) throws Exception
 	{
 		//	Canvas3D will deal with buffering
