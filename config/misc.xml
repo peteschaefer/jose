@@ -242,7 +242,7 @@
 		<!-- default web browser application on Windows -->
 		<browser os="Windows">rundll32 url.dll,FileProtocolHandler %url%</browser>
 		<!-- default web browser application on Unix -->
-		<browser os="Unix">mozilla %url%</browser>
+		<browser os="Unix">xdg-open %url%</browser>
 		<!-- on OS X, just call "open" -->
 		<browser os="Mac">open %url%</browser>
  	</web>

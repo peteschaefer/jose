@@ -173,7 +173,7 @@
 		<item id="menu.help.about"			key="control H" hide="mac"/>
 		<item id="menu.help.license"/>
 		<separator/>
-		<item id="menu.web.home" 		url="http://jose-chess.sourceforge.net"/>
+		<item id="menu.web.home" 		url="https://hrimfaxi.bitbucket.io/jose"/>
 		<item id="menu.web.update"/>
 		<!--item id="menu.web.report"		url="http://sourceforge.net/tracker/?func=browse&amp;group_id=60120&amp;atid=493133"/-->
 		<item id="menu.web.report"		url="https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a&amp;statuses=new&amp;statuses=indeterminate&amp;sort=-updated&amp;page=1"/>

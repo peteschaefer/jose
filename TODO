@@ -2,11 +2,12 @@
 
 * suggestion arrow colors don't update as they should?
 * double click insert variant; trying to delete it
-* project urls
+
 
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
+
 
 ==== Project
 compile sources against 1.8 [x]
@@ -53,15 +54,13 @@ Leela
 * "New Game from here"
   - player names update
   - turn board on engine start
-  - BUG: New Game from here can not be saved to DB (not dirty?)
-  - BUG: engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0. Fixed ??
+  - BUG fixed ?? engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0.
 
 * keep playing after flagging ?
 
 * Chessnut
-  - persist in user settings: board orientation white/black/auto
   - beep: after each move
-  - flip option with new game
+  - flip option with new game ??
   - check mate: fanfare, animation ...
 
 * BUG: engine configurations

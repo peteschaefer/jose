@@ -17,7 +17,7 @@ import de.jose.Util;
 import de.jose.Version;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.Triplet;
-import sun.awt.Win32FontManager;
+//import sun.awt.Win32FontManager;
 
 import java.util.*;
 import java.awt.*;
@@ -318,6 +318,8 @@ public class FontUtil
 		Class[] types = { boolean.class };
 		Object[] values = { Boolean.TRUE };
 
+		return sun.font.SunFontManager.getInstance().getPlatformFontPath(true);
+/*
 		try {
 			if (Version.windows) {
 				String path = Win32FontManager.getInstance().getPlatformFontPath(false);
@@ -329,20 +331,20 @@ public class FontUtil
 			}
 			else
 			{
-/*
+/ *
 			String s = Version.getSystemProperty("sun.java2d.noType1Font");
 			if(s == null)
 				type1 = sun.awt.font.NativeFontWrapper.getType1FontVar();
 			if("true".equals(s))
 				type1 = true;
-*/
+* /
 				values[0] = Boolean.FALSE;
 				return (String)ReflectionUtil.invoke("sun.awt.font.NativeFontWrapper",null,"getFontPath",types,values);
 			}
 		} catch (Exception e) {
 			Application.error(e);
 			return null;
-		}
+		}*/
 	}
 
 	public static final String getJavaFontPath()
