@@ -17,7 +17,7 @@ import de.jose.Util;
 import de.jose.Version;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.Triplet;
-//import sun.awt.Win32FontManager;
+import sun.awt.Win32FontManager;
 
 import java.util.*;
 import java.awt.*;
@@ -320,9 +320,8 @@ public class FontUtil
 
 		try {
 			if (Version.windows) {
-				//String path = Win32FontManager.getInstance().getPlatformFontPath(false);
-				//return path;
-				throw new UnsupportedOperationException();
+				String path = Win32FontManager.getInstance().getPlatformFontPath(false);
+				return path;
 			}
 			if (Version.java15orLater)
 			{
