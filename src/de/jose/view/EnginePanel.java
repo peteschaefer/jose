@@ -776,7 +776,7 @@ public class EnginePanel
 //		button.setText(null);		//	no text
 //		button.setMargin(INSETS_MARGIN);
 		button.setToolTipText(Language.getTip(command));
-		button.setFocusable(true); //  don't steal keyboard focus from game panel
+		button.setFocusable(false); //  don't steal keyboard focus from game panel
 //		button.setBorder(null);
 		button.setBorderPainted(true);
 		button.setContentAreaFilled(true);

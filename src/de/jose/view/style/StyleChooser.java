@@ -104,6 +104,9 @@ public class StyleChooser
 		JPanel leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
 
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		updateUI(dark);
+
 		add(leftPanel,BorderLayout.CENTER);
 		add(rightPanel,BorderLayout.EAST);
 	}
@@ -115,13 +118,14 @@ public class StyleChooser
 				return false;
 			}
 		};
-		styleTree.setCellRenderer(new CellRenderer(new Dimension(160,20)));
+		CellRenderer rend = new CellRenderer(new Dimension(160, 20));
+		styleTree.setCellRenderer(rend);
 		styleTree.setDragEnabled(false);
 		styleTree.setEditable(false);
 		styleTree.setVisibleRowCount(12);
 		styleTree.setRootVisible(true);
 		styleTree.setShowsRootHandles(false);
-		styleTree.setBackground(Color.WHITE);
+		styleTree.setBackground(Color.white);
 
 		JScrollPane scroll = new JScrollPane(styleTree,
 		            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -188,8 +192,6 @@ public class StyleChooser
 		previewPanel.add(fontPreviewScreen);
 		leftPanel.add(previewPanel, BorderLayout.SOUTH);
 
-		boolean dark = Application.theApplication.isDarkLookAndFeel();
-		updateUI(dark);
 		return leftPanel;
 	}
 
@@ -197,6 +199,10 @@ public class StyleChooser
 	{
 		fontPreviewExplain.setVisible(dark);
 		fontPreviewScreen.setVisible(dark);
+
+		Color selBgColor = Color.lightGray;UIManager.getColor("Table.selectionBackground");
+		((CellRenderer)styleTree.getCellRenderer()).setBackgroundSelectionColor(selBgColor);
+		fontList.setSelectionBackground(selBgColor);
 	}
 
 	public void forPrintOnly(boolean print)
@@ -593,17 +599,6 @@ public class StyleChooser
 		if (e.getSource()==fontColor) {
 			Color color = fontColor.getColor();
 			updateAttribute(currentStyle, StyleConstants.Foreground, color, Color.black);
-		}
-	}
-
-	static class SortStyleByName implements Comparator
-	{
-		public int compare(Object a, Object b)
-		{
-			Style sa = (Style)a;
-			Style sb = (Style)b;
-
-			return sa.getName().compareTo(sb.getName());
 		}
 	}
 

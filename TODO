@@ -53,7 +53,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [ ] flatlaf bugs
     	[x] TextPaneUI: fix jumping characters. custom hiliter bug, actually.
     	[x] TextPaneUI: nicer selection
-        [ ] initial selection color in StyleChooser
+        [x] initial selection color in StyleChooser
         [?] wdl label height; adjust to font
 
     [x] add to F9 Color Tab

@@ -296,7 +296,7 @@ public class JoToolBar
 
 			IconSpec ispec = new IconSpec(spec, 28);
 			if ((ispec.style & BUTTON) != 0) {
-				button.setFocusable(true); //  don't steal keyboard focus from game panel
+				button.setFocusable(false); //  don't steal keyboard focus from game panel
 //		button.setBorder(null);
 				button.setBorderPainted(true);
 				button.setFocusPainted(true);
