@@ -199,6 +199,7 @@ public class MySQLAdapter
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File bindir = new File(Application.theWorkingDirectory, "bin");
 		File libdir = new File(Application.theWorkingDirectory, "lib/"+Version.osDir);
+		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 //		File defaultsFile = new File(Application.theWorkingDirectory, "config/mysql.ini");
 
 		// setup parameters for embedded driver
@@ -211,6 +212,7 @@ public class MySQLAdapter
 		props.put("--basedir",bindir);
 		/** data directory */
 		props.put("--datadir",mysqldir);
+		props.put("--tmpdir",tmpdir);
 		//  more config parameters are read from my.ini
 		//  groups: mysqld embedded
 //		props.put("--defaults-file",defaultsFile);
@@ -504,9 +506,9 @@ public class MySQLAdapter
 			this is already the default for Linux but we have to eplicitly
 			force it on OS X (which may or may not be case sensitive)
 			on Windows, it doesn't matter anyway
+			(it would matter if we used mixed casing, but we don't)
 		*/
 		command.add("--lower_case_table_names=0");   //  means: always use exact case
-
 //		large key buffer is useful(?) for bulk inserts
 
 		boolean tcpConnect = false;
@@ -584,6 +586,7 @@ public class MySQLAdapter
 
 		command.add("--tmpdir");
 		command.add(tmpdir.getAbsolutePath());
+		tmpdir.mkdirs();
 
 		//	set base directory
 		command.add("--basedir");
