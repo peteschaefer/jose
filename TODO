@@ -47,6 +47,10 @@ Q: is the db already running in standalone mode?
      see: https://github.com/tofi86/universalJavaApplicationStub
    - good news: jre can be bundled
 
+[ ] "Apple Silicon"
+    - jdk1.8, 11 (not 9?) is available from Oracle :)
+    - MySQL >= 8.0.30
+
 ==== Deprecated Stuff
 
 * ghost installer
