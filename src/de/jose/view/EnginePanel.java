@@ -36,6 +36,7 @@ import de.jose.view.input.WdlLabel;
 import de.jose.view.style.JoStyleContext;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -259,7 +260,7 @@ public class EnginePanel
 
 	private void createIcons()
 	{
-		int iconSize=26;
+		int iconSize=20;
 
 		String green 	= "#009900";
 		String yellow 	= "#cccc00";
@@ -268,16 +269,16 @@ public class EnginePanel
 		String orange 	= "#cc9900";
 
 		//	todo think about frameless icons
-		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+green,iconSize);
-		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+yellow,iconSize);
-		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:button:"+red,iconSize);
-		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+blue,iconSize);
-		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+orange,iconSize);
+		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+green,iconSize);
+		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+yellow,iconSize);
+		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:flat:"+red,iconSize);
+		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+blue,iconSize);
+		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+orange,iconSize);
 
-		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:button:"+green,iconSize);
-		iHint 		= JoToolBar.createAwesomeIcons("?:button:"+blue,iconSize);
-		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:button:bold:"+yellow,iconSize);
-		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:button:bold:"+orange,iconSize);
+		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:flat:"+green,iconSize);
+		iHint 		= JoToolBar.createAwesomeIcons("?:flat:"+blue,iconSize);
+		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:bold:flat:"+yellow,iconSize);
+		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:bold:flat:"+orange,iconSize);
 	}
 
 	private void createFontIcons()
@@ -394,11 +395,15 @@ public class EnginePanel
 
 		/** layout buttons  */
 		Box buttonBox = Box.createHorizontalBox();
+		buttonBox.setBorder(new EmptyBorder(4,4,4,4));
 		buttonBox.add(bGo);
+		buttonBox.add(Box.createHorizontalStrut(4));
 		buttonBox.add(bPause);
+		buttonBox.add(Box.createHorizontalStrut(4));
 		buttonBox.add(bAnalyze);
 		buttonBox.add(Box.createHorizontalStrut(12));
 		buttonBox.add(bHint);
+		buttonBox.add(Box.createHorizontalStrut(4));
 		buttonBox.add(bThreat);
         buttonBox.add(Box.createHorizontalStrut(12));
 
@@ -770,11 +775,15 @@ public class EnginePanel
 //		button.setText(null);		//	no text
 //		button.setMargin(INSETS_MARGIN);
 		button.setToolTipText(Language.getTip(command));
-		button.setFocusable(false); //  don't steal keyboard focus from game panel
-		button.setBorder(null);
-		button.setBorderPainted(false);
-		button.setContentAreaFilled(false);
+		button.setFocusable(true); //  don't steal keyboard focus from game panel
+//		button.setBorder(null);
+		button.setBorderPainted(true);
+		button.setContentAreaFilled(true);
 		button.setRolloverEnabled(true);
+		button.putClientProperty("JButton.buttonType","roundRect");
+		button.putClientProperty("Button.arc",999);
+//		button.putClientProperty("Button.focusWidth",12);
+//		button.setMargin(new Insets(8, 8, 8, 8));
 		return button;
 	}
 
@@ -1326,6 +1335,9 @@ public class EnginePanel
 		button.setIcon(icon[1]);
 		button.setRolloverIcon(icon[2]);
 		button.setPressedIcon(icon[3]);
+		int hmargin = 26-icon[1].getIconWidth();
+		int vmargin = 26-icon[1].getIconHeight();
+		button.setMargin(new Insets(vmargin/2, hmargin/2, vmargin/2, hmargin/2));
 	}
 
 	protected Icon[] getGoIcon(Application.AppMode appState,
