@@ -19,8 +19,8 @@ move on to 64bit land
     [ ] Mac arm
 [ ] fixes hi-dpi issues
     [x] fonts
-    [x] view2d
-    [ ] view3d
+    [x] 2d board
+    [ ] 3d board (fix: mouse arithmetics)
 [ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
@@ -30,6 +30,7 @@ move on to 64bit land
     [ ] Windows ( ) embedded (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     (MacOS already standalone, 64 bit)
+    patch: https://bugs.mysql.com/bug.php?id=12070
 [ ] easylink: 64 bit, use lates hidapi
     [ ] fixes BLE
 
