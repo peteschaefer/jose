@@ -70,8 +70,12 @@ public abstract class EBoardConnector
         board[1] = new BoardState();
     }
 
-    public Mode getMode() { return app.mode; }
-    public void setMode(Mode mode) { app.mode=mode; }
+    public Mode getMode() {
+        return app.mode;
+    }
+    public void setMode(Mode mode) {
+        app.mode=mode;
+    }
 
     public void useAppBoard(IBoardAdapter anAppBoard, Mode anMode, CommandListener anListener) {
         oldAppStates.push(app.clone());
@@ -157,12 +161,12 @@ public abstract class EBoardConnector
         if (st.diff_cnt==0)
             wasAcked = true;    //  App changed was replicated on the E-Board
 
-        if (app.mode==Mode.PLAY && StringUtil.compare(board[currentOri.ordinal()].fen,START_XFEN)==0) {
+        /*if (app.mode==Mode.PLAY && StringUtil.compare(board[currentOri.ordinal()].fen,START_XFEN)==0) {
             //  note that StringBuilder does not overwrite equals()
             //  start a new game?
             if (Application.theApplication.askNewGame())
                 return;
-        }
+        }*/
 
         switch(app.mode) {
             case PLAY:
@@ -170,7 +174,7 @@ public abstract class EBoardConnector
                 break;
             case SETUP_LEAD:
                 //  send board[currentOri].fen to setup dialog
-                Command cmd = new Command("eboard.changed",null,board[currentOri.ordinal()].fen);
+                Command cmd = new Command("eboard.changed",null, board[currentOri.ordinal()].fen.toString());
                 Application.theCommandDispatcher.handle(cmd,app.listener);
                 break;
             case SETUP_FOLLOW:

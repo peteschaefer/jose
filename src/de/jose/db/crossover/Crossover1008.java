@@ -12,6 +12,12 @@ import java.io.File;
 import java.sql.*;
 import java.util.Properties;
 
+/**
+ * new columns
+ *      MoreGame.Eval
+ *      IO_Game.Eval
+ * for evaluation graph data
+ */
 public class Crossover1008
 {
     public static int crossOver(int version, JoConnection conn, Config config) throws Exception

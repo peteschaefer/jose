@@ -44,9 +44,9 @@ public class DialogComponent extends JComponent implements ActionListener
         add(connect = JoDialog.newButton("eboard.connect", ImgUtil.getMenuIcon("eboard.connect"),this));
 
         ori = new JComboBox<String>();
-        ori.addItem(Language.get("eboard.orientation.auto"));
         ori.addItem(Language.get("eboard.orientation.white"));
         ori.addItem(Language.get("eboard.orientation.black"));
+        ori.addItem(Language.get("eboard.orientation.auto"));
 
         add(Box.createHorizontalStrut(12));
         add(JoDialog.newLabel("eboard.orientation"));
@@ -70,8 +70,10 @@ public class DialogComponent extends JComponent implements ActionListener
     public void follow()
     {
         //  switch to setup-follow mode
-        eboard.setMode(EBoardConnector.Mode.SETUP_FOLLOW);
-        eboard.synchFromApp();
+        if (eboard.getMode()!=EBoardConnector.Mode.SETUP_FOLLOW) {
+            eboard.synchFromApp();
+            eboard.setMode(EBoardConnector.Mode.SETUP_FOLLOW);
+        }
 
         if (synchLead!=null) synchLead.setSelected(false);
         if (synchFollow!=null) synchFollow.setSelected(true);

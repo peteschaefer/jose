@@ -132,7 +132,7 @@ public class SetupDialog
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-				//	new position cam in from eboard
+				//	new position came in from eboard
 				String fen = (String)cmd.data;
 				setFEN(fen);
 			}
@@ -174,7 +174,8 @@ public class SetupDialog
 			public void userMove(Move mv) {
 				super.userMove(mv);
 				adjustControls();
-				eboardCtrl.follow();	//	app board takes the lead, until e-board is re-synched
+				if (mv!=null)
+					eboardCtrl.follow();	//	app board takes the lead, until e-board is re-synched
 			}
 		};
 
