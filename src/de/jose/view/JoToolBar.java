@@ -18,6 +18,11 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.image.ImgUtil;
 import de.jose.profile.LayoutProfile;
+import de.jose.util.ButtonIcon;
+import de.jose.util.FontUtil;
+import de.jose.util.StringUtil;
+import de.jose.util.TextIcon;
+import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -196,55 +201,14 @@ public class JoToolBar
 			button.setName(name);
 			button.setActionCommand(name);
 
-			//  are there navigation icons ?
-			Icon[] navIcons = ImgUtil.getNavigationIcons(name);
-			Icon menuIcon = ImgUtil.getMenuIcon(name);
-			int iconWidth, iconHeight;
-
-			if (navIcons != null) {
-				//  rollover icons
-				button.setDisabledIcon(navIcons[0]);    //  *.off
-				button.setIcon(navIcons[1]);                //  *.cold
-				button.setRolloverIcon(navIcons[2]);    //  *.hot
-				button.setPressedIcon(navIcons[3]);     //  *.pressed
-				//  TODO
-				button.setDisabledSelectedIcon(navIcons[0]);    //  *.off
-				button.setSelectedIcon(navIcons[4]);                //  *.selected.cold
-				button.setRolloverSelectedIcon(navIcons[5]);    //  *.selected.hot
-				//  what about selected.pressed ?
-
-				button.setText(null);		//	no text
-				button.setRolloverEnabled(navIcons[2]!=null);
-				button.setContentAreaFilled(navIcons[3]==null);
-
-				iconWidth = navIcons[1].getIconWidth();
-				iconHeight = navIcons[1].getIconHeight();
-			}
-			else if (menuIcon != null) {
-				//  default menu icon
-				button.setIcon(menuIcon);
-				button.setSelectedIcon(ImgUtil.getMenuIcon(name,true));
-				button.setText(null);		//	no text
-				button.setContentAreaFilled(true);
-
-				iconWidth = menuIcon.getIconWidth();
-				iconHeight = menuIcon.getIconHeight();
-			}
-			else {
-				button.setIcon(null);
-				button.setText(Language.get(name));
-				button.setContentAreaFilled(true);
-
-				iconWidth = 16;
-				iconHeight = 16;
-			}
+			Dimension iconSize = createIcons(name, button);
 
 			button.setBorderPainted(false);
 			button.setFocusPainted(false);
 
-			minDimension.width = Math.max(minDimension.width, iconWidth);
-			minDimension.height = Math.max(minDimension.height, iconHeight);
-			if (iconWidth < 32)
+			minDimension.width = Math.max(minDimension.width, iconSize.width);
+			minDimension.height = Math.max(minDimension.height, iconSize.height);
+			if (iconSize.width < 32)
 				button.setBorder(new EmptyBorder(2,2,2,2));
 			else
 				button.setBorder(new EmptyBorder(0,0,0,0));
@@ -256,7 +220,125 @@ public class JoToolBar
 			add(button);
 		}
 	}
-	
+
+	private static Dimension createIcons(String name, JButton button)
+	{
+		//	get icon specification from menu entry
+		String spec = JoMenuBar.ICON_SPECS.get(name);
+
+		Icon[] icons = null;
+		if (spec != null) {
+			//	(1) create from Font Awesome
+			icons = createAwesomeIcons(spec,16);
+		}
+		if (icons==null) {
+			//	(2) lookup .gif in images/nav
+			icons = ImgUtil.getNavigationIcons(name);
+		}
+		if (icons==null) {
+			//	(3) lookup .gif in images/menu
+			Icon menuIcon = ImgUtil.getMenuIcon(name);
+			Icon menuIcon2 = ImgUtil.getMenuIcon(name,true);
+			if (menuIcon!=null)
+				icons = new Icon[] { null, menuIcon, null, null, menuIcon2, null, null };
+		}
+
+		Dimension iconSize = new Dimension();
+
+		if (icons!=null) {
+			assert(icons.length>=6);
+			//  rollover icons
+			button.setDisabledIcon(icons[0]);    //  *.off
+			button.setIcon(icons[1]);                //  *.cold
+			button.setRolloverIcon(icons[2]);    //  *.hot
+			button.setPressedIcon(icons[3]);     //  *.pressed
+			//  TODO
+			button.setDisabledSelectedIcon(icons[0]);    //  *.off
+			button.setSelectedIcon(icons[4]);                //  *.selected.cold
+			button.setRolloverSelectedIcon(icons[5]);    //  *.selected.hot
+			// icons[6] = Rollover Pressed is not used
+			//  what about selected.pressed ?
+			button.setText(null);		//	no text
+			button.setRolloverEnabled(icons[2]!=null);
+			button.setContentAreaFilled(icons[3]==null);
+
+			iconSize.width = icons[1].getIconWidth();
+			iconSize.height = icons[1].getIconHeight();
+		}
+		else {
+			button.setIcon(null);
+			button.setText(Language.get(name));
+			button.setContentAreaFilled(true);
+
+			iconSize.width = 16;
+			iconSize.height = 16;
+		}
+		return iconSize;
+	}
+
+	public static Icon[] createAwesomeIcons(String spec, int size)
+	{
+		//	spec looks like "<text>:<#color1>[:#color2][:bold][:italic]"
+		String text;
+		Color color1=null;
+		Color color2=null;
+		int style = Font.PLAIN;
+
+		String[] specs = spec.split(":");
+		text = StringUtil.unescape(specs[0]);
+		for(int i=1; i<specs.length; i++) {
+			if (specs[i].equalsIgnoreCase("bold"))
+				style |= Font.BOLD;
+			if (specs[i].equalsIgnoreCase("italic"))
+				style |= Font.ITALIC;
+			if (specs[i].equalsIgnoreCase("button"))
+				style |= BUTTON;
+			if (specs[i].startsWith("#") || specs[i].startsWith("0x")) {
+				if (color1==null)
+					color1 = Color.decode(specs[i]);
+				else if (color2==null)
+					color2 = Color.decode(specs[i]);
+			}
+		}
+
+		if (color1==null) color1 = Color.darkGray;
+		return createAwesomeIcons(text,size,style,color1,color2);
+	}
+
+	public static final int BUTTON = 4;
+
+	public static Icon[] createAwesomeIcons(String s, int size, int style, Color color1, Color color2)
+	{
+		Font font = FontUtil.fontAwesome();
+		font = font.deriveFont(style & ~BUTTON);
+		Icon[] result = new Icon[7];
+		Insets insets = new Insets(2,2,2,2); // right ?
+
+		if ((style&BUTTON) != 0) {
+			result[0] = new ButtonIcon(s, font, size).fixedColor(Color.lightGray).setInsets(insets);
+			result[1] = new ButtonIcon(s, font, size).huedColor(color1).setInsets(insets);
+			result[2] = new ButtonIcon(s, font, size).huedColor(color1).hilited().setInsets(insets);
+			result[3] = new ButtonIcon(s, font, size).huedColor(color1).pushed().setInsets(insets);
+			if (color2!=null) {
+				result[4] = new ButtonIcon(s, font, size).huedColor(color2).setInsets(insets);
+				result[5] = new ButtonIcon(s, font, size).huedColor(color2).hilited().setInsets(insets);
+				result[6] = new ButtonIcon(s, font, size).huedColor(color2).pushed().setInsets(insets);
+			}
+		}
+		else {
+			result[0] = new TextIcon(s,font,style,size,Color.lightGray).setInsets(insets);
+			result[1] = new TextIcon(s,font,style,size,color1).setInsets(insets);
+			result[2] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,1.5f)).setInsets(insets);
+			result[3] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,0.5f)).setInsets(insets);
+			if (color2!=null) {
+				result[4] = new TextIcon(s,font,style,size,color2).setInsets(insets);
+				result[5] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,1.5f)).setInsets(insets);
+				result[6] = new TextIcon(s,font,style,size,ButtonIcon.brighter(color1,0.5f)).setInsets(insets);
+			}
+		}
+		return result;
+	}
+
 	public void addSpacer(int size)
 	{
 		JPanel spacer = new JPanel();

@@ -118,6 +118,7 @@ public class CommandAction
 
 	public void DoThread(final Command cmd)
 	{
+		//	todo not used yet. Put to thread pool instead.
 		Thread thr = new Thread() {
 			public void run() {
 				try {

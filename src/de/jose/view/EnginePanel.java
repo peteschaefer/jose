@@ -216,35 +216,22 @@ public class EnginePanel
 	{
 		int iconSize=26;
 	// todo less bright color
-		Color green = new Color(0x00,0x99,0x00);
-		Color yellow = new Color(0xcc,0xcc,0x00);
-		Color red = new Color(0xb3,0x00,0x00);
-		Color blue = new Color(0x00,0x00,0xd9);
-		Color orange = new Color(0xcc,0x99,0x00);
-		iGoGreen = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,green);
-		iGoYellow = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,yellow);
-		iGoRed = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,red);
-		iGoBlue = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,blue);
-		iGoOrange = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,orange);
+		String green 	= "#009900";
+		String yellow 	= "#cccc00";
+		String red 		= "#b30000";
+		String blue 	= "#0000d9";
+		String orange 	= "#cc9900";
 
-		iPause = awesomeIconSet('\uf04c',iconSize,Font.PLAIN,green);
-		iHint = awesomeIconSet('?',iconSize,Font.PLAIN,blue);
-		iAnalyze = awesomeIconSet('\uf013',iconSize,Font.BOLD,yellow);
-		iBolt = awesomeIconSet('\ue0b7',iconSize,Font.BOLD,orange);
-	}
+		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:"+green+":button",iconSize);
+		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:"+yellow+":button",iconSize);
+		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:"+red+":button",iconSize);
+		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:"+blue+":button",iconSize);
+		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:"+orange+":button",iconSize);
 
-	private Icon[] awesomeIconSet(char c, int size, int style, Color color)
-	{
-		String s = Character.toString(c);
-		Font font = FontUtil.fontAwesome();
-		font = font.deriveFont(style);
-		Icon[] result = new Icon[4];
-		Insets insets = new Insets(2,2,2,2);
-		result[0] = new ButtonIcon(s,font,size).fixedColor(Color.lightGray).setInsets(insets);
-		result[1] = new ButtonIcon(s,font,size).huedColor(color).setInsets(insets);
-		result[2] = new ButtonIcon(s,font,size).huedColor(color).hilited().setInsets(insets);
-		result[3] = new ButtonIcon(s,font,size).huedColor(color).pushed().setInsets(insets);
-		return result;
+		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:"+green+":button",iconSize);
+		iHint 		= JoToolBar.createAwesomeIcons("?:"+blue+":button",iconSize);
+		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:"+yellow+":button:bold",iconSize);
+		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:"+orange+":button:bold",iconSize);
 	}
 
 	private void createFontIcons()

@@ -651,8 +651,10 @@ public class UserProfile
 		for (Node nd = elm.getFirstChild(); nd!=null; nd = nd.getNextSibling())
 			if ("separator".equals(XMLUtil.getTagName(nd)))
 				result.add(null);
-			else if ("item".equals(XMLUtil.getTagName(nd)))
-				result.add(((Element)nd).getAttribute("id"));
+			else if ("item".equals(XMLUtil.getTagName(nd))) {
+				Element el = (Element)nd;
+				result.add(el.getAttribute("id"));
+			}
 		return result;
 	}
 

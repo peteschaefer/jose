@@ -51,6 +51,8 @@ public class JoMenuBar
 		}
 	};
 
+	public static Map<String,String> ICON_SPECS = new HashMap<>();
+
 	//-------------------------------------------------------------------------------
 	//	interface ActionListener
 	//-------------------------------------------------------------------------------
@@ -360,6 +362,8 @@ public class JoMenuBar
 			String intParam = itemElement.getAttribute("int");
 			String urlParam = itemElement.getAttribute("url");
             String modal    = itemElement.getAttribute("modal");
+			String iconSpec	= itemElement.getAttribute("icon");
+			//	todo evaluate icon. Also used by JoToolBar.
 
 			JMenuItem item;
 			if (check!=null && check.length()>0)
@@ -372,6 +376,10 @@ public class JoMenuBar
 
 			if (intParam!=null && intParam.length()>0)
 				item.putClientProperty("action.data", Integer.valueOf(intParam));
+
+			if (iconSpec!=null && iconSpec.length()>0)
+				ICON_SPECS.put(name, iconSpec);
+
 			if (urlParam!=null && urlParam.length()>0)
 				try {
 					item.putClientProperty("action.data", new URL(urlParam));

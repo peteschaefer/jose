@@ -1,6 +1,5 @@
 package de.jose.util;
 
-import ch.randelshofer.quaqua.colorchooser.JColorWheel;
 import de.jose.Util;
 
 import javax.swing.*;
@@ -82,6 +81,9 @@ public class ButtonIcon
         g2.setPaint(p2);
 
         g2.setFont(super.font);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
         g2.drawString(super.text,
                 x+insets.left+(size-super.width)/2,
                 y+insets.top+(size-super.height)/2+super.ascent);
@@ -108,7 +110,7 @@ public class ButtonIcon
     }
 
 
-    protected static Color brighter(Color c, float fact)
+    public static Color brighter(Color c, float fact)
     {
 /*        float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
         hsb[2] = Math.min(1.0f,hsb[2]*fact);
