@@ -129,6 +129,17 @@ public class LineNode
 
 	public final MoveNode lastMove()	{ return (MoveNode)last(MOVE_NODE); }
 
+	public final MoveNode moveByPly(int ply)
+	{
+		for(MoveNode mv = firstMove(); mv != null; mv = mv.nextMove()) {
+			if (mv.getPly() == ply)
+				return mv;
+			if (mv.getPly() > ply)
+				break;
+		}
+		return null;
+	}
+
 	public final boolean contains(Node nd)
 	{
 		return containsAfter(first(),nd);
@@ -273,9 +284,24 @@ public class LineNode
 		}
 	}
 
+	@Override
+	public Node clone() {
+		return cloneFrom(first());
+	}
 
 
-	//-------------------------------------------------------------------------------
+	public LineNode cloneFrom(Node nd)
+	{
+		LineNode clone = new LineNode(this.game);
+		for( ; nd!=null; nd = nd.next()) {
+			Node nd2 = nd.clone();
+			nd2.insertLast(clone);
+		}
+		return clone;
+	}
+
+
+//-------------------------------------------------------------------------------
 	//	protecetd Part
 	//-------------------------------------------------------------------------------
 	
@@ -563,8 +589,6 @@ public class LineNode
 		}
 		return baos.toByteArray();
 	}
-
-
 
 	public static void  toSAX(byte[] bin, int boffset, byte[] comments, int coffset,
 	                          de.jose.chess.Position pos, String fen,

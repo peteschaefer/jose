@@ -9,10 +9,7 @@ import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.JoConnection;
-import de.jose.pgn.Collection;
-import de.jose.pgn.PgnConstants;
-import de.jose.pgn.PgnUtil;
-import de.jose.pgn.ResultNode;
+import de.jose.pgn.*;
 import de.jose.task.GameSource;
 import de.jose.task.io.PGNImport;
 import de.jose.util.HttpsUtil;
@@ -234,7 +231,9 @@ public class LiChessOpeningExplorer extends OpeningBook
                     //  fetch inserted Game.Id
                     int GId1 = reader.getFirstGameId();
                     int GId2 = reader.getLastGameId();
-                    if (GId2 > 0) editLater(GId1,GId2);
+
+                    //  open downloaded game for editing:
+                    if (GId2 > 0) editLater(gameRef,GId1,GId2);
 
                     //  open in Tab
                 } catch(FileNotFoundException e) {
@@ -263,17 +262,52 @@ public class LiChessOpeningExplorer extends OpeningBook
         });
     }
 
-    protected static void editLater(int GId1,int GId2)
+    protected static void editLater(LiChessGameRef gameRef, int GId1,int GId2)
     {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                int[] gids = ListUtil.intRange(GId1,GId2);
-                Command cmd = new Command("edit.game", null,
-                        GameSource.gameArray(gids),
-                        Boolean.FALSE);
-                AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+
+                openInTabs(GId1, GId2);
+
+                //  get the Game dom and insert it as sub-line into the Original game:
+                MoveNode mvnd = Application.theApplication.theGame.getCurrentMove();
+                for(int GId = GId1; GId <= GId2; GId++) {
+                    Game gm = Application.theHistory.getById(GId);
+                    if (gm!=null) {
+                        insertNewLine(gm, mvnd, gameRef.toString());
+                        return;
+                    }
+                }
             }
         });
+    }
+
+    private static void insertNewLine(Game gm, MoveNode mvnd, String label)
+    {
+        //  clip sub-line from Game
+        LineNode mainLine = gm.getMainLine();
+        MoveNode cut = mainLine.moveByPly(mvnd.getPly()+1);
+        if (cut==null) return;
+
+        LineNode subline = mainLine.cloneFrom(cut);
+
+        CommentNode comment = new CommentNode(label);
+        comment.insertFirst(subline);
+
+        //  insert into original Game
+        subline.insertAfter(mvnd);  //  todo find the exact place to insert a new line
+        //  trigger update, etc.
+        Command cmd = new Command("edit.game.paste",null, mvnd, subline);
+        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+    }
+
+    private static void openInTabs(int GId1, int GId2) {
+        //  open downloaded game in a Tab:
+        int[] gids = ListUtil.intRange(GId1, GId2);
+        Command cmd = new Command("edit.game", null,
+                GameSource.gameArray(gids),
+                Boolean.FALSE);
+        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
     }
 }

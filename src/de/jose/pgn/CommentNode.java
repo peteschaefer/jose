@@ -70,7 +70,14 @@ public class CommentNode
 		text.append(c,start,len);
 	}
 
-	public String debugString()
+    @Override
+    public Node clone() {
+        CommentNode clone = new CommentNode(text.toString());
+        clone.isMarkup = isMarkup;
+        return clone;
+    }
+
+    public String debugString()
 	{
 		return "{}";
 	}

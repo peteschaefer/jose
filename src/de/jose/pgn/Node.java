@@ -27,7 +27,7 @@ import static de.jose.pgn.INodeConstants.*;
  */
 
 abstract public class Node
-			implements javax.swing.text.Element
+			implements javax.swing.text.Element, Cloneable
 {
 	/**	link to previous node	 */
 	protected Node previousNode;
@@ -279,6 +279,9 @@ abstract public class Node
 		else
 			return false;
 	}
+
+	@Override
+	abstract public Node clone();
 
 	public String toString(StyledDocument ignore)
 	{

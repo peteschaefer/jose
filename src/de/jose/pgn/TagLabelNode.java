@@ -40,6 +40,11 @@ public class TagLabelNode
 	protected void setTagNode(TagNode tag)						{ tag1 = tag; }
 	protected void setTagNodes(TagNode tag1, TagNode tag2)		{ this.tag1 = tag1; this.tag2 = tag2; }
 
+	@Override
+	public Node clone() {
+		throw new IllegalStateException("can not clone a TagLabelNode, because TagNode references are invalid");
+	}
+
 	public String toString()
 	{
 		if (isVisible())

@@ -61,6 +61,15 @@ public class MoveNode
 	public final int getMoveNo()	{ return ply/2; }
 	public final Move getMove()		{ return move; }
 
+	@Override
+	public Node clone() {
+		MoveNode clone = new MoveNode(ply, new Move(move));
+		clone.hashKey = this.hashKey;
+		clone.moveCountLen = this.moveCountLen;
+		clone.engineValue = new Score(this.engineValue);
+		return clone;
+	}
+
 	public void play(de.jose.chess.Position pos)
 	{
 		if (!pos.tryMove(move))

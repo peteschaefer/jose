@@ -45,6 +45,16 @@ public class LineLabelNode
 		super.insert (doc, at);
 	}
 
+	@Override
+	public Node clone() {
+		LineLabelNode clone = new LineLabelNode(location);
+		clone.text = text;
+		clone.styleName = styleName;
+		clone.altStyleName = altStyleName;
+		clone.style = style;
+		return clone;
+	}
+
 	public String toString(StyledDocument doc)
 	{
 		if (style==null) {
