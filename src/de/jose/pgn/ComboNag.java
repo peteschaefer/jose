@@ -150,21 +150,37 @@ public class ComboNag
                 + color.length;
     }
 
+    public static String translate(String text)
+    {
+        String key = text.toLowerCase();
+        key = key.replace(" ","");
+        key = "pgn.nag.combo."+key;
+        return Language.get(key,text);
+    }
+
+    public static String[] translate(String[] text)
+    {
+        String[] result = new String[text.length];
+        for(int i=0; i < text.length; ++i)
+            result[i] = translate(text[i]);
+        return result;
+    }
+
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append(color[selcol]);  //  "white/black"
+        buf.append(translate(color[selcol]));  //  "white/black"
         buf.append(" ");
-        buf.append(verb);
+        buf.append(translate(verb));
         buf.append(" ");//  "has a"
         if (adjective.length > 0 && !adjective[seladj].isEmpty()) {
-            buf.append(adjective[seladj]);  //  "slight/moderate/decisive"
+            buf.append(translate(adjective[seladj]));  //  "slight/moderate/decisive"
             buf.append(" ");
         }
         if (subst.length > 0 && !subst[selsubst].isEmpty()) {
-            buf.append(subst[selsubst]);    //  "king side/queen side"
+            buf.append(translate(subst[selsubst]));    //  "king side/queen side"
             buf.append(" ");
         }
-        buf.append(selector);              //   "advantage"
+        buf.append(translate(selector));              //   "advantage"
         return buf.toString();
     }
 

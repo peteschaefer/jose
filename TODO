@@ -124,6 +124,8 @@ Alternative JREs:
 
 ==== Refactorings
 
+* lang.properties to utf-8
+
 * fine-grained BoardView2D updates
     - 64+2 bits instead of fRedraw
     - set bits selectively when painting/undoing arrows

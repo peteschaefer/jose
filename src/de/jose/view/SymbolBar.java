@@ -26,6 +26,7 @@ import de.jose.view.style.JoFontConstants;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.LabelUI;
 import javax.swing.text.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -288,7 +289,8 @@ public class SymbolBar
         comboPane.add(comboVerb = new JLabel());
         comboPane.add(comboAdjective = new JComboBox<>());
         comboPane.add(comboSubst = new JComboBox<>());
-        comboPane.add(comboSelector = new JComboBox<>(ComboNag.ALL_SELECTORS));
+        comboPane.add(comboSelector = new JComboBox<>());
+        setModel(comboSelector,ComboNag.ALL_SELECTORS);
 
         comboColor.setMaximumSize(new java.awt.Dimension(980,20));
         comboVerb.setBorder(new EmptyBorder(1,3,0,3));
@@ -311,6 +313,7 @@ public class SymbolBar
     private void setModel(JComboBox combo, String[] model)
     {
         combo.setVisible(model!=null && model.length>0);
+        model = ComboNag.translate(model);
         combo.setModel(new DefaultComboBoxModel(model));
     }
 
@@ -326,7 +329,7 @@ public class SymbolBar
     {
         this.comboNag = comboNag;
         setModel(comboColor, comboNag.color);
-        this.comboVerb.setText(comboNag.verb);
+        this.comboVerb.setText(ComboNag.translate(comboNag.verb));
         setModel(comboAdjective, comboNag.adjective);
         setModel(comboSubst, comboNag.subst);
 
@@ -342,7 +345,7 @@ public class SymbolBar
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource()==comboSelector) {
-            String sel = (String) comboSelector.getSelectedItem();
+            String sel =  ComboNag.ALL_SELECTORS[comboSelector.getSelectedIndex()];
             if (!sel.equals(comboNag.selector)) {
                 setComboNag(ComboNag.findBySelector(sel));
             }
@@ -571,5 +574,6 @@ public class SymbolBar
         button.setActionCommand(command);
         return button;
     }
+
 
 }

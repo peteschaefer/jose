@@ -1386,3 +1386,76 @@ pgn.nag.195     = rückständige Bauern
 # this code is only defined by us
 pgn.nag.201  = Diagramm
 pgn.nag.250  = Diagramm
+
+# used to assemble combo NAgs:
+
+pgn.nag.combo.white = Weiß
+pgn.nag.combo.black = Schwarz
+
+pgn.nag.combo.has = hat
+pgn.nag.combo.the = die
+pgn.nag.combo.hasa = hat eine 
+pgn.nag.combo.hasthe = hat die
+pgn.nag.combo.isin = ist in
+pgn.nag.combo.alasting = anhaltenden
+
+pgn.nag.combo.advantage = Vorteil
+pgn.nag.combo.zugzwang = Zugzwang
+pgn.nag.combo.initiative = Initiative
+pgn.nag.combo.attack = Angriff
+pgn.nag.combo.compensation = Kompensation
+pgn.nag.combo.controladvantage = Kontrolle
+pgn.nag.combo.coordination = Koordination
+
+pgn.nag.combo.slight = leichten
+pgn.nag.combo.moderate = mittlere
+pgn.nag.combo.severe = schwere
+pgn.nag.combo.veryweak = sehr schwache
+pgn.nag.combo.weak = schwache
+pgn.nag.combo.strong = starke
+pgn.nag.combo.verystrong  = sehr starke
+
+pgn.nag.combo.opening = Eröffnung
+pgn.nag.combo.middle = Mittelspiel
+pgn.nag.combo.end = Endspiel
+
+pgn.nag.combo.space = Raum
+pgn.nag.combo.development = Entwicklung
+
+pgn.nag.combo.decisive = entscheidenden
+pgn.nag.combo.crushing = überwältigenden
+
+pgn.nag.combo.insufficient = keine ausreichende
+pgn.nag.combo.sufficient = ausreichende
+pgn.nag.combo.ample = mehr als ausreichende
+    
+pgn.nag.combo.center = Zentrum
+pgn.nag.combo.kingside = Königsflügel
+pgn.nag.combo.queenside = Damenflügel
+pgn.nag.combo.firstrank = Grundreihe
+
+
+pgn.nag.combo.vulnerable = verwundbare
+pgn.nag.combo.protected = geschützte
+pgn.nag.combo.placed = platzierte
+
+pgn.nag.combo.verypoor = sehr schlechte
+pgn.nag.combo.poor = schlecht
+pgn.nag.combo.good = gut
+pgn.nag.combo.verygood = sehr gute
+pgn.nag.combo.poorly  = schlechte
+pgn.nag.combo.well = gute
+
+pgn.nag.combo.king = König
+pgn.nag.combo.pawns = Bauern
+pgn.nag.combo.knight = Springer
+pgn.nag.combo.bishop = Läufer
+pgn.nag.combo.rook = Turm
+pgn.nag.combo.queen = Dame
+pgn.nag.combo.placement = Stellung
+
+pgn.nag.combo.hasplayeda = hat gespielt
+pgn.nag.combo.game = Spiel
+
+pgn.nag.combo.counterplay = Gegenspiel
+pgn.nag.combo.timepressure = Zeitdruck
