@@ -34,7 +34,7 @@ public class JoSplitPane
 		/** overwrites startDragging() and stopDragging() to notify the parent JSplitPane   */
 		protected void startDragging()
 		{
-			/** notify the children that we are starting to resize  !   */
+			/* notify the children that we are starting to resize  !   */
 			((JoSplitPane)getSplitPane()).startContinuousResize();
 
 			super.startDragging();
@@ -44,7 +44,7 @@ public class JoSplitPane
 		{
 			super.finishDraggingTo(location);
 
-			/** notify the children that resizing is finished  !   */
+			/* notify the children that resizing is finished  !   */
 			((JoSplitPane)getSplitPane()).finishContinuousResize();
 		}
 	}
@@ -76,7 +76,7 @@ public class JoSplitPane
 		super(newOrientation, false,
                 (Component)newLeftComponent,
                 (Component)newRightComponent);
-        /**
+        /*
          * workaround for GTK look & feel. This value is missing and would crash JoSplitPaneUI
          * (note that the actual divider size will be overwritten, anyway)
          */
@@ -165,14 +165,14 @@ public class JoSplitPane
 	        newDividerLocation = getDividerLocation();
 	        break;
 
-        default:
-            //  dividerMethod is already the correct value
-            break;
-
         case DIVIDE_WEIGHT:
-            /**	setting the divider location to a negative value
+            /*	setting the divider location to a negative value
              *	will trigger a recalculation based on the resize weight */
             break;
+
+		default:
+			//  dividerMethod is already the correct value
+			break;
         }
 
 	    // once the divider location is established, let the user resize it
@@ -237,6 +237,7 @@ public class JoSplitPane
 	    }
     }
 
+    @Override
     public void reshape(int x, int y, int width, int height)
     {
         //  adjust divider locations, based on new size
@@ -245,9 +246,17 @@ public class JoSplitPane
         super.reshape(x,y,width,height);
     }
 
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+		//  adjust divider locations, based on new size
+		if (width > 0 && height > 0 && firstComponent()!=null && secondComponent()!=null)
+			adjustDivider(new Dimension(width,height));
+		super.setBounds(x, y, width, height);
+	}
+
 	public String getName()
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("(");
 		if (getLeftComponent()!=null) buf.append(getLeftComponent().getName());
 		buf.append("/");
@@ -295,7 +304,7 @@ public class JoSplitPane
 		setLeftComponent(b);
 		updateContinuousHierarchy();
 //		setDividerLocation(getDividerLocation());
-		/**	looks like a noop but will effectively avoid a new layout */
+		/*	looks like a noop but will effectively avoid a new layout */
 //	really needed ?
 	}
 
@@ -323,7 +332,7 @@ public class JoSplitPane
 		setRightComponent(b);
 		updateContinuousHierarchy();
 //		setDividerLocation(getDividerLocation());
-		/**	looks like a noop but will effectively avoid a new layout		 */
+		/*	looks like a noop but will effectively avoid a new layout		 */
 //	really needed ?
 	}
 
@@ -338,7 +347,7 @@ public class JoSplitPane
 	{
 		setContinuousLayout(firstJoComponent().isContinuousLayout() && secondJoComponent().isContinuousLayout());
 
-		/**
+		/*
 		 * hide dividers for fixed-size components (toolbars, in particular)
 		 */
 		if (getOrientation()==HORIZONTAL_SPLIT) {
@@ -485,7 +494,7 @@ public class JoSplitPane
 	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		/*	we do not handle event on ourselves	*/
-		return;
+	//	return;
 	}
 
 	//-------------------------------------------------------------------------------
@@ -494,11 +503,12 @@ public class JoSplitPane
 
 	public boolean showContextMenu()		{ return false; }
 
+	@Override
     public boolean showControls() {
         return false;
     }
 
-    public void adjustContextMenu(Collection ignore, MouseEvent event)
+    public void adjustContextMenu(Collection<Object> ignore, MouseEvent event)
 	{	}
 
 	public float getWeightX() {

@@ -231,8 +231,8 @@ public class BoardPanel
 	public boolean is2d()		{	return theView != null && theView == view2d;	}
 	public boolean is3d()		{	return theView != null && theView == view3d;	}
 
-	public boolean has2d()		{	return view2d != null; }
-	public boolean has3d()		{	return view3d != null; }
+//	public boolean has2d()		{	return view2d != null; }
+//	public boolean has3d()		{	return view3d != null; }
 
 	public BoardView2D get2dView()	{ return view2d; }
 	public BoardView3D get3dView()	{ return view3d; }
@@ -242,7 +242,7 @@ public class BoardPanel
 	//	Methods
 	//-------------------------------------------------------------------------------
 
-	
+	@Override
 	public boolean isContinuousLayout()
 	{
 		return true;
@@ -372,7 +372,7 @@ public class BoardPanel
 			public void Do(Command cmd) {
 				boolean flip;
 				if (cmd.data != null)
-					flip = ((Boolean)cmd.data).booleanValue();
+					flip = (Boolean) cmd.data;
 				else
 					flip = !theView.flipped;	//	toggle
                 AbstractApplication.theUserProfile.set("board.flip",flip);
@@ -387,7 +387,7 @@ public class BoardPanel
 				if (theView!=null) {
 					boolean show;
 				 	if (cmd.data != null)
-						show = ((Boolean)cmd.data).booleanValue();
+						show = (Boolean) cmd.data;
 					else
 					 	show = !theView.showCoords; //	toggle
                     AbstractApplication.theUserProfile.set("board.coords",show);
@@ -402,7 +402,7 @@ public class BoardPanel
 				if (theView!=null) {
 					boolean show;
 					if (cmd.data != null)
-						show = ((Boolean)cmd.data).booleanValue();
+						show = (Boolean) cmd.data;
 					else
 						show = !theView.showEvalbar; //	toggle
 					AbstractApplication.theUserProfile.set("board.evalbar",show);
@@ -481,7 +481,7 @@ public class BoardPanel
 						cmd = new Command("new.game.setup",null,fen);   //  set the position immediately
 						Application.theCommandDispatcher.forward(cmd, Application.theApplication);
 					} catch (Throwable e) {
-						/** parse error in FEN string ? don't mind  */
+						/* parse error in FEN string ? don't mind  */
 						AWTUtil.beep(BoardPanel.this);  //  "beep"
 					}
 				else
@@ -579,15 +579,14 @@ public class BoardPanel
 	{
 
 		//  or from view, after an image has been captured
-		switch (what) {
-			case BoardView.MESSAGE_CAPTURE_IMAGE:
-				try {
-					ClipboardUtil.setImage((Image) data, this);
-				} catch (Exception e) {
-					Application.error(e);
-				}
-				return;
-		}
+        if (what == BoardView.MESSAGE_CAPTURE_IMAGE) {
+            try {
+                ClipboardUtil.setImage((Image) data, this);
+            } catch (Exception e) {
+                Application.error(e);
+            }
+           // return;
+        }
 		//	message from Plugin
 		// @deprecated listen to "app.state.changed" instead
 		//mouseSelect = (what!=THINKING.numval);
@@ -602,7 +601,7 @@ public class BoardPanel
 
 	protected void showAnalysisHints(AnalysisRecord a)
 	{
-		ArrayList<Hint> hints = new ArrayList<Hint>();
+		ArrayList<Hint> hints = new ArrayList<>();
 		if (a.maxpv==0) return;
 
 		int cpmin = Integer.MAX_VALUE;
@@ -659,7 +658,7 @@ public class BoardPanel
 		}
 
 		//	sort by Z order
-		Collections.sort(hints,new CompareHintsByZorder());
+		hints.sort(new CompareHintsByZorder());
 		//	add to view
 		theView.showAllHints(hints);
 	}
@@ -704,7 +703,7 @@ public class BoardPanel
 			mv.setStalemate();
 			return false;
 		}
-		/**
+		/*
 		 * Draw_3 and Draw_50 are accepted as legal moves (though the game is actually finished)
 		 */
 

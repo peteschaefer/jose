@@ -39,23 +39,23 @@ public class AnimationDialog
         extends JoDialog
         implements ChangeListener, MessageListener
 {
-    private static String[] buttons = {
+    private static final String[] buttons = {
         "move.first", "move.backward", null,
 		"move.forward", "move.last", null,
 	    "move.animate", "engine.stop",
     };
 
     /** button panel    */
-    private JoToolBar   buttonPanel;
+    private final JoToolBar   buttonPanel;
     /** slider for speed control */
-    private JSlider     slider;
+    private final JSlider     slider;
 	/** check box for animation hints   */
-	private JCheckBox   hintCheckbox;
+	private final JCheckBox   hintCheckbox;
     /** the animation */
-    private Animation   animation;
+    private final Animation   animation;
 
 
-	private static Dimension PREFERRED_SIZE = Version.mac ?
+	private static final Dimension PREFERRED_SIZE = Version.mac ?
               new Dimension(276,192)        //  optimized for Aqua L&F
             : new Dimension(276,172);
 
@@ -103,9 +103,9 @@ public class AnimationDialog
 		slider.setName(name);
 		slider.setInverted(true);
 
-		Dictionary labels = new Hashtable();
-		labels.put(new Integer(100), new JLabel(Language.get("animation.slider.fast")));
-		labels.put(new Integer(2500), new JLabel(Language.get("animation.slider.slow")));
+		Dictionary<Integer,JLabel> labels = new Hashtable<>();
+		labels.put(100, new JLabel(Language.get("animation.slider.fast")));
+		labels.put(2500, new JLabel(Language.get("animation.slider.slow")));
 		slider.setLabelTable(labels);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
@@ -134,7 +134,7 @@ public class AnimationDialog
 		super.setupActionMap(map);
 
 		CommandAction action = new CommandAction() {
-			public void Do(Command cmd) throws Exception
+			public void Do(Command cmd)
 			{
 				int speed = Util.toint(cmd.data);
 				boolean hints = Util.toboolean(cmd.moreData);
@@ -162,7 +162,7 @@ public class AnimationDialog
 
 		Application.theCommandDispatcher.broadcast(
 				new Command("change.animation.settings",null,
-				        new Integer(speed), Util.toBoolean(hints)),
+				        speed, Util.toBoolean(hints)),
 				Application.theApplication);
 		//  will be handled by the Application
 	}

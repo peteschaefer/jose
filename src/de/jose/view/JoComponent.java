@@ -21,89 +21,89 @@ import java.util.Collection;
 public interface JoComponent
 {
 	/**	constants for docking handles	 */
-	
-	public char DOCK_NORTH	= 'N';
-	public char DOCK_EAST	= 'E';
-	public char DOCK_SOUTH	= 'S';
-	public char DOCK_WEST	= 'W';
-	public char DOCK_CENTER	= '0';
 
-	public String DOCK_HORIZONTAL	= "WE";
-	public String DOCK_VERTICAL		= "NS";
-	public String DOCK_ALL			= "NESW";
-	public String DOCK_NONE			= "";
+    char DOCK_NORTH	= 'N';
+	char DOCK_EAST	= 'E';
+	char DOCK_SOUTH	= 'S';
+	char DOCK_WEST	= 'W';
+	char DOCK_CENTER	= '0';
+
+	String DOCK_HORIZONTAL	= "WE";
+	String DOCK_VERTICAL		= "NS";
+	String DOCK_ALL			= "NESW";
+	String DOCK_NONE			= "";
 	
 	/**
 	 * the name of the component
 	 *	(split panes get the name of the left / top component)
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * the parent frame
 	 */
-	public int getWidth();
-	public int getHeight();
+	int getWidth();
+	int getHeight();
 	
-	public Dimension getSize();
+	Dimension getSize();
 	
-	public JoFrame getParentFrame();
+	JoFrame getParentFrame();
 	
 	/**
 	 *	can this component be continuously resized ?
 	 */
-	public boolean isContinuousLayout();
+	boolean isContinuousLayout();
 
 	/**
 	 * callback from JoSplitPane: the split pane is about to be resized
 	 */
-	public void startContinuousResize();
+	void startContinuousResize();
 	/**
 	 * callback from JoSplitPane: the split pane is about to be resized
 	 */
-	public void finishContinuousResize();
+	void finishContinuousResize();
 
 
 	/**
 	 * get the max. size if laid out in a JSplitPane
 	 * @param orientation of the split pane
 	 */
-	public Dimension getMaximumSize(int orientation);
+	Dimension getMaximumSize(int orientation);
 
 	/**
 	 * do we show a context menu? 
-	 */	
-	public boolean showContextMenu();
+	 */
+    boolean showContextMenu();
 
 	/**
 	 *	currently not in use 
-	 * @return
+	 * @return ?
 	 */
-    public boolean showControls();
+    boolean showControls();
 
 	/**
 	 * insert items into context menu
 	 */
-	public void adjustContextMenu(Collection<Object> commands, MouseEvent event);
+    void adjustContextMenu(Collection<Object> commands, MouseEvent event);
 	
 	/**
 	 * relative weight (horizontal
 	 */
-	public float getWeightX();
+    float getWeightX();
 	
 	/**
 	 * relative weigth (vertical)
 	 */
-	public float getWeightY();
+    float getWeightY();
 	
 	/**
 	 * @return a String indicating the available docking zones
 	 */
-	public String getDockingSpots();
+    String getDockingSpots();
 
 	/**
 	* @return the location of a dockign handle
-	*/	
-	public Point getDockingSpot(char orientation);
+	*/
+    Point getDockingSpot(char orientation);
 	
 }

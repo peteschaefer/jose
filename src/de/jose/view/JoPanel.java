@@ -166,6 +166,7 @@ public class JoPanel
 		}
 	}
 
+	@Override
     public boolean showControls()
     {
         return showControls;
