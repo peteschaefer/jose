@@ -125,6 +125,15 @@ public class Application
 				return AppMode.valueOf(val.toString());
 		}
 	}
+	public enum PlayState {
+		//	none of the below; user can move
+		//	(includes background analysis)
+		NEUTRAL,
+		//	BOOK_PLAY query has been sent
+		BOOK,
+		//	plugin.THINKING
+		ENGINE
+	}
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -2382,7 +2391,6 @@ public class Application
 					enginePlay(query.lastMove);
 				else
 					enginePlay();
-				setMode(AppMode.USER_ENGINE);
 				break;
 
 			case BOOK_HINT:
@@ -2525,10 +2533,10 @@ public class Application
 					//	adjust time ? or rely on engine's time keeping ?
 					setGameDefaultInfo();
 					engine.go();
-					setMode(AppMode.USER_ENGINE);
 				}
 			}
 		});
+		setPlayState(PlayState.ENGINE);
 	}
 
 	private void enginePlay(Move userMove)
@@ -2549,11 +2557,11 @@ public class Application
 						showFRCWarning(false);
 					//  but keep on playing (you have been warned ;-)
 					// LET ENGINE PLAY
-					setMode(AppMode.USER_ENGINE);
 					engine.userMove(userMove, true);
 				}
 			};
 		});
+		setPlayState(PlayState.ENGINE);
 	}
 
 	private void cutLine(Node node) throws BadLocationException
@@ -3216,6 +3224,7 @@ public class Application
 		switch (what) {
 		case Plugin.PLUGIN_MOVE:
 			handlePluginMove((EnginePlugin.EvaluatedMove) data, pos);
+			setPlayState(PlayState.NEUTRAL);
 			break;
 
 		case Plugin.PLUGIN_ACCEPT_DRAW:
@@ -3267,7 +3276,8 @@ public class Application
 		}
 	}
 
-	private void handlePluginMove(EnginePlugin.EvaluatedMove data, Position pos) throws BadLocationException, ParseException {
+	private void handlePluginMove(EnginePlugin.EvaluatedMove data, Position pos) throws BadLocationException, ParseException
+	{
 		if (pos.isGameFinished(true)) {
 			handleEngineError(EnginePlugin.PLUGIN_ERROR, "game is already finished");
 			return;
@@ -3677,6 +3687,8 @@ public class Application
 
 	public BookQuery submitBookQuery(int onCompletion, Move lastMove)
 	{
+		if (onCompletion==BOOK_PLAY)
+			setPlayState(PlayState.BOOK);
 		Position pos = theGame.getPosition();
 		//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
 		BookQuery query = new BookQuery(pos, onCompletion, lastMove);
@@ -3695,7 +3707,6 @@ public class Application
 			default:
 			case OpeningLibrary.GUI_BOOK_ONLY:
 			case OpeningLibrary.PREFER_GUI_BOOK:
-				setMode(AppMode.USER_ENGINE);
 				submitBookQuery(BOOK_PLAY,lastMove);
 				return true;
 
@@ -3748,6 +3759,7 @@ public class Application
 		}
 
 		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move), this);
+		setPlayState(PlayState.NEUTRAL);
 
 		if (entry.move.isGameFinished(false))
 			gameFinished(entry.move.flags,pos.movedLast(), theGame.isMainLine());
@@ -3823,9 +3835,18 @@ public class Application
 	{
 		if (mode!=theMode) {
 			theMode = mode;
-			Command cmd = new Command("app.state.changed", null, theMode);
+			Command cmd = new Command("app.state.changed", null,
+							theMode, null);
 			broadcast(cmd);
 		}
+	}
+
+	public void setPlayState(PlayState thinkState)
+	{
+		theMode = AppMode.USER_ENGINE;
+		Command cmd = new Command("app.state.changed", null,
+							theMode, thinkState);
+		broadcast(cmd);
 	}
 
 	public boolean openEnginePlugin() throws IOException

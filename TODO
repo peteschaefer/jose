@@ -32,7 +32,13 @@
      (see BoardPanel.mouseSelect, not sufficient)
     - thinking status should be managed by application
         USER_ENGINE && plugin.THINKING || BOOK_PLAY query
-
+    [ ] BoardPanel.mouseSelect listens only to engine changes
+        listen to "app.state.changed instead
+    [ ] "app.state.changed" broadcasts
+            AppMode (USER_INPUT,ANALYSIS,USER_ENGINE)
+            Book playing (BOOK_PLAY under way)
+            Engine playing (plugin.THINKING)
+        - listeners: BoardPanel.mouseSelect, EnginePanel.info bar?
 
 [ ] test with/without book
 [ ] test with/without engine

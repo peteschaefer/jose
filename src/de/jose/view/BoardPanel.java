@@ -121,6 +121,7 @@ public class BoardPanel
 		if (theView != null) theView.refresh(true);
 	}
 
+	//@deprecated listen to "app.state.changed" instead
 	protected void connectTo(Plugin plugin)
 	{
 		plugin.addMessageListener(this);
@@ -508,6 +509,15 @@ public class BoardPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
+				Application.PlayState pstate = (Application.PlayState) cmd.moreData;
+				mouseSelect = (pstate==null || pstate==Application.PlayState.NEUTRAL);
+				//	Application.PlayState.BOOK,ENGINE: user is currently blocked
+			}
+		};
+		map.put("app.state.changed",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
 				EngineState engineMode = EngineState.valueOf(cmd.data);
 				AnalysisRecord a = (AnalysisRecord)cmd.moreData;
 				if (engineMode==ANALYZING && theView.showSuggestions) {
@@ -566,7 +576,7 @@ public class BoardPanel
 	
 	public void handleMessage(Object who, int what, Object data)
 	{
-		//	message from Plugin
+
 		//  or from view, after an image has been captured
 		switch (what) {
 			case BoardView.MESSAGE_CAPTURE_IMAGE:
@@ -577,8 +587,9 @@ public class BoardPanel
 				}
 				return;
 		}
-
-		mouseSelect = (what!=THINKING.numval);
+		//	message from Plugin
+		// @deprecated listen to "app.state.changed" instead
+		//mouseSelect = (what!=THINKING.numval);
 	}
 
 	protected void captureImage(boolean transparent)

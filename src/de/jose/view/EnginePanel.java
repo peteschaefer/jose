@@ -756,13 +756,18 @@ public class EnginePanel
 	protected void updateButtonState()
 	{
 		updateButtonState(
-				(plugin==null) ? PAUSED : plugin.getMode(),
-				Application.theApplication.theMode);
+				Application.theApplication.theMode,null, null);
 	}
 
-	protected void updateButtonState(EngineState engineState, Application.AppMode appState)
+	protected void updateButtonState(
+			Application.AppMode appState,
+			Application.PlayState playState,
+			EngineState engineState)
 	{
-		setIcon(bGo,getGoIcon(engineState,appState));
+		if (engineState==null && plugin!=null)
+			engineState = plugin.getMode();
+
+		setIcon(bGo,getGoIcon(appState,playState,engineState));
 		bGo.setEnabled(true);
 		bPause.setEnabled(engineState != PAUSED);
 		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
@@ -777,7 +782,7 @@ public class EnginePanel
 	 */
 	protected void display(EngineState state, AnalysisRecord rec, boolean bookMode)
 	{
-		updateButtonState(state,Application.theApplication.theMode);
+		updateButtonState(Application.theApplication.theMode,null,state);
 
 		//  book mode/ engine mode layout
 		infoPanel.setVisible(! bookMode);
@@ -1162,11 +1167,13 @@ public class EnginePanel
 		button.setPressedIcon(icon[3]);
 	}
 
-	protected Icon[] getGoIcon(EngineState state, Application.AppMode appState)
+	protected Icon[] getGoIcon(Application.AppMode appState,
+							   Application.PlayState playState,
+							   EngineState engineState)
 	{
-		if (state==null)
+		if (engineState==null)
 			return iGoYellow;
-		switch (state) {
+		switch (engineState) {
 		default:
 		case THINKING:	    		return iGoRed;
 		case PONDERING:				return iGoGreen;
@@ -1177,6 +1184,7 @@ public class EnginePanel
 				case ANALYSIS:		return iGoYellow;
 			}
 		}
+		//	todo honor playState (instead of/in addition to engineState)
 		return iGoYellow;
 	}
 
@@ -1539,7 +1547,9 @@ public class EnginePanel
 		/**	default action that is performed upon each broadcast	*/
 		action = new CommandAction() {
 			public void Do(Command cmd) {
-				updateButtonState();
+				Application.AppMode mode = (Application.AppMode)cmd.data;
+				Application.PlayState pstate = (Application.PlayState) cmd.moreData;
+				updateButtonState(mode,pstate,null);
 			}
 		};
 		//map.put("on.broadcast",action);
