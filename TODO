@@ -22,7 +22,7 @@ libraries needed:
 * todo cross-compile easylink for i386. Which extra libaries are needed?
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 
-[ ] port JavaLauncher, or use shc
+[-] port JavaLauncher, or use shc
 [x] java.desktop
 
 ==== macOS
@@ -35,6 +35,8 @@ libraries needed:
 [x] upgrade mysql.jar
 [-] Java3D
 
+BUG: Chess Berlin figurines print wrong. Other fonts seem to work.
+BUG: Print Preview does not work
 
 [-] compile easylink
  ### project compiles, but can't connect to chessboard)
@@ -52,7 +54,7 @@ libraries needed:
    [-] Print Preview
    [-] port JavaLauncher :(   [x] upgrade mrjadapter 1.3
 
-[ ] "Apple Silicon" = arm64
+[x] "Apple Silicon" = arm64
     [x] jdk1.8_431, 11 (not 9?) is available from Oracle :)
     [x] MySQL 5.0.67 compile from source
         [x] Ubuntu x86_64
@@ -63,7 +65,7 @@ libraries needed:
     [x] jose-arm.sh
     [x] stockfish
     [x] Lc0
-    [ ] test bundle
+    [x] test bundle
 
 
 ==== Deprecated Stuff
@@ -103,7 +105,6 @@ libraries needed:
 
 ==== Postponed
 
-* Print Preview on macOS
 * launch mysqld earlier
 
 * Graph View interactive
