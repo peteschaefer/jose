@@ -7,11 +7,13 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
-public abstract class GameEdit implements UndoableEdit
+public abstract class NodeEdit implements UndoableEdit
 {
+    protected Game game;
     protected Node node;
 
-    public GameEdit(Node node) {
+    public NodeEdit(Game game, Node node) {
+        this.game = game;
         this.node = node;
     }
 

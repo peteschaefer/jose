@@ -215,23 +215,23 @@ public class EnginePanel
 	private void createIcons()
 	{
 		int iconSize=26;
-	// todo less bright color
+
 		String green 	= "#009900";
 		String yellow 	= "#cccc00";
 		String red 		= "#b30000";
 		String blue 	= "#0000d9";
 		String orange 	= "#cc9900";
 
-		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:"+green+":button",iconSize);
-		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:"+yellow+":button",iconSize);
-		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:"+red+":button",iconSize);
-		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:"+blue+":button",iconSize);
-		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:"+orange+":button",iconSize);
+		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+green,iconSize);
+		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+yellow,iconSize);
+		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:button:"+red,iconSize);
+		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+blue,iconSize);
+		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+orange,iconSize);
 
-		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:"+green+":button",iconSize);
-		iHint 		= JoToolBar.createAwesomeIcons("?:"+blue+":button",iconSize);
-		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:"+yellow+":button:bold",iconSize);
-		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:"+orange+":button:bold",iconSize);
+		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:button:"+green,iconSize);
+		iHint 		= JoToolBar.createAwesomeIcons("?:button:"+blue,iconSize);
+		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:button:bold:"+yellow,iconSize);
+		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:button:bold:"+orange,iconSize);
 	}
 
 	private void createFontIcons()
