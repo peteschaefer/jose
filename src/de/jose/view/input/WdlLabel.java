@@ -35,19 +35,28 @@ public class WdlLabel
             paintScore(g);
     }
 
+    private static final int ALPHA = 255;
+    private static final Color WHITE = new Color(255, 255, 255, ALPHA);
+    private static final Color GREY = new Color(128, 128, 128, ALPHA);
+    private static final Color BLACK = new Color(0, 0, 0, ALPHA);
+
     protected void paintScore(Graphics g) {
         int width = getWidth();
         int height = getHeight();
         int txtHeight = getFontMetrics(getFont()).getHeight();
+        int barHeight = txtHeight;
+        int arc = 4;
 
         int w1 = (int)(wdlScore.rel(wdlScore.win)*width+0.5);
         int w2 = (int)(wdlScore.rel(wdlScore.draw)*width+0.5);
+        int w3 = width-w1-w2;
+        int y = Math.min(height-barHeight, 2*txtHeight+4);
 
-        g.setColor(Color.white);
-        g.fillRect(0, height-txtHeight, w1, txtHeight);
-        g.setColor(Color.gray);
-        g.fillRect(w1, height-txtHeight, w1+w2, txtHeight);
-        g.setColor(Color.black);
-        g.fillRect(w1+w2, height-txtHeight, width-w1-w2, txtHeight);
+        g.setColor(WHITE);
+        g.fillRect(0, y, w1, barHeight);
+        g.setColor(GREY);
+        g.fillRect(w1, y, w2, barHeight);
+        g.setColor(BLACK);
+        g.fillRect(w1+w2, y, w3, barHeight);
     }
 }
