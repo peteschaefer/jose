@@ -4,14 +4,28 @@ import de.jose.Application;
 import de.jose.Main;
 import de.jose.db.JoConnection;
 import de.jose.pgn.Collection;
+import de.jose.task.DBTask;
 import de.jose.task.MaintenanceTask;
 import de.jose.window.JoDialog;
 
 import javax.swing.*;
 import java.sql.SQLException;
 
+
+/**
+ *  Game.Id <-> MoreGame.GId
+ *  is a 1:1, not-nullable, relation
+ *
+ *  however, for the sake of efficiency, referential integrity is not guarantueed.
+ *  if, for example, a game import fails, or games are only partially deleted,
+ *  referential integrity gets broken.
+ *
+ *  we fix it on application launch by inserting dummy records
+ *  (which are of little use, but make sure that the 1:1 relation is restored)
+ *
+ */
 public class GameRepair
-    extends MaintenanceTask
+    extends DBTask
 {
 
     /**
@@ -19,6 +33,7 @@ public class GameRepair
      */
     public GameRepair() throws Exception {
         super("GameRepair",false);
+        setSilentTime(1000);
     }
 
     public static boolean checkOnStart() throws SQLException
@@ -33,7 +48,7 @@ public class GameRepair
                         +" and MoreGame.GId "
                         +" are out of synch ("+maxId+" != "+maxGId+")."
                         +"\n\n"
-                        +"Advice: Repair Game Table. ";
+                        +"Repairing Game Table. ";
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -48,56 +63,44 @@ public class GameRepair
         return true;
     }
 
-    @Override
-    public void prepare() throws Exception
-    {
-        /*  (1) Game without MoreGame */
-        String sql1 = "SELECT Game.Id "
-                + "  FROM Game LEFT OUTER JOIN MoreGame"
-                + "  ON Game.Id=MoreGame.GId "
-                + "  WHERE MoreGame.GId IS NULL";
+    private static final String MISSING_MOREGAME =
+            "SELECT Game.Id "
+            + "  FROM Game LEFT OUTER JOIN MoreGame"
+            + "  ON Game.Id=MoreGame.GId "
+            + "  WHERE MoreGame.GId IS NULL";
+    private static final String INSERT_MOREGAME =
+            "INSERT INTO MoreGame (GId) " + MISSING_MOREGAME;
 
-        // if (count(sql1) > 0)
-        String update1 = "INSERT INTO MoreGame (GId) "+sql1;
-        //  that should re-populate MoreGame
+    private static final String FROM_RIGHT_OUTER =
+            "FROM Game RIGHT OUTER JOIN MoreGame"
+            + "  ON Game.Id= MoreGame.GId "
+            + "  WHERE Game.Id IS NULL";
+    private static final String MISSING_GAME =
+            "SELECT MoreGame.GId "+FROM_RIGHT_OUTER;
+
+    private static final String INSERT_GAME =
+            "INSERT INTO Game (Id,CId,Idx, WhiteId,BlackId,EventId,SiteId,OpeningId,AnnotatorId) " +
+            "  SELECT MoreGame.GId, @collId, @newIdx:=@newIdx+1, 0,0,0,0,0,0 "
+            +FROM_RIGHT_OUTER;
+
+    public int work() throws SQLException {
+        /*  (1) Game without MoreGame */
+        int repairedRows = 0;
+        if (connection.exists(MISSING_MOREGAME)) {
+            //  that should re-populate MoreGame
+            repairedRows += connection.executeUpdate(INSERT_MOREGAME);
+        }
 
         /*  (2) MoreGame without Game */
-        String sql2 = "SELECT MoreGame.GId "
-                + "FROM Game RIGHT OUTER JOIN MoreGame"
-                + "  ON Game.Id= MoreGame.GId "
-                + "  WHERE Game.Id IS NULL";
+        if (connection.exists(MISSING_GAME)) {
+            Collection coll = Collection.newCollection(0, "Recovered Games", connection);
+            connection.executeUpdate("set @newIdx=1");
+            connection.executeUpdate("set @collId="+coll.Id);
+            //  that should re-populate Game
+            repairedRows += connection.executeUpdate(INSERT_GAME);
+        }
 
-        //  if (count(sql2) > 0)
-        Collection coll = Collection.newCollection(0,"Recovered Games",connection);
-/*
-        set @newIdx=1
-
-        insert into Game (Id,CId,Idx,WhiteId,BlackId,EventId,SiteId,OpeningId,AnnotatorId)
-        select MoreGame.GId, coll.Id, @newIdx:=@newIdx+1, 0,0,0,0,0, 0
-        from Game right outer join MoreGame
-        on Game.Id=MoreGame.GId
-        where Game.Id is null;
- */
-        //  that should re-populate Game
-    }
-
-    @Override
-    public void processGame(int GId) throws Exception {
-
-    }
-
-    @Override
-    public void processGames(int[] GId, int from, int to) throws Exception {
-
-    }
-
-    @Override
-    public void processCollection(int CId) throws Exception {
-
-    }
-
-    @Override
-    public void processCollectionContents(int CId) throws Exception {
-
+        System.err.println(repairedRows+" Game rows repaired.");
+        return SUCCESS;
     }
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -325,10 +325,17 @@ abstract public class Task
 					result = work();
 				} catch (TaskAbortedException abortex) {
 					result = state = ABORTED;
+				} catch(SQLException sqlex) {
+					if (sqlex.getErrorCode()==1317) {
+						//	that means: interrupted
+						result = state = ABORTED;
+					}
+					else {
+						errorText = onError(sqlex);
+						break;
+					}
 				} catch (Throwable ex) {
-					state = ERROR;
-					if (reportErrors) Application.reportError(ex,true,false);
-					errorText = ex.toString();
+					errorText = onError(ex);
 					break;
 				}
 
@@ -351,6 +358,13 @@ abstract public class Task
 			state = done(getTaskState());
 //			Util.printTime(this.getName(),startTime);
 		}
+	}
+
+	private String onError(Throwable ex)
+	{
+		state = ERROR;
+		if (reportErrors) Application.reportError(ex,true,false);
+		return ex.toString();
 	}
 
     protected void closeDialog(Timer dialogTimer, final String errorText)

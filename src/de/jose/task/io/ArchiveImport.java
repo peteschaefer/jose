@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ public class ArchiveImport
         archive.extractAllFiles(dataDir);
         archive.close();
 	    /**
-	     * et voilá: the IO schema is back again !
+	     * et voilï¿½: the IO schema is back again !
 	     * (now try THAT with Oracle ;-)
 	     */
 	    setProgress(0.1);
@@ -428,12 +428,23 @@ public class ArchiveImport
         return count;
     }
 
+	private static final String DELETE_GAME =
+			"DELETE Game" +
+			"    FROM Game" +
+			"    LEFT OUTER JOIN MoreGame ON Game.Id = MoreGame.GId" +
+			"    WHERE MoreGame.GId IS NULL";
+
+	private static final String DELETE_MOREGAME =
+			"DELETE MoreGame " +
+			"    FROM Game " +
+			"    RIGHT OUTER JOIN MoreGame ON Game.Id = MoreGame.GId " +
+			"    WHERE Game.Id IS NULL";
+
 	private void rollBackGames()
 			throws SQLException
 	{
-		connection.executeUpdate(
-				"DELETE FROM Game LEFT OUTER JOIN MoreGame ON Game.Id = MoreGame.GId" +
-			    " WHERE MoreGame.GId IS NULL");
+		connection.executeUpdate(DELETE_GAME);
+		connection.executeUpdate(DELETE_MOREGAME);
 		//  just in case: res-synch the sequence generator
 		Collection.resetSequence(connection);
 		Collection.repairGameCounts(connection);

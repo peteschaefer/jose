@@ -451,6 +451,25 @@ public class JoConnection
 		return defaultValue;
 	}
 
+	/**
+	 * @return the result of querying exactly one value
+	 */
+	public boolean exists(String sql)
+			throws SQLException
+	{
+		JoStatement stm = null;
+		try {
+			stm = new JoStatement(this);
+			stm.setMaxRows(1);
+			stm.execute(sql);
+			if (stm.next())
+				return true;
+		} finally {
+			if (stm!=null) stm.close();
+		}
+		return false;
+	}
+
 
 	public int[] selectIntArray(String sql, int defaultValue)
 		throws SQLException

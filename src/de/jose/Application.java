@@ -2307,8 +2307,10 @@ public class Application
 
 
 		action = new CommandAction() {
-			public void Do(Command cmd) throws SQLException {
-				GameRepair.checkOnStart();
+			public void Do(Command cmd) throws Exception {
+				GameRepair repair = new GameRepair();
+				if (! repair.checkOnStart())
+					repair.start();
 			}
 		};
 		map.put("db.check",action);
