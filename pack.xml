@@ -197,7 +197,7 @@
 		</zip>
 	</target>
 
-	<target name="leela-mac-intel">
+	<!--target name="leela-mac-intel">
 		<description> Leela (Lc0) engine for MacOS </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
 			<zipfileset dir="config" prefix="${appldir}/config">
@@ -211,10 +211,10 @@
 				<include name="lc0"/>
 			</zipfileset>
 		</zip>
-	</target>
+	</target-->
 
 
-	<target name="stockfish-mac-intel">
+	<!--target name="stockfish-mac-intel">
 		<description> Stockfish engine for Linux </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
 			<zipfileset dir="config" prefix="${appldir}/config">
@@ -224,14 +224,14 @@
 				<exclude name="stockfish-windows-*"/>
 				<exclude name="stockfish-ubuntu-*"/>
 				<exclude name="stockfish-macos-*"/>
-				<!--exclude name="src"/-->
+				<! - -exclude name="src"/- - >
 				<exclude name="wiki"/>
 			</zipfileset>
 			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish" filemode="775">
 				<include name="stockfish-macos-*"/>
 			</zipfileset>
 		</zip>
-	</target>
+	</target-->
 
 	<!-- Linux plus JRE -->
 	<target name="linux" depends="init">
@@ -306,6 +306,7 @@
 						prefix="${appldir}"
 						filemode="775">
 				<include name="bin/Linux_amd64/mysqld"/>
+				<include name="bin/Linux_amd64/myisamchk"/>
 				<include name="engines/lc0/lc0"/>
 				<include name="engines/stockfish/*"/>
 			</zipfileset>
@@ -327,61 +328,42 @@
 
 	<target name="zip-macos-intel">
 		<description> add Mac OS X specific stuff to zip </description>
-
 		<zip destfile="${zip-file}" update="true">
-			<!-- OS X specific stuff -->
-			<!-- application bundle -->
-			<zipfileset dir="Contents" prefix="${appldir}/Contents">
-				<include name="Info.plist"/>
-				<include name="PkgInfo"/>
-            </zipfileset>
-			<zipfileset dir="Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
+			<zipfileset dir="${dist-dir}/mac_x64/Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
 				<!--include name="JavaApplicationStub"/-->
 				<include name="jose.sh"/>
 				<include name="jose"/>
-            </zipfileset>
-			<zipfileset dir="Contents/Resources" prefix="${appldir}/Contents/Resources">
-				<include name="jose.icns"/>
-				<include name="arch.icns"/>
-				<include name="pgn.icns"/>
-            </zipfileset>
-
-			<zipfileset dir="bin" prefix="${appldir}/bin">
-				<include name="share/**"/>
+				<include name="shc"/>
 			</zipfileset>
-			<zipfileset dir="bin/Mac_intel" prefix="${appldir}/bin/Mac" filemode="775">
+
+			<zipfileset dir="${dist-dir}/mac_x64/bin/Mac_intel" prefix="${appldir}/bin/Mac_intel" filemode="775">
 				<!--include name="Mac/unrar"/-->
 				<include name="mysqld"/>
-				<include name="mysqladmin"/>
+				<include name="myisamchk"/>
+				<!--include name="mysqladmin"/-->
 			</zipfileset>
-			<zipfileset dir="lib/Mac" prefix="${appldir}/lib/Mac">
-				<include name="mrjadapter-1.3.jar"/>
-				<!--<include name="libmysqlje.jnilib"/>-->
-                <!--include name="libquaqua.jnilib"/-->
-				<!--include name="libquaqua64.jnilib"/-->
-				<!--include name="libquaqua64.dylib"/-->
-			</zipfileset>
-            <!--zipfileset dir="lib/plaf" prefix="${appldir}/lib/plaf">
-                <include name="quaqua.jar"/>
-				<include name="VAaqua13.jar"/>
-            </zipfileset-->
-			<zipfileset dir="lib/jdbc" prefix="${appldir}/lib/jdbc">
-			    <include name="mysql.jar"/>
+
+			<zipfileset dir="${dist-dir}/mac_x64/engines" prefix="${appldir}/engines" filemode="775">
+				<!--include name="Mac/unrar"/-->
+				<include name="lc0/lc0"/>
+				<include name="stockfish/stockfish-macos-x86-64-sse41-popcnt"/>
+				<!--include name="mysqladmin"/-->
 			</zipfileset>
 
 			<!-- the jre -->
-			<zipfileset dir="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/jre"
+			<zipfileset src="${dist-dir}/mac_x64/jdk-21.zip"
 						prefix="${appldir}/jre">
 				<exclude name="bin/java"/>
 				<exclude name="lib/jspawnhelper"/>
 			</zipfileset>
-			<zipfileset dir="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/jre"
+			<zipfileset src="${dist-dir}/mac_x64/jdk-21.zip"
 						prefix="${appldir}/jre"
 						filemode="775">
 				<include name="bin/java"/>
 				<include name="lib/jspawnhelper"/>
 			</zipfileset>
-       	</zip>
+		</zip>
+
 	</target>
 
 	<target name="zip-common">
@@ -439,6 +421,7 @@
 			<zipfileset dir="${dist-dir}/mac_arm64/bin/Mac_arm" prefix="${appldir}/bin/Mac_arm" filemode="775">
 				<!--include name="Mac/unrar"/-->
 				<include name="mysqld"/>
+				<include name="myisamchk"/>
 				<!--include name="mysqladmin"/-->
 			</zipfileset>
 
@@ -450,12 +433,12 @@
 			</zipfileset>
 
 			<!-- the jre -->
-			<zipfileset dir="${dist-dir}/mac_arm64/jre"
+			<zipfileset src="${dist-dir}/mac_arm64/jdk-21.zip"
 						prefix="${appldir}/jre">
 				<exclude name="bin/java"/>
 				<exclude name="lib/jspawnhelper"/>
 			</zipfileset>
-			<zipfileset dir="${dist-dir}/mac_arm64/jre"
+			<zipfileset src="${dist-dir}/mac_arm64/jdk-21.zip"
 						prefix="${appldir}/jre"
 						filemode="775">
 				<include name="bin/java"/>
@@ -501,15 +484,15 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+		<antcall target="zip-common">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-macos-common">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
 		<antcall target="zip-macos-intel">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="stockfish-mac-intel">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="leela-mac-intel">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
