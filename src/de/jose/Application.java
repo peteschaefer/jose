@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3409,6 +3409,8 @@ public class Application
 		public void run() {
 
 			getContextMenu();
+
+			//	todo if standalone db, launch it here !
 
 			//  deferred loading of ECO classificator & additional fonts
 			Thread deferredLoader = new DeferredStartup();

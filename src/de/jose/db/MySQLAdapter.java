@@ -99,6 +99,7 @@ public class MySQLAdapter
 							/**	since the server is running in a separate process,
 							 * 	this may take some time to complete.
 							 * 	to account for that, we sleep a bit, then try several connect requests
+							 * 	todo no, please. put this into Application.Startup
 							 */
 							try {
 								Thread.sleep(300);
@@ -684,7 +685,7 @@ public class MySQLAdapter
 				MiniAdmin admin = new MiniAdmin(conn.jdbcConnection);
 				admin.shutdown();
 				done = true;
-				//serverProcess.waitFor();	// not necessary !?
+				//144serverProcess.waitFor();	// not necessary !?
 			} catch (Throwable thr) {
 				//	our last resort:
 				thr.printStackTrace();

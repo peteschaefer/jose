@@ -35,7 +35,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>JavaApplicationStub</string>
+	<string>jose.sh</string>
 	<key>CFBundleIconFile</key>
 	<string>jose.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -49,7 +49,7 @@
 	<key>CFBundleVersion</key>
 	<string>10.2</string>
 	<key>Java</key>
-	<dict>
+	<!--dict>
 		<key>ClassPath</key>
 		<array>
 			<string>lib/plaf/quaqua.jar</string>
@@ -68,6 +68,6 @@
 		<string>$APP_PACKAGE/</string>
 		<key>Arguments</key>
 		<string>db=MySQL-standalone</string>
-	</dict>
+	</dict-->
 </dict>
 </plist>

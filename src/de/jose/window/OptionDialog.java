@@ -508,6 +508,12 @@ public class OptionDialog
 
 	protected void initTab6(Component comp6)
 	{
+		if (!Version.hasJava3d(false,false)) {
+			JPanel tab6 = (JPanel)comp6;
+			add(tab6,0,new JLabel(Language.get("dialog.option.board.3d.na")));
+			return;
+		}
+
 		JPanel tab6 = (JPanel)comp6;
 
         File dir3d = new File(Application.theWorkingDirectory, "3d");

@@ -30,7 +30,9 @@ libraries needed:
 [x] and lc0. via brew
 [x] mysqld standalone
     5.0.67 for MacOS 64, (remember to copy share too)
+    [ ] launch in Application.Startup
 [x] upgrade mysql.jar
+[-] Java3D
 
 jose 1.4.4 setup on my MacPro
 MacOS 10.7.5 i386
@@ -49,6 +51,9 @@ mysqld 5.0.24a i686 from 11-07-2005
    - we need a new launcher stub
      see: https://github.com/tofi86/universalJavaApplicationStub
    - good news: jre can be bundled
+   [ ] bundle leela
+   [ ] bundle stockfish
+   [ ] make jose.sh executable ?
 
 [ ] "Apple Silicon"
     - jdk1.8, 11 (not 9?) is available from Oracle :)
