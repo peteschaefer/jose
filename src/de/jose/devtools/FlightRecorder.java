@@ -15,7 +15,6 @@ package de.jose.devtools;
 import de.jose.Application;
 import de.jose.Command;
 import de.jose.CommandAction;
-import de.jose.FlyBy;
 import de.jose.chess.Move;
 import de.jose.jo3d.SplineKeyFrame;
 import de.jose.jo3d.interpolators.KBRotPosScaleSplinePathInterpolator;
