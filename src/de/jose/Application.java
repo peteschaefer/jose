@@ -2361,7 +2361,7 @@ public class Application
 			if (onEngineMove) switchAnalysis = false;
 			BookQuery query = new BookQuery(pos,switchAnalysis);
 			theExecutorService.submit(query);
-			//	will call back with message BOOK_RESPONSE
+			//	will call back with message BOOK_RESPONSE, onBookUpdate
 		}
 	}
 
@@ -2372,6 +2372,7 @@ public class Application
 
 		EnginePanel eng = enginePanel();
 		if (!query.result.isEmpty()) {
+			pausePlugin(false);
 			eng.showBook(query.result, pos);
 		}
 		else {

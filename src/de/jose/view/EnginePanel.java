@@ -1539,7 +1539,7 @@ public class EnginePanel
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
 					Application.theApplication.updateBook(wasEngineMove,
-					!wasEngineMove && Application.theApplication.theMode==Application.ANALYSIS);
+							Application.theApplication.theMode==Application.ANALYSIS);
 				}
 			}
 		};
