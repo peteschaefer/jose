@@ -24,9 +24,9 @@ abstract public class MoveFormatter
 
 
     /** kingside castling string   */
-    public String    kingsideCastling   = "O-O";      //  these are O's not zero's !!
+    public String    kingsideCastling   = "O-O";      //  these are Oh's not zero's !!
     /** queenside castling string   */
-    public String    queensideCastling  = "O-O-O";    //  these are O's not zero's !!
+    public String    queensideCastling  = "O-O-O";    //  these are Oh's not zero's !!
 
     /** separator char (for long notation)  */
     public String   separator           = "-";

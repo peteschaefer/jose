@@ -139,11 +139,16 @@ the first production release.
 * support for Chessnut Air, Air+, Pro electronic boards (only USB, currently. Bluetooth not yet realiably supported)
 * Lichess Opening Explorer (used as opening book)
 
-=== 1.5.1 (2025-02)
+=== 1.5.1 (2025-02-14)
 * support for Hi-DPI screens on Windows and Linux
 * upgrade *64-bit* binaries:
     * JRE 21
     * Java3D 1.5
 * MySQL 5.0.67 running as a separate process (as was already the case on MacOS)
+
+=== 1.5.2 (2025-03)
+* Database Repair tool fixes most (hopefully all) cases of crashed databases
+* Lichess Opening Explorer displays top reference games. Click to download.
+* minor GUI improvements (w-d-l scores, eval bar, ...)
 
 ==========================

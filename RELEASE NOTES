@@ -10,12 +10,18 @@ hrimfaxi.bitbucket.io/jose
 Files for Download
 ==================
 
-* jose-15-windows.zip              zip archive for Windows
-* jose-15-linux.zip                zip archive for Linux with Intel processors
+* jose-152-windows.zip              zip archive for Windows
+* jose-152-linux.zip                zip archive for Linux with Intel processors
+* jose-152-mac-intel.zip            zip archive for macOS with Intel processors
+* jose-152-mac-arm.zip              zip archive for macOS wiht Apple Silicon (ARM 64) processors
 
 * database-10k.jose                Database containing 10.000 grandmaster games
 * database-500k.jose               Database containing more than 500.000 games
 * database-1700k.jose              Database containing more than 1.7 million games
+
+in the future, I might distribute patch files that can simply be unzipped on top of
+an existing installation. Patches are (usually) platform-agnostic, and cumulative
+(i.e. only need to apply the latest patch).
 
 ============
 Requirements
@@ -24,6 +30,7 @@ Requirements
 * Operating Systems: 
    - Windows 98 or later
    - Linux with Intel processors
+   - macOS (since?)
 
 ====================
 Windows Installation
@@ -34,8 +41,6 @@ Windows Installation
 * You can start jose by double-clicking "jose.exe"
   or you can start it from the command line with
      java -jar jose.jar
-
-* DirectX 8, or later, is recommended for the 3D board display.
 
 * jose includes a number of TrueType fonts for displaying chess figurines.
   If you like to use these fonts with other applications,
@@ -53,18 +58,23 @@ Linux Installation
   or you can start it from the command line with
      java -jar jose.jar
 
+* if display looks too small on hi-dpi screens,
+  adjust the UI scaling factor. See jose.sh
+
 ======================
 3D System Requirements
 ======================
 
 * WINDOWS
     - Windows 2000 or Windows XP
-    - DirectX 8, or OpenGL 1.1
+    - OpenGL 1.1
 
 * LINUX
   - Graphics adapter with driver that supports the GLX extension:
     GLX 1.3 or later and OpenGL 1.2 or later
 
+* MACOS
+  - ?
 
 =====================================
 Installing the Sample Games Databases
@@ -77,6 +87,21 @@ Installing the Sample Games Databases
   After the archive has been copied into your personal
   database, it will be available immediately.
 
+* when upgrading from an older version, just move the database directory
+  to the new installation
+* it is recommended to make regular backups of the database directory
+* if, for some reason, the database becomes corrupted, run
+  Help / Repair Database...
+  the repair tool can fix most cases without losing valuable data
+
+========================
+Setting up Chess Engines
+========================
+
+* Stockfish and Leela Chess Zero (Lc0) are readily bundled
+* depending on your available hardware, you may want to upgrade
+  the Leela installation with a customized executable, and with neural nets
+* refer to Lc0 instructions at lc0.org
 
 =========================  
 Removing the Installation

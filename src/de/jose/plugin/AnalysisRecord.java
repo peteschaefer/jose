@@ -75,6 +75,9 @@ public class AnalysisRecord
 	/**	number of processed nodes per second	*/
 	public long 	nodesPerSecond;
 
+	/** iterate: count sent messages */
+	public long 	msgCount=0;
+
 	/**	position evaluation in centipawns etc.	*/
     public static class LineData {
 		public Score eval = new Score();	// score

@@ -879,6 +879,7 @@ ply
 		case PONDERING:
 		case ANALYZING:
 				parseAnalysis(s,analysis);
+				analysis.msgCount++;
 				sendMessage(mode,analysis);
 				break;
 		}

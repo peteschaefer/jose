@@ -767,6 +767,7 @@ public class UciPlugin
         if (s.startsWith("info")) {
 			if (ignoreMoves==0) {
 				parseAnalysis(StringUtil.rest(s), analysis);
+				analysis.msgCount++;
 				sendMessage(mode, analysis);
 			}
         }

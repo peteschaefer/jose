@@ -29,7 +29,7 @@ public class MoveIterator
 	/**	are there more moves ?	 */
 	protected boolean hasNext;
 	
-	/**	iteration variables fro use by move generators	 */
+	/**	iteration variables for use by move generators	 */
 	protected Util.IntHandle i1;
 	protected Util.IntHandle i2;
 	

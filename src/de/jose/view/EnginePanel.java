@@ -68,6 +68,7 @@ public class EnginePanel
 	/** contains book info  */
 	protected AnalysisRecord bookmoves = new AnalysisRecord();  //  TODO share with OpeningLirary ?
 	public boolean inBook = false;
+	private long seenMsg;
 
 	/** go button   */
 	protected JButton   bGo;
@@ -1209,6 +1210,7 @@ public class EnginePanel
 		int cap = plugin.getParseCapabilities();
 		analysis = plugin.getAnalysis();
 		analysis.reset();
+		seenMsg=0;
 		adjustCapabilities(cap);
 	}
 
@@ -1217,7 +1219,7 @@ public class EnginePanel
 		plugin.removeMessageListener(this);
 		this.plugin = null;
 		pluginName = null;
-
+		seenMsg=0;
 		display(EnginePlugin.PAUSED, null, inBook);
 	}
 
@@ -1225,18 +1227,28 @@ public class EnginePanel
 	{
 		String hintText = null;
 		/* ... = (String)data; */
+		AnalysisRecord a=null;
+		switch (what) {
+			case EnginePlugin.THINKING:
+			case EnginePlugin.ANALYZING:
+			case EnginePlugin.PONDERING:
+				a = (AnalysisRecord) data;
+				if (a!=null) {
+					analysis = a;
+					if (a.msgCount <= seenMsg) return; // already handled this message
+					seenMsg = a.msgCount;
+				}
+				break;
+		}
+
 		switch (what) {
 		case EnginePlugin.THINKING:
 		case EnginePlugin.ANALYZING:
-				AnalysisRecord a = (AnalysisRecord)data;
-				if (a!=null) analysis = a;
 				exitBook();
-				display(what, a, inBook);
+				if (analysis!=null) display(what, analysis, inBook);
 				break;
 		case EnginePlugin.PONDERING:
-				a = (AnalysisRecord)data;
-				if (a!=null) analysis = a;
-				if (!inBook) display(what, a, inBook);
+				if (!inBook && analysis!=null) display(what, analysis, inBook);
 				break;
 
 		case EnginePlugin.PLUGIN_ELAPSED_TIME:
@@ -1468,6 +1480,7 @@ public class EnginePanel
 			public void Do(Command cmd) {
 				if (plugin!=null) disconnect();
 				plugin = null;
+				seenMsg=0;
 			}
 		};
 		map.put("close.plugin", action);
@@ -1678,9 +1691,10 @@ public class EnginePanel
 				if (label==e.getSource())
 				{
 					String text = getPvText(i);
-
-					Command cmd = new Command("menu.game.paste.line",e,text,Boolean.TRUE);
-					Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);
+					if (text!=null) {
+						Command cmd = new Command("menu.game.paste.line", e, text, Boolean.TRUE);
+						Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);
+					}
 				}
 			}
 		}
