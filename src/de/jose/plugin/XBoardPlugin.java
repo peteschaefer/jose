@@ -355,7 +355,7 @@ ply
 			else
 				score.cp = eval;
 
-			score.cp = adjustPointOfView(score.cp);
+			adjustPointOfView(score,rec.white_next);
 
 			rec.modified |= AnalysisRecord.EVAL;
 		}

@@ -108,7 +108,6 @@ public class EnginePanel
 	protected static final DecimalFormat NCOUNT_0 = new DecimalFormat("###0.#");
 	protected static final DecimalFormat NCOUNT_K = new DecimalFormat("###0.# k");
 	protected static final DecimalFormat NCOUNT_M = new DecimalFormat("####0.# M" );
-	protected static final DecimalFormat EVAL_FORMAT = new DecimalFormat("+###0.00;-###0.00" );
 
 	protected static final long TEN_MINUTES  = 10*60*1000L;
 
@@ -619,7 +618,7 @@ public class EnginePanel
 				if (rec.wasPvModified(idx)) {
 					assert(rec.eval[idx]!=null);
 					assert(rec.line[idx]!=null);
-					setEvaluation(idx, rec.eval[idx], pmap);
+					setEvaluation(idx, rec.eval[idx]);
 					setVariation(idx, rec.line[idx]);
 
 					if (! inBook) {
@@ -649,7 +648,7 @@ public class EnginePanel
 
 			for (int idx=0; idx < pvCount; idx++)
 			{
-				setEvaluation(idx,new Score(), pmap);
+				setEvaluation(idx,new Score());
 				setVariation(idx,null);
 			}
 
@@ -810,93 +809,31 @@ public class EnginePanel
 			lElapsedTime.setText(text);
 	}
 
-	protected void setValue(JLabel value, String key, HashMap pmap)
+	protected static void setValue(JLabel value, String key, HashMap pmap)
 	{
-		String text = textValue(key,pmap);
-		String tip = tipValue(key,pmap);
+		String text = Language.args(key,pmap);
+		String tip = Language.argsTip(key,pmap);
 		value.setText(text);
 		value.setToolTipText(tip);
 	}
 
-	protected String textValue(String key, HashMap pmap) {
-		if (key==null) return "";
-		String text = Language.get(key);
-		return StringUtil.replace(text,pmap);
-	}
-
-	protected String tipValue(String key, HashMap pmap) {
-		if (key==null) return "";
-		String text = Language.getTip(key);
-		return StringUtil.replace(text,pmap);
-	}
 
 	/**
 	 * @param idx
 	 * @param score (from whites point of view)
-	 * @param pmap
 	 *
 	 * todo use Score object with WDL info
 	 */
-	public void setEvaluation(int idx, Score score, HashMap pmap)
+	public void setEvaluation(int idx, Score score)
 	{
 		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
-		String key;
-		if (score.flags==Score.EVAL_GAME_COUNT)
-		{
-			//  book move, game count
-			if (score.cp<=0)
-				pmap.put("count","-");
-			else
-				pmap.put("count", Integer.toString(score.cp));
-			key = "plugin.gamecount";
-		}
-		else if (score.cp <=  Score.UNKNOWN)
-			key = null;
-		else if (score.cp > Score.WHITE_MATES)
-		{
-			int plies = score.cp-Score.WHITE_MATES;
-			pmap.put("eval",String.valueOf((plies+1)/2));
-			key = "plugin.white.mates";
-		}
-		else if (score.cp < Score.BLACK_MATES)
-		{
-			int plies = Score.BLACK_MATES-score.cp;
-			pmap.put("eval",String.valueOf((plies+1)/2));
-			key = "plugin.black.mates";
-		}
-		else {
-			String text;
-			if (score.cp==0)
-				text = "0";
-			else
-				text = EVAL_FORMAT.format((double)score.cp/100.0);
-
-			switch (score.flags)
-			{
-			case Score.EVAL_LOWER_BOUND:     text = "\u2265 "+text; break;  //  >=
-			case Score.EVAL_UPPER_BOUND:     text = "\u2264 "+text; break;  //  <=
-			}
-
-			pmap.put("eval",text);
-			key = "plugin.evaluation";
-		}
-
-		String text = textValue(key,pmap);
-		String tip = tipValue(key,pmap);
-
-		if (score.hasWDL()) {
-			pmap.put("win",Integer.toString(score.win));
-			pmap.put("draw",Integer.toString(score.draw));
-			pmap.put("lose",Integer.toString(score.lose));
-			key = "plugin.wdl";
-			text += "\n"+textValue(key,pmap);
-			tip = "<html>"+tip+"<br>"+tipValue(key,pmap)+"</html>";
-		}
+		String text = plugin.printScore(score,true);
+		String tooltip = plugin.printScoreTooltip(score,true);
 
 		leval.setText(text);
-		leval.setToolTipText(tip);
+		leval.setToolTipText(tooltip);
 	}
 
 	public void setNodeCount(long nodes, HashMap pmap)

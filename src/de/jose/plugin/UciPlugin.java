@@ -824,7 +824,7 @@ public class UciPlugin
 
 		int pvidx = 0;  // 0 = main line, might differ for multi-pv
 		Score score = new Score();
-		boolean pvmod=false;
+		boolean score_modified=false;
 		StringTokenizer tok = new StringTokenizer(input);
 
 		if (rec.info!=null &&
@@ -920,8 +920,7 @@ public class UciPlugin
 						score.cp = Score.BLACK_MATES + 2*moves;
 				}
 
-				score.cp = adjustPointOfView(score.cp);
-				pvmod = true;
+				score_modified = true;
 			}
 			else if (t.equals("lowerbound"))
 				score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_LOWER_BOUND:Score.EVAL_UPPER_BOUND;
@@ -931,6 +930,7 @@ public class UciPlugin
 				score.win = StringUtil.parseInt(tok.nextToken());
 				score.draw = StringUtil.parseInt(tok.nextToken());
 				score.lose = StringUtil.parseInt(tok.nextToken());
+				score_modified = true;
 			}
 			else if (t.equals("movesleft")) {
 				int moves_left = StringUtil.parseInt(tok.nextToken());
@@ -980,7 +980,8 @@ public class UciPlugin
 			if (!tokispv) ispv = false;
 		}
 
-		if (pvmod) {
+		if (score_modified) {
+			adjustPointOfView(score,rec.white_next);	//	todo confusing for win-percentage scores!!
 			rec.eval[pvidx] = score;
 			rec.setPvModified(pvidx);
 		}
@@ -1122,5 +1123,4 @@ public class UciPlugin
 		}
 		return null;
 	}
-
 }

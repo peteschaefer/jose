@@ -12,10 +12,7 @@
 
 package de.jose.plugin;
 
-import de.jose.Application;
-import de.jose.Config;
-import de.jose.Util;
-import de.jose.Version;
+import de.jose.*;
 import de.jose.chess.*;
 import de.jose.pgn.Parser;
 import de.jose.pgn.Game;
@@ -37,6 +34,7 @@ import javax.xml.transform.TransformerException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -137,6 +135,9 @@ abstract public class EnginePlugin
 	 */
 	public static final byte OPTIONS_NEW_ENGINE     = 0x04;
 
+	//	numeric format for centipawn scores
+	protected static final DecimalFormat CENTIPAWN_FORMAT = new DecimalFormat("+###0.00;-###0.00" );
+
 	/**	used to parse input moves	 */
 	protected Parser moveParser;
 	protected Position enginePosition;
@@ -229,26 +230,6 @@ abstract public class EnginePlugin
 	 * @return
 	 */
 	abstract public int getEvaluationPointOfView();
-
-	/**
-	 *
-	 * @param score from the engine's point of view
-	 * @return the score from WHITES point of view
-	 */
-	public int adjustPointOfView(int score)
-	{
-		switch (getEvaluationPointOfView())
-		{
-		case POINT_OF_VIEW_CURRENT:
-				if (enginePosition.blackMovesNext()) return -score;
-		case POINT_OF_VIEW_WHITE:
-				return score;
-		case POINT_OF_VIEW_BLACK:
-				return -score;
-		default:
-				throw new IllegalStateException("point of view not defined");
-		}
-	}
 
 	public static boolean setPaths(Element cfg, String os,
 	                            File dir, File exe, File logo,
@@ -872,5 +853,119 @@ abstract public class EnginePlugin
 		return true;
 	}
 
+	//
+	//	Score handling
+	//
+
+
+	/**
+	 * todo needs overhaul.
+	 * It does not work for win-percentage scores, wdl scores shouold be adjusted, too.
+	 *
+	 * @param score from the engine's point of view
+	 * @return the score from WHITES point of view
+	 */
+	public void adjustPointOfView(Score score, boolean white_next)
+	{
+		switch (getEvaluationPointOfView())
+		{
+			case POINT_OF_VIEW_WHITE:
+				break;
+			case POINT_OF_VIEW_CURRENT:
+				if (white_next) break;
+				//	otherwise: fall-through intended
+			case POINT_OF_VIEW_BLACK:
+				score.cp = -score.cp;
+				score.swapWDL();
+				break;
+			default:
+				throw new IllegalStateException("point of view not defined");
+		}
+	}
+
+	protected String prepareCentipawnScore(Score score, HashMap pmap)
+	{
+		String cptext;
+		if (score.cp==0)
+			cptext = "0";
+		else
+			cptext = CENTIPAWN_FORMAT.format((double)score.cp/100.0);
+
+		switch (score.flags)
+		{
+			case Score.EVAL_LOWER_BOUND:     cptext = "\u2265 "+cptext; break;  //  >=
+			case Score.EVAL_UPPER_BOUND:     cptext = "\u2264 "+cptext; break;  //  <=
+		}
+
+		pmap.put("eval",cptext);
+		return "plugin.evaluation";
+	}
+
+	private String printScoreText(Score score, boolean tooltip, boolean with_wdl)
+	{
+		HashMap pmap = new HashMap();
+		String key;
+		if (score.flags==Score.EVAL_GAME_COUNT)
+		{
+			//  book move, game count
+			if (score.cp<=0)
+				pmap.put("count","-");
+			else
+				pmap.put("count", Integer.toString(score.cp));
+			key = "plugin.gamecount";
+		}
+		else if (score.cp <=  Score.UNKNOWN)
+			key = null;
+		else if (score.cp > Score.WHITE_MATES)
+		{
+			int plies = score.cp-Score.WHITE_MATES;
+			pmap.put("eval",String.valueOf((plies+1)/2));
+			key = "plugin.white.mates";
+		}
+		else if (score.cp < Score.BLACK_MATES)
+		{
+			int plies = Score.BLACK_MATES-score.cp;
+			pmap.put("eval",String.valueOf((plies+1)/2));
+			key = "plugin.black.mates";
+		}
+		else {
+			key = prepareCentipawnScore(score,pmap);
+		}
+
+		String result = tooltip ? Language.argsTip(key,pmap) : Language.args(key,pmap);
+
+		if (with_wdl && score.hasWDL()) {
+			pmap.put("win",Integer.toString(score.win));
+			pmap.put("draw",Integer.toString(score.draw));
+			pmap.put("lose",Integer.toString(score.lose));
+			if (tooltip) {
+				result += "<br>" + Language.argsTip("plugin.wdl", pmap);
+			}
+			else {
+				result += "\n" + Language.args("plugin.wdl", pmap);
+			}
+		}
+
+		if (tooltip)
+			return "<html>"+result+"</html>";
+		else
+			return result;
+	}
+
+	public String printScore(Score score, boolean with_wdl) {
+		return printScoreText(score, false, with_wdl);
+	}
+
+	public String printScoreTooltip(Score score, boolean with_wdl) {
+		return printScoreText(score, true, with_wdl);
+	}
+
+	public double mapUnit(Score sc) {
+		return Double.NaN;
+	}
+
+	public double[] mapUnitWDL(Score sc) {
+		return new double[3];
+	}
 
 }

@@ -536,14 +536,14 @@ public class BoardPanel
 			case EnginePlugin.PONDERING:
 				AnalysisRecord a = (AnalysisRecord)data;
 				if (a==null || a.maxpv==0)
-					theView.setScore(null,false);	//	nothing to be done
+					theView.setScore(null);	//	nothing to be done
 				else
-					theView.setScore(a.eval[0], a.white_next);
+					theView.setScore(a.eval[0]);
 				theView.repaint();
 				break;
 
 			case EnginePlugin.PAUSED:
-				theView.setScore(null,false);
+				theView.setScore(null);
 				theView.repaint();
 				break;
 		}

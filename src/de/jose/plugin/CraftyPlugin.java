@@ -90,7 +90,7 @@ tab  depth score*100
 			else
 				score.cp = eval;
 
-			score.cp = adjustPointOfView(score.cp);
+			adjustPointOfView(score,rec.white_next);
 
 			/**
 			 * Crafty reports

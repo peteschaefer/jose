@@ -19,6 +19,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -217,6 +218,22 @@ public class Language
             result = theLanguage.get1(key, null);
         }
 		return result;
+	}
+
+	public static String args(String key, HashMap args) {
+		if (key==null) return "";
+		String text = Language.get(key);
+		if (args!=null)
+			text = StringUtil.replace(text,args);
+		return text;
+	}
+
+	public static String argsTip(String key, HashMap args) {
+		if (key==null) return "";
+		String text = Language.getTip(key);
+		if (args!=null)
+			text = StringUtil.replace(text,args);
+		return text;
 	}
 
     /**

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
 <PLUGIN ID="lc0" type="uci">
 	<NAME> Lc0 </NAME>
 	<EXEC os="Windows">
@@ -37,7 +36,7 @@
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
 		<OPTION name="MultiPV"> 3 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
-		<OPTION dirty="true" name="ScoreType"> Q </OPTION>
+		<OPTION dirty="true" name="ScoreType"> win_percentage </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
 		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
 		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>
