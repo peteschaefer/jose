@@ -87,7 +87,7 @@
 		<mkdir dir="${java.classes}"/>
 		<!-- some classes are 1.5 specific -->
 		<javac fork="yes"
-			executable="C:/jdk1.5/bin/javac.exe"
+			executable="C:/Program Files (x86)/Java/jdk1.8.0_202/bin/javac.exe"
 			srcdir="${java.src}" destdir="${java.classes}"
 			source="1.8" target="1.8" compiler="modern"
 			nowarn="on" optimize="on"
@@ -98,10 +98,11 @@
 
 		</javac>
 	    <!-- debug="off" debuglevel="lines" -->
-	    <!-- de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM) -->
+	    <!-- de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM)
         <exec executable="C:/Programme/Microsoft Visual Studio/VJ98/jvc.exe">
 		    <arg line="/cp:p &quot;${java.classes}&quot; /d &quot;${java.classes}&quot; /g &quot;${java.src}/de/jose/BootError.java&quot; &quot;${java.src}/de/jose/Main.java&quot;  "/>
 	    </exec>
+		-->
 
 		<!-- important: compile against JRE 1.4 to maintain backward compatibility -->
         <!-- the jar file is useful when compiling against 1.4 only (Mac OS X) -->

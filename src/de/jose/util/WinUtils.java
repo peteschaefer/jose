@@ -235,8 +235,8 @@ public class WinUtils
 
 	        }
 
-//	        String mru = (String)WinRegistry.getValue(root+"/OpenWithList","MRUList");
-	        //  TODO
+	        //String mru = (String)WinRegistry.getValue(root+"/OpenWithList","MRUList");
+	        //  TODO prone to fail.
 
             return oldAssociation;
 	        

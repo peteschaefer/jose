@@ -26,26 +26,6 @@ libraries needed:
 * which JDK is running on recent macOS ?
 * do we need a 64bit version of mysql-je? Do we already have one?
 
-=== Factory Settings
-
-* eval bar = true
-* engine panel = true
-* suggestions = true
-* board tooltips = true
-* wdl = true
-* move stats = true
-* moves-left = true
-* open last game = true
-
-Leela
-* logo
-* MultiPV = 8 (?)
-* VerboseMoveStats = true
-* LogLiveStats = true
-
-BUG: first launch, w/out preferences takes very long. Context menus missing.
-BUG: lc0/more_nets must be excluded from packing
-
 ==== New Features
 
 * arrows + text label

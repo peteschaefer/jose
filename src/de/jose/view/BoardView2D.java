@@ -540,17 +540,18 @@ public class BoardView2D
 
 	private void paintHints()
 	{
-		if (hints.isEmpty()) return;
+		synchronized (hints) {
+			if (hints.isEmpty()) return;
 
-		int painted=0;
-		for (int i=0; i < hints.size(); i++)
-		{
-			Hint hnt =(Hint)hints.get(i);
-			if (hnt!=null) {
-				Graphics2D g = getBufferGraphics();
-				paintArrow(g, center(hnt.from), center(hnt.to),
-						squareSize/16, hnt.color, hnt.label);
-				painted++;
+			int painted = 0;
+			for (int i = 0; i < hints.size(); i++) {
+				Hint hnt = (Hint) hints.get(i);
+				if (hnt != null) {
+					Graphics2D g = getBufferGraphics();
+					paintArrow(g, center(hnt.from), center(hnt.to),
+							squareSize / 16, hnt.color, hnt.label);
+					painted++;
+				}
 			}
 		}
 

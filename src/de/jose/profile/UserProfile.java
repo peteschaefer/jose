@@ -96,7 +96,7 @@ public class UserProfile
 		return "FigurineSymbol S2";
 	}
 
-	public static final String FACTORY_ENGINES = "spike;toga;crafty";
+	public static final String FACTORY_ENGINES = "lc0;stockfish";
 
 	public static final Object[] FACTORY_SETTINGS = {
 		"meta.version",				new Integer(META_VERSION),
@@ -106,6 +106,8 @@ public class UserProfile
 		"board.3d",					Boolean.FALSE,
 		"board.flip",				Boolean.FALSE,
 		"board.coords",				Boolean.TRUE,
+		"board.evalbar",			Boolean.TRUE,
+		"board.suggestions",		Boolean.TRUE,
 
 //		"board.surface.light",		Surface.newColor(0xee,0xee,0xee, "wood01.jpg"),
 //		"board.surface.dark",		Surface.newColor(0x88, 0x88, 0x88, "wood02.jpg"),
@@ -141,11 +143,11 @@ public class UserProfile
 		"doc.panel.tab.layout",			new Integer(JTabbedPane.WRAP_TAB_LAYOUT),
 		"doc.panel.antialias",          Boolean.TRUE,
 		"doc.classify.eco",				Boolean.TRUE,
-
+		"plugin.pv.tooltips",			Boolean.TRUE,
 
 		"game.mode",					new Integer(Application.USER_ENGINE),
 		"doc.write.mode",				new Integer(Game.ASK),
-		"doc.load.history",				Boolean.FALSE,
+		"doc.load.history",				Boolean.TRUE,
 		"doc.move.format", 				new Integer(MoveFormatter.SHORT),
 
 		"plugin.1",						FACTORY_ENGINES,

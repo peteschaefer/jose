@@ -225,7 +225,9 @@ abstract public class BoardView
 	public final void showHint(Hint hnt,boolean repaint)
 	{
 		if (hnt.getDelay() > 0) hnt.start();
-		hints.add(hnt);
+		synchronized (hints) {
+			hints.add(hnt);
+		}
 		doShowHint(hnt,repaint);
 	}
 
@@ -262,17 +264,20 @@ abstract public class BoardView
 
 	protected void hideAllHints(boolean repaint)
 	{
-		for (int i=hints.size()-1; i>=0; i--)
-		{
-			Hint hnt = (Hint)hints.get(i);
-			if (hnt!=null && hnt.from==0) {
-				//  text hint
-				((Popup)hnt.implData).hide();
-				hints.remove(i);
+		synchronized (hints) {
+			for (int i = hints.size() - 1; i >= 0; i--) {
+				Hint hnt = (Hint) hints.get(i);
+				if (hnt != null && hnt.from == 0) {
+					//  text hint
+					((Popup) hnt.implData).hide();
+					hints.remove(i);
+				}
 			}
+			if (repaint && removePermanentHints() <= 0)
+				repaint=false;
 		}
 		//  hide Move hints (implemented by subclass)
-		if (removePermanentHints() > 0 && repaint)
+		if (repaint)
 			doRepaintHints();
 	}
 
@@ -293,8 +298,10 @@ abstract public class BoardView
 		//	todo
 		//	identical arrows can be painted over
 		//	only do a force redraw if necessary
-		removePermanentHints();
-		this.hints.addAll(new_hints);
+		synchronized (hints) {
+			removePermanentHints();
+			this.hints.addAll(new_hints);
+		}
 		doRepaintHints();
 	}
 

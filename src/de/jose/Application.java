@@ -3677,7 +3677,7 @@ public class Application
 				EnginePlugin defaultPlugin = (EnginePlugin)Plugin.getDefaultPlugin(Version.osDir,true);
 				if (defaultPlugin==null) {
 					//	no plugin available !
-					JoDialog.showErrorDialog(null,"error.plugin.not.found", "plugin.1",name);
+					JoDialog.showErrorDialog(null,"error.engine.not.found", "plugin.1",name);
 					theMode = USER_INPUT;   //  no use bothering the user with more errors
 					return false;
 				}
