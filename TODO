@@ -2,6 +2,14 @@
 
 ? Charter buggy
 
+[ ] game vs. opening explorer:
+    - user moves have no value (and it shows)
+        -> get one from current AnalysisRecord
+[ ] Application.selectBookMove needs to be asynchronized. three parts:
+    [ ] OpeningLibrary.selectEngineMove() true/false. play immediately
+    [ ] start BookQuery (BOOK_PLAY)
+    [ ] on completion: playBookMove() (and start engine response
+
 [ ] asynch book lookups
     - coordination is subtle
     1. overlapping queries need to be conflated (i.e. we need a request counter)
