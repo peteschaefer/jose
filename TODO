@@ -13,7 +13,7 @@
 [x] compile against jdk 1.8
 [ ] run with JBR 21 x64
     [x] Windows
-        [ ] checkout JoFileChooser with Window l+f
+        [-] checkout JoFileChooser with Window l+f
     [x] Linux
     [ ] Mac Intel
     [ ] Mac arm
@@ -25,15 +25,18 @@
     [x] Windows
     [x] Linux
     [ ] Mac Intel
-[ ] JavaLauncher -> needs server/jvm.dll
+[ ] JavaLauncher
+    [ ] batch compiler for Windows
+    [x] java.sh and java.desktop for Linux
+    [x] shc for Mac OS
 [ ] mysql 5.0.15
     !! patch: https://bugs.mysql.com/bug.php?id=12070
-    [ ] Windows ( ) embedded (x) stand-alone
+    [?] Windows (--) embedded (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     [ ] Mac intel
     [ ] Mac arm
-[ ] easylink: 64 bit, use latest hidapi
-    [ ] Windows: fixes BLE?
+[x] easylink: 64 bit, use latest hidapi
+    [x] Windows: (-) fixes BLE?
     [ ] Linux ?
 
 ==== macOS
