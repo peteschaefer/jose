@@ -639,6 +639,8 @@ public class BoardPanel
 			}
 
 			Move mv = data.moves.get(0);
+			if (mv==null) continue;
+
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
 
