@@ -103,6 +103,11 @@ public class LiChessOpeningExplorer extends OpeningBook
     {
         //  run asynchroneously
         if (fen==null) fen = pos.toString();
+        //try {
+        //    Thread.sleep(10000);
+        //} catch (InterruptedException e) {
+        //    throw new RuntimeException(e);
+        //}
         return getBookMoves1(fen, ignoreColors, deep, TOP_GAMES, result);
     }
 
@@ -156,12 +161,7 @@ public class LiChessOpeningExplorer extends OpeningBook
                 Then proceed without Lichess data.
              */
             if (!NETWORK_ERROR_REPORTED) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        JoDialog.showErrorDialog("network.error.lichess");
-                    }
-                });
+                JoDialog.showErrorDialog("network.error.lichess");
                 NETWORK_ERROR_REPORTED = true;
             }
             return false;

@@ -62,6 +62,7 @@ public abstract class OpeningBook
 
 	/**
 	 * @param pos          current position
+	 * @param fen			either pos, or fen is not null. implementors may use fen (if!=null), or pos.setup(fen)
 	 * @param ignoreColors look for reversed color transpositions, too
 	 * @param deep
 	 * @param result       list of book moves + book entries
