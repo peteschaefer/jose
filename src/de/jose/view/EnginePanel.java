@@ -930,8 +930,11 @@ public class EnginePanel
 			rec.modified = 0;
 			rec.clearPvModified();
 
-            if (scrollhist)
-                AWTUtil.scrollDown(pvScroller,pvPanel);
+            //if (scrollhist)
+            //    AWTUtil.scrollDown(pvScroller,pvPanel);
+			//	don't. it's confusing most of the time.
+			//	scrolling to top is less confusing (but not perfect, also :(
+			AWTUtil.scrollUp(pvScroller,pvPanel);
 		}
 		else {
 			//  clear all
