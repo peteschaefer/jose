@@ -484,15 +484,22 @@ public class Parser
 		for (int i=0; i<pieceChars.length(); i++)
 		{
 			char c = pieceChars.charAt(i);
-			char2piece[c] = (byte)(PAWN+i);
-			if (!caseSensitive) char2piece[Character.toLowerCase(c)] = (byte)(PAWN+i);
+			if (c < 256) {
+				char2piece[c] = (byte) (PAWN + i);
+				if (!caseSensitive) char2piece[Character.toLowerCase(c)] = (byte) (PAWN + i);
+			}
+			//	else: Unicode chars are not relevant for parsing (yet)
 		}
 	}
 	
 	protected void setBit(String s, byte bit)
 	{
-		for (int i=0; i<s.length(); i++)
-			charTypes[s.charAt(i)] |= bit;
+		for (int i=0; i<s.length(); i++) {
+			char c = s.charAt(i);
+			if (c < 256)
+				charTypes[c] |= bit;
+			//	else: Unicode chars are not relevant for parsing (yet)
+		}
 	}
 
 	protected void clearBit(String s, byte bit)

@@ -440,7 +440,7 @@ public boolean handleKeyword(String keyword, int parameter)
 
     if (keyword.equals("uc")) {
 	/* count of characters to skip after a unicode character */
-	parserState.put("UnicodeSkip", new Integer(parameter));
+	parserState.put("UnicodeSkip", parameter);
 	return true;
     }
     if (keyword.equals("u")) {
@@ -546,9 +546,14 @@ getCharacterSet(final String name)
       charsetStream = (InputStream)java.security.AccessController.
 	              doPrivileged(new java.security.PrivilegedAction() {
 	  public Object run() {
-	      return RTFReader.class.getResourceAsStream
-		                     ("/javax/swing/text/rtf/charsets/" + name + ".txt");
-	  }
+	      //return RTFReader.class.getResourceAsStream
+		  //                   ("/javax/swing/text/rtf/charsets/" + name + ".txt");
+          try {
+              return new FileInputStream("lib/charsets/"+name+".txt");
+          } catch (FileNotFoundException e) {
+              throw new RuntimeException(e);
+          }
+      }
       });
       set = readCharset(charsetStream);
       defineCharacterSet(name, set);
@@ -692,7 +697,7 @@ class FonttblDestination implements Destination
             //font name might be broken across multiple calls
             fontName = fontTable.get(fontNumberKey) + fontName;
         } else {
-            fontNumberKey = new Integer(nextFontNumber);
+            fontNumberKey = nextFontNumber;
         }
         fontTable.put(fontNumberKey, fontName);
 
@@ -920,7 +925,7 @@ class StylesheetDestination
             int semicolon = (styleName == null) ? 0 : styleName.indexOf(';');
 	    if (semicolon > 0)
 		styleName = styleName.substring(0, semicolon);
-	    definedStyles.put(new Integer(number), this);
+	    definedStyles.put(number, this);
 	    super.close();
 	}
 
@@ -971,7 +976,7 @@ class StylesheetDestination
 
 	    if (basedOn != STYLENUMBER_NONE) {
 		StyleDefiningDestination styleDest;
-		styleDest = (StyleDefiningDestination)definedStyles.get(new Integer(basedOn));
+		styleDest = (StyleDefiningDestination)definedStyles.get(basedOn);
 		if (styleDest != null && styleDest != this) {
 		    basis = styleDest.realize();
 		}
@@ -998,7 +1003,7 @@ class StylesheetDestination
 
 	    if (nextStyle != STYLENUMBER_NONE) {
 		StyleDefiningDestination styleDest;
-		styleDest = (StyleDefiningDestination)definedStyles.get(new Integer(nextStyle));
+		styleDest = (StyleDefiningDestination)definedStyles.get(nextStyle);
 		if (styleDest != null) {
 		    next = styleDest.realize();
 		}
@@ -1164,11 +1169,11 @@ abstract class AttributeTrackingDestination implements Destination
 	    keyword = "cf"; /* whatEVER, dude. */
 
 	if (keyword.equals("f")) {
-	    parserState.put(keyword, new Integer(parameter));
+	    parserState.put(keyword, parameter);
 	    return true;
 	}
 	if (keyword.equals("cf")) {
-	    parserState.put(keyword, new Integer(parameter));
+	    parserState.put(keyword, parameter);
 	    return true;
 	}
 
@@ -1256,10 +1261,10 @@ abstract class AttributeTrackingDestination implements Destination
 	    if (tabs == null) {
 		tabs = new Hashtable();
 		parserState.put("_tabs", tabs);
-		stopCount = new Integer(1);
+		stopCount = 1;
 	    } else {
 		stopCount = (Integer)tabs.get("stop count");
-		stopCount = new Integer(1 + stopCount.intValue());
+		stopCount = 1 + stopCount.intValue();
 	    }
 	    tabs.put(stopCount, newStop);
 	    tabs.put("stop count", stopCount);
@@ -1415,7 +1420,7 @@ abstract class AttributeTrackingDestination implements Destination
 		int count = ((Integer)workingTabs.get("stop count")).intValue();
 		tabs = new TabStop[count];
 		for (int ix = 1; ix <= count; ix ++)
-		    tabs[ix-1] = (TabStop)workingTabs.get(new Integer(ix));
+		    tabs[ix-1] = (TabStop)workingTabs.get(ix);
 		parserState.put("_tabs_immutable", tabs);
 	    }
 	}
