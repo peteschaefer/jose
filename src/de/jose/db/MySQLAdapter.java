@@ -48,7 +48,7 @@ public class MySQLAdapter
 {
 	protected static String PRODUCT_VERSION = null;
 	protected static boolean bootstrap = false;
-	protected static boolean init_embedded = false;
+	protected static boolean init_server = false;
 	protected FileWatch watch;
 
 	/**	default ctor	*/
@@ -87,7 +87,7 @@ public class MySQLAdapter
 
 	@Override
 	public boolean launchComplete() {
-		return init_embedded;
+		return init_server;
 	}
 
 	private boolean waitForStandaloneServer() throws IOException {
@@ -112,7 +112,14 @@ public class MySQLAdapter
 
 		@Override
 		public void run() {
-			switch(getServerMode()) {
+			if (false)
+            try {
+                sleep(40000);	//	artificial delay; for testing only
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            switch(getServerMode()) {
 				case MODE_STANDALONE:
 					props.put("user","");
 					props.put("password","");
@@ -133,7 +140,7 @@ public class MySQLAdapter
 
 			watchDirectory();
 
-			init_embedded = true;
+			init_server = true;
 
 			if (bootstrap) {
                 try {
@@ -145,7 +152,7 @@ public class MySQLAdapter
                 }
             }
 
-			for(Command cmd : deferredActions.values())
+			for(Command cmd : deferredActions)
 				postAfterLaunch(cmd);	// this should now post into the event loop
 			deferredActions.clear();
 		}
@@ -762,7 +769,7 @@ public class MySQLAdapter
 
 	public boolean cancelQuery(JoConnection conn) throws SQLException
 	{
-		if (init_embedded)
+		if (init_server)
 			try {
 			((MyConnection)conn.jdbcConnection).killQuery();
 			return true;

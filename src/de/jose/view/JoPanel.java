@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.db.JoConnection;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.window.JoFrame;
@@ -141,17 +142,25 @@ public class JoPanel
 
         super.setVisible(visible);
 
-		if (isVisible() && !inited)
-			try {
-                cmd = new Command("panel.init",null,this);
-                Application.theApplication.broadcast(cmd);
-                init();
-                inited = true;
-				postInit();
-			} catch (Exception ex) {
-				Application.error(ex);
-				throw new RuntimeException(ex.getMessage());
-			}
+		if (!isVisible() || inited)
+			return;	//	already done
+
+		cmd = new Command("panel.init",null,this);
+		if (this instanceof IDBPanel) {
+			//	defer initialisation until we have a db connection
+			JoConnection.postWithConnection(cmd);
+		}
+		else {
+			Application.theCommandDispatcher.handle(cmd, Application.theApplication);
+		}
+	}
+
+	public void doInit() throws Exception {
+		if (!inited) {
+			init();
+			inited = true;
+			postInit();
+		}
 	}
 
     public boolean showControls()

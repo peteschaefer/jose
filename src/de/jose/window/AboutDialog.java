@@ -21,6 +21,7 @@ import de.jose.jo3d.Util3D;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.view.input.JoStyledLabel;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.JOniException;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -323,19 +324,25 @@ public class AboutDialog
 	private String createDBInfoText()
 	{
 		Hashtable placeholders = new Hashtable();
+
 		JoConnection conn = null;
 		try {
-			conn = JoConnection.get();
-			placeholders.put("dbname", conn.getDatabaseProductName());
-			placeholders.put("dbversion", conn.getDatabaseProductVersion());
-			placeholders.put("dburl", JoConnection.getAdapter().getURL());
+			DBAdapter adapt = JoConnection.getAdapter(false);
+			if (adapt != null && adapt.launchComplete())
+			{
+				conn = JoConnection.get();
+				placeholders.put("dbname", conn.getDatabaseProductName());
+				placeholders.put("dbversion", conn.getDatabaseProductVersion());
+			}
 
+			placeholders.put("dburl", JoConnection.getAdapter().getURL());
+/*
 			JoPreparedStatement stm = conn.getPreparedStatement(
 			        "SELECT * FROM MetaInfo WHERE BINARY TableName = BINARY ?");
 			stm.setString(1,"Game");
 			stm.execute();
 			stm.closeResult();
-
+*/
 		} catch (SQLException sqlex) {
 			StringBuffer errors = new StringBuffer();
 			while (sqlex != null) {
@@ -350,7 +357,7 @@ public class AboutDialog
 			placeholders.put("dbname", "error:"+ex.getLocalizedMessage());
 			Application.error(ex);
 		} finally {
-			conn.release();
+			if (conn!=null) conn.release();
 		}
 
 		String dbid = getDBIdentifier(Application.theApplication.theDatabaseId);

@@ -29,16 +29,14 @@ import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * a layer between the application and JDBC
@@ -664,7 +662,7 @@ abstract public class DBAdapter
 	 * Launch process
 	 * @return
 	 */
-	protected HashMap<String,Command> deferredActions = new HashMap<>();
+	protected java.util.List<Command> deferredActions = new ArrayList<>();
 
 	public void launchProcess(boolean boostrap) {
 	}
@@ -675,9 +673,7 @@ abstract public class DBAdapter
 
 	public boolean postAfterLaunch(Command cmd) {
 		if (launchComplete()) {
-			//EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-			//ActionEvent event = new ActionEvent(this,ActionEvent.ACTION_FIRST, action);
-			//queue.postEvent(event);
+			// dispatch Command to Application event handler
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					Application.theCommandDispatcher.handle(cmd,Application.theApplication);
@@ -686,7 +682,8 @@ abstract public class DBAdapter
 			return true;
 		}
 		else{
-			deferredActions.put(cmd.code,cmd);
+			//	put into deferrred actions. Try again when the server is launched.
+			deferredActions.add(cmd);
 			return false;
 		}
 	}

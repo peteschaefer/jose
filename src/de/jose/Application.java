@@ -2212,22 +2212,16 @@ public class Application
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
-				String panelName = cmd.code.substring("panel.init.".length());
-				JoPanel panel = JoPanel.get(panelName);
-
+				JoPanel panel = (JoPanel)cmd.data;
+				broadcast(cmd);
                 try {
-					if (panel instanceof IDBPanel) {
-					// init withConnection
-					}
-                    panel.init();
+                    panel.doInit();
                 } catch (Exception e) {
-                    Application.error(e);
+                    error(e);
                 }
             }
 		};
-		for(String window : JoPanel.panelNames())
-			map.put("panel.init."+window,action);
-
+		map.put("panel.init", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd)	throws Exception
