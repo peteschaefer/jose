@@ -1085,8 +1085,13 @@ abstract public class EnginePlugin
 			result = new float[2];
 		if (!sc.hasWDL()) {
 			//	use linear score
-			result[0] = mapUnit(sc);
-			result[1] = 0.0f;
+			if (sc.cp==Score.UNKNOWN) {
+				result[0] = result[1] = Float.MAX_VALUE;
+			}
+			else {
+				result[0] = mapUnit(sc);
+				result[1] = 0.0f;
+			}
 			return result;
 		}
 		else {
