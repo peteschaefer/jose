@@ -272,7 +272,7 @@ Die ganze Partie über spürte man, daß sich hier zwei Giganten gegenübersaßen, di
 16... Ba6 $5 17. Bb3 dxe5 18. d6 Bxd6 19. Qxd6 Qxd6 20. Nxd6 Nb7 21. Nxb7 Bxb7 22. cxb4 cxb4 23. f3 
 {Cementing white's advantage. Both of his minor pieces are better than their counterparts, and black's queenside pawns are also weak.}
 23... Rfd8 24. Be3 h6 25. Red1 Bc6 26. Rac1 Be8 27. Kf2 Rxd1 28. Rxd1 Rc8 29. g4 
-{With the idea 30.h4, 31.g5, 32.Rd5, etc.}
+(g4 $140 -- 30.h4 -- 31.g5 -- 32.Rd5 $190)
 (29. Bb6 $6 Nd7 30. Bxa5 Nc5 $14)
 29... Bd7 $6 30. Bb6 Be6 31. Bxe6 fxe6 32. Rd8+
 {Nice. White exchanges off rooks since otherwise black would develop counterplay with ...Rc8-c2 (that was black's idea behind exchanging bishops).}
