@@ -182,8 +182,8 @@ public class StyleChooser
 
 		JPanel previewPanel = new JPanel();
 		previewPanel.setLayout(new BoxLayout(previewPanel, BoxLayout.Y_AXIS));
-		previewPanel.add(explainLabel);
 		previewPanel.add(fontPreview);
+		previewPanel.add(explainLabel);
 		previewPanel.add(fontPreviewScreen);
 		leftPanel.add(previewPanel, BorderLayout.SOUTH);
 

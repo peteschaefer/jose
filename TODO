@@ -75,7 +75,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [x] EnginePanel background
         [ ] board auto, or manually?
         [x] StyleChooser: left panel layout
-        [ ] font sample for screen (todo mapping formula)
+        [x] font sample for screen
     	[x] StyleContext / "default" / foreground = black, or grey in dark mode. Set by system.
     	    [x] choosing black = default (which may be gray in dark mode).
     	        Fallback mechanism already implemented :)

@@ -205,7 +205,7 @@ public class StyleUtil
 
     /**
      * @param acol
-     * @return a color suitable for dark mode
+     * @return a color suitable for dark mode; with high contrast
      */
     public static Color mapDarkTextColor(Color acol)
     {
@@ -215,11 +215,13 @@ public class StyleUtil
             return new Color(red,red,red);
         }
         else {
-            //  color brightness is limited: not too dark, not too bright
+            //  we want high contrast:
+            //  - bright, but not too bright
+            //  - close to white = low saturation
             float[] hsb = new float[4];
             Color.RGBtoHSB(acol.getRed(), acol.getGreen(), acol.getBlue(), hsb);
-            hsb[1] = 0.4f + hsb[1]*0.4f;
-            hsb[2] = 0.4f + hsb[2]*0.4f;
+            hsb[1] = 0.2f*hsb[1];   //  low saturation
+            hsb[2] = 1.0f - (1.0f-hsb[2])*0.2f; //  bright ?
             return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
         }
     }
