@@ -1,5 +1,8 @@
 package com.chessnut;
 
+import de.jose.Application;
+import de.jose.Version;
+
 /**
  * Java Bindings for Chessnut electronic chess board protocol.
  * @url https://github.com/chessnutech/EasyLinkSDK
@@ -123,10 +126,21 @@ public class EasyLink
     public static boolean AVAILABLE = false;
     static {
         try {
-            System.loadLibrary("hidapi");
+            try {
+                //  hidapi for Windows
+                if (Version.windows)
+                    System.loadLibrary("hidapi");
+                if (Version.linux)
+                    System.loadLibrary("hidapi-hidraw");
+            } catch (UnsatisfiedLinkError e) {
+                e.printStackTrace();
+            }
+
             System.loadLibrary("easylink");
             AVAILABLE = true;
+
         } catch (UnsatisfiedLinkError e) {
+            e.printStackTrace();
             AVAILABLE = false;
         }
     }

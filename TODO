@@ -24,7 +24,7 @@
 [x] compile against jdk 1.8
 [ ] run with Oracle 21 x64
     [x] Windows
-    [ ] Linux
+    [x] Linux (uiscale needs to be set from script. JBR 21 could do it out-of-the-box, but has touch-drag bug :(
     [ ] Mac Intel
     [ ] Mac arm
 
@@ -34,8 +34,8 @@
     [ ] Mac Intel
 [ ] JavaLauncher x64
     [x] Windows
-    [ ] Linux
-    [ ] Mac
+    [-] Linux
+    [-] Mac
 [ ] mysql 5.0.15 x64
     !! patch: https://bugs.mysql.com/bug.php?id=12070
     [x] Windows (x) stand-alone
@@ -44,11 +44,10 @@
     [ ] Mac arm
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
-    [ ] Linux ?
+    [-] Linux builds but don't work
 
-Alternative: JBR 21 x64, or x86
- -> all the benefits of JBR, keep old binaries (mysql-je!)
- [ ] bug: can not load 32bit dll's. Wait for fix? Get a workaround?
+Alternative: JBR 21 (x64, or x86)
+ [ ] bug: can not load 32bit dll's.
  [ ] bug: touch & drag not detected
 
 ==== Deprecated Stuff

@@ -31,7 +31,7 @@ the first production release.
 
 * Translations: French, Portuguese. Thanks to Frederic Raimbault and José da Paula !
 * Support for UCI engines, including:
-      - display multiple varitions (only supported by few engines)
+      - display multiple variations (only supported by few engines)
       - display current move, elapsed time, nodes per second
 * Dialog for Engine configuration (Edit/Options/Engines)
 * EPD/FEN import
@@ -126,8 +126,8 @@ the first production release.
 
 ... 18 years go by ...
 
-=== 1.5 (2025-01)
-* support for modern OSes like Windows 10,11, Ubuntu 24.04, ...
+=== 1.5 (2025-01-21)
+* support for modern OSes like Windows 10,11, Ubuntu 24.04, macOS intel & arm ...
 * bundled with JRE 1.8
 * bundled with Stockfish and Leela (Linux users have to compile Leela themselves...)
 * WDL scores and other Leela scores
@@ -137,13 +137,13 @@ the first production release.
 * Analysis arrows
 * "New game from here" starts a new game from current position
 * support for Chessnut Air, Air+, Pro electronic boards (only USB, currently. Bluetooth not yet realiably supported)
+* Lichess Opening Explorer (used as opening book)
 
 === 1.5.1 (2025-02)
 * support for Hi-DPI screens on Windows and Linux
 * upgrade *64-bit* binaries:
     * JRE 21
-    * MySQL 5.0.19
     * Java3D 1.5
-* MySQL running in standalone mode (i.e. as a separate process)
+* MySQL 5.0.67 running as a separate process (as was already the case on MacOS)
 
 ==========================

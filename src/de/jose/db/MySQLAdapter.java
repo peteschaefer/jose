@@ -97,9 +97,11 @@ public class MySQLAdapter
 			if (! serverProcess.isAlive())
 				return false;
 			String line = bin.readLine();
-			System.out.println(line);
-			if (line!=null && line.contains("ready for connections"))
-				return true;
+			if (line!=null) {
+				System.out.println(line);
+				if (line.contains("ready for connections"))
+					return true;
+			}
 		}
 		return false;
 	}
@@ -129,8 +131,9 @@ public class MySQLAdapter
 
                     try {
                         serverProcess = startStandaloneServer(true);
-						waitForStandaloneServer();
-                    } catch (IOException e) {
+						if (!waitForStandaloneServer())
+							throw new SQLException("Server failed to respond. giving up.");
+                    } catch (Exception e) {
 						Application.error(e);
 					}
                    break;

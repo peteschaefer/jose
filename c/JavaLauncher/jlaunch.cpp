@@ -11,11 +11,9 @@
 #include "jlaunch.h"
 #include "util.h"
 
-#define MISSING_JRE 	"Java Runtime Environment 1.4 or later is required\n" \
-						"Please read the download instructions at \n " \
-						"      http://jose-chess.sourceforge.net/download.html\n" \
-						"or download Java from \n" \
-						"      http://java.sun.com"
+#define MISSING_JRE 	"Java Runtime Environment not found.\n" \
+						"Please install one (preferrably version 21)."
+
 
 const char* getIniFile(const char* arg0)
 {

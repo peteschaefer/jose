@@ -9,12 +9,6 @@
 
 #include "jlaunch.h"
 
-#define MISSING_JRE 	"Java Runtime Environment 1.4 or later is required\n" \
-						"Please read the download instructions at \n " \
-						"      http://jose-chess.sourceforge.net/download.html\n" \
-						"or download Java from \n" \
-						"      http://java.sun.com"
-
 void message(const char* msg, const char* title, int code)
 {
 	char* temp = new char[64];

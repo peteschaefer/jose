@@ -151,11 +151,11 @@
 				<include name="bin/Windows/*"/>
 				<include name="lib/Windows/*"/>
 
-				<include name="engines/lc0/lc0.exe"/>
+				<include name="engines/lc0/*"/>
 				<include name="engines/stockfish/stockfish-windows-x86-64-sse41-popcnt.exe"/>
 			</zipfileset>
 			<!-- add JRE -->
-			<zipfileset src="${dist-dir}/windows_x64/jdk-21_windows-x64_bin.zip"
+			<zipfileset src="${dist-dir}/windows_x64/jdk-21_windows-x64.zip"
 						prefix="${appldir}/jre"/>
 		</zip>
 
@@ -192,156 +192,6 @@
 			</zipfileset>
 		</zip>
 	</target>
-<!--
-	<target name="crafty-windows">
-		<description> Crafty engine for Windows </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="crafty.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty">
-				<include name="Windows/Crafty-1918.exe"/>
-				<include name="book.bin"/>
-				<include name="books.bin"/>
-				<include name="position.bin"/>
-
-				<include name="Crafty2.JPG"/>
-				<include name="game.001"/>
-				<include name="log.001"/>
-			</zipfileset>
-		</zip>
-	</target>
-	<target name="crafty-linux">
-		<description> Crafty engine for Linux </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="crafty.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" filemode="777">
-				<include name="Linux_i386/crafty-19.18"/>
-			</zipfileset>
-			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
-				<include name="book.bin"/>
-				<include name="books.bin"/>
-				<include name="position.bin"/>
-				<include name="Crafty2.JPG"/>
-				<include name="game.001"/>
-				<include name="log.001"/>
-			</zipfileset>
-		</zip>
-	</target>
-	<target name="crafty-macosx">
-		<description> Crafty engine for Mac </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="crafty.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" filemode="777">
-				<include name="Mac/crafty-19.18"/>
-			</zipfileset>
-			<zipfileset dir="engines/crafty/big-endian" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
-				<include name="book.bin"/>
-				<include name="books.bin"/>
-				<include name="position.bin"/>
-			</zipfileset>
-			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
-				<include name="Crafty2.JPG"/>
-				<include name="game.001"/>
-				<include name="log.001"/>
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="spike-windows">
-		<description>Spike engine for Windows</description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="spike.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/spike" prefix="${appldir}/engines/spike">
-				<include name="Spike10a.exe"/>
-				<include name="spike.gif"/>
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="toga-windows">
-		<description> Toga engine for Windows </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="toga.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
-				<include name="TogaII.exe"/>
-				<include name="TogaII.jpg"/>
-				<include name="book.bin"/>
-				<include name="book_small.bin"/>
-				<include name="copying.txt"/>
-				<include name="readme.txt"/>
-				<include name="TogaII-Source.zip"/>
-			</zipfileset>
-		</zip>
-	</target>
-	<target name="toga-linux">
-		<description> Toga engine for Linux </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="toga.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga"  filemode="777">
-				<include name="TogaII-Linux"/>
-			</zipfileset>
-			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
-				<include name="TogaII.jpg"/>
-				<include name="book.bin"/>
-				<include name="book_small.bin"/>
-				<include name="copying.txt"/>
-				<include name="readme.txt"/>
-				<include name="TogaII-Source.zip"/>
-			</zipfileset>
-		</zip>
-	</target>
-	<target name="toga-macosx">
-		<description> Toga engine for Mac </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="toga.xml"/>
-            </zipfileset>
-			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga"  filemode="777">
-				<include name="TogaII-Mac"/>
-			</zipfileset>
-			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
-				<include name="TogaII.jpg"/>
-				<include name="book.bin"/>
-				<include name="book_small.bin"/>
-				<include name="copying.txt"/>
-				<include name="readme.txt"/>
-				<include name="TogaII-Source.zip"/>
-			</zipfileset>
-		</zip>
-	</target>
--->
-	<target name="leela-windows">
-		<description> Leela (Lc0) engine for Windows </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="lc0.xml"/>
-			</zipfileset>
-			<!--zipfileset dir="engines/lc0-openblas" prefix="${appldir}/engines/lc0">
-				<exclude name="more nets/**"/>
-			</zipfileset-->
-		</zip>
-		<!--
-		note: choose minimal hardware requirements
-		- openblas = no gpu
-		- onnx-dml = old gpu
-		more recent versions hav cuda and cudnn. users have to install themselves
-		-->
-		<zip destfile="${zip-file}" update="true">
-			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
-			<zipfileset src="engines/lc0-onnx-dml.zip" prefix="${appldir}/engines/lc0"/>
-		</zip>
-	</target>
 
 	<target name="leela-mac-intel">
 		<description> Leela (Lc0) engine for MacOS </description>
@@ -359,64 +209,6 @@
 		</zip>
 	</target>
 
-	<target name="leela-linux">
-		<description> Leela (Lc0) engine for Linux </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="lc0.xml"/>
-			</zipfileset>
-			<!--zipfileset dir="engines/lc0-openblas" prefix="${appldir}/engines/lc0">
-				<exclude name="more nets/**"/>
-			</zipfileset-->
-		</zip>
-		<!--
-		note: choose minimal hardware requirements
-		- eigen
-		more recent versions hav cuda and cudnn. users have to install themselves
-		-->
-		<zip destfile="${zip-file}" update="true">
-			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
-			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" excludes="lc0"/>
-			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" filemode="775">
-				<include name="lc0"/>
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="stockfish-windows">
-		<description> Stockfish engine for Windows </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="stockfish.xml"/>
-			</zipfileset>
-			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
-				<exclude name="stockfish-windows-x86-64-avx2.*"/>
-				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="stockfish-macos-*"/>
-				<!--exclude name="src"/-->
-				<exclude name="wiki"/>
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="stockfish-linux">
-		<description> Stockfish engine for Linux </description>
-		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
-			<zipfileset dir="config" prefix="${appldir}/config">
-				<include name="stockfish.xml"/>
-			</zipfileset>
-			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish">
-				<exclude name="stockfish-windows-*"/>
-				<exclude name="stockfish-ubuntu-*"/>
-				<exclude name="stockfish-macos-*"/>
-				<!--exclude name="src"/-->
-				<exclude name="wiki"/>
-			</zipfileset>
-			<zipfileset src="engines/stockfish.zip" prefix="${appldir}/engines/stockfish" filemode="775">
-				<include name="stockfish-ubuntu-*"/>
-			</zipfileset>
-		</zip>
-	</target>
 
 	<target name="stockfish-mac-intel">
 		<description> Stockfish engine for Linux </description>
@@ -437,11 +229,11 @@
 		</zip>
 	</target>
 
-	<!-- Windows w/out JRE
-	<target name="windows-no-jre" depends="init">
-		<description> installation package for windows (not including JRE) </description>
+	<!-- Linux plus JRE -->
+	<target name="linux" depends="init">
+		<description> installation package for linux (including JRE) </description>
 
-		<property name="zip-file" location="${target-dir}/jose-${version}-windows.zip"/>
+		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
 		<property name="appldir" value="jose"/>
 		<delete dir="${appldir}"/>
 
@@ -449,28 +241,22 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-windows">
+		<antcall target="zip-common">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="spike-windows">
+		<antcall target="zip-j3d">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="toga-windows">
+		<antcall target="zip-linux-x64">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-<! - -
-		<antcall target="crafty-windows">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-- - >
 
 		<delete dir="${appldir}"/>
 	</target>
--->
+
 	<!-- Windows plus JRE -->
 	<target name="windows" depends="init">
 		<description> installation package for windows (including JRE) </description>
@@ -491,7 +277,7 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-windows-x64">
+		<antcall target="zip-linux-x64">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
@@ -499,115 +285,40 @@
 		<delete dir="${appldir}"/>
 	</target>
 
-	<target name="zip-linux">
+	<target name="zip-linux-x64">
 		<description> add Linux specific stuff to zip </description>
 
 		<zip destfile="${zip-file}" update="true">
 			<!-- Linux specific stuff -->
 			<zipfileset dir="." prefix="${appldir}" filemode="775">
 				<include name="jose.sh"/>
+				<include name="jose.desktop"/>
 			</zipfileset>
-			<zipfileset dir="bin" prefix="${appldir}/bin">
-				<include name="share/**"/>
+			<zipfileset dir="${dist-dir}/linux_x64"
+						prefix="${appldir}">
+				<include name="lib/Linux_amd64/*"/>
 			</zipfileset>
-			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="775">
-				<include name="Linux_i386/unrar"/>
+			<zipfileset dir="${dist-dir}/linux_x64"
+						prefix="${appldir}"
+						filemode="775">
+				<include name="bin/Linux_amd64/mysqld"/>
+				<include name="engines/lc0/lc0"/>
+				<include name="engines/stockfish/*"/>
 			</zipfileset>
-			<zipfileset dir="lib/Linux_i386" prefix="${appldir}/lib/Linux_i386">
-<!--				<include name="libjunixsocket.so"/>-->
-				<include name="libunixutils.so"/>
-				<include name="libmysqlje.so"/>
-				<include name="libstdc++.so.5"/>
-				<include name="libXi.so.6"/>
-				<include name="libXrender.so.1"/>
-				<include name="libXtst.so.6"/>
-				<!--Java3D-->
-				<include name="j3dcore.jar"/>
-				<include name="libj3dcore-ogl.so"/>
-				<include name="libj3dutils.so"/>
-				<include name="j3dutils.jar"/>
-				<include name="vecmath.jar"/>
+
+			<!-- jre -->
+			<zipfileset src="${dist-dir}/linux_x64/jdk-21.zip"
+						prefix="${appldir}/jre">
+				<exclude name="bin/java"/>
+				<exclude name="lib/jspawnhelper"/>
 			</zipfileset>
-<!--			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">-->
-<!--				<include name="Linux_i386/mysqld"/>-->
-<!--			</zipfileset>-->
+			<zipfileset src="${dist-dir}/linux_x64/jdk-21.zip"
+						prefix="${appldir}/jre"
+						filemode="775">
+				<include name="bin/java"/>
+				<include name="lib/jspawnhelper"/>
+			</zipfileset>
         </zip>
-	</target>
-
-
-	<!-- Linux w/out JRE - - >
-	<target name="linux">
-		<description> installation package for linux (not including JRE) </description>
-
-		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
-		<property name="appldir" value="jose"/>
-		<delete dir="${appldir}"/>
-
-		<antcall target="zip-base">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="zip-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-<! - -
-		<antcall target="toga-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-- - >
-<! - -
-		<antcall target="crafty-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-- - >
-		<delete dir="${appldir}"/>
-	</target>
--->
-	<!-- Linux plus JRE -->
-	<target name="linux" depends="init">
-		<description> installation package for linux (including JRE) </description>
-
-		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
-		<property name="appldir" value="jose"/>
-		<delete dir="${appldir}"/>
-
-		<antcall target="zip-base">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="zip-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="stockfish-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-		<antcall target="leela-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
-
-		<!--
-		<antcall target="toga-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
--->
-<!--
-		<antcall target="crafty-linux">
-			<param name="zip-file" value="${zip-file}"/>
-			<param name="appldir" value="${appldir}"/>
-		</antcall>
--->
-		<!-- add jre -->
-		<zip destfile="${zip-file}" update="true">
-			<zipfileset src="${jre-dir}/jre1.8-linux-x86.zip" prefix="${appldir}/jre-linux"/>
-		</zip>
-		<delete dir="${appldir}"/>
 	</target>
 
 	<target name="zip-macos-intel">
@@ -681,7 +392,7 @@
 			<!-- engines/** -->
 			<!-- lib/**.jar -->
 			<exclude name="lib/j3d/*"/>
-			<exclude name="bin/share-unused"/>
+			<exclude name="bin/share-unused/*"/>
 			</zipfileset>
 		</zip>
 	</target>
@@ -692,7 +403,7 @@
 		<zip destfile="${zip-file}" update="true">
 			<!-- OS X specific stuff -->
 			<!-- application bundle -->
-			<zipfileset dir="${dist-dir}/common/lib/j3d 1.5"
+			<zipfileset dir="${dist-dir}/common/lib/j3d"
 						prefix="${appldir}/lib/j3d">
 			</zipfileset>
 		</zip>
