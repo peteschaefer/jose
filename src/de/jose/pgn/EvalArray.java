@@ -36,6 +36,7 @@ public class EvalArray {
 
 	public EvalArray(int first) {
 		values = new FloatArray(2 * 120);
+		values.empty = Float.MAX_VALUE;
 		firstPly = first;
 		//adjustMax = ADJUST_LOW_HIGH;
 		clear();

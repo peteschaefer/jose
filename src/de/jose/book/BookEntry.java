@@ -120,8 +120,14 @@ public class BookEntry
 		if (result==null)
 			result = new float[2];
 
-		result[0] = (float)countWhite/count;
-		result[1] = (float)countDraw/count;
+		if (countWhite==IUNKNOWN || countDraw==IUNKNOWN || countBlack==IUNKNOWN) {
+			//	at least have some decent displayable value
+			result[0] = result[1] = 1.0f/3f;
+		}
+		else {
+			result[0] = (float) countWhite / count;
+			result[1] = (float) countDraw / count;
+		}
 		return result;
 	}
 

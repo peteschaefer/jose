@@ -564,6 +564,7 @@ public class Application
     public final CollectionPanel collectionPanel()  { return (CollectionPanel)JoPanel.get("window.collectionlist"); }
 	public final SymbolBar symbolToolbar()		{ return (SymbolBar)JoPanel.get("window.toolbar.symbols"); }
 	public final EnginePanel enginePanel()      { return (EnginePanel) JoPanel.get("window.engine"); }
+	public final EvalPanel evalPanel()      	{ return (EvalPanel) JoPanel.get("window.eval"); }
 
 	public final JoDialog openDialog(String name) throws Exception
 	{
@@ -3621,23 +3622,25 @@ public class Application
 		if (boardPanel() != null)
 			boardPanel().move(entry.move, (float)(entry.move.distance()*0.2));
 
+		if (node!=null && entry.move!=null) {
+			//  update move evaluation history
+			float[] bookValue = entry.mappedValue(null);
+			if (/*theGame.isMainLine(node) &&*/EvalArray.isValid(bookValue)) {
+				node.engineValue = bookValue;
+				theGame.setDirty(true);
+				evalPanel().setValue(node.getPly(),node.engineValue);
+				// todo this should not be handled by a direct call, but rather by a message
+				// and it should be unified with the way engine evals are updated ...
+			}
+//					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
+		}
+
 		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move), this);
 
 		if (entry.move.isGameFinished(false))
 			gameFinished(entry.move.flags,pos.movedLast(), theGame.isMainLine());
 
 		classifyOpening();
-
-		if (node!=null && entry.move!=null) {
-			//  update move evaluation history
-
-			float[] bookValue = entry.mappedValue(null);
-			if (/*theGame.isMainLine(node) &&*/EvalArray.isValid(bookValue)) {
-				node.engineValue = bookValue;
-				theGame.setDirty(true);
-			}
-//					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
-		}
 		return true;
 	}
 

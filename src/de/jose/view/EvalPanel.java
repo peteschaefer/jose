@@ -97,4 +97,8 @@ public class EvalPanel
 		if (visible)
 			view.setGame(Application.theHistory.getCurrent());
 	}
+
+	public void setValue(int ply, float[] val) {
+		view.setValue(ply, val);
+	}
 }

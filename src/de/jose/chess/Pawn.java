@@ -79,6 +79,8 @@ public class Pawn
 			return true;
 			
 		case 4:	//	double step
+			if (EngUtil.rowOf(mv.from) != EngUtil.pawnRow(color()))
+				return false;
 			int step = isWhite() ? OUTER_BOARD_WIDTH : -OUTER_BOARD_WIDTH;
 			if (!pos.isEmpty(mv.from+step) ||
 				!pos.isEmpty(mv.to)) return false;
@@ -239,7 +241,7 @@ public class Pawn
 	protected static byte[][] createVTable(byte[] vector, int color)
 	{
 		byte[][] t = new byte[OUTER_BOARD_SIZE][];
-		int homerow = EngUtil.isWhite(color) ? WHITE_PAWN_ROW : BLACK_PAWN_ROW;
+		int homerow = EngUtil.pawnRow(color);
 		
 		for (int file=FILE_A; file<=FILE_H; file++) {
 			for (int row = ROW_2; row <= ROW_7; row++) {
@@ -267,7 +269,7 @@ public class Pawn
 	public static int getRowAdvance(int color, int square)
 	{
 		if (EngUtil.isWhite(color))
-			return EngUtil.rowOf(square)- WHITE_PAWN_ROW;
+			return EngUtil.rowOf(square) - WHITE_PAWN_ROW;
 		else
 			return BLACK_PAWN_ROW - EngUtil.rowOf(square);
 	}

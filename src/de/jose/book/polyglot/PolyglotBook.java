@@ -162,6 +162,13 @@ public class PolyglotBook extends OpeningBook
 		entry.count = (int) read_integer(disk, 2);
 		entry.n = (int) read_integer(disk, 2);
 		entry.sum = (int) read_integer(disk, 2);
+		/* todo the meaning of count, n, sum is not clear
+		 	some sources call count = weight, providing a 'scaled' value.
+		 	But it is not clear how that is supposed to be interpreted; conventions seem to vary.
+		 	n,sum is meant for book learning. Again, there's no consensus how to interpret it.
+
+		 	This is a bit sad, since I _do_ want to extract WDL scores from the book.
+		 */
 
 		return entry;
 	}

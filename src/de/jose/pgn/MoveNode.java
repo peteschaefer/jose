@@ -59,6 +59,7 @@ public class MoveNode
 		engineValue = null;
 	}
 
+	public final int getPly() 		{ return ply; }
 	public final Move getMove()		{ return move; }
 
 	public void play(de.jose.chess.Position pos)

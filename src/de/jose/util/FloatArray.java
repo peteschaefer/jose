@@ -33,6 +33,8 @@ public final class FloatArray
 	/**	allocation block size	 */
 	private static final int kBlockSize = 64;
 
+	public float empty = 0.0f;
+
 	/**	Constructs an empty array.
 	 */
 	public FloatArray() {
@@ -293,6 +295,7 @@ public final class FloatArray
 			throw new IndexOutOfBoundsException();
 		if (index >= fSize) {
 			ensureCapacity(index+1);
+			Arrays.fill(fArray,fSize,index+1,empty);
 			fSize = index+1;
 		}
 		return fArray[index] = element;
@@ -309,15 +312,15 @@ public final class FloatArray
 		if (sz > fArray.length)
 			allocate(sz);
 		if (sz > fSize)
-			Arrays.fill(fArray,fSize,sz-fSize,0);
+			Arrays.fill(fArray,fSize,sz-fSize, empty); // indicating empty entries
 		fSize = sz;
 	}
 	
 	/**	Returns an int[] array containing all of the elements in this list in the
 	 * correct order.
 	 */
-	public int[] toArray() {
-		int[] copy = new int[fSize];
+	public float[] toArray() {
+		float[] copy = new float[fSize];
 		System.arraycopy(fArray,0, copy,0,fSize);
 		return copy;
 	}
@@ -406,11 +409,11 @@ public final class FloatArray
 	
 	/**	static string utilities	 */
 	
-	public static final int[] stringToArray(String s, String delimiter) {
+	public static final float[] stringToArray(String s, String delimiter) {
 		return new FloatArray(s,delimiter).toArray();
 	}
 	
-	public static final int[] stringToArray(String s) {
+	public static final float[] stringToArray(String s) {
 		return stringToArray(s," ,;()");
 	}
 	

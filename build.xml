@@ -67,7 +67,7 @@
 <!--		<pathelement location="lib/lucene.jar"/>-->
 <!--		<pathelement location="lib/xpath14"/>-->
 <!--		<pathelement location="lib/xpath15"/>-->
-		<pathelement location="lib/jose15.jar"/>
+		<!--pathelement location="lib/jose15.jar"/-->
 		<pathelement location="lib/Mac/MRJAdapter.jar"/>
 	</path>
 
@@ -87,9 +87,9 @@
 
 	<!-- this stuff is really @deprecated - and creates confusion when packing. -->
 	<!-- Only WinUtils is still needed -->
-    <target name="bootClasses">
+    <!--target name="bootClasses">
 		<mkdir dir="${java.classes}"/>
-		<!-- some classes are 1.5 specific -->
+		<! - - some classes are 1.5 specific - - >
 		<javac fork="yes"
 			executable="${jdk-dir}/bin/javac.exe"
 			srcdir="${java.src}" destdir="${java.classes}"
@@ -101,26 +101,27 @@
 			<include name="de/jose/util/WinUtils.java"/>
 
 		</javac>
-	    <!-- debug="off" debuglevel="lines" -->
-	    <!-- de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM)
+	    <! - - debug="off" debuglevel="lines" - - >
+	    <! - - de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM)
         <exec executable="C:/Programme/Microsoft Visual Studio/VJ98/jvc.exe">
 		    <arg line="/cp:p &quot;${java.classes}&quot; /d &quot;${java.classes}&quot; /g &quot;${java.src}/de/jose/BootError.java&quot; &quot;${java.src}/de/jose/Main.java&quot;  "/>
 	    </exec>
-		-->
+		- - >
 
-		<!-- important: compile against JRE 1.4 to maintain backward compatibility -->
-        <!-- the jar file is useful when compiling against 1.4 only (Mac OS X) -->
+		<! - - important: compile against JRE 1.4 to maintain backward compatibility - - >
+        <! - - the jar file is useful when compiling against 1.4 only (Mac OS X) - - >
         <jar jarfile="lib/jose15.jar" basedir="${java.classes}"
 			index="false"
 			includes="de/jose/util/xml/XPathImpl15.class de/jose/util/WinUtils.class de/jose/Main.class de/jose/BootError.class">
 		</jar>
 
     </target>
+-->
 
     <target name="classes">
         <mkdir dir="${java.classes}"/>
 
-	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
+	    <!--unzip src="lib/jose15.jar" dest="${java.classes}"/-->
 
 		<javac fork="yes"
             executable="${jdk-dir}/bin/javac.exe"
@@ -133,11 +134,11 @@
 			classpathref="java.build.path">
 
 			<!-- already compiled by target bootClasses -->
-			<exclude name="**/de/jose/util/xml/XPathImpl15.java"/>
-			<exclude name="**/de/jose/util/WinUtils.java"/>
+			<!--exclude name="**/de/jose/util/xml/XPathImpl15.java"/-->
+			<!--exclude name="**/de/jose/util/WinUtils.java"/-->
 
 			<!--exclude name="**/de/jose/Main.java"/-->
-			<exclude name="**/de/jose/BootError.java"/>
+			<!--exclude name="**/de/jose/BootError.java"/-->
 
 			<exclude name="**/FlyBy.java"/>
 			<exclude name="**/devtools/**"/>
@@ -151,7 +152,7 @@
 			</javac>
 
 	    <!--boot classes-->
-	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
+	    <!--unzip src="lib/jose15.jar" dest="${java.classes}"/-->
 
 	</target>
 
