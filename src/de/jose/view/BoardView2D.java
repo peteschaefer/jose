@@ -239,14 +239,15 @@ public class BoardView2D
 			/*	paint off screen	*/
             prepareImage(g2);
             /*	then copy	*/
-			AffineTransform save_tf = g2.getTransform();
+			AffineTransform save_tf=null;
 			try {
-				g2.setTransform(ImgUtil.IDENTITY);
+				save_tf = ImgUtil.setIdentityTransform(g2,true);
+				//	undo scale, but keep dislocation
 				g2.drawImage(buffer, 0, 0, null);
 				if (sprite1.isMoving()) sprite1.paint(g2);
 				if (sprite2.isMoving()) sprite2.paint(g2);
 			} finally {
-				g2.setTransform(save_tf);
+				if (save_tf!=null) g2.setTransform(save_tf);
 			}
 		}
 	}
@@ -269,13 +270,9 @@ public class BoardView2D
 
 		double uglyScale = calcSquareSize(screen.getBounds().getSize()) / (double) devSquareSize;
 
-		AffineTransform save_tf = g.getTransform();
+		AffineTransform save_tf = null;
 		try {
-			AffineTransform ident = new AffineTransform();
-			ident.translate(screen.getX(), screen.getY());
-			//	undo scaling, but keep dislocation
-
-			g.setTransform(ident);
+			save_tf = ImgUtil.setIdentityTransform(g,true);
 
 			dst.width = (int) Math.round(src.width * uglyScale);
 			dst.height = (int) Math.round(src.height * uglyScale);
@@ -308,7 +305,7 @@ public class BoardView2D
 			 *  (because Java2D don't like it)
 			 */
 		} finally {
-			g.setTransform(save_tf);
+			if (save_tf!=null) g.setTransform(save_tf);
 		}
 	}
 
@@ -423,7 +420,7 @@ public class BoardView2D
 	protected void paintImmediate(Graphics2D g, int square)
 	{
 		Point2D p = origin(square,false);
-		AffineTransform save_tf =g.getTransform();
+		AffineTransform save_tf = null;
 
 		int x0 = (int)p.getX();
 		int y0 = (int)p.getY();
@@ -431,12 +428,12 @@ public class BoardView2D
 		int y1 = y0+devSquareSize;
 
 		try {
-			g.setTransform(ImgUtil.IDENTITY);
+			save_tf = ImgUtil.setIdentityTransform(g,true);
 			g.drawImage(buffer,
 					x0,y0, x1,y1,
 					x0,y0, x1,y1, null);
 		} finally {
-			g.setTransform(save_tf);
+			if (save_tf!=null) g.setTransform(save_tf);
 		}
 	}
 

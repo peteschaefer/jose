@@ -22,6 +22,8 @@ import de.jose.image.ImgUtil;
 import javax.media.j3d.*;
 import javax.vecmath.Point3f;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -105,7 +107,14 @@ public class JoCanvas3D extends Canvas3D
 	}
 
 	public void setBounds(int x, int y, int width, int height) {
-		super.setBounds(x, y, width, height);
+		/*	Canvas3D has difficulties adjusting to hi-dpi environments
+			let's help out:
+		 */
+		Graphics2D g = (Graphics2D)getGraphics();
+		double scalex = g.getTransform().getScaleX();
+		double scaley = g.getTransform().getScaleY();
+
+		super.setBounds(x,y-(int)((scaley-1.0)*height),(int)(scalex*width), (int)(scaley*height));
 	}
 
 	/**	called before rendering */

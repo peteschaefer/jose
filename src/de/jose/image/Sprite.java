@@ -22,8 +22,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-import static de.jose.image.ImgUtil.IDENTITY;
-
 public class Sprite
 		implements ActionListener
 {
@@ -158,12 +156,12 @@ public class Sprite
 		//	paint sprite into buffer
 		ImgUtil.copy(theSprite, bufferg);
 		//	show buffer on screen
-		AffineTransform save_tf = g.getTransform();
+		AffineTransform save_tf = null;
 		try {
-			g.setTransform(IDENTITY);
+			ImgUtil.setIdentityTransform(g,true);
 			ImgUtil.copy(theBuffer, 0,0, g, r.x,r.y, r.width,r.height);
 		} finally {
-			g.setTransform(save_tf);
+			if (save_tf!=null) g.setTransform(save_tf);
 		}
 	}
 
@@ -179,12 +177,12 @@ public class Sprite
 	{
 		Rectangle r = getBounds(current.x,current.y);
 		//	todo reset g.transform
-		AffineTransform save_tf = screeng.getTransform();
+		AffineTransform save_tf=null;
 		try {
-			screeng.setTransform(IDENTITY);
+			ImgUtil.setIdentityTransform(screeng,true);
 			ImgUtil.copy(theBackground, r.x, r.y, screeng, r.x, r.y, r.width, r.height);
 		} finally {
-			screeng.setTransform(save_tf);
+			if (save_tf!=null) screeng.setTransform(save_tf);
 		}
 	}
 
@@ -204,9 +202,9 @@ public class Sprite
 
 		paint(current.x = x, current.y = y);
 
-		AffineTransform save_tf = screeng.getTransform();
+		AffineTransform save_tf = null;
 		try {
-			screeng.setTransform(IDENTITY);
+			save_tf = ImgUtil.setIdentityTransform(screeng,true);
 
 			int screenWidth = theBackground.getWidth();
 			int screenHeight = theBackground.getHeight();
@@ -232,7 +230,7 @@ public class Sprite
 						screeng, r2.x, r2.y,
 						r2.width, r2.height);
 		} finally {
-			screeng.setTransform(save_tf);
+			if (save_tf!=null) screeng.setTransform(save_tf);
 		}
 		//screeng.drawRect(r2.x,r2.y,r2.width,r2.height);
 		//System.out.println(r2.x+","+r2.y+","+r2.width+","+r2.height);

@@ -126,7 +126,7 @@ public class BoardView3D
 	{
 		super(board);
 		addComponentListener(this);
-		setDoubleBuffered(Version.useDoubleBuffer());
+		setDoubleBuffered(true);
 		setLayout(new BorderLayout());
 	}
 
@@ -195,6 +195,7 @@ public class BoardView3D
 
 				gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
 			        							getDefaultScreenDevice().getBestConfiguration(template);
+//				gc = new DelegateGraphicsConfiguration(gc, ImgUtil.IDENTITY);
 //				gc = SimpleUniverse.getPreferredConfiguration();
 			}
 
@@ -206,7 +207,6 @@ public class BoardView3D
 		//canvas.setDoubleBufferEnable(false);
 		//c.getGraphicsContext3D().setBufferOverride(true);
 		//c.getGraphicsContext3D().setFrontBufferRendering(true);
-
 		add(BorderLayout.CENTER, canvas);
 
 		worldBounds =
