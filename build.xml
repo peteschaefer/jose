@@ -33,11 +33,11 @@
 
 	<property name="java.common.path" value="lib/jsdk23.jar lib/jaxp.jar lib/xerces.jar lib/xalan.jar lib/jcommon.jar lib/jfreechart.jar"/>
 	<property name="java.jdbc.path" value="lib/jdbc/antlr.jar lib/jdbc/qed.jar lib/jdbc/caucho.jar lib/nativeskin.jar"/>
-	<property name="java.plaf.path" value="lib/plaf/3DLF.jar lib/plaf/gtkswing.jar lib/plaf/kunststoff.jar lib/plaf/metouia.jar lib/plaf/nextlf.jar lib/plaf/oalnf.jar lib/plaf/skinlf.jar lib/plaf/teknolust.jar lib/plaf/quaqua.jar"/>
+	<property name="java.plaf.path" value="lib/plaf/flatlaf.jar lib/plaf/3DLF.jar lib/plaf/gtkswing.jar lib/plaf/kunststoff.jar lib/plaf/metouia.jar lib/plaf/nextlf.jar lib/plaf/oalnf.jar lib/plaf/skinlf.jar lib/plaf/teknolust.jar lib/plaf/quaqua.jar"/>
 
     <!-- class path at runtime (as it appears in manifest) -->
 	<property name="classpath.mysql" value="lib/jdbc/mysql-je.jar lib/jdbc/mysql.jar"/>
-	<property name="classpath.plaf" value="lib/plaf/metouia.jar"/>
+	<property name="classpath.plaf" value="lib/plaf/metouia.jar lib/plaf/flatlaf.jar"/>
 	<property name="classpath.java3d"
 			  value="lib/j3d/j3dcore.jar lib/j3d/j3dutils.jar lib/j3d/vecmath.jar lib/j3d/jogamp-fat.jar"/>
 

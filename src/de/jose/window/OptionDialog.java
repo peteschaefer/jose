@@ -971,7 +971,7 @@ public class OptionDialog
 		lnfTouched = new Date();
 		String[] args = new String[] {
 				"jre/bin/java",
-				"-jar", "lib/plaf/flatlaf-theme-editor-3.5.4.jar",
+				"-jar", "lib/plaf/flatlaf-theme-editor.jar",
 				"config/themes" };
         try {
             Runtime.getRuntime().exec(args);
