@@ -573,11 +573,11 @@ public class OptionDialog
 		slider.setInverted(true);
 
 		Dictionary labels = new Hashtable();
-		labels.put(new Integer(-180), new JLabel("-180�"));
-		labels.put(new Integer( -90), new JLabel("-90�"));
-		labels.put(new Integer(   0), new JLabel("0�"));
-		labels.put(new Integer( +90), new JLabel("+90�"));
-		labels.put(new Integer(+180), new JLabel("+180�"));
+		labels.put(-180, new JLabel("-180\u00b0"));
+		labels.put( -90, new JLabel("-90\u00b0"));
+		labels.put(   0, new JLabel("0\u00b0"));
+		labels.put( +90, new JLabel("+90\u00b0"));
+		labels.put(+180, new JLabel("+180\u00b0"));
 
 		slider.setLabelTable(labels);
 		slider.setPaintTicks(true);
