@@ -129,7 +129,14 @@ public class DocumentEditor
 		docPanel.getMessageProducer().addMessageListener(Application.theApplication);
 
         setSelectionColor(Application.theApplication.isDarkLookAndFeel());
+		installMoveHighlight();
 
+		setupActions();
+		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	private void installMoveHighlight()
+	{
 		try {
             Highlighter.HighlightPainter painter =
 					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor) {
@@ -146,14 +153,13 @@ public class DocumentEditor
 							DocumentEditor.this.paintHighlight(g,offs0,offs1,bounds,c,moveHiliteColor);
 						}
 					};
+
+			getHighlighter().removeAllHighlights();
             hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
 			((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
         } catch (BadLocationException e) {
             Application.error(e);
         }
-
-        setupActions();
-		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
 	public void setSelectionColor(boolean dark)
@@ -164,11 +170,13 @@ public class DocumentEditor
 		if (selColor==null) selColor = MOVE_HILITE_COLOR;
 		if (dark) selColor = StyleUtil.mapDarkTextColor(selColor);
 
-		moveHiliteColor = StyleUtil.pastelize(selColor,1.4f);
+		moveHiliteColor = StyleUtil.pastelize(selColor,0.6f);
 		setSelectionColor(selColor);
 
 	//	UIManager.put("TextPane.selectionBackground",selColor);
-		((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
+	//	((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
+		//	will effectively disable our move hiliter. why?
+		installMoveHighlight();
 	}
 
 	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException
