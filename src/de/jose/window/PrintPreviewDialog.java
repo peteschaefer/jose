@@ -91,8 +91,12 @@ public class PrintPreviewDialog
 		scale = new PrintScaleComboBox(printView);
 		scale.addItemListener(this);
 
-		onePage = JoDialog.newToggleButton("print.preview.page.one", ImgUtil.getIcon("menu","print.preview.one"));
-		twoPage = JoDialog.newToggleButton("print.preview.page.two", ImgUtil.getIcon("menu","print.preview.two"));
+		String whiteOnBlack = ":#ffffff:#666666";
+		float bigIconSize = 32f;
+		Icon onePageIcon = JoToolBar.create1AwesomeIcon("\uf15c"+whiteOnBlack,bigIconSize);
+		Icon twoPageIcon = JoToolBar.create1AwesomeIcon("\uf1ca\uf15c"+whiteOnBlack,bigIconSize);;
+		onePage = JoDialog.newToggleButton("print.preview.page.one", onePageIcon);
+		twoPage = JoDialog.newToggleButton("print.preview.page.two", twoPageIcon);
 
 		JoButtonGroup bg = new JoButtonGroup("print.preview.page");
 		bg.add(onePage);
@@ -101,8 +105,10 @@ public class PrintPreviewDialog
 		onePage.addChangeListener(this);
 		twoPage.addChangeListener(this);
 
-		landscape = JoDialog.newToggleButton("print.preview.ori.land", ImgUtil.getMenuIcon("print.preview.land"));
-		portrait = JoDialog.newToggleButton("print.preview.ori.port", ImgUtil.getMenuIcon("print.preview.port"));
+		Icon landscapeIcon = JoToolBar.create1AwesomeIcon("\uf1cb"+whiteOnBlack,bigIconSize);
+		Icon portraitIcon = JoToolBar.create1AwesomeIcon("\uf15c"+whiteOnBlack,bigIconSize);
+		landscape = JoDialog.newToggleButton("print.preview.ori.land", landscapeIcon);
+		portrait = JoDialog.newToggleButton("print.preview.ori.port", portraitIcon);
 
 		bg = new JoButtonGroup("print.preview.ori");
 		bg.add(landscape);

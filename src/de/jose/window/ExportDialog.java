@@ -453,8 +453,8 @@ public class ExportDialog
 		tLeft.getDocument().addDocumentListener(this);
 		tRight.getDocument().addDocumentListener(this);
 
-		Icon portraitIcon = ImgUtil.getMenuIcon("print.preview.port");	//	todo find a ttf icon.
-		Icon landscapeIcon = ImgUtil.getMenuIcon("print.preview.land");
+		Icon landscapeIcon = JoToolBar.create1AwesomeIcon("\uf1cb:#ffffff:#444444",32f);
+		Icon portraitIcon = JoToolBar.create1AwesomeIcon("\uf15c:#ffffff:#444444",32f);
 		reg(rPortrait = newToggleButton("dialog.export.ori.port",portraitIcon));
 		reg(rLandscape = newToggleButton("dialog.export.ori.land",landscapeIcon));
 		newButtonGroup("dialog.export.ori");

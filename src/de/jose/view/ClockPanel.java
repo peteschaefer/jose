@@ -69,9 +69,9 @@ public class ClockPanel
 	public static final Color SHADOW_64 = new Color(0,0,0,64);
 	public static final Color SHADOW_96 = new Color(0,0,0,96);
 
-    protected ImageIcon WHITE_ICON  = null;
-    protected ImageIcon BLACK_ICON  = null;
-    protected ImageIcon OFF_ICON  = null;
+    protected Icon WHITE_ICON  = null;
+    protected Icon BLACK_ICON  = null;
+    protected Icon OFF_ICON  = null;
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -127,28 +127,28 @@ public class ClockPanel
 	//	Methods
 	//-------------------------------------------------------------------------------
 
-	protected ImageIcon getWhiteIcon() {
-		if (WHITE_ICON==null) WHITE_ICON = ImgUtil.getIcon(null,"white");
+	protected Icon getWhiteIcon() {
+		if (WHITE_ICON==null) WHITE_ICON = JoToolBar.create1AwesomeIcon("\uf111:#ffffff:#000000",32);
 		return WHITE_ICON;
 	}
 
-	protected ImageIcon getBlackIcon() {
-		if (BLACK_ICON==null) BLACK_ICON = ImgUtil.getIcon(null,"black");
+	protected Icon getBlackIcon() {
+		if (BLACK_ICON==null) BLACK_ICON = JoToolBar.create1AwesomeIcon("\uf111:#000000:#ffffff",32);
 		return BLACK_ICON;
 	}
 
-	protected ImageIcon getOffIcon() {
-		if (OFF_ICON==null) OFF_ICON = ImgUtil.getIcon(null,"off");
+	protected Icon getOffIcon() {
+		if (OFF_ICON==null) OFF_ICON = JoToolBar.create1AwesomeIcon("\uf111:#808080",32);
 		return OFF_ICON;
 	}
-
+/*
 	protected void finalize()
 		throws Throwable
 	{
 		theClock.removeMessageListener(this);
 		super.finalize();
 	}
-
+*/
 	public final int getDisplayMode()			{
 		return AbstractApplication.theUserProfile.getInt("clock.display");
 	}

@@ -1,7 +1,6 @@
 package de.jose.util.icon;
 
 import de.jose.image.ImgUtil;
-import org.w3c.dom.Text;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

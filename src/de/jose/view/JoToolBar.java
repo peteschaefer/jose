@@ -395,7 +395,7 @@ public class JoToolBar
 		return result;
 	}
 
-	public static Icon create1AwesomeIcon(IconSpec spec)
+	private static Icon create1AwesomeIcon(IconSpec spec)
 	{
 		Font font = FontUtil.fontAwesome();
 		font = font.deriveFont(spec.style & ~BUTTON);

@@ -31,6 +31,7 @@ import de.jose.view.input.MoveFormatList;
 import de.jose.view.style.JoStyleContext;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
@@ -137,13 +138,14 @@ public class DocumentPanel
 		theGame = Application.theApplication.theGame;
 		theTextPane = new DocumentEditor(DocumentEditor.emptyGame,this);
 
-	    closeButton = new JButton(ImgUtil.getIcon(null,"tab.close"));
+		Icon closeIcon = JoToolBar.create1AwesomeIcon("\uf00d",24f);
+	    closeButton = new JButton(closeIcon);
 	    closeButton.setActionCommand("menu.game.close");
 	    closeButton.addActionListener(this);
 	    closeButton.setName("menu.game.close");
 	    closeButton.setToolTipText(Language.getTip("menu.game.close"));
 	    closeButton.setVisible(false);
-        if (Version.mac) {
+		if (Version.mac) {
             closeButton.setMargin(new Insets(2,2,2,2));
             closeButton.putClientProperty("JButton.buttonType","toolbar");
         }
