@@ -608,6 +608,10 @@ public class EnginePanel
 
 	protected void broadcastMoveValue(int ply, Score score)
 	{
+		score = new Score(score);
+		if (!score.hasWDL())
+			plugin.mapUnit(score);
+
 		Command cmd = new Command("move.value", null, score, ply);
 		Game game = Application.theApplication.theGame;
 		if (game!=null) {
@@ -1436,8 +1440,7 @@ public class EnginePanel
 						boolean use_wdl = opt_wdl.equals("true");
 						use_wdl = !use_wdl;
 						EnginePlugin.setOptionValue(plugin.config,"UCI_ShowWDL",Boolean.toString(use_wdl));
-						plugin.setOptions(true);
-						plugin.restartAnalysis();
+						plugin.restartWithOptions(true);
 					}
 				}
 			}
@@ -1460,8 +1463,7 @@ public class EnginePanel
 						boolean use_stats = opt_stats.equals("true");
 						use_stats = !use_stats;
 						EnginePlugin.setOptionValue(plugin.config,"VerboseMoveStats",Boolean.toString(use_stats));
-						plugin.setOptions(true);
-						plugin.restartAnalysis();
+						plugin.restartWithOptions(true); // todo analysis? what about thinking ?
 					}
 				}
 			}

@@ -671,10 +671,28 @@ abstract public class EnginePlugin
 	public final boolean isAnalyzing()		{ return mode == ANALYZING; }
 
 
-	public final void restartAnalysis() {
-		if (isAnalyzing()) {
-			pause();
-			analyze(applPosition);
+	public final void restartWithOptions(boolean dirtyOnly) throws IOException
+	{
+		switch(mode)
+		{
+			case PAUSED:
+				setOptions(dirtyOnly);
+				break;
+			case THINKING:
+				pause();
+				setOptions(dirtyOnly);
+				// todo ?
+				break;
+			case PONDERING:
+				pause();
+				setOptions(dirtyOnly);
+				//	todo ?
+				break;
+			case ANALYZING:
+				pause();
+				setOptions(dirtyOnly);
+				analyze(applPosition);
+				break;
 		}
 	}
 
@@ -1064,9 +1082,9 @@ abstract public class EnginePlugin
 		if (cp >= cpmax)
 			sc.win = span;
 		else if (cp <= cpmin)
-			sc.win =0;
+			sc.win = 0;
 		else
-			sc.win = (cp-cpmin) / span;
+			sc.win = cp-cpmin;
 		sc.draw = 0;
 		sc.lose = span-sc.win;
 	}

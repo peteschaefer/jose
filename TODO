@@ -4,6 +4,9 @@
 
 ? Charter buggy
 
+[ ] Score WDL from Settings or from Context Menu !?
+    -> update context menu when engine changes ?
+
 === Database Bugs
 
 [x] database cut/copy/paste (-> --tmpdir)
@@ -11,18 +14,10 @@
 [?] db: duplicate key on insert (GameBuffer.Id?)
 [x] db import: error in sql syntax
 [ ] db: expected data on row ?
-[.] MoreGame missing? detect on start; use more robust sequence, at least
+[x] MoreGame missing? detect on start; use more robust sequence, at least
 
 === Database Repair Tool
-1. close db window
-2. shutdown server
-3. myisamchk -c
-4. myisamchk -r
-5. restart server, or quit
-6. GameRepair (also: Player, Event, Collection references)
-7. open db window
-
-[ ] repair button in error dialog (for SQLExceptions)
+[ ] what's the best setting for myisamchk? -r -f, -o -f ?
 
 ==== Project
 
@@ -81,12 +76,12 @@ Alternative JREs:
 * Refactor Scoring !!
     - no more float[]. Use Score.wdl instead.
         Normalisation (and validity) can be based on wdl (plus engine knowledge).
-    - only one ground truth: MoveNode.score
-    - drop EvalArray (read data from Game tree directly)
-    - drop BoardView.eval (read from Game.currentMove())
+    - only one ground truth: MoveNode.engineValue (if present, otherwise broadcasted Score)
+    - drop EvalArray (read data from Game tree directly).  ???
+    - drop BoardView.eval (read from Game.currentMove()) ???
     - use similar updating mechanism for Engine and Book evals
-        broadcast("score.changed", MoveNode)
-        from EnginePanel to BoardPanel,EvalPanel,(DocumentPanel)
+        [x] broadcast("score.changed", MoveNode)
+        [x] from EnginePanel to BoardPanel,EvalPanel
 
 * LiChess Opening Explorer
     - download top games for a variation
