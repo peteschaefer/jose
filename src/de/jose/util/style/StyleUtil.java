@@ -203,4 +203,24 @@ public class StyleUtil
                   (!StyleConstants.getForeground(style).equals(StyleConstants.getForeground(base)));
       }
 
+    /**
+     * @param acol
+     * @return a color suitable for dark mode
+     */
+    public static Color mapDarkTextColor(Color acol)
+    {
+        if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - acol.getRed();
+            return new Color(red,red,red);
+        }
+        else {
+            //  color brightness is limited: not too dark, not too bright
+            float[] hsb = new float[4];
+            Color.RGBtoHSB(acol.getRed(), acol.getGreen(), acol.getBlue(), hsb);
+            hsb[1] = 0.4f + hsb[1]*0.4f;
+            hsb[2] = 0.4f + hsb[2]*0.4f;
+            return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+        }
+    }
 }

@@ -48,7 +48,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [x] pick up accent color
     [x] add flatlaf variants to F9 list
         [x] flatlaf becomes new default
-        [ ] old plaf co-exist! I.e. flatlaf needed for compilation but not at runtime.
+        [x] old plaf co-exist! I.e. flatlaf needed for compilation but not at runtime.
         
     [ ] Fork flatlaf
     	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
@@ -58,8 +58,8 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
         
     [ ] add to F9 Color Tab
-        [ ] background color
-        [ ] accent color
+        [-] background color
+        [-] accent color
         [ ] Pickup from system (only Windows?)
         [ ] open theme editor
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
@@ -71,12 +71,15 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
     [x] dark mode
         [ ] buttons + icons
-        [ ] EnginePanel background
+        [ ] gnome/kde accent color?
+        [x] EnginePanel background
         [ ] board auto, or manually?
-        [ ] StyleChooser: left panel layout
+        [x] StyleChooser: left panel layout
+        [ ] font sample for screen (todo mapping formula)
     	[x] StyleContext / "default" / foreground = black, or grey in dark mode. Set by system.
     	    [x] choosing black = default (which may be gray in dark mode).
     	        Fallback mechanism already implemented :)
+    	    [x] invert colors in dark mode (StyleContext.getForeground)
 
 
 [ ] Undo

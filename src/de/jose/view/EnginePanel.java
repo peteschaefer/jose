@@ -28,6 +28,7 @@ import de.jose.pgn.MoveNode;
 import de.jose.plugin.*;
 import de.jose.profile.LayoutProfile;
 import de.jose.util.*;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.JoButton;
 import de.jose.view.input.JoStyledLabel;
@@ -65,6 +66,8 @@ public class EnginePanel
 	protected AnalysisRecord bookmoves = new AnalysisRecord();  //  TODO share with OpeningLirary ?
 	public boolean inBook = false;
 	private static long msgSeen=0;
+
+	private Color bgColor;
 
 	/** go button   */
 	protected JButton   bGo;
@@ -151,11 +154,51 @@ public class EnginePanel
 
 		titlePriority = 6;
 
+		setBgColor(Application.theApplication.isDarkLookAndFeel());
+
 		createIcons();
 		createComponents();
 		createLayout();
 	}
 
+	private void setBgColor(boolean dark)
+	{
+		if (dark)
+			bgColor = UIManager.getColor("background");
+		else
+			bgColor = BACKGROUND_COLOR;
+	}
+
+	private void applyBgColor()
+	{
+		this.setBackground(bgColor);
+		infoPanel.setBackground(bgColor);
+
+		tPVHistory.setBackground(bgColor);
+		infoPanel.setBackground(bgColor);
+		pvPanel.setBackground(bgColor);
+		lStatus.setBackground(bgColor);
+
+		lCurrentMove.setBackground(bgColor);
+		tCurrentMove.setBackground(bgColor);
+
+		lDepth.setBackground(bgColor);
+		tDepth.setBackground(bgColor);
+
+		lElapsedTime.setBackground(bgColor);
+		tElapsedTime.setBackground(bgColor);
+
+		lNodeCount.setBackground(bgColor);
+		tNodeCount.setBackground(bgColor);
+
+		lNodesPerSecond.setBackground(bgColor);
+		tNodesPerSecond.setBackground(bgColor);
+
+		for(int i=0; i < countPvLines(); i++) {
+			getPvLabel(i,false,false).setBackground(bgColor);
+			getEvalLabel(i,false,false).setBackground(bgColor);
+		}
+	}
 
 	private static final Color GREY_INFO = Color.darkGray;
 	private static final Color BLUE_LINK = new Color(0,0,196);
@@ -171,12 +214,14 @@ public class EnginePanel
 		//	not sure what that means, or why it is necessary
 		//	but it scales correctly :\
 
-		Style textStyle = styles.addStyle("engine.pv",null);
+		Style def = userStyles.getDefaultStyle();
+
+		Style textStyle = styles.addStyle("engine.pv",def);
 		StyleConstants.setFontFamily(textStyle, "sans-serif");
 		StyleConstants.setFontSize(textStyle, 12);
 		//StyleConstants.setLineSpacing(textStyle, -12.f);
 
-		Style boldStyle = styles.addStyle("bold",null);
+		Style boldStyle = styles.addStyle("bold",def);
 		StyleConstants.setBold(boldStyle, true);
 
 		Style infoStyle = styles.addStyle("engine.pv.info",textStyle);
@@ -310,7 +355,7 @@ public class EnginePanel
         tPVHistory.setName("plugin.pv.history");
         tPVHistory.setFont(normalFont);
         tPVHistory.setBorder(new JoLineBorder(tborder, 1, 0,4,0,4));
-        tPVHistory.setBackground(BACKGROUND_COLOR);
+        tPVHistory.setBackground(bgColor);
         tPVHistory.setOpaque(true);
         tPVHistory.setWrapStyleWord(false);
 
@@ -363,7 +408,7 @@ public class EnginePanel
 
 		/** layout info area    */
 		infoPanel = new JPanel(new GridLayout(2,5));
-		infoPanel.setBackground(BACKGROUND_COLOR);
+		infoPanel.setBackground(bgColor);
 
         infoPanel.add(tCurrentMove);
         infoPanel.add(tDepth);
@@ -380,7 +425,7 @@ public class EnginePanel
 		/** more components will be added later */
 		/** layout pv area  */
 		pvPanel = new JPanel(new EnginePanelLayout(this));
-		pvPanel.setBackground(BACKGROUND_COLOR);
+		pvPanel.setBackground(bgColor);
         pvPanel.add(tPVHistory);
 		/** more components will be added later, when the number of PVs is known */
 
@@ -777,7 +822,7 @@ public class EnginePanel
 		label.setHorizontalAlignment(aligment);
 		label.setBorder(new JoLineBorder(border, 1,
                         paddingTop,paddingLeft,paddingBottom,paddingRight));
-		label.setBackground(BACKGROUND_COLOR);
+		label.setBackground(bgColor);
 		label.setOpaque(true);
 
 		label.setMinimumSize(new Dimension(12,16));
@@ -800,7 +845,7 @@ public class EnginePanel
 //		label.setHorizontalAlignment(aligment);
 		label.setBorder(new JoLineBorder(border, 1,
                         paddingTop,paddingLeft,paddingBottom,paddingRight));
-		label.setBackground(BACKGROUND_COLOR);
+		label.setBackground(bgColor);
 		label.setOpaque(true);
 
 		label.setMinimumSize(new Dimension(12,16));
@@ -1785,6 +1830,15 @@ public class EnginePanel
             }
         };
         map.put("styles.modified",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				setBgColor(dark);
+				applyBgColor();
+			}
+		};
+		map.put("update.ui",action);
 
         action = new CommandAction() {
             public void Do(Command cmd) {

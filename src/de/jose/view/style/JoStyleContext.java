@@ -17,6 +17,7 @@ import de.jose.Util;
 import de.jose.util.AWTUtil;
 import de.jose.util.FontUtil;
 import de.jose.util.print.Triplet;
+import de.jose.util.style.StyleUtil;
 
 import javax.swing.text.*;
 import javax.swing.text.html.CSS;
@@ -55,6 +56,31 @@ public class JoStyleContext
 		copyFrom(copy);
 	}
 
+	/**
+	 *
+	 * @return the root of the style hierarchy
+	 */
+	public Style getDefaultStyle() {
+		return getStyle("default");
+	}
+
+	public Color getDefaultColor() {
+		return StyleConstants.getForeground(getDefaultStyle());
+	}
+
+	@Override
+	public Color getForeground(AttributeSet attr)
+	{
+		Color acol = super.getForeground(attr);
+		Color dcol = getDefaultColor();
+		if (dcol.equals(Color.black) || dcol.equals(acol))
+			return acol;
+
+		//	else: dark mode, re-map the color!
+		Color rcol = StyleUtil.mapDarkTextColor(acol);
+		return rcol;
+	}
+
 	public JoStyleContext copy()
 	{
 		return new JoStyleContext(this);
@@ -63,16 +89,6 @@ public class JoStyleContext
 	public Object clone()
 	{
 		return copy();
-	}
-
-	@Override
-	protected MutableAttributeSet createLargeAttributeSet(AttributeSet a) {
-		return super.createLargeAttributeSet(a);
-	}
-
-	@Override
-	protected SmallAttributeSet createSmallAttributeSet(AttributeSet a) {
-		return super.createSmallAttributeSet(a);
 	}
 
 	public float getFontScale()     	        { return fontScale; }

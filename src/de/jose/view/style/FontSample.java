@@ -16,6 +16,7 @@ import de.jose.Util;
 import de.jose.profile.FontEncoding;
 import de.jose.util.StringUtil;
 import de.jose.util.FontUtil;
+import de.jose.util.style.StyleUtil;
 
 import javax.swing.text.Style;
 import java.awt.*;
@@ -73,16 +74,16 @@ public class FontSample
 		maxFontSize = maxSize;
 	}
 
-	public void setStyle(Style style, float scale, String name, int nestLevel)
+	public void setStyle(Style style, float scale, String name, int nestLevel, boolean dark)
 	{
 		fontText = name;
 //        sampleText = Language.get(fontText);
 		if (nestLevel > 0)
 			fontText = StringUtil.blanks(nestLevel,' ')+fontText;
-		setStyle(style,scale);
+		setStyle(style,scale,dark);
 	}
 
-	public void setStyle(Style style, float scale)
+	public void setStyle(Style style, float scale, boolean dark)
     {
         fontName = JoFontConstants.getFontFamily(style);
         fontSize = JoFontConstants.getFontSize(style);
@@ -93,6 +94,8 @@ public class FontSample
             fontStyle |= Font.ITALIC;
 
         fontColor = JoFontConstants.getForeground(style);
+		if (dark)
+			fontColor = StyleUtil.mapDarkTextColor(fontColor);
 
         if (JoFontConstants.isFigurine(style))
             flags = showFigurineSample;

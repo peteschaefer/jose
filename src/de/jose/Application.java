@@ -608,7 +608,7 @@ public class Application
 
 				UIManager.setLookAndFeel(lnf);
 
-				broadcast(new Command("update.ui", null, lookAndFeel));
+				broadcast(new Command("update.ui", null, lookAndFeel, isDarkLookAndFeel()));
 			} catch (UnsupportedLookAndFeelException usex) {
 				JoDialog.showErrorDialog("error.lnf.not.supported");
 			}
