@@ -211,15 +211,15 @@ public class ListUtil
 		return result;
 	}
 
-	public static List deepClone(List list)
+	public static <T extends Cloneable> List<T> deepClone(List<T> list)
 	{
-		List copy = null;
+		List<T> copy = null;
 		try {
-			copy = (List)list.getClass().newInstance();
+			copy = (List<T>)list.getClass().newInstance();
 			for (int i=0; i < list.size(); i++)
 			{
-				Object item = list.get(i);
-				if (item!=null) item = ReflectionUtil.invoke(item,"clone");
+				T item = list.get(i);
+				if (item!=null) item = (T)ReflectionUtil.invoke(item,"clone");
 				copy.add(item);
 			}
 		} catch (Exception e) {

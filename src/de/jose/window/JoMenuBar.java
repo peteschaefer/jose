@@ -217,11 +217,11 @@ public class JoMenuBar
 
 	public void addTimeControlItems(JMenu menu, String name, ActionListener[] actionListeners, boolean isModal)
 	{
-		Vector controls = Application.theUserProfile.getTimeControls();
+		Vector<TimeControl> controls = Application.theUserProfile.getTimeControls();
 		TimeControl current = Application.theUserProfile.getTimeControl();
 
 		for (int i=0; i<controls.size(); i++) {
-			TimeControl control = (TimeControl)controls.get(i);
+			TimeControl control = controls.get(i);
 			JMenuItem item = createMenuItem(name, control==current);
             if (isModal)
                 item.setEnabled(false);
@@ -237,11 +237,11 @@ public class JoMenuBar
 
 	public static void addTimeControlItems(Collection menu)
 	{
-		Vector controls = Application.theUserProfile.getTimeControls();
+		Vector<TimeControl> controls = Application.theUserProfile.getTimeControls();
 		TimeControl current = Application.theUserProfile.getTimeControl();
 
 		for (int i=0; i<controls.size(); i++) {
-			TimeControl control = (TimeControl)controls.get(i);
+			TimeControl control = controls.get(i);
 			JMenuItem item = createMenuItem("menu.game.time.control", control==current);
 			item.setText(control.getDisplayName());
 			item.setToolTipText(control.getToolTip());

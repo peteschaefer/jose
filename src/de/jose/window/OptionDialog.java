@@ -909,8 +909,8 @@ public class OptionDialog
 	public void readTab3()  {
 		read(3,profile.settings);
 
-		Vector controls = profile.getTimeControls();
-		controls = (Vector)ListUtil.deepClone(controls);
+		Vector<TimeControl> controls = profile.getTimeControls();
+		controls = (Vector<TimeControl>) ListUtil.deepClone(controls);
 		timeControls.setModel(new DefaultComboBoxModel(controls));
 		int idx = profile.getTimeControlIdx();
 		selectedControl = profile.getTimeControl();

@@ -860,8 +860,8 @@ public class UserProfile
 
 	/**	@return a Vector of user defined Time Control settings
 	 */
-	public Vector getTimeControls()		{
-		Vector controls = (Vector)get("time.controls");
+	public Vector<TimeControl> getTimeControls()		{
+		Vector<TimeControl> controls = (Vector<TimeControl>)get("time.controls");
 		if (controls==null)
 			set("time.controls",controls = TimeControl.FACTORY_SETTINGS);
 		return controls;
@@ -871,7 +871,7 @@ public class UserProfile
 	 */
 	public int getTimeControlIdx()	{
 		int idx = getInt("time.control.current");
-		Vector controls = getTimeControls();
+		Vector<TimeControl> controls = getTimeControls();
 		if (idx < 0 || idx >= controls.size())
 			idx = setTimeControlIdx(0);
 		return idx;
@@ -880,14 +880,14 @@ public class UserProfile
 	/**	@return the current Time Control
 	 */
 	public TimeControl getTimeControl()	{
-		Vector controls = getTimeControls();
+		Vector<TimeControl> controls = getTimeControls();
 		int idx = getTimeControlIdx();
-		return (TimeControl)controls.get(idx);
+		return controls.get(idx);
 	}
 
 	public int setTimeControlIdx(int idx)
 	{
-		Vector controls = getTimeControls();
+		Vector<TimeControl> controls = getTimeControls();
 		if (idx < 0 || idx >= controls.size())
 			idx = 0;
 		set("time.control.current",idx);
