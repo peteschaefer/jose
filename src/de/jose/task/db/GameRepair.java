@@ -41,7 +41,6 @@ public class GameRepair
     public static boolean checkOnStart() throws SQLException
     {
         JoConnection conn = null;
-        for(;;)
             try {
                 conn = JoConnection.get();
                 int maxId = conn.selectMaxIntValue("Game", "Id");
@@ -61,16 +60,6 @@ public class GameRepair
                     return false;
                 }
                 return true;
-            } catch (SQLException e) {
-                if (e.getErrorCode()==144) {
-                    //  table is crashed and needs to be fixed by myisamchk
-                    try {
-                        MySQLAdapter.fixCrashedTable("Game");
-                        MySQLAdapter.fixCrashedTable("MoreGame");
-                    } catch (Exception ex) {
-
-                    }
-                }
             } finally {
                 conn.release();
             }

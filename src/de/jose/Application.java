@@ -14,6 +14,7 @@ package de.jose;
 
 import de.jose.chess.*;
 import de.jose.db.DBAdapter;
+import de.jose.db.DBRepairTool;
 import de.jose.db.JoConnection;
 import de.jose.db.MySQLAdapter;
 import de.jose.eboard.ChessNutConnector;
@@ -1055,6 +1056,13 @@ public class Application
             }
         };
         map.put("menu.help.manual", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				DBRepairTool.open();
+			}
+		};
+		map.put("menu.help.repair", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws IOException {
@@ -2552,6 +2560,18 @@ public class Application
         JoPanel panel = createPanel(name);
         return showPanelFrame(panel);
     }
+
+	public JoFrame hidePanelFrame(String name)
+	{
+		JoPanel panel = JoPanel.get(name);
+		if (panel==null) return null;
+
+		JoFrame frame = panel.getParentFrame();
+		if (frame==null) return null;
+
+		frame.setVisible(false);
+		return frame;
+	}
 
     /**
      * show the frame, a panel belongs to

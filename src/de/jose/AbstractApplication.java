@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
 
@@ -258,6 +259,8 @@ abstract public class AbstractApplication
 		dialog.getElementPane().add(new JoStyledLabel(message), JoDialog.ELEMENT_REMAINDER);
 
 		dialog.addButton("menu.web.report");
+		if (thrw instanceof SQLException)
+			dialog.addButton("menu.help.repair");
 		dialog.addButton(JoDialog.CANCEL);
 
 

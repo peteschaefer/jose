@@ -20,6 +20,7 @@ import de.jose.util.KillProcess;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.window.JoDialog;
+import org.apache.tools.ant.util.StringUtils;
 
 import javax.sound.midi.SysexMessage;
 import javax.swing.*;
@@ -28,6 +29,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Vector;
+import java.util.List;
 
 
 /**
@@ -79,9 +81,11 @@ public class MySQLAdapter
     }
 
 	@Override
-	public void launchProcess(boolean bootstrap) {
+	public Thread launchProcess(boolean bootstrap) {
 		this.bootstrap = bootstrap;
-		new MySqlLauncher().start();
+		MySqlLauncher launcher = new MySqlLauncher();
+		launcher.start();
+		return launcher;
 	}
 
 	@Override
@@ -425,7 +429,8 @@ public class MySQLAdapter
 		return result.toString();
 	}
 
-	public static void fixCrashedTable(String table) throws IOException, InterruptedException {
+	public static Process repairIndexes(String[] tables, boolean repair) throws IOException, InterruptedException
+	{
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 		File lockFile = new File(Application.theDatabaseDirectory, "db.lock");
@@ -436,8 +441,13 @@ public class MySQLAdapter
 		String execPath = binPath+File.separator+Version.osDir+File.separator+"myisamchk";
 
 		command.add(execPath);
-		command.add("-r");
-		command.add(table);
+		if (repair)
+			command.add("-r");
+		else
+			command.add("-c");
+
+		for(String table : tables)
+			command.add(table);
 
 		String[] args = (String[])new String[command.size()];
 		command.toArray(args);
@@ -445,9 +455,8 @@ public class MySQLAdapter
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(mysqldir,"jose"));
 		pb.redirectErrorStream(true);
-		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-		Process check = pb.start();
-		int result = check.waitFor();
+		pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
+		return pb.start();
 	}
 
 	public Process startStandaloneServer(boolean printCommandLine)
@@ -825,7 +834,7 @@ public class MySQLAdapter
 	/**
 	 * shut down the database
 	 */
-	public void shutDown(JoConnection conn)
+	public Thread shutDown(JoConnection conn)
 	{
 		/*	mysqladmin shutdown
 		*/
@@ -833,6 +842,7 @@ public class MySQLAdapter
 			killProcess.conn = conn;
 			killProcess.run();
 		}
+		return killProcess;
 	}
 
 	public void disableConstraints(String table, JoConnection conn) throws SQLException {

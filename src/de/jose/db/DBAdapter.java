@@ -329,9 +329,10 @@ abstract public class DBAdapter
 	/**
 	 * shut down the database
 	 */
-	public void shutDown(JoConnection conn)
+	public Thread shutDown(JoConnection conn)
 	{
 		/*	override */
+		return null;
 	}
 
 	public final Object getProperty(Object key)		{ return props.get(key); }
@@ -668,7 +669,8 @@ abstract public class DBAdapter
 	 */
 	protected java.util.List<Command> deferredActions = new ArrayList<>();
 
-	public void launchProcess(boolean boostrap) {
+	public Thread launchProcess(boolean boostrap) {
+		return null;
 	}
 
 	public boolean launchComplete() {
