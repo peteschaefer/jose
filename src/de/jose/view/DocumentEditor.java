@@ -124,7 +124,7 @@ public class DocumentEditor
 		docPanel = owner;
 		docPanel.getMessageProducer().addMessageListener(Application.theApplication);
 
-        setSelectionColor(UIManager.getColor("TextPane.selectionBackground"));
+        //setSelectionColor(UIManager.getColor("TextPane.selectionBackground"));
 
         try {
             Highlighter.HighlightPainter painter =

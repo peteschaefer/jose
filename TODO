@@ -108,10 +108,13 @@ BUG: Print Preview does not work
     - compile with jdk 8
     - run with jbr 21 (32 or 64 bit?)
       https://github.com/JetBrains/JetBrainsRuntime
+
       [x] fixes hidpi on Linux :)
+      [x] but only partially on Windows :(
+            [x] adjust font size on many dialog elements
       [ ] deprecate ClassPathUtil, but that's ok
       [x] fix sprite rendering
-      [ ] maybe some reflection bugs, but they can be fixed
+      [ ] maybe some reflection bugs, but they can be fixed/deprecated
 
 * launch mysqld earlier (?)
 

@@ -56,11 +56,11 @@ public class JoTabbedPaneUI
         {
             contentBorderInsets = UIManager.getInsets("TabbedPane.contentBorderInsets");
 //            UIManager.put("TabbedPane.contentBorderInsets", new Insets(0,0,0,-15));
-            UIManager.put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));
+//            UIManager.put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));
 
             super.installDefaults();
 
-            UIManager.put("TabbedPane.contentBorderInsets", contentBorderInsets);
+//            UIManager.put("TabbedPane.contentBorderInsets", contentBorderInsets);
         }
         else
             super.installDefaults();

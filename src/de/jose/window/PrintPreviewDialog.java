@@ -139,6 +139,9 @@ public class PrintPreviewDialog
 //		buttonPane.add(Box.createHorizontalStrut(10));
 //		buttonPane.add(JoDialog.newButton(JoDialog.HELP,this));
 
+		JoDialog.rescaleFonts(printView);
+		JoDialog.rescaleFonts(buttonPane);
+
 		read();
 	}
 

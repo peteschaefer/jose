@@ -161,6 +161,9 @@ public class OptionDialog
 		IntHashSet mnemonicsInUse = new IntHashSet();
 		JoMenuBar.assignMnemonics(buttonPane,mnemonicsInUse);
 		JoMenuBar.assignMnemonics(getTabbedPane(),mnemonicsInUse);
+
+		rescaleFonts(elementPane);
+		rescaleFonts(buttonPane);
 	}
 
 	protected void initTab0(Component comp0)

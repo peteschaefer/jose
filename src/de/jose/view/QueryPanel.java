@@ -224,6 +224,8 @@ public class QueryPanel
 
 		JoMenuBar.assignMnemonics(buttonPanel);
 		setInitialValues();
+
+		JoDialog.rescaleFonts(this);
 	}
 
 /*

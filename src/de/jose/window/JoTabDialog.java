@@ -73,20 +73,22 @@ public class JoTabDialog
 		if (isInited(idx)) return false;
 
 		currentTab = idx;
+		Component tab = getTabbedPane().getComponentAt(idx);
 		switch (idx) {
-		case 0: initTab0(getTabbedPane().getComponentAt(0)); break;
-		case 1: initTab1(getTabbedPane().getComponentAt(1)); break;
-		case 2: initTab2(getTabbedPane().getComponentAt(2)); break;
-		case 3: initTab3(getTabbedPane().getComponentAt(3)); break;
-		case 4: initTab4(getTabbedPane().getComponentAt(4)); break;
-		case 5: initTab5(getTabbedPane().getComponentAt(5)); break;
-		case 6: initTab6(getTabbedPane().getComponentAt(6)); break;
-		case 7: initTab7(getTabbedPane().getComponentAt(7)); break;
-		case 8: initTab8(getTabbedPane().getComponentAt(8)); break;
-		case 9: initTab9(getTabbedPane().getComponentAt(9)); break;
-		default: initTab(idx,getTabbedPane().getComponentAt(idx)); break;
+		case 0: initTab0(tab); break;
+		case 1: initTab1(tab); break;
+		case 2: initTab2(tab); break;
+		case 3: initTab3(tab); break;
+		case 4: initTab4(tab); break;
+		case 5: initTab5(tab); break;
+		case 6: initTab6(tab); break;
+		case 7: initTab7(tab); break;
+		case 8: initTab8(tab); break;
+		case 9: initTab9(tab); break;
+		default: initTab(idx,tab); break;
 		}
 
+		JoDialog.rescaleFonts(tab);
 		setInited(idx);
 		read(idx);
 		return true;
@@ -107,18 +109,19 @@ public class JoTabDialog
 	protected synchronized void activate(int idx)
 	{
 		currentTab = idx;
+		Component tab = getTabbedPane().getComponentAt(idx);
 		switch (idx) {
-		case 0: activateTab0(getTabbedPane().getComponentAt(0)); break;
-		case 1: activateTab1(getTabbedPane().getComponentAt(1)); break;
-		case 2: activateTab2(getTabbedPane().getComponentAt(2)); break;
-		case 3: activateTab3(getTabbedPane().getComponentAt(3)); break;
-		case 4: activateTab4(getTabbedPane().getComponentAt(4)); break;
-		case 5: activateTab5(getTabbedPane().getComponentAt(5)); break;
-		case 6: activateTab6(getTabbedPane().getComponentAt(6)); break;
-		case 7: activateTab7(getTabbedPane().getComponentAt(7)); break;
-		case 8: activateTab8(getTabbedPane().getComponentAt(8)); break;
-		case 9: activateTab9(getTabbedPane().getComponentAt(9)); break;
-		default: activateTab(idx,getTabbedPane().getComponentAt(idx)); break;
+		case 0: activateTab0(tab); break;
+		case 1: activateTab1(tab); break;
+		case 2: activateTab2(tab); break;
+		case 3: activateTab3(tab); break;
+		case 4: activateTab4(tab); break;
+		case 5: activateTab5(tab); break;
+		case 6: activateTab6(tab); break;
+		case 7: activateTab7(tab); break;
+		case 8: activateTab8(tab); break;
+		case 9: activateTab9(tab); break;
+		default: activateTab(idx,tab); break;
 		}
 	}
 

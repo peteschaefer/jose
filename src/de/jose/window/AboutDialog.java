@@ -62,6 +62,8 @@ public class AboutDialog
 		addButton("dialog.button.close");
 
 		JoMenuBar.assignMnemonics(getTabbedPane());
+		JoDialog.rescaleFonts(getElementPane());
+		JoDialog.rescaleFonts(getButtonPane());
 	}
 
 	public void setupActionMap(Map map)
