@@ -3,7 +3,6 @@
 * suggestion arrow colors don't update as they should?
 * double click insert variant; trying to delete it
 
-
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
@@ -65,7 +64,10 @@ Leela
 * BUG: engine configurations
   - absolute path to directories?
   - can't delete? (Apply !!)
-* BUG: Leela resigns early (probably ScoreType confusion). Fixed??
+* BUG: update eval bar
+  - don't show in opening book
+  - when switching moves, games
+  - opening book moves in eval graph?
 
 ==== Postponed
 
