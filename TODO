@@ -4,25 +4,21 @@
 
 ? Charter buggy
 
+=== Database Bugs
+
 [x] database cut/copy/paste (-> --tmpdir)
 [ ] db copy: NoSuchElementException (harmless but annoying)
+[ ] db: duplicate key on insert (GameBuffer.Id?)
+[ ] db import: error in sql syntax ?
+[ ] db: expected data on row ?
+    MoreGame missing? can we it (outer join?)
 
 ==== Project
-
-
-1.5.1: move on to 64-bit land
-
-[x] compile against jdk 1.8
-[x] run with Oracle 21 x64
-    [x] Windows hi-dpi works well
-    [x] Linux: uiscale needs to be set from script
 
 [x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
     [ ] Mac Intel
-[x] JavaLauncher x64
-    [x] Windows
 [x] mysql 5.0.67 x64
     [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
