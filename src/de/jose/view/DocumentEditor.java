@@ -817,7 +817,7 @@ public class DocumentEditor
 
 	protected void insertCommentAfter(Node after, DocUpdate d, int padding) throws BadLocationException
 	{
-		if (d.nag > 0) {
+		if (d.nag >= 0) {
 			insertAnnotationAfter(after,d.nag,padding);
 		}
 		else {
@@ -833,7 +833,7 @@ public class DocumentEditor
 
 	protected void insertCommentBefore(Node before, DocUpdate d, int padding) throws BadLocationException
 	{
-		if (d.nag > 0) {
+		if (d.nag >= 0) {
 			insertAnnotationBefore(before,d.nag,padding);
 		}
 		else {
