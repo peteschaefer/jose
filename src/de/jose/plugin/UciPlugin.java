@@ -499,9 +499,10 @@ public class UciPlugin
 		 * ignoreMoves would get out of synch
 		 */
 
-		if (isAnalyzing())
-			printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
-		else if (isThinking() || isActivelyPondering()) {
+		//if (isAnalyzing())
+		//	printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
+		//else
+		if (isAnalyzing() || isThinking() || isActivelyPondering()) {
 			printOut.println("stop");
 			ignoreMoves++;
 		}
@@ -509,7 +510,7 @@ public class UciPlugin
 		setPosition(pos);
 
 		printOut.println("go infinite");
-		ignoreMoves++;
+		//ignoreMoves++;
         setMode(ANALYZING);
 		/**
 		 * some engines (ruffian) have the habit of responding immediately with "bestmove"
@@ -532,10 +533,10 @@ public class UciPlugin
 			ignoreMoves++;
 			return;
 		}
-		else if (isAnalyzing()) {
-			printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
-		}
-		else if (isActivelyPondering()) {
+		//else if (isAnalyzing()) {
+		//	printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
+		//}
+		else if (isAnalyzing() || isActivelyPondering()) {
 			printOut.println("stop");
 			ignoreMoves++;
 		}
@@ -644,6 +645,9 @@ public class UciPlugin
 		    return;
 	    }
 
+		if (isPaused())
+			return;		// already paused; ignore late-coming move
+
         if (!isThinking() && !isAnalyzing())
 	        throw new IllegalStateException("unexpected mode "+mode);
 
@@ -751,8 +755,9 @@ public class UciPlugin
 			engineAuthor = StringUtil.rest(s,2);
 
 		if (s.startsWith("bestmove")) {
-			if (ignoreMoves == 0)
-                engineMoves(StringUtil.rest(s));
+			if (ignoreMoves == 0) {
+				engineMoves(StringUtil.rest(s));
+			}
 			else
 				ignoreMoves--;
 		}
@@ -761,7 +766,7 @@ public class UciPlugin
 			parseOption(s);
 
         if (s.startsWith("info")) {
-			if (ignoreMoves==1) {
+			if (ignoreMoves==0) {
 				parseAnalysis(StringUtil.rest(s), analysis);
 				sendMessage(mode, analysis);
 			}
@@ -914,41 +919,7 @@ public class UciPlugin
 			}
 			else if (t.equals("score"))
 			{
-				score.flags = Score.EVAL_EXACT;
-
-				t = tok.nextToken();
-				if (t.equals("cp")) {
-					int cp = StringUtil.parseInt(tok.nextToken());
-					int abscp = Math.abs(cp);
-					if (abscp > 29000) {
-						/** unfortunately, UCI engines are not consistent in reporting mates
-						 *  we accept some variants:
-						 *
-						 * the return value is always 30.000 + x
-						 */
-						if (abscp < 30000)
-							score.cp = mateScore(cp>0, 29999-abscp);   // 30.000 - x
-						else if (abscp < 31000)
-							score.cp = mateScore(cp>0, abscp-30000);   // 30.000 + x
-//						else if (abscp < 32700)
-//							rec.eval[pvidx] = mateScore(cp>0, 32700-abscp);   //  32.700 - x
-//						else if (abscp < 32734)
-//							rec.eval[pvidx] = mateScore(cp>0, abscp-32700);   //  32.700 + x
-						else
-							score.cp = mateScore(cp>0, 32767-abscp);   //  32.767 - x
-					}
-					else
-						score.cp = cp;
-				}
-				else if (t.equals("mate")) {
-					int moves = StringUtil.parseInt(tok.nextToken());
-					if (moves > 0)
-						score.cp = Score.WHITE_MATES + 2*moves;
-					else
-						score.cp = Score.BLACK_MATES + 2*moves;
-				}
-
-				score_modified = true;
+				score_modified = parseScore(score, tok);
 			}
 			else if (t.equals("lowerbound"))
 				score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_LOWER_BOUND:Score.EVAL_UPPER_BOUND;
@@ -1052,6 +1023,48 @@ public class UciPlugin
 		while (enginePosition.ply() > engply)
 			enginePosition.undoMove();
 
+	}
+
+	private static boolean parseScore(Score score, StringTokenizer tok)
+	{
+		boolean score_modified;
+		String t;
+		score.flags = Score.EVAL_EXACT;
+
+		t = tok.nextToken();
+		if (t.equals("cp")) {
+			int cp = StringUtil.parseInt(tok.nextToken());
+			int abscp = Math.abs(cp);
+			if (abscp > 29000) {
+				/** unfortunately, UCI engines are not consistent in reporting mates
+				 *  we accept some variants:
+				 *
+				 * the return value is always 30.000 + x
+				 */
+				if (abscp < 30000)
+					score.cp = mateScore(cp>0, 29999-abscp);   // 30.000 - x
+				else if (abscp < 31000)
+					score.cp = mateScore(cp>0, abscp-30000);   // 30.000 + x
+//						else if (abscp < 32700)
+//							rec.eval[pvidx] = mateScore(cp>0, 32700-abscp);   //  32.700 - x
+//						else if (abscp < 32734)
+//							rec.eval[pvidx] = mateScore(cp>0, abscp-32700);   //  32.700 + x
+				else
+					score.cp = mateScore(cp>0, 32767-abscp);   //  32.767 - x
+			}
+			else
+				score.cp = cp;
+		}
+		else if (t.equals("mate")) {
+			int moves = StringUtil.parseInt(tok.nextToken());
+			if (moves > 0)
+				score.cp = Score.WHITE_MATES + 2*moves;
+			else
+				score.cp = Score.BLACK_MATES + 2*moves;
+		}
+
+		score_modified = true;
+		return score_modified;
 	}
 
 	protected String printMove(Move mv, boolean showCount)

@@ -99,13 +99,13 @@ public abstract class EBoardConnector
     public void readProfile(UserProfile prf) {
         boolean enabled = prf.getBoolean("eboard.chessnut",false);
         this.inputOri = orientationFromProfile(prf, "eboard.orientation", this.inputOri);
-        this.currentOri = orientationFromProfile(prf, "eboard.orientation", this.currentOri);
+        this.currentOri = orientationFromProfile(prf, "eboard.orientation.current", this.currentOri);
         if (enabled) connect();
     }
 
     public void storeProfile(UserProfile prf) {
         prf.set("eboard.orientation", this.inputOri.toString());
-        prf.set("eboard.orientation", this.currentOri.toString());
+        prf.set("eboard.orientation.current", this.currentOri.toString());
     }
 
     private static Orientation orientationFromProfile(UserProfile prf, String key, Orientation deflt)
@@ -193,10 +193,16 @@ public abstract class EBoardConnector
     {
         //  look for (a) legal move,
         Move mv = guessMove(st,appXFen,app.board.getPosition());
-        if (mv!=null /*&& appBoard.isLegal(mv)*/) {
-            userMove(mv);
+        if (mv!=null) {
+            if (!app.board.isLegal(mv))
+                doBeep(200,300);
+            else
+                userMove(mv);
             return;
         }
+        /*  todo is there a feasible way to look ahead TWO moves
+            to detect exchange sequences ?
+         */
         //  (b) retract last _human_ move
         if (st.diff_cnt < 2) return;
         if (!canUndoMove()) return;

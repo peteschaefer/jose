@@ -892,7 +892,7 @@ public class OptionDialog
 
 		setValueByName("font.diagram", profile.getString("font.diagram"));
 		setValueByName("eboard.chessnut", profile.getBoolean("eboard.chessnut",false));
-		eboardCtrl.eboard.readProfile(profile);
+		//eboardCtrl.eboard.readProfile(profile);
 	}
 
 	public void readTab2()  { read(2,profile.settings); }

@@ -8,6 +8,8 @@
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
+* Chessnut loses orientation ? (switching between games?)
+
 ==== Project
 compile sources against 1.8 [x]
 libraries needed:
@@ -61,8 +63,6 @@ Leela
   - eco update !! ??
   - player names update
   - turn board on engine start
-  - BUG: analysis out of synch; should not appear in play mode. Caused by "move now" ?
-  - BUG: analysis in play mode; appears (randomly?) on/off
   - BUG: New Game from here can not be saved to DB (not dirty?)
 
 * keep playing after flagging ?

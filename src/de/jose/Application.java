@@ -2344,7 +2344,7 @@ public class Application
 			public void Do(Command cmd) throws Exception {
 				if (cmd.equals("eboard.connect"))
 					getEBoardConnector().connect();
-				if (cmd.equals("eboard.connect"))
+				if (cmd.equals("eboard.disconnect"))
 					getEBoardConnector().disconnect();
 			}
 			@Override
@@ -3471,8 +3471,13 @@ public class Application
 			else if (JoFrame.isVisible(frameProfiles[i].state))
             {
 				JoFrame frame = new JoFrame(frameProfiles[i]);
-                frame.setComponentsVisible(true);
  				openFrames.add(frame);
+				 SwingUtilities.invokeLater(new Runnable() {
+					 @Override
+					 public void run() {
+						 frame.setComponentsVisible(true);
+					 }
+				 });
 			}
 		}
 

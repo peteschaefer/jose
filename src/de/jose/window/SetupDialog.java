@@ -250,7 +250,7 @@ public class SetupDialog
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
 		eboardCtrl = new de.jose.eboard.DialogComponent(true);
-		eboardCtrl.eboard.readProfile(Application.theUserProfile);
+		//eboardCtrl.eboard.readProfile(Application.theUserProfile);
 		ebox.add(eboardCtrl,	gridConstraint(LABEL_ONE_LEFT,1,1,1));
 
 		GridBagConstraints econst = new GridBagConstraints(0,3, 1,1, 1.0,0.0,

@@ -583,6 +583,8 @@ public class BoardPanel
 				}
 				break;
 			case EnginePlugin.PAUSED:
+			case EnginePlugin.THINKING:
+			case EnginePlugin.PONDERING:
 				//	hide all suggestions
 				theView.hideAllHints(true);
 				break;

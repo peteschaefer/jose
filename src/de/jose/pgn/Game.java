@@ -1446,8 +1446,8 @@ public class Game
         stm1.execute();
 
 
-        String sql2 =   "INSERT INTO MoreGame (WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments,PosMain,PosVar,GId) "+
-                        " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String sql2 =   "INSERT INTO MoreGame (WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments,PosMain,PosVar,Eval,GId) "+
+                        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         JoPreparedStatement stm2 = conn.getPreparedStatement(sql2);
         setMoreGameParameters(stm2,writer);
         stm2.execute();
