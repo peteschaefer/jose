@@ -31,6 +31,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     private Orientation currentOri;
 
     private IBoardAdapter appBoard;
+    private boolean wasAcked = false;
 
     public EBoardConnector(IBoardAdapter anAppBoard)
     {
@@ -68,25 +69,35 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     @Override
     public void realTimeCallback(String fen) {
         //  called from E-Board
-        synchFromBoard(fen);
+        if (setExplodedFen(fen,board[0].fen) > 0)
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    synchFromBoard();
+                }
+            });
+        //  invokeLater avoids threading issues with GUI thread
     }
 
 
-    public synchronized void synchFromBoard(String fen)
+    public synchronized void synchFromBoard()
     {
         if (mode == Mode.DISCONNECTED) {
             //  now connected
             mode = Mode.PLAY;
-            EasyLink.beep(800,500);
+            //EasyLink.beep(800,500);
         }
 
-        if (setExplodedFen(fen,board[0].fen)==0)
-            return; //  nothing has changed
+        //if (setExplodedFen(fen,board[0].fen)==0)
+        //    return; //  nothing has changed
         if (appXFen==null)
             return;   //  nothing to do, yet
 
         computeDiff();
         showLeds(board[currentOri.ordinal()].diff,currentOri);
+
+        if (board[currentOri.ordinal()].diff_cnt==0)
+            wasAcked = true;    //  App changed was replicated on the E-Board
 
         /*  todo
             IF diff==empty AND currentOri changed
@@ -95,11 +106,20 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
 
         switch(mode) {
             case PLAY:
-                //  todo look for (a) legal move,
+                //  look for (a) legal move,
                 Move mv = guessMove(board[currentOri.ordinal()],appXFen,appBoard.getPosition());
-                if (mv!=null /*&& appBoard.isLegal(mv)*/)
+                if (mv!=null /*&& appBoard.isLegal(mv)*/) {
                     userMove(mv);
+                    break;
+                }
                 //  todo (b) retract last _human_ move
+                if (/*wasAcked*/true) {
+                    //  last engine move was replicated on board
+                    //  may be taken back
+                }
+                else {
+                    //  last two moves may be taken back
+                }
                 break;
             case SETUP_LEAD:
                 //  todo send board[currentOri].fen to application
@@ -113,12 +133,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     private void userMove(Move mv)
     {
         Command cmd = new Command("move.user", null, mv);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
-            }
-        });
+        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
     }
 
     private static int squareAt(int xfenIndex)
@@ -137,24 +152,18 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
 
     private Move guessMove(BoardState st, StringBuilder fen, Position pos)
     {
+        if (st.diff_cnt < 2 || st.diff_cnt > 4) return null;
+
         MoveIterator moves = new MoveIterator(pos);
         while(moves.next())
         {
             Move mv = moves.getMove();
             //  check move against diff and ..
-            if (mv.diffCount() != st.diff_cnt) continue;
-            int ifrom = xfenIndex(mv.from);
-            int ito = xfenIndex(mv.to);
+            if (st.diff_cnt > mv.diffCount()) continue;
 
-            if (st.diff.charAt(ifrom)!='1') continue;
-            if (st.diff.charAt(ito)!='1') continue;
-            if (st.fen.charAt(ifrom)!='1') continue;
-
+            if (!st.changed(mv.from,Constants.EMPTY)) continue;
             if (!pos.checkMove(mv)) continue;
-
-            //char pfrom = EngUtil.coloredPieceCharacter(pos.pieceAt(mv.from));
-            char pto = EngUtil.coloredPieceCharacter(mv.getDestinationPiece());
-            if (st.fen.charAt(ito)!=pto) continue;
+            if (!st.changed(mv.getDestinationSquare(),mv.getDestinationPiece())) continue;
             return mv;
         }
         return null;
@@ -171,6 +180,9 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         computeDiff();
         showLeds(board[currentOri.ordinal()].diff,currentOri);
 
+        if (board[currentOri.ordinal()].diff_cnt > 0)
+            wasAcked = false;    //  App changed was not yet replicated on the E-Board
+
         if(mode==Mode.SETUP_FOLLOW)
             throw new IllegalStateException("don't modify position in follow mode");
     }
@@ -181,6 +193,17 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         StringBuilder fen = new StringBuilder(EMPTY_X_FEN);
         StringBuilder diff = new StringBuilder(EasyLink.NO_LEDS);
         int diff_cnt = 0;
+
+        boolean changed(int square, int piece)
+        {
+            int idx = xfenIndex(square);
+            char pc;
+            if (piece==Constants.EMPTY)
+                pc = '1';
+            else
+                pc = EngUtil.coloredPieceCharacter(piece);
+            return diff.charAt(idx)=='1' && fen.charAt(idx)==pc;
+        }
     }
 
     // ---------------------------------------------

@@ -144,8 +144,9 @@ public class Pawn
 					i1.i++;
 		case 2:		//  capture left
 					result.to = result.from+vector[3];
-					if (pos.checkMove(result) && checkMove(result)
-					        && nextPromo(i1,i2,result))
+					if (pos.checkMove(result)
+							&& nextPromo(i1,i2,result)
+							&& checkMove(result))
 						return true;
 					//	fall-through íntended
 					i1.i++;

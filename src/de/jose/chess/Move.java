@@ -113,11 +113,34 @@ public class Move
 	}
 
 	public final boolean isPromotion()			{ return EngUtil.isPromotion(flags); }
-	public final int getPromotionPiece()		{ return EngUtil.getPromotionPiece(flags); }
+
+	public final int getPromotionPiece()		{
+		return EngUtil.getPromotionPiece(flags);
+	}
+	public final int getColoredPromotionPiece() {
+		int pc = getPromotionPiece();
+		pc = EngUtil.uncolored(pc);
+		int co = moving.color();
+		return pc+co;
+	}
+
+	public final int getDestinationSquare() {
+		//  kingside castling FRC
+		//  king ALWAYS moves to G1, rook ALWAYS moves to F1
+		switch (castlingMask())
+		{
+			case WHITE_KINGS_CASTLING:	return G1;
+			case BLACK_KINGS_CASTLING:  return G8;
+			case WHITE_QUEENS_CASTLING:	return C1;
+			case BLACK_QUEENS_CASTLING: return C8;
+		}
+		//else
+		return to;
+	}
 
 	public final int getDestinationPiece() {
 		if (isPromotion())
-			return getPromotionPiece();
+			return getColoredPromotionPiece();
 		else
 			return moving.piece;
 	}
