@@ -11,8 +11,11 @@
 		*akshually* run in 64 bit mode -->
 		<COMMAND> %dir%/stockfish-ubuntu-x86-64-sse41-popcnt </COMMAND>
 	</EXEC>
-	<EXEC os="Mac">
+	<EXEC os="Mac_intel">
 		<COMMAND> %dir%/stockfish-macos-x86-64-sse41-popcnt </COMMAND>
+	</EXEC>
+	<EXEC os="Mac_arm">
+		<COMMAND> %dir%/stockfish-macos-m1-apple-silicon </COMMAND>
 	</EXEC>
 	<DIR> %local%/engines/stockfish </DIR>
 	<LOGO> %dir%/Stockfish-large.bmp </LOGO>

@@ -75,7 +75,7 @@ public class Version
 	public static final String	osVersion		= getSystemProperty("os.version");
 
 	public static final String	arch			= getSystemProperty("os.arch");
-
+	public static final boolean	archIntel		= arch.equals("i386") || arch.startsWith("x86");
 
 	public static final boolean	windows			= osName.startsWith("Windows");
 	public static final boolean windowsNT		= osName.startsWith("Windows NT");
@@ -86,8 +86,11 @@ public class Version
 	public static final boolean winNTfamily		= windowsNT || windows2000 || windowsXP;
 
 	public static final boolean linux			= osName.startsWith("Linux");
-	public static boolean linuxIntel;
+	public static final boolean linuxIntel		= linux && archIntel;
+
 	public static final boolean mac				= osName.startsWith("Mac OS");
+	public static final boolean macIntel		= mac && archIntel;
+	public static final boolean macArm			= mac && arch.equals("aarch64");
 
 	public static final boolean unix			= !windows;
 
@@ -101,17 +104,16 @@ public class Version
 		 */
 		if (windows)
 			osDir = "Windows";
-		else if (linux) {
-			if (arch.equals("i386") || arch.equals("x86")) {
-				osDir = "Linux_i386";		//	i386 and x86 are synonymous to us
-				linuxIntel = true;
-			}
-			else
-				osDir = "Linux_"+arch;
+		else if (linuxIntel) {
+			osDir = "Linux_i386";		//	i386 and x86 are synonymous to us
+		} else if (linux) {
+			osDir = "Linux_"+arch;
 		}
-		else if (mac) {
-			osDir = "Mac";
-			//  TODO Mac with Intel architecture
+		else if (macIntel) {
+			osDir = "Mac_intel";
+		}
+		else if (macArm) {
+			osDir = "Mac_arm";
 		}
 		else
 			osDir = osName+"_"+arch;

@@ -628,7 +628,7 @@
 			<zipfileset dir="bin" prefix="${appldir}/bin">
 				<include name="share/**"/>
 			</zipfileset>
-			<zipfileset dir="bin/Mac" prefix="${appldir}/bin/Mac" filemode="775">
+			<zipfileset dir="bin/Mac_intel" prefix="${appldir}/bin/Mac" filemode="775">
 				<!--include name="Mac/unrar"/-->
 				<include name="mysqld"/>
 				<include name="mysqladmin"/>

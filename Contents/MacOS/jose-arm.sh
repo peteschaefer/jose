@@ -2,7 +2,7 @@
 
 cd $(dirname "$0")/../..
 
-vmargs=-Djava.library.path=lib/Mac_intel
+vmargs=-Djava.library.path=lib/Mac_arm
 args=jose.db=MySQL-standalone
 
 jre/bin/java $vmargs -jar jose.jar $args
