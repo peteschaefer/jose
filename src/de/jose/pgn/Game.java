@@ -845,17 +845,20 @@ public class Game
 			return INSERT_NEW_NODE;
 
 		case NEW_MAIN_LINE:
-			//	todo this should be effectively NEW_LINE, followed by promotoLine()
 			/*LineNode variation = new LineNode(this);
 			move.insertAfter(variation.first());
 			insertIntoCurrentLine(variation, next);
 			(currentMove = move).play(position);
 
 			promoteLine(variation);
-			reformat(); //  side effect: currentMove=null
-			gotoMove(move);*/
+			*/
+			//	todo this should be effectively NEW_LINE, followed by promotoLine()
 			LineNode variation = createNewLine(move,next);
 			promoteLine(variation);
+
+			reformat(); //  side effect: currentMove=null
+			gotoMove(move);
+			// todo or? updateLabels(...)
 			return INSERT_NEW_NODE;
 
 		case NEW_LINE:
@@ -971,6 +974,7 @@ public class Game
 		updateLabels(V);
 		updateMoveCount(B.first);
 		updateMoveCount(A.first);
+		maybe even update style of STATIC_TEXT_NODES
 		*/
 
 		setDirty();
