@@ -12,7 +12,9 @@
 
 package de.jose.util.style;
 
+import de.jose.Application;
 import de.jose.Version;
+import de.jose.image.Surface;
 import de.jose.util.WinRegistry;
 import de.jose.view.style.JoFontConstants;
 import de.jose.Util;
@@ -129,6 +131,15 @@ public class StyleUtil
             if (value != Integer.MIN_VALUE)
                 return new Color(value);
         }
+        if (Version.linux) {
+            Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
+            if (sf!=null) return sf.color;
+        }
+        if (Version.mac) {
+            //   ?
+            return SystemColor.activeCaption;
+        }
+
         //  else {
         return Color.decode("#2675BF");
     }

@@ -129,6 +129,7 @@ public class UserProfile
 		"board.surface.coords",		Surface.newColor(Color.black, "marble02.jpg"),
         "board.hilite.squares",		Boolean.FALSE,
 		"board.animation.hints",    Boolean.FALSE,
+		"lnf.accent.color",			Surface.newColor(Color.decode("#2675BF")),
 
 //		"board.3d.model",				"std2.j3df",
 		"board.3d.model",				"fab100.j3df",

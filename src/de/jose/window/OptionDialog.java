@@ -317,6 +317,16 @@ public class OptionDialog
 
 		addWithLabel(tab2,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
 
+		tab2.add(new JLabel(""), ELEMENT_ONE_ROW);
+
+		if (Version.linux) {
+			addWithLabel(tab2, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
+			//	todo adjust on demand, when?
+		}
+
+		addWithLabel(tab2, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
+		//	todo adjust on demand, when?
+
 		tab2.add(new JLabel(""), ELEMENT_REMAINDER);
 
 	}
@@ -890,6 +900,14 @@ public class OptionDialog
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
 			{
+				openThemeEditor();
+			}
+		};
+		map.put("lnf.theme.editor",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception
+			{
 				//  notification from style editor
 				if (cmd.data==OptionDialog.this) return; //  was broadcasted by ourself
 
@@ -922,6 +940,22 @@ public class OptionDialog
 			}
 		};
 		map.put("plugin.search.time.control.link",action);
+	}
+
+	private void openThemeEditor()
+	{
+		String[] args = new String[] {
+				"jre/bin/java",
+				"-jar", "lib/plaf/flatlaf-theme-editor-3.5.4.jar",
+				"config/themes" };
+        try {
+            Runtime.getRuntime().exec(args);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //com.formdev.flatlaf.themeeditor.FlatLafThemeEditor.main( args );
+		//	would work too, but hangs up sooner or later
 	}
 
 	public void addBooks(File[] files)
