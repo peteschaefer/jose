@@ -56,6 +56,7 @@ public class Main
 			Application.main(args);
 
 		} catch (Throwable ex) {
+			ex.printStackTrace();
 			JoDialog.showErrorDialog(null,ex.getMessage());
 		} finally {
 	        try {

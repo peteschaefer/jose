@@ -249,17 +249,17 @@ public class Util
 	public static Number toNumber(Object obj) throws NumberFormatException
 	{
 		if (obj==null)
-			return new Integer(0);
+			return 0;
 		if (obj instanceof Number)
 			return (Number)obj;
 
 		String text = obj.toString();
 		if (text.length()==0)
-			return new Integer(0);
+			return 0;
 		else if (StringUtil.isInteger(text))
-			return new Integer(text);
+			return Integer.valueOf(text);
 		else
-			return new Double(text);
+			return Double.valueOf(text);
 	}
 
 	public static int toint(Object obj) throws NumberFormatException

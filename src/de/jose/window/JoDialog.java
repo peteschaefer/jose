@@ -1037,7 +1037,7 @@ public class JoDialog
 
 	public final void setValue(String name, int value)
 	{
-		setValue(name, new Integer(value));
+		setValue(name, Integer.valueOf(value));
 	}
 
 	public final void setValue(String name, boolean value)
@@ -1114,9 +1114,9 @@ public class JoDialog
 		else if (comp instanceof JComboBox)
 			return ((JComboBox)comp).getSelectedItem();
 		else if (comp instanceof JCheckBox)
-			return new Boolean(((JCheckBox)comp).isSelected());
+			return ((JCheckBox)comp).isSelected();
 		else if (comp instanceof JRadioButton)
-			return new Boolean(((JRadioButton)comp).isSelected());
+			return ((JRadioButton)comp).isSelected();
 		else if (comp instanceof JColorChooser)
 			return ((JColorChooser)comp).getColor();
 		else if (comp instanceof JSpinner)
@@ -1186,7 +1186,7 @@ public class JoDialog
 
 	public final void setValueByName(String name, int value)
 	{
-		setValue(getElement(name), new Integer(value));
+		setValue(getElement(name), value);
 	}
 
 

@@ -699,7 +699,7 @@ public class UserProfile
 		return (d!=null) ? Util.todouble(d) : defaultValue;
 	}
 
-	public final void set(String key, int value)		{ set(key, value); }
+	public final void set(String key, int value)		{ set(key, (Integer)value); }
 
 	public final boolean getBoolean(String key) {
 		return getBoolean(key,false);
@@ -713,7 +713,7 @@ public class UserProfile
 			return Util.toboolean(b);
 	}
 
-	public final void set(String key, boolean value)	{ set(key, value); }
+	public final void set(String key, boolean value)	{ set(key, (Boolean)value); }
 
 
 	public final Object getStyleAttr(String styleName, Object key)
