@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import static de.jose.Application.USER_INPUT;
 /**
  * OpeningLibrary
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class OpeningLibrary
 		extends Vector/*<BookFileEntry>*/
@@ -87,7 +87,7 @@ public class OpeningLibrary
 	public int selectMode = SELECT_IMPLEMENTATION;
 
 	protected Position pos = new Position();
-	protected Random random = new Random();
+	public Random random = new Random();
 
 	protected BookEntry.BookEntryComparator sort = new BookEntry.BookEntryComparator(selectMode,true);
 
@@ -213,7 +213,8 @@ public class OpeningLibrary
 		return result;
 	}
 
-
+	//	@deprecated use queryMove instead
+/*
 	public BookEntry selectMove(Position pos, int gameMode, boolean ignoreColors, boolean turnWhite)
 			throws IOException
 	{
@@ -235,13 +236,8 @@ public class OpeningLibrary
 		List moves = collectMoves(pos,null,go_deep,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}
-
-	public BookEntry selectMove(List moves, boolean turnWhite)
-	{
-		return selectMove(moves, this.selectMode, turnWhite, this.random);
-	}
-
-	public BookEntry selectMove(List moves, int selectMode, boolean turnWhite, Random random)
+*/
+	public BookEntry selectMove(List<BookEntry> moves, int selectMode, boolean turnWhite, Random random)
 	{
 		if (moves.isEmpty()) return null;
 
@@ -253,7 +249,10 @@ public class OpeningLibrary
 			scores[i] = entry.score(selectMode,turnWhite);
 		}
 
-		return selectMove(moves, scores, random);
+		if (random!=null)
+			return selectMove(moves, scores, random);
+		else
+			return moves.get(ListUtil.maxIndex(scores));
 	}
 
 
@@ -280,33 +279,7 @@ public class OpeningLibrary
 
 		return moves.get(Math.min(i,moves.size()-1));
 	}
-/*
-	public boolean addBook(File file)
-	{
-		int i = indexOf(file);
-		if (i >= 0)
-		{
-			BookFileEntry fentry = (BookFileEntry) books.get(i);
-			if (open(fentry))
-				return true;
-		}
 
-		BookFileEntry fentry = new BookFileEntry(file);
-		books.add(fentry);
-		return open(fentry);
-	}
-
-	public BookFileEntry removeBook(int index)
-	{
-		return (BookFileEntry) books.remove(index);
-	}
-
-	public void moveBook(int fromIndex, int toIndex)
-	{
-		BookFileEntry fentry = removeBook(fromIndex);
-		books.add(toIndex,fentry);
-	}
-*/
 
 	public boolean openBook(int index)
 	{

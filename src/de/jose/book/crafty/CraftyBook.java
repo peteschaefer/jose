@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import java.util.Random;
 /**
  * CraftyBook
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class CraftyBook extends OpeningBook
@@ -136,11 +136,11 @@ public class CraftyBook extends OpeningBook
 		//  NOT canTransposeIntoBook() IMPLIES  ( getBookMoves()==true <--> NOT result.isEmpty() )
 	}
 
-	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
-			throws IOException
-	{
-			return null;  //let OpeningLibrary choose a move
-	}
+//	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
+//			throws IOException
+//	{
+//			return null;  //let OpeningLibrary choose a move
+//	}
 
 
 	private int seekCluster(long key) throws IOException

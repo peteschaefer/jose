@@ -207,7 +207,7 @@ public class ShredderBook extends OpeningBook
 		}
 	}
 
-
+/*
 	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
 	{
 		//  TODO implement reversed color transposition
@@ -229,7 +229,7 @@ public class ShredderBook extends OpeningBook
 		return null;
 		}
 	}
-
+*/
 	public List readMoveEntries(Position board)
 	{
 		/*synchronized (board)*/ {

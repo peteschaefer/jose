@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import static de.jose.book.BookEntry.IUNKNOWN;
 /**
  * Book
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class PolyglotBook extends OpeningBook
 {
@@ -93,10 +93,10 @@ public class PolyglotBook extends OpeningBook
 		return in_book;
 	}
 
-	public BookEntry selectBookMove(Position pos, boolean withTransposedColors, Random random)
-	{
-		return null;    //  let OpeningLibrary select a move
-	}
+//	public BookEntry selectBookMove(Position pos, boolean withTransposedColors, Random random)
+//	{
+//		return null;    //  let OpeningLibrary select a move
+//	}
 
 
 	private int find_pos(long key)

@@ -6,6 +6,7 @@ import de.jose.book.polyglot.PolyglotBook;
 import de.jose.book.polyglot.PolyglotHashKey;
 import de.jose.book.shredder.ShredderHashKey;
 import de.jose.chess.Board;
+import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.comm.msg.MessageProducer;
 import de.jose.pgn.Game;
@@ -26,10 +27,11 @@ public class BookQuery
     public static long theSeqNo=0;
 
     //  Application state. If it changes, the query is discarded
-    long seqNo; // sequence number for each query
-    Game appGame;
-    MoveNode appMove;
-    int appMode;
+    protected long seqNo; // sequence number for each query
+    protected Game appGame;
+    protected MoveNode appMove;
+    protected int appMode;
+    public Move lastMove;
 
     // Query argument
     public String fen;
@@ -81,5 +83,7 @@ public class BookQuery
 
         if (isValid() && (onCompletion!=0))
             sendMessage(onCompletion,this);
+        else
+            System.err.println("lost query");
     }
 }

@@ -64,6 +64,7 @@ abstract public class Plugin
 	public static final int BOOK_SHOW	                          = 88;
 	public static final int BOOK_ANALYSIS                         = 87;
 	public static final int BOOK_PLAY	                          = 86;
+	public static final int BOOK_HINT	                          = 85;
 
 	//-------------------------------------------------------------------------------
 	//	Fields

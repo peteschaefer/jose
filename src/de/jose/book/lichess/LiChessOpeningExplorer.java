@@ -171,11 +171,11 @@ public class LiChessOpeningExplorer extends OpeningBook
         }
     }
 
-    @Override
-    public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random) throws IOException {
+//    @Override
+//    public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random) throws IOException {
         //  let opening Library do it
-        return null;
-    }
+//        return null;
+//    }
 
     public static void startDownload(LiChessGameRef gameRef)     {
         Runnable job = new Runnable() {

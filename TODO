@@ -9,15 +9,7 @@
     [ ] OpeningLibrary.selectEngineMove() true/false. play immediately
     [ ] start BookQuery (BOOK_PLAY)
     [ ] on completion: playBookMove() (and start engine response
-
-[ ] asynch book lookups
-    - coordination is subtle
-    1. overlapping queries need to be conflated (i.e. we need a request counter)
-    2. on completion, show moves in engine panel (if it is still in same state & move)
-    3. if unsuccesul, switch to engine analysis (if it is still in same state & move)
-    - don't rely on Position during queries (it might be out-of-synch)
-    - compute query data first (fen)
-
+    [x] conflate BOOK_PLAY with BOOK_SHOW; no need to make two queries in Play mode
 
 === Database Bugs
 
@@ -90,6 +82,14 @@ Alternative JREs:
     - 64+2 bits instead of fRedraw
     - set bits selectively when painting/undoing arrows
 * double buffering still needed ? (probably)
+
+* do we need a GameController ?
+    - talk to Engine
+    - manage BookQueries
+ much of it is spread over Application, a bit over EnginePanel.
+ maybe time to centralize it.
+ On the other hand, Game navigation & editing is another big chunk
+ of Application.
 
 ==== Interesting New Features
 

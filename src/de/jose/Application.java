@@ -75,6 +75,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static de.jose.book.OpeningLibrary.SELECT_GAME_COUNT;
 import static de.jose.chess.Board.XFEN;
 import static de.jose.plugin.Plugin.*;
 
@@ -1457,32 +1458,8 @@ public class Application
 					engine.moveNow();
 				else if (theGame.getPosition().isMate() || theGame.getPosition().isStalemate())
 					Sound.play("sound.error");
-				else if (selectBookMove()) {
-					/* move chosen from book,alright */
-					//setGameDefaultInfo();
-					theMode = USER_ENGINE;
-				}
-				else
-				{
-				invokeWithPlugin(new Runnable() {
-					public void run() {
-						EnginePlugin engine = getEnginePlugin();
-						boolean supportsFRC = engine.supportsFRC();
-						if (!isClassic && !supportsFRC)
-							showFRCWarning(false);
-							//  but keep on playing (you have been warned ;-)
-						if (engine.isThinking())
-							engine.moveNow();
-						else {
-							//	thePlugin.setTime(clockPanel().getWhite/BlackTime());
-							//	adjust time ? or rely on engine's time keeping ?
-							setGameDefaultInfo();
-							engine.go();
-							theMode = USER_ENGINE;
-						}
-					}
-				});
-			}
+				else if (! queryBookMove(null))
+					enginePlay();
 			}
 		};
 		map.put("move.start", action);
@@ -2071,19 +2048,9 @@ public class Application
 				 * otherwise: request hint from Book or Engine
 				 */
 				Position pos = theGame.getPosition();
-				BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
-				if (hint!=null) {
-					//  (1) Hint from Opening Library
-					Application.this.handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, hint.move);
-					if (enginePanel()!=null)
-						enginePanel().handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, hint.move);
-				}
-				else if (getEnginePlugin()!=null)
-				{
-					//  (2) Hint from Plugin
-					getEnginePlugin().getHint();
-					//	plugin will eventually respond with a Hint message
-				}
+				//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
+				BookQuery query = new BookQuery(pos, BOOK_HINT);
+				theExecutorService.submit(query);
 			}
 		};
 		map.put("menu.game.hint",action);
@@ -2366,28 +2333,55 @@ public class Application
 		}
 	}
 
-	private void afterBookUpdate(BookQuery query, Position pos)
-	{
+	private void handleBookMessage(BookQuery query, Position pos) throws Exception {
 		if (!query.isValid())
 			return;
 
 		EnginePanel eng = enginePanel();
-		if (query.onCompletion==BOOK_SHOW || query.onCompletion==BOOK_ANALYSIS)
+		BookEntry entry;
+
+		switch(query.onCompletion)
 		{
-			if (!query.result.isEmpty()) {
-				pausePlugin(false);
-				eng.showBook(query.result, pos);
-			} else {
-				eng.exitBook();
-				//	when out of book, switch to Engine
-				if (query.onCompletion == BOOK_ANALYSIS)
-					startEngineAnalysis(true);
-			}
-		}
-		if (query.onCompletion==BOOK_PLAY)
-		{
-			//	todo
-			//	see playBookMove()
+			case BOOK_SHOW:
+			case BOOK_ANALYSIS:
+				if (!query.result.isEmpty()) {
+					pausePlugin(false);
+					eng.showBook(query.result, pos);
+				} else {
+					eng.exitBook();
+					//	when out of book, switch to Engine
+					if (query.onCompletion == BOOK_ANALYSIS)
+						startEngineAnalysis(true);
+				}
+				break;
+
+			case BOOK_PLAY:
+				entry = theOpeningLibrary.selectMove(query.result,
+						SELECT_GAME_COUNT, pos.whiteMovesNext(),
+						theOpeningLibrary.random);
+				if (entry != null)
+					playBookMove(entry);
+				else if (query.lastMove!=null)
+					enginePlay(query.lastMove);
+				else
+					enginePlay();
+				break;
+
+			case BOOK_HINT:
+				entry = theOpeningLibrary.selectMove(query.result, SELECT_GAME_COUNT,pos.whiteMovesNext(),null);
+				if (entry!=null) {
+					//  (1) Hint from Opening Library
+					Application.this.handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, entry.move);
+					if (enginePanel()!=null)
+						enginePanel().handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, entry.move);
+				}
+				else if (getEnginePlugin()!=null)
+				{
+					//  (2) Hint from Plugin
+					getEnginePlugin().getHint();
+					//	plugin will eventually respond with a Hint message
+				}
+				break;
 		}
 	}
 
@@ -2454,16 +2448,9 @@ public class Application
 					break;
 
 			case USER_ENGINE:
-				boolean wasBook = false;
-				try {
-					// PLAY FROM BOOK
-					wasBook = selectBookMove();
-					//	todo make asynch; execute in onBookUpdate, later
-				} catch (Exception e) {
-					wasBook = false;
-				}
-
-				if (!wasBook)
+				// PLAY FROM BOOK
+				//	migth call back to onBookUpdate, later
+				if (! queryBookMove(mv))
 					enginePlay(mv);
 				break;
 
@@ -2494,6 +2481,31 @@ public class Application
 						showFRCWarning(false);
 						//  but keep on playing (you have been warned ;-)
 					engine.analyze(theGame.getPosition(), userMove);
+				}
+			}
+		});
+	}
+
+	private void enginePlay()
+	{
+		boolean isClassic = theGame.getPosition().isClassic();
+
+		//enginePanel().exitBook(); ?
+		invokeWithPlugin(new Runnable() {
+			public void run() {
+				EnginePlugin engine = getEnginePlugin();
+				boolean supportsFRC = engine.supportsFRC();
+				if (!isClassic && !supportsFRC)
+					showFRCWarning(false);
+				//  but keep on playing (you have been warned ;-)
+				if (engine.isThinking())
+					engine.moveNow();
+				else {
+					//	thePlugin.setTime(clockPanel().getWhite/BlackTime());
+					//	adjust time ? or rely on engine's time keeping ?
+					setGameDefaultInfo();
+					engine.go();
+					theMode = USER_ENGINE;
 				}
 			}
 		});
@@ -3229,7 +3241,7 @@ public class Application
 		case BOOK_SHOW:
 		case BOOK_PLAY:
 			BookQuery query = (BookQuery)data;
-			afterBookUpdate(query, pos);
+			handleBookMessage(query, pos);
 			break;
 		}
 	}
@@ -3641,25 +3653,25 @@ public class Application
 		}
 	}
 
-	public boolean selectBookMove() throws Exception
+	public boolean queryBookMove(Move lastMove)
 	{
 		switch (theOpeningLibrary.engineMode)
 		{
-		case OpeningLibrary.PREFER_ENGINE_BOOK:
-			if (getEnginePlugin()!=null && getEnginePlugin().isBookEnabled())
-				return false;
-			//  else: intended fall-through
-		default:
-		case OpeningLibrary.GUI_BOOK_ONLY:
-		case OpeningLibrary.PREFER_GUI_BOOK:
-			//	todo make asynch
-			BookEntry bookEntry = theOpeningLibrary.selectMove(
-					theGame.getPosition(), theMode, true,
-					theGame.getPosition().whiteMovesNext());
-			return (bookEntry!=null) && playBookMove(bookEntry);
+			case OpeningLibrary.PREFER_ENGINE_BOOK:
+				if (getEnginePlugin()!=null && getEnginePlugin().isBookEnabled())
+					return false;
+				//  else: intended fall-through
+			default:
+			case OpeningLibrary.GUI_BOOK_ONLY:
+			case OpeningLibrary.PREFER_GUI_BOOK:
+				theMode = USER_ENGINE;
+				BookQuery query = new BookQuery(theGame.getPosition(), BOOK_PLAY);
+				query.lastMove = lastMove;
+				theExecutorService.submit(query);
+				return true;
 
-		case OpeningLibrary.NO_BOOK:
-			return false;   //  pretty easy
+			case OpeningLibrary.NO_BOOK:
+				return false;   //  pretty easy
 		}
 	}
 

@@ -55,6 +55,9 @@ import java.util.*;
 import java.util.List;
 import java.io.IOException;
 
+import static de.jose.Application.ENGINE_ENGINE;
+import static de.jose.Application.USER_ENGINE;
+
 public class EnginePanel
 		extends JoPanel
 		implements ClipboardOwner, MouseListener, DeferredMessageListener
@@ -1538,8 +1541,17 @@ public class EnginePanel
 					/* stay in engine mode */;
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					Application.theApplication.updateBook(wasEngineMove,
-							Application.theApplication.theMode==Application.ANALYSIS);
+					switch(Application.theApplication.theMode)
+					{	//	todo move this stuff to Application
+						case USER_ENGINE:
+						case ENGINE_ENGINE:
+							//	will play a move and hit the Book anyway
+							break;
+						default:
+							Application.theApplication.updateBook(wasEngineMove,
+									Application.theApplication.theMode==Application.ANALYSIS);
+							break;
+					}
 				}
 			}
 		};
