@@ -1,0 +1,55 @@
+60
+ // list of diacritical characters
+ // stored in UTF-16
+ //                
+ // to replace Unicode characters by "\uxxxx" sequences
+ / call "java de.jose.util.CharUtil diacr.txt > diacr2.txt"
+ //
+
+ private static String[] kEscapes = {
+  "  `´^~\"_uv.           c ,   jk -ne °	/	s",
+  "   '                               o      ",	 
+ };
+								 
+ private static String[] kDiacritics = {
+  // latin:
+  "A ÀÁÂÃÄ\u0100\u0102\u01cd\u1ea0\u1ea2\u1ea4\u1ea6\u1ea8\u1eaa\u1eac\u1eae\u1eb0\u1eb2\u1eb4\u1eb6\u0104          Æ\u01fcÅ           \u01fa",
+  "a àáâãä\u0101\u0103\u01ce\u1ea1\u1ea3\u1ea5\u1ea7\u1ea9\u1eab\u1ead\u1eaf\u1eb1\u1eb3\u1eb5\u1eb7\u0105          æ\u01fdå           \u01fb",
+  "O ÒÓÔÕÖ\u014c\u014e\u01d1\u1ecc\u1ece\u1ed0\u1ed2\u1ed4\u1ed6\u1ed8\u1eda\u1edc\u1ede\u1ee0\u1ee2           \u0152  \u01a0Ø\u01fe\u0150       ",
+  "o òóôõö\u014d\u014f\u01d2\u1ecd\u1ecf\u1ed1\u1ed3\u1ed5\u1ed7\u1ed9\u1edb\u1edd\u1edf\u1ee1\u1ee3           \u0153  \u01a1ø\u01ff\u0151       ",
+  "U ÙÚÛ\u0168Ü\u016a\u016c\u01d3\u1ee4\u1ee6     \u1ee8\u1eea\u1eec\u1eee\u1ef0\u0172            \u016e\u01af  \u0170   \u01d5\u01d7\u01d9\u01db",
+  "u ùúû\u0169ü\u016b\u016d\u01d4\u1ee5\u1ee7     \u1ee9\u1eeb\u1eed\u1eef\u1ef1\u0173            \u016f\u01b0  \u0171   \u01d6\u01d8\u01da\u01dc",
+  "C  \u0106\u0108    \u010c            Ç\u010a                   ",
+  "c  \u0107\u0109    \u010d            ç\u010b                   ",
+  "D        \u010e                                 ",
+  "d                       \u010f                  ",
+  "E ÈÉÊ\u1ebcË\u0112\u0114\u011a\u1eb8\u1eba\u1ebe\u1ec0\u1ec2\u1ec4\u1ec6     \u0118\u0116                   "
+  "e èéê\u1ebdë\u0113\u0115\u011b\u1eb9\u1ebb\u1ebf\u1ec1\u1ec3\u1ec5\u1ec7     \u0119\u0117                   ",
+  "f                        \u0192                 ",
+  "G   \u011c   \u011e             \u0122\u0120                   ",
+  "g   \u011d   \u011f              \u0121\u0123                  ",
+  "H   \u0124                     \u0126                ",
+  "h   \u0125                     \u0127                ",
+  "I ÌÍÎ\u0128Ï\u012a\u012c\u01cf\u1eca\u1ec8          \u012e\u0130   \u0131\u0132              ",
+  "i ìíî\u0129ï\u012b\u012d\u01d0\u1ecb\u1ec9          \u012f     \u0133              ",
+  "J   \u0134                                      "
+  "j   \u0135                                      ",
+  "K                     \u0136      \u0138             ",
+  "k                     \u0137                    ",
+  "L  \u0139                  \u013b \u013d     \u013f\u0141           ",
+  "l  \u013a                  \u013c \u013e     \u0140\u0142           ",
+  "N  \u0143 Ñ   \u0147            \u0145 \u0149       \u014a          ",
+  "n  \u0144 ñ   \u0148            \u0146         \u014b          ",
+  "R  \u0154     \u0158            \u0156                    ",
+  "r  \u0155     \u0159            \u0157                    ",
+  "S  \u015a\u015c    \u0160            \u015e                  ß ",
+  "s  \u015b\u015d    \u0161            \u015f                    ",
+  "T        \u0164                \u0166               \u0162",
+  "t                       \u0165 \u0167               \u0163",
+  "W \u1e80\u1e82\u0174 \u1e84                                    ",						    
+  "w \u1e81\u1e83\u0175 \u1e85                                    ",						    
+  "Y \u1ef2Ý\u0176\u1ef8\u0178   \u1ef4\u1ef6                               ",					    
+  "y \u1ef3ý\u0177\u1ef9ÿ   \u1ef5\u1ef7                               ",					    
+  "Z  \u0179     \u017d             \u017b                   ",	    
+  "z  \u017a     \u017e             \u017c                   ",	    
+ };

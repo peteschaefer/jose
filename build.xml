@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="jose" basedir="." default="jar">
+    <description> make file for jose </description>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--    release build                                                                         -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- java source directory -->
+    <property name="java.src" location="src"/>
+	<!-- java classes directory -->
+	<property name="java.classes" location="classes"/>
+	<!-- application main class -->
+	<property name="java.main.class" value="de.jose.Main"/>
+	<!-- build version -->
+	<property name="version" value="1.4.2"/>
+
+	<!-- html docs -->
+	<property name="man.html" location="doc/man"/>
+	<!-- JavaHelp directory -->
+	<property name="javahelp" location="C:\jh1.1.3\javahelp\lib"/>
+
+	<target name="init">
+		<description> setup initial properties</description>
+		<!-- property is only set on windows -->
+		<condition property="is-windows">
+			<os family="windows"/>
+		</condition>
+	</target>
+
+	<property name="java.common.path" value="lib/jsdk23.jar lib/jaxp.jar lib/xerces.jar lib/xalan.jar lib/jcommon.jar lib/jfreechart.jar"/>
+	<property name="java.jdbc.path" value="lib/jdbc/antlr.jar lib/jdbc/qed.jar lib/jdbc/caucho.jar lib/nativeskin.jar"/>
+	<property name="java.plaf.path" value="lib/plaf/3DLF.jar lib/plaf/gtkswing.jar lib/plaf/kunststoff.jar lib/plaf/metouia.jar lib/plaf/nextlf.jar lib/plaf/oalnf.jar lib/plaf/skinlf.jar lib/plaf/teknolust.jar lib/plaf/quaqua.jar"/>
+
+    <!-- class path at runtime (as it appears in manifest) -->
+	<property name="java.runtime.path" value="lib/jh.jar lib/jdbc/mysql-je.jar lib/plaf/metouia.jar lib/Mac/MRJAdapter.jar"/>
+
+	<!-- class path for compilation -->
+	<path id="java.build.path">
+		<pathelement location="lib/Windows/j3dcore.jar"/>
+<!--		<pathelement location="lib/Windows/j3daudio.jar"/>-->
+<!--		<pathelement location="lib/Windows/j3dutils.jar"/>-->
+<!--		<pathelement location="lib/Windows/vecmath.jar"/>-->
+
+		<pathelement location="lib/fop-plus.jar"/>
+		<pathelement location="lib/jai_codec.jar"/>
+<!--		<pathelement location="lib/jcommon.jar"/>-->
+<!--		<pathelement location="lib/jfreechart.jar"/>-->
+<!--		<pathelement location="lib/portfolio.jar"/>-->
+        <pathelement location="lib/jsdk23.jar"/>
+<!--        <pathelement location="lib/jaxp.jar"/>-->
+        <pathelement location="lib/jh.jar"/>
+<!--		<pathelement location="lib/httpunit.jar"/>-->
+<!--		<pathelement location="lib/Tidy.jar"/>-->
+		<!--pathelement location="lib/xerces.jar"/-->
+        <!--pathelement location="lib/xalan.jar"/-->
+<!--        <pathelement location="lib/jl020.jar"/>-->
+		<pathelement location="lib/plaf/skinlf.jar"/>
+		<pathelement location="lib/plaf/quaqua.jar"/>
+<!--        <pathelement location="lib/plaf/nativeskin.jar"/>-->
+		<pathelement location="lib/jdbc/mysql.jar"/>
+		<pathelement location="lib/jdbc/mysql-je.jar"/>
+<!--		<pathelement location="lib/jdbc/jds.jar"/>-->
+<!--		<pathelement location="lib/lucene.jar"/>-->
+<!--		<pathelement location="lib/xpath14"/>-->
+<!--		<pathelement location="lib/xpath15"/>-->
+		<pathelement location="lib/jose15.jar"/>
+		<pathelement location="lib/Mac/MRJAdapter.jar"/>
+	</path>
+
+	<target name="clean">
+		<description> clean up directories </description>
+		<!-- clean up classes directory -->
+		<delete>
+			<fileset dir="${java.classes}" excludes="**/Main.class"/>
+        </delete>
+		<!-- clean up jose.jar --> 
+		<delete file="jose.jar"/>
+		<!-- clean up Thumbs.db (Windows image previews) -->
+		<delete>
+			<fileset dir="." includes="**/Thumbs.db"/>
+		</delete>
+	</target>
+
+    <target name="bootClasses">
+		<mkdir dir="${java.classes}"/>
+		<!-- some classes are 1.5 specific -->
+		<javac fork="yes"
+			executable="C:/jdk1.5/bin/javac.exe"
+			srcdir="${java.src}" destdir="${java.classes}"
+			source="1.4" target="1.4" compiler="modern"
+			nowarn="on" optimize="on"
+			debug="on">
+
+			<include name="de/jose/util/xml/XPathImpl15.java"/>
+			<include name="de/jose/util/WinUtils.java"/>
+
+		</javac>
+	    <!-- debug="off" debuglevel="lines" -->
+	    <!-- de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM) -->
+        <exec executable="C:/Programme/Microsoft Visual Studio/VJ98/jvc.exe">
+		    <arg line="/cp:p &quot;${java.classes}&quot; /d &quot;${java.classes}&quot; /g &quot;${java.src}/de/jose/BootError.java&quot; &quot;${java.src}/de/jose/Main.java&quot;  "/>
+	    </exec>
+
+		<!-- important: compile against JRE 1.4 to maintain backward compatibility -->
+        <!-- the jar file is useful when compiling against 1.4 only (Mac OS X) -->
+        <jar jarfile="lib/jose15.jar" basedir="${java.classes}"
+			index="false"
+			includes="de/jose/util/xml/XPathImpl15.class de/jose/util/WinUtils.class de/jose/Main.class de/jose/BootError.class">
+		</jar>
+
+    </target>
+
+    <target name="classes">
+        <mkdir dir="${java.classes}"/>
+
+	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
+
+		<javac fork="yes"
+            executable="C:/jdk1.4/bin/javac.exe"
+			srcdir="${java.src}" destdir="${java.classes}"
+			source="1.4" target="1.4" compiler="modern"
+			nowarn="on" optimize="on"
+			includeantruntime="no"
+			includejavaruntime="yes"
+			debug="on"
+			classpathref="java.build.path">
+
+			<exclude name="**/de/jose/util/xml/XPathImpl15.java"/>
+			<exclude name="**/de/jose/util/WinUtils.java"/>
+
+			<exclude name="**/de/jose/Main.java"/>
+			<exclude name="**/de/jose/BootError.java"/>
+
+			<exclude name="**/FlyBy.java"/>
+			<exclude name="**/devtools/**"/>
+			<exclude name="**/db/JDataStoreAdapter.java"/>
+			<exclude name="**/CreatePositionIndex*.java"/>
+			<exclude name="**/OnlineReport.java"/>
+
+			<exclude name="**/com/shredderchess/**"/>
+			<exclude name="**/shredder/**"/>
+
+			</javac>
+
+	    <!--boot classes-->
+	    <unzip src="lib/jose15.jar" dest="${java.classes}"/>
+
+	</target>
+
+	<target name="jar" depends="classes">
+		<description> build release jar file </description>
+		<delete file="jose.jar"/>
+
+		<tstamp/>
+
+		<jar jarfile="jose.jar" basedir="${java.classes}"
+			index="false"
+			excludes="**/Bootstrap.class .dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/**">
+			<manifest>
+				<!-- please DON'T use index="true" it will break the Class-Path (java bug) -->
+
+<!--				<attribute name="Built-By" value="Peter Schäfer"/>-->
+<!--				<attribute name="Implementation-Title" value="jose"/>-->
+<!--				<attribute name="Implementation-Version" value="${version} ${TODAY}"/>-->
+
+
+                <attribute name="Main-Class" value="${java.main.class}"/>
+				<!--attribute name="Class-Path" value="${java.runtime.path}"/-->
+				<attribute name="Class-Path" value="${java.runtime.path}"/>
+			</manifest>
+		</jar>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - -->
+	<!--   HTML manual                 -->
+	<!-- - - - - - - - - - - - - - - - -->
+	<target name="doc">
+		<description>build html documentaion</description>
+		<java classname="de.jose.help.TOCGenerator" fork="yes" dir="${man.html}">
+			<arg line=". -notoc img -notoc JavaHelpSearch -notoc macros.html -notoc demo"/>
+			<classpath>
+				<pathelement path="${java.classes}"/>
+				<pathelement path="${javahelp}/jhall.jar"/>
+			</classpath>
+		</java>
+
+		<java classname="com.sun.java.help.search.Indexer" fork="yes" dir="${man.html}">
+			<arg line="index.html 01-install 03-panel 04-menu 05-dialog 10-reference"/>
+			<classpath>
+				<pathelement path="${javahelp}/jhall.jar"/>
+				<pathelement path="${javahelp}/jsearch.jar"/>
+			</classpath>
+		</java>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--     database setup                                                                        -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- data source -->
+	<property name="db.source" value="Quadcap"/>
+	<!-- local database directory -->
+	<property name="db.dir" location="database/Quadcap"/>
+	<!-- class path for db setup -->
+	<path id="db.setup.path">
+		<pathelement location=""/>
+	</path>
+
+	<target name="db.clean">
+		<description> clean up database directory </description>
+		<delete dir="${db.dir}"/>
+	</target>
+
+	<target name="db.setup">
+		<description> create a new database and populate it with default data </description>
+
+		<java classname="de.jose.db.Setup"
+			classpathref="db.setup.path">
+			<arg value="-db ${db.source}"/>
+		</java>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--     3D model assembly                                                                  -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- source path for 3D models -->
+	<property name="3d.src" location="3d/work"/>
+	<!-- destination path for 3D models -->
+	<property name="3d.dest" location="3d"/>
+	<!-- class path for running assembler -->
+	<path id="3d.build.path">
+		<pathelement location="${java.classes}"/>
+		<pathelement location="lib/xerces.jar"/>
+		<pathelement location="lib/portfolio.jar"/>
+	</path>
+
+	<target name="3d.assemble">
+		<description> assemble 3d models </description>
+
+		<antcall target="3d.assemble.zip">
+			<param name="ctrl" value="clock"/>
+		</antcall>
+        <antcall target="3d.assemble.file">
+            <param name="ctrl" value="fab100"/>
+        </antcall>
+		<antcall target="3d.assemble.file">
+			<param name="ctrl" value="std"/>
+		</antcall>
+        <antcall target="3d.assemble.zip">
+            <param name="ctrl" value="flyby"/>
+        </antcall>
+		<antcall target="3d.assemble.file">
+			<param name="ctrl" value="std2"/>
+		</antcall>
+		<antcall target="3d.assemble.file">
+			<param name="ctrl" value="fab50x"/>
+		</antcall>
+		<antcall target="3d.assemble.file">
+			<param name="ctrl" value="fau"/>
+		</antcall>
+
+	</target>
+
+    <target name="3d.assemble.file">
+        <description> param = ctrl</description>
+
+        <java classname="de.jose.devtools.Jo3DAssembler"
+            classpathref="3d.build.path"
+            fork="true">
+            <arg value="${3d.src}/${ctrl}"/>
+            <arg value="${3d.dest}/${ctrl}"/>
+        </java>
+
+    </target>
+
+    <target name="3d.assemble.stream">
+        <description> param = ctrl</description>
+
+        <java classname="de.jose.devtools.Jo3DAssembler"
+            classpathref="3d.build.path"
+            fork="true">
+            <arg value="${3d.src}/${ctrl}"/>
+            <arg value="${3d.dest}/${ctrl}"/>
+            <arg value="-stream"/>
+        </java>
+
+    </target>
+
+	<target name="3d.assemble.zip">
+		<description> param = ctrl</description>
+
+		<java classname="de.jose.devtools.Jo3DAssembler"
+			classpathref="3d.build.path"
+			fork="true">
+			<arg value="${3d.src}/${ctrl}"/>
+			<arg value="${3d.dest}/${ctrl}"/>
+			<arg value="-zip"/>
+		</java>
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--     create javadoc                                                                       -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</project>

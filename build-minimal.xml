@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="jose-build-minimal" basedir="D:/jose/work" default="jar">
+    <description> make file for jose </description>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--    release build                                                                         -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<!-- java source directory -->
+    <property name="java.src" location="src"/>
+	<!-- java classes directory -->
+	<property name="java.classes" location="classes"/>
+	<!-- application main class -->
+	<property name="java.main.class" value="de.jose.Main"/>
+	<!-- build version -->
+	<property name="version" value="1.3.3"/>
+
+	<target name="init">
+		<description> setup initial properties</description>
+		<!-- property is only set on windows -->
+		<condition property="is-windows">
+			<os family="windows"/>
+		</condition>
+	</target>
+
+<!--	<property name="java.common.path" value="lib/jsdk23.jar lib/jaxp.jar lib/xerces.jar lib/xalan.jar lib/jcommon.jar lib/jfreechart.jar"/>-->
+<!--	<property name="java.jdbc.path" value="lib/jdbc/antlr.jar lib/jdbc/qed.jar lib/jdbc/caucho.jar lib/nativeskin.jar"/>-->
+<!--	<property name="java.plaf.path" value="lib/plaf/3DLF.jar lib/plaf/gtkswing.jar lib/plaf/kunststoff.jar lib/plaf/metouia.jar lib/plaf/nextlf.jar lib/plaf/oalnf.jar lib/plaf/skinlf.jar lib/plaf/teknolust.jar"/>-->
+
+    <!-- class path at runtime (as it appears in manifest) -->
+	<property name="java.runtime.path" value="lib/jh.jar lib/jdbc/mysql.jar lib/plaf/metouia.jar lib/Mac/MRJAdapter.jar"/>
+
+	<!-- class path for compilation -->
+	<path id="java.build.path">
+		<pathelement location="lib/Windows/jd3core.jar"/>
+		<pathelement location="lib/Windows/j3daudio.jar"/>
+		<pathelement location="lib/Windows/j3dutils.jar"/>
+		<pathelement location="lib/Windows/vecmath.jar"/>
+
+		<pathelement location="lib/fop-plus.jar"/>
+		<pathelement location="lib/jai_codec.jar"/>
+<!--		<pathelement location="lib/jcommon.jar"/>-->
+<!--		<pathelement location="lib/jfreechart.jar"/>-->
+<!--		<pathelement location="lib/portfolio.jar"/>-->
+<!--        <pathelement location="lib/jsdk23.jar"/>-->
+<!--        <pathelement location="lib/jaxp.jar"/>-->
+        <pathelement location="lib/jh.jar"/>
+<!--		<pathelement location="lib/httpunit.jar"/>-->
+<!--		<pathelement location="lib/Tidy.jar"/>-->
+<!--		<pathelement location="lib/xerces.jar"/>-->
+<!--        <pathelement location="lib/xalan.jar"/>-->
+<!--        <pathelement location="lib/jl020.jar"/>-->
+		<pathelement location="lib/plaf/skinlf.jar"/>
+<!--        <pathelement location="lib/plaf/nativeskin.jar"/>-->
+		<pathelement location="lib/jdbc/mysql.jar"/>
+		<pathelement location="lib/Mac/MRJAdapter.jar"/>
+<!--		<pathelement location="lib/jdbc/jds.jar"/>-->
+<!--		<pathelement location="lib/lucene.jar"/>-->
+	</path>
+
+	<target name="clean">
+		<description> clean up directories </description>
+		<!-- clean up classes directory -->
+		<delete>
+			<fileset dir="${java.classes}" excludes="**/Main.class"/>
+        </delete>
+		<!-- clean up jose.jar --> 
+		<delete file="jose.jar"/>
+		<!-- clean up Thumbs.db (Windows image previews) -->
+		<delete>
+			<fileset dir="." includes="**/Thumbs.db"/>
+		</delete>
+	</target>
+
+	<target name="classes">
+		<description> build release class files </description>
+
+		<mkdir dir="${java.classes}"/>
+		<javac srcdir="${java.src}" destdir="${java.classes}"
+			target="1.4" compiler="modern"
+			nowarn="on" optimize="on"
+			debug="on"
+			classpathref="java.build.path">
+		<exclude name="**/FlyBy.java"/>
+		<exclude name="**/devtools/**"/>
+		<exclude name="**/db/JDataStoreAdapter.java"/>
+		<exclude name="**/CreatePositionIndex*.java"/>
+		<exclude name="**/OnlineReport.java"/>
+			<!-- exclude files that do not appear in the final build: -->
+        </javac>
+
+		<!-- debug="off" debuglevel="lines" -->
+	</target>
+
+<!--
+	<target name="main.class" depends="init" if="is-windows">
+		<description>build the main wrapper class (use M$ compiler so that it is compatible with jview)</description>
+		<! - - de.jose.Main needs to be compiled with M$ JVC (so that it will run with that rotten JVM) - - >
+		<exec executable="C:/Programme/Microsoft Visual Studio/VJ98/jvc.exe">
+			<arg line="/cp:p &quot;${java.classes}&quot; /d &quot;${java.classes}&quot; /g &quot;${java.src}/de/jose/Main.java&quot;"/>
+		</exec>
+	</target>
+-->
+
+	<target name="jar" depends="classes">
+		<description> build release jar file </description>
+		<delete file="jose.jar"/>
+
+		<tstamp/>
+
+		<jar jarfile="jose.jar" basedir="${java.classes}"
+			index="false"
+			excludes="**/Bootstrap.class .dependency-info/** **/de/jose/devtools/** **/de/jose/crafty/**">
+			<manifest>
+				<!-- please DON'T use index="true" it will break the Class-Path (java bug) -->
+
+<!--				<attribute name="Built-By" value="Peter Schäfer"/>-->
+<!--				<attribute name="Implementation-Title" value="jose"/>-->
+<!--				<attribute name="Implementation-Version" value="${version} ${TODAY}"/>-->
+
+
+                <attribute name="Main-Class" value="${java.main.class}"/>
+				<!--attribute name="Class-Path" value="${java.runtime.path}"/-->
+				<attribute name="Class-Path" value="${java.runtime.path}"/>
+			</manifest>
+		</jar>
+	</target>
+
+</project>

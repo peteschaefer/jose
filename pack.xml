@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="jose-deploy" basedir="." default="release">
+    <description> release packaging </description>
+
+	<!-- current verision (as used in file names) -->
+	<property name="version" value="142"/>
+
+	<!-- target directory -->
+
+	<property name="target-dir" location="F:/jose archive/release/${version}"/>
+	<property name="jre-dir" location="F:/jose archive/release/extras"/>
+
+
+<!--
+	<property name="target-dir" location="/windows/F/jose archive/release/${version}"/>
+	<property name="jre-dir" location="/windows/F/jose archive/release/extras"/>
+-->
+
+	<target name="init">
+		<echo>Ant Version: ${ant.version}</echo>
+		<mkdir dir="${target-dir}"/>
+		<echo>Building: ${target-dir}</echo>
+	</target>
+
+	<target name="clean">
+		<description> clean up release directory </description>
+		<delete dir="${target-dir}"/>
+	</target>
+
+	<target name="zip-base">
+		<description> basic installation package (not including platform specific stuff) </description>
+
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="false">
+
+			<zipfileset dir="." prefix="${appldir}">
+				<include name="HISTORY"/>
+				<include name="LICENSE"/>
+				<include name="RELEASE NOTES"/>
+				<include name="jose.jar"/>
+			</zipfileset>
+
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="eco.key"/>
+				<include name="lang.properties*"/>
+				<include name="eco.properties*"/>
+				<include name="datasources.xml"/>
+				<include name="fonts.xml"/>
+				<include name="menu.xml"/>
+				<include name="meta.xml"/>
+				<include name="books.xml"/>
+				<include name="misc.xml"/>
+				<include name="toolbars.xml"/>
+            </zipfileset>
+
+			<zipfileset dir="database" prefix="${appldir}/database" dirmode="777">
+				<include name="starter.pgn"/>
+				<include name="mysql/info.txt"/>
+			</zipfileset>
+
+			<zipfileset dir="doc" prefix="${appldir}/doc">
+				<include name="man/index.html"/>
+				<include name="man/manual.css"/>
+				<include name="man/toc.xml"/>
+				<include name="man/*.hs"/>
+				<include name="man/*.jhm"/>
+				<include name="man/*/**"/>
+
+				<exclude name="**/Thumbs.db"/>
+				<exclude name="**/*.mac"/>
+				<exclude name="**/*.lnk"/>
+			</zipfileset>
+
+			<zipfileset dir="fonts" prefix="${appldir}/fonts">
+				<include name="*.ttf"/>
+				<include name="*.TTF"/>
+				<!--exclude copyrighted fonts-->
+				<exclude name="Sp*.TTF"/>
+			</zipfileset>
+
+			<zipfileset dir="books" prefix="${appldir}/books">
+				<include name="book.bin"/>
+				<!--<include name="DCbook_large.bin"/>-->
+				<!--<include name="Performance.bin"/>-->
+				<!--<include name="Varied.bin"/>-->
+			</zipfileset>
+
+			<zipfileset dir="fop" prefix="${appldir}/fop" includes="info.txt" dirmode="777"/>
+
+			<zipfileset dir="images" prefix="${appldir}/images">
+				<exclude name="etc/**"/>
+				<exclude name="**/Thumbs.db"/>
+			</zipfileset>
+
+			<zipfileset dir="lib" prefix="${appldir}/lib">
+				<include name="fop-plus.jar"/>
+				<include name="jai_codec.jar"/>
+				<include name="jh.jar"/>
+				<include name="jdbc/mysql-je.jar"/>
+				<include name="plaf/metouia.jar"/>
+			</zipfileset>
+
+			<zipfileset dir="sounds" prefix="${appldir}/sounds">
+				<include name="KDE_*"/>
+			</zipfileset>
+
+			<zipfileset dir="xsl" prefix="${appldir}/xsl">
+				<exclude name="test*"/>
+			</zipfileset>
+
+			<zipfileset dir="3d" prefix="${appldir}/3d">
+				<include name="*.j3ds"/>
+				<include name="*.j3df"/>
+				<exclude name="flyby.j3ds"/>
+			</zipfileset>
+
+			<zipfileset dir="web" prefix="${appldir}/web">
+				<include name="res/*.jsp"/>
+				<include name="res/*.gif"/>
+				<include name="res/*.png"/>
+				<include name="res/pngHack.htc"/>
+				<!-- config files for Tomcat -->
+				<include name="WEB-INF/web.xml"/>
+				<include name="META-INF/context.xml"/>
+				<!-- config files for Resin -->
+				<include name="resin-2.conf"/>
+				<include name="resin-3.conf"/>
+				<exclude name="**/Thumbs.db"/>
+			</zipfileset>
+
+		</zip>
+	</target>
+
+	<target name="zip-windows">
+		<description> add Windows specific files to zip </description>
+
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<!-- Windows specific stuff -->
+			<zipfileset dir="." prefix="${appldir}">
+				<include name="jose.exe"/>
+				<include name="jose.ini"/>
+				<!--include name="jose.lax"/-->
+				<!--include name="lax.jar"/-->
+				<include name="winUtils.dll"/>
+			</zipfileset>
+			<zipfileset dir="bin" prefix="${appldir}/bin">
+				<include name="share/**"/>
+				<include name="Windows/UnRAR.exe"/>
+			</zipfileset>
+			<zipfileset dir="lib/Windows" prefix="${appldir}/lib/Windows">
+				<include name="libmysqld.dll"/>
+				<include name="libmysqlje.dll"/>
+				<!--Java3D libraries-->
+				<include name="j3dcore.jar"/>
+				<include name="j3dcore-d3d.dll"/>
+				<include name="j3dcore-ogl.dll"/>
+				<include name="j3dutils.jar"/>
+				<include name="J3DUtils.dll"/>
+				<include name="vecmath.jar"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="crafty-windows">
+		<description> Crafty engine for Windows </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="crafty.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty">
+				<include name="Windows/Crafty-1918.exe"/>
+				<include name="book.bin"/>
+				<include name="books.bin"/>
+				<include name="position.bin"/>
+
+				<include name="Crafty2.JPG"/>
+				<include name="game.001"/>
+				<include name="log.001"/>
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="crafty-linux">
+		<description> Crafty engine for Linux </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="crafty.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" filemode="777">
+				<include name="Linux_i386/crafty-19.18"/>
+			</zipfileset>
+			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
+				<include name="book.bin"/>
+				<include name="books.bin"/>
+				<include name="position.bin"/>
+				<include name="Crafty2.JPG"/>
+				<include name="game.001"/>
+				<include name="log.001"/>
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="crafty-macosx">
+		<description> Crafty engine for Mac </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="crafty.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" filemode="777">
+				<include name="Mac/crafty-19.18"/>
+			</zipfileset>
+			<zipfileset dir="engines/crafty/big-endian" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
+				<include name="book.bin"/>
+				<include name="books.bin"/>
+				<include name="position.bin"/>
+			</zipfileset>
+			<zipfileset dir="engines/crafty" prefix="${appldir}/engines/crafty" dirmode="777" filemode="666">
+				<include name="Crafty2.JPG"/>
+				<include name="game.001"/>
+				<include name="log.001"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="spike-windows">
+		<description>Spike engine for Windows</description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="spike.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/spike" prefix="${appldir}/engines/spike">
+				<include name="Spike10a.exe"/>
+				<include name="spike.gif"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="toga-windows">
+		<description> Toga engine for Windows </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="toga.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
+				<include name="TogaII.exe"/>
+				<include name="TogaII.jpg"/>
+				<include name="book.bin"/>
+				<include name="book_small.bin"/>
+				<include name="copying.txt"/>
+				<include name="readme.txt"/>
+				<include name="TogaII-Source.zip"/>
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="toga-linux">
+		<description> Toga engine for Linux </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="toga.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga"  filemode="777">
+				<include name="TogaII-Linux"/>
+			</zipfileset>
+			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
+				<include name="TogaII.jpg"/>
+				<include name="book.bin"/>
+				<include name="book_small.bin"/>
+				<include name="copying.txt"/>
+				<include name="readme.txt"/>
+				<include name="TogaII-Source.zip"/>
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="toga-macosx">
+		<description> Toga engine for Mac </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="toga.xml"/>
+            </zipfileset>
+			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga"  filemode="777">
+				<include name="TogaII-Mac"/>
+			</zipfileset>
+			<zipfileset dir="engines/toga" prefix="${appldir}/engines/toga">
+				<include name="TogaII.jpg"/>
+				<include name="book.bin"/>
+				<include name="book_small.bin"/>
+				<include name="copying.txt"/>
+				<include name="readme.txt"/>
+				<include name="TogaII-Source.zip"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<!-- Windows w/out JRE -->
+	<target name="windows" depends="init">
+		<description> installation package for windows (not including JRE) </description>
+
+		<property name="zip-file" location="${target-dir}/jose-${version}-windows.zip"/>
+		<property name="appldir" value="jose"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="spike-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="toga-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+<!--
+		<antcall target="crafty-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+-->
+
+		<delete dir="${appldir}"/>
+	</target>
+	
+	<!-- Windows plus JRE -->
+	<target name="windows-jre" depends="init">
+		<description> installation package for windows (including JRE) </description>
+
+		<property name="zip-file" location="${target-dir}/jose-${version}-windows-jre.zip"/>
+		<property name="appldir" value="jose"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="spike-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="toga-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+<!--
+		<antcall target="crafty-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+-->
+		<!-- add JRE -->
+		<zip destfile="${zip-file}" update="true">
+<!--			<zipfileset src="${jre-dir}/jre-1.4.2-windows.zip" prefix="${appldir}/jre-windows"/>-->
+			<zipfileset src="${jre-dir}/jre-1.5.0_05-windows.zip" prefix="${appldir}/jre-windows"/>
+		</zip>
+		<delete dir="${appldir}"/>
+	</target>
+
+	<target name="zip-linux">
+		<description> add Linux specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- Linux specific stuff -->
+			<zipfileset dir="." prefix="${appldir}" filemode="777">
+				<include name="jose.sh"/>
+			</zipfileset>
+			<zipfileset dir="bin" prefix="${appldir}/bin">
+				<include name="share/**"/>
+			</zipfileset>
+			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">
+				<include name="Linux_i386/unrar"/>
+			</zipfileset>
+			<zipfileset dir="lib/Linux_i386" prefix="${appldir}/lib/Linux_i386">
+<!--				<include name="libjunixsocket.so"/>-->
+				<include name="libunixutils.so"/>
+				<include name="libmysqlje.so"/>
+				<!--Java3D-->
+				<include name="j3dcore.jar"/>
+				<include name="libj3dcore-ogl.so"/>
+				<include name="libj3dutils.so"/>
+				<include name="j3dutils.jar"/>
+				<include name="vecmath.jar"/>
+			</zipfileset>
+<!--			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">-->
+<!--				<include name="Linux_i386/mysqld"/>-->
+<!--			</zipfileset>-->
+        </zip>
+	</target>
+
+
+	<!-- Linux w/out JRE -->
+	<target name="linux">
+		<description> installation package for linux (not including JRE) </description>
+
+		<property name="zip-file" location="${target-dir}/jose-${version}-linux.zip"/>
+		<property name="appldir" value="jose"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="toga-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+<!--
+		<antcall target="crafty-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+-->
+		<delete dir="${appldir}"/>
+	</target>
+	
+	<!-- Linux plus JRE -->
+	<target name="linux-jre" depends="init">
+		<description> installation package for linux (including JRE) </description>
+
+		<property name="zip-file" location="${target-dir}/jose-${version}-linux-jre.zip"/>
+		<property name="appldir" value="jose"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="toga-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+<!--
+		<antcall target="crafty-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+-->
+		<!-- add jre -->
+		<zip destfile="${zip-file}" update="true">
+			<zipfileset src="${jre-dir}/jre-1.5.0_05-linux.zip" prefix="${appldir}/jre-linux"/>
+		</zip>
+		<delete dir="${appldir}"/>
+	</target>
+
+	<target name="zip-macosx">
+		<description> add Mac OS X specific stuff to zip </description>
+
+		<zip destfile="${zip-file}" update="true">
+			<!-- OS X specific stuff -->
+			<!-- application bundle -->
+			<zipfileset dir="Contents" prefix="${appldir}/Contents">
+				<include name="Info.plist"/>
+				<include name="PkgInfo"/>
+            </zipfileset>
+			<zipfileset dir="Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
+				<include name="JavaApplicationStub"/>
+            </zipfileset>
+			<zipfileset dir="Contents/Resources" prefix="${appldir}/Contents/Resources">
+				<include name="jose.icns"/>
+				<include name="arch.icns"/>
+				<include name="pgn.icns"/>
+            </zipfileset>
+
+			<zipfileset dir="bin" prefix="${appldir}/bin">
+				<include name="share/**"/>
+			</zipfileset>
+			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">
+				<include name="Mac/unrar"/>
+				<include name="Mac/mysqld"/>
+			</zipfileset>
+			<zipfileset dir="lib/Mac" prefix="${appldir}/lib/Mac">
+				<include name="MRJAdapter.jar"/>
+				<!--<include name="libmysqlje.jnilib"/>-->
+                <include name="libquaqua.jnilib"/>
+			</zipfileset>
+            <zipfileset dir="lib/plaf" prefix="${appldir}/lib/plaf">
+                <include name="quaqua.jar"/>
+            </zipfileset>
+			<zipfileset dir="lib/jdbc" prefix="${appldir}/lib/jdbc">
+			    <include name="mysql.jar"/>
+			</zipfileset>
+       	</zip>
+	</target>
+
+	<!-- Mac OS X application bundle -->
+	<taskdef name="jarbundler"
+		classname="com.loomcom.ant.tasks.jarbundler.JarBundler" />
+
+	<target name="mac-bundle" depends="init">
+		<description> build an application bundle (clickable folder) for Mac OS X </description>
+		<jarbundler dir="."
+			name="jose"
+			aboutmenuname="jose"
+			jars="jose.jar lib/jh.jar lib/jdbc/mysql-je.jar lib/jai_codec.jar lib/fop-plus.jar lib/plaf/quaqua.jar"
+			antialiasedgraphics="true"
+			antialiasedtext="true"
+			growbox="on"
+			growboxintrudes="yes"
+			infostring="jose 1.4.0 Copyright (C) 2002-2006 Peter Schäfer"
+			jvmversion="1.4+"
+			liveresize="true"
+			mainclass="de.jose.Main"
+			screenmenu="true"
+			stubfile="JavaApplicationStub"
+			version="1.4.0"/>
+<!--		icon="Jose.icns"-->
+	</target>
+
+	<!-- MacOSX w/out JRE -->
+	<target name="macosx">
+		<description> installation package for Mac OS X (not including JRE) </description>
+		
+		<property name="zip-file" location="${target-dir}/jose-${version}-macosx.zip"/>
+		<property name="appldir" value="jose.app"/>
+		<delete dir="${appldir}"/>
+
+		<antcall target="zip-base">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="zip-macosx">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="toga-macosx">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+<!--
+		<antcall target="crafty-macosx">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+-->
+		<delete dir="${appldir}"/>
+	</target>
+
+	<!-- source code -->
+	<target name="source">
+		<description>Java Sources</description>
+
+		<zip destfile="${target-dir}/jose-${version}-source.zip" update="false">
+			<zipfileset dir="src" prefix="java">
+				<exclude name="**/devtools/**"/>
+				<exclude name="**/de/jose/book/shredder/**"/>
+				<include name="**/*.java"/>
+			</zipfileset>
+			<zipfileset dir="c" prefix="c">
+				<include name="**/*.c"/>
+				<include name="**/*.cpp"/>
+				<include name="**/*.h"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<!-- upgrade diffs -->
+	<target name="diff-windows" depends="init">
+        <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
+        <property name="os" value="windows"/>
+
+		<!-- unzip the deployment package -->
+		<delete dir="${target-dir}/jose"/>
+		<unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
+			<patternset>
+            <exclude name="jose/config/crafty.xml"/>
+			<exclude name="jose/engines/**"/>
+            <exclude name="jose/database/**"/>
+<!--            font modificatios are not relevant for Windows    -->
+            <exclude name="jose/fonts/**"/>
+				<!--don't include 3D stuff in update package-->
+			<exclude name="jose/3d/**"/>
+			<exclude name="jose/lib/Windows/j3d*.jar"/>
+			<exclude name="jose/lib/Windows/J3DUtils.jar"/>
+			<exclude name="jose/lib/Windows/vecmath.jar"/>
+			<exclude name="jose/lib/Windows/j3d*.dll"/>
+			</patternset>
+		</unzip>
+
+		<!-- compare to 1.0 -->
+		<java classpath="classes" classname="de.jose.devtools.Diff">
+			<arg path="${clean-dir}"/>
+			<arg path="${target-dir}/jose"/>
+			<arg value="-zip"/>
+			<arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
+		</java>
+
+		<!-- clean up -->
+		<delete dir="${target-dir}/jose"/>
+	</target>
+
+    <target name="diff-linux" depends="init">
+        <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
+        <property name="os" value="linux"/>
+
+	    <!-- unzip the deployment package -->
+	    <delete dir="${target-dir}/jose"/>
+	    <unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
+		    <patternset>
+            <exclude name="jose/jose.sh"/>
+            <exclude name="jose/config/crafty.xml"/>
+		    <exclude name="jose/engines/**"/>
+            <exclude name="jose/database/**"/>
+	<!--            font modificatios are not relevant for Windows    -->
+			<exclude name="jose/fonts/**"/>
+			    <!--don't include 3D stuff in update package-->
+			<exclude name="jose/3d/**"/>
+			<exclude name="jose/lib/Linux_i386/j3d*.jar"/>
+			<exclude name="jose/lib/Linux_i386/vecmath.jar"/>
+		    <exclude name="jose/lib/Linux_i386/libj3d*.so"/>
+		    </patternset>
+	    </unzip>
+
+	    <!-- compare to 1.0 -->
+	    <java classpath="classes" classname="de.jose.devtools.Diff">
+		    <arg path="${clean-dir}"/>
+		    <arg path="${target-dir}/jose"/>
+		    <arg value="-zip"/>
+		    <arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
+	    </java>
+
+	    <!-- clean up -->
+		<delete dir="${target-dir}/jose"/>
+    </target>
+
+    <target name="diff-macosx" depends="init">
+        <property name="clean-dir" location="F:/Programme/jose-10-clean"/>
+        <property name="os" value="macosx"/>
+
+	    <!-- unzip the deployment package -->
+	    <delete dir="${target-dir}/jose.app"/>
+	    <unzip src="${target-dir}/jose-${version}-${os}.zip" dest="${target-dir}">
+		    <patternset>
+            <exclude name="jose.app/config/crafty.xml"/>
+		    <exclude name="jose.app/engines/**"/>
+            <exclude name="jose.app/database/**"/>
+            <exclude name="jose.app/Contents/MacOS/**"/>
+			    <!--don't include 3D stuff in update package-->
+			<exclude name="jose/3d/**"/>
+		    </patternset>
+	    </unzip>
+
+	    <!-- compare to 1.0 -->
+	    <java classpath="classes" classname="de.jose.devtools.Diff">
+		    <arg path="${clean-dir}"/>
+		    <arg path="${target-dir}/jose.app"/>
+		    <arg value="-zip"/>
+		    <arg path="${target-dir}/jose-${version}-${os}-update.zip"/>
+	    </java>
+
+	    <!-- clean up -->
+		<delete dir="${target-dir}/jose.app"/>
+    </target>
+
+	<!-- windows installer (ghost installer) w/out JRE -->
+	<target name="windows-install">
+		<antcall target="ghost-installer">
+			<param name="zip-file" value="jose-${version}-windows.zip"/>
+			<param name="exe-file" value="jose-${version}-windows.exe"/>
+        </antcall>
+	</target>
+
+	<!-- windows installer (ghost installer) plus JRE -->
+	<target name="windows-jre-install">
+		<antcall target="ghost-installer">
+			<param name="zip-file" value="jose-${version}-windows-jre.zip"/>
+			<param name="exe-file" value="jose-${version}-windows-jre.exe"/>
+        </antcall>
+	</target>
+
+	<target name="ghost-installer">
+		<description> create Ghost Install installer for windows (w/out JRE) </description>
+
+		<delete file="${target-dir}/${exe-file}"/>
+
+		<!-- unzip -->
+		<delete dir="${target-dir}/jose"/>
+		<!--delete dir="${target-dir}/fonts"/-->
+		<unzip src="${target-dir}/${zip-file}" dest="${target-dir}">
+			<!--patternset>
+			<exclude name="jose/fonts/*.ttf"/>
+			<exclude name="jose/fonts/*.TTF"/>
+			</patternset-->
+		</unzip>
+<!--
+		<mkdir dir="${target-dir}/fonts"/>
+		<copy  todir="${target-dir}/fonts">
+			<fileset dir="fonts">
+			<include name="*.ttf"/>
+			<include name="*.TTF"/>
+			</fileset>
+		</copy>
+-->
+
+		<!-- copy installer config file -->
+		<copy file="ghost-install.xml" todir="${target-dir}"/>
+		<!-- call ghost installer -->
+		<!-- GhostInstaller version 4.0 -->
+<!--		<exec executable="C:\Programme\Ethalone\Ghost Installer\Bin\GIBuild.exe"-->
+		<!-- GhostInstaller version 3.7 - - PREFERRED -->
+		<exec executable="C:\Programme\gInstall\Ghost Installer\Bin\GIBuild.exe"
+			dir="${target-dir}">
+			<arg path="${target-dir}/ghost-install.xml"/>
+		</exec>
+		<!-- rename -->
+		<move file="${target-dir}/jose-windows.exe" tofile="${target-dir}/${exe-file}"/>
+
+		<!-- clean up -->
+		<delete dir="${target-dir}/jose"/>
+		<!--delete dir="${target-dir}/fonts"/-->
+		<delete file="${target-dir}/ghost-install.xml"/>
+	</target>
+
+	<target name="release">
+		<description>create packages for all platforms</description>
+
+		<antcall target="windows"/>
+		<antcall target="windows-jre"/>
+		<antcall target="linux"/>
+		<antcall target="linux-jre"/>
+		<antcall target="macosx"/>
+		<antcall target="source"/>
+		<antcall target="windows-install"/>
+		<antcall target="windows-jre-install"/>
+		<!--<antcall target="diff-windows"/>-->
+		<!--<antcall target="diff-linux"/>-->
+		<!--<antcall target="diff-macosx"/>-->
+	</target>
+
+	<target name="list-files">
+		<exec dir="${target-dir}" executable="cmd.exe" output="${target-dir}/dir.txt">
+            <arg line="/c dir"/>
+		</exec>
+	</target>
+
+	<target name="upload">
+		<description>upload to Sourceforge FTP server</description>
+		<ftp server="upload.sourceforge.net"
+			userid="anonymous"
+			password="peterschaefer@users.sourceforge.net"
+			remotedir="/incoming"
+			action="send"
+			binary="yes"
+			verbose="yes">
+			<fileset dir="${target-dir}">
+				<include name="jose-${version}-windows.exe"/>
+				<include name="jose-${version}-windows-jre.exe"/>
+				<include name="jose-${version}-windows-update.zip"/>
+
+				<include name="jose-${version}-linux.zip"/>
+				<include name="jose-${version}-linux-jre.zip"/>
+				<include name="jose-${version}-linux-update.zip"/>
+
+				<include name="jose-${version}-macosx.dmg"/>
+				<include name="jose-${version}-macosx-update.zip"/>
+
+				<include name="jose-${version}-source.zip"/>
+			</fileset>
+		</ftp>
+	</target>
+
+</project>

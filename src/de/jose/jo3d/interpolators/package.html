@@ -1,0 +1,11 @@
+
+
+This code was copied from com.sun.j3d.utils.behaviors.interpolators
+
+There was a flaw (?) in KBRotPosScaleSplinePathInterpolator.
+Unfortunately, the com.sun.j3d.utils package uses so many private variables that it
+is virtually impossible to overwrite class from there !!
+
+That's why I had to copy the code. Modified lines are
+KBRotPosScaleSplinePathInterpolator.java 221-256
+

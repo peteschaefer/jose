@@ -1,0 +1,268 @@
+
+
+options{
+    IGNORE_CASE=true ;
+    UNICODE_INPUT=false ;
+    STATIC=false ;
+//  DEBUG_LOOKAHEAD= true ;
+//	USER_TOKEN_MANAGER = false ;
+}
+
+PARSER_BEGIN(Query)
+
+package de.jose.db.query;
+import java.io.*;
+
+public class Query {
+
+	public Query(String stream) 
+	{
+		this(new LanguageTokenManager(stream));
+	}
+
+	public SimpleNode getResult()
+	{
+		return (SimpleNode)jjtree.rootNode();
+	}
+
+    public static void main( String args[] )
+        throws ParseException, IOException
+    {
+		java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
+        File dir = new File(".");
+		String lang = "de";
+        
+        for (int i=0; i<args.length; i++)
+			if (args[i].equalsIgnoreCase("-wd"))
+				dir = new File(args[++i]);
+			else
+				lang = args[i];
+				
+        de.jose.Language.setLanguage(dir, lang);
+		
+		for (;;)
+		{
+			String line = in.readLine();
+			if (line==null) break;
+			line = line.trim();
+			if (line.length()==0) break;
+
+			Query q = new Query(line);
+			q.CompilationUnit() ;
+			ASTCompilationUnit root = (ASTCompilationUnit)q.getResult();
+			
+			de.jose.db.ParamStatement stm = new de.jose.db.ParamStatement();
+			root.appendSQL(stm,0);
+			
+			root.dump("");
+			System.out.println(stm.where.toString());
+		}
+    } // main ends here
+
+	//	the following methods will record the token sequence for each node
+	void jjtreeOpenNodeScope(Node n)
+    {
+      ((SimpleNode)n).firstToken = getToken(1);
+    }
+
+    void jjtreeCloseNodeScope(Node n)
+    {
+      ((SimpleNode)n).lastToken = getToken(0);
+    }
+    
+}
+
+PARSER_END(Query)
+
+SKIP:
+{
+    " "
+|   "\t"
+|   "\r"
+|   "\n"
+}
+
+TOKEN: 
+{
+    <AND: "AND">
+|   <OR: "OR">
+|   <NOT: "NOT">
+|	<SAND: "&">
+|	<SOR: "|">
+|	<SNOT: "!">
+|	<LPAREN: "(">
+|	<RPAREN: ")">
+|	<VERSUS: "VERSUS">
+|	<SVERSUS: "-">
+|	<WHITE: "WHITE">
+|	<BLACK: "BLACK">
+|	<AS: "AS">
+|	<WINS: "WINS">
+|	<LOSES: "LOSES">
+|	<DRAWS: "DRAWS">
+|	<WIN: "WIN">
+|	<LOSE: "LOSE">
+|	<DRAW: "DRAW">
+|	<DOES: "DOES">
+|	<SWIN: "1-0">
+|	<SLOSE: "0-1">
+|	<SDRAW: "1/2">
+|	<SUNKNOWN: "*">
+}
+
+TOKEN:
+{
+	<PLAYER: "PLAYER">
+|	<EVENT: "EVENT">
+|	<SITE: "SITE">
+|	<DATE: "DATE">
+|	<OPENING: "OPENING">
+|	<ECO: "ECO">
+|	<ELO: "ELO">
+|	<TITLE: "TITLE">
+|	<RESULT: "RESULT">
+}
+
+TOKEN:
+{
+	<EQ: "=">
+|	<NEQ: "!=">
+|	<LT: "<">
+|	<GT: ">">
+|	<LTE: "<=">
+|	<GTE: ">=">
+|	<SEQ: "~=">
+}
+
+TOKEN:
+{
+	< VALUE: ( <LETTER> )+ >
+| 	< #LETTER: ~[" ","\n","\r","\t","\""] >
+|   < QUOTED_VALUE: "\"" (~["\n","\r","\""])* "\"" >
+}
+
+void CompilationUnit():
+{}
+{
+	Expression()
+}
+
+void Expression():
+{}
+{
+	OrExpression() (("OR"|"|") OrExpression())*
+}
+
+void OrExpression():
+{}
+{
+	AndExpression() (("AND"|"&") AndExpression())*
+}
+
+void  AndExpression(): 
+{}
+{
+	VersusExpression() [("VERSUS"|"-") VersusExpression()]	
+}
+
+void VersusExpression():
+{}
+{
+		CastExpression()
+	|	NegatedExpression()
+}
+
+void NegatedExpression():
+{}
+{
+	("NOT"|"!") CastExpression()
+}
+
+void CastExpression():
+{}
+{
+		( Color() (SimpleExpression())+ )
+	|	( (SimpleExpression())+ ["AS" Color()] )
+}
+
+void Color():
+{}
+{
+	("WHITE"|"BLACK")
+}
+
+void SimpleExpression():
+{}
+{
+		("(" Expression() ")")
+	|	LOOKAHEAD(3) ColorDependentExpression()		/*	LOOKAHEAD(3) needed to detect DOES NOT WIN	*/
+	|	LOOKAHEAD(3) ColorIndependentExpression()
+}
+
+void ColorDependentExpression():
+{}
+{	
+		ColorDependentFieldExpression()
+	|	ColorDependentResultExpression()
+	|	PlayerExpression()
+}
+
+void PlayerExpression():
+{}
+{
+	["PLAYER" [Operator()]] Value()
+}
+
+void ColorDependentFieldExpression():
+{}
+{
+	("TITLE" | "ELO") [Operator()] Value()
+}
+
+void ColorDependentResultExpression():
+{}
+{
+		("WINS")
+	|	("LOSES")
+	|	LOOKAHEAD(3) ("DOES" "NOT" "WIN")
+	|	LOOKAHEAD(3) ("DOES" "NOT" "LOSE")
+}
+
+void ColorIndependentExpression():
+{}
+{
+		ColorIndependentFieldExpression()
+	|	ColorIndependentResultExpression()
+}
+
+void ColorIndependentFieldExpression():
+{}
+{
+	("EVENT" | "SITE" | "OPENING" | "ECO" | "DATE") [Operator()] Value()
+}
+
+void ColorIndependentResultExpression():
+{}
+{
+		("DRAWS")
+	|	(["DOES" "NOT"] "DRAW")
+	|	(["RESULT" [Operator()]] ResultValue())
+}
+
+void Operator():
+{}
+{
+	("=" | "!=" | "<" | ">" | "<=" | ">=" | "~=")
+}
+
+void Value():
+{}
+{
+	( <VALUE> | <QUOTED_VALUE> )
+}
+
+void ResultValue():
+{}
+{
+	("1-0" | "1/2" | "0-1" | "*")
+}
