@@ -32,6 +32,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ClipboardUtil;
 import de.jose.view.input.JoBigLabel;
+import de.jose.view.input.JoButton;
 import de.jose.view.input.JoStyledLabel;
 import de.jose.view.input.WdlLabel;
 import de.jose.view.style.JoStyleContext;
@@ -73,7 +74,7 @@ public class EnginePanel
 	/** pause button    */
 	protected JButton   bPause;
 	/** hint button */
-	protected JButton   bHint;
+	protected JoButton bHint;
 	/** anaylze button  */
 	protected JButton   bAnalyze;
 
@@ -112,6 +113,11 @@ public class EnginePanel
 
 	protected StyledMoveFormatter formatter;
 	protected JoStyleContext styles;
+
+	// engine mode when Hint is pressed
+	protected EngineState hintMode;
+	//	suggestion status before hint is pressed
+	protected boolean hintSuggestions;
 
 	/** status info    */
 	protected JLabel    lStatus;
@@ -269,8 +275,14 @@ public class EnginePanel
 
 		bGo             = newButton("move.start");
 		bPause          = newButton("engine.stop");
-		bHint           = newButton("menu.game.hint");
 		bAnalyze        = newButton("menu.game.analysis");
+		bHint           = new JoButton() {
+			@Override
+			public void mousePressed(MouseEvent e) { showHint(); }
+			@Override
+			public void mouseReleased(MouseEvent e) { hideHint(); }
+		};
+		newButton("menu.game.hint",bHint);
 
 		setIcon(bGo, iGoBlue);
 		setIcon(bPause,iPause);
@@ -637,10 +649,75 @@ public class EnginePanel
 			return buf.toString();
 	}
 
-
-	protected JButton newButton(String command)
+	private Move getHintMove()
 	{
-		JButton button = new JButton();
+		if (analysis!=null && analysis.ponderMove!=null)
+			return analysis.ponderMove;
+		if (inBook && bookmoves!=null
+				&& bookmoves.data[0].moves!=null
+				&& !bookmoves.data[0].moves.isEmpty()
+				&& this.pvCount > 0)
+			return bookmoves.data[0].moves.get(0);
+		if (!inBook && analysis!=null
+				&& analysis.data[0].moves!=null
+				&& !analysis.data[0].moves.isEmpty()
+				&& this.pvCount > 0)
+			return analysis.data[0].moves.get(0);
+		return null;
+	}
+
+	private void showHint()
+	{
+		BoardPanel bpanel = Application.theApplication.boardPanel();
+		if (bpanel==null) return;
+
+		Move mv = getHintMove();
+		if (mv!=null) {
+			bpanel.showHint(mv);
+			return;
+		}
+		// else: switch on suggestions arrows temporarily
+		hintMode = null;
+		if (plugin!=null)
+			switch(hintMode = plugin.getMode())
+			{
+				case THINKING:
+				case PONDERING:
+					//	no hints while engine is thinking (and no ponderMove stored)
+					return;
+				case ANALYZING:
+					//	turn on suggestions
+					hintSuggestions = bpanel.getView().showSuggestions(true);
+					return;
+				case PAUSED:
+					//	turn on analyzing
+					hintSuggestions = bpanel.getView().showSuggestions(true);
+					plugin.analyze(plugin.applPosition);
+					//	turn on suggestions temporarily
+					return;
+			}
+	}
+
+	private void hideHint()
+	{
+		BoardPanel bpanel = Application.theApplication.boardPanel();
+		if (bpanel==null) return;
+
+		if (hintMode!=null) switch (hintMode)
+		{
+			case ANALYZING:
+				bpanel.getView().showSuggestions(hintSuggestions);
+				break;
+			case PAUSED:
+				bpanel.getView().showSuggestions(hintSuggestions);
+				plugin.pause();
+				break;
+		}
+		hintMode = THINKING;
+	}
+
+	protected JButton newButton(String command, JButton button)
+	{
 		button.setName(command);
 		button.setActionCommand(command);
 		button.addActionListener(this);
@@ -655,6 +732,12 @@ public class EnginePanel
 		button.setContentAreaFilled(false);
 		button.setRolloverEnabled(true);
 		return button;
+	}
+
+	protected JButton newButton(String command)
+	{
+		JButton button = new JButton();
+		return newButton(command,button);
 	}
 
     protected JLabel newLabel(String name, Font font, int aligment, int border, boolean withToolTip)
@@ -772,8 +855,8 @@ public class EnginePanel
 		bGo.setEnabled(true);
 		bPause.setEnabled(engineState!=null && engineState != PAUSED);
 		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
-		bHint.setEnabled(true);
-		//if (!enabled) hideHint();
+		bHint.setEnabled(playState==null || playState==Application.PlayState.NEUTRAL);
+		//	no hint while engine is thinking
 	}
 
 	/**
@@ -1349,10 +1432,9 @@ public class EnginePanel
 			break;
 
 		case EnginePlugin.PLUGIN_HINT:
-		case EnginePlugin.PLUGIN_REQUESTED_HINT:
+		//case EnginePlugin.PLUGIN_REQUESTED_HINT:
 				//  requested or unrequested hint: show as tool tip
-				receiveHint(data);
-			//  TODO asociate hint with games, switch hint when games are switched
+				analysis.ponderMove = (EnginePlugin.FormattedMove) data;
 				break;
 
 		case EnginePlugin.PLUGIN_ERROR:
@@ -1364,32 +1446,32 @@ public class EnginePanel
 		//updateButtonState();
 	}
 
-	public Move getHintMove()
-	{
-		return (Move)bHint.getClientProperty("hint");
-	}
+//	public Move getHintMove()
+//	{
+//		return (Move)bHint.getClientProperty("hint");
+//	}
 
-	public static String getHintTip(Object data)
-	{
-		String tiptext = Language.get("engine.hint.tip")+" ";
-		String moveText = "?";
-		if (data!=null) moveText = data.toString();
-		return StringUtil.replace(tiptext,"%move%", moveText);
-	}
+//	public static String getHintTip(Object data)
+//	{
+//		String tiptext = Language.get("engine.hint.tip")+" ";
+//		String moveText = "?";
+//		if (data!=null) moveText = data.toString();
+//		return StringUtil.replace(tiptext,"%move%", moveText);
+//	}
 
 
-	private void receiveHint(Object data)
-	{
-		bHint.putClientProperty("hint", data);
-		bHint.setToolTipText(getHintTip(data));
-	}
+//	private void receiveHint(Object data)
+//	{
+//		bHint.putClientProperty("hint", data);
+//		bHint.setToolTipText(getHintTip(data));
+//	}
 
-    private void hideHint()
-    {
+//    private void hideHint()
+//    {
 //      bHint.setText(null);
-		bHint.putClientProperty("hint", null);
-        bHint.setToolTipText(Language.getTip("menu.game.hint"));
-    }
+//		bHint.putClientProperty("hint", null);
+//        bHint.setToolTipText(Language.getTip("menu.game.hint"));
+//    }
 
     protected void toggleHistory()
     {
@@ -1463,7 +1545,7 @@ public class EnginePanel
 
         list.add(ContextMenu.SEPARATOR);
 
-		list.add("menu.game.hint");
+//		list.add("menu.game.hint");
 		list.add("menu.game.draw");
 		list.add("menu.game.resign");
 
@@ -1595,12 +1677,17 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
+				//if (analysis!=null) analysis.ponderMove=null;
+				// todo when should ponderMove reset? keep pondermove when advancing
+				//	reset it when jumping?
+				pvCount=0;	//	clear pv panel, right?
 				//boolean isPaused =  (plugin!=null && plugin.isPaused());
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
 				switch(Application.theApplication.theMode)
 				{	//	todo move this stuff to Application
 					case USER_ENGINE:
 					case ENGINE_ENGINE:
+						// todo why do we need to call updateBook here? shouldn't it be BOOK_PLAY ?
 					case USER_INPUT:
 						Application.theApplication.updateBook(wasEngineMove,false);
 //						Application.theApplication.pausePlugin(false); // right?
@@ -1613,12 +1700,12 @@ public class EnginePanel
 		};
 		map.put("move.notify",action);
 
-		action = new CommandAction() {
-            public void Do(Command cmd) {
-                hideHint();
-            }
-        };
-        map.put("hide.hint",action);
+//		action = new CommandAction() {
+//            public void Do(Command cmd) {
+//                hideHint();
+//            }
+//        };
+//        map.put("hide.hint",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {

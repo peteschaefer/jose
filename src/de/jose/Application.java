@@ -2052,7 +2052,7 @@ public class Application
 			}
 		};
 		map.put("restart.plugin",action);
-
+/*
 		action = new CommandAction() {
 			public boolean isEnabled(String code) {
 				return getEnginePlugin() != null;
@@ -2074,13 +2074,13 @@ public class Application
 
 				/**
 				 * otherwise: request hint from Book or Engine
-				 */
+				 * /
 				//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
 				submitBookQuery(BOOK_HINT,null);
 			}
 		};
 		map.put("menu.game.hint",action);
-
+*/
 		action = new CommandAction()
 		{
 			public boolean isSelected(String code) {
@@ -2392,7 +2392,7 @@ public class Application
 				else
 					enginePlay();
 				break;
-
+/*
 			case BOOK_HINT:
 				entry = theOpeningLibrary.selectMove(query.result,
 						SELECT_GAME_COUNT, pos.whiteMovesNext(),null);
@@ -2409,6 +2409,7 @@ public class Application
 					//	plugin will eventually respond with a Hint message
 				}
 				break;
+ */
 		}
 	}
 
@@ -3262,12 +3263,12 @@ public class Application
 		case Plugin.PLUGIN_RESIGNS:
 			gameFinished(Plugin.PLUGIN_RESIGNS,pos.movesNext(),true);
 			break;
-
+/*
 		case Plugin.PLUGIN_REQUESTED_HINT:
 			if (boardPanel() != null)
 				boardPanel().showHint(data);
 			break;
-
+*/
 		case BOOK_ANALYSIS:
 		case BOOK_SHOW:
 		case BOOK_PLAY:

@@ -725,17 +725,15 @@ public class BoardPanel
 	}
 	
 
-	public void showHint(Object data)
+	public void showHint(Move data)
 	{
 		//  requested hint: explicitly show hint
 		if (isShowing())
 		{
 			BoardView bv = getView();
 			if (bv!=null) {
-				if (data instanceof Move)
-					bv.showHint((Move)data, 2000, BoardView.ENGINE_HINT_COLOR);
-				else
-					bv.showHint(EnginePanel.getHintTip(data), 2000, BoardView.ENGINE_HINT_COLOR);
+				bv.showHint((Move)data, 2000, BoardView.ENGINE_HINT_COLOR);
+				//	bv.showHint(EnginePanel.getHintTip(data), 2000, BoardView.ENGINE_HINT_COLOR);
 }
 		}
 //		 bHint.setText(data.toString());

@@ -446,32 +446,19 @@ ply
 
 	public void engineHint(String moveText)
 	{
-		Object message;
+		FormattedMove message=null;
 		Move mv = moveParser.parseMove(moveText);   //  TODO is this the correct position ???
 		if (mv!=null)
 			message = new FormattedMove(mv,false,moveText);
-		else
-			message = StringMoveFormatter.getDefaultFormatter().replaceDefaultPieceChars(moveText);
+		//else
+		//	message = StringMoveFormatter.getDefaultFormatter().replaceDefaultPieceChars(moveText);
 //			message = moveText;
 
 		if (message!=null)
-			analysis.ponderMove = message.toString();
+			analysis.ponderMove = message;
 		else
 			analysis.ponderMove = null;
-
-		if (userRequestedHint)
-			sendMessage(PLUGIN_REQUESTED_HINT, message);
-		else
-			sendMessage(PLUGIN_HINT, message);
-
-		userRequestedHint = false;
-	}
-
-	public void getHint()
-	{
-		printOut.println("hint");
-		userRequestedHint = true;
-		//	engine may respond with "Hint: "
+		sendMessage(PLUGIN_HINT, message);
 	}
 
 	public void kibitz(String message)

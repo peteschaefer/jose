@@ -51,7 +51,8 @@ abstract public class Plugin
 	public static final int PLUGIN_RESIGNS			= 96;
 	public static final int PLUGIN_COMMENT			= 95;
 	public static final int PLUGIN_HINT				= 94;
-	public static final int PLUGIN_REQUESTED_HINT	= 93;
+	//@deprecated
+	//public static final int PLUGIN_REQUESTED_HINT	= 93;
 	/** message sent in regular interval (to update elapsed time) */
 	public static final int PLUGIN_ELAPSED_TIME     = 92;
 	//  error condition in plugin; new setup required
@@ -64,7 +65,8 @@ abstract public class Plugin
 	public static final int BOOK_SHOW	                          = 88;
 	public static final int BOOK_ANALYSIS                         = 87;
 	public static final int BOOK_PLAY	                          = 86;
-	public static final int BOOK_HINT	                          = 85;
+	//@deprecated
+	//public static final int BOOK_HINT	                          = 85;
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -363,7 +365,7 @@ abstract public class Plugin
 	abstract public void pause();
 
 	/**	request a hint from the engine */
-	abstract public void getHint();
+	abstract public void requestHint();
 
     /**	set the time controls	 */
 	abstract public void setTimeControls(int moves, long millis, long increment);

@@ -62,7 +62,7 @@ public class AnalysisRecord
 	/** current move    */
 	public String   currentMove;
 	/** ponder move (if available)  */
-	public String   ponderMove;
+	public EnginePlugin.FormattedMove ponderMove;
 	/** current move no.    */
 	public int      currentMoveNo;
 	/**	search depth (plies)	*/

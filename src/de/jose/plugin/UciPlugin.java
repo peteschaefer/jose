@@ -616,10 +616,10 @@ public class UciPlugin
         setMode(PAUSED);
 	}
 
-	public void getHint()
+	public void requestHint()
     {
 		if (hint!=null)
-            sendMessage(PLUGIN_REQUESTED_HINT, hint);
+            sendMessage(PLUGIN_HINT, hint);
 	}
 
 	public void setTimeControls(int moves, long millis, long increment) {
@@ -693,7 +693,7 @@ public class UciPlugin
 			    }
 			    //  (unrequested) hint
 			    if (hint!=null)
-				    analysis.ponderMove = hint.toString();
+				    analysis.ponderMove = hint;
 			    else
 				    analysis.ponderMove = null;
 			    sendMessage(PLUGIN_HINT, hint);
@@ -768,7 +768,8 @@ public class UciPlugin
 
         if (s.startsWith("info")) {
 			if (ignoreMoves==0) {
-				parseAnalysis(StringUtil.rest(s), analysis);
+				String r = StringUtil.rest(s);
+				parseAnalysis(r, analysis);
 				msgSent++;
 				sendMessage(mode.numval, analysis);
 			}
@@ -837,7 +838,7 @@ public class UciPlugin
 //			return;
 //		}
 
-		if (Util.allOf(AnalysisRecord.NEW_MOVE,rec.modified)) {
+		if (Util.allOf(rec.modified,AnalysisRecord.NEW_MOVE)) {
 			rec.reset();
 			rec.modified = AnalysisRecord.CURRENT_MOVE +
 					AnalysisRecord.CURRENT_MOVE_NO +

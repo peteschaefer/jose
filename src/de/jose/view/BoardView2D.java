@@ -833,19 +833,21 @@ public class BoardView2D
 			g.setColor(Color.black);
 			//g.drawPolygon(x,y, x.length-1);
 
-			FontMetrics mtx = g.getFontMetrics();
-			Rectangle2D box = mtx.getStringBounds(label, g);
-			Point textAnchor = new Point(length, 0);
-			int texty = (int) (textAnchor.y + mtx.getAscent() / 2 - devSquareSize * 0.02);
-			if (angle >= -Math.PI / 2 && angle <= Math.PI / 2) {
-				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
-			} else {
-				//	rotate text box, too
-				AffineTransform rot2 = (AffineTransform) oldTransform.clone();
-				rot2.translate(p1.getX(), p1.getY());
-				rot2.rotate(angle - Math.PI);
-				g.setTransform(rot2);
-				g.drawString(label, -textAnchor.x, texty);
+			if (label!=null) {
+				FontMetrics mtx = g.getFontMetrics();
+				Rectangle2D box = mtx.getStringBounds(label, g);
+				Point textAnchor = new Point(length, 0);
+				int texty = (int) (textAnchor.y + mtx.getAscent() / 2 - devSquareSize * 0.02);
+				if (angle >= -Math.PI / 2 && angle <= Math.PI / 2) {
+					g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
+				} else {
+					//	rotate text box, too
+					AffineTransform rot2 = (AffineTransform) oldTransform.clone();
+					rot2.translate(p1.getX(), p1.getY());
+					rot2.rotate(angle - Math.PI);
+					g.setTransform(rot2);
+					g.drawString(label, -textAnchor.x, texty);
+				}
 			}
 		} finally {
 			g.setTransform(oldTransform);

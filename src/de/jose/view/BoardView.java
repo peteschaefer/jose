@@ -172,11 +172,13 @@ abstract public class BoardView
 		refresh(true);
 	}
 
-	public void showSuggestions(boolean on)
+	public boolean showSuggestions(boolean on)
 	{
+		boolean old_value = showSuggestions;
 		showSuggestions = on;
 		//	refreshes on next move
 		if (!showSuggestions) hideAllHints(true);
+		return old_value;
 	}
 
 	abstract public Point getScreenLocation(int square);

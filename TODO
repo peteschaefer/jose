@@ -12,14 +12,10 @@
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
 
-[ ] hint button activation
+[x] hint button activation
 [ ] hint button behavior
-    switch(engine state)
-    case THINKING:  hint disabled
-    case PONDERTING: hint = ponder move
-    case ANAYLSIS: hint = current analysis (arrows)
-    case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
-    -> no need for PLUGIN_REQUESTED_HINT messaging
+    [ ] ponderMove reset, when?
+    [ ] updateBook on "move.notify" necessary?
 
 [x] Application.selectBookMove needs to be asynchronized.
     [?] update/don't update book when navigating

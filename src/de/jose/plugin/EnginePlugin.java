@@ -50,12 +50,12 @@ abstract public class EnginePlugin
 	/**	the user offered a draw to the engine	*/
 	protected boolean userOfferedDraw;
 	/**	user requested a hint */
-	protected boolean userRequestedHint;
+	//protected boolean userRequestedHint;
 	/**	called upon launch */
 	protected Runnable launchHook = null;
 
     /**	current mode	 */
-	protected EngineState mode;
+	protected EngineState mode = EngineState.PAUSED;
 	/** calculation analysis */
 	protected AnalysisRecord analysis;
 	/** iterate: count sent messages */

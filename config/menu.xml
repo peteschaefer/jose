@@ -121,7 +121,7 @@
 		<item id="menu.game.suggestions"	check="true"/>
 		<separator/>
 		<item id="menu.game.analysis"/>
-		<item id="menu.game.hint"/>
+<!--		<item id="menu.game.hint"/> -->
 		<item id="menu.game.draw"/>
 		<item id="menu.game.resign"/>
 		<separator/>
