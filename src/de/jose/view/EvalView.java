@@ -113,8 +113,7 @@ public class EvalView
 	{
 		if (branch==null) return 0;
 		MoveNode last = branch.lastMove();
-		if (last==null) return 0;
-		return (last.getPly()+1)/2;
+		return (last==null) ? 0 : (last.getMoveNo()+1);
 	}
 
 	public void updateGame()
@@ -155,7 +154,7 @@ public class EvalView
 		if (p%2==1) x0 += BAR_WIDTH/2;
 
 		paint1Value(g, x0, BAR_WIDTH/2, mv, hilite);
-		drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
+		if (!hilite) drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
 	}
 
 	protected void scrollVisible(int move)
@@ -174,7 +173,7 @@ public class EvalView
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0,0,width,height);
 
-		paintBackground(g);
+		//paintBackground(g);
 		paintValues(g);
 		paintHorizontalTickMarks(g);
 		paintVerticalAxis(g);
@@ -294,37 +293,28 @@ public class EvalView
 	protected void paintValues(Graphics g)
 	{
 		//  paint bars !
-		int first = 0;
-		LineNode line = branch;
-		MoveNode mv = line.lastMove();
+		MoveNode mv = branch.lastMove();
 		MoveNode nxt = null;
 		MoveNode current = game.getCurrentMove();
 		last1=null;	// unless...
 
 		while(mv!=null) {
 			Score sc = mv.engineValue;
-			if (sc!=null && sc.hasWDL()) {
-				int mno = mv.getMoveNo();
-				int x0 = mno*BAR_WIDTH;
 
-				if (nxt!=null && nxt.getMoveNo()==mno) {
-					//	paint both
-					paint1Value(g, x0, BAR_WIDTH/2, mv, mv==current);
-					paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt, false);
-				}
-				else {
-					//	paint one
-					paint1Value(g, x0, BAR_WIDTH, mv, mv==current);
-				}
-				nxt = mv;
-			}
+			int mno = mv.getMoveNo();
+			int x0 = mno*BAR_WIDTH;
 
-			mv = mv.previousMove();
-			while (mv==null && line!=null) {
-				//	climb up
-				mv = line.previousMove();
-				line = line.parent();
+			if (nxt!=null && nxt.getMoveNo()==mno) {
+				//	paint both
+				paint1Value(g, x0, BAR_WIDTH/2, mv, mv==current);
+				//paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt, false);
 			}
+			else {
+				//	paint one
+				paint1Value(g, x0, BAR_WIDTH, mv, mv==current);
+			}
+			nxt = mv;
+			mv = mv.previousMove();	//	climbs the tree, if necessary
 		}
 	}
 
@@ -375,9 +365,9 @@ public class EvalView
 	{
 		int height = getHeight();
 		Score value = mvnd.engineValue;
-		Color[] pal = hilite ? HILITED : NORMAL;
+		Color[] pal = /*hilite ? HILITED :*/ NORMAL;
 
-		if (value==null) {
+		if (value==null || !value.hasWDL()) {
 			paintBackground(g,x,width,pal);
 		}
 		else {
@@ -393,19 +383,18 @@ public class EvalView
 			g.setColor(pal[4]);
 			g.fillRect(x, p2, width, height);
 		}
-/*
+
 		if (hilite) {
 			g.setColor(Color.red);
 			g.drawLine(x+width-4,0,x+width-4,height);
+			//g.drawRect(x, 0, width, height);
 		}
- */		if (hilite)
+		if (hilite)
 	 		last1 = mvnd;
 	}
 
-	protected void updateValue(int ply, MoveNode mvnd, Score value)
+	protected void updateValue(MoveNode mvnd)
 	{
-		//setValue(ply, value);
-
 		if (mvnd!=null) {
 			LineNode new_branch = mvnd.parent();
 			if (new_branch != branch) {

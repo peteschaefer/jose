@@ -71,7 +71,8 @@ public class EvalPanel
 				//  adjust array, if necessary !
 				boolean destructive = Util.toboolean(cmd.moreData);
 				if (destructive) view.updateGame();
-				view.repaint1(view.game.getCurrentMove());
+
+				view.updateValue(view.game.getCurrentMove());
 			}
 		};
 		map.put("move.notify", action);
@@ -79,17 +80,11 @@ public class EvalPanel
 		action = new CommandAction() {
 			public void Do(Command cmd)
 			{
-				Score score = (Score) cmd.data;
 				MoveNode mvnd = null;
-				int ply = 0;
-				if (cmd.moreData instanceof Integer)
-					ply = (Integer)cmd.moreData;
-				if (cmd.moreData instanceof MoveNode) {
+				if (cmd.moreData instanceof MoveNode)
 					mvnd = (MoveNode) cmd.moreData;
-					ply = mvnd.getPly();
-				}
 
-				view.updateValue(ply, mvnd, score);
+				view.updateValue(mvnd);
 			}
 		};
 		map.put("move.value", action);
