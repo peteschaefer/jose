@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ public class Game
             +"       Result, GameDate, EventDate, DateFlags, "
 			+"		 EventId, Event.Name, SiteId, Site.Name, Round, Board, "
             +"       Game.ECO, OpeningId, Opening.Name, AnnotatorId, Annotator.Name, FEN, MoreGame.Info, "
-            +"       MoreGame.Bin, MoreGame.Comments ";
+            +"       MoreGame.Bin, MoreGame.Comments, MoreGame.Eval ";
 	public static final String DISPLAY_FROM =
              " Game, MoreGame, Player White, Player Black, Event, Site, Opening, Player Annotator ";
 	public static final String DISPLAY_WHERE =
@@ -1291,6 +1291,9 @@ public class Game
 
 			pos = writer.getVarPositions();
 			stm.setBytes(i++,      (pos!=null&&pos.length>0) ? pos:null);
+
+			byte[] eval = mainLine.containsEval() ? mainLine.writeEval() : null;
+			stm.setBytes(i++, 		(eval!=null&&eval.length>0) ? eval:null);
 		}
         stm.setInt(i++,        dbId);
     }
@@ -1375,7 +1378,7 @@ public class Game
         String sql2 =   "UPDATE MoreGame "+
                         " SET WhiteTitle=?,BlackTitle=?,Round=?,Board=?,FEN=?,Info=? ";
 		if (withData) {
-			sql2 += ",Bin=?,Comments=?,PosMain=?,PosVar=? ";
+			sql2 += ",Bin=?,Comments=?,PosMain=?,PosVar=?,Eval=? ";
 		}
 		sql2	+=      " WHERE GId = ?";
 
@@ -1853,22 +1856,23 @@ public class Game
 	{
 		byte[] bin      = res.getBytes(i++);
 		byte[] comments = res.getBytes(i++);
+		byte[] eval		= res.getBytes(i++);
 
 		String fen = (String)getTagValue(TAG_FEN);
 
-		readData(bin,comments,fen);
+		readData(bin,comments,eval,fen);
 
 		return i;
 	}
 
 	protected void readData(GameBuffer.Row buf)
 	{
-		readData(buf.Bin, buf.Comments, buf.FEN);
+		readData(buf.Bin, buf.Comments, null, buf.FEN);
 	}
 
-	protected void readData(byte[] bin, byte[] comments, String fen)
+	protected void readData(byte[] bin, byte[] comments, byte[] eval, String fen)
 	{
-		mainLine = new LineNode(this, bin,0, comments,0, fen, true);
+		mainLine = new LineNode(this, bin,0, comments,0, eval, fen, true);
 		setupDoc();
 
 		position.reset();
@@ -1903,7 +1907,7 @@ public class Game
 
 		parseText(text,offset,len, fen, bin, comments, true);
 
-		mainLine = new LineNode(this, bin,0, comments, 0, fen, true);
+		mainLine = new LineNode(this, bin,0, comments, 0, null, fen, true);
 		setupDoc();
 
 		insertNode(0, root);

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import de.jose.util.ListUtil;
 import de.jose.sax.JoContentHandler;
 
 import javax.swing.text.*;
+import java.io.*;
 import java.util.Vector;
 
 import org.xml.sax.SAXException;
@@ -51,11 +52,13 @@ public class LineNode
         clear(aGame);
 	}
 	
-	public LineNode(Game aGame, byte[] bin, int boffset, byte[] comments, int coffset,  String fen, boolean replay)
+	public LineNode(Game aGame, byte[] bin, int boffset, byte[] comments, int coffset, byte[] eval, String fen, boolean replay)
 	{
 		this(aGame);
 		if (bin != null)
 			readBinary(bin,boffset, comments,coffset, fen, replay);
+		if (eval != null)
+			readEval(eval);
 	}
 
 
@@ -80,7 +83,15 @@ public class LineNode
 		return null;
 	}
 
-    public final Node last(int nodeClass) {
+	public final Node first(int nodeClass1, int nodeClass2) {
+		for (Node n = first(); n != null; n = n.next())
+			if (n.is(nodeClass1) || n.is(nodeClass2))
+				return n;
+		return null;
+	}
+
+
+	public final Node last(int nodeClass) {
 		for (Node n = last(); n != null; n = n.previous())
 			if (n.is(nodeClass))
 				return n;
@@ -478,6 +489,64 @@ public class LineNode
 
 	    reader.pos.setOptions(oldOptions);
     }
+
+	private void readEval(byte[] eval)
+	{
+		ByteArrayInputStream bais = new ByteArrayInputStream(eval);
+		DataInputStream in = new DataInputStream(bais);
+
+		//	iterate nodes in pre-order
+		GameMoveIterator it = new GameMoveIterator(this);
+		for(MoveNode move = it.next(); move != null; move = it.next())
+		try {
+
+			short sw = in.readShort();
+			short sd = in.readShort();
+
+			float fw = (float)sw/32768.0f;
+			float fd = (float)sd/32768.0f;
+
+			move.engineValue = new float[] {fw,fd};
+
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public boolean containsEval()
+	{
+		GameMoveIterator it = new GameMoveIterator(this);
+		for(MoveNode move = it.next(); move != null; move = it.next())
+			if (EvalArray.isValid(move.engineValue))
+				return true;
+		return false;
+	}
+
+	public byte[] writeEval()
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(baos);
+		GameMoveIterator it = new GameMoveIterator(this);
+
+		for(MoveNode move = it.next(); move != null; move = it.next())
+		try {
+			float[] val = move.engineValue;
+
+			float fw = (val!=null) ? val[0] : Float.MAX_VALUE;
+			float fd = (val!=null) ? val[1] : Float.MAX_VALUE;
+
+			short sw = (short)(fw * 32768.0f);
+			short sd = (short)(fd * 32768.0f);
+
+			out.writeShort(sw);
+			out.writeShort(sd);
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+		return baos.toByteArray();
+	}
+
+
 
 	public static void  toSAX(byte[] bin, int boffset, byte[] comments, int coffset,
 	                          de.jose.chess.Position pos, String fen,

@@ -70,7 +70,7 @@ public class EvalArray {
 		int ply = firstPly = gm.getPosition().firstPly();
 		MoveNode node = gm.getMainLine().firstMove();
 		for (; node != null; node = node.nextMove())
-			if (node.engineValue != null)
+			if (EvalArray.isValid(node.engineValue))
 				setPlyValue(ply++, node.engineValue);
 			else
 				setPlyValue(ply++, null);
@@ -100,6 +100,15 @@ public class EvalArray {
 	public static boolean isValid(float[] value)
 	{
 		return value!=null && (value[0]!=Float.MAX_VALUE) && (value[1]!=Float.MAX_VALUE);
+	}
+
+	public static boolean equals(float[] a, float[] b) {
+		if (!isValid(a))
+			return !isValid(b);
+		else if (!isValid(b))
+			return false;
+		else
+			return a[0]==b[0] && a[1]==b[1];
 	}
 
 	public static boolean isValid(float v1, float v2)

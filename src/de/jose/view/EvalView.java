@@ -107,7 +107,7 @@ public class EvalView
 		setMinimumSize(new Dimension(minwidth, minsize.height));
 		setPreferredSize(new Dimension(minwidth, (int)getPreferredSize().getHeight()));
 
-		revalidate();
+		repaint();
 	}
 
 
@@ -361,9 +361,11 @@ public class EvalView
 		MoveNode mvnd = game.getCurrentMove();
 		if (mvnd==null) return;
 
-		mvnd.engineValue = value;
-		if (this.isVisible())
-			game.setDirty(true);
+		if (! EvalArray.equals(mvnd.engineValue,value)) {
+			mvnd.engineValue = value.clone();
+			if (this.isVisible())
+				game.setDirty(true);
+		}
 	}
 }
 

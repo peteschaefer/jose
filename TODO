@@ -50,8 +50,6 @@ Leela
 
 ==== New Features
 
-* eval graph: store in DB
-
 * arrows + text label
   - font size?
   - if possible, redraw only modified arrows
