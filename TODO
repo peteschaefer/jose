@@ -4,8 +4,7 @@
 
 ? Charter buggy
 
-[ ] Score WDL from Settings or from Context Menu !?
-    -> update context menu when engine changes ?
+[x] caution: engine IDs must be unique. take care when copy/pasting .xml files.
 
 === Database Bugs
 

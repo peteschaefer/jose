@@ -354,11 +354,12 @@ abstract public class EnginePlugin
 
 	public String getDisplayName()
 	{
-		String name = getEngineDisplayName();
-		if (name!=null)
-			return name;					//	as returned by "feature"
+		String engName = getEngineDisplayName();
+		String cfgName = getName();
+		if (engName==null || engName.equalsIgnoreCase(cfgName))
+			return cfgName;
 		else
-			return getName();	//	as defined in properties.xml
+			return engName+" ("+cfgName+")";
 	}
 
 	public static Element getOptionSet(Element cfg)
