@@ -88,6 +88,8 @@ public interface PgnConstants
 	public static final int NAG_DECISIVE_ADVANTAGE_BLACK	= 19;
 
 	/**	non-standard NAGs defined by Fritz (equivalent to Informator symbols)	*/
+	public static final int NAG_WITH_IDEA                    = 140;
+	public static final int NAG_BETTER	                     = 142;
 
 	/**	non-standard NAG defined by jose	*/
 	/**	NAG number for "print diagram"	*/

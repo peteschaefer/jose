@@ -993,6 +993,11 @@ public class DocumentPanel
 			menu.add(nd);
 		}
 
+		addAnnotationMenuItem(menu,nd, PgnConstants.NAG_BETTER);
+		addAnnotationMenuItem(menu,nd, PgnConstants.NAG_WITH_IDEA);
+
+		menu.add(null);
+
 		addAnnotationMenuItem(menu,nd, PgnConstants.NAG_GOOD);
 		addAnnotationMenuItem(menu,nd, PgnConstants.NAG_VERY_GOOD);
 		addAnnotationMenuItem(menu,nd, PgnConstants.NAG_BAD);

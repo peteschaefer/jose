@@ -9,50 +9,15 @@
     instead, outdated analysis is shown
     -> there should be no early response. could be side-effect of another error?!
 
-[x] asynch book lookups (branch async-book)
 [ ] Eval Bar, Graph drawing glitches (paintImmediately?)
 [?] paint eval bar frame
 
 [?] game vs. opening explorer:
     - user moves have no value (and it shows)
-        -> get one from current AnalysisRecord
 
-[x] hint button activation
-[x] hint button behavior
-    [x] store ponderMove ply?
-    [x] updateBook on "move.notify" necessary?
-        it shouldn't because there will be BOOK_PLAY
-
-[x] Application.selectBookMove needs to be asynchronized.
-    [?] update/don't update book when navigating
-    [x] pause button should pause engine;
-        book is shown in both, USER_INPUT and ANALYSIS
-    [?] no duplicate Book Queries
-[x] pause button activation
-[x] play button activation
-
-[x] BOOK_PLAY ~= THINKING
-[ ] test with/without book
-    0 books should not alter the control flow.
-    There is just a shortcut in submitQuery.
-[ ] test with/without engine
-[x] test with/without pondering
-[ ] test input/analysis/play
-
-=== Database Bugs
-
-[x] database cut/copy/paste (-> --tmpdir)
-[x] db copy: NoSuchElementException (harmless but annoying)
-[?] db: duplicate key on insert (GameBuffer.Id?)
-[x] db import: error in sql syntax
 [ ] db: expected data on row ?
-[x] MoreGame missing? detect on start; use more robust sequence, at least
 
-=== Database Repair Tool
-[x] what's the best setting for myisamchk? (-r -f), -o -f ?
-[-] repair table Game extended use_frm
-    -> no need for myisamchk, process contortions, ...
-    -> results are not convincing
+
 
 ==== Project
 
@@ -112,7 +77,6 @@ Alternative JREs:
 
 * "New Game from here"
   - turn board on engine start (or don't)
-  - BUG fixed ?? engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0.
 
 * keep playing after flagging ?
 
@@ -134,11 +98,17 @@ Alternative JREs:
 
 ==== Interesting New Features
 
-* Logos: Engine, Lichess, User
-    [x] in engine panel (info label)
-    [x] eval bar
-    [x] font awesome
-     -> replace old icons step-by-step with TextIcon
+* nicer annotation palette
+    - docking is great
+    - table needs to be 2d
+    - custom sorting (some important ones first)
+    - mouse hover
+    - most recent list
+    - $202: reversed Diagram
+
+* font awesome icons
+
+* Logos: User
     [ ] document? (would have to be stored in db :(
 
 * Foldable variations.

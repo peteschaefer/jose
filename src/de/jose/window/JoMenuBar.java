@@ -228,7 +228,7 @@ public class JoMenuBar
                 item.setEnabled(false);
 			item.setText(control.getDisplayName());
 			item.setToolTipText(control.getToolTip());
-			item.putClientProperty("action.data",new Integer(i));
+			item.putClientProperty("action.data",i);
 			if (actionListeners!=null)
 				for (int j=0; j < actionListeners.length; j++)
 					item.addActionListener(actionListeners[j]);
@@ -248,7 +248,7 @@ public class JoMenuBar
 			item.setToolTipText(control.getToolTip());
 
 			menu.add(item);
-			menu.add(new Integer(i));
+			menu.add(i);
 		}
 	}
 
@@ -371,7 +371,7 @@ public class JoMenuBar
 				item.setAccelerator(AWTUtil.getMenuKeyStroke(stroke));
 
 			if (intParam!=null && intParam.length()>0)
-				item.putClientProperty("action.data", new Integer(intParam));
+				item.putClientProperty("action.data", Integer.valueOf(intParam));
 			if (urlParam!=null && urlParam.length()>0)
 				try {
 					item.putClientProperty("action.data", new URL(urlParam));

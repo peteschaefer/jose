@@ -738,7 +738,7 @@ public class Game
 		if (currentMove.parent().level()==1 || currentMove.nextMove()!=null) {
 			//	insert new variation
 			MoveNode copy = (MoveNode)currentMove.clone();
-			AnnotationNode nagNode = new AnnotationNode(140);
+			AnnotationNode nagNode = new AnnotationNode(NAG_WITH_IDEA);
 
 			LineNode variation = new LineNode(this);
 			copy.insertAfter(variation.first());	//	skip prefix
