@@ -121,7 +121,7 @@
 						<xsl:attribute name="font-size"><xsl:value-of select="$styles//style[name='body.comment.4']/a[key='size']/value"/>pt</xsl:attribute>
 						<xsl:attribute name="color"><xsl:value-of select="$styles//style[name='body.comment.4']/a[key='foreground']/value"/></xsl:attribute>
 			
-			                  			created with jose-chess.sourceforge.net
+			                  			created with jose Chess: hrimfaxi.bitbucket.io/jose
 					</fo:block>
 
 				</fo:flow>

@@ -55,7 +55,7 @@
 
 </xsl:for-each>
 
-\begin{center} created with jose-chess.sourceforge.net \end{center}
+\begin{center} created with jose Chess: hrimfaxi.bitbucket.io/jose \end{center}
 
 \end{document}
 
