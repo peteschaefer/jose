@@ -18,6 +18,7 @@ import org.apache.fop.configuration.FontTriplet;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.Options;
 import org.apache.fop.apps.FOPException;
+import org.apache.fop.fonts.TTFFile;
 import org.apache.fop.render.awt.AWTRenderer;
 import org.apache.fop.render.Renderer;
 import org.apache.fop.render.svg.SVGRenderer;
@@ -43,9 +44,13 @@ import de.jose.task.io.XSLFOExport;
 import de.jose.util.SoftCache;
 import de.jose.util.FontUtil;
 import de.jose.util.file.FileUtil;
+import org.w3c.dom.Document;
 
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -322,13 +327,27 @@ public class FOPUtil
 			return null;
 	}
 
-	protected static boolean createFontMetrics(File ttf, File mtx)
+	protected static boolean createFontMetrics(File ttfFile, File mtxFile)
 	{
 		try {
 			// [options] fontfile.ttf xmlfile.xml
-			String[] args = { ttf.getAbsolutePath(), mtx.getAbsolutePath(), };
-			TTFReader.main(args);
+//			String[] args = { ttfFile.getAbsolutePath(), /*mtx.getAbsolutePath()*/"fop/"+mtx.getName(), };
+//			TTFReader.main(args);
 //			AWTReader.main(args);
+
+			//	TTFReader.main has a problem with windows file paths.
+			//	let's do the processing step-by-step:
+			TTFReader app = new TTFReader();
+			TTFFile ttf = app.loadTTF(ttfFile.getAbsolutePath(), null);
+			if (ttf==null) return false;
+
+			Document doc = app.constructFontXML(ttf, null, null, null, null, true, null);
+			FileOutputStream fos = new FileOutputStream(mtxFile.getAbsolutePath());
+			TransformerFactory.newInstance().newTransformer().transform(
+					new DOMSource(doc),
+					new StreamResult(fos));
+			fos.close();
+
 			return true;
 		} catch (Exception e) {
 			return false;

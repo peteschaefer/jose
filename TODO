@@ -7,7 +7,6 @@
 ? fix Berlin font
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
-? put fop metrics to ../fop/*.XML. Seems to have file path problems ?
 ? Text File export not implemented?
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
