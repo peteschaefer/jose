@@ -177,6 +177,8 @@ public class GameBuffer
 	/** total number of inserted rows   */
 	public int totalRows;
 	public int nextFlush;
+	/**	 range of consumed Game.Id (Sequence) **/
+	public int seqFirst=0,seqLast=0;
 
 	/**	String maps (String -> Integer)	 */
 	protected ObjIntMap[] smap;
@@ -345,7 +347,7 @@ public class GameBuffer
 		throws SQLException
 	{
 		if (conn!=null)
-			r.Id = Game.getSequence(conn);
+			r.Id = getSequence(conn);
 		else
 			r.Id = 0;
 		r.CId = CId;
@@ -376,6 +378,14 @@ public class GameBuffer
 
 	}
 
+	protected int getSequence(JoConnection conn) throws SQLException
+	{
+		int GId = Game.getSequence(conn);
+		if (seqFirst==0) seqFirst=GId;
+		seqLast=GId;
+		return GId;
+	}
+
 	protected void setParameters(Row r,
 	                             JoPreparedStatement pstm1, int p1,
 	                             JoPreparedStatement pstm2, int p2,
@@ -387,7 +397,7 @@ public class GameBuffer
 		" EventId,SiteId,GameDate,EventDate,DateFlags,AnnotatorId,ECO,OpeningId) "+
 		" VALUES ";
 */
-		if (r.Id==0) r.Id = Game.getSequence(conn);
+		if (r.Id==0) r.Id = getSequence(conn);
 		pstm1.setInt			(p1++, r.Id);
 		pstm1.setInt			(p1++, r.CId);
 		pstm1.setInt			(p1++, r.Idx);

@@ -12,6 +12,7 @@
 		<FORMAT>LiChess</FORMAT>
 		<AUTHOR>-</AUTHOR>
 		<URL>http://explorer.lichess.ovh/masters</URL>
+		<DOWNLOAD>http://lichess.org/game/export</DOWNLOAD>
 		<COMMENT>explore openings from the Lichess Masters database.
 			(an Internet connection is required)</COMMENT>
 	</BOOK>

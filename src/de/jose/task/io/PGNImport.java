@@ -15,7 +15,6 @@ package de.jose.task.io;
 import de.jose.Application;
 import de.jose.Language;
 import de.jose.Version;
-import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
 import de.jose.db.Setup;
@@ -235,6 +234,30 @@ public class PGNImport
 		setProgressTitle(Language.get("dialog.read-progress.title"));
 	}
 
+	protected PGNImport(String taskName, int CollectionId, Reader input, long length)
+			throws Exception
+	{
+		super(taskName+"."+gGameImporterInstance,true);
+
+		broadcastOnUpdate(getName());
+		broadcast = true;
+		/*	database will be updated; close open results to avoid deadlocks !	*/
+
+		instance = gGameImporterInstance++;
+		CId = CollectionId;
+		de.jose.pgn.Collection collection = de.jose.pgn.Collection.readCollection(CId);
+		initReader(input,length,null);
+
+		connection.setAutoCommit(false);
+
+		HashMap pmap = new HashMap();
+		pmap.put("fileName",collection.Name);
+
+		setSilentTime(0);
+		setProgressText(StringUtil.replace(Language.get("dialog.read-progress.text"),pmap));
+		setProgressTitle(Language.get("dialog.read-progress.title"));
+	}
+
 	/** constructor for single game parser */
 	public PGNImport(Reader input, long length) throws Exception
 	{
@@ -406,15 +429,7 @@ public class PGNImport
 
 		if (pgnFilter.accept(null,name) || epdFilter.accept(null,name))
         {
-		    InputStream fin = conn.getInputStream();
-            BufferedInputStream bin = new BufferedInputStream(fin,4096);
-
-			Reader fr = new InputStreamReader(bin, "ISO-8859-1");
-			/**	PGN uses ISO-8859-1 by definition
-			 *	can we rely on that ?
-			 */
-			reader = newImporter(name, url.toExternalForm(), fr, size);
-            if (reader==null) throw new IllegalArgumentException("unknown file type "+name);
+			reader = newPgnImporter(name, url, conn, size);
 			reader.start();
 		}
 		else if (FileUtil.hasExtension(name,"zip"))
@@ -479,6 +494,47 @@ public class PGNImport
         }
         else
             throw new IllegalArgumentException("unknown file type "+name);
+	}
+
+	public static PGNImport newPgnImporter(String name, URL url,
+									   URLConnection conn, int size) throws Exception
+	{
+		if (conn==null) {
+			conn = url.openConnection();
+			size = conn.getContentLength();
+		}
+
+		PGNImport reader;
+		InputStream fin = conn.getInputStream();
+		BufferedInputStream bin = new BufferedInputStream(fin,4096);
+
+		Reader fr = new InputStreamReader(bin, "ISO-8859-1");
+		/**	PGN uses ISO-8859-1 by definition
+		 *	can we rely on that ?
+		 * 	No, but PGN parser accepts utf-8 by heuristics.
+		 */
+		reader = new PGNImport("PGNImport", FileUtil.trimExtension(name) ,url.toExternalForm(), fr,size);
+		if (reader==null) throw new IllegalArgumentException("unknown file type "+ name);
+		return reader;
+	}
+
+	public static PGNImport newPgnImporter(int CollectionId, URL url) throws Exception
+	{
+		URLConnection conn = url.openConnection();
+		int size = conn.getContentLength();
+
+		PGNImport reader;
+		InputStream fin = conn.getInputStream();
+		BufferedInputStream bin = new BufferedInputStream(fin,4096);
+
+		Reader fr = new InputStreamReader(bin, "ISO-8859-1");
+		/**	PGN uses ISO-8859-1 by definition
+		 *	can we rely on that ?
+		 * 	No, but PGN parser accepts utf-8 by heuristics.
+		 */
+		reader = new PGNImport("PGNImport", CollectionId, fr,size);
+		if (reader==null) throw new IllegalArgumentException("unknown file type ");
+		return reader;
 	}
 
 
@@ -789,6 +845,16 @@ public class PGNImport
 			return PROGRESS_UNKNOWN;
 		else
 			return ((double)in.getPosition())/total;
+	}
+
+	public int getFirstGameId()
+	{
+		return (gm==null) ? 0 : gm.seqFirst;
+	}
+
+	public int getLastGameId()
+	{
+		return (gm==null) ? 0 : gm.seqLast;
 	}
 
 }

@@ -5,9 +5,11 @@ import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.pgn.Collection;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.ResultNode;
+import de.jose.task.io.PGNImport;
 import de.jose.util.xml.XMLUtil;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
@@ -16,6 +18,7 @@ import org.json.JSONObject;
 import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -26,7 +29,8 @@ import java.util.stream.Collectors;
 
 public class LiChessOpeningExplorer extends OpeningBook
 {
-    private String apiUrl;
+    public static String apiUrl;
+    public static String downloadUrl;
 
     //  list only moves if there are at least 20 games
     public static final int MIN_GAMES_PLAYED = 20;
@@ -39,6 +43,7 @@ public class LiChessOpeningExplorer extends OpeningBook
     public LiChessOpeningExplorer(org.w3c.dom.Element config)
     {
         apiUrl = XMLUtil.getChildValue(config,"URL");
+        downloadUrl = XMLUtil.getChildValue(config,"DOWNLOAD");
     }
 
     public static String getInfoText(org.w3c.dom.Element config, boolean enabled)
@@ -192,5 +197,24 @@ public class LiChessOpeningExplorer extends OpeningBook
     public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random) throws IOException {
         //  let opening Library do it
         return null;
+    }
+
+    public static void startDownload(String lichessId) throws Exception
+    {
+        int CId = Collection.DOWNLOADS_ID;
+
+        String urlStr = downloadUrl+"/"+lichessId+"?evals=false&literate=true";
+        URL url = new URL(urlStr);
+
+        PGNImport reader = PGNImport.newPgnImporter(CId,url);
+        Collection.makeDownloads(reader.getConnection());
+
+        reader.start();
+        reader.wait();
+
+        //  todo wait for reader to finish
+        //  fetch inserted Game.Id
+        int GId = reader.getLastGameId();
+        //  open in Tab
     }
 }

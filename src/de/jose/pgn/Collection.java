@@ -76,6 +76,7 @@ public class Collection
 	public static final String TRASH_PATH		= ":/"+TRASH_ID+"/";
 	public static final String CLIPBOARD_PATH	= ":/"+CLIPBOARD_ID+"/";
 	public static final String AUTOSAVE_PATH	= ":/"+AUTOSAVE_ID+"/";
+	public static final String DOWNLOADS_PATH	= ":/"+DOWNLOADS_ID+"/";
 
     /** Attribute bits  */
     /** marked for deletion */
@@ -189,14 +190,18 @@ public class Collection
 		//	never reached
 	}
 
-	public static boolean makeDownloads()
-	{
-		/*	todo
-			INSERT INTO Collection ()
-			VALUES (4,null,null, 'collection.downloads', ':/4/', 16, '-', {fn now()}, 0)
-			IF NOT EXISTS
-		 */
-		return false;
+	public static int makeDownloads(JoConnection conn) throws SQLException {
+		String sql =
+			"INSERT INTO Collection "+
+			" VALUES (?,null,null, ?, ?, 16, '-', {fn now()}, 0) "+
+			" ON DUPLICATE IGNORE";
+
+		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+		pstm.setInt(1,DOWNLOADS_ID);
+		pstm.setString(2,"collection.downloads");
+		pstm.setString(3,DOWNLOADS_PATH);
+		boolean ok = pstm.execute();
+		return DOWNLOADS_ID;
 	}
 	
 	public static boolean exists(int parentId, String name, JoConnection conn) throws SQLException

@@ -15,8 +15,8 @@ package de.jose.view;
 import de.jose.*;
 import de.jose.book.GameRef;
 import de.jose.book.lichess.LiChessBookEntry;
-import de.jose.book.lichess.LiChessDownload;
 import de.jose.book.lichess.LiChessGameRef;
+import de.jose.book.lichess.LiChessOpeningExplorer;
 import de.jose.chess.*;
 import de.jose.chess.Position;
 import de.jose.pgn.ECOClassificator;
@@ -426,7 +426,14 @@ public class EnginePanel
 			 Object source = e.getSource();
 			 if (source instanceof GameRef) {
 				 LiChessGameRef ref = (LiChessGameRef) source;
-				 LiChessDownload.download(ref.id);
+                 try {
+                     LiChessOpeningExplorer.startDownload(ref.id);
+                 } catch (Exception ex) {
+                     Application.error(ex);
+                 }
+                 //	todo wait for download to finish
+				 //	fetch Game.Id
+				 //	open in tabs
 			 }
 		 }
 		 else {
