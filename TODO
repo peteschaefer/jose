@@ -5,10 +5,6 @@
 
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
-? antialiasing when running jose.exe vs. java.exe vs. debugger ?
-
-[X] fix: scrolling DEAD-LOCK in large databases
-    the code in IntervalCacheModel is horrifying...
 
 ==== Project
 
@@ -17,6 +13,7 @@
 [x] compile against jdk 1.8
 [ ] run with JBR 21 x64
     [x] Windows
+        [ ] checkout JoFileChooser with Window l+f
     [x] Linux
     [ ] Mac Intel
     [ ] Mac arm
