@@ -661,9 +661,11 @@ public class BoardView2D
 
 			int painted = 0;
 			Graphics2D g = getBufferGraphics();
-			int fontSize = (int) (devSquareSize * 0.16f);
-			Font f = new Font("SansSerif", Font.BOLD, fontSize);
+			int fontSize = (int) (devSquareSize * 0.17f);
+			Font f = new Font("SansSerif", Font.PLAIN, fontSize);
 			g.setFont(f);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
 			for (int i = 0; i < hints.size(); i++) {
 				Hint hnt = (Hint) hints.get(i);
@@ -739,7 +741,7 @@ public class BoardView2D
 			FontMetrics mtx = g.getFontMetrics();
 			Rectangle2D box = mtx.getStringBounds(label,g);
 			Point textAnchor = new Point(x[x.length-1],y[x.length-1]);
-			int texty = (int) (textAnchor.y + mtx.getAscent()/2 - devSquareSize*0.04);
+			int texty = (int) (textAnchor.y + mtx.getAscent()/2 - devSquareSize*0.02);
 			if (angle >= -Math.PI/2 && angle <= Math.PI/2) {
 				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
 			}
@@ -967,6 +969,8 @@ public class BoardView2D
 		int fontSize = (int) (devSquareSize * 0.3f);
 		Font f = new Font("SansSerif", Font.PLAIN, fontSize);
 		g.setFont(f);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		FontMetrics fmx = g.getFontMetrics();
 
 		int drop = Math.max(devSquareSize / 48, 1);

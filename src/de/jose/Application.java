@@ -15,6 +15,7 @@ package de.jose;
 import de.jose.chess.*;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
+import de.jose.db.MySQLAdapter;
 import de.jose.eboard.ChessNutConnector;
 import de.jose.eboard.EBoardConnector;
 import de.jose.export.ExportConfig;
@@ -66,6 +67,7 @@ import java.awt.event.FocusEvent;
 import java.io.*;
 import java.net.*;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -2205,22 +2207,21 @@ public class Application
 				showPanel(cmd.code);
 			}
 		};
-		map.put("window.board", action);
-		map.put("window.list", action);
-		map.put("window.clock", action);
-		map.put("window.game", action);
-		map.put("window.toolbar.1", action);
-		map.put("window.toolbar.2", action);
-		map.put("window.toolbar.3", action);
-		map.put("window.console", action);
-		map.put("window.gamelist", action);
-		map.put("window.collectionlist", action);
-		map.put("window.query", action);
-		map.put("window.sqlquery", action);
-		map.put("window.sqllist", action);
-		map.put("window.engine", action);
-		map.put("window.eval",action);
-        map.put("window.toolbar.symbols", action);
+		for(String window : JoPanel.panelNames())
+			map.put(window,action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				JoPanel panel = (JoPanel)cmd.data;
+				broadcast(cmd);
+                try {
+                    panel.doInit();
+                } catch (Exception e) {
+                    error(e);
+                }
+            }
+		};
+		map.put("panel.init", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd)	throws Exception
@@ -3346,6 +3347,9 @@ public class Application
 
 		theMode = theUserProfile.getInt("game.mode",USER_ENGINE);
 
+		//	create DB adapter
+		JoConnection.getAdapter(true);
+
 		if (theUserProfile.getBoolean("doc.load.history"))
 			openHistory();
 
@@ -3394,7 +3398,14 @@ public class Application
 
 			getContextMenu();
 
-			//	todo if standalone db, launch it here !
+			//	launch DB process
+
+			//	bootstrap directory?
+			File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+			boolean bootstrap = MySQLAdapter.askBootstrap(mysqldir);
+			//	launch background process
+			DBAdapter adapter = JoConnection.getAdapter(true);
+			adapter.launchProcess(bootstrap);
 
 			//  deferred loading of ECO classificator & additional fonts
 			Thread deferredLoader = new DeferredStartup();
@@ -4164,7 +4175,7 @@ public class Application
 		if (gids != null && gids.length > 0)
 		{
 			GameSource src = GameSource.gameArray(gids);
-			theCommandDispatcher.forward(new Command("edit.all", null,src,Boolean.FALSE), theApplication);
+			JoConnection.postWithConnection(new Command("edit.all", null,src,Boolean.FALSE));
 		}
 	}
 

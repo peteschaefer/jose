@@ -12,10 +12,7 @@
 
 package de.jose.db;
 
-import de.jose.Application;
-import de.jose.Config;
-import de.jose.Language;
-import de.jose.Version;
+import de.jose.*;
 import de.jose.db.sqltrace.TraceDriverManager;
 import de.jose.db.crossover.*;
 import de.jose.pgn.Collection;
@@ -31,14 +28,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.List;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * a layer between the application and JDBC
@@ -658,5 +656,37 @@ abstract public class DBAdapter
                 Application.error(e);
             }
         }
+	}
+
+	/**
+	 * Launch process
+	 * @return
+	 */
+	protected java.util.List<Command> deferredActions = new ArrayList<>();
+
+	public void launchProcess(boolean boostrap) {
+	}
+
+	public boolean launchComplete() {
+		return true;
+	}
+
+	public boolean postAfterLaunch(Command cmd) {
+		if (launchComplete()) {
+			// dispatch Command to Application event handler
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					CommandListener target = cmd.target;
+					if (target==null) target = Application.theApplication;
+					Application.theCommandDispatcher.handle(cmd,target);
+				}
+			});
+			return true;
+		}
+		else{
+			//	put into deferrred actions. Try again when the server is launched.
+			deferredActions.add(cmd);
+			return false;
+		}
 	}
 }

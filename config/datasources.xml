@@ -4,7 +4,7 @@
 <data-sources>
 
 	<!-- MySQL embedded library -->
-	<data-source default="true">
+	<data-source default="false">
 		<display-name> MySQL </display-name>
 		<jndi-name> jdbc/mysql-embedded </jndi-name>
 		<adapter-class mode="embedded"> de.jose.db.MySQLAdapter </adapter-class>
@@ -17,7 +17,7 @@
 	</data-source>
 
 	<!-- MySQL separate server process -->
-	<data-source default="false">
+	<data-source default="true">
 		<display-name> MySQL-standalone </display-name>
 		<jndi-name> jdbc/mysql-standalone </jndi-name>
         <adapter-class mode="standalone"> de.jose.db.MySQLAdapter </adapter-class>

@@ -491,8 +491,10 @@ public class BoardPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
-				if (theView!=null)
-				    theView.refresh(false);
+				if (theView!=null) {
+					theView.hideAllHints(true);	//	todo right place to hide arrows ??
+					theView.refresh(false);
+				}
 			}
 		};
   		map.put("move.notify", action);

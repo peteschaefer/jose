@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,10 +13,14 @@
 package de.jose.db;
 
 import de.jose.Application;
+import de.jose.Command;
 import de.jose.Config;
 import de.jose.Util;
 import de.jose.util.IntArray;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.*;
 import java.util.HashMap;
@@ -139,6 +143,10 @@ public class JoConnection
     {
         if (conn!=null) conn.release();
     }
+
+	public static boolean postWithConnection(Command cmd) {
+		return theAdapter.postAfterLaunch(cmd);
+}
 
 	//-------------------------------------------------------------------------------
 	//	Methods

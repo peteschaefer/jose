@@ -37,7 +37,7 @@ import java.util.Collection;
 
 public class QueryPanel
 		extends JoPanel
-        implements TableModelListener, ChangeListener, DocumentListener
+        implements IDBPanel, TableModelListener, ChangeListener, DocumentListener
 {
 
     //-------------------------------------------------------------------------------

@@ -31,6 +31,7 @@ import java.util.Map;
 
 public class SQLResultPanel
 		extends DBTable
+		implements IDBPanel
 {
 	String currentSql;
 	
