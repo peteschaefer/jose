@@ -275,7 +275,7 @@ public class LiChessOpeningExplorer extends OpeningBook
                 for(int GId = GId1; GId <= GId2; GId++) {
                     Game gm = Application.theHistory.getById(GId);
                     if (gm!=null) {
-                        insertNewLine(gm, mvnd, gameRef.toString());
+                        insertNewLine(gm, mvnd, gameRef.toString(false));
                         return;
                     }
                 }
@@ -287,17 +287,22 @@ public class LiChessOpeningExplorer extends OpeningBook
     {
         //  clip sub-line from Game
         LineNode mainLine = gm.getMainLine();
-        MoveNode cut = mainLine.moveByPly(mvnd.getPly()+1);
-        if (cut==null) return;
+        MoveNode cut1 = mainLine.moveByPly(mvnd.getPly()+1);
+        if (cut1==null) return;
+        Node cut2 = mainLine.last();
+        NodeSection cut = new NodeSection(cut1,cut2);
+        cut.trim(INodeConstants.STATIC_TEXT_NODE);  //  skip Result nodes, e.g.
 
-        LineNode subline = mainLine.cloneFrom(cut);
+        Game orig = Application.theApplication.theGame;
+        LineNode subline = new LineNode(orig);
+        subline.cloneFrom(cut.first(),cut.last());
 
         CommentNode comment = new CommentNode(label);
-        comment.insertFirst(subline);
+        comment.insertLast(subline);
 
         //  insert into original Game
-        subline.insertBefore(mvnd.nextMove());  //  todo find the exact place to insert a new line
-        //  todo  @see Game.createNewLine
+        MoveNode next = mvnd.nextMove();
+        orig.insertNewLine(subline,next);
 
         //  trigger update, etc.
         Command cmd = new Command("edit.game.paste",null, mvnd, subline);

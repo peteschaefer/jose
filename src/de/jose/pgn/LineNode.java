@@ -24,6 +24,7 @@ import javax.swing.text.*;
 import java.io.*;
 import java.util.Vector;
 
+import org.apache.tools.ant.util.optional.NoExitSecurityManager;
 import org.xml.sax.SAXException;
 
 import static de.jose.pgn.INodeConstants.*;
@@ -286,16 +287,17 @@ public class LineNode
 
 	@Override
 	public Node clone() {
-		return cloneFrom(first());
+		return cloneFrom(first(),last());
 	}
 
 
-	public LineNode cloneFrom(Node nd)
+	public LineNode cloneFrom(Node nd1, Node nd2)
 	{
 		LineNode clone = new LineNode(this.game);
-		for( ; nd!=null; nd = nd.next()) {
-			Node nd2 = nd.clone();
-			nd2.insertLast(clone);
+		while(nd1!=null) {
+			nd1.clone().insertLast(clone);
+			if (nd1==nd2) break;
+			nd1 = nd1.next();
 		}
 		return clone;
 	}
