@@ -944,13 +944,13 @@ public class Game
 		MoveNode d = (MoveNode)V.next(MOVE_NODE);
 		if (d!=null) {
 			D = new NodeSection(d,P.last());
+		}
 
-			MoveNode c = V.secondMove();
-			if (c!=null) {
-				assert(c.ply==d.ply);
-				C = new NodeSection(c, V.last());
-				B.setLast(c.previous());
-			}
+		MoveNode c = V.secondMove();
+		if (c!=null) {
+			assert(d==null || c.ply==d.ply);
+			C = new NodeSection(c, V.last());
+			B.setLast(c.previous());
 		}
 
 		A.trim(STATIC_TEXT_NODE);
@@ -967,6 +967,19 @@ public class Game
 		else if (D!=null) {
 			D.remove();
 			A.append(D);
+		}
+		else if (C!=null) {
+			//	put C in place of (empty) D
+			C.remove();
+			D = new NodeSection(V.next(),P.last());
+			if (D.first().is(STATIC_TEXT_NODE) || D.first().is(RESULT_NODE)) {
+				C.insertBefore(D.first());
+			}
+			else {
+				D.trim(STATIC_TEXT_NODE,RESULT_NODE);
+				C.insertAfter(D.last());
+			}
+			//	todo can we write that more comprehensively? how can we model an "empty" NodeSection ?
 		}
 
 		/*	todo necessary ?
