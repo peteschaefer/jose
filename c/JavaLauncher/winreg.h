@@ -6,7 +6,7 @@
 char* enumRegistryKey(const char* key, int idx);
 
 /**		get a value		*/
-char* getRegistryValue(const char* akey, const char *version, char* subkey);
+char* getRegistryValue(const char* akey, const char *version, const char* subkey);
 
 
 #endif

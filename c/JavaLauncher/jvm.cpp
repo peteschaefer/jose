@@ -1,8 +1,12 @@
 
+#ifdef _WINDOWS
 #include <windows.h>
+#endif
+#ifdef WIN_REGISTRY
+#include "winreg.h"
+#endif
 
 #include "jvm.h"
-#include "winreg.h"
 #include "util.h"
 
 
@@ -10,26 +14,26 @@
 JVM::JVM()
 { }
 
-void JVM::setClassPath(char* path)
+void JVM::setClassPath(const char* path)
 {
 	class_path = path;
 }
 
-void JVM::setLibraryPath(char* path)
+void JVM::setLibraryPath(const char* path)
 {
 	library_path = path;
 }
 
 void JVM::setJavaVMOptions(int jni_version, 
-						StringList* args, 
-						char* class_path, 
-						char* library_path)
+						const StringList* args,
+						const char* class_path,
+						const char* library_path)
 {
 	vm_args.nOptions = args->size();
 	vm_args.options = new JavaVMOption[vm_args.nOptions+2];
 
 	for (int i=0; i<vm_args.nOptions; i++)
-		vm_args.options[i].optionString = args->get(i);
+		vm_args.options[i].optionString = (char*)args->get(i);
 
 	if (class_path != NULL)
 		vm_args.options[vm_args.nOptions++].optionString = stringcat("-Djava.class.path=",class_path,NULL);
@@ -42,26 +46,30 @@ void JVM::setJavaVMOptions(int jni_version,
 
 
 /**		launch the VM and call the "main" method	*/
-int JVM::launch(char* dll_path, int jni_version, StringList* jvm_options)
+int JVM::launch(const char* dll_path, int jni_version, const StringList* jvm_options)
 {
 	if (dll_path==NULL)
 		return JVM_ERROR_DLL_MISSING;
 
 	/* 
 	 * load jvm.dll	 
-	 */	
+	 */
+#ifdef _WINDOWS
 	HINSTANCE dll_handle = LoadLibrary(dll_path);
 	if (dll_handle==NULL)
 		return JVM_ERROR_DLL_NOT_FOUND;
-		
+#endif
+
 	/* setup JVM arguments
 	 */ 
 	setJavaVMOptions(jni_version,jvm_options, class_path,library_path);
 
 	/*	launch VM; call method from jvm.dll
 	 */
+#ifdef _WINDOWS
 	CreateJavaVM = (jint (JNICALL *)(JavaVM **,void **, void *))
 						GetProcAddress(dll_handle, "JNI_CreateJavaVM");
+#endif
 	if (CreateJavaVM==NULL)
 		return JVM_ERROR_CREATE_JAVA_VM_NOT_FOUND;
 
@@ -71,7 +79,7 @@ int JVM::launch(char* dll_path, int jni_version, StringList* jvm_options)
 	return +1;
 }
 
-jvalue* JVM::createMethodArgs(StringList* args)
+jvalue* JVM::createMethodArgs(const StringList* args)
 {
 	jclass stringClass = env->FindClass("java/lang/String");
 	jobjectArray array = env->NewObjectArray(args->size(),stringClass, NULL);
@@ -86,7 +94,7 @@ jvalue* JVM::createMethodArgs(StringList* args)
 	return value;
 }
 
-int JVM::call(char* main_class, StringList* args)
+int JVM::call(const char* main_class, const StringList* args)
 {
 	/* 
 	 * invoke the main method using JNI 
@@ -121,13 +129,14 @@ void JVM::destroy()
 
 
 //	registry key for JRE
-char* JRE_KEY			= "Software\\JavaSoft\\Java Runtime Environment";
+const char* JRE_KEY			= "Software\\JavaSoft\\Java Runtime Environment";
 //	registry key for JDK
-char* JDK_KEY			= "Software\\JavaSoft\\Java Development Kit";
+const char* JDK_KEY			= "Software\\JavaSoft\\Java Development Kit";
 //	registry key for Plug-in
-char* PLUGIN_KEY		= "Software\\JavaSoft\\Java Plug-in";
+const char* PLUGIN_KEY		= "Software\\JavaSoft\\Java Plug-in";
 
-char* findJvmInRegistry(char* version)
+#ifdef WIN_REGISTRY
+char* findJvmInRegistry(const char* version)
 {
 	char* jvm;
 	char* javahome;
@@ -181,7 +190,7 @@ char* findJvmInRegistry(char* version)
 }
 
 
-char* findJvmInRegistry(char* key, char* preferred_version)
+const char* findJvmInRegistry(const char* key, const char* preferred_version)
 {
 	for (int i=0; ; i++)
 	{
@@ -200,12 +209,12 @@ char* findJvmInRegistry(char* key, char* preferred_version)
 	}
 	return NULL;
 }
-
+#endif
 		
 
 
 /**		find a jvm.dll either in a local directory, or in the registry	*/
-char* JVM::find(StringList* local_path, StringList* preferred_version)
+const char* JVM::find(const StringList* local_path, const StringList* preferred_version)
 {
 	/* 1. look for bundled JRE in working directory */
 	for (int j=0; j<local_path->size(); j++)
@@ -213,11 +222,13 @@ char* JVM::find(StringList* local_path, StringList* preferred_version)
 			return local_path->get(j);
 
 	/* 2. look for preferred version in registry */
-	char* jvm;
+#ifdef WIN_REGISTRY
+	const char* jvm;
+	int j;
 	for (j=0; j<preferred_version->size(); j++)
 	{
 			/**	try current 1.4	*/
-			char* pref = preferred_version->get(j);
+			const char* pref = preferred_version->get(j);
 			jvm = findJvmInRegistry(pref);
 			if (jvm!=NULL) return jvm;
 	}
@@ -225,7 +236,7 @@ char* JVM::find(StringList* local_path, StringList* preferred_version)
 	for (j=0; j<preferred_version->size(); j++)
 	{
 			/**	try any 1.4	*/
-			char* pref = preferred_version->get(j);
+			const char* pref = preferred_version->get(j);
 			jvm = findJvmInRegistry(JRE_KEY,pref);
 			if (jvm!=NULL) return jvm;
 
@@ -245,7 +256,7 @@ char* JVM::find(StringList* local_path, StringList* preferred_version)
 
 	jvm = findJvmInRegistry(PLUGIN_KEY,NULL);
 	if (jvm!=NULL) return jvm;
-	
+#endif
 	//	all fails
 	return NULL;
 }

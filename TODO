@@ -22,6 +22,9 @@ libraries needed:
 * todo cross-compile easylink for i386. Which extra libaries are needed?
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 
+[ ] port JavaLauncher
+[ ] java.desktop
+
 ==== macOS
 
 [x] macOS 15 Sequoia VM
@@ -53,11 +56,15 @@ mysqld 5.0.24a i686 from 11-07-2005
    - good news: jre can be bundled
    [ ] bundle leela
    [ ] bundle stockfish
-   [ ] make jose.sh executable ?
+   [-] make jose.sh executable ?
+   [ ] port JavaLauncher
 
 [ ] "Apple Silicon"
-    - jdk1.8, 11 (not 9?) is available from Oracle :)
-    - MySQL >= 8.0.30
+    [ ] jdk1.8, 11 (not 9?) is available from Oracle :)
+    [ ] MySQL >= 8.0.30
+    [ ] JavaLauncher
+    [ ] stockfish
+    [ ] Lc0
 
 ==== Deprecated Stuff
 

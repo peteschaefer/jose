@@ -3,7 +3,7 @@
 #define __UTIL_DEFINED__
 
 
-bool existsFile(char* file);
+bool existsFile(const char* file);
 
 /**		string utility	*/
 char* stringcat(const char* c1, const char* c2, const char* c3);

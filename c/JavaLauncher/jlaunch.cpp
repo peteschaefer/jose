@@ -1,9 +1,12 @@
+//
+// Created by nightrider on 25.01.2025.
+//
 
-
-//#include <stdio.h>
+#include <cstdlib>
+#include <cstring>
 #include <jni.h>
-#include <windows.h>
 
+#include "jlaunch.h"
 #include "jvm.h"
 #include "util.h"
 
@@ -13,162 +16,31 @@
 						"or download Java from \n" \
 						"      http://java.sun.com"
 
-static void message(char* msg, char* title, int code)
+const char* getIniFile(const char* arg0)
 {
-	char* temp = new char[64];
-	if (code!=0) {
-		sprintf(temp," error code = %i",code);
-		MessageBox(NULL, stringcat(msg,temp,NULL),title,MB_OK);
-	}
-	else
-		MessageBox(NULL, msg,title,MB_OK);
+    //		trim trailing ".exe"
+    int len = strlen(arg0);
+    if (len > 4 && strcmp(arg0+len-4,".exe")==0)
+        ((char*)arg0)[len-4] = 0;
+    else if (len > 4 && strcmp(arg0+len-4,".EXE")==0)
+        ((char*)arg0)[len-4] = 0;
+    return stringcat(arg0,".ini",NULL);
 }
 
-static void fatal(char* msg, int code)
+const char* getWorkDir(const char* arg0)
 {
-//	fprintf(stderr,"%s\n",message);
-	//	show message box
-	message(msg,"Error",code);
-	exit(code);
-}
-
-
-
-char* getIniFile(char* arg0)
-{
-	//		trim trailing ".exe"
-	int len = strlen(arg0);
-	if (len > 4 && strcmp(arg0+len-4,".exe")==0)
-		arg0[len-4] = 0;
-	else if (len > 4 && strcmp(arg0+len-4,".EXE")==0)
-		arg0[len-4] = 0;
-	return stringcat(arg0,".ini",NULL);
-}
-
-char* getWorkDir(char* arg0)
-{
-	char* s = arg0+strlen(arg0);
-	while (s > arg0 && s[-1] != '\\')
-		s--;
-	s[0] = 0;
-	return arg0;
+    const char* s = arg0+strlen(arg0);
+    while (s > arg0 && s[-1] != '\\')
+        s--;
+    ((char*)s)[0] = 0;
+    return arg0;
 }
 
 
-//	Splash Screen Window Handle
-HWND splash_hwnd = NULL;
-
-/**	splash screen	
-	get(0) = path to jpeg
-	get(1..) additional text
-*/
 StringList splash;
-//	application instance
-HINSTANCE hInstance;
-//	splash screen bitmap handle
-HBITMAP bitmap;
-//	and actual bitmap
-BITMAP bm;
-
-
-//	Window Procedure for Splash Screen
-LRESULT CALLBACK SplashWndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
-{
-	switch(iMessage)
-	{
-		case WM_PAINT:
-			PAINTSTRUCT   ps;
-			HBITMAP       hOldBitmap;
-			HDC           hDC, hMemDC;
-
-			hDC = BeginPaint( hWnd, &ps );
-			
-			hMemDC = CreateCompatibleDC( hDC );
-			hOldBitmap = (HBITMAP)SelectObject( hMemDC, bitmap );
-
-			BitBlt( hDC, 0, 0, bm.bmWidth, bm.bmHeight,
-					hMemDC, 0, 0, SRCCOPY );
-
-			SelectObject( hMemDC, hOldBitmap );
-			DeleteObject( bitmap );
-
-			HFONT hfnt = (HFONT)GetStockObject(ANSI_VAR_FONT); 
-			SelectObject(hDC, hfnt);
-	    
-			for (int i=1; i < splash.size(); i++)
-			{			
-				TextOut(hDC, 10, bm.bmHeight-10+(i-splash.size())*20, splash.get(i), splash.length(i)); 
-			}
-
-			EndPaint( hWnd, &ps );
-
-		break;
-	}
-
-	return DefWindowProc(hWnd, iMessage, wParam, lParam);
-}
-
-//	register window class
-BOOL InitWindowClass() 
-{ 
-    WNDCLASSEX wcx; 
- 
-    wcx.cbSize = sizeof(wcx);          // size of structure 
-    wcx.style = CS_HREDRAW | CS_VREDRAW;                    // redraw if size changes 
-    wcx.lpfnWndProc = SplashWndProc;     // points to window procedure 
-    wcx.cbClsExtra = NULL;                // no extra class memory 
-    wcx.cbWndExtra = NULL;                // no extra window memory 
-    wcx.hInstance = hInstance;         // handle to instance 
-    wcx.hIcon = LoadIcon(hInstance, NULL);              // predefined app. icon 
-    wcx.hCursor = LoadCursor(NULL, IDC_ARROW);                    // predefined arrow 
-    wcx.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);                  // white background brush 
-    wcx.lpszMenuName =  NULL;    // name of menu resource 
-    wcx.lpszClassName = "SplashWClass";  // name of window class 
-    wcx.hIconSm = NULL; 
- 
-    return RegisterClassEx(&wcx); 
-} 
-
-
-//	create and open splash screen window
-HWND ShowSplashScreen(char* path)
-{
-	if (!InitWindowClass()) return NULL;
-
-	bitmap = (HBITMAP)LoadImage( NULL, splash.get(0), IMAGE_BITMAP, 0, 0,
-               LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE );
-
-	GetObject(bitmap, sizeof(BITMAP), &bm);
-
-	//	calc screen size
-	HDC device = GetDC(NULL);
-	int screen_width = GetDeviceCaps(device,HORZRES);
-	int screen_height = GetDeviceCaps(device,VERTRES);
-
-	//	create window
-	HWND hwnd = CreateWindowEx(WS_EX_TOPMOST|WS_EX_TOOLWINDOW, //	always on top, not in taskbar
-		"SplashWClass", NULL, WS_POPUP,			//	no border
-		(screen_width-bm.bmWidth)/2,
-		(screen_height-bm.bmHeight)/2,
-		bm.bmWidth, bm.bmHeight,
-		(HWND)NULL, (HMENU)NULL, hInstance, NULL);
-
-	if (hwnd==NULL) return NULL;
-
-	//	show it
-	ShowWindow(hwnd, SW_SHOWNORMAL); 
-	UpdateWindow(hwnd); 
-
-	return hwnd;
-}
-
-void HideSplashScreen(HWND hwnd)
-{
-	DestroyWindow(hwnd);
-}
 
 int launch(StringList* argv)
-{	
+{
 	/** used to launch the JVM */
 	JVM* jvm = new JVM();
 
@@ -188,7 +60,7 @@ int launch(StringList* argv)
 	/*
 	 *	parse ini file
 	 */
-	char* ini_file = getIniFile(argv->get(0));
+	const char* ini_file = getIniFile(argv->get(0));
 
 	if (ini_file != NULL) {
 			FILE* file = fopen(ini_file,"r");
@@ -201,7 +73,7 @@ int launch(StringList* argv)
 				char* brk = strpbrk(line,"=");
 				if (brk==NULL) continue;		//		no "=" on this line
 				*brk++ = 0;		//		separates key and value
-				
+
 				char* key = tolower(trim(line));
 				char* value = trim(brk);
 
@@ -242,7 +114,7 @@ int launch(StringList* argv)
 		else if (strcmp("-version",argv->get(i))==0 && (i+1) < argc)
 			preferred_version.parse(argv->get(++i));
 		else if (strcmp("-main",argv->get(i))==0 && (i+1) < argc)
-			main_class = replace(argv->get(++i),'.','/');
+			main_class = replace((char*)argv->get(++i),'.','/');
 		else if (strcmp("-cp",argv->get(i))==0 && (i+1) < argc)
 			jvm->setClassPath(argv->get(++i));
 		else if (strcmp("-lp",argv->get(i))==0 && (i+1) < argc)
@@ -255,29 +127,27 @@ int launch(StringList* argv)
 			main_args.add(argv->get(i));	//	this is a MAIN argument
 	}
 
-	/* 
+	/*
 	 * set work dir to application location
 	 */
-	char* work_dir = getWorkDir(argv->get(0));
+	const char* work_dir = getWorkDir(argv->get(0));
 	if (work_dir != NULL && work_dir[0] != 0)
 		SetCurrentDirectory(work_dir);
 		//		otherwise: keep current dir
 
 	/*
 	 *	show splash screen
-	 */	
-	if (hInstance!=NULL && splash.size()>0)
-	{
-		if ((splash_hwnd=ShowSplashScreen(splash.get(0)))!=NULL)
-			main_args.add("splash=off");	//	tell the application not to show its own splash screen
-	}
+	 */
+	if (ShowSplashScreen(splash))
+		main_args.add("splash=off");	//	tell the application not to show its own splash screen
+
 
 	/**
      * TODO find correct JDK, either in working dir, or from Registry
 	 */
-	char* jvm_path = JVM::find(&local_jvm_path, &preferred_version);
+	const char* jvm_path = JVM::find(&local_jvm_path, &preferred_version);
 
-	int error = jvm->launch(jvm_path, JNI_VERSION_1_4, &jvm_options);	
+	int error = jvm->launch(jvm_path, JNI_VERSION_1_4, &jvm_options);
 	if (error >= 0)
 		error = jvm->call(main_class,&main_args);
 
@@ -293,39 +163,12 @@ int launch(StringList* argv)
 		case JVM::JVM_ERROR_BAD_MAIN_ARGS:				fatal("bad arguments to main()",error);
 		default:										fatal("failed to launch JVM",-1);
 		}
-		
-	if (splash_hwnd!=NULL)
-		HideSplashScreen(splash_hwnd);
 
-    /* destroy immediately. AWT threads will keep running. */ 
+	HideSplashScreen();
+
+    /* destroy immediately. AWT threads will keep running. */
     jvm->destroy();
 
 	return +1;
 }
 
-
-/**
- * main entry point for console application
- */
-int main(int argc, char** argv)
-{
-	return launch(new StringList(argc,argv));
-}
-
-/**
- * Main Entry point for Windows application
- */
-int APIENTRY WinMain(HINSTANCE hinst,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow )
-{
-	hInstance = hinst;
-	char* cmdline = GetCommandLineA();
-
-	StringList* args = new StringList();
-	args->parse1(cmdline);
-	args->parse(lpCmdLine);
-
-	return launch(args);
-}

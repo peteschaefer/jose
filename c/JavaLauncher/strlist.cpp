@@ -11,7 +11,7 @@
 StringList::StringList(int argc, char** argv)
 {
 	sz = capacity = argc;
-	data = argv;
+	*(char***)&data = argv;
 	alloced = false;
 }
 
@@ -22,7 +22,7 @@ StringList::StringList()
 	alloced = false;
 }
 
-StringList::StringList(char* line)
+StringList::StringList(const char* line)
 {
 	sz = capacity = 0;
 	data = NULL;
@@ -30,13 +30,13 @@ StringList::StringList(char* line)
 	parse(line);
 }
 
-char* StringList::add(char* str) 
+const char* StringList::add(const char* str)
 {
 	ensureCapacity(sz+1);
 	return (data[sz++] = str);
 }
 
-char* StringList::add(char* str, int start, int len)
+const char* StringList::add(const char* str, int start, int len)
 {
 	//		copy
 	char* newstr = (char*)malloc(len+1);
@@ -62,7 +62,7 @@ void StringList::ensureCapacity(int cap)
 		if (alloced) free(data);
 	}
 
-	data = newData;
+	*(char***)&data = newData;
 	capacity = newCapacity;
 	alloced = true;
 }
@@ -76,10 +76,10 @@ void StringList::ensureCapacity(int cap)
 #define END_TOKEN(x,newstate)		{ if (x>token) add(token,0,x-token); state = newstate; }
 
 
-int StringList::parse(char* line)
+int StringList::parse(const char* line)
 {
-	char* s = line;
-	char* token = NULL;
+	const char* s = line;
+	const char* token = NULL;
 	int size_before = size();
 
 	short state = WHITE;
@@ -113,15 +113,15 @@ int StringList::parse(char* line)
 	
 }
 
-int StringList::length(int i)
+int StringList::length(int i) const
 { 
 	return strlen(get(i)); 
 }
 
-int StringList::parse1(char* line)
+int StringList::parse1(const char* line)
 {
-	char* s = line;
-	char* token = NULL;
+	const char* s = line;
+	const char* token = NULL;
 
 	short state = WHITE;
 

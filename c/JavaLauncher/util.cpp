@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <windows.h>
 
-bool existsFile(char* file)
+bool existsFile(const char* file)
 {
 	WIN32_FIND_DATA find_data;
 	HANDLE hFind = FindFirstFile(file,&find_data);

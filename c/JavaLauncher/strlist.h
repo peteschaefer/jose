@@ -11,7 +11,7 @@ private:
 	/**	current capacity		*/
 	int capacity;
 	/** string data */
-	char** data;
+	const char** data;
 	/** was data allocated by this class ? */
 	bool alloced;
 
@@ -29,24 +29,24 @@ public:
 
 	/**
 	 */
-	StringList(char* line);
+	StringList(const char* line);
 
 
-	int size()						{ return sz; }
+	int size() const						{ return sz; }
 
-	char* get(int i)				{ return data[i]; }
+	const char* get(int i) const			{ return data[i]; }
 
-	int length(int i);
+	int length(int i) const;
 
-	char* operator[] (int i)		{ return data[i]; }
+	const char* operator[] (int i) const	{ return data[i]; }
 
-	char* add(char* str);
+	const char* add(const char* str);
 
-	char* add(char* str, int start, int len);
+	const char* add(const char* str, int start, int len);
 
-	int parse(char* str);
+	int parse(const char* str);
 
-	int parse1(char* str);
+	int parse1(const char* str);
 	
 
 protected:
