@@ -2,6 +2,7 @@ package de.jose.book.lichess;
 
 import de.jose.AbstractApplication;
 import de.jose.Application;
+import de.jose.book.BookQueryArguments;
 import de.jose.comm.Command;
 import de.jose.Language;
 import de.jose.book.BookEntry;
@@ -98,13 +99,13 @@ public class LiChessOpeningExplorer extends OpeningBook
     }
 
     @Override
-    public boolean getBookMoves(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
+    public boolean getBookMoves(BookQueryArguments args, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
     {
         //  run asynchroneously
         Callable<Boolean> task = new Callable() {
             @Override
             public Boolean call() throws Exception {
-                return getBookMoves1(pos, ignoreColors, deep, TOP_GAMES, result);
+                return getBookMoves1(args.fen, ignoreColors, deep, TOP_GAMES, result);
             }
         };
 
@@ -129,11 +130,10 @@ public class LiChessOpeningExplorer extends OpeningBook
         }
     }
 
-    public boolean getBookMoves1(Position pos, boolean ignoreColors, boolean deep,
+    public boolean getBookMoves1(String fen, boolean ignoreColors, boolean deep,
                                  int topGames,
                                  List<BookEntry> result) throws IOException
     {
-        String fen = pos.toString();
         fen = URLEncoder.encode(fen);
         String urlString = apiUrl+"?fen="+fen+"&topGames="+topGames;    //  don't enumerate games
 

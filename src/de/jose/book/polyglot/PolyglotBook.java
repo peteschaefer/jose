@@ -12,6 +12,7 @@
 
 package de.jose.book.polyglot;
 
+import de.jose.book.BookQueryArguments;
 import de.jose.book.OpeningBook;
 import de.jose.book.BookEntry;
 import de.jose.chess.Position;
@@ -56,20 +57,20 @@ public class PolyglotBook extends OpeningBook
 		return result;
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
+	public boolean getBookMoves(BookQueryArguments args, boolean withTransposedColors, boolean deep, List result)
 			throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
-		boolean res1 = getBookMovesColored(pos,false,result);
+		boolean res1 = getBookMovesColored(args.polyglotHashKeys[0],false,result);
 		boolean res2 = false;
-		if (withTransposedColors) res2 = getBookMovesColored(pos,true,result);
+		if (withTransposedColors) res2 = getBookMovesColored(args.polyglotHashKeys[1],true,result);
 		return res1||res2;
 	}
 
-	private boolean getBookMovesColored(Position pos, boolean reversed, List result) throws IOException
+	private boolean getBookMovesColored(PolyglotHashKey key, boolean reversed, List result) throws IOException
 	{
-		PolyglotHashKey key = reversed ? reversed_hashkey:hashkey;
-		pos.computeHashKey(key);
+//		^ = reversed ? reversed_hashkey:hashkey;
+//		pos.computeHashKey(key);
 
 		boolean in_book = false;
 		if (disk != null && BookSize > 0)

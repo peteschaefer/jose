@@ -1923,27 +1923,18 @@ public class Application
 				EnginePanel eng_panel = enginePanel();
 				eng_panel.setVisible(true);
 
-				if (eng_panel.inBook)
-					engine_analysis = true; //  already in book, switch to engine mode
+				if (eng_panel.inBook) {
+					//	switch from Book to Engine analysis
+					startEngineAnalysis(true);
+				}
 				else try {
 					//  (1) fetch book moves
-					engine_analysis = ! eng_panel.updateBook(false);
+					boolean hasbook = eng_panel.updateBook(false);
+					//	if there are not books moves, switch to engine analysis instead:
+					startEngineAnalysis(!hasbook);
+					//	todo call asynch, switch to engine analysis on completion
 				} catch (IOException e) {
 					error(e);
-				}
-
-				if (engine_analysis) {
-					invokeWithPlugin(new Runnable() {
-						public void run() {	//  (2) enter engine analysis mode
-							pausePlugin(true);
-							theMode = ANALYSIS;
-						}
-					});
-				}
-				else {
-					//  (2) leave engine analysis mode
-					pausePlugin(false);
-					theMode = USER_INPUT;
 				}
 			}
 		};
@@ -2356,6 +2347,23 @@ public class Application
 		};
 		map.put("eboard.disconnect",action);
 		map.put("eboard.connect",action);
+	}
+
+	private void startEngineAnalysis(boolean engine_analysis)
+	{
+		if (engine_analysis) {
+			invokeWithPlugin(new Runnable() {
+				public void run() {	//  (2) enter engine analysis mode
+					pausePlugin(true);
+					theMode = ANALYSIS;
+				}
+			});
+		}
+		else {
+			//  (2) leave engine analysis mode
+			pausePlugin(false);
+			theMode = USER_INPUT;
+		}
 	}
 
 	public void handleUserMove(Move move, boolean animate)

@@ -17,6 +17,7 @@ import de.jose.Config;
 import de.jose.Application;
 import de.jose.chess.Position;
 
+import java.awt.print.Book;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -183,18 +184,17 @@ public class OpeningLibrary
 	}
 
 
-	public List collectMoves(Position pos, int gameMode, boolean ignoreColors, boolean allowOutOfBook)
+	public List<BookEntry> collectMoves(BookQueryArguments args, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
 			throws IOException
 	{
-		ArrayList result = new ArrayList();
+		ArrayList<BookEntry> result = new ArrayList();
 		for (int i=0; i < size(); i++)
 		{
 			BookFile fentry = (BookFile) get(i);
 			if (fentry.book==null) continue;
 
 			ArrayList one_result = new ArrayList();
-			boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
-			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, go_deep, one_result);
+			boolean containsPosition = fentry.book.getBookMoves(args, ignoreColors, go_deep, one_result);
 			if (!containsPosition && !allowOutOfBook)
 				continue;   //  transpose from out-of-book into the book. Ignore !
 

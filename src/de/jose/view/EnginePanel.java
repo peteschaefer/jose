@@ -1672,6 +1672,7 @@ public class EnginePanel
 
 	}
 
+	//	todo move to Application. Submit BookQuery to executor services.
 	public boolean updateBook(boolean onEngineMove)
 			throws IOException
 	{
@@ -1679,17 +1680,21 @@ public class EnginePanel
 		Position pos = Application.theApplication.theGame.getPosition();
 		OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
 
-		List bookMoves=null;
+		List<BookEntry> bookMoves=null;
 		boolean inBook;
 		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
 		{	//	don't update book after an engine move, if this is not desired
 			inBook = false;
 		}
 		else {
+			// note: collectMoves can be slow b/c of Lichess queries
+			// todo for long-running queries, don't rely on pos. compute fen, hash key before.
 			bookMoves = lib.collectMoves(pos, Application.theApplication.theMode,true,false);
-			inBook = bookMoves!=null && !bookMoves.isEmpty();
+			inBook = (bookMoves!=null) && !bookMoves.isEmpty();
 		}
 
+		//	todo do this when collectMoves returns (plus: switch to engine analysis on failure)
+		//	time coordination is a bit tricky
 		if (inBook)
 			showBook(bookMoves,pos);
 		else

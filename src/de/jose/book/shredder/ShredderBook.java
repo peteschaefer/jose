@@ -74,13 +74,13 @@ public class ShredderBook extends OpeningBook
 		return ! moveEntries.isEmpty();
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
+	public boolean getBookMoves(BookQueryArguments args, boolean withTransposedColors, boolean deep, List result)
 			throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
-		boolean res1 = getBookMovesColored(pos, false, result);
+		boolean res1 = getBookMovesColored(args.shredderHashKeys[0], false, result);
 		boolean res2 = false;
-		if (withTransposedColors) res2 = getBookMovesColored(pos, true, result);
+		if (withTransposedColors) res2 = getBookMovesColored(args.shredderHashKeys[1], true, result);
 		return res1||res2;
 	}
 
@@ -178,17 +178,17 @@ public class ShredderBook extends OpeningBook
 		return 0;
 	}
 
-	protected Vector readBookEntries(Position board) {
-		synchronized (board) {
+	protected Vector readBookEntries(ShredderHashKey hashKey, boolean whiteMovesNext) {
+		/*synchronized (board)*/ {
 		Vector vector = new Vector();
 		try {
 			BookFile bookFile = new BookFile(disk/*bookFilePath, "r"*/);
-			ShredderHashKey hashKey = new ShredderHashKey();
-			board.computeHashKey(hashKey);
+//			ShredderHashKey hashKey = new ShredderHashKey();
+//			board.computeHashKey(hashKey);
 //			int hashKeyPart1 = ShredderHashKey.calculateHashKeyPart1(board);
 //			int hashKeyPart2 = ShredderHashKey.calculateHashKeyPart2(board);
 			long blockOffset = hashKey.value() & 127;
-			if (!board.whiteMovesNext())
+			if (!whiteMovesNext)
 				blockOffset += 128L;    //  set of black move entries
 			blockOffset *= 0x610L;   //  block-size = 32*book-entry-size ?
 			bookFile.seek(blockOffset);
@@ -227,11 +227,11 @@ public class ShredderBook extends OpeningBook
 		}
 	}
 
-	public List readMoveEntries(Position board)
+	public List readMoveEntries(BookQueryArguments args)
 	{
-		synchronized (board) {
+		/*synchronized (board)*/ {
 		List moveEntries = new Vector();
-		Vector bookEntries = readBookEntries(board);
+		Vector bookEntries = readBookEntries(args.shredderHashKeys[0], args.whiteNext);
 		int bookScoreSum = 0;
 		int bookScoreMax = 1;
 		for (Iterator bookEntryIterator = bookEntries.iterator(); bookEntryIterator.hasNext();)
