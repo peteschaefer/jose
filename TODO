@@ -49,7 +49,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [x] docking targets shifted? contentPane()!
     [ ] popup window out of screen (Windows only?)
         [x] write mode
-        [ ] promotion
+        [x] promotion
     [ ] export dialog, spurios 'false' label
     [ ] always embed TTF into PDF
     [x] apply Selection Color on Linux

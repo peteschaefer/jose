@@ -1532,7 +1532,7 @@ public class BoardView2D
 		if (couldBePromotion(mouseMove)) {
 			/*	show popup	*/
 			mouseStartSquare = mouseMove.from;
-			showPromotionPopup(board.movesNext(), origin(mouseMove.to,true));
+			showPromotionPopup(board.movesNext(), getLocationOnScreen(mouseMove.to));
 			/*	when the user selects an item, mouseEnd will be called again	*/
 			return true;	//	important: keep mouseMove
 		}

@@ -433,7 +433,7 @@ abstract public class BoardView
 		pop.add(item);
 	}
 
-	protected void showPromotionPopup(int color, Point2D where)
+	protected void showPromotionPopup(int color, Point locationOnScreen)
 	{
 		JPopupMenu pop = new JPopupMenu(Language.get("popup.promote"));
 
@@ -459,9 +459,21 @@ abstract public class BoardView
 
 		JoMenuBar.addMenuItemListener(pop, this);
 		pop.addPopupMenuListener(this);
-		pop.show(getParent(), (int)where.getX(), (int)where.getY());
+
+		Point where = fitInto(width,locationOnScreen,getParent());
+		pop.show(getParent(), where.x, where.y);
 
 		promoPopupShowing = true;
+	}
+
+	protected Point fitInto(int width, Point locationOnScreen, Component parent)
+	{
+		//	global bounds of board panel
+		Rectangle bbounds = ViewUtil.boundsOnScreen(parent);
+		//	global bounds of popup dialog
+		Rectangle dbounds = new Rectangle(locationOnScreen.x, locationOnScreen.y, width, 4*width);
+		ViewUtil.fitInto(dbounds,bbounds);
+		return new Point(dbounds.x-bbounds.x,dbounds.y-bbounds.y);
 	}
 
 	public void actionPerformed(ActionEvent evt)
