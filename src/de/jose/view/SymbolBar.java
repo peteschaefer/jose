@@ -29,6 +29,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListDataListener;
 import javax.swing.text.Style;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -102,7 +104,7 @@ import static java.awt.GridBagConstraints.REMAINDER;
  */
 public class SymbolBar 
         extends JoPanel
-		implements PgnConstants, ItemListener
+		implements PgnConstants, ActionListener
 {
     private static final Insets margin = new Insets(0,2,0,2);
 
@@ -120,15 +122,16 @@ public class SymbolBar
     protected ComboNag comboNag;
     protected JButton comboButton;
     protected JPanel comboPane;
+    //protected BoxLayout comboLayout;
     protected JComboBox<String> comboColor,comboAdjective,comboSubst,comboSelector;
     protected JLabel comboVerb;
 
-    private static final int BUTTON_SIZE = 20;
+    private static final int BUTTON_SIZE = 28;
 
     //protected BoxLayout comboLayout;
 //    protected JScrollPane boxScroller,comboScroller;
 
-    protected Font symbolFont, textFont, labelFont;
+    protected Font symbolFont, textFont, smallFont, labelFont;
     protected FontEncoding fontEncoding = null;
 	//protected JoBigLabel[] labels;
 
@@ -173,7 +176,7 @@ public class SymbolBar
     {
         super(profile,withContextMenu,withBorder);
         setLayout(gridLayout=new GridBagLayout());
-        gridRows=gridCols=0;
+        gridRows=gridCols=1;
     }
 
     @Override
@@ -183,9 +186,12 @@ public class SymbolBar
         super.setBounds(x, y, width, height);
     }
 
-    private void onResize(int width, int height) {
-        int rows = height / BUTTON_SIZE;
-        int cols = width / BUTTON_SIZE;
+    private void onResize(int width, int height)
+    {
+        if (!isInited()) return;
+
+        int rows = Math.max(1,height / BUTTON_SIZE);
+        int cols = Math.max(1,width / BUTTON_SIZE);
 
         if (rows != gridRows || cols != gridCols) {
             gridRows = rows;
@@ -199,50 +205,53 @@ public class SymbolBar
         int cells = gridRows * gridCols;
         int n=0;
         if (cells >= (normalButtons.size()+easyButtons.size())) {
+            //  show complete set of buttons
             n = relayoutButtons(easyButtons,n);
             n = relayoutButtons(normalButtons,n);
         }
         else {
-            relayoutButtons(easyButtons,-1);
+            //  don't show "easy" buttons
+            relayoutButtons(easyButtons,-Integer.MAX_VALUE);
             n = relayoutButtons(normalButtons,n);
         }
 
         int bottomcols = n % gridCols;
-        if (bottomcols>0 && bottomcols+8 <= gridCols) {
+        if (bottomcols>0 && (bottomcols+16) <= gridCols) {
             //  put combo boxes into the bottom row
-            relayoutComboPane(n);
+            relayoutComboPane(n,BoxLayout.X_AXIS);
         }
         else {
             int nextRow = (n / gridCols)+1;
             if (nextRow < gridRows) {
-                relayoutComboPane(nextRow*gridCols);
+                relayoutComboPane(nextRow*gridCols, (gridCols>=16) ? BoxLayout.X_AXIS: BoxLayout.Y_AXIS);
             }
-            else if (gridRows > 1 || gridCols >= 8) {
+            else if (gridRows > 1 && gridCols >= 5) {
                 gridRows++;
-                relayoutComboPane(nextRow*gridCols);
+                relayoutComboPane(nextRow*gridCols, (gridCols>=16) ? BoxLayout.X_AXIS: BoxLayout.Y_AXIS);
             }
             else {
-                relayoutComboPane(-1);
+                relayoutComboPane(-Integer.MAX_VALUE,BoxLayout.X_AXIS);
             }
         }
 
         gridLayout.invalidateLayout(this);
     }
 
-    private void relayoutComboPane(int i)
+    private void relayoutComboPane(int i, int preferredAxis)
     {
-        comboButton.setVisible(i>=0);
+        //comboButton.setVisible(i>=0);
         comboPane.setVisible(i>=0);
+        comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
 
         if (i >= 0) {
-            relayoutButton(comboButton, i++);
+            //relayoutButton(comboButton, i++);
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = i % gridCols;
             c.gridy = i / gridCols;
             c.gridwidth = REMAINDER;
             c.gridheight = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
+            c.anchor = GridBagConstraints.NORTHWEST;
+            c.fill = GridBagConstraints.NONE;
             gridLayout.setConstraints(comboPane, c);
         }
     }
@@ -258,11 +267,11 @@ public class SymbolBar
         button.setVisible(i >= 0);
         if (i >= 0) {
             GridBagConstraints c = new GridBagConstraints();
-            c.gridx = i %gridCols;
-            c.gridy = i /gridCols;
+            c.gridx = i % gridCols;
+            c.gridy = i / gridCols;
             c.gridwidth = 1;
             c.gridheight = 1;
-            c.anchor = GridBagConstraints.CENTER;
+            c.anchor = GridBagConstraints.NORTHWEST;
             c.fill = GridBagConstraints.NONE;
             gridLayout.setConstraints(button,c);
         }
@@ -270,11 +279,9 @@ public class SymbolBar
 
     public void init()
     {
-        comboPane = new JPanel();
-        LayoutManager comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
-
         Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
-        textFont = new Font("Dialog", Font.PLAIN, 14);
+        textFont = new Font("Dialog", Font.PLAIN, 16);
+        smallFont = new Font("Dialog", Font.PLAIN, 9);
         labelFont = new Font("Dialog", Font.PLAIN, 10);
         fontEncoding = null;
 
@@ -293,23 +300,30 @@ public class SymbolBar
 
     private void makeComboPane()
     {
-        comboPane.add(makeActionButton("\uf060","switch.symbols"));
-        comboPane.add(comboButton = makeSymbolButton(1,symbolFont,"?","?"));
-        comboButton.setMinimumSize(new Dimension(32,32));
-        comboButton.setPreferredSize(new Dimension(32,32));
+        comboPane = new JPanel();
 
-        comboPane.add(Box.createHorizontalStrut(10));
+        //comboPane.add(makeActionButton("\uf060","switch.symbols"));
+        //comboPane.add();
+        comboButton = makeSymbolButton(1,symbolFont,"?","?");
+
+//        comboPane.add(Box.createHorizontalStrut(10));
+        comboPane.add(comboButton);
+        //comboPane.add(comboVerb = new JLabel("="));
         comboPane.add(comboColor = new JComboBox<>());
         comboPane.add(comboVerb = new JLabel());
         comboPane.add(comboAdjective = new JComboBox<>());
         comboPane.add(comboSubst = new JComboBox<>());
         comboPane.add(comboSelector = new JComboBox<>(ComboNag.ALL_SELECTORS));
 
-        comboColor.addItemListener(this);
-        comboAdjective.addItemListener(this);
-        comboSubst.addItemListener(this);
-        comboSelector.addItemListener(this);
+        comboColor.addActionListener(this);
+        comboAdjective.addActionListener(this);
+        comboSubst.addActionListener(this);
+        comboSelector.addActionListener(this);
 
+        comboPane.setBorder(new LineBorder(Color.lightGray,2,true));
+
+       // this.add(comboButton);
+        this.add(comboPane);    //  grid constraints are added later
         setComboNag(ComboNag.ALL[0]);
     }
 
@@ -335,19 +349,18 @@ public class SymbolBar
         setSymbol(comboButton,comboNag.code());
     }
 
-    public void itemStateChanged(ItemEvent e)
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        if (e.getStateChange()==ItemEvent.SELECTED
-                && e.getSource()==comboSelector) {
+        if (e.getSource()==comboSelector) {
             String sel = (String) comboSelector.getSelectedItem();
             if (!sel.equals(comboNag.selector)) {
                 setComboNag(ComboNag.findBySelector(sel));
             }
         }
-        if (e.getStateChange()==ItemEvent.SELECTED
-                && (e.getSource()==comboColor
+        if (e.getSource()==comboColor
                 || e.getSource()==comboAdjective
-                || e.getSource()==comboSubst))
+                || e.getSource()==comboSubst)
         {
             comboNag.select(
                     comboColor.getSelectedIndex(),
@@ -355,6 +368,7 @@ public class SymbolBar
                     comboSubst.getSelectedIndex());
             setSymbol(comboButton,comboNag.code());
         }
+        super.actionPerformed(e);
     }
 
     private JButton makeSymbolButton(int nag)
@@ -372,8 +386,9 @@ public class SymbolBar
         else {
             text = Language.get("pgn.nag."+nag);
             if (text.length() > 4)
-                text = "$"+nag;
-            return makeSymbolButton(nag, textFont, text, tip);
+                return makeSymbolButton(nag, smallFont, "$"+nag, tip);
+            else
+                return makeSymbolButton(nag, textFont, text, tip);
         }
     }
 
@@ -410,9 +425,6 @@ public class SymbolBar
 	public void updateFormat()
 	{
 		Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
-		textFont = new Font("Dialog", Font.PLAIN, 14);
-		labelFont = new Font("Dialog", Font.PLAIN, 10);
-
 		if (symbolStyle != null) {
 			String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
 			fontEncoding = FontEncoding.getEncoding(fontFamily);
@@ -436,11 +448,14 @@ public class SymbolBar
         }
         else {
             text = Language.get("pgn.nag."+nag);
-            if (text.length() > 4)
-                text = "$"+nag;
-
-            button.setFont(textFont);
-            button.setText(text);
+            if (text.length() > 4) {
+                button.setFont(smallFont);
+                button.setText("$" + nag);
+            }
+            else {
+                button.setFont(textFont);
+                button.setText(text);
+            }
         }
     }
 
@@ -505,9 +520,13 @@ public class SymbolBar
         }
         else {
             text = Language.get("pgn.nag."+nag);
-            if (text.length() > 4)
-                text = "$"+nag;
-            button.setFont(textFont);
+            if (text.length() > 4) {
+                text = "$" + nag;
+                button.setFont(smallFont);
+            }
+            else {
+                button.setFont(textFont);
+            }
         }
         button.setText(text);
         button.setToolTipText(tip);
@@ -521,6 +540,7 @@ public class SymbolBar
         button.setActionCommand(name);
         button.setFont(font);
         button.setText(text);
+        //button.setIcon(new TextIcon(text,font,Color.black));
         button.setToolTipText(tip);
         button.addActionListener(this);
         button.setBorderPainted(true);
@@ -532,7 +552,7 @@ public class SymbolBar
         Dimension size = new Dimension(BUTTON_SIZE, BUTTON_SIZE);
         button.setMinimumSize(size);
         button.setPreferredSize(size);
-        button.setMaximumSize(size);
+       // button.setMaximumSize(size);
 
         //JoBigLabel label = new JoBigLabel(tip,1,40);
         //label.setFont(labelFont);
