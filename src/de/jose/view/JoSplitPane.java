@@ -80,7 +80,7 @@ public class JoSplitPane
          * (note that the actual divider size will be overwritten, anyway)
          */
 //        System.out.println(UIManager.getDefaults().get("SplitPaneUI"));
-        UIManager.getDefaults().put("SplitPane.dividerSize",new Integer(6));
+        UIManager.getDefaults().put("SplitPane.dividerSize",6);
 		setUI(new JoSplitPaneUI());
 
 		if (size==null)

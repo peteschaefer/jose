@@ -231,7 +231,7 @@ public class JoPanel
 			   IllegalAccessException, InvocationTargetException
 	{
 		Class[] paramClasses = { LayoutProfile.class, boolean.class, boolean.class, };
-		Object[] paramObjects = { profile, new Boolean(withContextMenu), new Boolean(withBorder) };
+		Object[] paramObjects = { profile, withContextMenu, withBorder };
 		
 		Constructor ctor = clazz.getConstructor(paramClasses);
 		return (JoPanel)ctor.newInstance(paramObjects);

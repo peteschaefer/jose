@@ -505,9 +505,9 @@ public class ClockPanel
 	{
 		super.adjustContextMenu(list,event);
 		list.add(ContextMenu.SEPARATOR);
-		list.add(new Boolean(getDisplayMode()==ANALOG));
+		list.add(Boolean.valueOf(getDisplayMode()==ANALOG));
 		list.add("clock.mode.analog");
-		list.add(new Boolean(getDisplayMode()==DIGITAL));
+		list.add(Boolean.valueOf(getDisplayMode()==DIGITAL));
 		list.add("clock.mode.digital");
 //		list.add(new Boolean(getDisplayMode()==BOTH));
 //		list.add("clock.mode.both");
@@ -517,7 +517,7 @@ public class ClockPanel
 
 		list.add(null);
 		list.add("menu.edit.option");
-		list.add(new Integer(3));
+		list.add(3);
 	}
 
 	public void setupActionMap(Map map)

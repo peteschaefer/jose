@@ -88,7 +88,7 @@ public class TextureTest
 		showNextTexture(+1);
 		
 		dlg.setBounds(40,40, 400,400);
-		dlg.show();
+		dlg.setVisible(true);
 	}
 	
 	public void paintComponent(Graphics g)

@@ -117,29 +117,29 @@ public class Row
 										if (res.wasNull())
 											return null;
 										else
-											return new Double(d);
+											return d;
 		case Types.FLOAT:				float f = res.getFloat(column);
 										if (res.wasNull())
 											return null;
 										else
-											return new Float(f);
+											return f;
 		case Types.INTEGER:				int i = res.getInt(column);
 										if (res.wasNull())
 											return null;
 										else
-											return new Integer(i);
+											return i;
 
 		case Types.TINYINT:             byte by = res.getByte(column);
 										if (res.wasNull())
 											return null;
 										else
-											return new Byte(by);
+											return by;
 
 		case Types.SMALLINT:	        short s = res.getShort(column);
 										if (res.wasNull())
 											return null;
 										else
-											return new Short(s);
+											return s;
 			
 		case Types.TIME:				return res.getTime(column);
 		case Types.TIMESTAMP:			return res.getTimestamp(column);

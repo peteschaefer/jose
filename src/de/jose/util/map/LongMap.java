@@ -304,9 +304,9 @@ abstract public class LongMap
 		for (int i = fKeys.length-1; i >= 0; i--)
 			if (fKeys[i] != 0 && fKeys[i] != DELETED_KEY) {
 				if (fKeys[i] == ZERO_KEY)
-					result[j] = new Long(0L);
+					result[j] = 0L;
 				else
-					result[j] = new Long(fKeys[i]);
+					result[j] = fKeys[i];
 				j++;
 			}
 		return result;
@@ -481,7 +481,7 @@ abstract public class LongMap
 		 * @exception java.util.NoSuchElementException iteration has no more elements.
 		 */
 		public Object next() {
-			return new Long(nextLong());
+			return nextLong();
 		}
 	}
 

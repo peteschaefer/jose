@@ -348,12 +348,12 @@ public class JoDialog
 
     public void show()
     {
-	    frame.show();
+	    frame.setVisible(true);
 //	    if (!isModal) WinUtils.setTopMost((Frame)frame);
 	    //  do/don't force topmost position for modeless dialogs
     }
 
-    public void hide()                              { frame.hide(); }
+    public void hide()                              { frame.setVisible(false); }
 
     public void dispose()                           { frame.dispose(); }
 
@@ -1401,7 +1401,7 @@ public class JoDialog
 			else
 				dlg = opane.createDialog(parent, Language.get("dialog.error.title"));
 			SplashScreen.close();
-			dlg.show();
+			dlg.setVisible(true);
 			WinUtils.setTopMost(dlg);
 		}
 	}
@@ -1469,7 +1469,7 @@ public class JoDialog
 		JOptionPane opane = new JOptionPane(buf.toString(), JOptionPane.ERROR_MESSAGE);
 		JDialog dlg = opane.createDialog(JoFrame.getActiveFrame(), Language.get("dialog.error.title"));
         SplashScreen.close();
-		dlg.show();
+		dlg.setVisible(true);
 		WinUtils.setTopMost(dlg);
 	}
 

@@ -95,7 +95,7 @@ public class GameSource
 
 	public GameSource(DataFlavor sourceFlavor, int d)
 	{
-		this (sourceFlavor, new Integer(d));
+		this (sourceFlavor, Integer.valueOf(d));
 	}
 
 

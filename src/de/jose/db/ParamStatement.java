@@ -312,26 +312,26 @@ public class ParamStatement
 		case Types.VARCHAR:		
 			addParameter(type, stringValue); break;
 		case Types.INTEGER:
-			addParameter(type, new Integer(stringValue)); break;
+			addParameter(type, Integer.valueOf(stringValue)); break;
 		case Types.DOUBLE:
-			addParameter(type, new Double(stringValue)); break;
+			addParameter(type, Double.valueOf(stringValue)); break;
 		}
 	}
 
 	public final void addIntParameter(int value)
 	{
-		addParameter(Types.INTEGER, new Integer(value));
+		addParameter(Types.INTEGER, value);
 	}
 
     public final void addIntParameters(int[] values)
     {
         for (int i=0; i<values.length; i++)
-            addParameter(Types.INTEGER, new Integer(values[i]));
+            addParameter(Types.INTEGER, values[i]);
     }
 
 	public final void insertIntParameter(int index, int value)
 	{
-		insertParameter(index, Types.INTEGER, new Integer(value));
+		insertParameter(index, Types.INTEGER, value);
 	}
 
     public final ParamStatement getUnion(int i)

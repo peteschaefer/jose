@@ -49,7 +49,7 @@ public class CrossOver1007
 				        "jose will now update the database structure.\n" +
 				        "This may take up to some minutes.",
 				        false);
-				dlg.show();
+				dlg.setVisible(true);
 				dlg.paint(dlg.getGraphics());
 
 				conn.executeUpdate(

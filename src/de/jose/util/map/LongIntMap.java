@@ -147,7 +147,7 @@ public class LongIntMap
 		if (result==NOT_FOUND)
 			return null;
 		else
-			return new Integer(result);
+			return result;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class LongIntMap
 		if (value==NOT_FOUND)
 			return null;
 		else
-			return new Integer(value);
+			return value;
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class LongIntMap
 		if (result==NOT_FOUND)
 			return null;
 		else
-			return new Integer(result);
+			return result;
 	}
 
 	//-------------------------------------------------------------------------
@@ -518,7 +518,7 @@ public class LongIntMap
 		int j=0;
 		for (int i=fKeys.length-1; i>=0; i--)
 			if (fKeys[i] != 0L && fKeys[i] != DELETED_KEY)
-				result[j++] = new Integer(fValues[i]);
+				result[j++] = fValues[i];
 		return result;
 	}
 
@@ -759,7 +759,7 @@ public class LongIntMap
 		{
 			int idx = nextInt();
 			if (retained==null || retained.intValue()!=idx)
-				retained = new Integer(idx);
+				retained = idx;
 			return retained;
 		}
 	}
@@ -798,7 +798,7 @@ public class LongIntMap
 		 * @return the key corresponding to this entry.
 		 */
 		public Object getKey()		{
-			if (keyRetained==null) keyRetained = new Long(getLongKey());
+			if (keyRetained==null) keyRetained = getLongKey();
 			return keyRetained;
 		}
 
@@ -819,7 +819,7 @@ public class LongIntMap
 		 * @return the value corresponding to this entry.
 		 */
 		public Object getValue()	{
-			if (valueRetained==null) valueRetained = new Integer(getIntValue());
+			if (valueRetained==null) valueRetained = getIntValue();
 			return valueRetained;
 		}
 

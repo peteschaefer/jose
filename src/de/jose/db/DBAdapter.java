@@ -85,7 +85,7 @@ abstract public class DBAdapter
 		props = properties;
 
 		abilities = new Properties();
-		abilities.put("mode",new Integer(serverMode));
+		abilities.put("mode",serverMode);
 		setAbilities(abilities);
 	}
 
@@ -112,7 +112,7 @@ abstract public class DBAdapter
         abs.put("order_without_select",         Boolean.TRUE);
 		abs.put("multi_table_delete",			Boolean.FALSE);
 		abs.put("multi_table_update",			Boolean.FALSE);
-		abs.put("index_key_size",				new Integer(0));
+		abs.put("index_key_size",				0);
 		abs.put("like_case_sensitive",			Boolean.TRUE);
         abs.put("fulltext_index",               Boolean.FALSE);
         abs.put("can_set_auto_commit",          Boolean.TRUE);
@@ -314,14 +314,14 @@ abstract public class DBAdapter
 	 * set whether this database instance is embeded, or if it is an external server
 	 */
 	public void setServerMode(int mode) {
-		abilities.put("mode", new Integer(mode));
+		abilities.put("mode", mode);
 	}
 
 	/**
 	 * set if the database will be modified
 	 */
 	public void setDirty(boolean dirty) {
-		abilities.put("dirty", new Boolean(dirty));
+		abilities.put("dirty", dirty);
 	}
 
 	/**

@@ -94,7 +94,7 @@ public class FileWatch implements ActionListener
 		JOptionPane opane = new JOptionPane(Language.get(errorMessage), JOptionPane.ERROR_MESSAGE);
 		JDialog dlg = opane.createDialog(JoFrame.theActiveFrame, Language.get("dialog.error.title"));
         SplashScreen.close();
-		dlg.show();
+		dlg.setVisible(true);
 	}
 
 }

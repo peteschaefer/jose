@@ -819,11 +819,11 @@ public class Setup
             indexColumns.add(name);
             String keySize = singleIndex.getAttribute("keysize");
             if ((keySize != null) && (keySize.length() > 0))
-                indexColumns.add(new Integer(keySize));
+                indexColumns.add(keySize);
 
             type = singleIndex.getAttribute("type");
             if ((type != null) && "full-text".equalsIgnoreCase(type))
-                indexColumns.add(new Integer(FULLTEXT_INDEX));
+                indexColumns.add(FULLTEXT_INDEX);
         }
 	}
 

@@ -147,7 +147,7 @@ public class IntIntMap
 		if (result==NOT_FOUND)
 			return null;
 		else
-			return new Integer(result);
+			return result;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class IntIntMap
 		if (value==NOT_FOUND)
 			return null;
 		else
-			return new Integer(value);
+			return value;
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class IntIntMap
 		if (result==NOT_FOUND)
 			return null;
 		else
-			return new Integer(result);
+			return result;
 	}
 
 	//-------------------------------------------------------------------------
@@ -516,7 +516,7 @@ public class IntIntMap
 		int j=0;
 		for (int i=fKeys.length-1; i>=0; i--)
 			if (fKeys[i] != 0 && fKeys[i] != DELETED_KEY)
-				result[j++] = new Integer(fValues[i]);
+				result[j++] = fValues[i];
 		return result;
 	}
 
@@ -757,7 +757,7 @@ public class IntIntMap
 		{
 			int idx = nextInt();
 			if (retained==null || retained.intValue()!=idx)
-				retained = new Integer(idx);
+				retained = idx;
 			return retained;
 		}
 	}
@@ -796,7 +796,7 @@ public class IntIntMap
 		 * @return the key corresponding to this entry.
 		 */
 		public Object getKey()		{
-			if (keyRetained==null) keyRetained = new Integer(getIntKey());
+			if (keyRetained==null) keyRetained = getIntKey();
 			return keyRetained;
 		}
 
@@ -817,7 +817,7 @@ public class IntIntMap
 		 * @return the value corresponding to this entry.
 		 */
 		public Object getValue()	{
-			if (valueRetained==null) valueRetained = new Integer(getIntValue());
+			if (valueRetained==null) valueRetained = getIntValue();
 			return valueRetained;
 		}
 

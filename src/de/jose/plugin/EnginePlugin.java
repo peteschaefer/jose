@@ -855,7 +855,7 @@ abstract public class EnginePlugin
 	public void actionPerformed(ActionEvent e)
 	{
 		//  call back from clock tick
-		sendMessage(PLUGIN_ELAPSED_TIME, new Long(getElapsedTime()));
+		sendMessage(PLUGIN_ELAPSED_TIME, getElapsedTime());
 	}
 
 	public boolean canAnalyze()

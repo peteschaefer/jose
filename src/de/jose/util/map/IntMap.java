@@ -304,9 +304,9 @@ abstract public class IntMap
 		for (int i = fKeys.length-1; i >= 0; i--)
 			if (fKeys[i] != 0 && fKeys[i] != DELETED_KEY) {
 				if (fKeys[i] == ZERO_KEY)
-					result[j] = new Integer(0);
+					result[j] = 0;
 				else
-					result[j] = new Integer(fKeys[i]);
+					result[j] = fKeys[i];
 				j++;
 			}
 		return result;
@@ -481,7 +481,7 @@ abstract public class IntMap
 		 * @exception java.util.NoSuchElementException iteration has no more elements.
 		 */
 		public Object next() {
-			return new Integer(nextInt());
+			return nextInt();
 		}
 	}
 

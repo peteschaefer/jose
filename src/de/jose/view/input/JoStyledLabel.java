@@ -184,7 +184,7 @@ public class JoStyledLabel
                 //  can't help it
             }
 	    else if (e.getEventType()==HyperlinkEvent.EventType.EXITED) {
-		    if (tooltip!=null) tooltip.hide();
+		    if (tooltip!=null) tooltip.setVisible(false);
             setCursor(Cursor.getDefaultCursor());
         }
 		else if (e.getEventType()==HyperlinkEvent.EventType.ENTERED)
@@ -257,7 +257,7 @@ public class JoStyledLabel
 
     public void setVisible(boolean aFlag)
     {
-        if (tooltip!=null) tooltip.hide();
+        if (tooltip!=null) tooltip.setVisible(false);
         super.setVisible(aFlag);
     }
 

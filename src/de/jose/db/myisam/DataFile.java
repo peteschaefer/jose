@@ -33,7 +33,7 @@ public class DataFile
 	protected int[] col_types;
 	protected int nullable;
 
-	protected static final Integer ZERO = new Integer(0);
+	protected static final Integer ZERO = 0;
 
 	public static final int INT1    = 1;
 	public static final int INT2    = 2;
@@ -166,7 +166,7 @@ public class DataFile
 				if (is_zero)
 					result[i] = ZERO;
 				else
-					result[i] = new Integer(read_low_int(col_types[i]));
+					result[i] = read_low_int(col_types[i]);
 				break;
 
 			case BLOB2:

@@ -492,7 +492,7 @@ public class FontCapture
 		//BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		Frame proof = new Frame();
 		proof.setBounds(780,80,200,200);
-		proof.show();
+		proof.setVisible(true);
 
 		Graphics pg = proof.getGraphics();
 		pg.translate(20,60);

@@ -338,7 +338,7 @@ public class MySQLAdapter
 		/**	closing a huge result set can become very expensive (more expensive than the query itself)
 		 * 	better use limits
 		 */
-		abs.put("index_key_size",	new Integer(255));
+		abs.put("index_key_size",	255);
 		/**	indexes on LONGVARCHAR columns must be given a key size,
 		 * 	like CREATE INDEX ... ON Collection(Path(255))
 		 */

@@ -435,7 +435,7 @@ public class IntHashMap
 		int result = 0;
 		for (int i=keys.length-1; i>=0; i--)
 		{
-			if (put(keys[i], new Integer(values[i])) != null)
+			if (put(keys[i], Integer.valueOf(values[i])) != null)
 				result++;
 		}
 		return result;
@@ -699,7 +699,7 @@ public class IntHashMap
 		{
 			if (keys[i]==0 || keys[i]==DELETED_KEY)
 				continue;
-			if (put(keys[i], new Integer(values[i])) != null)
+			if (put(keys[i], Integer.valueOf(values[i])) != null)
 				result++;
 		}
 		return result;
@@ -858,7 +858,7 @@ public class IntHashMap
 		 * @return the key corresponding to this entry.
 		 */
 		public Object getKey()		{
-			if (keyRetained==null) keyRetained = new Integer(getIntKey());
+			if (keyRetained==null) keyRetained = getIntKey();
 			return keyRetained;
 		}
 

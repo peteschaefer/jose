@@ -91,7 +91,7 @@ public class JoColorButton
 			//	I have been pressed
 			chooser = JColorChooser.createDialog(getTopLevelAncestor(),
 										this.getText(), true, chooserPane, this, this);
-			chooser.show();
+			chooser.setVisible(true);
 		}
 
 		//	callback from Dialog ?

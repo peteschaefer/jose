@@ -470,7 +470,7 @@ public final class IntArray
         ObjIterator()				{ fCurrent = 0;	}
 
         public final boolean hasNext()	{ return fCurrent < size(); }
-        public final Object next()		{ return new Integer(nextInt()); }
+        public final Object next()		{ return nextInt(); }
         public final int nextInt()		{ return get(fCurrent++); }
         public final void remove()		{ removeRange(fCurrent,fCurrent+1); }
     }

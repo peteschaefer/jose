@@ -436,7 +436,7 @@ public class JoFrame
 	{
 		for (int i=0; i<theFrames.size(); i++) {
 			JoFrame frame = getFrame(i);
-			if (frame!=null) frame.hide();
+			if (frame!=null) frame.setVisible(false);
 		}
 		theFrames.clear();
 	}
@@ -699,7 +699,7 @@ public class JoFrame
 					    AbstractApplication.theCommandDispatcher.forward(cmd, Application.theApplication);
                     }
                     else {
-                        hide();
+                        setVisible(false);
                         /** Mac OS X
                          *  Appplication without windows. We should show a Menu Bar now,
                          *  but it doesn't work. Using a "dummy" frame doesn't work either.
@@ -707,7 +707,7 @@ public class JoFrame
                     }
 				}
 				else
-					hide();
+					setVisible(false);
 			}
 		};
 		map.put("menu.file.close", action);

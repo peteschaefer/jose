@@ -83,7 +83,7 @@ public class DBFileInfo
     public void addTableVersion(String schemaName, String tableName, int version)
     {
         if (schemaName==null) schemaName="MAIN";
-        tableVersionInfo.put(schemaName+"."+tableName, new Integer(version));
+        tableVersionInfo.put(schemaName+"."+tableName, version);
     }
 
     public int getTableVersion(String schemaName, String tableName)

@@ -84,13 +84,13 @@ public class PgnUtil
 		if (value instanceof Integer)
 			return (Integer)value;
 		if (value instanceof Number)
-			return new Integer(((Number)value).intValue());
+			return ((Number)value).intValue();
 
 		String svalue = toString(value);
 		if (svalue==null)
 			return null;
 		else
-			return new Integer(svalue);
+			return Integer.valueOf(svalue);
 	}
 
 	public static String toString(Object value)

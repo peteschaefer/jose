@@ -1826,13 +1826,13 @@ public class Game
 		setTagValue(TAG_WHITE_TITLE, res.getString(i++));
 
 		int welo = res.getInt(i++);
-		if (welo > 0) setTagValue(TAG_WHITE_ELO, new Integer(welo));
+		if (welo > 0) setTagValue(TAG_WHITE_ELO, welo);
 
 		setIfNotNull(TAG_BLACK, res.getInt(i++),res.getString(i++));
 		setTagValue(TAG_BLACK_TITLE, res.getString(i++));
 
 		int belo = res.getInt(i++);
-		if (belo > 0) setTagValue(TAG_BLACK_ELO, new Integer(belo));
+		if (belo > 0) setTagValue(TAG_BLACK_ELO, belo);
 
 		setResult(res.getInt(i++));
 
@@ -1873,7 +1873,7 @@ public class Game
 		TagNode.toSAX(TAG_WHITE_TITLE, res.getString(i++), handler);
 
 		int welo = res.getInt(i++);
-		if (welo > 0) TagNode.toSAX(TAG_WHITE_ELO, new Integer(welo), handler);
+		if (welo > 0) TagNode.toSAX(TAG_WHITE_ELO, welo, handler);
 
 		int blackId = res.getInt(i++); //  ignore
 
@@ -1881,7 +1881,7 @@ public class Game
 		TagNode.toSAX(TAG_BLACK_TITLE, res.getString(i++), handler);
 
 		int belo = res.getInt(i++);
-		if (belo > 0) TagNode.toSAX(TAG_BLACK_ELO, new Integer(belo), handler);
+		if (belo > 0) TagNode.toSAX(TAG_BLACK_ELO, belo, handler);
 
 		int result = res.getInt(i++);
 		TagNode.toSAX(TAG_RESULT, PgnUtil.resultString(result), handler);
@@ -1937,13 +1937,13 @@ public class Game
 		setTagValue(TAG_WHITE_TITLE, buf.WhiteTitle);
 
 		int welo = buf.WhiteELO;
-		if (welo > 0) setTagValue(TAG_WHITE_ELO, new Integer(welo));
+		if (welo > 0) setTagValue(TAG_WHITE_ELO, welo);
 
 		setTagValue(TAG_BLACK, buf.sval[GameBuffer.IBLACK]);
 		setTagValue(TAG_BLACK_TITLE, buf.BlackTitle);
 
 		int belo = buf.BlackELO;
-		if (belo > 0) setTagValue(TAG_BLACK_ELO, new Integer(belo));
+		if (belo > 0) setTagValue(TAG_BLACK_ELO, belo);
 
 		setResult(buf.Result);
 

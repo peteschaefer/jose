@@ -495,7 +495,7 @@ public class DocumentPanel
 
 			public void Do(Command cmd)
 			{
-				cmd.data = new Integer(MoveFormatList.toConst(cmd.code));
+				cmd.data = MoveFormatList.toConst(cmd.code);
 				Application.theUserProfile.set("doc.move.format",cmd.data);
 				reformat();
 			}
@@ -825,7 +825,7 @@ public class DocumentPanel
 		list.add(ContextMenu.SEPARATOR);
 
 		if (tabClicked >= 0) {
-			Integer param = new Integer(tabClicked);
+			Integer param = tabClicked;
 			GameSource gms = GameSource.singleGame(Application.theHistory.get(tabClicked).getId());
 
 			list.add("menu.game.close");
@@ -941,7 +941,7 @@ public class DocumentPanel
 
         list.add(null);
         list.add("menu.edit.option");
-        list.add(new Integer(6));
+        list.add(6);
 	}
 
 
@@ -1020,7 +1020,7 @@ public class DocumentPanel
 	{
 		menu.add("pgn.nag."+nag);
 		menu.add(nd);
-		menu.add(new Integer(nag));
+		menu.add(nag);
 	}
 
 	//	implements ChangeListener
@@ -1060,7 +1060,7 @@ public class DocumentPanel
 		    if (tab >= 0)
 		    {
 			    //  close tab
-			    final Command cmd = new Command("menu.game.close",e,new Integer(tab));
+			    final Command cmd = new Command("menu.game.close",e,tab);
 			    SwingUtilities.invokeLater(new Runnable() {
 				    public void run()
 				    {

@@ -77,7 +77,7 @@ public class JoSurfaceButton
 			//	I have been pressed
 			chooser = JoSurfaceChooser.createDialog(getTopLevelAncestor(), 
 										this.getText(), true, chooserPane, this, this);
-			chooser.show();
+			chooser.setVisible(true);
 		}
 		
 		//	callback from Dialog ?

@@ -26,24 +26,24 @@ public class History
 		implements DocumentListener
 {
     /** list of Games (corresponds to tab indexes)  */
-    protected Vector games;
+    protected Vector<Game> games;
 	/**	list of tab titles	*/
-	protected Vector tabTitles;
+	protected Vector<String> tabTitles;
     /** current index   */
     protected int current;
 
     /** create a new, empty History */
     public History()
     {
-        games = new Vector();
-		tabTitles = new Vector();
+        games = new Vector<>();
+		tabTitles = new Vector<>();
         current = 0;
     }
 
     /**
      * get a game from history
      */
-    public final Game get(int offset)	    { return (Game)games.get(offset); }
+    public final Game get(int offset)	    { return games.get(offset); }
 
 	public final int size() 				{ return games.size(); }
 
@@ -57,16 +57,15 @@ public class History
 	{
 		if (games.isEmpty()) return null;
 
-		ArrayList collect = new ArrayList();
-		for (int i=0; i<games.size(); i++) {
-			Game gm = (Game)games.get(i);
-			if (gm!=null && (!gm.isEmpty() || includeEmpty))
-				collect.add(gm);
-		}
+		ArrayList<Game> collect = new ArrayList<>();
+        for (Game gm : games) {
+            if (gm != null && (!gm.isEmpty() || includeEmpty))
+                collect.add(gm);
+        }
 		if (collect.isEmpty())
 			return null;
 		else
-			return (Game[])collect.toArray(new Game[collect.size()]);
+			return collect.toArray(new Game[collect.size()]);
 	}
 
 	public final int indexOf(Game g)
@@ -100,25 +99,25 @@ public class History
 
 	public final void setCurrent(int index)	{ current = index; }
 
-	public final Vector getTabTitles()
+	public final Vector<String> getTabTitles()
 	{
 		tabTitles.setSize(size());
 
 		for (int i=0; i<size(); i++) {
 			String title = get(i).getTabTitle(32);
-			if (title.length()==0) title = Language.get("tab.untitled");
+			if (title.isEmpty()) title = Language.get("tab.untitled");
 			tabTitles.setElementAt(title,i);
 		}
 
 		//	find duplicates
 		for (int i=size()-1; i>=0; i--) {
-			String title = (String)tabTitles.get(i);
+			String title = tabTitles.get(i);
 			int dupl1 = Util.count(tabTitles,0,i, title);
 			int dupl2 = Util.count(tabTitles,i+1,size(), title);
 
 			if ((dupl1+dupl2) > 0)
 				title += " ["+(dupl1+1)+"]";
-			Game g = get(i);
+//			Game g = get(i);
 //			if (g.isDirty()) title += " *";
 			tabTitles.setElementAt(title,i);
 		}
@@ -129,7 +128,7 @@ public class History
 	public String getToolTip(int index)
 	{
 		String toolTip = get(index).getTabToolTip();
-		if (toolTip.length()==0) toolTip = Language.get("tab.untitled");
+		if (toolTip.isEmpty()) toolTip = Language.get("tab.untitled");
 		return toolTip;
 	}
 
@@ -146,7 +145,7 @@ public class History
 			Game g = get(i);
 			if (g.getId() > 0) result.add(g.getId());
 		}
-		if (result.size()==0)
+		if (result.isEmpty())
 			return null;
 		else
 			return result.toArray();
@@ -200,7 +199,7 @@ public class History
 		for (int i=size()-1; i>=0; i--)
 			if (i != index) {
 				get(i).save();
-				Application.theApplication.broadcast(new Command("game.modified",null,new Integer(get(i).getId())));
+				Application.theApplication.broadcast(new Command("game.modified",null,get(i).getId()));
 			}
 	}
 
@@ -262,11 +261,11 @@ public class History
             Game g = get(i);
             if (g.isNew()) {
                 g.saveAs(Collection.AUTOSAVE_ID, 0);
-				Application.theApplication.broadcast(new Command("collection.modified",null,new Integer(Collection.AUTOSAVE_ID)));
+				Application.theApplication.broadcast(new Command("collection.modified",null,Collection.AUTOSAVE_ID));
 			}
             else if (g.isDirty()) {
                 g.save();
-				Application.theApplication.broadcast(new Command("game.modified",null,new Integer(g.getId())));
+				Application.theApplication.broadcast(new Command("game.modified",null,g.getId()));
 			}
         }
     }

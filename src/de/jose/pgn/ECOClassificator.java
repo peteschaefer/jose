@@ -123,7 +123,7 @@ public class ECOClassificator
                     else
                         counter.put(ckey,Math.max(cvalue,ccount));
                     if (ccount==0)
-                        firstEntry.put(ckey,new Long(hash));
+                        firstEntry.put(ckey, Long.valueOf(hash));
                 }
             }
             /** read terminal matsig  */
@@ -289,7 +289,7 @@ public class ECOClassificator
         int count = counter.get(code);
         if (count==LongIntMap.NOT_FOUND) {
             count = 0;      //  first entry, no offset
-            firstEntry.put(code,new Long(hash));
+            firstEntry.put(code,Long.valueOf(hash));
         }
         else if (count==0)
         {

@@ -430,9 +430,9 @@ public class BoardView3D
 	{
 		//	store camera angle
 		if (orbit!=null) {
-			prf.set("board.3d.camera.distance", new Double(orbit.getDistance()));
-			prf.set("board.3d.camera.latitude", new Double(orbit.getLatitude()));
-			prf.set("board.3d.camera.longitude", new Double(orbit.getLongitude()));
+			prf.set("board.3d.camera.distance", orbit.getDistance());
+			prf.set("board.3d.camera.latitude", orbit.getLatitude());
+			prf.set("board.3d.camera.longitude", orbit.getLongitude());
 		}
 	}
 

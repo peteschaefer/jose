@@ -31,7 +31,7 @@ public class JIntegerField
 
 	public void setTextValue(int num, String text)
 	{
-		Integer n = new Integer(num);
+		Integer n = num;
 		numToText.put(n,text);
 		textToNum.put(text.toLowerCase(),n);
 	}
@@ -56,7 +56,7 @@ public class JIntegerField
 		else if (text.length()==0)
 			return null;
 		else
-			return new Integer(text);
+			return Integer.valueOf(text);
 	}
 
 }
