@@ -19,7 +19,6 @@ libraries needed:
 ? eval bar
   * fix score perspective:
   - cp is always from whites perspective. range differs with ScoreType
-  - wdl is always from current side perspective. needs to be adjusted (how?)
 
         Stockfish       Leela
 cp      white           white       [-2000..+2000]

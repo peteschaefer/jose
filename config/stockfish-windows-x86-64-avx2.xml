@@ -22,7 +22,7 @@
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_LimitStrength"> false </OPTION>
 		<OPTION name="UCI_Elo"> 1320 </OPTION>
-		<OPTION dirty="true" name="UCI_ShowWDL"> true </OPTION>
+		<OPTION dirty="true" name="UCI_ShowWDL"> false </OPTION>
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
 		<OPTION name="Syzygy50MoveRule"> true </OPTION>

@@ -839,7 +839,7 @@ public class EnginePanel
 	 */
 	public void setEvaluation(int idx, Score score, HashMap pmap)
 	{
-		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN), true);
+		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
 		String key;

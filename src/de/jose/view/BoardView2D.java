@@ -720,6 +720,7 @@ public class BoardView2D
 		int boardSize = 8*squareSize;
 		int x2 = inset.x+boardSize;
 		int y2 = inset.y+boardSize;
+		Border b = new SoftBevelBorder(BevelBorder.RAISED);
 
 		if (redraw) {
 			if (lockImgCache) FontCapture.unlock();    //	make outdated images available for gc
@@ -741,7 +742,6 @@ public class BoardView2D
 
 			g.setColor(Color.black);
 			//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
-			Border b = new SoftBevelBorder(BevelBorder.RAISED);
 			b.paintBorder(this, g, inset.x - 2, inset.y - 2, boardSize + 4, boardSize + 4);
 
 			if (showCoords) {
@@ -778,7 +778,7 @@ public class BoardView2D
 		}
 
 		if (showEvalbar)
-			drawEvalbar(g);	//	always draw it
+			drawEvalbar(g,b);	//	always draw it
 
 		synch(redraw);
 
@@ -787,7 +787,7 @@ public class BoardView2D
 		paintHook(redraw);
 	}
 
-	public void drawEvalbar(Graphics2D g)
+	public void drawEvalbar(Graphics2D g, Border b)
 	{
 		if (!showEvalbar) return;	//	that was easy
 		if (this.score==null) return;	//	no useful score
@@ -820,6 +820,9 @@ public class BoardView2D
 		int y2 = inset.y+boardSize;
 		int gap = (int)(squareSize*0.1f);
 		int wid = (int)(squareSize*0.25f);
+
+		if (b!=null)
+			b.paintBorder(this, g, x2+gap - 2, inset.y - 2, wid + 4, boardSize + 4);
 
 		if (hwhite > 0) {
 			g.setColor(Color.white);

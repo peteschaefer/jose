@@ -67,7 +67,7 @@ public class UciPlugin
 	protected boolean readOptions = false;
 	protected boolean frcMode = false;
 
-	protected Vector options = new Vector();
+	protected Vector<Option> options = new Vector<Option>();
 
 	/** option types (= input elements) */
 
@@ -79,11 +79,13 @@ public class UciPlugin
 
 	/** these UCI options are usually used for file paths   */
 	public static final String[] FILE_OPTIONS   = {
-		"BookFile","LearnBookFile",
+		"BookFile", "LearnBookFile", "WeightsFile",
+		"EvalFile", "EvalFileSmall",
+		"LogFile", "ConfigFile", "Debug Log File"
 	};
 	/** these UCI options are usually used for directory paths */
 	public static final String[] DIR_OPTIONS = {
-		"NalimovPath","BitbasePath",
+		"NalimovPath","BitbasePath", "SyzygyPath"
 	};
     /** this UCI option is displayed as read-only text */
     public static final String[] READ_ONLY_OPTIONS = {
@@ -225,6 +227,12 @@ public class UciPlugin
         return false;
     }
 
+	public boolean useWDL(boolean on) {
+		if (!supportsOption("UCI_WDL")) return false;
+		setOption("UCI_WDL",Boolean.toString(on));
+		return true;
+	}
+
 
 	public boolean open(String osName) throws IOException
 	{
@@ -249,6 +257,7 @@ public class UciPlugin
 
         //  set options
 		setOptions(false);
+		// useWDL(true);	//	use WDL, if available (or maybe not?)
 
         setMode(PAUSED);
 		return false;
@@ -971,9 +980,10 @@ public class UciPlugin
 			if (!tokispv) ispv = false;
 		}
 
-		rec.eval[pvidx] = score;
-		if (pvmod)
+		if (pvmod) {
+			rec.eval[pvidx] = score;
 			rec.setPvModified(pvidx);
+		}
 
 		if (Util.noneOf(rec.modified, AnalysisRecord.ELAPSED_TIME))
 		{
@@ -1103,11 +1113,11 @@ public class UciPlugin
 
 
 
-	public static Option getOption(List optionList, String key)
+	public static Option getOption(List<Option> optionList, String key)
 	{
 		for (int i=0; i < optionList.size(); i++)
 		{
-			Option option = (Option)optionList.get(i);
+			Option option = optionList.get(i);
 			if (option.name.equalsIgnoreCase(key)) return option;
 		}
 		return null;
