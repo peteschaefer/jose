@@ -18,8 +18,8 @@
 	<OPTIONS>
 		<OPTION name="Debug Log File"/>
 		<OPTION name="NumaPolicy"> auto </OPTION>
-		<OPTION name="Threads"> 7 </OPTION>
-		<OPTION name="Hash"> 1024 </OPTION>
+		<OPTION name="Threads"> 1 </OPTION>
+		<OPTION name="Hash"> 256 </OPTION>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="MultiPV"> 6 </OPTION>
 		<OPTION name="Skill Level"> 20 </OPTION>
@@ -28,7 +28,7 @@
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_LimitStrength"> false </OPTION>
 		<OPTION name="UCI_Elo"> 1320 </OPTION>
-		<OPTION name="UCI_ShowWDL"> true </OPTION>
+		<OPTION name="UCI_ShowWDL"> false </OPTION>
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
 		<OPTION name="Syzygy50MoveRule"> true </OPTION>

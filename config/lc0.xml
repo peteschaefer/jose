@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
 <PLUGIN ID="lc0" type="uci">
 	<NAME> Lc0 </NAME>
 	<EXEC os="Windows">
@@ -21,7 +22,7 @@
 		Don't even try to determine it from factory settings.
 		Just use the default and let the user change it.-->
 		<OPTION name="BackendOptions"/>
-		<OPTION name="Threads"> 7 </OPTION>
+		<OPTION name="Threads"> 0 </OPTION>
 		<OPTION name="NNCacheSize"> 2000000 </OPTION>
 		<OPTION name="MinibatchSize"> 0 </OPTION>
 		<OPTION name="MaxPrefetch"> 32 </OPTION>
@@ -56,9 +57,9 @@
 		<OPTION name="MovesLeftQuadraticFactor"> -0.652100 </OPTION>
 		<OPTION name="MaxConcurrentSearchers"> 1 </OPTION>
 		<OPTION name="DrawScore"> 0.000000 </OPTION>
-		<OPTION name="ContemptMode"> white_side_analysis </OPTION>
-		<OPTION name="Contempt"> 100 </OPTION>
-		<OPTION name="WDLCalibrationElo"> 2300 </OPTION>
+		<OPTION name="ContemptMode"> play </OPTION>
+		<OPTION name="Contempt"/>
+		<OPTION name="WDLCalibrationElo"> 0.000000 </OPTION>
 		<OPTION name="WDLEvalObjectivity"> 1.000000 </OPTION>
 		<OPTION name="WDLDrawRateReference"> 0.500000 </OPTION>
 		<OPTION name="NodesPerSecondLimit"> 0.000000 </OPTION>
