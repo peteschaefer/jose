@@ -2398,9 +2398,15 @@ public class Application
 			//  show opening book moves
 			Position pos = Application.theApplication.theGame.getPosition();
 			// onEngineMove implies NOT analysis mode, right?
-			if (onEngineMove) switchAnalysis = false;
-			submitBookQuery(switchAnalysis ? BOOK_ANALYSIS : BOOK_SHOW, null);
-			//	will call back with message BOOK_RESPONSE, onBookUpdate
+			if (pos.isGameFinished(true)) {
+				enginePanel().exitBook();
+				pausePlugin(false);
+			}
+			else {
+				if (onEngineMove) switchAnalysis = false;
+				submitBookQuery(switchAnalysis ? BOOK_ANALYSIS : BOOK_SHOW, null);
+				//	will call back with message BOOK_RESPONSE, onBookUpdate
+			}
 		}
 	}
 

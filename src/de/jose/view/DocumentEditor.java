@@ -969,12 +969,12 @@ public class DocumentEditor
 			node.remove();	//	remove from Node hierarchy
 			select(d.pos1,d.pos1);
 		}
-		else if (d.pos1==startOffset && (d.nag > 0))
+		else if (d.pos1==startOffset && (d.nag > 0) && PgnUtil.isSymbolicNag(d.nag))
 		{
 			//	annotation at the beginning of a comment; make an annotation out of it
 			insertAnnotationBefore(node, d.nag, padding);
 		}
-		else if (d.pos1==endOfText && (d.nag > 0)) {
+		else if (d.pos1==endOfText && (d.nag > 0) && PgnUtil.isSymbolicNag(d.nag)) {
 			insertAnnotationAfter(node, d.nag, padding);
 		}
 		else if (d.newText.equals("\n") /*&& (node.next(MOVE_NODE)==null)*/) {

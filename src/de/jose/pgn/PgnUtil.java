@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,15 @@ public class PgnUtil
 	{
 		return normalizeValue(value,getDataType(type));
 	}
+
+	public static boolean isSymbolicNag(int nag)
+	{
+		if (nag<=0) return false;
+
+		String tip = Language.get("pgn.nag."+nag+".tip",null);
+		return (tip==null);	//	text is already the textual representation
+	}
+
 
 	public static Object normalizeValue(Object value, Class type)
 		throws ParseException
