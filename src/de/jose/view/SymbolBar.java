@@ -313,7 +313,7 @@ public class SymbolBar
     private void setModel(JComboBox combo, String[] model)
     {
         combo.setVisible(model!=null && model.length>0);
-        model = ComboNag.translate(model);
+        //model = ComboNag.translate(model);
         combo.setModel(new DefaultComboBoxModel(model));
     }
 
@@ -329,7 +329,7 @@ public class SymbolBar
     {
         this.comboNag = comboNag;
         setModel(comboColor, comboNag.color);
-        this.comboVerb.setText(ComboNag.translate(comboNag.verb));
+        this.comboVerb.setText(comboNag.verb);
         setModel(comboAdjective, comboNag.adjective);
         setModel(comboSubst, comboNag.subst);
 

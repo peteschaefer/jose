@@ -150,6 +150,9 @@ public class ComboNag
                 + color.length;
     }
 
+    //  experimental: translate. but other languages have other grammars.
+    //  it's not that easy
+/*
     public static String translate(String text)
     {
         String key = text.toLowerCase();
@@ -165,22 +168,22 @@ public class ComboNag
             result[i] = translate(text[i]);
         return result;
     }
-
+*/
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append(translate(color[selcol]));  //  "white/black"
+        buf.append(color[selcol]);  //  "white/black"
         buf.append(" ");
-        buf.append(translate(verb));
+        buf.append(verb);
         buf.append(" ");//  "has a"
         if (adjective.length > 0 && !adjective[seladj].isEmpty()) {
-            buf.append(translate(adjective[seladj]));  //  "slight/moderate/decisive"
+            buf.append(adjective[seladj]);  //  "slight/moderate/decisive"
             buf.append(" ");
         }
         if (subst.length > 0 && !subst[selsubst].isEmpty()) {
-            buf.append(translate(subst[selsubst]));    //  "king side/queen side"
+            buf.append(subst[selsubst]);    //  "king side/queen side"
             buf.append(" ");
         }
-        buf.append(translate(selector));              //   "advantage"
+        buf.append(selector);              //   "advantage"
         return buf.toString();
     }
 
