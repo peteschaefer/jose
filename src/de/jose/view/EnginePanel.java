@@ -859,7 +859,9 @@ public class EnginePanel
 		setIcon(bGo,getGoIcon(appState,playState,engineState));
 		bGo.setEnabled(true);
 		bPause.setEnabled(engineState!=null && engineState != PAUSED);
-		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
+
+		Position pos = Application.theApplication.theGame.getPosition();
+		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze(pos));
 		bHint.setEnabled(playState==null || playState==Application.PlayState.NEUTRAL);
 		//	no hint while engine is thinking
 	}
@@ -1691,23 +1693,19 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
-				// todo when should ponderMove reset? keep pondermove when advancing
-				//boolean isPaused =  (plugin!=null && plugin.isPaused());
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-				if (analysis!=null && !wasEngineMove) analysis.ponderMove=null;
-
 				switch(Application.theApplication.theMode)
-				{	//	todo move this stuff to Application
+				{	//	todo move this stuff to Application (but it's called in many places..)
 					case USER_ENGINE:
 					case ENGINE_ENGINE:
 						if (wasEngineMove)
 							Application.theApplication.updateBook(true,false);
+							// might be overwritten by pondering, but well...
 						//else
-						// BOOK_PLAY will come soon
+							// BOOK_PLAY will come soon
 						break;
 					case USER_INPUT:
 						Application.theApplication.updateBook(false,false);
-//						Application.theApplication.pausePlugin(false); // right?
 						break;
 					case ANALYSIS:
 						Application.theApplication.updateBook(false,true);

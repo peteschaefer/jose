@@ -143,8 +143,7 @@ public class EvalView
 
 	protected Rectangle moveRect(MoveNode mv)
 	{
-		int x = mv.getMoveNo() * BAR_WIDTH;
-		if (mv.getPly() % 2 == 1) x += BAR_WIDTH / 2;
+		int x = mv.getPly() * BAR_WIDTH/2;
 		return new Rectangle(x,0,BAR_WIDTH/2,getHeight());
 	}
 
@@ -200,7 +199,7 @@ public class EvalView
 	protected void paint1Move(Graphics g, MoveNode mv, boolean hilite)
 	{
 		Rectangle rect = moveRect(mv);
-		paint1Value(g, rect.x, rect.width, mv, hilite);
+		paint1Value(g, mv, hilite);
 		/*if (!hilite)*/ drawVerticalGrid(g, rect.x, rect.x+rect.width);
 	}
 
@@ -337,6 +336,10 @@ public class EvalView
 		return buf.toString();
 	}
 
+	private static boolean hasWdl(MoveNode nd) {
+		return nd!=null && nd.engineValue!=null && nd.engineValue.hasWDL();
+	}
+
 	protected void paintValues(Graphics g)
 	{
 		//  paint bars !
@@ -346,20 +349,17 @@ public class EvalView
 		last1=null;	// unless...
 
 		while(mv!=null) {
-			Score sc = mv.engineValue;
-
-			int mno = mv.getMoveNo();
-			int x0 = mno*BAR_WIDTH;
-
-			if (nxt!=null && nxt.getMoveNo()==mno) {
-				//	paint both
-				paint1Value(g, x0, BAR_WIDTH/2, mv, mv==current);
-				//paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt, false);
+			if (!hasWdl(mv) && hasWdl(nxt)) {
+				//	engine values missing. supplement ?!
+				mv.engineValue = new Score(nxt.engineValue);
 			}
-			else {
-				//	paint one
-				paint1Value(g, x0, BAR_WIDTH, mv, mv==current);
+			if (hasWdl(mv) && (nxt!=null) && !hasWdl(nxt)) {
+				nxt.engineValue = new Score(mv.engineValue);
+				paint1Value(g, nxt,nxt==current);
 			}
+
+			paint1Value(g, mv,mv==current);
+
 			nxt = mv;
 			mv = mv.previousMove();	//	climbs the tree, if necessary
 		}
@@ -408,32 +408,32 @@ public class EvalView
 			tinted(Color.lightGray,Color.red,0.3f),
 			tinted(Color.white,Color.red,0.3f) };
 
-	protected void paint1Value(Graphics g, int x, int width, MoveNode mvnd, boolean hilite)
+	protected void paint1Value(Graphics g, MoveNode mvnd, boolean hilite)
 	{
-		int height = getHeight();
+		Rectangle r = moveRect(mvnd);
 		Score value = mvnd.engineValue;
 		Color[] pal = /*hilite ? HILITED :*/ NORMAL;
 
 		if (value==null || !value.hasWDL()) {
-			paintBackground(g,x,width,pal);
+			paintBackground(g,r.x,r.width,pal);
 		}
 		else {
-			int p1 = (int) (height * value.rel(value.lose));
-			int p2 = (int) (height * value.rel(value.draw));
+			int p1 = (int) (r.height * value.rel(value.lose));
+			int p2 = (int) (r.height * value.rel(value.draw));
 
 			g.setColor(pal[0]);	//	black
-			g.fillRect(x, 0, width, p1);
+			g.fillRect(r.x, 0, r.width, p1);
 
 			g.setColor(pal[2]);	//	grey
-			g.fillRect(x, p1, width, p2);
+			g.fillRect(r.x, p1, r.width, p2);
 
 			g.setColor(pal[4]);	//	white
-			g.fillRect(x, p1+p2, width, height-p1-p2);
+			g.fillRect(r.x, p1+p2, r.width, r.height-p1-p2);
 		}
 
 		if (hilite) {
 			g.setColor(Color.red);
-			g.drawLine(x+width-4,0,x+width-4,height);
+			g.drawLine(r.x+r.width-4,0,r.x+r.width-4,r.height);
 			//g.drawRect(x, 0, width, height);
 		}
 		if (hilite)

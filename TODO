@@ -13,10 +13,9 @@
         -> get one from current AnalysisRecord
 
 [x] hint button activation
-[ ] hint button behavior
-    [ ] ponderMove reset, when?
-        -> store ponderMove ply?
-    [?] updateBook on "move.notify" necessary?
+[x] hint button behavior
+    [x] store ponderMove ply?
+    [x] updateBook on "move.notify" necessary?
         it shouldn't because there will be BOOK_PLAY
 
 [x] Application.selectBookMove needs to be asynchronized.
@@ -32,6 +31,7 @@
     0 books should not alter the control flow.
     There is just a shortcut in submitQuery.
 [ ] test with/without engine
+[x] test with/without pondering
 [ ] test input/analysis/play
 
 === Database Bugs
