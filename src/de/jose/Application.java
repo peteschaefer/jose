@@ -980,12 +980,15 @@ public class Application
 		map.put("menu.game.paste.line",action);
 
 		action = new CommandAction() {
-			public void Do(Command cmd) {
-				MoveNode mvnd = theGame.getCurrentMove();
-				if (mvnd==null) return;
-				if (theGame.getPosition().isGameFinished(false)) return;
+			@Override
+			public boolean isEnabled(String cmd) {
+				return theGame.canInsertNullMove();
+			}
 
-				theGame.insertNullMove(mvnd);
+			public void Do(Command cmd) {
+				if (!theGame.canInsertNullMove()) return;
+
+				theGame.insertNullMove();
 				cmd = new Command("move.notify",null,Move.NULLMOVE);
 				broadcast(cmd);
 

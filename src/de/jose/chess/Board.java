@@ -1503,7 +1503,7 @@ public class Board
 	 */
 	public boolean checkMove(Move mv)
 	{
-		if (mv==Move.NULLMOVE) return true;
+		if (mv.isNullMove()) return true;
 
 		if (!EngUtil.innerSquare(mv.from))
 			return false;
@@ -1735,6 +1735,8 @@ public class Board
 	public Move decodeMove(short code)
 	{
 		//	find the moving piece
+		if (code==SHORT_NULLMOVE)
+			return Move.NULLMOVE;
 		Piece p = null;
 		switch (code & 0x00f0)
 		{

@@ -90,7 +90,7 @@ public class Move
 
 	public boolean isPrepared()
 	{
-		return (this==NULLMOVE) || (moving!=null);
+		return (this.isNullMove()) || (moving!=null);
 	}
 
  	//-------------------------------------------------------------------------------
@@ -126,6 +126,10 @@ public class Move
 
 
 	public final boolean isPromotion()			{ return EngUtil.isPromotion(flags); }
+
+	public final boolean isNullMove() {
+		return from==0 && to==0;
+	}
 
 	public final int getPromotionPiece()		{
 		return EngUtil.getPromotionPiece(flags);
@@ -215,7 +219,7 @@ public class Move
 
 	public final short encode()
 	{
-		if (this==NULLMOVE)
+		if (this.isNullMove())
 			return BinaryConstants.SHORT_NULLMOVE;
 		else
 			return moving.encodeMove(this);

@@ -317,7 +317,7 @@ abstract public class BoardView
 
 	protected Hint getHint(Move mv)
 	{
-		if (mv==null || mv==Move.NULLMOVE)
+		if (mv==null || mv.isNullMove())
 			return null;
 		else
 			return getHint(mv.from,mv.to);

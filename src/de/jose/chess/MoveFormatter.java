@@ -129,7 +129,7 @@ abstract public class MoveFormatter
 
 	public void format(int format, Move mv, Position pos, boolean chck)
 	{
-		if (mv==Move.NULLMOVE) {
+		if (mv.isNullMove()) {
 			text(nullmove);
 			return;
 		}

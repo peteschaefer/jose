@@ -845,10 +845,13 @@ public class EnginePanel
 		bGo.setEnabled(true);
 		bPause.setEnabled(engineState!=null && engineState != PAUSED);
 
-		Position pos = Application.theApplication.theGame.getPosition();
+		Game game = Application.theApplication.theGame;
+		Position pos = game.getPosition();
 		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze(pos));
-		bHint.setEnabled(playState==null || playState==Application.PlayState.NEUTRAL);
 		//	no hint while engine is thinking
+		bHint.setEnabled(playState==null || playState==Application.PlayState.NEUTRAL);
+		//	no null move in check positions
+		bThreat.setEnabled(game.canInsertNullMove());
 	}
 
 	/**

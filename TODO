@@ -4,6 +4,10 @@
 
 ? Charter buggy
 
+[ ] BUG? "go infinite" with only one legal move
+    early respose "bestmove", but analysis does not arrive at EnginePanel
+    instead, outdated analysis is shown
+
 [x] asynch book lookups (branch async-book)
 [ ] Eval Bar, Graph drawing glitches (paintImmediately?)
 [?] paint eval bar frame
@@ -134,9 +138,10 @@ Alternative JREs:
     [ ] document? (would have to be stored in db :(
 
 * threat analysis
-    [ ] insert variation with null, pass move
-    [ ] Position play, unplay
-    [ ] store in DB
+    [x] insert variation with null, pass move
+    [x] not after check moves
+    [x] Position play, unplay
+    [x] store in DB
     [ ] type --
     [ ] export pgn
     [ ] export text

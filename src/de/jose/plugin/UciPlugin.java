@@ -459,6 +459,9 @@ public class UciPlugin
 						break;
 					}
 				}
+				else if (moves[i].isNullMove()) {
+					currentLine.append("0000");
+				}
 				else {
 					currentLine.append(EngUtil.square2String(moves[i].from));
 					currentLine.append(EngUtil.square2String(moves[i].to));

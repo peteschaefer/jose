@@ -664,7 +664,7 @@ public class Position
 
 	public boolean prepareMove(Move mv)
 	{
-		if (mv==Move.NULLMOVE)
+		if (mv.isNullMove())
 			return true;
 
 		if (!checkMove(mv))

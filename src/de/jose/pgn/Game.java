@@ -722,12 +722,20 @@ public class Game
 			return currentMove.nextMove();
 	}
 
-	public MoveNode insertNullMove(MoveNode current)
+	public boolean canInsertNullMove()
 	{
-		MoveNode nullNode = new MoveNode(current.ply+1,Move.NULLMOVE);
-		if (current.parent().level()==1 || current.nextMove()!=null) {
+		if (getCurrentMove()==null) return false;
+		if (getPosition().isGameFinished(true)) return false;
+		if (getPosition().isCheck()) return false;	//	no null move if opponent is already in check!
+		return true;
+	}
+
+	public MoveNode insertNullMove()
+	{
+		MoveNode nullNode = new MoveNode(currentMove.ply+1,Move.NULLMOVE);
+		if (currentMove.parent().level()==1 || currentMove.nextMove()!=null) {
 			//	insert new variation
-			MoveNode copy = (MoveNode)current.clone();
+			MoveNode copy = (MoveNode)currentMove.clone();
 			AnnotationNode nagNode = new AnnotationNode(140);
 
 			LineNode variation = new LineNode(this);
@@ -735,24 +743,35 @@ public class Game
 			nullNode.insertAfter(copy);
 			nagNode.insertAfter(nullNode);
 
-			insertIntoCurrentLine(variation, current);	//	insert into structure
+			insertIntoCurrentLine(variation, currentMove);	//	insert into structure
 			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
 			/**	insert variation at end of current line	*/
 			insertNode(variation);	//	insert into document
 
 			updateLabels(variation);
 			updateMoveCount(variation);
+
+			currentMove = nullNode;
+			currentMove.play(position);
+			setDirty();
+			return nullNode;
 		}
 		else {
 			//	just append null move
+            try {
+                insertMove(-1,Move.NULLMOVE,NEW_LINE);
+            } catch (BadLocationException e) {
+                throw new RuntimeException(e);
+            }
+/*
 			insertIntoCurrentLine(nullNode,current);
 			insertNode(nullNode);	//	insert into document
-		}
 
-		currentMove = nullNode;
-		currentMove.play(position);
-		setDirty();
-		return nullNode;
+			currentMove = nullNode;
+			currentMove.play(position);
+			setDirty();
+*/			return nullNode;
+		}
 	}
 
 	protected void insertIntoCurrentLine(Node newNode, MoveNode after)

@@ -159,7 +159,7 @@ public class MoveNode
         int len = formatter.position() - at;
 
 		pos.tryMove(move);
-		if (move.moving==null && move!=Move.NULLMOVE)
+		if (move.moving==null && !move.isNullMove())
 			throw new ReplayException(pos,move);
 		setLength(len);
 	}
