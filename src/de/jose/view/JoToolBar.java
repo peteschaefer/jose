@@ -337,35 +337,26 @@ public class JoToolBar
 		}
 	}
 
-	public static Icon[] createAwesomeIcons(String spec, float size)
-	{
-		return createAwesomeIcons(spec,size,false);
-	}
-
 	public static Icon[] createAwesomeIcons(String sp, float size, boolean dark)
 	{
 		IconSpec spec = new IconSpec(sp, size);
 		if ((spec.style&BUTTON)!=0) {
 			//	button style icons
+			spec.style &= ~BUTTON;
+			spec.style |= FLAT;
 		}
-		else if ((spec.style&FLAT)!=0) {
-			//	flat text icons
+
+		if (dark) {
+			//	high contrast colors!
+			spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0)));
+			if (spec.colors.size() < 2)
+				spec.colors.add(Color.darkGray);
+			else
+				spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1)));
 		}
 		else {
-			//	outlined text icons
-
-			if (dark) {
-				//	high contrast colors!
-				spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0)));
-				if (spec.colors.size() < 2)
-					spec.colors.add(Color.darkGray);
-				else
-					spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1)));
-			}
-			else {
-				if (spec.colors.size() < 2)
-					spec.colors.add(Color.white);
-			}
+			if (spec.colors.size() < 2)
+				spec.colors.add(Color.white);
 		}
 		return create7AwesomeIcons(spec);
 	}

@@ -155,9 +155,11 @@ public class EnginePanel
 
 		titlePriority = 6;
 
-		setBgColor(Application.theApplication.isDarkLookAndFeel());
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
 
-		createIcons();
+		setBgColor(dark);
+		createIcons(dark);
+		//	todo adjust on demand
 		createComponents();
 		createLayout();
 	}
@@ -258,7 +260,7 @@ public class EnginePanel
 		formatter.setFigStyle(useFigurines ? figStyle : null);
 	}
 
-	private void createIcons()
+	private void createIcons(boolean dark)
 	{
 		int iconSize=20;
 
@@ -269,16 +271,16 @@ public class EnginePanel
 		String orange 	= "#cc9900";
 
 		//	todo think about frameless icons
-		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+green,iconSize);
-		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+yellow,iconSize);
-		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:flat:"+red,iconSize);
-		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+blue,iconSize);
-		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+orange,iconSize);
+		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+green,iconSize,dark);
+		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+yellow,iconSize,dark);
+		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:flat:"+red,iconSize,dark);
+		iGoBlue 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+blue,iconSize,dark);
+		iGoOrange 	= JoToolBar.createAwesomeIcons("\uf04b:flat:"+orange,iconSize,dark);
 
-		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:flat:"+green,iconSize);
-		iHint 		= JoToolBar.createAwesomeIcons("?:flat:"+blue,iconSize);
-		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:bold:flat:"+yellow,iconSize);
-		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:bold:flat:"+orange,iconSize);
+		iPause 		= JoToolBar.createAwesomeIcons("\uf04c:flat:"+green,iconSize,dark);
+		iHint 		= JoToolBar.createAwesomeIcons("?:flat:"+blue,iconSize,dark);
+		iAnalyze 	= JoToolBar.createAwesomeIcons("\uf013:bold:flat:"+yellow,iconSize,dark);
+		iBolt 		= JoToolBar.createAwesomeIcons("\ue0b7:bold:flat:"+orange,iconSize,dark);
 	}
 
 	private void createFontIcons()
