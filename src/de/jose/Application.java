@@ -1749,7 +1749,8 @@ public class Application
 					fotask.start();   //  don't wait for task to complete
 					break;
                 case ExportConfig.OUTPUT_PGN:
-	                PGNExport pgntask = new PGNExport(context.target);
+					String charSet = context.profile.getString("pgn.export.charset","iso-8859-1");
+	                PGNExport pgntask = new PGNExport(context.target,charSet);
 	                pgntask.setSource(context.source);
 	                pgntask.start();
 	                break;

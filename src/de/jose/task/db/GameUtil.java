@@ -974,7 +974,7 @@ abstract public class GameUtil
 
 	    /** setup PGN exporter  */
 	    StringWriter swriter = new StringWriter();
-	    PGNExport pgnex = new PGNExport(swriter);
+	    PGNExport pgnex = new PGNExport(swriter,"Unicode");
 	    pgnex.setSource(GameSource.gameArray(GIds));
 	    pgnex.run();
 
@@ -989,7 +989,7 @@ abstract public class GameUtil
 	{
 		/** setup PGN exporter  */
 		StringWriter swriter = new StringWriter();
-		PGNExport pgnex = new PGNExport(swriter);
+		PGNExport pgnex = new PGNExport(swriter,"Unicode");
 		pgnex.prepare();
 		pgnex.printGame(gm);
 		pgnex.finish();

@@ -237,6 +237,8 @@ public class PGNExport
 	/** formats moves   */
 	protected PrintMoveFormatter formatter;
 
+	protected String charSet;
+
 	static final int HANDLER_LIMIT   = 256;
 	static final int BUFFER_LIMIT    = 256;
 
@@ -244,17 +246,18 @@ public class PGNExport
 	//  Ctor
 	// ---------------------------------------------------------
 
-	public PGNExport(Object output)
+	public PGNExport(Object output, String charSet)
 			throws Exception
 	{
 		super("PGN export",true);
+		this.charSet = charSet;
 		if (output instanceof File)
 			outputFile = (File)output;
 		else if (output instanceof Writer)
 			out = new LinePrintWriter((Writer)output,false);
 		else if (output instanceof OutputStream)
 		{
-			OutputStreamWriter wout = new OutputStreamWriter((OutputStream)output,"ISO-8859-1");
+			OutputStreamWriter wout = new OutputStreamWriter((OutputStream)output,charSet);
 			/**	PGN specifies ISO-8859-1	!	*/
 			out = new LinePrintWriter(wout,false);
 		}
@@ -419,7 +422,7 @@ public class PGNExport
 		pos.setOption(Position.DRAW_MAT, false);
 
         if (fout!=null) {
-            OutputStreamWriter wout = new OutputStreamWriter(fout,"ISO-8859-1");
+            OutputStreamWriter wout = new OutputStreamWriter(fout,charSet);
             /**	PGN specifies ISO-8859-1	!	*/
             out = new LinePrintWriter(wout,false);
         }
@@ -885,7 +888,8 @@ public class PGNExport
 	    out.print("[");
 	    out.print(key);
 	    out.print(" \"");
-	    out.print(escapeTagValue(value));
+		out.print(escapeTagValue(value));
+
 		/*	PGN specifies no escape mechanism for characters outside ISO-8859-1
 			but some programs use \"u or something ...
 
@@ -902,14 +906,15 @@ public class PGNExport
 	 *
 	 * @param text
 	 * @return
-	 * @see CharUtil.escape()
 	 */
-	protected static String escapeTagValue(String text)
+	protected String escapeTagValue(String text)
 	{
 		if (text==null)
 			return "";
-		else
+		else if (charSet.equalsIgnoreCase("iso-8859-1"))
 			return CharUtil.escape(text,false);
+		else
+			return text;
 		//  false = retain ASCII <= 256, escape all others
 		//  true = retain ASCII <= 128, escape all diacritic chars
 	}

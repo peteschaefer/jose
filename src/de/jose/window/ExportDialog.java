@@ -105,6 +105,9 @@ public class ExportDialog
 	/** style editor */
 	private StyleChooser styleChooser;
 
+	private JRadioButton radIso8859, radUtf8;
+	private JPanel charSetSelector;
+
 	/** set during execution of listener methods (to avoid nasty recursions)    */
 	private boolean enableListener;
 	private int currentUIOutput=-1;
@@ -321,6 +324,11 @@ public class ExportDialog
 				context.profile.set("transform.print",transform);
 			else
 				context.profile.set("transform.export",transform);
+
+			if (radIso8859.isSelected())
+				context.profile.set("pgn.export.charset","iso-8859-1");
+			if (radUtf8.isSelected())
+				context.profile.set("pgn.export.charset","utf-8");
 		}
 
 		if (isInited(1)) {
@@ -517,6 +525,20 @@ public class ExportDialog
 		rightPanel.add(sourceInfo,BorderLayout.NORTH);
 		rightPanel.add(exportPanel,BorderLayout.CENTER);
 
+		radIso8859 = newRadioButton("dialog.export.iso8859");
+		radUtf8 = newRadioButton("dialog.export.utf8");
+		ButtonGroup radioGroup = new ButtonGroup();
+		radioGroup.add(radIso8859);
+		radioGroup.add(radUtf8);
+
+		charSetSelector = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		charSetSelector.add(Box.createHorizontalStrut(2));
+		charSetSelector.add(new JLabel(Language.get("dialog.export.charset")));
+		charSetSelector.add(Box.createHorizontalStrut(16));
+		charSetSelector.add(radIso8859);
+		charSetSelector.add(radUtf8);
+		charSetSelector.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+
 		return rightPanel;
 	}
 
@@ -612,17 +634,17 @@ public class ExportDialog
 			break;
 
 		case ExportConfig.OUTPUT_PGN:
+			exportPanel.add(charSetSelector,BorderLayout.SOUTH);
+			//	fall-through intended
 		case ExportConfig.OUTPUT_XML:
 		case ExportConfig.OUTPUT_TEX:
 		case ExportConfig.OUTPUT_ARCH:
 			createFileChooserPanel(output);
-
 			exportPanel.add(fileChooser,BorderLayout.CENTER);
 			break;
 
 		case ExportConfig.OUTPUT_AWT:
 			setOutputInfo(output);
-
 			exportPanel.add(exportUserInfo,BorderLayout.CENTER);
 			break;
 
@@ -746,6 +768,9 @@ public class ExportDialog
 		case ExportConfig.OUTPUT_PGN:
 			preferredFilters[1] = availFilters[0] =  JoFileChooser.PGN;
 //			availFilters[1] =  JoFileChooser.ARCH;
+			String charset = context.profile.getString("pgn.export.charset","iso-8859-1");
+			radIso8859.setSelected(charset.equals("iso-8859-1"));
+			radUtf8.setSelected(charset.equals("utf-8"));
 			break;
 		case ExportConfig.OUTPUT_ARCH:
 //			availFilters[0] =  JoFileChooser.PGN;
@@ -764,16 +789,13 @@ public class ExportDialog
 
 		FileFilter[] oldFilters = fileChooser.getChoosableFileFilters();
 		fileChooser.removeChoosableFileFilters(oldFilters);
-
 		fileChooser.setFilters(availFilters, JoFileChooser.getPreferredFilter(preferredFilters));
-
 		fileChooser.setFileName(getPreferredFileName(context.source,output));
 	}
 
 	protected void createFileChooserPanel(int output)
 	{
 		//  show embedded file chooser
-
 		getFileChooser(true);
 		initFileChooser(output);
 	}

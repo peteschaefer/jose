@@ -113,7 +113,6 @@ public class ExportConfig
 	        "  </jose:export>" +
 	        "</export-config>";
 
-
 	public ExportConfig(File file) throws Exception
 	{
 		map = new HashMap();
