@@ -1047,6 +1047,10 @@ public class EnginePanel
 				else {
 					doc.insertString(0, text.toString(), styles.getStyle("engine.pv"));
 				}
+				int i1 = text.indexOf(" ");
+				if (i1 < 0) i1 = text.length();
+				//	first word is bold
+				doc.setCharacterAttributes(0,i1, styles.getStyle("bold"), false);
 			}
 			if (info!=null && info.length()>0) {
 				doc.insertString(doc.getLength(), "\n", styles.getStyle("engine.pv"));
