@@ -128,7 +128,8 @@ public class StyleUtil
     {
         if (Version.windows) {
             //  get system accent color from registry
-            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
+            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","ColorizationColor");
+            //  not "AccentColor"
             if (value != Integer.MIN_VALUE)
                 return new Color(value);
         }

@@ -47,8 +47,8 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[x] SplitPaneUI: individual style=plain
 
     [ ] flatlaf related bugs
-    	[ ] Text Selection Color: configurable. Accent color is too arbitrary.
-    	    [ ] dark mode
+    	[ ] Text Selection Color: smarter formula. Don't rely on theme.
+    	    [ ] for dark mode
     	[ ] bug TextPaneUI: jagged selection
         [ ] layout in F9, F11
         [ ] bug: Board coordinates in F9
