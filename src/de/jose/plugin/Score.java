@@ -1,5 +1,8 @@
 package de.jose.plugin;
 
+import de.jose.Language;
+
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -99,5 +102,23 @@ public class Score
         int temp = win;
         win = lose;
         lose = temp;
+    }
+
+    public String wdlString(HashMap args)
+    {
+        if (args==null) args = new HashMap();
+        args.put("win",Integer.toString(win));
+        args.put("draw",Integer.toString(draw));
+        args.put("lose",Integer.toString(lose));
+        return Language.args("plugin.wdl", args);
+    }
+
+    public String wdlTooltip(HashMap args)
+    {
+        if (args==null) args = new HashMap();
+        args.put("win",Integer.toString(win));
+        args.put("draw",Integer.toString(draw));
+        args.put("lose",Integer.toString(lose));
+        return Language.argsTip("plugin.wdl", args);
     }
 }

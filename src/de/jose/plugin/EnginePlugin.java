@@ -1033,24 +1033,27 @@ abstract public class EnginePlugin
 			key = "?";
 		}
 
-		String result = tooltip ? Language.argsTip(key,pmap) : Language.args(key,pmap);
+		StringBuilder result = new StringBuilder();
+		if (tooltip) {
+			result.append("<html>");
+			result.append(Language.argsTip(key, pmap));
+		}
+		else {
+			result.append(Language.args(key, pmap));
+		}
 
 		if (with_wdl && score.hasWDL()) {
-			pmap.put("win",Integer.toString(score.win));
-			pmap.put("draw",Integer.toString(score.draw));
-			pmap.put("lose",Integer.toString(score.lose));
-			if (tooltip) {
-				result += "<br>" + Language.argsTip("plugin.wdl", pmap);
-			}
-			else {
-				result += "\n" + Language.args("plugin.wdl", pmap);
-			}
+			if (tooltip)
+				result.append("<br>");
+			else
+				result.append("\n");
+			result.append(score.wdlTooltip(pmap));
 		}
 
 		if (tooltip)
-			return "<html>"+result+"</html>";
-		else
-			return result;
+			result.append("</html>");
+
+		return result.toString();
 	}
 
 	public static String printScore(Score score, EnginePlugin plug, boolean with_wdl, boolean white_pov) {

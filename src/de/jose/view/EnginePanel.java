@@ -31,6 +31,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ClipboardUtil;
 import de.jose.view.input.JoBigLabel;
+import de.jose.view.input.WdlLabel;
 import javafx.stage.PopupWindow;
 
 import javax.swing.*;
@@ -94,13 +95,13 @@ public class EnginePanel
 	/** pv evaluation
 	 *  Vector<JLabel>
 	 *   */
-	protected Vector<JLabel> lEval;
+	protected ArrayList<WdlLabel> lEval;
 	/** primary variation
 	 *  Vector<JLabel>
 	 *  0 = general info
 	 *  1 = first pv, ...
 	 * */
-	protected Vector<JLabel> lPrimaryVariation;
+	protected ArrayList<JoBigLabel> lPrimaryVariation;
 	/** number of displayed primary variations  */
 	protected int pvCount;
 	protected boolean showInfoLabel;
@@ -246,8 +247,8 @@ public class EnginePanel
 		lNodeCount.setLabelFor(tNodeCount);
 		lNodesPerSecond.setLabelFor(tNodesPerSecond);
 
-		lEval = new Vector();  //  will be filled on demand
-		lPrimaryVariation = new Vector(); //   will be filled on demand
+		lEval = new ArrayList<>();  //  will be filled on demand
+		lPrimaryVariation = new ArrayList<>(); //   will be filled on demand
 		pvCount = 0;
 
         tPVHistory = new JTextArea();
@@ -262,13 +263,21 @@ public class EnginePanel
 		/** will be create later    */
 	}
 
-	private JoBigLabel createPvComponent(String name)
+	private WdlLabel createPvEvalComponent(String name)
 	{
 		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
-		JoBigLabel label = newBigLabel(name,normalFont,JLabel.LEFT,
+		WdlLabel label = new WdlLabel(""/*Language.get(name)*/,1,4);
+		makeBigLabel(label, name,normalFont,JLabel.LEFT,
+				JoLineBorder.ALL, 3,3,3,3);
+		return label;
+	}
+
+	private JoBigLabel createPvLineComponent(String name)
+	{
+		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
+		JoBigLabel label = new JoBigLabel(""/*Language.get(name)*/,1,4);
+		makeBigLabel(label, name,normalFont,JLabel.LEFT,
                                     JoLineBorder.ALL, 3,3,3,3);
-		label.setToolTipText(null);
-		label.addMouseListener(this);
 		return label;
 	}
 
@@ -384,7 +393,7 @@ public class EnginePanel
 
 	protected JoBigLabel getInfoLabel(boolean create)
 	{
-		JoBigLabel info = getDynamicLabel(lPrimaryVariation,0, create, true, "plugin.info");
+		JoBigLabel info = getDynamicLineLabel(0, create, true, "plugin.info");
 		if (info!=null && !info.isShowing()) {
 //			info.setBackground(Color.lightGray);
 			info.setVisible(true);
@@ -396,10 +405,10 @@ public class EnginePanel
 
 	protected JoBigLabel getPvLabel(int idx, boolean create, boolean show)
 	{
-		JoBigLabel pv = getDynamicLabel(lPrimaryVariation, idx+1, create, show, "plugin.pv."+(idx+1));
+		JoBigLabel pv = getDynamicLineLabel( idx+1, create, show, "plugin.pv."+(idx+1));
 		if (pv!=null && show && !pv.isShowing())
 		synchronized (this) {
-			JoBigLabel eval = getDynamicLabel(lEval, idx+1, true, show, "plugin.eval."+(idx+1));
+			WdlLabel eval = getDynamicEvalLabel( idx+1, true, show, "plugin.eval."+(idx+1));
 			pv.setVisible(true);
 			showTooltip(idx);
 			pv.setToolTipText("?");
@@ -419,12 +428,12 @@ public class EnginePanel
 		return spaces+1;
 	}
 
-	protected JoBigLabel getEvalLabel(int idx, boolean create, boolean show)
+	protected WdlLabel getEvalLabel(int idx, boolean create, boolean show)
 	{
-		JoBigLabel eval = getDynamicLabel(lEval, idx+1, create, show, "plugin.eval."+(idx+1));
+		WdlLabel eval = getDynamicEvalLabel( idx+1, create, show, "plugin.eval."+(idx+1));
 		if (eval!=null && show && !eval.isShowing())
 		synchronized (this) {
-			JoBigLabel pv = getDynamicLabel(lPrimaryVariation, idx+1, true, show, "plugin.pv."+(idx+1));
+			JoBigLabel pv = getDynamicLineLabel( idx+1, true, show, "plugin.pv."+(idx+1));
 			pv.setVisible(true);
 			showTooltip(idx);
 			pv.setToolTipText("?");
@@ -436,8 +445,31 @@ public class EnginePanel
 		return eval;
 	}
 
-	private JoBigLabel getDynamicLabel(Vector v, int vidx, boolean create, boolean show, String name)
+	private WdlLabel getDynamicEvalLabel(int vidx, boolean create, boolean show, String name)
 	{
+		ArrayList<WdlLabel> v = lEval;
+		if (vidx >= v.size() && !create)
+			return null;
+
+		while (vidx >= v.size()) v.add(null);
+
+		WdlLabel result = (WdlLabel)v.get(vidx);
+		if (result==null && create)
+		{
+			//  create new label
+			result = createPvEvalComponent(name);
+			v.set(vidx,result);
+		}
+		if (result!=null && show) {
+			pvCount = Math.max(pvCount,vidx);
+			result.setVisible(!showHistory);
+		}
+		return result;
+	}
+
+	private JoBigLabel getDynamicLineLabel(int vidx, boolean create, boolean show, String name)
+	{
+		ArrayList<JoBigLabel> v = lPrimaryVariation;
 		if (vidx >= v.size() && !create)
 			return null;
 
@@ -447,7 +479,7 @@ public class EnginePanel
 		if (result==null && create)
 		{
 			//  create new label
-			result = createPvComponent(name);
+			result = createPvLineComponent(name);
 			v.set(vidx,result);
 		}
         if (result!=null && show) {
@@ -583,15 +615,15 @@ public class EnginePanel
 		return label;
 	}
 
-	protected JoBigLabel newBigLabel(String name, Font font, int aligment,
-	                                 int border,
-	                                 int paddingTop, int paddingLeft, int paddingBottom, int paddingRight)
+	protected void makeBigLabel(JoBigLabel label,
+			String name, Font font, int aligment,
+			int border,
+			int paddingTop, int paddingLeft, int paddingBottom, int paddingRight)
 	{
 //		JTextComponent label = new JoStyledLabel(Language.get(name));
-		JoBigLabel label = new JoBigLabel(""/*Language.get(name)*/,1,4);
 		label.setName(name);
 //		label.setText(Language.get(name));
-		label.setToolTipText(Language.getTip(name));
+//		label.setToolTipText(Language.getTip(name));
 		label.setFont(font);
 //		label.setHorizontalAlignment(aligment);
 		label.setBorder(new JoLineBorder(border, 1,
@@ -603,7 +635,8 @@ public class EnginePanel
 		label.setPreferredSize(new Dimension(48,16));
 		label.setMaximumSize(new Dimension(Integer.MAX_VALUE,48));
 
-		return label;
+		label.setToolTipText(null);
+		label.addMouseListener(this);
 	}
 
 	protected void broadcastMoveValue(int ply, Score score)
@@ -884,15 +917,20 @@ public class EnginePanel
 	 */
 	public void setEvaluation(int idx, Score score)
 	{
-		JTextComponent leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
+		WdlLabel leval = getEvalLabel(idx, (score.cp > Score.UNKNOWN) || score.hasWDL(), true);
 		if (leval==null) return;
 
-		String text = EnginePlugin.printScore(score, plugin,true,true);
+		String text = EnginePlugin.printScore(score, plugin,false,true);
 		String tooltip = EnginePlugin.printScoreTooltip(score, plugin,true);
 		/* note: even though the methods are located at EnginePlugin, they work just as well for opening books */
 
 		leval.setText(text);
 		leval.setToolTipText(tooltip);
+
+		if (score!=null && score.hasWDL())
+			leval.setWdlScore(score);
+		else
+			leval.setWdlScore(null);
 	}
 
 	public void setNodeCount(long nodes, HashMap pmap)
