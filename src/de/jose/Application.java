@@ -1055,10 +1055,13 @@ public class Application
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception
             {
+				/*
                 GameSource src = getGameSource(cmd,false,false);
                 CreatePositionIndex2 task = new CreatePositionIndex2();
                 task.setSource(src);
                 task.start();
+				 */
+				throw new UnsupportedOperationException();
             }
         };
         map.put("menu.edit.position.index",action);

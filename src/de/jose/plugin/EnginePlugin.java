@@ -914,7 +914,8 @@ abstract public class EnginePlugin
 		if (ply <= MIN_DRAW_PLY) return false;
 		//  don't draw in opening phase
 
-		for (int i=0; i < ADJUDICATE_MOVES; i++)
+		int i=0;
+		for ( ; i < ADJUDICATE_MOVES; i++)
 		{
 			Score value = node.engineValue;
 			//	todo mapUnitWDL(Score) !!
@@ -938,7 +939,7 @@ abstract public class EnginePlugin
 			node = node.previousMove();
 			if (node==null) break;
 		}
-		return true;
+		return i >= ADJUDICATE_MOVES;
 	}
 
 	//

@@ -446,7 +446,7 @@ public class IntHashSet
 	 */
 	public final Object[] toArray()
 	{
-		return toArray(null);
+		return toArray((Object[])null);
 	}
 
 	/**

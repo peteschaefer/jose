@@ -64,6 +64,9 @@ java.util.EmptyStackException
 
 [ ] Engine Panel: smaller info labels
 [ ] fix: offer draw, resign
+    [ ] askedAdjudicated == true can not be reset
+        - user declined draw offer
+        - can not offer theirselves
 
 [x] DON'T delete system folders (auto-save, clipboard, ...)
     [x] re-create on demand (like for Download)
