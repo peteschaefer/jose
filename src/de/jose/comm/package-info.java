@@ -21,9 +21,14 @@ package de.jose.comm;
  *      * more flexible. there is a broadcast meachanisms: interested parties just register their listener code
  *      * receiving end is handled through a map of message key -> lambda (see setupActionMap)
  *      * messages can be defined on-the-fly by just introducing a string key
- *      * deferred reception is not implemented (could it?)
+ *      * deferred execution can be done through flag INVOKE_LATER
+ *          (but it's not yet used :( )
  *      * there is a singleton CommandDispatcher instance that can be used to send messages
  *          (either to a specific destination, or broadcast)
  *      * hierarchy of listeners
+ *
+ *      * was ... meant to be used for undo/redo. But not implemented properly.
+ *
+ * todo many places use SwingUtilities.invokeLater(). Maybe, this could be done more elegantly using one of the above mechanisms.
  *
  */

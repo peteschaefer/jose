@@ -94,24 +94,26 @@ public class CommandAction
 	{
 		if (Util.anyOf(flags,INVOKE_LATER))
 			DoLater(cmd);
-		else if (Util.anyOf(flags,INVOKE_LATER))
+		else if (Util.anyOf(flags,NEW_THREAD))
 			DoThread(cmd);
 		else
 			Do(cmd);
 	}
 
-	public void DoLater(final Command cmd)
-	{
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Do(cmd);
-				} catch (Exception ex) {
-					/** where to throw to ? */
-					Application.error(ex);
+	public void DoLater(final Command cmd) throws Exception {
+		if (SwingUtilities.isEventDispatchThread())
+			Do(cmd);
+		else
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						Do(cmd);
+					} catch (Exception ex) {
+						/** where to throw to ? */
+						Application.error(ex);
+					}
 				}
-			}
-		});
+			});
 	}
 
 	public void DoThread(final Command cmd)
