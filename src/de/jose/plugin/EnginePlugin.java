@@ -796,16 +796,7 @@ abstract public class EnginePlugin
 	}
 
 
-	public void parseAnalysis(String input, AnalysisRecord rec)
-	{
-		/**	can not parse it; derived classes (like UciPlugin) can	*/
-		rec.clear();
-		rec.getLine(0).append(input);
-		rec.setPvModified(0);  //  first PV has bee modified
-		rec.ply = enginePosition.gamePly();
-		rec.white_next = enginePosition.whiteMovesNext();
-		rec.engineMode = mode;
-	}
+	abstract public void parseAnalysis(String input, AnalysisRecord rec);
 
 	/** @return the number of legal moves in the current engine position    */
 	public int countLegalMoves()        { return legalMoveCount; }

@@ -830,10 +830,10 @@ public class UciPlugin
 
 	public synchronized void parseAnalysis(String input, AnalysisRecord rec)
 	{
-		if (input==null || input.length()==0) {
-			rec.clear();
-			return;
-		}
+//		if (input==null || input.length()==0) {
+//			rec.clear();
+//			return;
+//		}
 
 		rec.engineMode = mode;
 		rec.ply = enginePosition.gamePly();
@@ -850,8 +850,9 @@ public class UciPlugin
 					AnalysisRecord.SELECTIVE_DEPTH +
 					AnalysisRecord.EVAL;
 		}
-		else
-			rec.modified = 0;
+		//else
+		//	rec.modified = 0;
+		//	don't. modification flags accumulate until the reader acknowledges
 
 		int pvidx = 0;  // 0 = main line, might differ for multi-pv
 		Score score = new Score();

@@ -721,6 +721,12 @@ public class EnginePanel
 		label.addMouseListener(this);
 	}
 
+	protected void broadcastAnalysis(int engineMode, AnalysisRecord a)
+	{
+		Command cmd = new Command("move.values", null, engineMode, a);
+		Application.theCommandDispatcher.broadcast(cmd, Application.theApplication);
+	}
+
 	protected void broadcastMoveValue(int ply, Score score)
 	{
 		score = new Score(score);
@@ -796,13 +802,17 @@ public class EnginePanel
 						else
 							scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
 					}
-			}
+				}
 
 			if (rec.wasModified(AnalysisRecord.INFO)) {
 				//  show info
 				scrollhist = showInfo(rec.info);
 				infoModified = true;
 			}
+
+			//	we have acknowledged the modifications
+			rec.modified = 0;
+			rec.clearPvModified();
 
             if (scrollhist)
                 AWTUtil.scrollDown(pvScroller,pvPanel);
@@ -850,9 +860,7 @@ public class EnginePanel
 
 		}
 
-		bookmoves.clear();
-		bookmoves.modified = 0;
-		bookmoves.clearPvModified();
+		bookmoves.reset();
 		bookmoves.ply = pos.ply();
 
 		for (int i=0; i < bookEntries.size(); i++)
@@ -1234,6 +1242,16 @@ public class EnginePanel
 					if (EnginePlugin.msgSent <= EnginePanel.msgSeen) return; // already handled this message
 					EnginePanel.msgSeen = EnginePlugin.msgSent;
 				}
+				break;
+		}
+
+		switch (what) {
+			case EnginePlugin.THINKING:
+			case EnginePlugin.PONDERING:
+			case EnginePlugin.ANALYZING:
+				if (analysis!=null)
+					broadcastAnalysis(what,analysis);
+				//	analysis arrows in board panel
 				break;
 		}
 

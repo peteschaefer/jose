@@ -18,6 +18,7 @@ import de.jose.chess.Move;
 import de.jose.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 import static de.jose.plugin.Score.UNKNOWN;
 
@@ -103,7 +104,7 @@ public class AnalysisRecord
 	/** fields that were just modified  */
 	public int      modified;
 	/** PVs that where just modified    */
-	public long[]   pvmodified;
+	public BitSet pvmodified;
 	/** max. number of used PVs */
 	public int      maxpv;
 
@@ -112,7 +113,7 @@ public class AnalysisRecord
 		data = new LineData[256];
 		for(int i=0; i<256; i++)
 			data[i] = new LineData();
-		pvmodified = new long[4];   // = 256 bits; one for each pv
+		pvmodified = new BitSet(256);
 		maxpv = 0;
 	}
 
@@ -144,7 +145,7 @@ public class AnalysisRecord
 
 	public boolean wasPvModified(int pv)
 	{
-		return (pvmodified[pv>>6] & (1<<(pv&0x3f))) != 0L;
+		return pvmodified.get(pv);
 	}
 
 	public boolean wasPvModified() {
@@ -156,13 +157,16 @@ public class AnalysisRecord
 	public void setPvModified(int pv)
 	{
 		if (pv >= maxpv) maxpv = pv+1;
-		pvmodified[pv>>6] |= 1<<(pv&0x3f);
+		pvmodified.set(pv);
+	}
+
+	public void clearPvModified(int pv) {
+		pvmodified.clear(pv);
 	}
 
 	public void clearPvModified()
 	{
-		for (int i=0; i < pvmodified.length; i++)
-			pvmodified[i] = 0L;
+		pvmodified.clear();
 	}
 
 	public int findPvMoveIdx(Move mv)
@@ -205,6 +209,7 @@ public class AnalysisRecord
 			data[i].clear();
 		info = null;
 		modified = -1;  //  all fields modified
+		pvmodified.set(0,256);
 	}
 
 	public void reset()
@@ -212,6 +217,7 @@ public class AnalysisRecord
 		clear();
 		maxpv = 0;
 		modified = 0;
+		clearPvModified();
 	}
 
 	public static long parseLong(char[] chars, int offset, int len)

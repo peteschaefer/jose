@@ -508,6 +508,22 @@ public class BoardPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
+				int engineMode = (Integer)cmd.data;
+				AnalysisRecord a = (AnalysisRecord)cmd.moreData;
+				if (engineMode==EnginePlugin.ANALYZING && theView.showSuggestions) {
+					if (a.wasPvModified())
+						showAnalysisHints(a);
+				}
+				else {
+					//	hide all suggestions
+					theView.hideAllHints(true);
+				}
+			}
+		};
+		map.put("move.values",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
 				UserProfile prf = (UserProfile)cmd.data;
 				if (view2d != null) view2d.storeProfile(prf);
 				if (view3d != null) view3d.storeProfile(prf);
@@ -564,26 +580,6 @@ public class BoardPanel
 		case EnginePlugin.THINKING:	mouseSelect = false; break;
 		default:				    mouseSelect = true; break;
 		}
-
-		//	update suggestions (only in ANALYZTE mode, not during thinking and pondering)
-		switch(what) {
-			case EnginePlugin.ANALYZING:
-				//theView.hideAllHints(false);
-				if (theView.showSuggestions) {
-					AnalysisRecord a = (AnalysisRecord)data;
-					EnginePlugin plugin = (EnginePlugin)who;
-					if (a==null) break;
-					if (!a.wasPvModified()) break;
-					showAnalysisHints(a, plugin);
-				}
-				break;
-			case EnginePlugin.PAUSED:
-			case EnginePlugin.THINKING:
-			case EnginePlugin.PONDERING:
-				//	hide all suggestions
-				theView.hideAllHints(true);
-				break;
-		}
 	}
 
 	protected void captureImage(boolean transparent)
@@ -593,7 +589,7 @@ public class BoardPanel
 		theView.captureImage(this,transparent);
 	}
 
-	protected void showAnalysisHints(AnalysisRecord a, EnginePlugin plugin)
+	protected void showAnalysisHints(AnalysisRecord a)
 	{
 		ArrayList<Hint> hints = new ArrayList<Hint>();
 		if (a.maxpv==0) return;
@@ -631,6 +627,8 @@ public class BoardPanel
 			Move mv = data.moves.get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
+
+			EnginePlugin plugin = Application.theApplication.getEnginePlugin();
 			hint.label = EnginePlugin.printScore(data.eval, plugin, false, a.white_next);	//	todo apply pov
 
 			//	update color
