@@ -1677,23 +1677,26 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
-				//if (analysis!=null) analysis.ponderMove=null;
 				// todo when should ponderMove reset? keep pondermove when advancing
-				//	reset it when jumping?
-				pvCount=0;	//	clear pv panel, right?
 				//boolean isPaused =  (plugin!=null && plugin.isPaused());
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
+				if (analysis!=null && !wasEngineMove) analysis.ponderMove=null;
+
 				switch(Application.theApplication.theMode)
 				{	//	todo move this stuff to Application
 					case USER_ENGINE:
 					case ENGINE_ENGINE:
-						// todo why do we need to call updateBook here? shouldn't it be BOOK_PLAY ?
+						if (wasEngineMove)
+							Application.theApplication.updateBook(wasEngineMove,false);
+						//else
+						// BOOK_PLAY will come soon
+						break;
 					case USER_INPUT:
-						Application.theApplication.updateBook(wasEngineMove,false);
+						Application.theApplication.updateBook(false,false);
 //						Application.theApplication.pausePlugin(false); // right?
 						break;
 					case ANALYSIS:
-						Application.theApplication.updateBook(wasEngineMove,true);
+						Application.theApplication.updateBook(false,true);
 						break;
 				}
 			}
