@@ -1467,7 +1467,9 @@ public class BoardView2D
 			if (guessMove2(new int[]{mouseClickSquare,square}))
 				return 0;
 			if ((Application.theApplication.theMode==USER_INPUT || Application.theApplication.theMode==ANALYSIS))
-			{
+			{	//	this feature is somewhat questionable
+				//	there is a use to it for pyhsical boards (@see EBoardConnector), but for mouse clicks ?
+				//	Maybe remove it (like the one above)
 				Move[] mvs = guessDoubleTake(mouseClickSquare,square,board.getPosition());
 				if (mvs!=null
 						&& tryMouseMove(mvs[0])

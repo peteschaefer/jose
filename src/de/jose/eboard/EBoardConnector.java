@@ -288,7 +288,11 @@ public abstract class EBoardConnector
     private Move guessMove(BoardState st, Position pos)
     {
         if (st.diff_cnt < 2 || st.diff_cnt > 4) return null;
-
+        /*
+            note: with diff_cnt==2 we could easily construct two Move candidates
+            but with diff_cnt==3,4 it is not so easy to decide who moves from where.
+            that's why we iterate over all pseudo-legal moves:
+         */
         MoveIterator moves = new MoveIterator(pos);
         while(moves.next())
         {

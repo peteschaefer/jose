@@ -112,6 +112,12 @@ Alternative JREs:
 
 * font awesome icons
 
+* RFT export? currently possible via copy/paste.
+  - fop 0.20 does not support it
+  - upgrading fop seems painful (and has little merit)
+  - RTFGenerator is not flawless but better than nothing
+    (why does Oracle not support it?)
+
 * Logos: User
     [ ] document? (would have to be stored in db :(
 
