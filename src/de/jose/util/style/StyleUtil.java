@@ -177,8 +177,7 @@ public class StyleUtil
             return getWindowsSystemColor("AccentColor");
         }
         if (Version.mac) {
-            //  todo does this work ?
-            return SystemColor.activeCaption;
+            return SystemColor.controlHighlight;
         }
         return null;
     }
@@ -194,7 +193,6 @@ public class StyleUtil
             return null;
         }
         if (Version.mac) {
-            //  todo does this work ?
             return SystemColor.textHighlight;
         }
         return null;

@@ -293,6 +293,11 @@ public class Application
             //  I think this is the default for Aqua lnf, so we let it be...
             Version.setDefaultSystemProperty("apple.awt.showGrowBox","true");
 
+			// adapt window title bars
+			System.setProperty("apple.awt.application.appearance","system");
+			//	application menu name
+			System.setProperty("apple.awt.application.name", "jose");
+
             Version.setDefaultSystemProperty("apple.awt.brushMetalLook","false");
             Version.setDefaultSystemProperty("apple.awt.graphics.EnableLazyDrawing","true");
 
