@@ -159,7 +159,6 @@ public class EnginePanel
 
 		setBgColor(dark);
 		createIcons(dark);
-		//	todo adjust on demand
 		createComponents();
 		createLayout();
 	}
@@ -1850,6 +1849,13 @@ public class EnginePanel
 				boolean dark = (Boolean)cmd.moreData;
 				setBgColor(dark);
 				applyBgColor();
+
+				createIcons(dark);
+				setIcon(bPause,iPause);
+				setIcon(bAnalyze,iAnalyze);
+				setIcon(bHint,iHint);
+				setIcon(bThreat,iBolt);
+				updateButtonState();
 			}
 		};
 		map.put("update.ui",action);

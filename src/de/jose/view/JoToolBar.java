@@ -215,17 +215,17 @@ public class JoToolBar
 
 			Dimension iconSize = createIcons(name, button, dark);
 
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
+			//button.setBorderPainted(false);
+			//button.setFocusPainted(false);
 
 			minDimension.width = Math.max(minDimension.width, iconSize.width);
 			minDimension.height = Math.max(minDimension.height, iconSize.height);
-			if (iconSize.width < 32)
-				button.setBorder(new EmptyBorder(2,2,2,2));
-			else
-				button.setBorder(new EmptyBorder(0,0,0,0));
+			if (!button.isBorderPainted()) {
+				button.setBorder(new EmptyBorder(2, 2, 2, 2));
+				button.setMargin(margin);
+			}
+			//else: border already set in createIcons. clean this up !
 
-			button.setMargin(margin);
 			button.setToolTipText(Language.getTip(name));
             if (Version.mac)
                 button.putClientProperty("JButton.buttonType","toolbar");
@@ -270,6 +270,10 @@ public class JoToolBar
 
 		Dimension iconSize = new Dimension();
 
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
+		button.setContentAreaFilled(false);
+
 		if (icons!=null) {
 			assert(icons.length>=6);
 			//  rollover icons
@@ -289,6 +293,22 @@ public class JoToolBar
 
 			iconSize.width = icons[1].getIconWidth();
 			iconSize.height = icons[1].getIconHeight();
+
+			IconSpec ispec = new IconSpec(spec, 28);
+			if ((ispec.style & BUTTON) != 0) {
+				button.setFocusable(true); //  don't steal keyboard focus from game panel
+//		button.setBorder(null);
+				button.setBorderPainted(true);
+				button.setFocusPainted(true);
+				button.setContentAreaFilled(true);
+				button.setRolloverEnabled(true);
+				button.putClientProperty("JButton.buttonType","roundRect");
+				button.putClientProperty("Button.arc",999);
+
+				int hmargin = 24-iconSize.width;
+				int vmargin = 24-iconSize.height;
+				button.setMargin(new Insets(vmargin/2,hmargin/2, vmargin/2, hmargin/2));
+			}
 		}
 		else {
 			button.setIcon(null);
@@ -340,10 +360,12 @@ public class JoToolBar
 	public static Icon[] createAwesomeIcons(String sp, float size, boolean dark)
 	{
 		IconSpec spec = new IconSpec(sp, size);
-		if ((spec.style&BUTTON)!=0) {
+		boolean isButton = ((spec.style&BUTTON)!=0);
+		if (isButton) {
 			//	button style icons
 			spec.style &= ~BUTTON;
 			spec.style |= FLAT;
+			spec.size *= 0.6f;
 		}
 
 		if (dark) {
@@ -358,7 +380,14 @@ public class JoToolBar
 			if (spec.colors.size() < 2)
 				spec.colors.add(Color.white);
 		}
-		return create7AwesomeIcons(spec);
+
+		Icon[] result = create7AwesomeIcons(spec);
+
+		if (isButton) {
+			spec.style &= BUTTON;
+		}
+
+		return result;
 	}
 
 	public static Icon create1AwesomeIcon(String spec, float size)
