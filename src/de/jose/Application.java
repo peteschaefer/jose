@@ -3024,6 +3024,10 @@ public class Application
 			task = new MoveTask(src, 0, false,true);
 		}
 
+		if (!(task instanceof MoveTask) && (task.size() > 500))
+			task.setSilentTime(0);	//	this will likely be a "long runner". Show progress dialog always.
+		//	todo maybe ask user: "Do you really want to copy 5.6 million files to the clipboard ???"
+
 		task.setDisplayComponent((JoPanel)Util.nvl(listPanel(),collectionPanel(),getFocusPanel()));
 //		task.run();	//	snychroneous operation
 		task.start();	// for asynchronesous operation

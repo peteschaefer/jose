@@ -11,7 +11,7 @@
 [?] db: duplicate key on insert (GameBuffer.Id?)
 [ ] db import: error in sql syntax ?
 [ ] db: expected data on row ?
-[ ] MoreGame missing? detect on start; use robust sequence, at least
+[.] MoreGame missing? detect on start; use robust sequence, at least
 
 ==== Project
 
