@@ -20,6 +20,8 @@ import de.jose.Util;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static de.jose.plugin.EngineState.*;
+
 public class XBoardPlugin
 		extends EnginePlugin
 {
@@ -254,7 +256,7 @@ public class XBoardPlugin
 		setMode(PAUSED);
 	}
 
-	protected void setMode(int newMode)
+	protected void setMode(EngineState newMode)
 	{
 		super.setMode(newMode);
 		userOfferedDraw = false;
@@ -390,7 +392,7 @@ ply
 	{
 		if (!isOpen()) { brokenPipe(); return; }
 
-		if (mode <= PAUSED) synch();
+		if (mode == PAUSED) synch();
 
 		if (isAnalyzing())
 			printOut.println("exit");	//	exit analysis mode
@@ -880,7 +882,7 @@ ply
 		case ANALYZING:
 				parseAnalysis(s,analysis);
 				msgSent++;
-				sendMessage(mode,analysis);
+				sendMessage(mode.numval,analysis);
 				break;
 		}
 	}

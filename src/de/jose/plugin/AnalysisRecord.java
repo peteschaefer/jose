@@ -55,7 +55,7 @@ public class AnalysisRecord
 	/** engine state: THINKING,ANALYZING,PONDERING
 	 *  (ponder PVs are a bit different than others)
 	 * */
-	public int      engineMode;
+	public EngineState  engineMode;
 	/** current game ply */
 	public int      ply;
 	public boolean	white_next;

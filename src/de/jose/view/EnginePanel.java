@@ -26,10 +26,7 @@ import de.jose.book.BookEntry;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
-import de.jose.plugin.Score;
-import de.jose.plugin.AnalysisRecord;
-import de.jose.plugin.EnginePlugin;
-import de.jose.plugin.UciPlugin;
+import de.jose.plugin.*;
 import de.jose.profile.LayoutProfile;
 import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
@@ -53,6 +50,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.io.IOException;
+
+import static de.jose.plugin.EngineState.*;
 
 public class EnginePanel
 		extends JoPanel
@@ -117,7 +116,7 @@ public class EnginePanel
 	/** status info    */
 	protected JLabel    lStatus;
 
-    protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed;
+    protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
 	protected static ImageIcon[] iPause, iHint, iAnalyze;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
@@ -150,7 +149,7 @@ public class EnginePanel
 		createComponents();
 		createLayout();
 
-		display(EnginePlugin.PAUSED,null, inBook);
+		display(PAUSED,null, inBook);
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 	}
@@ -210,6 +209,7 @@ public class EnginePanel
 		iGoYellow = new ImageIcon[4];
 		iGoRed = new ImageIcon[4];
 		iGoBlue = new ImageIcon[4];
+		iGoOrange = new ImageIcon[4];
 		iPause = new ImageIcon[4];
 		iHint = new ImageIcon[4];
 		iAnalyze = new ImageIcon[4];
@@ -217,6 +217,7 @@ public class EnginePanel
 		iGoGreen[0] =
 		iGoYellow[0] =
 		iGoRed[0] =
+		iGoOrange[0] =
 		iGoBlue[0] = ImgUtil.getIcon("nav","move.forward.off");
 
 		iGoGreen[1] =// ImgUtil.getIcon("nav","move.forward.cold");
@@ -234,6 +235,10 @@ public class EnginePanel
 		iGoBlue[1] = ImgUtil.getIcon("nav","arrow.blue.cold");
 		iGoBlue[2] = ImgUtil.getIcon("nav","arrow.blue.hot");
 		iGoBlue[3] = ImgUtil.getIcon("nav","arrow.blue.pressed");
+
+		iGoOrange[1] = ImgUtil.getIcon("nav","arrow.orange.cold");
+		iGoOrange[2] = ImgUtil.getIcon("nav","arrow.orange.hot");
+		iGoOrange[3] = ImgUtil.getIcon("nav","arrow.orange.pressed");
 
 		iPause[0] = ImgUtil.getIcon("nav","engine.stop.off");
 		iPause[1] = ImgUtil.getIcon("nav","engine.stop.cold");
@@ -585,11 +590,11 @@ public class EnginePanel
 
 		if (! inBook && analysis!=null)
 			switch (analysis.engineMode) {
-			case EnginePlugin.ANALYZING:
-			case EnginePlugin.THINKING:
+			case ANALYZING:
+			case THINKING:
 					break;
 
-			case EnginePlugin.PONDERING:
+			case PONDERING:
 					if (analysis.ponderMove!=null) {
 						buf.append(analysis.ponderMove);
 						//buf.append(" {ponder move} ");
@@ -750,14 +755,16 @@ public class EnginePanel
 
 	protected void updateButtonState()
 	{
-		updateButtonState((plugin==null) ? UciPlugin.PAUSED : plugin.getMode());
+		updateButtonState(
+				(plugin==null) ? PAUSED : plugin.getMode(),
+				Application.theApplication.theMode);
 	}
 
-	protected void updateButtonState(int engineState)
+	protected void updateButtonState(EngineState engineState, Application.AppMode appState)
 	{
-		setIcon(bGo,getGoIcon(engineState));
+		setIcon(bGo,getGoIcon(engineState,appState));
 		bGo.setEnabled(true);
-		bPause.setEnabled(engineState > EnginePlugin.PAUSED);
+		bPause.setEnabled(engineState != PAUSED);
 		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
 		bHint.setEnabled(true);
 		//if (!enabled) hideHint();
@@ -768,9 +775,9 @@ public class EnginePanel
 	 * @param rec
 	 * @param bookMode
 	 */
-	protected void display(int state, AnalysisRecord rec, boolean bookMode)
+	protected void display(EngineState state, AnalysisRecord rec, boolean bookMode)
 	{
-		updateButtonState(state);
+		updateButtonState(state,Application.theApplication.theMode);
 
 		//  book mode/ engine mode layout
 		infoPanel.setVisible(! bookMode);
@@ -843,7 +850,7 @@ public class EnginePanel
 		}
 
 		if (bookMode) {
-			lStatus.setText(getStatusText(-1));
+			lStatus.setText(getStatusText(null));
 			//  always scroll to the *top* of the list
 			AWTUtil.scrollUp(pvScroller,pvPanel);
 		}
@@ -854,7 +861,7 @@ public class EnginePanel
 	public void exitBook()
 	{
 		if (inBook) {
-			display(-1,null, inBook);    //  TODO which state ?
+			display(null,null, inBook);    //  TODO which state ?
 			showLines(1, false);
 			pvCount = 1;
 		}
@@ -909,7 +916,7 @@ public class EnginePanel
 		pvCount = bookEntries.size();
 
 		inBook = true;
-		display(-1,bookmoves, inBook);
+		display(null,bookmoves, inBook);
 	}
 
 
@@ -1155,42 +1162,51 @@ public class EnginePanel
 		button.setPressedIcon(icon[3]);
 	}
 
-	protected Icon[] getGoIcon(int state)
+	protected Icon[] getGoIcon(EngineState state, Application.AppMode appState)
 	{
+		if (state==null)
+			return iGoYellow;
 		switch (state) {
 		default:
-		case EnginePlugin.PAUSED:		return iGoBlue;
-		case EnginePlugin.THINKING:	    return iGoRed;
-		case EnginePlugin.PONDERING:	return iGoGreen;
-		case EnginePlugin.ANALYZING:	return iGoYellow;
+		case THINKING:	    		return iGoRed;
+		case PONDERING:				return iGoGreen;
+		case PAUSED:				return iGoBlue;
+		case ANALYZING:			//return iGoYellow;
+			switch(appState) {
+				case USER_INPUT: 	return iGoOrange;
+				case ANALYSIS:		return iGoYellow;
+			}
 		}
+		return iGoYellow;
 	}
 
-	protected String getGoToolTip(int state)
+	protected String getGoToolTip(EngineState state)
 	{
 		String result = null;
 		switch (state) {
 		default:
-		case EnginePlugin.PAUSED:		result = "engine.paused.tip"; break;
-		case EnginePlugin.THINKING:	    result = "engine.thinking.tip"; break;
-		case EnginePlugin.PONDERING:	result = "engine.pondering.tip"; break;
-		case EnginePlugin.ANALYZING:	result = "engine.analyzing.tip"; break;
+		case PAUSED:	result = "engine.paused.tip"; break;
+		case THINKING:	result = "engine.thinking.tip"; break;
+		case PONDERING:	result = "engine.pondering.tip"; break;
+		case ANALYZING:	result = "engine.analyzing.tip"; break;
 		}
 		result = Language.get(result);
 		result = StringUtil.replace(result,"%engine%", (pluginName==null) ? "":pluginName);
 		return result;
 	}
 
-	protected String getStatusText(int state)
+	protected String getStatusText(EngineState state)
 	{
 		String result = null;
+		if (state==null)
+			result = "book.title";
+		else
 		switch (state) {
 		default:
-		case EnginePlugin.PAUSED:		result = "engine.paused.title"; break;
-		case EnginePlugin.THINKING:	    result = "engine.thinking.title"; break;
-		case EnginePlugin.PONDERING:	result = "engine.pondering.title"; break;
-		case EnginePlugin.ANALYZING:	result = "engine.analyzing.title"; break;
-		case -1:    					result = "book.title"; break;
+		case PAUSED:	result = "engine.paused.title"; break;
+		case THINKING:	result = "engine.thinking.title"; break;
+		case PONDERING:	result = "engine.pondering.title"; break;
+		case ANALYZING:	result = "engine.analyzing.title"; break;
 		}
 
 		result = Language.get(result);
@@ -1241,58 +1257,63 @@ public class EnginePanel
 		plugin.removeMessageListener(this);
 		this.plugin = null;
 		pluginName = null;
-		display(EnginePlugin.PAUSED, null, inBook);
+		display(PAUSED, null, inBook);
 	}
 
 	public void handleMessage(Object who, int what, Object data)
 	{
 		AnalysisRecord a=null;
-		switch (what) {
-			case EnginePlugin.THINKING:
-			case EnginePlugin.ANALYZING:
-			case EnginePlugin.PONDERING:
-				a = (AnalysisRecord) data;
-				if (a!=null) {
-					analysis = a;
-					if (EnginePlugin.msgSent <= EnginePanel.msgSeen) return; // already handled this message
-					EnginePanel.msgSeen = EnginePlugin.msgSent;
-				}
-				break;
+		EngineState state=EngineState.valueOf(what);
+		if (state!=null)
+		{
+			switch (state) {
+				case THINKING:
+				case ANALYZING:
+				case PONDERING:
+					a = (AnalysisRecord) data;
+					if (a!=null) {
+						analysis = a;
+						if (EnginePlugin.msgSent <= EnginePanel.msgSeen) return; // already handled this message
+						EnginePanel.msgSeen = EnginePlugin.msgSent;
+					}
+					break;
+			}
+
+			switch (state) {
+				case THINKING:
+				case PONDERING:
+				case ANALYZING:
+					if (analysis!=null)
+						broadcastAnalysis(what,analysis);
+					//	analysis arrows in board panel
+					break;
+			}
+
+			switch (state) {
+				case THINKING:
+				case ANALYZING:
+					exitBook();
+					if (analysis != null) display(state, analysis, inBook);
+					break;
+				case PONDERING:
+					if (!inBook && analysis != null) display(state, analysis, inBook);
+					break;
+				case PAUSED:
+					if (!inBook)
+						display(state, null, inBook);
+					else
+						display(state, bookmoves, inBook);
+					break;
+			}
 		}
 
-		switch (what) {
-			case EnginePlugin.THINKING:
-			case EnginePlugin.PONDERING:
-			case EnginePlugin.ANALYZING:
-				if (analysis!=null)
-					broadcastAnalysis(what,analysis);
-				//	analysis arrows in board panel
-				break;
-		}
-
-		switch (what) {
-		case EnginePlugin.THINKING:
-		case EnginePlugin.ANALYZING:
-				exitBook();
-				if (analysis!=null) display(what, analysis, inBook);
-				break;
-		case EnginePlugin.PONDERING:
-				if (!inBook && analysis!=null) display(what, analysis, inBook);
-				break;
-
+		switch(what) {
 		case EnginePlugin.PLUGIN_ELAPSED_TIME:
 			//  TODO update elapsed time
 			int elapsedTime = Util.toint(data);
 			//System.err.println("tick "+((double)elapsedTime/1000));
 			setElapsedTime(elapsedTime,null);
 			break;
-
-		case EnginePlugin.PAUSED:
-				if (!inBook)
-					display(what, null, inBook);
-				else
-					display(what, bookmoves, inBook);
-				break;
 
 		case EnginePlugin.PLUGIN_HINT:
 		case EnginePlugin.PLUGIN_REQUESTED_HINT:
@@ -1539,7 +1560,7 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
-				boolean isPaused =  (plugin!=null && ! plugin.isPaused());
+				boolean isPaused =  (plugin!=null && plugin.isPaused());
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
 				switch(Application.theApplication.theMode)
 				{	//	todo move this stuff to Application

@@ -55,7 +55,7 @@ abstract public class EnginePlugin
 	protected Runnable launchHook = null;
 
     /**	current mode	 */
-	protected int mode;
+	protected EngineState mode;
 	/** calculation analysis */
 	protected AnalysisRecord analysis;
 	/** iterate: count sent messages */
@@ -100,18 +100,6 @@ abstract public class EnginePlugin
 	 * number of moves before asking user to adjudicate
 	 */
 	public static final int ADJUDICATE_MOVES    = 5;
-
-
-	/**	mode: paused (engine not in use)
-	 *	engine position not in synch with application
-	 * */
-	public static final int PAUSED		= 0;
-	/**	mode: thinking (calculating the next computer move)	 */
-	public static final int THINKING	= 1;
-	/**	mode: waiting for user move, pondering (permanent brain)	 */
-	public static final int PONDERING	= 2;
-	/**	mode: anylizing (i.e. thinking but not moving automatically)	 */
-	public static final int ANALYZING	= 3;
 
 	/** return value from updateDirtyElements()
 	 *  no options have been modified
@@ -660,17 +648,17 @@ abstract public class EnginePlugin
 		return result;
 	}
 
-	public final int getMode()				{ return mode; }
+	public final EngineState getMode()		{ return mode; }
 
 	public final long getElapsedTime()      { return System.currentTimeMillis()-modeTime; }
 
-	public final boolean isPaused()			{ return mode == PAUSED; }
+	public final boolean isPaused()			{ return mode == EngineState.PAUSED; }
 
-	public final boolean isThinking()		{ return mode == THINKING; }
+	public final boolean isThinking()		{ return mode == EngineState.THINKING; }
 
-	public final boolean isPondering()		{ return mode == PONDERING; }
+	public final boolean isPondering()		{ return mode == EngineState.PONDERING; }
 
-	public final boolean isAnalyzing()		{ return mode == ANALYZING; }
+	public final boolean isAnalyzing()		{ return mode == EngineState.ANALYZING; }
 
 
 	public final void restartWithOptions(boolean dirtyOnly) throws IOException
@@ -702,12 +690,12 @@ abstract public class EnginePlugin
 
     abstract public boolean isActivelyPondering();
 
-	protected void setMode(int newMode)
+	protected void setMode(EngineState newMode)
 	{
 		mode = newMode;
 
 		modeTime = System.currentTimeMillis();
-		if (mode==PAUSED) {
+		if (mode== EngineState.PAUSED) {
 			if (modeTimer!=null) modeTimer.stop();
 		}
 		else if (modeTimer!=null)
@@ -719,7 +707,7 @@ abstract public class EnginePlugin
 
 		analysis.modified = AnalysisRecord.NEW_MOVE;
 		//  clear analysis content for next
-		sendMessage(mode);
+		sendMessage(mode.numval);
 	}
 
 	public void setLaunchHook(Runnable lambda) {

@@ -1379,9 +1379,10 @@ public class Application
 
 				theGame.gotoMove(mv);
 				theClock.halt();
-				setMode(AppMode.USER_INPUT);	//	right?
+				getAnimation().pause();
 
-                getAnimation().pause();
+				if (theMode==AppMode.USER_ENGINE)
+					setMode(AppMode.USER_INPUT);	//	stop auto-play
                 pausePlugin();
 
                 cmd = new Command("move.notify",null,mv.getMove());

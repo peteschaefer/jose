@@ -23,10 +23,7 @@ import de.jose.pgn.DiagramNode;
 import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
-import de.jose.plugin.AnalysisRecord;
-import de.jose.plugin.EnginePlugin;
-import de.jose.plugin.Plugin;
-import de.jose.plugin.Score;
+import de.jose.plugin.*;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.profile.FontEncoding;
@@ -39,6 +36,9 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
+
+import static de.jose.plugin.EngineState.ANALYZING;
+import static de.jose.plugin.EngineState.THINKING;
 
 /**
  * Panel that displays the chess board
@@ -508,9 +508,9 @@ public class BoardPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
-				int engineMode = (Integer)cmd.data;
+				EngineState engineMode = EngineState.valueOf(cmd.data);
 				AnalysisRecord a = (AnalysisRecord)cmd.moreData;
-				if (engineMode==EnginePlugin.ANALYZING && theView.showSuggestions) {
+				if (engineMode==ANALYZING && theView.showSuggestions) {
 					if (a.wasPvModified())
 						showAnalysisHints(a);
 				}
@@ -569,17 +569,16 @@ public class BoardPanel
 		//	message from Plugin
 		//  or from view, after an image has been captured
 		switch (what) {
-		case BoardView.MESSAGE_CAPTURE_IMAGE:
-			try {
-				ClipboardUtil.setImage((Image)data,this);
-			} catch (Exception e) {
-				Application.error(e);
-			}
-			break;
-
-		case EnginePlugin.THINKING:	mouseSelect = false; break;
-		default:				    mouseSelect = true; break;
+			case BoardView.MESSAGE_CAPTURE_IMAGE:
+				try {
+					ClipboardUtil.setImage((Image) data, this);
+				} catch (Exception e) {
+					Application.error(e);
+				}
+				return;
 		}
+
+		mouseSelect = (what!=THINKING.numval);
 	}
 
 	protected void captureImage(boolean transparent)

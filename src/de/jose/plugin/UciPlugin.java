@@ -22,6 +22,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
+import static de.jose.plugin.EngineState.*;
+
 /**
  *  implements the UCI engine protocol
  *
@@ -361,12 +363,12 @@ public class UciPlugin
 		pause();
 	}
 
-	protected void setMode(int newMode)
+	protected void setMode(EngineState newMode)
 	{
 		if (hasAnalyseOption) {
-			if (mode==ANALYZING && newMode!=ANALYZING)
+			if (mode== ANALYZING && newMode!= ANALYZING)
 				printOut.println("setoption UCI_AnalyseMode false");
-			else if (mode!=ANALYZING && newMode==ANALYZING)
+			else if (mode!= ANALYZING && newMode== ANALYZING)
 				printOut.println("setoption UCI_AnalyseMode true");
 		}
 
@@ -768,7 +770,7 @@ public class UciPlugin
 			if (ignoreMoves==0) {
 				parseAnalysis(StringUtil.rest(s), analysis);
 				msgSent++;
-				sendMessage(mode, analysis);
+				sendMessage(mode.numval, analysis);
 			}
         }
 

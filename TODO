@@ -15,19 +15,17 @@
     [?] update/don't update book when navigating
     [x] pause button should pause engine;
         book is shown in both, USER_INPUT and ANALYSIS
-    [?] duplicate Book Queries
+    [?] no duplicate Book Queries
 [x] fix pause button activation
 [?] fix play button activation
-    - should play button reflect App Mode?
-        e.g. when playing againt Lichess OE
-        the play button remains yellow. Misleading?
 [ ] fix hint button activation
-    [ ] fix hint button behavior
-    switch(engine mode)
+[ ] fix hint button behavior
+    switch(engine state)
     case THINKING:  hint disabled
     case PONDERTING: hint = ponder move
     case ANAYLSIS: hint = current analysis (with arrows)
     case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
+    -> no need for PLUGIN_REQUESTED_HINT
 
 === Database Bugs
 
@@ -106,6 +104,9 @@ Alternative JREs:
 * threat arrows
     -> like hint, but with reversed color
     - take care to never play a threat move, actually !
+
+* heuristic: figurines in Opening names (like from Eco)
+  - for any language
 
 * LiChess Opening Explorer
     [x] download top games for a variation
