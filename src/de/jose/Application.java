@@ -2352,7 +2352,7 @@ public class Application
 			}
 			@Override
 			public boolean isSelected(String cmd) {
-				return getEBoardConnector().isConnected();
+				return getEBoardConnector().connected;
 			}
 		};
 		map.put("eboard.disconnect",action);

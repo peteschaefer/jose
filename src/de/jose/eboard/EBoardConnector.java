@@ -15,8 +15,7 @@ import java.util.Stack;
 public abstract class EBoardConnector
 {
 
-    enum Mode {
-        DISCONNECTED,
+    public enum Mode {
         PLAY,
         SETUP_LEAD, SETUP_FOLLOW
     }
@@ -25,6 +24,7 @@ public abstract class EBoardConnector
         WHITE_UP, BLACK_UP, AUTO_DETECT
     }
 
+    public boolean connected;
     public Mode mode;
 
     Orientation inputOri;
@@ -36,7 +36,8 @@ public abstract class EBoardConnector
 
     public EBoardConnector()
     {
-        mode = Mode.DISCONNECTED;
+        connected = false;
+        mode = Mode.PLAY;
         inputOri = Orientation.AUTO_DETECT;  // todo read from UserProfile
         currentOri = Orientation.WHITE_UP;  // todo read from UserProfile
 
@@ -62,43 +63,40 @@ public abstract class EBoardConnector
         return doAvailable();
     }
 
-    public boolean isConnected()
-    {
-        return mode != Mode.DISCONNECTED;
-    }
-
     public boolean connect()
     {
         if(!doAvailable())
             return false;
 
         if (doConnect()) {
-            mode = Mode.PLAY;
+            connected = true;
             synchFromApp();
+            doBeep(800,300);
         }
         else
-            mode = Mode.DISCONNECTED;
-        return (mode!=Mode.DISCONNECTED);
+            connected = false;
+        return connected;
     }
 
     protected abstract boolean doAvailable();
     protected abstract boolean doConnect();
     protected abstract void doDisconnect();
     protected abstract void doShowLeds(String leds);
+    protected abstract void doBeep(int freq, int ms);
 
     public void disconnect()
     {
-        mode = Mode.DISCONNECTED;
+        connected = false;
         doDisconnect();
     }
 
 
     public synchronized void synchFromBoard()
     {
-        if (!isConnected()) {
+        if (!connected) {
             //  now connected
-            mode = Mode.PLAY;
-            //EasyLink.beep(800,500);
+            connected = true;
+            doBeep(800,300);
         }
 
         //if (setExplodedFen(fen,board[0].fen)==0)
@@ -237,7 +235,7 @@ public abstract class EBoardConnector
         if (setExplodedFen(appBoard,appXFen)==0)
             return;
 
-        if (!isConnected())
+        if (!connected)
             return;
 
         computeDiff();

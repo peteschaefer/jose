@@ -57,7 +57,7 @@ abstract public class BoardView
 	/**	is the promotion popup showing ?	 */
 	protected boolean promoPopupShowing;
 
-	protected IBoardAdapter board;
+	public IBoardAdapter board;
 
 	//
  	//	User settings

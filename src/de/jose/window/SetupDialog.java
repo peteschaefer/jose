@@ -18,6 +18,7 @@ import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.chess.Board;
 import de.jose.eboard.DialogComponent;
+import de.jose.eboard.EBoardConnector;
 import de.jose.view.BoardEditView;
 import de.jose.view.SetupBoardAdapter;
 import de.jose.view.input.JoStyledLabel;
@@ -39,6 +40,7 @@ public class SetupDialog
 {
 	protected SetupBoardAdapter setup;
 	protected BoardEditView view;
+	private de.jose.eboard.DialogComponent eboardCtrl;
 
     public void setupActionMap(Map map)
     {
@@ -215,10 +217,11 @@ public class SetupDialog
 
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
-		ebox.add( new de.jose.eboard.DialogComponent(true), 		gridConstraint(LABEL_ONE_LEFT,1,1,1));
+		eboardCtrl = new de.jose.eboard.DialogComponent(true);
+		ebox.add(eboardCtrl,	gridConstraint(LABEL_ONE_LEFT,1,1,1));
 
 		GridBagConstraints econst = new GridBagConstraints(0,3, 1,1, 1.0,0.0,
-				GridBagConstraints.SOUTHWEST, GridBagConstraints.NONE,
+				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 				INSETS_NORMAL, 0,0);
 		getElementPane().add(ebox, econst);
 
@@ -236,6 +239,17 @@ public class SetupDialog
 	{
 		super.show();
 		read();
+
+		eboardCtrl.eboard.useBoard(view.board);
+		eboardCtrl.eboard.mode = EBoardConnector.Mode.SETUP_LEAD;
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+
+		eboardCtrl.eboard.reuseBoard();
+		eboardCtrl.eboard.mode = EBoardConnector.Mode.PLAY;
 	}
 
 	public void setFEN(String fen)

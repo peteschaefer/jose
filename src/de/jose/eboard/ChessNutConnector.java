@@ -10,12 +10,12 @@ public class ChessNutConnector extends EBoardConnector implements EasyLink.IReal
     public ChessNutConnector() {
         super();
     }
-
+    @Override
     public boolean doAvailable()
     {
         return EasyLink.AVAILABLE;
     }
-
+    @Override
     public boolean doConnect()
     {
         if (!doAvailable())
@@ -28,7 +28,7 @@ public class ChessNutConnector extends EBoardConnector implements EasyLink.IReal
         EasyLink.led(EasyLink.NO_LEDS);
         return true;
     }
-
+    @Override
     public void doDisconnect()
     {
         EasyLink.disconnect();
@@ -48,8 +48,11 @@ public class ChessNutConnector extends EBoardConnector implements EasyLink.IReal
         //  invokeLater avoids threading issues with GUI thread
     }
 
+    @Override
     public void doShowLeds(String leds)
     {
         EasyLink.led(leds);
     }
+    @Override
+    protected void doBeep(int freq, int ms) { EasyLink.beep(freq,ms); }
 }
