@@ -729,6 +729,11 @@ public class EnginePanel
 				line.append("}");
 			}
 
+			if (bookmoves.moves[i]==null)
+				bookmoves.moves[i] = new ArrayList();
+			bookmoves.moves[i].clear();
+			bookmoves.moves[i].add(entry.move);	//	useful for tooltips
+
 			Score score = bookmoves.eval[i];
 			score.flags = Score.EVAL_GAME_COUNT;
 			score.cp = score.cp_current = BookEntry.nvl(entry.count);

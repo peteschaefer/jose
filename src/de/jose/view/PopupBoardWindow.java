@@ -98,9 +98,19 @@ public class PopupBoardWindow
 
     protected String replay(int ply)
     {
-        pos.setup(engpanel.plugin.applPosition);
-        ArrayList<Move> moves = engpanel.analysis.moves[pvidx];
-        if (moves==null || moves.isEmpty()) return "?";
+        if (engpanel.plugin!=null)
+            pos.setup(engpanel.plugin.applPosition);
+        else
+            pos.setup(Application.theApplication.theGame.getPosition());
+
+        ArrayList<Move> moves = null;
+        if (engpanel.analysis!=null)
+            moves = engpanel.analysis.moves[pvidx];
+        else if (engpanel.bookmoves!=null)
+            moves = engpanel.bookmoves.moves[pvidx];
+
+        if (moves==null || moves.isEmpty())
+            return "?";
 
         for(int i=0; i<moves.size() && i<ply; i++)
             pos.doMove(moves.get(i));
