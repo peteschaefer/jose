@@ -737,17 +737,7 @@ public class EnginePanel
 			bookmoves.moves[i].add(entry.move);	//	useful for tooltips
 
 			Score score = bookmoves.eval[i];
-			score.flags = Score.EVAL_GAME_COUNT;
-			score.cp = score.cp_current = BookEntry.nvl(entry.count);
-			if (entry.countWhite != IUNKNOWN) score.win = entry.countWhite;
-			if (entry.countDraw != IUNKNOWN) score.draw = entry.countDraw;
-			if (entry.countBlack != IUNKNOWN) score.lose = entry.countBlack;
-			if (entry.count > 1000) {
-				//	scale wdl down to 1000; do not display huge WDL counts (entry.count is already huge)
-				score.win = score.win * 1000 / entry.count;
-				score.draw = score.draw * 1000 / entry.count;
-				score.lose = 1000-score.win-score.draw;//score.lose * 1000 / entry.count;
-			}
+			entry.toScore(score,1000);
 		}
 
 		//  always show hint that these are book moves

@@ -3217,7 +3217,7 @@ public class Application
 		if (node!=null && emv!=null) {
 			//  update move evaluation history
 			if (/*theGame.isMainLine(node) &&*/ EvalArray.isValid(emv.mappedScore)) {
-				node.engineValue = emv.mappedScore;
+				node.engineValue = emv.score;
 				theGame.setDirty(true);
 			}
 			/** UCI engines can't resign or offer draws (stupid gits)
@@ -3646,16 +3646,13 @@ public class Application
 
 		if (node!=null && entry.move!=null) {
 			//  update move evaluation history
-			float[] bookValue = entry.mappedValue(null);
-			if (/*theGame.isMainLine(node) &&*/EvalArray.isValid(bookValue)) {
-				node.engineValue = bookValue;
-				theGame.setDirty(true);
-				if (evalPanel() != null)
-					evalPanel().setValue(node.getPly(),node.engineValue);
+			entry.toScore(node.engineValue,1000);
+			theGame.setDirty(true);
+			if (evalPanel() != null)
+				evalPanel().setValue(node.getPly(),node.engineValue);
 				// todo this should not be handled by a direct call, but rather dispatched by a message
 				// and it should be unified with the way engine evals are updated ...
 				// broadcast ( "eval.notify", node )
-			}
 //					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
 		}
 

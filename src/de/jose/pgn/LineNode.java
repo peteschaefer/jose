@@ -16,6 +16,7 @@ import de.jose.chess.BinaryConstants;
 import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Board;
+import de.jose.plugin.Score;
 import de.jose.util.ListUtil;
 import de.jose.sax.JoContentHandler;
 
@@ -515,10 +516,15 @@ public class LineNode
 			short sw = in.readShort();
 			short sd = in.readShort();
 
-			float fw = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sw/32767.0f;
-			float fd = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sd/32767.0f;
+//			float fw = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sw/32767.0f;
+//			float fd = (sw==Short.MIN_VALUE) ? Float.MAX_VALUE : (float)sd/32767.0f;
 
-			move.engineValue = new float[] {fw,fd};
+			if (sw!=Short.MIN_VALUE) {
+				move.engineValue = new Score();
+				move.engineValue.win = sw;
+				move.engineValue.draw = (sd!=Short.MIN_VALUE) ? sd : 0;
+				move.engineValue.lose = 32767-move.engineValue.win-move.engineValue.draw;
+			}
 
 		} catch(IOException e) {
 			throw new RuntimeException(e);
@@ -529,7 +535,7 @@ public class LineNode
 	{
 		GameMoveIterator it = new GameMoveIterator(this);
 		for(MoveNode move = it.next(); move != null; move = it.next())
-			if (EvalArray.isValid(move.engineValue))
+			if (move.engineValue!=null && move.engineValue.hasWDL())
 				return true;
 		return false;
 	}
@@ -542,10 +548,10 @@ public class LineNode
 
 		for(MoveNode move = it.next(); move != null; move = it.next())
 		try {
-			float[] val = move.engineValue;
+			Score val = move.engineValue;
 
-			float fw = (val!=null) ? val[0] : Float.MAX_VALUE;
-			float fd = (val!=null) ? val[1] : Float.MAX_VALUE;
+			float fw = (val!=null && val.hasWDL()) ? val.rel(val.win) : Float.MAX_VALUE;
+			float fd = (val!=null && val.hasWDL()) ? val.rel(val.draw) : Float.MAX_VALUE;
 
 			short sw = (fw==Float.MAX_VALUE) ? Short.MIN_VALUE : (short)(fw * 32767.0f);
 			short sd = (fd==Float.MAX_VALUE) ? Short.MIN_VALUE : (short)(fd * 32767.0f);
