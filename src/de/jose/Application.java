@@ -1462,6 +1462,7 @@ public class Application
 */		};
 		map.put("move.forward", action);
 
+		boolean isClassic = theGame.getPosition().isClassic();
 		action = new CommandAction() {
 /*			public boolean isEnabled(String code) {
 				return Application.theApplication.thePlugin==null ||
@@ -1473,8 +1474,9 @@ public class Application
 				updateClock();
 				getAnimation().pause();
 
-				if (getEnginePlugin()!=null && getEnginePlugin().isThinking())
-					getEnginePlugin().moveNow();
+				EnginePlugin engine = getEnginePlugin();
+				if (engine !=null && engine.isThinking())
+					engine.moveNow();
 				else if (theGame.getPosition().isMate() || theGame.getPosition().isStalemate())
 					Sound.play("sound.error");
 				else if (selectBookMove()) {
@@ -1486,16 +1488,18 @@ public class Application
 				{
 				invokeWithPlugin(new Runnable() {
 					public void run() {
-						if (!theGame.getPosition().isClassic() && !getEnginePlugin().supportsFRC())
+						EnginePlugin engine = getEnginePlugin();
+						boolean supportsFRC = engine.supportsFRC();
+						if (!isClassic && !supportsFRC)
 							showFRCWarning(false);
 							//  but keep on playing (you have been warned ;-)
-						if (getEnginePlugin().isThinking())
-							getEnginePlugin().moveNow();
+						if (engine.isThinking())
+							engine.moveNow();
 						else {
 							//	thePlugin.setTime(clockPanel().getWhite/BlackTime());
 							//	adjust time ? or rely on engine's time keeping ?
 							setGameDefaultInfo();
-							getEnginePlugin().go();
+							engine.go();
 							theMode = USER_ENGINE;
 						}
 					}
@@ -1635,7 +1639,7 @@ public class Application
 				else
 					theGame.setup(fen);
 
-				if (!theGame.getPosition().isClassic())
+				if (!isClassic)
 					theGame.setTagValue(PgnConstants.TAG_VARIANT,"Fischer Random Chess");
 
 				theGame.reformat();
@@ -1937,30 +1941,31 @@ public class Application
         map.put("menu.game.details", action);
 
 		action = new CommandAction() {
-			public void Do(Command cmd) {
+			public void Do(Command cmd)
+			{
+				boolean engine_analysis = false;
+				EnginePanel eng_panel = enginePanel();
+				eng_panel.setVisible(true);
+
+				if (eng_panel.inBook)
+					engine_analysis = true; //  already in book, switch to engine mode
+				else try {
+					//  (1) fetch book moves
+					engine_analysis = ! eng_panel.updateBook(false);
+				} catch (IOException e) {
+					error(e);
+				}
+				final boolean do_engine_analysis = engine_analysis;
+
 				invokeWithPlugin(new Runnable() {
 					public void run()
 					{
-						boolean engine_analysis = false;
-						EnginePanel eng_panel = enginePanel();
-						eng_panel.setVisible(true);
-
-						if (eng_panel.inBook)
-							engine_analysis = true; //  already in book, switch to engine mode
-						else try {
-							//  (1) fetch book moves
-							engine_analysis = ! eng_panel.updateBook(false);
-						} catch (IOException e) {
-							error(e);
-						}
-
-						//	todo invokeWithPlugin() is not really necessary,
-						//	since we don't need a plugin, if engine_analysis==false
+						//	todo invokeWithPlugin() is somewhat fragile,
 						//	better think about something like "postCommandWithPlugin"
 
 						//  (2) enter engine analysis mode
-						pausePlugin(engine_analysis);
-						theMode = engine_analysis ? ANALYSIS : USER_INPUT;
+						pausePlugin(do_engine_analysis);
+						theMode = do_engine_analysis ? ANALYSIS : USER_INPUT;
 					}
 				});
 			}
@@ -2391,55 +2396,61 @@ public class Application
 			gameFinished(mv.flags, theGame.getPosition().movedLast(), theGame.isMainLine());
 			theClock.halt();
 		}
-		else switch (theMode) {
-		case ENGINE_ENGINE:
-				//	TODO not yet implemented
-				break;
+		else {
+			boolean isFrcCastling = mv.isFRCCastling();
+			boolean isClassic = theGame.getPosition().isClassic();
+			switch (theMode) {
+			case ENGINE_ENGINE:
+					//	TODO not yet implemented
+					break;
 
-		case USER_ENGINE:
-			boolean wasBook = false;
-			try {
-				wasBook = selectBookMove();
-			} catch (Exception e) {
-				wasBook = false;
-			}
+			case USER_ENGINE:
+				boolean wasBook = false;
+				try {
+					wasBook = selectBookMove();
+				} catch (Exception e) {
+					wasBook = false;
+				}
 
-			if (!wasBook) {
-				enginePanel().exitBook();
-				invokeWithPlugin(new Runnable() {
-					public void run() {
-						if (mv.isFRCCastling() && !getEnginePlugin().supportsFRC()) {
-							showFRCWarning(true);
-							pausePlugin(false);
-						} else {
-							if (!theGame.getPosition().isClassic() && !getEnginePlugin().supportsFRC())
-								showFRCWarning(false);
-							//  but keep on playing (you have been warned ;-)
-							getEnginePlugin().userMove(mv, true);
-						}
-					}
-
-					;
-				});
-			}
-			break;
-
-		case ANALYSIS:
-				invokeWithPlugin(new Runnable() {
-					public void run() {
-						if (mv.isFRCCastling() && !getEnginePlugin().supportsFRC()) {
-							showFRCWarning(true);
-							pausePlugin(false);
-						}
-						else {
-							if (!theGame.getPosition().isClassic() && !getEnginePlugin().supportsFRC())
-								showFRCWarning(false);
+				if (!wasBook) {
+					enginePanel().exitBook();
+					invokeWithPlugin(new Runnable() {
+						public void run() {
+							EnginePlugin engine = getEnginePlugin();
+							boolean supportsFRC = engine.supportsFRC();
+							if (isFrcCastling && !supportsFRC) {
+								showFRCWarning(true);
+								pausePlugin(false);
+							} else {
+								if (!isClassic && !supportsFRC)
+									showFRCWarning(false);
 								//  but keep on playing (you have been warned ;-)
-							getEnginePlugin().analyze(theGame.getPosition(), mv);
-						}
-					}
-				});
+								engine.userMove(mv, true);
+							}
+						};
+					});
+				}
 				break;
+
+			case ANALYSIS:
+					invokeWithPlugin(new Runnable() {
+						public void run() {
+							EnginePlugin engine = getEnginePlugin();
+							boolean supportsFRC = engine.supportsFRC();
+							if (isFrcCastling && !supportsFRC) {
+								showFRCWarning(true);
+								pausePlugin(false);
+							}
+							else {
+								if (!isClassic && !supportsFRC)
+									showFRCWarning(false);
+									//  but keep on playing (you have been warned ;-)
+								engine.analyze(theGame.getPosition(), mv);
+							}
+						}
+					});
+					break;
+			}
 		}
 
 		classifyOpening();
@@ -3732,7 +3743,7 @@ public class Application
 		return getEnginePlugin() != null;
 	}
 
-	private void pausePlugin(boolean analyze)
+	private void reapausePlugin(boolean analyze)
 	{
 		if (getEnginePlugin() != null) {
 			if (analyze && !theGame.getPosition().isGameFinished(true))
