@@ -724,12 +724,12 @@ public class BoardView2D
 						//	for knight moves
 						Point2D pmid = center(hmid,false);
 						paintLine(g, pfrom, pmid, devSquareSize / 16, hnt.color);
-						paintArrow(g, pmid, pto, devSquareSize / 16, hnt.color, false);
+						paintArrow(g, pmid, pto, devSquareSize / 16, hnt.color);
 						paintArrowLabel(g, pmid, pto, hnt.label);
 						painted++;
 					}
 					else {
-						paintArrow(g, pfrom, pto, devSquareSize / 16, hnt.color, false);
+						paintArrow(g, pfrom, pto, devSquareSize / 16, hnt.color);
 						paintArrowLabel(g, pfrom, pto, hnt.label);
 						painted++;
 					}
@@ -773,7 +773,7 @@ public class BoardView2D
 	}
 
 	private void paintArrow(Graphics2D g, Point2D p1, Point2D p2,
-	                        int width, Color color, boolean curved)
+	                        int width, Color color)
 	{
 		/** set up a a polygon of normal width */
 		int length = (int)Math.round(p1.distance(p2));
@@ -797,18 +797,7 @@ public class BoardView2D
 			g.setColor(color);
 			//g.fillPolygon(x,y, x.length-1);
 			g.setStroke(new BasicStroke(2 * width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-
-			if (curved) {
-				int r1 = length;
-				int r2 = length;
-
-				//	todo curved arrows. need to figure out some trigonometry :)
-				//	it's not complicated but I don't have the nerves to do it right now
-			}
-			else {
-				g.drawLine(0, 0, length, 0);
-			}
-
+			g.drawLine(0, 0, length, 0);
 			g.drawLine(length, 0, length - tip, +tip);
 			g.drawLine(length, 0, length - tip, -tip);
 
