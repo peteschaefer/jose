@@ -13,7 +13,7 @@
 package de.jose.view;
 
 import de.jose.Application;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.Util;
 import de.jose.view.style.JoStyleContext;
 import de.jose.chess.Move;

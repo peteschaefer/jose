@@ -10,8 +10,10 @@
  *
  */
 
-package de.jose;
+package de.jose.comm;
 
+import de.jose.Application;
+import de.jose.Version;
 import de.jose.pgn.ReplayException;
 
 import javax.swing.*;

@@ -14,14 +14,13 @@ package de.jose.plugin;
 
 import de.jose.Application;
 import de.jose.Config;
-import de.jose.MessageProducer;
+import de.jose.comm.msg.MessageProducer;
 import de.jose.Version;
 import de.jose.profile.UserProfile;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.chess.TimeControl;
 import de.jose.util.StringUtil;
-import de.jose.util.xml.XMLUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
 import org.w3c.dom.Element;

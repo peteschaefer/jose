@@ -1,7 +1,7 @@
 package de.jose.eboard;
 
 import de.jose.Application;
-import de.jose.CommandListener;
+import de.jose.comm.CommandListener;
 import de.jose.Language;
 import de.jose.image.ImgUtil;
 import de.jose.view.IBoardAdapter;

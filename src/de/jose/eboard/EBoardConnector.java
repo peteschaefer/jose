@@ -2,12 +2,14 @@ package de.jose.eboard;
 
 import de.jose.*;
 import de.jose.chess.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
 import de.jose.profile.UserProfile;
 import de.jose.util.StringUtil;
 import de.jose.view.IBoardAdapter;
 import de.jose.view.MoveGesture;
 
-import javax.swing.*;
 import java.util.Stack;
 
 import static de.jose.Application.ANALYSIS;

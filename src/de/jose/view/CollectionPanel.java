@@ -13,6 +13,8 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.db.JoConnection;
 import de.jose.db.io.AutoImport;
 import de.jose.image.ImgUtil;

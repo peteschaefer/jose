@@ -15,6 +15,7 @@ package de.jose.db;
 import com.mysql.embedded.jdbc.MyConnection;
 import com.mysql.jdbc.MiniAdmin;
 import de.jose.*;
+import de.jose.comm.Command;
 import de.jose.plugin.InputListener;
 import de.jose.task.Task;
 import de.jose.task.db.CheckDBTask;

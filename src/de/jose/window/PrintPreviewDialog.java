@@ -11,8 +11,8 @@ package de.jose.window;
  *
  */
 
-import de.jose.CommandAction;
-import de.jose.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.Command;
 import de.jose.Application;
 import de.jose.Util;
 import de.jose.export.ExportContext;

@@ -13,6 +13,9 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
 import de.jose.window.JoMenuBar;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.*;
@@ -23,7 +26,6 @@ import de.jose.task.db.GameUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ListUtil;
 import de.jose.view.input.MoveFormatList;
-import de.jose.view.input.LanguageList;
 import de.jose.view.style.JoStyleContext;
 
 import javax.swing.*;
@@ -36,8 +38,6 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;

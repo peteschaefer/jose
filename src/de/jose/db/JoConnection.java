@@ -13,14 +13,11 @@
 package de.jose.db;
 
 import de.jose.Application;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.Config;
 import de.jose.Util;
 import de.jose.util.IntArray;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.*;
 import java.util.HashMap;

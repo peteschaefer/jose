@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,13 @@ package de.jose.jo3d;
 
 import com.sun.j3d.utils.timer.J3DTimer;
 import de.jose.Application;
-import de.jose.Command;
-import de.jose.MessageListener;
+import de.jose.comm.msg.MessageListener;
 import de.jose.view.BoardView;
 import de.jose.image.ImgUtil;
 
 import javax.media.j3d.*;
 import javax.vecmath.Point3f;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +31,7 @@ import java.io.IOException;
  * the paint method kicks off the view, if it is not currently running
  * (so that update events will be served during inactivity)
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
 */
 
 public class JoCanvas3D extends Canvas3D

@@ -2,39 +2,32 @@ package de.jose.book.lichess;
 
 import de.jose.AbstractApplication;
 import de.jose.Application;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.Language;
 import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
-import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
 import de.jose.pgn.*;
 import de.jose.task.GameSource;
 import de.jose.task.io.PGNImport;
-import de.jose.util.HttpsUtil;
 import de.jose.util.ListUtil;
 import de.jose.util.xml.XMLUtil;
-import de.jose.view.EnginePanel;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LiChessOpeningExplorer extends OpeningBook
 {

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,13 +13,12 @@
 package de.jose.view.dnd;
 
 import de.jose.Application;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.Util;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.Collection;
 import de.jose.task.GameSource;
 import de.jose.util.IntArray;
-import de.jose.util.ClipboardUtil;
 import de.jose.util.AWTUtil;
 import de.jose.view.CollectionPanel;
 import de.jose.view.list.IntervalCacheModel;

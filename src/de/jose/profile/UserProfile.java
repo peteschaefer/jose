@@ -13,7 +13,7 @@
 package de.jose.profile;
 
 import de.jose.Application;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.Util;
 import de.jose.Version;
 import de.jose.chess.MoveFormatter;
@@ -21,9 +21,7 @@ import de.jose.chess.TimeControl;
 import de.jose.image.Surface;
 import de.jose.pgn.Game;
 import de.jose.util.xml.XMLUtil;
-import de.jose.util.AWTUtil;
 import de.jose.util.file.XObjectInputStream;
-import de.jose.util.xml.XMLUtil;
 import de.jose.util.print.SerializablePageFormat;
 import de.jose.util.print.PrintableDocument;
 import de.jose.view.ClockPanel;

@@ -13,7 +13,7 @@
 package de.jose.task.io;
 
 import de.jose.Application;
-import de.jose.TaskAbortedException;
+import de.jose.task.TaskAbortedException;
 import de.jose.util.Metaphone;
 import de.jose.db.*;
 import de.jose.db.io.ArchiveFile;
@@ -24,7 +24,6 @@ import de.jose.task.DBTask;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;

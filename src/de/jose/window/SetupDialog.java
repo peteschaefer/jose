@@ -17,11 +17,12 @@ import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.chess.Board;
-import de.jose.eboard.DialogComponent;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.view.BoardEditView;
 import de.jose.view.SetupBoardAdapter;
-import de.jose.view.input.JoStyledLabel;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

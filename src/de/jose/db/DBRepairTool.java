@@ -1,14 +1,13 @@
 package de.jose.db;
 
 import de.jose.Application;
-import de.jose.Command;
-import de.jose.CommandAction;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.Language;
 import de.jose.task.db.GameRepair;
 import de.jose.util.file.TailOutputStream;
 import de.jose.view.input.JoBigLabel;
 import de.jose.window.JoDialog;
-import de.jose.window.JoFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +16,6 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  *  todo

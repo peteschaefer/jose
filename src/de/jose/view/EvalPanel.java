@@ -13,14 +13,12 @@
 package de.jose.view;
 
 import de.jose.pgn.MoveNode;
-import de.jose.plugin.Score;
 import de.jose.profile.LayoutProfile;
 import de.jose.Application;
-import de.jose.CommandAction;
-import de.jose.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.Command;
 import de.jose.Util;
 import de.jose.pgn.Game;
-import de.jose.plugin.EnginePlugin;
 
 import javax.swing.*;
 import java.util.Map;

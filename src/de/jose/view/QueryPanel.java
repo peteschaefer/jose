@@ -15,6 +15,8 @@ package de.jose.view;
 import de.jose.*;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.image.ImgUtil;
 import de.jose.image.Surface;
 import de.jose.pgn.SearchRecord;
@@ -22,7 +24,6 @@ import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.util.StringUtil;
 import de.jose.view.list.IDBTableModel;
-import de.jose.view.input.JoStyledLabel;
 import de.jose.window.JoDialog;
 import de.jose.window.JoMenuBar;
 

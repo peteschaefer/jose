@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,10 @@
 package de.jose.window;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
+import de.jose.comm.msg.MessageListener;
 import de.jose.profile.LayoutProfile;
 import de.jose.util.ListUtil;
 import de.jose.view.Animation;
@@ -29,7 +33,7 @@ import java.util.Map;
 /**
  * contains Animation controls
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class AnimationDialog
         extends JoDialog

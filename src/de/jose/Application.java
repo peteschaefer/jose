@@ -13,6 +13,11 @@
 package de.jose;
 
 import de.jose.chess.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandDispatcher;
+import de.jose.comm.CommandListener;
+import de.jose.comm.msg.DeferredMessageListener;
 import de.jose.db.DBAdapter;
 import de.jose.db.DBRepairTool;
 import de.jose.db.JoConnection;
@@ -40,7 +45,6 @@ import de.jose.task.io.*;
 import de.jose.util.*;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.PrintableDocument;
-import de.jose.util.xml.XMLUtil;
 import de.jose.view.*;
 import de.jose.view.input.LookAndFeelList;
 import de.jose.view.input.WriteModeDialog;
@@ -64,10 +68,8 @@ import java.awt.event.FocusEvent;
 import java.io.*;
 import java.net.*;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,12 +10,18 @@
  *
  */
 
-package de.jose;
+package de.jose.comm;
 
-/**
- * @author Peter Schäfer
- */
+import java.util.Map;
 
-public class TaskAbortedException extends RuntimeException
+public interface CommandListener
 {
+
+	public void setupActionMap(Map map);
+
+	public CommandListener getCommandParent();
+
+	public int numCommandChildren();
+
+	public CommandListener getCommandChild(int i);
 }

@@ -20,6 +20,7 @@ import de.jose.*;
 import de.jose.chess.Constants;
 import de.jose.chess.EngUtil;
 import de.jose.chess.Move;
+import de.jose.comm.msg.MessageListener;
 import de.jose.image.Surface;
 import de.jose.jo3d.*;
 import de.jose.profile.UserProfile;

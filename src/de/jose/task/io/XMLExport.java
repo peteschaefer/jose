@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,13 @@ package de.jose.task.io;
 
 import de.jose.task.GameExport;
 import de.jose.window.JoFileChooser;
-import de.jose.profile.UserProfile;
 import de.jose.export.ExportContext;
 import de.jose.export.ExportConfig;
-import de.jose.util.SoftCache;
 import de.jose.util.xml.XMLUtil;
-import de.jose.util.xml.XMLUtil;
-import de.jose.Command;
 
 import javax.xml.transform.*;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-
-import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
 
 /**
  * export to XML file

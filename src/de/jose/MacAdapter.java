@@ -4,9 +4,10 @@ package de.jose;
 /**
  * MacAdapter
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
+import de.jose.comm.Command;
 import net.roydesign.mac.MRJAdapter;
 import net.roydesign.event.ApplicationEvent;
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,23 @@ import de.jose.export.ExportContext;
 import de.jose.export.ExportConfig;
 import de.jose.util.file.FileUtil;
 import de.jose.util.xml.XMLUtil;
-import de.jose.util.xml.XMLUtil;
 import de.jose.util.print.FOPUtil;
-import de.jose.Command;
+import de.jose.comm.Command;
 import de.jose.view.style.JoStyleContext;
 
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.render.awt.AWTRenderer;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
 
 /**
  * XSLFOExport
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class XSLFOExport

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,10 +13,10 @@
 package de.jose.window;
 
 import de.jose.*;
+import de.jose.comm.Command;
 import de.jose.task.io.FileDownload;
 import de.jose.util.AWTUtil;
 import de.jose.util.StringUtil;
-import de.jose.util.xml.XMLUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.view.input.JoStyledLabel;
@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 
 /**
@@ -57,7 +56,7 @@ import java.util.StringTokenizer;
     </pre>
  *
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class OnlineUpdate
 {

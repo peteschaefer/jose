@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,18 +12,13 @@
 
 package de.jose.util.print;
 
-import de.jose.task.GameSource;
 import de.jose.task.io.XMLExport;
 import de.jose.export.ExportContext;
 import de.jose.export.HtmlUtil;
 import de.jose.Application;
-import de.jose.Command;
-import de.jose.view.style.JoStyleContext;
+import de.jose.comm.Command;
 import de.jose.view.style.JoStyleSheet;
-import de.jose.util.IntArray;
-import de.jose.util.AWTUtil;
 
-import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
@@ -31,7 +26,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.text.html.parser.ParserDelegator;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.print.PageFormat;
 import java.awt.*;
 import java.io.StringWriter;
 import java.io.File;
@@ -46,7 +40,7 @@ import java.net.URL;
  * Please note that rendering HTML in Swing produces poor results.
  * It is MUCH better to use an external browser for previewing.
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class HTMLPrintableDocument

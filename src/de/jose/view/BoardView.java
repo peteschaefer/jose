@@ -14,6 +14,8 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.*;
+import de.jose.comm.CommandListener;
+import de.jose.comm.msg.MessageListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;

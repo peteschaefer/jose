@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,13 +13,13 @@
 package de.jose.pgn;
 
 import de.jose.*;
+import de.jose.comm.Command;
 import de.jose.util.IntArray;
 import de.jose.view.DocumentPanel;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
 
 public class History

@@ -13,12 +13,11 @@
 package de.jose.view;
 
 import de.jose.AbstractApplication;
-import de.jose.CommandListener;
+import de.jose.comm.CommandListener;
 import de.jose.Util;
 import de.jose.window.JoFrame;
 
 import javax.swing.*;
-import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.metal.MetalSplitPaneUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;

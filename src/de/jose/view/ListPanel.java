@@ -13,12 +13,13 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.db.JoConnection;
 import de.jose.pgn.*;
 import de.jose.profile.LayoutProfile;
 import de.jose.task.GameSource;
 import de.jose.task.DBTask;
-import de.jose.task.DBSelectionModel;
 import de.jose.util.map.IntHashSet;
 import de.jose.util.AWTUtil;
 import de.jose.view.dnd.GameTransferHandler;

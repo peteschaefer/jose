@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 
 package de.jose.jo3d;
 
-import de.jose.MessageListener;
+import de.jose.comm.msg.MessageListener;
 import de.jose.chess.Clock;
 import de.jose.chess.Constants;
 import de.jose.util.map.MapUtil;

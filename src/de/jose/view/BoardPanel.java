@@ -14,9 +14,12 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.EngUtil;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
+import de.jose.comm.msg.MessageListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.pgn.DiagramNode;
-import de.jose.image.ImgUtil;
 import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
@@ -33,13 +36,9 @@ import de.jose.util.ClipboardUtil;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.awt.datatransfer.*;
 import java.awt.event.MouseEvent;
-import java.awt.image.ColorModel;
 import java.util.*;
-import java.io.IOException;
 
 /**
  * Panel that displays the chess board

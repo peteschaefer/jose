@@ -1,4 +1,4 @@
-package de.jose;
+package de.jose.comm;
 
 /**
  * There are two mechanisms for decoupled communication. RPC-like.
@@ -26,5 +26,4 @@ package de.jose;
  *          (either to a specific destination, or broadcast)
  *      * hierarchy of listeners
  *
- *  todo move to package de.jose.comm.msg and de.jose.comm
  */

@@ -13,6 +13,8 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.util.FontUtil;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;

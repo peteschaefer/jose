@@ -15,6 +15,8 @@ package de.jose.window;
 import de.jose.*;
 import de.jose.SplashScreen;
 //import de.jose.devtools.Profiler;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.export.ExportConfig;
 import de.jose.export.ExportContext;
 import de.jose.export.ExportList;

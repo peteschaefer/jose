@@ -12,15 +12,14 @@
 
 package de.jose.view;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import de.jose.*;
 import de.jose.chess.*;
+import de.jose.comm.msg.MessageListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
-import javafx.scene.transform.Affine;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -37,7 +36,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;

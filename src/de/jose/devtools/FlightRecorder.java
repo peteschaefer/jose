@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,8 +13,8 @@
 package de.jose.devtools;
 
 import de.jose.Application;
-import de.jose.Command;
-import de.jose.CommandAction;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.chess.Move;
 import de.jose.jo3d.SplineKeyFrame;
 import de.jose.jo3d.interpolators.KBRotPosScaleSplinePathInterpolator;
@@ -349,7 +349,7 @@ public class FlightRecorder
 		addField(controlPanel, "bank", "O L");
 		addSpacer(controlPanel, 2);
 
-		addField(controlPanel, "step", "Ü Ä");
+		addField(controlPanel, "step", "ï¿½ ï¿½");
 		addSpacer(controlPanel, 2);
 
         addField(controlPanel, "duration", "");

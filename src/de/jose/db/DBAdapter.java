@@ -13,6 +13,8 @@
 package de.jose.db;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandListener;
 import de.jose.db.sqltrace.TraceDriverManager;
 import de.jose.db.crossover.*;
 import de.jose.pgn.Collection;
@@ -22,15 +24,11 @@ import de.jose.task.Task;
 import de.jose.util.ClassPathUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.xml.XMLUtil;
-import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.List;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

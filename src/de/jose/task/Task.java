@@ -13,6 +13,7 @@
 package de.jose.task;
 
 import de.jose.*;
+import de.jose.comm.Command;
 
 import javax.swing.*;
 import java.awt.*;

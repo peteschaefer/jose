@@ -13,21 +13,17 @@
 package de.jose.plugin;
 
 import de.jose.*;
-import de.jose.util.EnumerationIterator;
-import de.jose.view.ConsolePanel;
+import de.jose.comm.msg.MessageListener;
+import de.jose.comm.msg.MessageProducer;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Vector;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
 
-import javax.print.DocFlavor;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**

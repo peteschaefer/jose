@@ -13,6 +13,10 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
+import de.jose.comm.msg.MessageProducer;
 import de.jose.db.JoConnection;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
@@ -20,7 +24,6 @@ import de.jose.window.JoFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;

@@ -14,13 +14,14 @@ package de.jose.window;
 
 import de.jose.*;
 import de.jose.chess.TimeControl;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
 import de.jose.image.ImgUtil;
 import de.jose.util.ListUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.map.IntHashSet;
-import de.jose.view.BoardPanel;
 import de.jose.view.DocumentPanel;
-import de.jose.view.input.LanguageList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

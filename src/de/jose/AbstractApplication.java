@@ -14,6 +14,10 @@ package de.jose;
 
 import de.jose.chess.Clock;
 import de.jose.chess.Constants;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandDispatcher;
+import de.jose.comm.CommandListener;
 import de.jose.pgn.Game;
 import de.jose.plugin.EnginePlugin;
 import de.jose.profile.UserProfile;
@@ -51,7 +55,7 @@ abstract public class AbstractApplication
 	/**	working directory	 */
 	public static File			theWorkingDirectory;
 	/**	map command codes to command handlers	*/
-	public static CommandDispatcher	theCommandDispatcher;
+	public static CommandDispatcher theCommandDispatcher;
 	/**	user profile	 */
 	public static UserProfile	theUserProfile;
 	/**	log exceptions to file */

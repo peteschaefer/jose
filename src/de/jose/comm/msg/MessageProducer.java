@@ -10,7 +10,7 @@
  *
  */
 
-package de.jose;
+package de.jose.comm.msg;
 
 import javax.swing.*;
 import java.util.Vector;

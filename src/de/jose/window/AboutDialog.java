@@ -13,7 +13,8 @@
 package de.jose.window;
 
 import de.jose.*;
-import de.jose.image.ImgUtil;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
@@ -21,16 +22,11 @@ import de.jose.jo3d.Util3D;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.view.input.JoStyledLabel;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.JOniException;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Hashtable;

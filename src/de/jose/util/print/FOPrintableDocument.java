@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@ import de.jose.export.ExportContext;
 import de.jose.task.io.XSLFOExport;
 import de.jose.Application;
 import de.jose.Language;
-import de.jose.Command;
+import de.jose.comm.Command;
 
 /**
  * FOPrintableDocument
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class FOPrintableDocument

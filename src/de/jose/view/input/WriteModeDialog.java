@@ -12,8 +12,8 @@
 
 package de.jose.view.input;
 
-import de.jose.Command;
-import de.jose.CommandAction;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.Version;
 import de.jose.pgn.Game;
 import de.jose.window.JoDialog;
@@ -22,8 +22,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**

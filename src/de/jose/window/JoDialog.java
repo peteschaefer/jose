@@ -14,6 +14,9 @@ package de.jose.window;
 
 import de.jose.*;
 import de.jose.SplashScreen;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
+import de.jose.comm.CommandListener;
 import de.jose.image.ImgUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;

@@ -13,6 +13,8 @@
 package de.jose.window;
 
 import de.jose.*;
+import de.jose.comm.Command;
+import de.jose.comm.CommandAction;
 import de.jose.util.StringUtil;
 import de.jose.chess.Position;
 import de.jose.pgn.Game;
