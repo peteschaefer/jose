@@ -986,10 +986,12 @@ public class EnginePanel
 		case EnginePlugin.THINKING:	    result = "engine.thinking.title"; break;
 		case EnginePlugin.PONDERING:	result = "engine.pondering.title"; break;
 		case EnginePlugin.ANALYZING:	result = "engine.analyzing.title"; break;
-		case -1:    result = "book.title"; break;
+		case -1:    					result = "book.title"; break;
 		}
+
 		result = Language.get(result);
 		result = StringUtil.replace(result,"%engine%", (pluginName==null) ? "":pluginName);
+		result = StringUtil.replace(result,"%book%", Application.theApplication.theOpeningLibrary.getTitle());
 		return result;
 	}
 

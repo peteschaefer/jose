@@ -128,7 +128,6 @@ public class BookFile /*implements Selectable*/
 		book = null;
 	}
 
-
 	private File getFile()
 	{
 		String name = XMLUtil.getChildValue(config,"FILE");
@@ -153,7 +152,7 @@ public class BookFile /*implements Selectable*/
 		if (!enabled) buf.append("<font color=#aaaaaa>");
 
 		buf.append("<b>");
-		buf.append(file.getName());
+		buf.append(getTitle());
 		buf.append("</b>");
 
 		if (!enabled) buf.append("</font>");
@@ -194,6 +193,14 @@ public class BookFile /*implements Selectable*/
 	public boolean isOpen()
 	{
 		return book!=null;
+	}
+
+	public String getTitle()
+	{
+		if (format().equalsIgnoreCase("LiChess"))
+			return LiChessOpeningExplorer.getTitle(config);
+		else
+			return file.getName();
 	}
 
 	public boolean isEnabled()

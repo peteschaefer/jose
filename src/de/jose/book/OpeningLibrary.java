@@ -122,11 +122,28 @@ public class OpeningLibrary
 			for (int i=0; i < files.length; i++)
 			{
 				BookFile fentry = new BookFile(files[i],Application.theApplication.theConfig);
-
-					add(fentry);
+				add(fentry);
 				if (isopen[i]) fentry.open();
 			}
 		}
+	}
+
+	public String getTitle()
+	{
+		StringBuffer buf = new StringBuffer();
+		for(int i=0; i < size(); i++) {
+			BookFile bfile = (BookFile)get(i);
+			if (bfile!=null && bfile.isOpen()) {
+				if (buf.length()==0) {
+					buf.append(bfile.getTitle());
+				}
+				else {
+					buf.append(", ...");
+					break;
+				}
+			}
+		}
+		return buf.toString();
 	}
 
 	public Object remove(int index)

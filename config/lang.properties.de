@@ -258,7 +258,7 @@ engine.paused.title = %engine%
 engine.thinking.title = %engine% rechnet
 engine.pondering.title = %engine% wartet
 engine.analyzing.title = %engine% analysiert
-book.title = Eröffnungsbuch
+book.title = Eröffnungsbuch (%book%)
 
 plugin.name = %name% %version%
 plugin.name.author = %name% %version% von %author%

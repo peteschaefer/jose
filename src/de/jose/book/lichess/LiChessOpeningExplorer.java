@@ -35,9 +35,8 @@ public class LiChessOpeningExplorer extends OpeningBook
 
         if (!enabled) buf.append("<font color=#aaaaaa>");
 
-        String title = XMLUtil.getChildValue(config,"FILE");
         buf.append("<b>");
-        buf.append(title);
+        buf.append(getTitle(config));
         buf.append("</b>");
 
         if (!enabled) buf.append("</font>");
@@ -51,6 +50,13 @@ public class LiChessOpeningExplorer extends OpeningBook
 
         return buf.toString();
     }
+
+
+    public static String getTitle(org.w3c.dom.Element config)
+    {
+        return XMLUtil.getChildValue(config,"FILE");
+    }
+
 
     @Override
     public boolean canTranspose() {
