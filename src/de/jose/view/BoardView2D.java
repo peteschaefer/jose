@@ -31,7 +31,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.FileNotFoundException;
@@ -317,26 +319,18 @@ public class BoardView2D
 	/**	calculate square size and inset after resize	 */
 	public void recalcSize()
 	{
-		//	todo widgetSize = ...
-		//	todo copyTransform = ...
-
 		// in user-space coordinates, used by Graphics2D
 		userSquareSize = calcUserSquareSize();
 
-		double scale = getBufferScaleFactor();
+		float scale = getBufferScaleFactor();
 		devSquareSize = (int)(userSquareSize*scale+0.5);
 
-		//	todo round userSquareSize to multiples of 2,4
-		//	s.t. both sizes are integral
-		// -> copy 1 square does not create round-off pixels
-		//	(but maybe that isn't a problem, after all)
-		//	how do sprites handle this?
-
-		userInset = calcInsetPoint(true);
-		devInset = calcInsetPoint(false);
+		userInset = calcUserInsetPoint();
+		devInset.x = (int)(userInset.x*scale+0.5);
+		devInset.y = (int)(userInset.y*scale+0.5);
 	}
 
-	protected Point calcInsetPoint(boolean userSpace)
+	protected Point calcUserInsetPoint()
 	{
 		float divx = 8.0f, divy = 8.0f;
 		if (showCoords) {
@@ -349,19 +343,24 @@ public class BoardView2D
 		Point inset = new Point(0,0);
 		int squareSize = userSpace ? userSquareSize : devSquareSize;
 
-		inset.x = (int)(getWidth()-divx*squareSize) / 2;
-		if (showCoords) userInset.x += 0.4*squareSize;
+		inset.x = (int)(getWidth()-divx*userSquareSize) / 2;
+		if (showCoords) userInset.x += 0.4*userSquareSize;
 
-		inset.y = (int)(getHeight()-divy*squareSize) / 2;
+		inset.y = (int)(getHeight()-divy*userSquareSize) / 2;
 		return inset;
 	}
 
-	protected double getBufferScaleFactor()
+	protected float getBufferScaleFactor()
 	{
-		AffineTransform tf2 =
-				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
-						getDefaultConfiguration().getDefaultTransform();
-		return tf2.getScaleX();
+		int screenRes = Toolkit.getDefaultToolkit().getScreenResolution();
+		if (screenRes <= 96) {
+			//	lo-res screen: buffer equals screen size
+			return 1.0f;
+		}
+		else {
+			//	hi-res screen: buffer is enlarged
+			return (float)screenRes/96.f;
+		}
 	}
 
 	private int calcUserSquareSize()
