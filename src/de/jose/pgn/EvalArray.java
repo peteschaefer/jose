@@ -91,6 +91,27 @@ public class EvalArray {
 		return result;
 	}
 
+	public float[] addPlyValue(int ply, float[] result) {
+		if (ply < firstPly)
+			return null;
+		ply -= firstPly;
+		if (ply >= values.size())
+			return null;
+		else {
+			if (result == null)
+				result = new float[2];
+
+			float v0 = values.get(2 * ply);
+			float v1 = values.get(2 * ply + 1);
+			if (Float.isNaN(v0) || Float.isNaN(v1))
+				return null;
+
+			result[0] += v0;
+			result[1] += v1;
+		}
+		return result;
+	}
+
 	public float[] moveValue(int move, int color, float[] result) {
 		if (EngUtil.isWhite(color))
 			return plyValue(2 * move, result);
@@ -104,6 +125,20 @@ public class EvalArray {
 
 		float[] blackValue = plyValue(2 * move + 1, result);
 		return blackValue;
+
+		/*
+		if (result==null) result = new float[2];
+			result[0] = result[1] = 0.0f;
+
+		float[] whiteValue = addPlyValue(2 * move, result);
+		float[] blackValue = addPlyValue(2 * move + 1, result);
+
+		if (whiteValue != null && blackValue != null) {
+			result[0] = result[0] / 2.0f;
+			result[1] = result[1] / 2.0f;
+		}
+
+		return result;		 */
 	}
 
 	public void setPlyValue(int ply, float[] value) {
