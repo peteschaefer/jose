@@ -41,6 +41,7 @@
         - listeners: BoardPanel.mouseSelect, EnginePanel.info bar?
 
 [ ] test with/without book
+    0 books should not alter the control flow. There is just a shortcut in submitQuery.
 [ ] test with/without engine
 [ ] test input/analysis/play
 

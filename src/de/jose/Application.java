@@ -3687,15 +3687,23 @@ public class Application
 		}
 	}
 
-	public BookQuery submitBookQuery(int onCompletion, Move lastMove)
+	public void submitBookQuery(int onCompletion, Move lastMove)
 	{
 		if (onCompletion==BOOK_PLAY)
 			setPlayState(PlayState.BOOK);
 		Position pos = theGame.getPosition();
 		//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
+		OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
 		BookQuery query = new BookQuery(pos, onCompletion, lastMove);
-		theExecutorService.submit(query);
-		return query;
+
+		if (lib.isEmpty()) {
+			//	shortcut if there is no book at all
+			query.result = new ArrayList<BookEntry>();
+			query.sendMessage(onCompletion,query);
+		}
+		else {
+			theExecutorService.submit(query);
+		}
 	}
 
 	public boolean queryBookMoveForPlay(Move lastMove)
