@@ -3,7 +3,7 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="153"/>
+	<property name="version" value="154"/>
 
 	<!-- target directory -->
 
@@ -81,6 +81,7 @@
 				<include name="*.otf"/>
 				<!--exclude copyrighted fonts-->
 				<exclude name="Sp*.TTF"/>
+				<exclude name="Material*"/>
 			</zipfileset>
 
 			<zipfileset dir="books" prefix="${appldir}/books">

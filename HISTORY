@@ -151,14 +151,14 @@ the first production release.
 * Lichess Opening Explorer displays top reference games. Click to download.
 * minor GUI improvements (w-d-l scores, eval bar, ...)
 
-=== 1.5.3 (2025-03-24)
+=== 1.5.3 (2025-04)
 * improved handling and printing of annotation symbols (NAGs)
 * some text editor fixes
 
 === 1.5.4 (2025-04)
-* nicer (scalable) icons. Those pixelated 2000's icon have had their day ;)
+* new set of icons. Those pixelated gifs from the 2000's  have had their day ;)
 
 === 1.5.5. (?)
-* undo in text editor?
+* undo in game editor?
 
 ==========================
