@@ -58,6 +58,20 @@ public class BoardView2D
 	/**	size of one square	 */
 	protected int squareSize;
 	protected boolean isResizing;
+	/**	todo thoughts on HiDpi displays.
+	 * 	to take advantage of high-res screens, we would need to
+	 * 	- determine scaling factor (Toolkit)
+	 * 	- enlarge the off-screen buffer accordingly
+	 * 		- userSquareSize in user-space coordinates
+	 * 		- devSquareSize in device-space coordinates
+	 * 			devSquareSize := userSquareSize * scaleFactor
+	 * 	- copy to the screen using Graphics.drawImage( AffineTransform )
+	 * 		is that the right way to do it? Or is it too expensive?
+	 *
+	 * 	todo what about MultiResolutionImage? (Java 9)
+	 * 	what about RenderingHint KEY_RESOLUTION_VARIANT ? (Java 9)
+	 * 	how do we get notified when scaling factor changes ?
+	 */
 	/**	texture offsets	 */
 	protected static int[] textureOffsets;
 
