@@ -433,7 +433,7 @@ public class Parser
 	    len = Math.min(len,line.length-start);
 
 	    //  encode UTF-8
-        while (len-- > 0) {
+        while (len > 0) {
 			//	heuristics: if two consecutive chars look like a utf-8 sequence,
 			//	we assume they *are* a utf-8 sequence
 			//	(this loosens the PGN standard, which always expects iso-8859-1, but it is common practice)
@@ -443,9 +443,11 @@ public class Parser
 			if (ulen >= 2) {
 				c = CharUtil.decodeUtf8(line,start,ulen);
 				start += ulen;
+				len -= ulen;
 			}
 			else {
 				c = line[start++];
+				len--;
 			}
 
 			coffset += CharUtil.encodeUtf8(c, comments,coffset);
