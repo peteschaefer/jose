@@ -1458,7 +1458,7 @@ public class Application
 					engine.moveNow();
 				else if (theGame.getPosition().isMate() || theGame.getPosition().isStalemate())
 					Sound.play("sound.error");
-				else if (! queryBookMove(null))
+				else if (! queryBookMoveForPlay(null))
 					enginePlay();
 			}
 		};
@@ -2047,10 +2047,8 @@ public class Application
 				/**
 				 * otherwise: request hint from Book or Engine
 				 */
-				Position pos = theGame.getPosition();
 				//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
-				BookQuery query = new BookQuery(pos, BOOK_HINT);
-				theExecutorService.submit(query);
+				submitBookQuery(BOOK_HINT,null);
 			}
 		};
 		map.put("menu.game.hint",action);
@@ -2326,9 +2324,7 @@ public class Application
 			Position pos = Application.theApplication.theGame.getPosition();
 			// onEngineMove implies NOT analysis mode, right?
 			if (onEngineMove) switchAnalysis = false;
-			BookQuery query = new BookQuery(pos,
-					switchAnalysis ? BOOK_ANALYSIS : BOOK_SHOW);
-			theExecutorService.submit(query);
+			submitBookQuery(switchAnalysis ? BOOK_ANALYSIS : BOOK_SHOW, null);
 			//	will call back with message BOOK_RESPONSE, onBookUpdate
 		}
 	}
@@ -2368,7 +2364,8 @@ public class Application
 				break;
 
 			case BOOK_HINT:
-				entry = theOpeningLibrary.selectMove(query.result, SELECT_GAME_COUNT,pos.whiteMovesNext(),null);
+				entry = theOpeningLibrary.selectMove(query.result,
+						SELECT_GAME_COUNT, pos.whiteMovesNext(),null);
 				if (entry!=null) {
 					//  (1) Hint from Opening Library
 					Application.this.handleMessage(theOpeningLibrary, Plugin.PLUGIN_REQUESTED_HINT, entry.move);
@@ -2450,7 +2447,7 @@ public class Application
 			case USER_ENGINE:
 				// PLAY FROM BOOK
 				//	migth call back to onBookUpdate, later
-				if (! queryBookMove(mv))
+				if (! queryBookMoveForPlay(mv))
 					enginePlay(mv);
 				break;
 
@@ -3653,7 +3650,16 @@ public class Application
 		}
 	}
 
-	public boolean queryBookMove(Move lastMove)
+	public BookQuery submitBookQuery(int onCompletion, Move lastMove)
+	{
+		Position pos = theGame.getPosition();
+		//BookEntry hint = theOpeningLibrary.selectMove(pos, theMode,true, pos.whiteMovesNext());
+		BookQuery query = new BookQuery(pos, onCompletion, lastMove);
+		theExecutorService.submit(query);
+		return query;
+	}
+
+	public boolean queryBookMoveForPlay(Move lastMove)
 	{
 		switch (theOpeningLibrary.engineMode)
 		{
@@ -3665,9 +3671,7 @@ public class Application
 			case OpeningLibrary.GUI_BOOK_ONLY:
 			case OpeningLibrary.PREFER_GUI_BOOK:
 				theMode = USER_ENGINE;
-				BookQuery query = new BookQuery(theGame.getPosition(), BOOK_PLAY);
-				query.lastMove = lastMove;
-				theExecutorService.submit(query);
+				submitBookQuery(BOOK_PLAY,lastMove);
 				return true;
 
 			case OpeningLibrary.NO_BOOK:

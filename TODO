@@ -5,11 +5,8 @@
 [ ] game vs. opening explorer:
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
-[ ] Application.selectBookMove needs to be asynchronized. three parts:
-    [ ] OpeningLibrary.selectEngineMove() true/false. play immediately
-    [ ] start BookQuery (BOOK_PLAY)
-    [ ] on completion: playBookMove() (and start engine response
-    [x] conflate BOOK_PLAY with BOOK_SHOW; no need to make two queries in Play mode
+[-] Application.selectBookMove needs to be asynchronized.
+    [ ] update book when navigating
 
 === Database Bugs
 

@@ -42,7 +42,7 @@ public class BookQuery
     //  upon completion, send message to Application
     public int onCompletion;
 
-    public BookQuery(Position pos, int completionMessage)
+    public BookQuery(Position pos, int completionMessage, Move lastMove)
     {
         seqNo = ++theSeqNo;
         appGame = Application.theApplication.theGame;
@@ -52,6 +52,7 @@ public class BookQuery
         fen = pos.toString();
 
         this.onCompletion = completionMessage;
+        this.lastMove = lastMove;
         addMessageListener(Application.theApplication);
     }
 
