@@ -20,4 +20,7 @@ void hideSplashScreen();
 
 int launch(StringList* argv);
 
+jint JNI_OnLoad(JavaVM *vm, void *reserved);
+
+
 #endif //JLANUCH_H

@@ -81,6 +81,19 @@ int JVM::launch(const char* dll_path, int jni_version, const StringList* jvm_opt
 	 */ 
 	setJavaVMOptions(jni_version,jvm_options, class_path,library_path);
 
+	int res;
+	vm_args.version = JNI_VERSION_21;
+#if 0
+	JNII_GetDefaultJavaVMInitArgsFunc getInitArgs = (JNII_GetDefaultJavaVMInitArgsFunc)
+#ifdef _WINDOWS
+	GetProcAddress(dll_handle, "JNI_GetDefaultJavaVMInitArgs");
+#endif
+
+	if (getInitArgs==NULL)
+		return JVM_ERROR_CREATE_JAVA_VM_FAILED; // better messgae
+	res = getInitArgs(&vm_args);
+#endif
+
 	/*	launch VM; call method from jvm.dll
 	 */
 	CreateJavaVMFunc create = (CreateJavaVMFunc)
@@ -94,8 +107,8 @@ int JVM::launch(const char* dll_path, int jni_version, const StringList* jvm_opt
 	if (create==NULL)
 		return JVM_ERROR_CREATE_JAVA_VM_NOT_FOUND;
 
-	vm_args.nOptions = 0;
-	int res = create(&jvm, (void**)&env, &vm_args);
+	//vm_args.nOptions = 0;
+	res = create(&jvm, (void**)&env, &vm_args);
 	if (res < 0)
 		return JVM_ERROR_CREATE_JAVA_VM_FAILED;
 	return +1;

@@ -176,3 +176,8 @@ int launch(StringList* argv)
 	return +1;
 }
 
+
+jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+	return JNI_VERSION_21;
+}
+

@@ -19,6 +19,7 @@ private:
 //	typedef _JNI_IMPORT_OR_EXPORT_
 //	jint JNICALL (*CreateJavaVMFunc) (JavaVM **pvm, void **env, void *args);
 	typedef jint (*CreateJavaVMFunc) (JavaVM **pvm, void **env, void *args);
+	typedef jint (*JNII_GetDefaultJavaVMInitArgsFunc)(void *args);
 
 	/* JDK 1.2 VM initialization arguments */ 
 	JavaVMInitArgs vm_args; 

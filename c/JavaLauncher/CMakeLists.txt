@@ -11,7 +11,8 @@ set(sources
         strlist.cpp
         util.cpp)
 
-set(JDK "C:\\Users\\nightrider\\Downloads\\jbrsdk-21.0.6-windows-x64-b825.77\\jbrsdk-21.0.6-windows-x64-b825.77")
+#set(JDK "C:\\Users\\nightrider\\Downloads\\jbrsdk-21.0.6-windows-x64-b825.77\\jbrsdk-21.0.6-windows-x64-b825.77")
+set(JDK "C:\\Program Files\\Java\\jdk-21.0.6")
 include_directories(
         "${JDK}\\include"
         "${JDK}\\include\\win32"
@@ -22,4 +23,4 @@ list(APPEND sources
         jlaunch-win.cpp
         winreg.cpp)
 
-add_executable(JavaLauncher ${sources})
+add_executable(JavaLauncher ${sources} resources.rc)
