@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -209,7 +209,7 @@ public class OptionDialog
 		//  write mode
 		addWithLabel(tab1, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode
 
-		//  animation
+		//  Animation
 		JSlider aslider = AnimationDialog.createSlider("animation.speed");
 /*
 		aslider.setBorder(new CompoundBorder(
@@ -224,10 +224,25 @@ public class OptionDialog
 
 		addBox(tab1, 0,2,4, sbox);
 
-		addWithLabel(tab1, 0,3,1, null, newCheckBox("board.flip", "menu.game.flip", null));
-		addWithLabel(tab1, 0,4,1, null, newCheckBox("board.coords", "menu.game.coords", null));
-		addWithLabel(tab1, 0,5, 1, null, newCheckBox("board.evalbar", "menu.game.evalbar", null));
-		addWithLabel(tab1, 0,6,1, null, newCheckBox("board.suggestions", "menu.game.suggestions", null));
+		// 	Board options
+		JPanel bbox = newGridBox("dialog.option.board");
+
+		addWithLabel(bbox, 0,0,2, null, newCheckBox("board.flip", "menu.game.flip", null));
+		addWithLabel(bbox, 2,0, 2, null, newCheckBox("board.evalbar", "menu.game.evalbar", null));
+
+		addWithLabel(bbox, 0,1,2, null, newCheckBox("board.coords", "menu.game.coords", null));
+		addWithLabel(bbox, 2,1,2, null, newCheckBox("board.suggestions", "menu.game.suggestions", null));
+
+		addBox(tab1, 0,3,4,bbox);
+
+		//	E-Board
+
+		JPanel ebox = newGridBox("dialog.option.eboard");
+
+		addWithLabel(ebox, 0,0,1, null, newCheckBox("eboard.chessnut", "eboard.chessnut", null));
+		addWithLabel(ebox, 1,1,1, null, newButton("eboard.connect"));
+
+		addBox(tab1, 0,4,4, ebox);
 
 		tab1.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
@@ -461,11 +476,11 @@ public class OptionDialog
 		slider.setInverted(true);
 
 		Dictionary labels = new Hashtable();
-		labels.put(new Integer(-180), new JLabel("-180°"));
-		labels.put(new Integer( -90), new JLabel("-90°"));
-		labels.put(new Integer(   0), new JLabel("0°"));
-		labels.put(new Integer( +90), new JLabel("+90°"));
-		labels.put(new Integer(+180), new JLabel("+180°"));
+		labels.put(new Integer(-180), new JLabel("-180ï¿½"));
+		labels.put(new Integer( -90), new JLabel("-90ï¿½"));
+		labels.put(new Integer(   0), new JLabel("0ï¿½"));
+		labels.put(new Integer( +90), new JLabel("+90ï¿½"));
+		labels.put(new Integer(+180), new JLabel("+180ï¿½"));
 
 		slider.setLabelTable(labels);
 		slider.setPaintTicks(true);

@@ -120,7 +120,13 @@ public class EasyLink
      */
     public static native String[] getFile(boolean andDelete);
 
+    public static boolean AVAILABLE = false;
     static {
-        System.loadLibrary("easylink");
+        try {
+            System.loadLibrary("easylink");
+            AVAILABLE = true;
+        } catch (UnsatisfiedLinkError e) {
+            AVAILABLE = false;
+        }
     }
 }

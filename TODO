@@ -17,14 +17,13 @@ libraries needed:
 * jdk 1.8 32 bit [x]
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
 ? TraceConnection probably not needed anyway
-* pack & upload jose-15b-win.zip
-* check link (remove donate, update, help, ...)
+* check links (remove donate, update, help, ...)
 * update download.xml
 
 ==== Linux build
-? : requires mysql-embedded to be re-compiled for 64 bit.
- -> find a *working* copy of libmysqld for 64 bit ??
-(? resize Ubuntu partition on xps 15)
+* requires jre 1.8 (i386)
+* requires some extra libraries (i386)
+    - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
 
 === Factory Settings
 
@@ -76,7 +75,7 @@ java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\m
 	at de.jose.pgn.Game.save(Game.java:1312)
 
 * keep playing after flagging ?
-* Leela "node 1"
+
 
 java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
@@ -87,7 +86,9 @@ java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
   - beep: after each move
   - check mate: fanfare, animation ...
 
-
+* BUG: engine configurations
+  - absolute path to directories?
+  - can't delete?
 
 ==== Postponed
 

@@ -13,6 +13,8 @@ public class ChessNutConnector extends EBoardConnector implements EasyLink.IReal
 
     public boolean doConnect()
     {
+        if (!EasyLink.AVAILABLE)
+            return false;
         if (EasyLink.connect()==0)
             return false;
 
