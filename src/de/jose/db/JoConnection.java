@@ -337,13 +337,15 @@ public class JoConnection
 	public void commit()
 		throws SQLException
 	{
-		jdbcConnection.commit();
+		if (!jdbcConnection.getAutoCommit())
+			jdbcConnection.commit();
 	}
 	
 	public void rollback()
 		throws SQLException
 	{
-		jdbcConnection.rollback();
+		if (!jdbcConnection.getAutoCommit())
+			jdbcConnection.rollback();
 	}
 	
 	public int executeUpdate(String sql)
