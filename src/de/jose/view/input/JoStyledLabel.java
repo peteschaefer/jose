@@ -269,8 +269,10 @@ public class JoStyledLabel
 
     @Override
     public JToolTip createToolTip() {
-        if (tooltip!=null)
+        if (tooltip!=null) {
+            tooltip.setVisible(true);
             return tooltip;
+        }
         else
             return super.createToolTip();
     }
@@ -284,9 +286,18 @@ public class JoStyledLabel
             Point tooltipLocation = (Point) mouseLocation.clone();
             tooltipLocation.x = de.jose.Util.roundUp(tooltipLocation.x,20);
             tooltipLocation.y = de.jose.Util.roundUp(tooltipLocation.y,20);
+            tooltipLocation.x += 20;
             tooltipLocation.y += 30;
             return tooltipLocation;
         }
     }
 
+    public void updateUI() {
+        super.updateUI();
+
+        JLabel uimodel = new JLabel();
+        setFont(uimodel.getFont());
+        setForeground(uimodel.getForeground());
+        setBackground(uimodel.getBackground());
+    }
 }
