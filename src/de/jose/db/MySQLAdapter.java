@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -448,9 +448,14 @@ public class MySQLAdapter
 		command.add("--skip-innodb");
 		command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
-
 		command.add("--default-character-set=utf8");
 		command.add("--default-collation=utf8_general_ci");
+		//	MySQL 8.0.x
+//		command.add("--upgrade=NONE");	//	don't upgrad old MyISAM tables
+//		command.add("--mysqld="+execPath);	//	used for "mysqld_safe"
+//		command.add("--log-error=error.log");
+//		command.add("--secure-file-priv="+Application.theDatabaseDirectory);
+
 
 		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
 		// only connect to local host; skip DNS name resolve
