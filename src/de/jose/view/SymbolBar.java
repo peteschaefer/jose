@@ -308,7 +308,7 @@ public class SymbolBar
         if (symbolStyle != null) {
             String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
             fontEncoding = FontEncoding.getEncoding(fontFamily);
-            symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
+            symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 16);
         }
 
         makeSymbolButtons();
@@ -466,7 +466,7 @@ public class SymbolBar
 		if (symbolStyle != null) {
 			String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
 			fontEncoding = FontEncoding.getEncoding(fontFamily);
-			symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
+			symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 16);
 		}
 
 		for(JButton button : easyButtons) updateFormat(button);
@@ -526,6 +526,14 @@ public class SymbolBar
 	    map.put("styles.modified",action);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        super.paintComponent(g);
+    }
+
     public void setSymbol(JButton button, int nag)
     {
         //if (nag==NAG_DIAGRAM_DEPRECATED) continue;
@@ -552,6 +560,7 @@ public class SymbolBar
         }
         button.setText(text);
         button.setToolTipText(tip);
+        button.setActionCommand(String.valueOf(nag));
     }
 
     public JButton makeSymbolButton(int nag, Font font, String text, String tip)

@@ -11,18 +11,18 @@ public class ComboNag
     protected static final String[] grd1 = {"slight","moderate","decisive","crushing"};
     protected static final String[] grd2 = {"slight","moderate","decisive" };
     protected static final String[] lasting = {"the","a lasting" };
-    protected static final String[] suff = {"insufficient","sufficient","more than adequate" };
+    protected static final String[] suff = {"insufficient","sufficient","ample" };
     protected static final String[] side = {"center","kingside","queenside" };
     protected static final String[] poor = {"poor","good" };
     protected static final String[] poorly = {"poorly","well" };
     protected static final String[] verypoor = {"very poor","poor","good","very good" };
     protected static final String[] placed = {"protected","placed" };
-    protected static final String[] vulnerable = {"vulnerable","well protected" };
+    protected static final String[] vulnerable = {"vulnerable","protected" };
     protected static final String[] officer = {"knight","bishop","rook","queen" };
     protected static final String[] moderate = {"moderate","severe" };
-    protected static final String[] weak = {"very weak","moderately weak","moderately strong","very strong" };
+    protected static final String[] weak = {"very weak","weak","strong","very strong" };
     protected static final String[] phase = {"opening","middle","end" };
-    protected static final String[] spacetime = {"space","time (development)" };
+    protected static final String[] spacetime = {"space","development" };
     protected static final String[] empty = new String[0];
 
     //  "composable nags"
@@ -44,7 +44,7 @@ public class ComboNag
     //  [70..77] w/b has a poorly/well protected/placed king
     protected static ComboNag king          = new ComboNag(70, "has a", poorly, placed, "king" );
     //  [78..85] w/b has very/moderately weak/strong pawn structure
-    protected static ComboNag pawns         = new ComboNag(78, "has a", weak, "pawn structure" );
+    protected static ComboNag pawns         = new ComboNag(78, "has", weak, "pawns" );
     //  [86..101] w/b has poor/good knight/bishop/rook/queen placement
     protected static ComboNag placement     = new ComboNag(86, "has", poor, officer, "placement" );
     //  [102..104] w/b has poor/good piece coordination
@@ -194,8 +194,8 @@ class AdvantageNag extends ComboNag
 {
     private static final String[] type = {
             "",
-            "space", "time (development)",
-            "center control", "kingside control", "queenside control" };
+            "space", "development",
+            "center", "kingside", "queenside" };
     //  combines advantage1, advantage2, control
     AdvantageNag()
     {
