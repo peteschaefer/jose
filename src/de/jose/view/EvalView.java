@@ -354,7 +354,7 @@ public class EvalView
 			if (new_branch != branch) {
 				branch = new_branch;
 				repaint();
-			} else {
+			} else if (isVisible()) {
 				repaint1(mvnd);
 			}
 		}
