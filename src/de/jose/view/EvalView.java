@@ -12,28 +12,21 @@
 
 package de.jose.view;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import de.jose.MessageListener;
 import de.jose.Util;
 import de.jose.Application;
 import de.jose.pgn.LineNode;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.util.FontUtil;
-import de.jose.util.IntArray;
 import de.jose.chess.Constants;
 import de.jose.image.Surface;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
-import de.jose.pgn.EvalArray;
-import de.jose.plugin.EnginePlugin;
-import de.jose.plugin.AnalysisRecord;
 
 import javax.swing.*;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -45,7 +38,7 @@ public class EvalView
 {
 	/** array of evaulations    */
 	// @deprecated retrieve evaluations directly from Game tree (branch, below)
-	protected EvalArray       values;
+	//protected EvalArray       values;
 	/** current game    */
 	protected Game          game;
 	protected LineNode		branch;
@@ -80,7 +73,7 @@ public class EvalView
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 
-		values = new EvalArray(0);
+		//values = new EvalArray(0);
 		game = null;
 
 		clear();
@@ -88,7 +81,7 @@ public class EvalView
 
 	public void clear()
 	{
-		values.clear();
+		//values.clear();
 
 		Dimension minsize = getMinimumSize();
 		setMinimumSize(new Dimension(20, minsize.height));
@@ -106,38 +99,35 @@ public class EvalView
 		game = gm;
 		branch = gm.getMainLine();
 		//values.setAdjustMax(EvalArray.ADJUST_LOW_HIGH);
-		values.setGame(gm);
+		//values.setGame(gm);
 
 		Dimension minsize = getMinimumSize();
-		int minwidth = (values.moveCount()-values.firstMove())*BAR_WIDTH;
+		int minwidth = moveCount()*BAR_WIDTH;
 		setMinimumSize(new Dimension(minwidth, minsize.height));
 		setPreferredSize(new Dimension(minwidth, (int)getPreferredSize().getHeight()));
 
 		repaint();
 	}
 
+	public int moveCount()
+	{
+		if (branch==null) return 0;
+		MoveNode last = branch.lastMove();
+		if (last==null) return 0;
+		return (last.getPly()+1)/2;
+	}
 
 	public void updateGame()
 	{
 		if (game!=null) setGame(game);
 	}
 
-	public void setValue(int ply, Score value)
-	{
-        if (ply >= 0)
-		    values.setPlyValue(ply,value);
-
-		adjustWidth();
-		scrollVisible(ply/2);
-
-		repaint1(ply/2);
-	}
 
 
 
 	protected void adjustWidth()
 	{
-		int minWidth = (values.moveCount()-values.firstMove())*BAR_WIDTH;
+		int minWidth = moveCount()*BAR_WIDTH;
 		Dimension minsize = getMinimumSize();
 		if (minWidth > minsize.width)  {
 			setMinimumSize(new Dimension(minWidth, minsize.height));
@@ -148,15 +138,19 @@ public class EvalView
 			revalidate();   //  right ?
 	}
 
-	protected void repaint1(int move)
+	protected void repaint1(MoveNode mv)
 	{
-		repaint();
+		//repaint();
 		//  TODO think of something more efficient
+		Graphics g = getGraphics();
+		int x0 = (int)mv.getMoveNo()*BAR_WIDTH;
+		paint1Value(g, x0, BAR_WIDTH/2, mv.engineValue);
+		drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
 	}
 
 	protected void scrollVisible(int move)
 	{
-		int x = (move-values.firstMove()) * BAR_WIDTH;
+		int x = move * BAR_WIDTH;
 		scrollRectToVisible(new Rectangle(x,0,BAR_WIDTH,getHeight()));
 	}
 
@@ -170,6 +164,7 @@ public class EvalView
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0,0,width,height);
 
+		paintBackground(g);
 		paintValues(g);
 		paintHorizontalTickMarks(g);
 		paintVerticalAxis(g);
@@ -186,7 +181,7 @@ public class EvalView
 		Rectangle2D textBounds = g.getFontMetrics().getStringBounds("5",g);
 
 		//  paint horizontal tick marks
-		int first = values.firstMove();
+		int first = 0;
 		int p = first-first%5+5;
 		int height = getHeight();
 		for (;; p += 5)
@@ -232,6 +227,22 @@ public class EvalView
 			g.drawLine(0,y, tickInset,y);
 			g.drawLine((int)(figWidth-tickInset),y, width,y);
 		}
+
+	}
+
+	protected void drawVerticalGrid(Graphics g, int x0, int x1)
+	{
+		int height = getHeight();
+		for (int i=-4; i <= +4; i++)
+		{
+			if (i==0)
+				g.setColor(Color.darkGray);
+			else
+				g.setColor(Color.lightGray);
+
+			int y = height/2 - i*height/8;
+			g.drawLine(x0,y, x1,y);
+		}
 	}
 
 	protected int drawFigs(int x, int y, String text, Graphics g, Font font)
@@ -273,52 +284,56 @@ public class EvalView
 	protected void paintValues(Graphics g)
 	{
 		//  paint bars !
-		int first = values.firstMove();
-		int last = first + values.moveCount();
-		float[] wvalue = new float[2];
-		float[] bvalue = new float[2];
+		int first = 0;
+		LineNode line = branch;
+		MoveNode mv = line.lastMove();
+		MoveNode nxt = null;
 
-		for (int p = first; p < last; p++)
-		{
-			float[] value1 = values.moveValue(p,Constants.WHITE,wvalue);
-			float[] value2 = values.moveValue(p,Constants.BLACK,bvalue);
+		while(mv!=null) {
+			Score sc = mv.engineValue;
+			if (sc!=null && sc.hasWDL()) {
+				int mno = mv.getMoveNo();
+				if (nxt!=null && nxt.getMoveNo()==mno) {
+					//	paint both
+					paint1Value(g, (int)mno*BAR_WIDTH, BAR_WIDTH/2, mv.engineValue);
+					paint1Value(g, (int)((mno+0.5f)*BAR_WIDTH), BAR_WIDTH/2, nxt.engineValue);
+				}
+				else {
+					//	paint one
+					paint1Value(g, mno*BAR_WIDTH, BAR_WIDTH, mv.engineValue);
+				}
+				nxt = mv;
+			}
 
-			if (EvalArray.isValid(value1) && EvalArray.isValid(value2)) {
-				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH/2, value1);
-				paint1Value(g, (int)((p-first+0.5f)*BAR_WIDTH), BAR_WIDTH/2, value2);
-			}
-			else if (EvalArray.isValid(value1)) {
-				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, value1);
-			}
-			else if (EvalArray.isValid(value2)) {
-				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, value2);
-			}
-			else {
-				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, null);
+			mv = mv.previousMove();
+			while (mv==null && line!=null) {
+				//	climb up
+				mv = line.previousMove();
+				line = line.parent();
 			}
 		}
 	}
 
-	protected void paint1Value(Graphics g, int x, int width, float[] value)
+	protected void paintBackground(Graphics g)
 	{
+		Graphics2D g2 = (Graphics2D) g;
+		float[] fractions = new float[] { 0.0f, 0.35f, 0.65f, 1.0f };
+		Color[] colors = new Color[] { Color.black, Color.darkGray, Color.lightGray, Color.white };
 		int height = getHeight();
 
-		if (!EvalArray.isValid(value)) {
-			Graphics2D g2 = (Graphics2D) g;
-			float[] fractions = new float[] { 0.0f, 0.35f, 0.65f, 1.0f };
-			Color[] colors = new Color[] { Color.black, Color.darkGray, Color.lightGray, Color.white };
+		LinearGradientPaint gp = new LinearGradientPaint(
+				new Point(0,0),new Point(0,height),
+				fractions, colors);
+		g2.setPaint(gp);
+		//g.setColor(Color.lightGray);
+		g2.fillRect(0, 0, moveCount()*BAR_WIDTH, height);
+	}
 
-			LinearGradientPaint gp = new LinearGradientPaint(
-					new Point(0,0),new Point(0,height),
-					fractions, colors);
-			g2.setPaint(gp);
-			//g.setColor(Color.lightGray);
-			g2.fillRect(x, 0, width, height);
-			return;
-		}
-
-		int p1 = (int)(height*(1.0f - value[0]-value[1]));
-		int p2 = (int)(height*(1.0f - value[0]));
+	protected void paint1Value(Graphics g, int x, int width, Score value)
+	{
+		int height = getHeight();
+		int p1 = (int)(height*(1.0f - value.rel(value.win-value.draw)));
+		int p2 = (int)(height*(1.0f - value.rel(value.win)));
 
 		g.setColor(Color.black);
 		g.fillRect(x, 0, width, p1);
@@ -332,17 +347,15 @@ public class EvalView
 
 	protected void updateValue(int ply, MoveNode mvnd, Score value)
 	{
-		setValue(ply, value);
+		//setValue(ply, value);
 
 		if (mvnd!=null) {
 			LineNode new_branch = mvnd.parent();
 			if (new_branch != branch) {
-				/**
-				 * whenever the tree branch changes
-				 * - trace back tree path from new_branch to top
-				 * - update the eval data accordingly.
-				 */
-				values.setBranch(branch = new_branch);
+				branch = new_branch;
+				repaint();
+			} else {
+				repaint1(mvnd);
 			}
 		}
 	}

@@ -17,7 +17,6 @@ import de.jose.chess.*;
 import de.jose.pgn.Parser;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
-import de.jose.pgn.EvalArray;
 import de.jose.util.*;
 import de.jose.util.xml.XMLPrettyPrint;
 import de.jose.util.xml.XMLUtil;

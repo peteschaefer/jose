@@ -101,7 +101,4 @@ public class EvalPanel
 			view.setGame(Application.theHistory.getCurrent());
 	}
 
-	public void setValue(int ply, Score val) {
-		view.setValue(ply, val);
-	}
 }

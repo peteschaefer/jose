@@ -62,6 +62,7 @@ public class MoveNode
 	}
 
 	public final int getPly() 		{ return ply; }
+	public final int getMoveNo()	{ return ply/2; }
 	public final Move getMove()		{ return move; }
 
 	public void play(de.jose.chess.Position pos)

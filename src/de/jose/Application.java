@@ -3666,12 +3666,6 @@ public class Application
 			//  update move evaluation history
 			entry.toScore(node.engineValue,1000);
 			theGame.setDirty(true);
-			if (evalPanel() != null)
-				evalPanel().setValue(node.getPly(),node.engineValue);
-				// todo this should not be handled by a direct call, but rather dispatched by a message
-				// and it should be unified with the way engine evals are updated ...
-				// broadcast ( "eval.notify", node )
-//					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
 		}
 
 		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move), this);
