@@ -1955,19 +1955,20 @@ public class Application
 				} catch (IOException e) {
 					error(e);
 				}
-				final boolean do_engine_analysis = engine_analysis;
 
-				invokeWithPlugin(new Runnable() {
-					public void run()
-					{
-						//	todo invokeWithPlugin() is somewhat fragile,
-						//	better think about something like "postCommandWithPlugin"
-
-						//  (2) enter engine analysis mode
-						pausePlugin(do_engine_analysis);
-						theMode = do_engine_analysis ? ANALYSIS : USER_INPUT;
-					}
-				});
+				if (engine_analysis) {
+					invokeWithPlugin(new Runnable() {
+						public void run() {	//  (2) enter engine analysis mode
+							pausePlugin(true);
+							theMode = ANALYSIS;
+						}
+					});
+				}
+				else {
+					//  (2) leave engine analysis mode
+					pausePlugin(false);
+					theMode = USER_INPUT;
+				}
 			}
 		};
 		map.put("menu.game.analysis",action);
@@ -3743,14 +3744,13 @@ public class Application
 		return getEnginePlugin() != null;
 	}
 
-	private void reapausePlugin(boolean analyze)
+	private void pausePlugin(boolean analyze)
 	{
-		if (getEnginePlugin() != null) {
-			if (analyze && !theGame.getPosition().isGameFinished(true))
-				getEnginePlugin().analyze(theGame.getPosition());
-			else if (!getEnginePlugin().isPaused())
-				getEnginePlugin().pause();
-		}
+		EnginePlugin engine = getEnginePlugin();
+		if ( analyze && engine!=null && !theGame.getPosition().isGameFinished(true))
+			engine.analyze(theGame.getPosition());
+		if (!analyze && engine!=null && !engine.isPaused())
+			engine.pause();
 	}
 
     public void closePlugin()
