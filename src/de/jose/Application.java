@@ -2360,6 +2360,8 @@ public class Application
 		{
 			//  show opening book moves
 			Position pos = Application.theApplication.theGame.getPosition();
+			// onEngineMove implies NOT analysis mode, right?
+			if (onEngineMove) switchAnalysis = false;
 			BookQuery query = new BookQuery(pos,switchAnalysis);
 			theExecutorService.submit(query);
 			//	will call back with message BOOK_RESPONSE
@@ -3182,8 +3184,9 @@ public class Application
 				break;
 
 			EnginePanel eng = enginePanel();
-			if (!query.result.isEmpty())
-				eng.showBook(query.result,pos);
+			if (!query.result.isEmpty()) {
+				eng.showBook(query.result, pos);
+			}
 			else {
 				eng.exitBook();
 				//	when out of book, switch to Engine

@@ -98,36 +98,12 @@ public class LiChessOpeningExplorer extends OpeningBook
     }
 
     @Override
-    public boolean getBookMoves(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
+    public boolean getBookMoves(Position pos, String fen,
+                                boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
     {
         //  run asynchroneously
-        String fen = pos.toString();
-        Callable<Boolean> task = new Callable() {
-            @Override
-            public Boolean call() throws Exception {
-                return getBookMoves1(fen, ignoreColors, deep, TOP_GAMES, result);
-            }
-        };
-
-        /*
-            I would like to query Lichess asynchroneously. It's perfectly possible with ExecutorService
-            but then the logic for coordinating EnginePanel with OpeningBook and Application becomes difficult.
-            In/out opening book triggers engine analysis, etc.
-            With asynch book moves the state transitions becomes too complicated.
-
-            As a compromise, we do a *blocking* query with fixed time-out.
-         */
-        Future<Boolean> fut = Application.theExecutorService.submit(task);
-        try {
-            //  .. synchroneously, but with fixed time-out
-            return fut.get(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            return false;
-        } catch (ExecutionException e) {
-            return false;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        if (fen==null) fen = pos.toString();
+        return getBookMoves1(fen, ignoreColors, deep, TOP_GAMES, result);
     }
 
     public boolean getBookMoves1(String fen, boolean ignoreColors, boolean deep,

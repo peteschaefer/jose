@@ -72,8 +72,11 @@ public class CraftyBook extends OpeningBook
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result) throws IOException
+	public boolean getBookMoves(Position pos, String fen,
+								boolean withTransposedColors, boolean deep, List result) throws IOException
 	{
+		assert(pos!=null);
+		if (fen!=null) pos.setup(fen);
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos,false,result);
 		boolean res2 = false;

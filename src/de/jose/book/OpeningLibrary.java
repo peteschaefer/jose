@@ -184,16 +184,11 @@ public class OpeningLibrary
 		return -1;
 	}
 
-	public List<BookEntry> collectMoves(String fen, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
+	public List<BookEntry> collectMoves(Position pos, String fen,
+										boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
 			throws IOException
 	{
-		pos.setup(fen);
-		return collectMoves(pos,go_deep,ignoreColors,allowOutOfBook);
-	}
-
-	public List<BookEntry> collectMoves(Position pos, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
-			throws IOException
-	{
+		if (pos==null) pos = this.pos;
 		ArrayList<BookEntry> result = new ArrayList();
 		for (int i=0; i < size(); i++)
 		{
@@ -201,7 +196,7 @@ public class OpeningLibrary
 			if (fentry.book==null) continue;
 
 			ArrayList one_result = new ArrayList();
-			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, go_deep, one_result);
+			boolean containsPosition = fentry.book.getBookMoves(pos,fen, ignoreColors, go_deep, one_result);
 			if (!containsPosition && !allowOutOfBook)
 				continue;   //  transpose from out-of-book into the book. Ignore !
 
@@ -234,7 +229,7 @@ public class OpeningLibrary
 			}
 
 		boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
-		List moves = collectMoves(pos,go_deep,ignoreColors, false);
+		List moves = collectMoves(pos,null,go_deep,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}
 

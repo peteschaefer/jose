@@ -70,7 +70,8 @@ public abstract class OpeningBook
 	 * However, those moves are not chosen when playing against an engine.
 	 * @throws IOException
 	 */
-	abstract public boolean getBookMoves(Position pos, boolean ignoreColors,
+	abstract public boolean getBookMoves(Position pos, String fen,
+										 boolean ignoreColors,
 										 boolean deep, List<BookEntry> result)
 			throws IOException;
 
@@ -153,7 +154,7 @@ public abstract class OpeningBook
 	{
 		List book_moves = new ArrayList();
 
-		boolean in_book = book.getBookMoves(pos,true,true, book_moves);
+		boolean in_book = book.getBookMoves(pos,null,true,true, book_moves);
 
 		if (in_book)
 			System.out.println("position is in book");

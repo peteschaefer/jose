@@ -1542,7 +1542,7 @@ public class EnginePanel
 					/* stay in engine mode */;
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					Application.theApplication.updateBook(wasEngineMove,true); // todo switchAnalysis ??
+					Application.theApplication.updateBook(wasEngineMove,!wasEngineMove); // todo switchAnalysis ??
 				}
 			}
 		};

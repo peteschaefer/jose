@@ -75,8 +75,11 @@ public class ShredderBook extends OpeningBook
 		return ! moveEntries.isEmpty();
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
+	public boolean getBookMoves(Position pos, String fen,
+								boolean withTransposedColors, boolean deep, List result)
 	{
+		assert(pos!=null);
+		if (fen!=null) pos.setup(fen);
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos, false, result);
 		boolean res2 = false;

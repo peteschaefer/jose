@@ -74,7 +74,7 @@ public class BookQuery
 
             OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
             boolean go_deep = (appMode==USER_INPUT || appMode==ANALYSIS);
-            result = lib.collectMoves(fen, go_deep,true,false);
+            result = lib.collectMoves(null,fen, go_deep,true,false);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
