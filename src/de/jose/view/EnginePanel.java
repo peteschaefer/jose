@@ -745,6 +745,16 @@ public class EnginePanel
 	 */
 	protected void display(int state, AnalysisRecord rec, boolean bookMode)
 	{
+		if (!SwingUtilities.isEventDispatchThread()) {
+			//	GUI operations need to be deferred to the Main Event Thread. Can't help it.
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					display(state, rec, bookMode);
+				}
+			});
+			return;
+		}
+
 		if (state >= 0) {
 			boolean enabled = (state > EnginePlugin.PAUSED);
 
