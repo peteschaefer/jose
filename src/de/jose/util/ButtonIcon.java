@@ -16,27 +16,45 @@ public class ButtonIcon
     public Color[] fg;
     public float[] steps;
 
-    public ButtonIcon(String text, Font font, int size, Color color) {
-        super(text, font, size*0.65f, color);
+    public ButtonIcon(String text, Font font, int size) {
+        super(text, font, size*0.65f, Color.black);
         this.size = size;
         steps = new float[] { 0.0f, 0.3f, 0.6f, 0.8f, 1.0f };
         bg = new Color[] {
                 white(1.0f),white(0.95f), white(0.95f), white(0.9f), white(0.85f)
         };
-        float h = Color.RGBtoHSB(super.color.getRed(), super.color.getGreen(), super.color.getBlue(), null)[0];
-        fg = new Color[] {
-               hue(h,1.0f), hue(h,0.95f), hue(h,0.9f), hue(h,0.85f), hue(h,0.8f)
-        };
     }
 
     @Override
     public int getIconHeight() {
-        return size;
+        return size+insets.top+insets.bottom;
     }
 
     @Override
     public int getIconWidth() {
-        return size;
+        return size+insets.left+insets.right;
+    }
+
+    public ButtonIcon fixedColor(Color color)
+    {
+        super.color=color;
+        fg = new Color[] {
+                super.color,super.color,super.color,super.color,super.color
+        };
+        return this;
+    }
+
+    public ButtonIcon huedColor(Color color) {
+        super.color = color;
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        fg = new Color[]{
+                Color.getHSBColor(hsb[0],hsb[1],hsb[2]*1.1f),
+                Color.getHSBColor(hsb[0],hsb[1],hsb[2]*1.0f),
+                Color.getHSBColor(hsb[0],hsb[1],hsb[2]*0.95f),
+                Color.getHSBColor(hsb[0],hsb[1],hsb[2]*0.9f),
+                Color.getHSBColor(hsb[0],hsb[1],hsb[2]*0.8f),
+        };
+        return this;
     }
 
     @Override
@@ -45,24 +63,28 @@ public class ButtonIcon
         Graphics2D g2 = (Graphics2D) g;
         //  draw background
         //  filled circle with radial gradient; off-center focus
-        Point2D center = new Point2D.Float(x+size/2, y+size/2);
-        Point2D focus = new Point2D.Float(x+size/3, y+size/3);
+        Point2D center = new Point2D.Float(x+insets.left+size/2, y+insets.top+size/2);
+        Point2D focus = new Point2D.Float(x+insets.left+size/3, y+insets.top+size/3);
         RadialGradientPaint p1 = new RadialGradientPaint(
                 center, size/2, focus, steps, bg, MultipleGradientPaint.CycleMethod.NO_CYCLE);
 
         save(g2);
         g2.setPaint(p1);
-        g2.fillOval(x, y, size, size);
+        g2.fillOval(x+insets.left, y+insets.top, size, size);
 
         //  draw text; centered
-        RadialGradientPaint p2 = new RadialGradientPaint(
+        Paint p2;
+        if (fg!=null)
+            p2 = new RadialGradientPaint(
                 center, size/2, center, steps, fg, MultipleGradientPaint.CycleMethod.NO_CYCLE);
+        else
+            p2 = super.color;
         g2.setPaint(p2);
 
         g2.setFont(super.font);
         g2.drawString(super.text,
-                x+(size-super.width)/2,
-                y+(size-super.height)/2+super.ascent);
+                x+insets.left+(size-super.width)/2,
+                y+insets.top+(size-super.height)/2+super.ascent);
         restore(g2);
     }
 
@@ -85,11 +107,6 @@ public class ButtonIcon
         return new Color(v,v,v);
     }
 
-    protected static Color hue(float h, float b)
-    {
-        float s = 1.0f;
-        return Color.getHSBColor(h,s,b);
-    }
 
     protected static Color brighter(Color c, float fact)
     {

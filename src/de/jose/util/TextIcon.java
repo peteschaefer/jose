@@ -15,6 +15,7 @@ public class TextIcon implements Icon
     protected float width;
     protected  float height;
     protected float ascent;
+    protected Insets insets = new Insets(0,0,0,0);
 
     protected Paint savePaint;
     protected Font saveFont;
@@ -34,6 +35,11 @@ public class TextIcon implements Icon
         this(text,font.deriveFont(style,size),color);
     }
 
+    public TextIcon setInsets(Insets insets) {
+        this.insets = insets;
+        return this;
+    }
+
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D g2 = (Graphics2D) g;
@@ -42,18 +48,18 @@ public class TextIcon implements Icon
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setFont(font);
         g2.setColor(color);
-        g2.drawString(text,x,y+ascent);
+        g2.drawString(text,x+ insets.left,y+insets.top+ascent);
         restore(g2);
     }
 
     @Override
     public int getIconWidth() {
-        return (int)(width+0.5);
+        return (int)(width+insets.left+insets.right+0.5);
     }
 
     @Override
     public int getIconHeight() {
-        return (int)(height+0.5);
+        return (int)(height+insets.top+insets.bottom+0.5);
     }
 
     protected void save(Graphics2D g2) {

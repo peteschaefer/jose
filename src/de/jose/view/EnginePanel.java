@@ -207,57 +207,36 @@ public class EnginePanel
 
 	private void createIcons()
 	{
-		iGoGreen = new Icon[4];
-		iGoYellow = new Icon[4];
-		iGoRed = new Icon[4];
-		iGoBlue = new Icon[4];
-		iGoOrange = new Icon[4];
-		iPause = new Icon[4];
-		iHint = new Icon[4];
-		iAnalyze = new Icon[4];
-
-		iGoGreen[0] =
-		iGoYellow[0] =
-		iGoRed[0] =
-		iGoOrange[0] =
-		iGoBlue[0] = ImgUtil.getIcon("nav","move.forward.off");
-
-		iGoGreen[1] =// ImgUtil.getIcon("nav","move.forward.cold");
-		iGoGreen[2] = ImgUtil.getIcon("nav","move.forward.hot");
-		iGoGreen[3] = ImgUtil.getIcon("nav","move.forward.pressed");
-
-		iGoYellow[1] = //ImgUtil.getIcon("nav","arrow.yellow.cold");
-		iGoYellow[2] = ImgUtil.getIcon("nav","arrow.yellow.hot");
-		iGoYellow[3] = ImgUtil.getIcon("nav","arrow.yellow.pressed");
-
-		iGoRed[1] = //ImgUtil.getIcon("nav","move.start.cold");
-		iGoRed[2] = ImgUtil.getIcon("nav","move.start.hot");
-		iGoRed[3] = ImgUtil.getIcon("nav","move.start.pressed");
-
-		iGoBlue[1] = ImgUtil.getIcon("nav","arrow.blue.cold");
-		iGoBlue[2] = ImgUtil.getIcon("nav","arrow.blue.hot");
-		iGoBlue[3] = ImgUtil.getIcon("nav","arrow.blue.pressed");
-
 		int iconSize=26;
-		iGoOrange[0] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.lightGray);
-		iGoOrange[1] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange);
-		iGoOrange[2] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange).hilited();
-		iGoOrange[3] = new ButtonIcon("\uf04b",FontUtil.fontAwesome(),iconSize,Color.orange).pushed();
+	// todo less bright color
+		Color green = new Color(0x00,0x99,0x00);
+		Color yellow = new Color(0xcc,0xcc,0x00);
+		Color red = new Color(0xb3,0x00,0x00);
+		Color blue = new Color(0x00,0x00,0xd9);
+		Color orange = new Color(0xcc,0x99,0x00);
+		iGoGreen = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,green);
+		iGoYellow = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,yellow);
+		iGoRed = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,red);
+		iGoBlue = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,blue);
+		iGoOrange = awesomeIconSet('\uf04b',iconSize,Font.PLAIN,orange);
 
-		iPause[0] = ImgUtil.getIcon("nav","engine.stop.off");
-		iPause[1] = ImgUtil.getIcon("nav","engine.stop.cold");
-		iPause[2] = ImgUtil.getIcon("nav","engine.stop.hot");
-		iPause[3] = ImgUtil.getIcon("nav","engine.stop.pressed");
+		iPause = awesomeIconSet('\uf04c',iconSize,Font.PLAIN,green);
+		iHint = awesomeIconSet('?',iconSize,Font.PLAIN,blue);
+		iAnalyze = awesomeIconSet('\uf013',iconSize,Font.BOLD,yellow);
+	}
 
-		iHint[0] = ImgUtil.getIcon("nav","hint.off");
-		iHint[1] = ImgUtil.getIcon("nav","hint.cold");
-		iHint[2] = ImgUtil.getIcon("nav","hint.hot");
-		iHint[3] = ImgUtil.getIcon("nav","hint.pressed");
-
-		iAnalyze[0] = ImgUtil.getIcon("nav","analyze.off");
-		iAnalyze[1] = ImgUtil.getIcon("nav","analyze.cold");
-		iAnalyze[2] = ImgUtil.getIcon("nav","analyze.hot");
-		iAnalyze[3] = ImgUtil.getIcon("nav","analyze.pressed");
+	private Icon[] awesomeIconSet(char c, int size, int style, Color color)
+	{
+		String s = Character.toString(c);
+		Font font = FontUtil.fontAwesome();
+		font = font.deriveFont(style);
+		Icon[] result = new Icon[4];
+		Insets insets = new Insets(2,2,2,2);
+		result[0] = new ButtonIcon(s,font,size).fixedColor(Color.lightGray).setInsets(insets);
+		result[1] = new ButtonIcon(s,font,size).huedColor(color).setInsets(insets);
+		result[2] = new ButtonIcon(s,font,size).huedColor(color).hilited().setInsets(insets);
+		result[3] = new ButtonIcon(s,font,size).huedColor(color).pushed().setInsets(insets);
+		return result;
 	}
 
 	private void createFontIcons()
