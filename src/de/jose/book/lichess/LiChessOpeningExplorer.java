@@ -33,6 +33,9 @@ public class LiChessOpeningExplorer extends OpeningBook
 
     private boolean NETWORK_ERROR_REPORTED = false;
 
+    //  number of top games in each query
+    public static final int TOP_GAMES = 8;
+
     public LiChessOpeningExplorer(org.w3c.dom.Element config)
     {
         apiUrl = XMLUtil.getChildValue(config,"URL");
@@ -94,7 +97,7 @@ public class LiChessOpeningExplorer extends OpeningBook
         Callable<Boolean> task = new Callable() {
             @Override
             public Boolean call() throws Exception {
-                return getBookMoves1(pos, ignoreColors, deep, result);
+                return getBookMoves1(pos, ignoreColors, deep, TOP_GAMES, result);
             }
         };
 
@@ -119,11 +122,13 @@ public class LiChessOpeningExplorer extends OpeningBook
         }
     }
 
-    public boolean getBookMoves1(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
+    public boolean getBookMoves1(Position pos, boolean ignoreColors, boolean deep,
+                                 int topGames,
+                                 List<BookEntry> result) throws IOException
     {
         String fen = pos.toString();
         fen = URLEncoder.encode(fen);
-        String urlString = apiUrl+"?fen="+fen+"&topGames=6";    //  don't enumerate games
+        String urlString = apiUrl+"?fen="+fen+"&topGames="+topGames;    //  don't enumerate games
 
         try {
             URL url = new URL(urlString);

@@ -1105,7 +1105,7 @@ public class EnginePanel
 			GameRef ref = refs.get(j);
 			String string = ref.toString(true);
 			doc.insertString(pos, string, linkStyle);
-
+			//	attach GameRef as attribute. Comes back through actionPerformed()
 			SimpleAttributeSet attributes = new SimpleAttributeSet();
 			attributes.addAttribute("clickable",ref);
 			doc.setCharacterAttributes(pos,string.length(), attributes, false);
