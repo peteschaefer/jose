@@ -906,6 +906,8 @@ public class OptionDialog
 				boolean dark = (Boolean)cmd.moreData;
 				if (theStyleChooser!=null)
 					theStyleChooser.updateUI(dark);
+				//	forward to JoDialog
+				SwingUtilities.updateComponentTreeUI(OptionDialog.this.frame);
 			}
 		};
 		map.put("update.ui",action);
