@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -321,6 +322,17 @@ public class AboutDialog
 		return StringUtil.replace(text, placeholders);
 	}
 
+	private int getDBMetaVersion(JoConnection conn) throws SQLException
+	{
+		JoPreparedStatement stm = conn.getPreparedStatement(
+				"SELECT Version FROM jose.MetaInfo " +
+					" WHERE Property = 'SCHEMA_VERSION' " +
+					"   AND SchemaName = 'MAIN'");
+		int metaVersion = stm.selectInt();
+		stm.close();
+		return metaVersion;
+	}
+
 	private String createDBInfoText()
 	{
 		Hashtable placeholders = new Hashtable();
@@ -336,13 +348,8 @@ public class AboutDialog
 			}
 
 			placeholders.put("dburl", JoConnection.getAdapter().getURL());
-/*
-			JoPreparedStatement stm = conn.getPreparedStatement(
-			        "SELECT * FROM MetaInfo WHERE BINARY TableName = BINARY ?");
-			stm.setString(1,"Game");
-			stm.execute();
-			stm.closeResult();
-*/
+			placeholders.put("schema", getDBMetaVersion(conn));
+
 		} catch (SQLException sqlex) {
 			StringBuffer errors = new StringBuffer();
 			while (sqlex != null) {
