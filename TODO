@@ -60,18 +60,19 @@ Release 1.5.2 checklist
 
                         Win     Lin     Mac Intel   Mac Arm
 
-JRE 21                  [ ]     [ ]     [ ]         [ ]
-Java 3D                 [ ]     [ ]     [ ]         [-]
-Hi-dpi                  [ ]     [ ]     [ ]         [ ]
-Mysql 5.0.67            [ ]     [ ]     [ ]         [ ]
-myisamchk               [ ]     [ ]     [ ]         [ ]
-Repair Tool             [ ]     [ ]     [ ]         [ ]
-Arrows                  [ ]     [ ]     [ ]         [ ]
-Eval Bar                [ ]     [ ]     [ ]         [ ]
-Leela                   [ ]     [ ]     [ ]         [ ]
-Stockfish               [ ]     [ ]     [ ]         [ ]
-Lichess Explorer        [ ]     [ ]     [ ]         [ ]
-Easylink                [ ]     [ ]     [-]         [-]
+Launcher                [x]     [x]     [ ]         [ ]
+JRE 21                  [x]     [x]     [ ]         [ ]
+Java 3D                 [x]     [x]     [ ]         [-]
+Hi-dpi                  [x]     [x]     [ ]         [ ]
+Mysql 5.0.67            [x]     [x]     [ ]         [ ]
+myisamchk               [x]     [x]     [ ]         [ ]
+Repair Tool             [x]     [x]     [ ]         [ ]
+Arrows                  [x]     [x]     [ ]         [ ]
+Eval Bar                [x]     [x]     [ ]         [ ]
+Leela                   [x]     [x]     [ ]         [ ]
+Stockfish               [x]     [x]     [ ]         [ ]
+Lichess Explorer        [x]     [x]     [ ]         [ ]
+Easylink                [x]     [-]     [-]         [-]
 
 
 [x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)

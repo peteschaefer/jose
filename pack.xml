@@ -78,6 +78,7 @@
 			<zipfileset dir="fonts" prefix="${appldir}/fonts">
 				<include name="*.ttf"/>
 				<include name="*.TTF"/>
+				<include name="*.otf"/>
 				<!--exclude copyrighted fonts-->
 				<exclude name="Sp*.TTF"/>
 			</zipfileset>
