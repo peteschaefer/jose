@@ -105,7 +105,9 @@ public class MoveNode
 	{
 		for (Node nd = previous(); nd != null; nd = nd.previous())
 			switch (nd.type()) {
-			case MOVE_NODE:				return false;
+			case MOVE_NODE:
+				MoveNode mvnd = (MoveNode)nd;
+				return mvnd.move.isNullMove();
 			case ANNOTATION_NODE:		continue;
 			case DIAGRAM_NODE:
 			default:
@@ -130,15 +132,16 @@ public class MoveNode
 
 		de.jose.chess.Position pos = getGame().getPosition();
 		moveCountLen = 0;
- 		if ((ply%2) == 0) {
-			 String moveCount = (ply/2+1)+".";
-			 moveCountLen = moveCount.length();
-			 formatter.text(moveCount, 0);
-		 }
-		else if (showNumber()) {
-			String moveCount = (ply/2+1)+"...";
-			moveCountLen = moveCount.length();
-			formatter.text(moveCount, 0);
+		if (!move.isNullMove()) {
+			if ((ply % 2) == 0) {
+				String moveCount = (ply / 2 + 1) + ".";
+				moveCountLen = moveCount.length();
+				formatter.text(moveCount, 0);
+			} else if (showNumber()) {
+				String moveCount = (ply / 2 + 1) + "...";
+				moveCountLen = moveCount.length();
+				formatter.text(moveCount, 0);
+			}
 		}
 
         formatter.setDocument(doc,at);

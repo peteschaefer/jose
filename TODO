@@ -143,6 +143,7 @@ Alternative JREs:
     [x] Position play, unplay
     [x] store in DB
     [ ] type --
+    [ ] export clipboard
     [ ] export pgn
     [ ] export text
     [ ] export html
@@ -164,7 +165,7 @@ Alternative JREs:
 
         4.a (4.a -- threatens($140) 5.c) 4...b
 
-    Is more logical, but it repeats 4.a
+    Is more logical, but it repeats 4.a. But this way, it is clear what is the threatining move.
 
 * Foldable variations.
     - Use LineLabelNode as buttons

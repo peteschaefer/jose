@@ -22,6 +22,8 @@ import de.jose.util.CharUtil;
 
 import java.util.Arrays;
 
+import static de.jose.chess.Move.NULLMOVE;
+
 public class Parser
 		implements Constants, PgnConstants, BinaryConstants
 {
@@ -769,6 +771,13 @@ public class Parser
 	
 		while ((getCharType(next()) & (PIECE_CHAR+MOVE_CHAR+DIGIT_CHAR)) != 0)
 			len++;
+
+		//	null move shorthand
+		if (len==2 && peek(0)=='-' && peek(1)=='-') {
+			moves[0] = NULLMOVE;
+			checkMoves(1, strictlyLegal, false);
+			return;
+		}
 		
         int moving = -1;
         int file1 = -1;

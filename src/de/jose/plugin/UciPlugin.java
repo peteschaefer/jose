@@ -390,12 +390,21 @@ public class UciPlugin
         }
     }
 
+	private static boolean containsNullMoves(Move[] moves)
+	{
+		for(int i=0;i < moves.length;i++)
+			if (moves[i].isNullMove()) return true;
+		return false;
+	}
+
 	private void setPosition(Position pos)
 	{
 		currentLine.setLength(0);
 		currentLine.append("position");
 
-		if (PREFER_MOVES) {
+		Move[] moves = pos.getMoves(0,pos.ply());
+		if (PREFER_MOVES && moves.length > 0 && !containsNullMoves(moves))
+		{	// not sure whether all UCI engines understand null moves !?
 			String start = pos.getStartFEN(Board.FEN_CLASSIC);
 			if (start==null || start.equals(Position.START_POSITION))
 				currentLine.append(" startpos");
@@ -410,7 +419,6 @@ public class UciPlugin
 				currentLine.append(start);
 			}
 
-			Move[] moves = pos.getMoves(0,pos.ply());
 			if (moves.length > 0)
 				currentLine.append(" moves");
 			for (int i=0; i<moves.length; i++)

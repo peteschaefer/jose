@@ -740,8 +740,8 @@ public class Game
 
 			LineNode variation = new LineNode(this);
 			copy.insertAfter(variation.first());	//	skip prefix
-			nullNode.insertAfter(copy);
-			nagNode.insertAfter(nullNode);
+			nagNode.insertAfter(copy);
+			nullNode.insertAfter(nagNode);
 
 			insertIntoCurrentLine(variation, currentMove);	//	insert into structure
 			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation

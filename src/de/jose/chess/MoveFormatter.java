@@ -52,7 +52,7 @@ abstract public class MoveFormatter
 	public String	drawMat				= "";
 
 	/** nullmove string */
-	public String   nullmove            = "--";
+	public String   nullmove            = "...";//"\u2026";//"\u205e";	// vertical dots?
 
     /** telegraphic files (lower half)  */
     public static final String TELEGRAPHIC_FILES_LOWER  = "BCDFGHKL";
