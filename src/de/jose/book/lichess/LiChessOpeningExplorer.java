@@ -9,12 +9,14 @@ import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.JoConnection;
+import de.jose.db.JoPreparedStatement;
 import de.jose.pgn.*;
 import de.jose.task.GameSource;
 import de.jose.task.io.PGNImport;
 import de.jose.util.HttpsUtil;
 import de.jose.util.ListUtil;
 import de.jose.util.xml.XMLUtil;
+import de.jose.view.EnginePanel;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,6 +27,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -215,25 +219,15 @@ public class LiChessOpeningExplorer extends OpeningBook
                     try {
                         conn = JoConnection.get();
                         Collection.makeDownloads(conn);
+
+                        if (findDownload(conn, CId, gameRef))
+                            return;
+
                     } finally {
                         if (conn!=null) conn.release();
                     }
 
-                    String urlStr = downloadUrl+"/"+gameRef.id+"?evals=false&literate=true";
-                    URL url = new URL(urlStr);
-
-                    reader = PGNImport.newPgnImporter(CId,url);
-                    reader.setSilentTime(2000);
-
-                    reader.start();
-                    reader.join();
-                    //  wait for reader to finish
-                    //  fetch inserted Game.Id
-                    int GId1 = reader.getFirstGameId();
-                    int GId2 = reader.getLastGameId();
-
-                    //  open downloaded game for editing:
-                    if (GId2 > 0) editLater(gameRef,GId1,GId2);
+                    download1Game(CId, gameRef);
 
                     //  open in Tab
                 } catch(FileNotFoundException e) {
@@ -247,6 +241,45 @@ public class LiChessOpeningExplorer extends OpeningBook
         };
 
         Application.theExecutorService.submit(job);
+    }
+
+    private static final String SQL_FIND =
+            "select Game.Id "+
+            " from Game"+
+            " left outer join MoreGame on GId=Game.Id "+
+            " where CId=? "+
+            " and Info like '%GameId={lichessid}' ";
+
+    private static boolean findDownload(JoConnection conn, int CId, LiChessGameRef gameRef) throws SQLException
+    {
+        String sql = SQL_FIND.replace("{lichessid}", gameRef.id);
+        JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+        pstm.setInt(1, CId);
+        int GId = pstm.selectInt();
+        if (GId<=0) return false;
+
+        editLater(gameRef,GId,GId);
+        return true;
+    }
+
+    private static void download1Game(int CId, LiChessGameRef gameRef) throws Exception
+    {
+        PGNImport reader;
+        String urlStr = downloadUrl+"/"+ gameRef.id+"?evals=false&literate=true";
+        URL url = new URL(urlStr);
+
+        reader = PGNImport.newPgnImporter(CId,url);
+        reader.setSilentTime(2000);
+
+        reader.start();
+        reader.join();
+        //  wait for reader to finish
+        //  fetch inserted Game.Id
+        int GId1 = reader.getFirstGameId();
+        int GId2 = reader.getLastGameId();
+
+        //  open downloaded game for editing:
+        if (GId2 > 0) editLater(gameRef,GId1,GId2);
     }
 
     protected static void excuseLater(String game)
@@ -283,36 +316,53 @@ public class LiChessOpeningExplorer extends OpeningBook
         });
     }
 
+    private static String printSnippet(MoveNode mv1, int count, String label)
+    {
+        StringBuffer buf = new StringBuffer();
+        while(mv1!=null && count>0) {
+            buf.append(mv1.getMove().toString());
+            buf.append(" ");
+            mv1 = mv1.nextMove();
+            count--;
+        }
+        buf.append(" {");
+        buf.append(label);
+        buf.append("} ");
+        return buf.toString();
+    }
+
     private static void insertNewLine(Game gm, MoveNode mvnd, String label)
     {
         //  clip sub-line from Game
         LineNode mainLine = gm.getMainLine();
         MoveNode cut1 = mainLine.moveByPly(mvnd.getPly()+1);
         if (cut1==null) return;
-        Node cut2 = mainLine.last();
-        NodeSection cut = new NodeSection(cut1,cut2);
-        cut.trim(INodeConstants.STATIC_TEXT_NODE);  //  skip Result nodes, e.g.
+//        Node cut2 = mainLine.last();
+//        NodeSection cut = new NodeSection(cut1,cut2);
+//        cut.trim(INodeConstants.STATIC_TEXT_NODE);  //  skip Result nodes, e.g.
 
-        Game orig = Application.theApplication.theGame;
-        LineNode subline = new LineNode(orig);
-        new LineLabelNode(0).insertFirst(subline);
-        subline.cloneFrom(cut.first(),cut.last());
-        new LineLabelNode(0).insertLast(subline);
+//        Game orig = Application.theApplication.theGame;
+//        LineNode subline = new LineNode(orig);
+        //new LineLabelNode(0).insertFirst(subline);
+//        subline.cloneFrom(cut.first(),cut.last());
+        //new LineLabelNode(0).insertLast(subline);
 
-        CommentNode comment = new CommentNode(label);
-        comment.insertLast(subline);
+//        CommentNode comment = new CommentNode(label);
+//        comment.insertLast(subline);
 
         //  insert into original Game
-        orig.insertNewLine(subline,mvnd);
-    //todo whatif next==null? insert subline behind mvnd
-
-    // todo think about alternative: print line to plain text, then paste
+//        orig.insertNewLine(subline,mvnd);
+    //todo manfacturing LineNodes is complicated
+    //  think about alternative: print line (5 moves) to plain text, then paste
     //  (-> no need for cloning and node subleties)
-    //  BUT GameUtil.UtilParser is limited. No full pgn support!
+    //  BUT GameUtil.UtilParser is limited, but ok for short snippets
 
+        String snippet = printSnippet(cut1,8,label);
         //  trigger update, etc.
-        Command cmd = new Command("edit.game.paste",null, mvnd, subline);
-        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+//        Command cmd = new Command("edit.game.paste",null, mvnd, snippet);
+//        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+        Command cmd = new Command("menu.game.paste.line",null,snippet,Boolean.TRUE);
+        Application.theCommandDispatcher.forward(cmd, Application.theApplication.enginePanel(), true);
     }
 
     private static void openInTabs(int GId1, int GId2) {

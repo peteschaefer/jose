@@ -1677,7 +1677,7 @@ public class EnginePanel
 
 					Command cmd = new Command("menu.game.paste.line",e,text,Boolean.TRUE);
 					Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);
-}
+				}
 			}
 		}
 	}
