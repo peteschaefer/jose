@@ -16,6 +16,8 @@ import com.mysql.embedded.jdbc.MyConnection;
 import com.mysql.jdbc.MiniAdmin;
 import de.jose.*;
 import de.jose.plugin.InputListener;
+import de.jose.task.Task;
+import de.jose.task.db.CheckDBTask;
 import de.jose.util.KillProcess;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
@@ -156,9 +158,13 @@ public class MySQLAdapter
 				if (bootstrap)
 					bootstrap(connection.getJdbcConnection());
 
+				Task checkIntegrity = new CheckDBTask(connection);
+				checkIntegrity.run();
+				//	will release connection upon completion
+
 				init_server = true;
 
-				JoConnection.release(connection);
+				//JoConnection.release(connection);
             } catch (SQLException e) {
                 Application.error(e);
             }
@@ -455,7 +461,7 @@ public class MySQLAdapter
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(mysqldir,"jose"));
 		pb.redirectErrorStream(true);
-		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+		pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
 		return pb.start();
 	}
 
@@ -763,6 +769,7 @@ public class MySQLAdapter
 				if (watch!=null) watch.finish();
 				//mysqladmin("shutdown");
 				if (conn==null)	conn = JoConnection.get();
+				if (conn.jdbcConnection==null) conn = JoConnection.theConnections.create(MySQLAdapter.this);
 				MiniAdmin admin = new MiniAdmin(conn.jdbcConnection);
 				admin.shutdown();
 				done = true;

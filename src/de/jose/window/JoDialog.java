@@ -262,7 +262,11 @@ public class JoDialog
 
 	public JoDialog(String name, boolean modal)
 	{
-        JFrame parent = JoFrame.getActiveFrame();
+		this(JoFrame.getActiveFrame(),name,modal);
+	}
+
+	public JoDialog(JFrame parent, String name, boolean modal)
+	{
         isModal = modal;
         if (isModal) {
 	        frame = new JDialog(parent,true);

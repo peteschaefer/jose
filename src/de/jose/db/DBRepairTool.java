@@ -6,10 +6,13 @@ import de.jose.CommandAction;
 import de.jose.Language;
 import de.jose.task.db.GameRepair;
 import de.jose.util.file.TailOutputStream;
+import de.jose.view.input.JoBigLabel;
 import de.jose.window.JoDialog;
+import de.jose.window.JoFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.Map;
@@ -20,10 +23,11 @@ public class DBRepairTool
     private int stage = 0;
     private JLabel[] labels = new JLabel[8];
     private JTextArea tail;
-    private PrintStream wasOut,wasErr;
+    private PrintStream wasOut,wasErr,tailStream;
+    private JButton nextButton;
 
     public DBRepairTool() {
-        super("menu.help.repair", true);
+        super(null, "menu.help.repair", true);
         center(600, 640);
     }
 
@@ -48,24 +52,24 @@ public class DBRepairTool
         JComponent comp = getElementPane();
 
         GridBagLayout layout = new GridBagLayout();
+        JLabel title;
         comp.setLayout(layout);
-        comp.add(newLabel(0,"Repair Database"),ELEMENT_ROW_SMALL);
-        labels[0].setFont(labels[0].getFont().deriveFont(Font.BOLD, 16.0f));
+        comp.add(title = newLabel("dialog.repair.title"),ELEMENT_ROW_SMALL);
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 16.0f));
 
+        JoBigLabel explain = new JoBigLabel(Language.get("dialog.repair.explain"));
+        comp.add(explain,ELEMENT_ROW);
         comp.add(Box.createVerticalStrut(20));
 
-        comp.add(newLabel(1,"Close Database Window"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(2,"Shutdown Database Process"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(3,"Check Index Files"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(4,"Repair Index Files"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(5,"Launch Database Process"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(6,"Recover Lost References"),ELEMENT_ROW_SMALL);
-        comp.add(newLabel(7,"Open Database Window"),ELEMENT_ROW_SMALL);
+        for (stage=1; stage <= 7; stage++)
+            comp.add(newLabel(stage,"dialog.repair."+stage),ELEMENT_ROW_SMALL);
 
-        comp.add(tail = newTextArea(120,40),ELEMENT_NEXTROW_REMAINDER);
+        tail = newTextArea(120,40);
+        JScrollPane scroll = new JScrollPane(tail);
+        comp.add(scroll,ELEMENT_NEXTROW_REMAINDER);
 
-        addButton("dialog.button.next");
-        addButton("dialog.button.close");
+        nextButton = addButton("dialog.button.next");
+
         JButton quit = addButton("dialog.button.quit");
         quit.setText(Language.get("menu.file.quit"));
 
@@ -78,7 +82,7 @@ public class DBRepairTool
     {
         wasOut = System.out;
         wasErr = System.err;
-        PrintStream tailStream = new PrintStream(new TailOutputStream(tail));
+        tailStream = new PrintStream(new TailOutputStream(tail));
         System.setOut(tailStream);
         System.setErr(tailStream);
         System.err.println("stderr redirected");
@@ -91,15 +95,62 @@ public class DBRepairTool
         System.setErr(wasErr);
     }
 
-    private void pipeOutput(Process process) throws IOException {
-        InputStream in1 = process.getInputStream();
-        InputStream in2 = process.getErrorStream();
-        BufferedReader bin = new BufferedReader(new InputStreamReader(in2));
-        while(process.isAlive()) {
-            String line = bin.readLine();
-            if (line!=null)
-                System.out.println(line);
+    private class PipeThread extends Thread {
+        private Process process;
+        private PrintStream out;
+
+        public PipeThread(Process process, PrintStream out) {
+            this.process = process;
+            this.out = out;
         }
+
+        @Override
+        public void run() {
+            InputStream in1 = process.getInputStream();
+            InputStream in2 = process.getErrorStream();
+            BufferedReader bin1 = new BufferedReader(new InputStreamReader(in1));
+            BufferedReader bin2 = new BufferedReader(new InputStreamReader(in2));
+
+            while(process.isAlive()) {
+                String line1 = null;
+                String line2 = null;
+                try {
+                    line1 = bin1.readLine();
+                    //line2 = bin2.readLine();
+                } catch (IOException e) { }
+                if (line1!=null)
+                    this.out.println(line1);
+                if (line2!=null)
+                    this.out.println(line2);
+                this.out.flush();
+            }
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) { }
+        }
+    }
+
+    protected Thread worker = null;
+    protected Timer poll;
+
+    protected void waitFor(Thread thread)
+    {
+        worker = thread;
+        nextButton.setEnabled(false);
+        poll = new Timer(500,this);
+        poll.setRepeats(true);
+        poll.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==poll) {
+            if (!worker.isAlive()) {
+                poll.stop();
+                updateLabels(stage, false);
+            }
+        }
+        super.actionPerformed(e);
     }
 
     @Override
@@ -115,49 +166,73 @@ public class DBRepairTool
         CommandAction action;
         action = new CommandAction() {
             @Override
-            public boolean isEnabled(String cmd) {
-                return stage < 7;
-            }
-
             public void Do(Command cmd) throws Exception {
-                updateLabels(++stage, true);
+                if (++stage >= 8) {
+                    hide();
+                    return;
+                }
+
+                System.out.print("--- ");
+                System.out.print(labels[stage].getText());
+                System.out.println(" ---");
+                updateLabels(stage, true);
+
+                boolean done=false;
                 try {
                     switch (stage) {
-                        case 1: closeDBWindow(); break;
-                        case 2: shutdownDB(); break;
-                        case 3: /*checkIndexes(false);*/ break;
-                        case 4: /*checkIndexes(true);*/ break;
-                        case 5: launchDB(); break;
-                        case 6: gameRepair(); break;
-                        case 7: openDBWindow(); break;
-                        case 8: hide(); break;
+                        case 1: done=closeDBWindow(); break;
+                        case 2: done=shutdownDB(); break;
+                        case 3: done=checkIndexes(false); break;
+                        case 4: done=checkIndexes(true); break;
+                        case 5: done=launchDB(); break;
+                        case 6: done=gameRepair(); break;
+                        //case 7: done=openDBWindow(); break;
+                        case 7: done=quitApplication(); break;
                     }
                 } catch (Throwable e) {
                     System.err.println(e.getMessage());
                 }
-                updateLabels(stage, false);
+
+                updateLabels(stage, !done);
             }
         };
         map.put("dialog.button.next", action);
 
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception {
-                Application.theApplication.quit(cmd);
+                quitApplication();
             }
         };
         map.put("dialog.button.quit", action);
     }
 
-    protected void closeDBWindow() {
+    protected boolean quitApplication()
+    {
+        Command cmd = new Command("menu.file.quit");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Application.theApplication.quit(cmd);
+                } catch (Exception e) {
+                    Application.error(e);
+                }
+            }
+        });
+        return true;
+    }
+
+    protected boolean closeDBWindow() {
         Application.theApplication.hidePanelFrame("window.collectionlist");
         Application.theApplication.hidePanelFrame("window.list");
         Application.theApplication.hidePanelFrame("window.gamelist");
         Application.theApplication.hidePanelFrame("window.query");
         Application.theApplication.hidePanelFrame("window.sqlquery");
         Application.theApplication.hidePanelFrame("window.sqllist");
+        return true;
     }
 
-    protected void shutdownDB()
+    protected boolean shutdownDB()
     {
         DBAdapter ad = JoConnection.getAdapter(false);
         Thread shutdownThread = null;
@@ -167,48 +242,46 @@ public class DBRepairTool
             JoConnection conn = null;
             try {
                 conn = JoConnection.get();
-                shutdownThread = ad.shutDown(conn);
+                shutdownThread = ad.shutDown(null);
             } catch (SQLException e) {
-                // ?
+                System.err.println(e.getMessage());
             }
         }
 
         JoConnection.closeAll();
 
-        while (shutdownThread!=null && shutdownThread.isAlive()) {
-            try {
-                shutdownThread.wait();
-            } catch (InterruptedException e) { }
-        }
+        if (shutdownThread!=null)
+            waitFor(shutdownThread);
+        return false;
     }
 
-    protected void checkIndexes(boolean repair) throws IOException, InterruptedException {
+    protected boolean checkIndexes(boolean repair) throws IOException, InterruptedException {
         String[] tables = { "MetaInfo", "Collection", "Game", "MoreGame", "Player", "Event", "Site", "Opening" };
         Process proc = MySQLAdapter.repairIndexes(tables,repair);
-        pipeOutput(proc);   //  todo move to worker thread
-        int result = proc.waitFor();
+        Thread pipeThread = new PipeThread(proc, tailStream);
+        pipeThread.start();
+        waitFor(pipeThread);
+        //int result = proc.waitFor();
+        return false;
     }
 
-    protected void launchDB() throws IOException, InterruptedException {
+    protected boolean launchDB() throws IOException, InterruptedException {
         MySQLAdapter ad = (MySQLAdapter)JoConnection.getAdapter(true);
         Thread launcher = ad.launchProcess(false);
-        while(launcher.isAlive())
-            try {
-                launcher.wait();
-            } catch (InterruptedException e) { }
+        waitFor(launcher);
+        return false;
     }
 
-    protected void gameRepair() throws Exception {
+    protected boolean gameRepair() throws Exception {
         GameRepair gameRepair = new GameRepair();
         gameRepair.start();
-        while(gameRepair.isAlive())
-            try {
-                gameRepair.wait();
-            } catch (InterruptedException e) { }
+        waitFor(gameRepair);
+        return false;
     }
 
-    protected void openDBWindow() {
+    protected boolean openDBWindow() {
         Application.theApplication.showPanelFrame("window.collectionlist");
+        return true;
     }
 
     protected void updateLabels(int st, boolean active) {
@@ -224,7 +297,10 @@ public class DBRepairTool
                 font = font.deriveFont(Font.PLAIN);
             label.setFont(font);
         }
-        getButton("dialog.button.next").setEnabled(st < 7);
+
+        nextButton.setEnabled(!active);
+        if (st==7 && !active)
+            nextButton.setText(Language.get("dialog.button.close"));
     }
 
 }

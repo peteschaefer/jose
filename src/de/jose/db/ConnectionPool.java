@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,14 +24,12 @@ public class ConnectionPool
     protected ArrayList free;
     /** set of occupied connections */
     protected ArrayList occupied;
-	protected boolean any;
 
     public ConnectionPool(int initialSize)
         throws SQLException
     {
 	    free = new ArrayList(initialSize);
 	    occupied = new ArrayList();
-		any = false;
 
         while (initialSize-- > 0)
             free.add(create(null));
@@ -99,6 +97,8 @@ public class ConnectionPool
 		   conn.close();
 		   remove(conn);
 	   }
+       occupied.clear();
+       free.clear();
 	}
 
 
@@ -106,24 +106,7 @@ public class ConnectionPool
     public JoConnection create(DBAdapter adapter)
         throws SQLException
     {
-		if (!any)
-		{
-			any = true;
-
-			/** use a separate connection for checking meta version
-			 *  and db integrity.
-			 */
-			JoConnection firstConn = new JoConnection(adapter,"test.connection");
-			//  check db integrity (missing constraints, etc.)
-			if (adapter==null)
-				JoConnection.theAdapter.checkIntegrity(firstConn);
-			else
-				adapter.checkIntegrity(firstConn);
-			//  checkIntegrity will close the connection upon completion
-
-		}
-
-	    JoConnection conn = new JoConnection(adapter,"pooled.connection");
+		JoConnection conn = new JoConnection(adapter,"pooled.connection");
 		conn.setAutoCommit(false);
 	    return conn;
     }
