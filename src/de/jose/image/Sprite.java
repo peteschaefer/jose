@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -35,7 +36,7 @@ public class Sprite
 	protected Graphics2D	bufferg;
 
 	protected Graphics2D	screeng;
-	protected Rectangle		screenBounds;
+	//protected Rectangle		screenBounds;
 
 	protected Point			current;
 	protected Point			offset;
@@ -43,7 +44,7 @@ public class Sprite
 
 	protected Sprite()
 	{ }
-
+/*
 	public Sprite(Graphics2D screen, Rectangle bounds,
 				  BufferedImage sprite, Point start,
 				  int offx, int offy)
@@ -58,7 +59,7 @@ public class Sprite
 	{
 		init(background, screen,bounds,sprite,start, offx,offy);
 	}
-
+*/
 	public void init(BufferedImage background,
 				  Graphics2D screen, Rectangle bounds,
 				  BufferedImage sprite, Point start,
@@ -66,7 +67,18 @@ public class Sprite
 	{
 		/*	screen	*/
 		screeng = screen;
-		screenBounds = bounds;
+		/* note: bounds in user-space coordinates.
+			but all painting happens in device-space coodinates
+		 */
+		// screenBounds = bounds;
+/*		AffineTransform tf = screen.getTransform();
+		tf.transform(bounds.getLocation(), screenBounds.getLocation());
+		Point2D screenSize = new Point2D.Double(bounds.getWidth(), bounds.getHeight());
+		tf.transform(screenSize,screenSize);
+		screenBounds.setSize((int)screenSize.getX(),(int)screenSize.getY());
+		//	s.t. screenBounds == background-bounds in device-space coordinates
+		//	todo user theBackground.getWidth() instead
+*/
 		/*	sprite	*/
 		theSprite = sprite;
 		spriteg = (Graphics2D)sprite.getGraphics();
@@ -87,7 +99,7 @@ public class Sprite
 		backg = (Graphics2D)theBackground.getGraphics();
 
 		current = start;
-		offset = new Point(offx,offy);
+		offset = new Point(offx,offy);	//	user-space, dev-space ?
 
 		updateBuffer();
 	}
@@ -106,7 +118,7 @@ public class Sprite
 		paint(current.x, current.y, screeng);
 	}
 
-	public final void paint(Graphics g)
+	public final void paint(Graphics2D g)
 	{
 		paint(current.x, current.y, g);
 	}
@@ -135,7 +147,7 @@ public class Sprite
 		paint(x,y,screeng);
 	}
 
-	public void paint(int x, int y, Graphics g)
+	public void paint(int x, int y, Graphics2D g)
 	{
 		//	restore background to buffer
 		Rectangle r = getBounds(x,y);
@@ -144,7 +156,13 @@ public class Sprite
 		//	paint sprite into buffer
 		ImgUtil.copy(theSprite, bufferg);
 		//	show buffer on screen
-		ImgUtil.copy(theBuffer, 0,0, g, r.x,r.y, r.width,r.height);
+		AffineTransform save_tf = null;
+		try {
+			ImgUtil.setIdentityTransform(g,true);
+			ImgUtil.copy(theBuffer, 0,0, g, r.x,r.y, r.width,r.height);
+		} finally {
+			if (save_tf!=null) g.setTransform(save_tf);
+		}
 	}
 
 	public void updateBuffer()
@@ -158,7 +176,14 @@ public class Sprite
 	public void hide()
 	{
 		Rectangle r = getBounds(current.x,current.y);
-		ImgUtil.copy(theBackground, r.x, r.y, screeng, r.x, r.y, r.width, r.height);
+		//	todo reset g.transform
+		AffineTransform save_tf=null;
+		try {
+			ImgUtil.setIdentityTransform(screeng,true);
+			ImgUtil.copy(theBackground, r.x, r.y, screeng, r.x, r.y, r.width, r.height);
+		} finally {
+			if (save_tf!=null) screeng.setTransform(save_tf);
+		}
 	}
 
 	public boolean moveTo(int x, int y)
@@ -177,25 +202,36 @@ public class Sprite
 
 		paint(current.x = x, current.y = y);
 
-		r1.x += offset.x;
-		r1.y += offset.y;
-		r1.width = Math.min(r1.width, screenBounds.width-r1.x);
-		r1.height = Math.min(r1.height, screenBounds.height-r1.y);
-		if (r1.width > 0 && r1.height > 0)
-			ImgUtil.copy(theBackground, r1.x,r1.y,
-					screeng, r1.x,r1.y,
-					r1.width,r1.height);
-		//screeng.drawRect(r1.x,r1.y,r1.width,r1.height);
-		//System.out.println(r1.x+","+r1.y+","+r1.width+","+r1.height);
+		AffineTransform save_tf = null;
+		try {
+			save_tf = ImgUtil.setIdentityTransform(screeng,true);
 
-		r2.x += offset.x;
-		r2.y += offset.y;
-		r2.width = Math.min(r2.width,screenBounds.width-r2.x);
-		r2.height = Math.min(r2.height,screenBounds.height-r2.y);
-		if (r2.width > 0 && r2.height > 0)
-			ImgUtil.copy(theBackground, r2.x,r2.y,
-					screeng, r2.x,r2.y,
-					r2.width,r2.height);
+			int screenWidth = theBackground.getWidth();
+			int screenHeight = theBackground.getHeight();
+			//	screen size in device-space coardinates
+
+			r1.x += offset.x;
+			r1.y += offset.y;
+			r1.width = Math.min(r1.width, screenWidth - r1.x);
+			r1.height = Math.min(r1.height, screenHeight - r1.y);
+			if (r1.width > 0 && r1.height > 0)
+				ImgUtil.copy(theBackground, r1.x, r1.y,
+						screeng, r1.x, r1.y,
+						r1.width, r1.height);
+			//screeng.drawRect(r1.x,r1.y,r1.width,r1.height);
+			//System.out.println(r1.x+","+r1.y+","+r1.width+","+r1.height);
+
+			r2.x += offset.x;
+			r2.y += offset.y;
+			r2.width = Math.min(r2.width, screenWidth - r2.x);
+			r2.height = Math.min(r2.height, screenHeight - r2.y);
+			if (r2.width > 0 && r2.height > 0)
+				ImgUtil.copy(theBackground, r2.x, r2.y,
+						screeng, r2.x, r2.y,
+						r2.width, r2.height);
+		} finally {
+			if (save_tf!=null) screeng.setTransform(save_tf);
+		}
 		//screeng.drawRect(r2.x,r2.y,r2.width,r2.height);
 		//System.out.println(r2.x+","+r2.y+","+r2.width+","+r2.height);
 		return true;

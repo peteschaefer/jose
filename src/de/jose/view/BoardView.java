@@ -30,7 +30,9 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -129,7 +131,7 @@ abstract public class BoardView
 	/**	called when the view is resized
 	 *	to recalc buffer sizes, etc.
 	 */
-	abstract public void recalcSize();
+	abstract public void recalcSize(Graphics2D g);
 
 	/**
 	 * capture an image asyncrhoneously
@@ -436,7 +438,7 @@ abstract public class BoardView
 		pop.add(item);
 	}
 
-	protected void showPromotionPopup(int color, Point where)
+	protected void showPromotionPopup(int color, Point2D where)
 	{
 		JPopupMenu pop = new JPopupMenu(Language.get("popup.promote"));
 
@@ -462,7 +464,7 @@ abstract public class BoardView
 
 		JoMenuBar.addMenuItemListener(pop, this);
 		pop.addPopupMenuListener(this);
-		pop.show(getParent(), where.x,where.y);
+		pop.show(getParent(), (int)where.getX(), (int)where.getY());
 
 		promoPopupShowing = true;
 	}

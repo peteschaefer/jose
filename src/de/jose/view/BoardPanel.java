@@ -33,9 +33,11 @@ import de.jose.util.ClipboardUtil;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.datatransfer.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.ColorModel;
 import java.util.*;
 import java.io.IOException;
 
