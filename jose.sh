@@ -9,6 +9,6 @@ cd `dirname "$0"`
 
 localJava="jre/bin/java"
 
-vmargs="-Xmx1200M -Djava.library.path=lib/Linux_i386"
+vmargs="--add-exports=java.desktop/sun.awt=ALL-UNNAMED -Djava.library.path=lib/Linux_x64"
 
 $localJava $vmargs -jar jose.jar $*

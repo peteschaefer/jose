@@ -93,7 +93,7 @@ public class Application
 
     /**	window icon
 	 */
-	public static final String ICON_IMAGE = "images"+File.separator+"jose32.gif";
+	public static final String ICON_IMAGE = "images"+File.separator+"ico"+File.separator+"jose128.png";
 
 	public static final String USER_PROFILE = ".jose.user.preferences";
 

@@ -24,4 +24,4 @@ list(APPEND sources
         winreg.cpp)
 
 # WIN32 hides the console window, uses WinMain entry point
-add_executable(JavaLauncher WIN32 ${sources} resources.rc jose.manifest)
+add_executable(jose WIN32 ${sources} resources.rc hidpi.manifest)
