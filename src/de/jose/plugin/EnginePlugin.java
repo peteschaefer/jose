@@ -838,7 +838,7 @@ abstract public class EnginePlugin
 			super(move);
 			this.ply = ply;
 			this.score.copy(ascore);
-			if (plugin!=null)
+			if (plugin!=null && !score.hasWDL())
 				plugin.mapUnit(score);
 		}
 

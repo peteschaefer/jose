@@ -27,21 +27,10 @@
     case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
     -> no need for PLUGIN_REQUESTED_HINT messaging
 
-[ ] BOOK_PLAY ~= THINKING
-    - while a book_play query is under way, the user can not move
-     (see BoardPanel.mouseSelect, not sufficient)
-    - thinking status should be managed by application
-        USER_ENGINE && plugin.THINKING || BOOK_PLAY query
-    [ ] BoardPanel.mouseSelect listens only to engine changes
-        listen to "app.state.changed instead
-    [ ] "app.state.changed" broadcasts
-            AppMode (USER_INPUT,ANALYSIS,USER_ENGINE)
-            Book playing (BOOK_PLAY under way)
-            Engine playing (plugin.THINKING)
-        - listeners: BoardPanel.mouseSelect, EnginePanel.info bar?
-
+[x] BOOK_PLAY ~= THINKING
 [ ] test with/without book
-    0 books should not alter the control flow. There is just a shortcut in submitQuery.
+    0 books should not alter the control flow.
+    There is just a shortcut in submitQuery.
 [ ] test with/without engine
 [ ] test input/analysis/play
 
