@@ -437,7 +437,7 @@ error.duplicate.database.access = Bitte benutzen sie nicht zwei Instanzen von jo
 	mit der gleichen Datenbank. \n\n\
 	Dadurch können Daten verloren gehen. \n\
 	Bitte beenden Sie eine Instanz.
-error.lnf.not.supported 	= Diese Design ist nicht verfügbar.
+error.lnf.not.supported 	= Dieses Design ist nicht verfügbar.
 error.not.selected = Bitte wählen Sie eine Partie zum Speichern.
 
 colorchooser.texture	= Textur

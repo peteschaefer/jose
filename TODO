@@ -110,8 +110,10 @@ BUG: Print Preview does not work
       https://github.com/JetBrains/JetBrainsRuntime
 
       [x] fixes hidpi on Linux :)
-      [x] but only partially on Windows :(
-            [x] adjust font size on many dialog elements
+      [x] ...and on Windows
+            after dialog elements are adjusted (maybe flaw of Windows LnF?)
+      [ ] bug: touch screen and drag not recognized.
+            which is a pity. moving pieces with your finger is a good feature
       [ ] deprecate ClassPathUtil, but that's ok
       [x] fix sprite rendering
       [ ] maybe some reflection bugs, but they can be fixed/deprecated

@@ -1447,6 +1447,8 @@ public class OptionDialog
 
 				component = text;
 			}
+			component.setMinimumSize(new Dimension(40,20));
+			component.setPreferredSize(new Dimension(80,20));
 			break;
 		}
 

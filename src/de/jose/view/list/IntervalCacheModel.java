@@ -20,7 +20,6 @@ import de.jose.db.*;
 import de.jose.pgn.PositionFilter;
 import de.jose.store.IntBuffer;
 import de.jose.util.StringUtil;
-import de.jose.util.ProcessUtil;
 import de.jose.util.map.IntIntMap;
 import de.jose.view.ListPanel;
 
