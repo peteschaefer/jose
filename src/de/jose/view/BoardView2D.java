@@ -1122,7 +1122,7 @@ public class BoardView2D
 		if (showEvalbar && eval!=null && eval.hasWDL())
 			doDrawEvalbar(g, b, r);
 		else {
-			Util.grow(r,new Insets(2,2,2,2));
+			//Util.grow(r,new Insets(2,2,2,2));
 			drawBackground(g, r);
 		}
 	}
@@ -1140,59 +1140,66 @@ public class BoardView2D
 		}
 	}
 
+	private Rectangle outerBounds(Rectangle2D r)
+	{
+		int x1 = (int)r.getX();
+		int y1 = (int)r.getY();
+		int x2 = (int)(r.getX()+r.getWidth()+1f);
+		int y2 = (int)(r.getY()+r.getHeight()+1f);
+		return new Rectangle(x1, y1, x2-x1, y2-y1);
+	}
+
 	private void doDrawEvalbar(Graphics2D g, Border b,
-							   Rectangle2D r)
+							   Rectangle2D r2d)
 	{
 		//int y2 = y0 +boardSize;
-		int hwhite = (int)(r.getHeight() * eval.rel(eval.win)+0.5);
-		int hgrey =  (int)(r.getHeight() * eval.rel(eval.draw)+0.5);
-		int hblack = (int)r.getHeight() - hwhite-hgrey;
+		Rectangle r = outerBounds(r2d);	//	round safely to int
+		int hwhite = (int)(r2d.getHeight() * eval.rel(eval.win)+0.5);
+		int hgrey =  (int)(r2d.getHeight() * eval.rel(eval.draw)+0.5);
+		int hblack = r.height - hwhite-hgrey;
 
-		int x = (int) r.getX();
-		int y0 = (int) r.getY();
-		int y2 = (int) (r.getY() + r.getHeight());
-		int width = (int) r.getWidth();
+        int y2 = r.y+r.height;
 
-		if (hwhite > 0) {
+        if (hwhite > 0) {
 			g.setColor(Color.white);
 			if (flipped)
-				g.fillRect(x, y0, width, hwhite);
+				g.fillRect(r.x, r.y, r.width, hwhite);
 			else
-				g.fillRect(x, y2 - hwhite, width, hwhite);
+				g.fillRect(r.x, y2 - hwhite, r.width, hwhite);
 		}
 		if (hgrey > 0) {
 			g.setColor(Color.gray);
 			if (flipped)
-				g.fillRect(x, y2 - hblack - hgrey, width, hgrey);
+				g.fillRect(r.x, y2 - hblack - hgrey, r.width, hgrey);
 			else
-				g.fillRect(x, y2 - hwhite - hgrey, width, hgrey);
+				g.fillRect(r.x, y2 - hwhite - hgrey, r.width, hgrey);
 		}
 		if (hblack > 0) {
 			g.setColor(Color.black);
 			if (flipped)
-				g.fillRect(x, y2 - hblack, width, hblack);
+				g.fillRect(r.x, y2 - hblack, r.width, hblack);
 			else
-				g.fillRect(x, y0, width, hblack);
+				g.fillRect(r.x, r.y, r.width, hblack);
 		}
 		//	paint user/engine/book icons
 		char blackIcon = evalChar(BLACK);
 		char whiteIcon = evalChar(WHITE);
 		if (blackIcon != 0 || whiteIcon != 0)
 		{
-			float fontSize = (int)r.getWidth()*0.75f;//devSquareSize * 0.2f;
+			int fontSize = (int)(r2d.getWidth()*0.75f);//devSquareSize * 0.2f;
 
-			int x3 = (int)(r.getX()+r.getWidth()/2);
-			int y1 = y0+(int)r.getWidth()/2;
-			int y3 = y2-(int)r.getWidth()/2;
+			int x3 = (int)(r2d.getX()+r2d.getWidth()/2);
+			int y1 = r.y +(int)r2d.getWidth()/2;
+			int y3 = y2-(int)r2d.getWidth()/2;
 
 			if (blackIcon != 0)
-				drawCentered(g, blackIcon, false, x3, flipped ? y3:y1, (int)fontSize);
+				drawCentered(g, blackIcon, false, x3, flipped ? y3:y1, fontSize);
 			if (whiteIcon != 0)
-				drawCentered(g, whiteIcon, true, x3, flipped ? y1:y3, (int)fontSize);
+				drawCentered(g, whiteIcon, true, x3, flipped ? y1:y3, fontSize);
 		}
 
 		if (b !=null)
-			b.paintBorder(this, g, x, y0, width, (int)r.getHeight());
+			b.paintBorder(this, g, r.x, r.y, r.width, r.height);
 	}
 
 	static final Surface light = new Surface(COLOR,Color.lightGray,null);
