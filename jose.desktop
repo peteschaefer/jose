@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version = 1.5
+Type = Application
+Name = josé
+Comment = a freee Chess Database and analysis tool
+Icon = images/jose128.png
+Categories = Games
+Terminal = false
+Exec = jose.sh %F
+StartupNotify =	true

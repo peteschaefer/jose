@@ -7,7 +7,7 @@ cd `dirname "$0"`
 # otherwise use java from path
 #
 
-localJava="jre-linux/bin/java"
+localJava="jre/bin/java"
 
 vmargs="-Xmx1200M -Djava.library.path=lib/Linux_i386"
 
