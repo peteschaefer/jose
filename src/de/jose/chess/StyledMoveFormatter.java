@@ -10,6 +10,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
+import static de.jose.util.ListUtil.indexOf;
+
 public class StyledMoveFormatter extends StringMoveFormatter
 {
     private StyledDocument doc;
@@ -22,12 +24,17 @@ public class StyledMoveFormatter extends StringMoveFormatter
         return textStyle;
     }
 
+    public Style getFigStyle() {
+        return figStyle;
+    }
+
     public void setTextStyle(Style textStyle) {
         this.textStyle = textStyle;
-        if (figStyle==null) {
-            String language = JoStyleContext.getFigurineLanguage(textStyle);
-            setLanguage(language);
-        }
+    }
+
+    public void setTextLanguage() {
+        String language = JoStyleContext.getFigurineLanguage(textStyle);
+        setLanguage(language);
     }
 
     public void setFigStyle(Style figStyle) {
@@ -35,10 +42,6 @@ public class StyledMoveFormatter extends StringMoveFormatter
         if (figStyle != null) {
             String fontName = JoFontConstants.getFontFamily(figStyle);
             this.enc = FontEncoding.getEncoding(fontName);
-        }
-        if (figStyle==null) {
-            String language = JoStyleContext.getFigurineLanguage(textStyle);
-            setLanguage(language);
         }
     }
 
@@ -70,6 +73,28 @@ public class StyledMoveFormatter extends StringMoveFormatter
             Application.error(blex);
             throw new RuntimeException(blex.getMessage());
         }
+    }
+
+    public void reformatFrom(CharSequence str)
+    {
+        boolean comment=false;
+        for (int i=0; i<str.length(); i++)
+        {
+            char c = str.charAt(i);
+            if (c=='{') comment=true;
+
+            if (!comment && Character.isUpperCase(c)) {
+                int pc = indexOf(pieceChars,c); //  todo
+                if (pc >= 0) {
+                    figurine(PAWN + pc, false);
+                    continue;
+                }
+            }
+
+            buf.append(c);
+            if (c=='}') comment=false;
+        }
+        flush();
     }
 
     @Override

@@ -115,6 +115,7 @@ public class MoveNode
 		throws BadLocationException
 	{
 		formatter.setTextStyle(getDefaultStyle(doc));
+		formatter.setTextLanguage();
 
 		int moveFormat = Application.theUserProfile.getInt("doc.move.format",MoveFormatter.SHORT);
 

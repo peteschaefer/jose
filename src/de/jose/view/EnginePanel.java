@@ -149,12 +149,12 @@ public class EnginePanel
 		display(EnginePlugin.PAUSED,null, inBook);
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
-
-		setupStyles();
 	}
 
 	private void setupStyles()
 	{
+		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
+
 		JoStyleContext styles = Application.theUserProfile.getStyleContext();
 		//textStyle = styles.getStyle("body.line");
 		textStyle = styles.addStyle("engine.pv",null);
@@ -173,6 +173,8 @@ public class EnginePanel
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
+		formatter.setPieceCharArray(
+				StringMoveFormatter.getDefaultFormatter().getPieceCharArray());
 
 		int moveFormat = Application.theUserProfile.getInt("doc.move.format", MoveFormatter.SHORT);
 		formatter.setFormat(moveFormat);
@@ -1024,8 +1026,15 @@ public class EnginePanel
 		StyledDocument doc = label.getStyledDocument();
         try {
             doc.remove(0,doc.getLength());
-			if (text!=null && text.length()>0)
-				doc.insertString(0,text.toString(),textStyle);
+			if (text!=null && text.length()>0) {
+				if (formatter.getFigStyle()!=null) {
+					formatter.setDocument(doc,0);
+					formatter.reformatFrom(text);
+				}
+				else {
+					doc.insertString(0, text.toString(), textStyle);
+				}
+			}
 			if (info!=null && info.length()>0) {
 				doc.insertString(doc.getLength(), "\n", null);
 				doc.insertString(doc.getLength(), info.toString(), infoStyle);
@@ -1092,7 +1101,7 @@ public class EnginePanel
         showHistory = Application.theUserProfile.getBoolean("plugin.pv.history");
 		showTooltips = Application.theUserProfile.getBoolean("plugin.pv.tooltips");
 
-		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
+		setupStyles();
 
 		if (Application.theApplication.getEnginePlugin() != null)
 			connectTo(Application.theApplication.getEnginePlugin());

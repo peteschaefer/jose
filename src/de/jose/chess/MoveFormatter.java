@@ -478,10 +478,18 @@ abstract public class MoveFormatter
 	public void setPieceChars(String chars)
     {
         if (chars==null)
-            pieceChars = parsePieceChars(DEFAULT_PIECE_CHARACTERS);
+            setPieceCharArray(null);
         else
-            pieceChars = parsePieceChars(chars);
+			setPieceCharArray(parsePieceChars(chars));
     }
+
+	public void setPieceCharArray(String[] chars)
+	{
+		if (chars==null)
+			pieceChars = parsePieceChars(DEFAULT_PIECE_CHARACTERS);
+		else
+			pieceChars = chars;
+	}
 
 	public void setLanguage(String langCode)
     {
@@ -490,6 +498,11 @@ abstract public class MoveFormatter
         else
             setPieceChars(Language.get("fig."+langCode, null));
     }
+
+	public String[] getPieceCharArray()
+	{
+		return pieceChars;
+	}
 
 	public static String[] parsePieceChars(String input)
 	{
