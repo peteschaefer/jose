@@ -3,12 +3,12 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="142"/>
+	<property name="version" value="15"/>
 
 	<!-- target directory -->
 
-	<property name="target-dir" location="F:/jose archive/release/${version}"/>
-	<property name="jre-dir" location="F:/jose archive/release/extras"/>
+	<property name="target-dir" location="C:/dev/jose/Release/${version}"/>
+	<property name="jre-dir" location="C:/jose/Release/extras"/>
 
 
 <!--
@@ -50,6 +50,7 @@
 				<include name="books.xml"/>
 				<include name="misc.xml"/>
 				<include name="toolbars.xml"/>
+				<include name="layout.xml"/>
             </zipfileset>
 
 			<zipfileset dir="database" prefix="${appldir}/database" dirmode="777">
@@ -79,9 +80,11 @@
 
 			<zipfileset dir="books" prefix="${appldir}/books">
 				<include name="book.bin"/>
-				<!--<include name="DCbook_large.bin"/>-->
-				<!--<include name="Performance.bin"/>-->
-				<!--<include name="Varied.bin"/>-->
+				<include name="book_small.bin"/>
+				<include name="DCbook_large.bin"/>
+				<include name="Performance.bin"/>
+				<include name="Varied.bin"/>
+				<include name="komodo.bin"/>
 			</zipfileset>
 
 			<zipfileset dir="fop" prefix="${appldir}/fop" includes="info.txt" dirmode="777"/>
@@ -97,10 +100,13 @@
 				<include name="jh.jar"/>
 				<include name="jdbc/mysql-je.jar"/>
 				<include name="plaf/metouia.jar"/>
+				<include name="com.sun.jar" />
 			</zipfileset>
 
 			<zipfileset dir="sounds" prefix="${appldir}/sounds">
-				<include name="KDE_*"/>
+				<!--include name="KDE_*"/-->
+				<exclude name="old/**"/>
+				<exclude name="*.zip"/>
 			</zipfileset>
 
 			<zipfileset dir="xsl" prefix="${appldir}/xsl">
@@ -140,7 +146,6 @@
 				<include name="jose.ini"/>
 				<!--include name="jose.lax"/-->
 				<!--include name="lax.jar"/-->
-				<include name="winUtils.dll"/>
 			</zipfileset>
 			<zipfileset dir="bin" prefix="${appldir}/bin">
 				<include name="share/**"/>
@@ -149,6 +154,9 @@
 			<zipfileset dir="lib/Windows" prefix="${appldir}/lib/Windows">
 				<include name="libmysqld.dll"/>
 				<include name="libmysqlje.dll"/>
+				<include name="easylink.dll"/>
+				<include name="metaphone.dll"/>
+				<include name="winUtils.dll"/>
 				<!--Java3D libraries-->
 				<include name="j3dcore.jar"/>
 				<include name="j3dcore-d3d.dll"/>
@@ -301,13 +309,13 @@
 	</target>
 
 	<target name="stockfish-windows">
-		<description> Leela (Lc0) engine for Windows </description>
+		<description> Stockfish engine for Windows </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
 			<zipfileset dir="config" prefix="${appldir}/config">
 				<include name="stockfish.xml"/>
 			</zipfileset>
 			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
-				<exclude name="stockfish-windows-x86-64-avx2.exe"/>
+				<exclude name="stockfish-windows-x86-64-avx2.*"/>
 				<exclude name="src"/>
 				<exclude name="wiki"/>
 			</zipfileset>
@@ -315,7 +323,7 @@
 	</target>
 
 	<!-- Windows w/out JRE -->
-	<target name="windows" depends="init">
+	<target name="windows-no-jre" depends="init">
 		<description> installation package for windows (not including JRE) </description>
 
 		<property name="zip-file" location="${target-dir}/jose-${version}-windows.zip"/>
@@ -352,7 +360,7 @@
 	<target name="windows-jre" depends="init">
 		<description> installation package for windows (including JRE) </description>
 
-		<property name="zip-file" location="${target-dir}/jose-${version}-windows-jre.zip"/>
+		<property name="zip-file" location="${target-dir}/jose-${version}-windows.zip"/>
 		<property name="appldir" value="jose"/>
 		<delete dir="${appldir}"/>
 

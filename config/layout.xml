@@ -32,7 +32,7 @@
                             <panel type="view" name="window.eval" visible="false" border="true">
                                 <weight x="1.0" y="0.2"/>
                             </panel>
-                            <panel type="view" name="window.engine" visible="false" border="true">
+                            <panel type="view" name="window.engine" visible="true" border="true">
                                 <weight x="1.0" y="0.3"/>
                             </panel>
                         </panel>

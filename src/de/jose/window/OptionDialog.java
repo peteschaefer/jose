@@ -1635,8 +1635,8 @@ public class OptionDialog
 		SearchType selected = SearchType.values() [ListUtil.indexOf(searchRadioValues, radioString)];
 
 		Date timeValue = (Date)getValueByName("plugin.search.time.fixed.value");
-		long pliesValue = (int)getValueByName("plugin.search.depth.value");
-		long nodesValue = (int)getValueByName("plugin.search.nodes.value");
+		long pliesValue = getIntValue("plugin.search.depth.value");
+		long nodesValue = getIntValue("plugin.search.nodes.value");
 
 		Element searchConfig = EnginePlugin.getSearchControls(pluginConfig);
 

@@ -35,4 +35,12 @@
 		<URL>http://osdn.dl.sourceforge.net/sourceforge/jose-chess/Varied.bin</URL>
 		<COMMENT>original book for Fruit, designed to play a broader range of openings</COMMENT>
 	</BOOK>
+	<BOOK>
+		<FILE>komodo.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Salvo Spitaleri</AUTHOR>
+		<URL>http://komodochess.com/downloads.htm</URL>
+		<COMMENT>book for Komodo</COMMENT>
+	</BOOK>
+
 </APPLICATION_SETTINGS>

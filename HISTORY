@@ -124,4 +124,19 @@ the first production release.
 === 1.4.4 (2006-02-11) ===
 * bug fixes
 
+... 18 years go by ...
+
+=== 1.5 (2006-01)
+* support for modern OSes like Windows 10,11, Ubuntu 24.04, ...
+* bundled with JRE 1.8
+* bundled with Stockfish and Leela (Linux users have to compile Leela themselves...)
+* WDL scores and other Leela scores
+* Leela diagnostics
+* Node-restricted search (and fixed time, fixed depth)
+* Evaluation bar and graph (stored in database)
+* Analysis arrows
+* "New game from here" starts a new game from current position
+* support for Chessnut Air, Air+, Pro electronic boards (only USB, currently. Bluetooth not yet realiably supported)
+
+
 ==========================

@@ -1,27 +1,17 @@
 
-==========================
-jose - 1.4.2 Release Notes
-==========================
+========================
+jose - 1.5 Release Notes
+========================
 
-jose-chess.sourceforge.net
+hrimfaxi.bitbucket.io/jose
 
 
 ==================
 Files for Download
 ==================
 
-* jose-142-windows.exe             Installer program for Windows; requires JRE 1.4 or later
-* jose-142-windows-jre.exe         Installer program for Windows; includes JRE 1.5.0
-
-* jose-142-linux.zip               zip archive for Linux with Intel 32 bit processors; requires JRE 1.4 or later
-* jose-142-linux-jre.zip           zip archive for Linux with Intel 32 bit processors; includes JRE 1.5.0
-* jose-142-macosx.dmg          	   disk image for Mac OS X with PowerPC processors; requires JRE 1.4 or later
-
-* jose-142-*-update.zip            Update packages for older versions
-* jose-142-source.zip              Source Code
-
-
-* jose-sounds.zip                  Move Announcements in various languages (optional)
+* jose-15-windows.zip              zip archive for Windows
+* jose-15-linux.zip                zip archive for Linux with Intel processors
 
 * database-10k.jose                Database containing 10.000 grandmaster games
 * database-500k.jose               Database containing more than 500.000 games
@@ -33,35 +23,13 @@ Requirements
 
 * Operating Systems: 
    - Windows 98 or later
-   - Linux with 32 bit processors
-   - Mac OS X 10.3 or later with PowerPC processors
+   - Linux with Intel processors
 
-* Java Runtime Environment 1.4 or later
-  (Sun JRE 1.5.0 recommended)
-
-  Some installation packages (those with "-jre") 
-  already contain the Runtime Environment. 
-  It will be installed along with jose (without affecting 
-  existing installations).
-  
-  Alternatively, you can download the JRE from:
-    http://java.sun.com/j2se/1.5.0/download.jsp
-  Linux users might also have a look at:
-    http://www.blackdown.org
-  
-  If you don't know which version of Java is installed on your system,
-  open a command prompt and type "java -version".
-  
-  Please note that jose will not run with Microsoft's JRE
-  (but the installation program will).
-
-  
 ====================
 Windows Installation
 ====================
 
-* Run the installer program "jose-142-windows.exe", resp. "jose-142-windows-jre.exe"
-* follow the instructions...
+* Unpack the zip file into a directory of your choice
 
 * You can start jose by double-clicking "jose.exe"
   or you can start it from the command line with
@@ -85,27 +53,6 @@ Linux Installation
   or you can start it from the command line with
      java -jar jose.jar
 
-
-=====================
-Mac OS X Installation
-=====================
-
-* Double click the downloaded file: a new volumne "jose for Mac" will appear on your desktop
-* Open the volume "jose for Mac", drag the icon to its final destination, e.g. the Applications folder
-* (avoid starting jose from the mounted disk image)
-
-* start jose by double clicking the jose icon
-  or you can start it by double clicking jose.jar
-  or you can start it from the command line with
-     open jose.app
-  or   
-     java -jar jose.jar db=MySQL-standalone
-
-* jose includes a number of TrueType fonts for displaying chess figurines.
-  If you like to use these fonts with other applications, install them with
-  the Font Utility.
-
-
 ======================
 3D System Requirements
 ======================
@@ -118,22 +65,6 @@ Mac OS X Installation
   - Graphics adapter with driver that supports the GLX extension:
     GLX 1.3 or later and OpenGL 1.2 or later
 
-* Mac OS X
-  - Java3D 1.3.1
-	see http://www.apple.com/downloads/macosx/apple/java3dandjavaadvancedimagingupdate.html
-
-
-====================   
-Upgrade Instructions
-====================
-
-* You need an existing jose installation
-* The upgrade package will update any version to the current release version
-* Unzip the package into your existing installation directory. 
-  When asked for overwriting files, click "Yes to All".    
-  
-* You can perform the update automatically by choosing "Online Update" from the Help menu.
-  If the online update fails, you can simply unzip the downloaded file, as described above.
 
 =====================================
 Installing the Sample Games Databases
@@ -151,14 +82,8 @@ Installing the Sample Games Databases
 Removing the Installation
 =========================
 
-* Windows: run the program jose/Uninstall.exe
-  - jose will be removed from your system
-  - the game database WILL NOT be removed automatically. 
-    To remove the database, delete the directory jose/database.
-  
-* Mac OS X: drag the jose icon into the Trash.
-  - if you want to keep a backup copy of the game database, 
-    just copy the folder jose.app/database
+* remove the installation folder
+* remove .jose.user.preferences from your home directory
 
 =========================
 

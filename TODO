@@ -29,6 +29,7 @@ libraries needed:
 === Factory Settings
 
 * eval bar = true
+* engine panel = true
 * suggestions = true
 * board tooltips = true
 * wdl = true
@@ -42,6 +43,7 @@ Leela
 * VerboseMoveStats = true
 * LogLiveStats = true
 
+BUG: first launch, w/out preferences takes very long. Context menus missing.
 
 ==== New Features
 
