@@ -229,8 +229,10 @@ public class PluginList
 		{
 			if (selected)
 				g.setColor(/*getSelectionBackground()*/Color.yellow);
-			else
-				g.setColor(Color.white);
+			else {
+				Color bg = UIManager.getColor("List.background");
+				g.setColor(bg.brighter());
+			}
 			g.fillRect(0,0,getWidth(),getHeight());
 
 
