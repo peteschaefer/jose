@@ -34,6 +34,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
@@ -389,16 +390,21 @@ public class QueryPanel
         controls.add(Box.createVerticalStrut(10));
 
         //  Edit buttons
-		controls.add( JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear",this) );
-		controls.add( JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", this) );
-		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", this) );
-		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", this) );
-		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", this) );
+		createEditButtons(controls,this);
 
-        posPanel.add(posEditor, BorderLayout.CENTER);
+		posPanel.add(posEditor, BorderLayout.CENTER);
 		posPanel.add(controls, BorderLayout.WEST);
 
 		addTab("dialog.query.position", posPanel, tabIcon[2],true);
+	}
+
+	public static void createEditButtons(JComponent controls, ActionListener list)
+	{
+		controls.add( JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear",list) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", list) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", list) );
+		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", list) );
+		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", list) );
 	}
 
 	protected void addTab(String id, JComponent component, Icon icon, boolean scrollable)

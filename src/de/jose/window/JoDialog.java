@@ -22,6 +22,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.WinUtils;
 import de.jose.util.icon.TextIcon;
+import de.jose.view.JoToolBar;
 import de.jose.view.colorchooser.JoColorButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
 import de.jose.view.input.*;
@@ -1679,7 +1680,12 @@ public class JoDialog
 
     public static JButton newLinkButton(String name, String icon, ActionListener listener)
     {
-        JButton button = newButton(name, ImgUtil.getMenuIcon(icon), listener);
+		String spec = JoMenuBar.ICON_SPECS.get(icon);
+		Icon[] icons = JoToolBar.createAwesomeIcons(spec,20);
+
+        JButton button = newButton(name, icons[1], listener);
+		button.setDisabledIcon(icons[0]);
+
 		button.setBorderPainted(false);
 		button.setBorder(new EmptyBorder(2,8,2,8));
 		button.setPreferredSize(new Dimension(92,22));

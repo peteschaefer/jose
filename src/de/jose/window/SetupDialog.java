@@ -22,6 +22,7 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.view.BoardEditView;
+import de.jose.view.QueryPanel;
 import de.jose.view.SetupBoardAdapter;
 
 import javax.swing.*;
@@ -159,7 +160,7 @@ public class SetupDialog
 
 	public SetupDialog(String name) {
 		super(name, false);
-		frame.setMinimumSize(new Dimension(720,580));
+		frame.setMinimumSize(new Dimension(820,580));
 
 		readOnFailedSave = false;    //	keep data when save fails
 
@@ -241,13 +242,9 @@ public class SetupDialog
 		JComponent buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.add(Box.createVerticalStrut(20));
-		buttons.add(JoDialog.newLinkButton("dialog.setup.clear", "menu.edit.clear", this));
-		buttons.add(JoDialog.newLinkButton("dialog.setup.initial", "menu.web.home", this));
-		buttons.add(JoDialog.newLinkButton("dialog.setup.copy", "menu.edit.copy", this));
-		buttons.add(JoDialog.newLinkButton("menu.edit.copy.fen", "menu.edit.copy", this));
-		buttons.add(JoDialog.newLinkButton("menu.edit.paste", "menu.edit.paste", this));
+		QueryPanel.createEditButtons(buttons,this);
 
-		getElementPane().add(buttons, gridConstraint(ELEMENT_TWO_SMALL,1,3,1));
+		getElementPane().add(buttons, gridConstraint(ELEMENT_TWO,1,3,1));
 
 		JPanel ebox = newGridBox("dialog.option.eboard");
 

@@ -180,7 +180,7 @@
 		<separator/>
 		<item id="menu.help.repair"/>
 		<separator/>
-		<item id="menu.web.home" 		url="https://hrimfaxi.bitbucket.io/jose"/>
+		<item id="menu.web.home" 		icon="\uf015:#ffff88:#000000" url="https://hrimfaxi.bitbucket.io/jose"/>
 		<item id="menu.web.update"/>
 		<!--item id="menu.web.report"		url="http://sourceforge.net/tracker/?func=browse&amp;group_id=60120&amp;atid=493133"/-->
 		<item id="menu.web.report"		url="https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a&amp;statuses=new&amp;statuses=indeterminate&amp;sort=-updated&amp;page=1"/>
