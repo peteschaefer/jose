@@ -26,7 +26,6 @@ libraries needed:
 
 ==== New Features
 
-* BUG? black evals during (after) book phase
 * BUG? Leela keeps analyzing while playing from book
 * BUG? Leela diagnostics not always associated correctly
 
@@ -51,6 +50,19 @@ libraries needed:
   - can't delete? (Apply !!)
 
 ==== Postponed
+
+* Graph View interactive
+    - mark current move
+    - tooltips
+    - click navigate
+
+* Refactor Scoring !!
+    - no more float[]. Use Score.wdl instead.
+        Normalisation (and validity) can be based on wdl (plus engine knowledge).
+    - only one ground truth: MoveNode.score
+    - drop EvalArray (read data from Game tree directly)
+    - drop BoardView.eval (read from Game.currentMove())
+    - use similar updating mechanism for Engine and Book evals
 
 * Resign, Offer draw. Current heuristics is similar to TCEC
   - no draw offer before move 30

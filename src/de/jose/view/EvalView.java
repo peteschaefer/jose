@@ -33,6 +33,7 @@ import de.jose.plugin.AnalysisRecord;
 import javax.swing.*;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -294,14 +295,29 @@ public class EvalView
 			else if (EvalArray.isValid(value2)) {
 				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, value2);
 			}
+			else {
+				paint1Value(g, (int)(p-first)*BAR_WIDTH, BAR_WIDTH, null);
+			}
 		}
 	}
 
 	protected void paint1Value(Graphics g, int x, int width, float[] value)
 	{
-		if (!EvalArray.isValid(value)) return;
-
 		int height = getHeight();
+
+		if (!EvalArray.isValid(value)) {
+			Graphics2D g2 = (Graphics2D) g;
+			float[] fractions = new float[] { 0.0f, 0.35f, 0.65f, 1.0f };
+			Color[] colors = new Color[] { Color.black, Color.darkGray, Color.lightGray, Color.white };
+
+			LinearGradientPaint gp = new LinearGradientPaint(
+					new Point(0,0),new Point(0,height),
+					fractions, colors);
+			g2.setPaint(gp);
+			//g.setColor(Color.lightGray);
+			g2.fillRect(x, 0, width, height);
+			return;
+		}
 
 		int p1 = (int)(height*(1.0f - value[0]-value[1]));
 		int p2 = (int)(height*(1.0f - value[0]));

@@ -16,6 +16,7 @@ import de.jose.*;
 import de.jose.chess.EngUtil;
 import de.jose.chess.Move;
 import de.jose.chess.Rook;
+import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
@@ -156,7 +157,7 @@ public class BoardView2D
 	public void activate(boolean active)
 	{
 		/*	nothing to do - position will be synched in paint()	*/
-		eboard.connect(); // right place?
+		//eboard.connect(); // right place?
 	}
 
 	public void storeProfile(UserProfile prf)
@@ -516,7 +517,8 @@ public class BoardView2D
 			sprite2.updateBuffer();
 		}
 
-		eboard.synchFromApp();
+		EBoardConnector eboard = Application.theApplication.eboard;
+		if (eboard!=null) eboard.synchFromApp();
 	}
 
 

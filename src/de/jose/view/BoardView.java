@@ -82,7 +82,7 @@ abstract public class BoardView
 	protected boolean showAnimationHints;
 
 	/** attached electronic chess board; optional */
-	protected EBoardConnector eboard;
+	//protected EBoardConnector eboard;
 
 	//	score for eval bar
 	protected float[] eval = null;
@@ -95,13 +95,12 @@ abstract public class BoardView
 		setMinimumSize(new Dimension(48,48));
 		setOpaque(true);
 		hints = new ArrayList<Hint>();
-
-		eboard = Application.theApplication.getEBoardConnector();
 	}
 
 	public void useAppBoard(EBoardConnector.Mode mode, CommandListener commandListener)
 	{
-		eboard.useAppBoard(board,mode,commandListener);
+		EBoardConnector eboard = Application.theApplication.eboard;
+		if (eboard != null) eboard.useAppBoard(board,mode,commandListener);
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }

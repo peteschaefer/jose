@@ -355,8 +355,10 @@ public abstract class EBoardConnector
 
     public synchronized void synchFromApp()
     {
+        if (app.board==null)
+            return; // not yet attached to Application
         if (setExplodedFen(app.board,appXFen)==0)
-            return;
+            return; // not modified
 
         if (!connected)
             return;

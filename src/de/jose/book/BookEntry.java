@@ -122,7 +122,7 @@ public class BookEntry
 
 		if (countWhite==IUNKNOWN || countDraw==IUNKNOWN || countBlack==IUNKNOWN) {
 			//	at least have some decent displayable value
-			result[0] = result[1] = 1.0f/3f;
+			result[0] = result[1] = Float.MAX_VALUE;	// invalid
 		}
 		else {
 			result[0] = (float) countWhite / count;

@@ -27,7 +27,6 @@ import de.jose.pgn.*;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.InputListener;
 import de.jose.plugin.Plugin;
-import de.jose.plugin.UciPlugin;
 import de.jose.profile.FrameProfile;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
@@ -188,7 +187,7 @@ public class Application
 	protected HelpSystem        helpSystem;
 	protected Rectangle			helpBounds;
 
-	protected EBoardConnector	eboard;
+	public EBoardConnector	eboard=null;
 
 	protected boolean shownFRCWarning=false;
 
@@ -2370,17 +2369,17 @@ public class Application
 			@Override
 			public void Do(Command cmd) throws Exception {
 				if (cmd.code.equals("eboard.connect"))
-					getEBoardConnector().connect();
+					initEBoardConnector().connect();
 				if (cmd.code.equals("eboard.disconnect"))
-					getEBoardConnector().disconnect();
+					initEBoardConnector().disconnect();
 			}
 			@Override
 			public boolean isEnabled(String cmd) {
-				return getEBoardConnector().isAvailable();
+				return eboard!=null && eboard.isAvailable();
 			}
 			@Override
 			public boolean isSelected(String cmd) {
-				return getEBoardConnector().connected;
+				return initEBoardConnector().connected;
 			}
 		};
 		map.put("eboard.disconnect",action);
@@ -3468,6 +3467,9 @@ public class Application
 			JoStyleContext styles = (JoStyleContext)theUserProfile.getStyleContext();
 			styles.assertCustomFonts();
 			getClassificator();
+			initEBoardConnector();
+			//if (boardPanel()!=null)
+			//	boardPanel().getView().useAppBoard(EBoardConnector.Mode.PLAY,theApplication);
 		}
 	}
 
@@ -3628,9 +3630,11 @@ public class Application
 			if (/*theGame.isMainLine(node) &&*/EvalArray.isValid(bookValue)) {
 				node.engineValue = bookValue;
 				theGame.setDirty(true);
-				evalPanel().setValue(node.getPly(),node.engineValue);
-				// todo this should not be handled by a direct call, but rather by a message
+				if (evalPanel() != null)
+					evalPanel().setValue(node.getPly(),node.engineValue);
+				// todo this should not be handled by a direct call, but rather dispatched by a message
 				// and it should be unified with the way engine evals are updated ...
+				// broadcast ( "eval.notify", node )
 			}
 //					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
 		}
@@ -3785,10 +3789,13 @@ public class Application
 		}
 	}
 
-	public EBoardConnector getEBoardConnector() {
+	public EBoardConnector initEBoardConnector() {
 		if (eboard==null) {
 			eboard = new ChessNutConnector();
+			if (boardPanel()!=null)
+				boardPanel().getView().useAppBoard(EBoardConnector.Mode.PLAY,this);
 			eboard.readProfile(theUserProfile);
+			if (!eboard.connected) eboard.connect();
 		}
 		return eboard;
 	}

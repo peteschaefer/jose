@@ -4,7 +4,6 @@ import de.jose.Application;
 import de.jose.CommandListener;
 import de.jose.Language;
 import de.jose.image.ImgUtil;
-import de.jose.profile.UserProfile;
 import de.jose.view.IBoardAdapter;
 import de.jose.window.JoDialog;
 
@@ -25,7 +24,7 @@ public class DialogComponent extends JComponent implements ActionListener
 
     public DialogComponent(boolean with_synch)
     {
-        eboard = Application.theApplication.getEBoardConnector();
+        eboard = Application.theApplication.initEBoardConnector();
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
