@@ -35,7 +35,7 @@ public class Version
 	public static final String author	= SplashScreen.author;
 	/**	author contact
 	 */
-	public static final String contact	= "peterschaefer@users.sourceforge.net";
+	public static final String contact	= "pete.schaefer@gmail.com";
 
     /** download site for Sun JRE
     	TODO move to xml config

@@ -16,6 +16,8 @@ import de.jose.*;
 import de.jose.chess.*;
 import de.jose.eboard.ChessNutConnector;
 import de.jose.eboard.EBoardConnector;
+import de.jose.pgn.Game;
+import de.jose.pgn.MoveNode;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.UserProfile;
@@ -31,6 +33,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
+
+import static de.jose.pgn.INodeConstants.MOVE_NODE;
 
 
 /**
@@ -142,7 +146,10 @@ abstract public class BoardView
 	/**	paint one square	 */
 	//abstract public void updateOne(Graphics2D g, int file, int row);
 
-	public void refresh(boolean stopAnimation)	{ super.repaint(); }
+	public void refresh(boolean stopAnimation)	{
+		super.repaint();
+		resetScore();
+	}
 
 	public void flip(boolean on)
 	{
@@ -335,14 +342,41 @@ abstract public class BoardView
 
 	public void setScore(Score sc, EnginePlugin plugin)
 	{
+		float[] val;
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
-			this.eval = null;	//	Score object contains no useful info. Ignore.
+			val = null;	//	Score object contains no useful info. Ignore.
 		else if (sc==null)
-			this.eval = null;
+			val = null;
 		else if (plugin==null)
-			this.eval = null;
+			val = null;
 		else
-			this.eval = plugin.mapUnitWDL(sc,eval);
+			val = plugin.mapUnitWDL(sc,eval);
+		setEval(val);
+	}
+
+	public void setEval(float[] val)
+	{
+		this.eval = val;
+	}
+
+	public void resetScore()
+	{
+		//	fall back to game value (if present)
+		float[] val = null;
+		Game gm = Application.theApplication.theGame;
+		if (gm!=null) {
+			MoveNode mv = gm.getCurrentMove();
+			if (mv!=null) {
+				val = mv.engineValue;
+				if (val==null) {
+					//	fall back to previous eval
+					mv = (MoveNode)mv.previous(MOVE_NODE);
+					if (mv!=null)
+						val = mv.engineValue;
+				}
+			}
+		}
+		setEval(val);
 	}
 
 	/**

@@ -149,7 +149,7 @@ public class BoardView2D
 			if (sprite1!=null) sprite1.drop();
 			if (sprite2!=null) sprite2.drop();
 		}
-		super.repaint();
+		super.refresh(stopAnimation);
 	}
 
 
@@ -178,11 +178,11 @@ public class BoardView2D
 	}
 
 	@Override
-	public void setScore(Score sc, EnginePlugin plugin)
+	public void setEval(float[] val)
 	{
-		boolean hadeval = (showEvalbar && eval!=null);
-		super.setScore(sc, plugin);
-		boolean haseval = (showEvalbar && eval!=null);
+		boolean hadeval = (showEvalbar && this.eval!=null);
+		super.setEval(val);
+		boolean haseval = (showEvalbar && this.eval!=null);
 		if (hadeval!=haseval)
 			forceRedraw = true;
 		//	when eval bar switches state, a redraw is necessary

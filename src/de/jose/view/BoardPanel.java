@@ -559,14 +559,14 @@ public class BoardPanel
 				AnalysisRecord a = (AnalysisRecord)data;
 				EnginePlugin plugin = (EnginePlugin)who;
 				if (a==null || a.maxpv==0)
-					theView.setScore(null,null);	//	nothing to be done
+					theView.resetScore();	//	nothing to be done
 				else
 					theView.setScore(a.eval[0],plugin);
 				theView.repaint();
 				break;
 
 			case EnginePlugin.PAUSED:
-				theView.setScore(null,null);
+				theView.resetScore();
 				theView.repaint();
 				break;
 		}

@@ -8,25 +8,28 @@
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
 ==== Project
-compile sources against 1.8 [x]
+compile sources against 1.8 32bit [x]
 libraries needed:
-* jdk 1.8 32 bit [x]
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
 ? TraceConnection probably not needed anyway
-* check links (remove donate, update, help, ...)
-* update download.xml
 * get rid of some outdated stuff (customizing for jdk 1.4, 1.5, plafs, ...)
 
 ==== Linux build (!!)
 * requires jre 1.8 (i386)
 * requires some extra libraries (i386)
     - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
+* todo cross-compile easylink for i386. Which extra libaries are needed?
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 ==== macOS
 * which JDK is running on recent macOS ?
 * do we need a 64bit version of mysql-je? Do we already have one?
 
 ==== New Features
+
+* InfoDialog: version and home page
+* BUG: black evals during (after) book phase
+* BUG: Leela keeps analyzing while playing from book
+* BUG: Leela diagnostics not always associated correctly
 
 * arrows + text label
   - font size?

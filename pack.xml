@@ -8,7 +8,7 @@
 	<!-- target directory -->
 
 	<property name="target-dir" location="C:/dev/jose/Release/${version}"/>
-	<property name="jre-dir" location="C:/jose/Release/extras"/>
+	<property name="jre-dir" location="C:/dev/jose"/>
 
 <!--
 	<property name="target-dir" location="/windows/F/jose archive/release/${version}"/>
@@ -315,6 +315,7 @@
 			</zipfileset>
 			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
 				<exclude name="stockfish-windows-x86-64-avx2.*"/>
+				<exclude name="stockfish-ubuntu-*"/>
 				<exclude name="src"/>
 				<exclude name="wiki"/>
 			</zipfileset>
@@ -328,7 +329,7 @@
 				<include name="stockfish.xml"/>
 			</zipfileset>
 			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
-				<exclude name="*.exe"/>
+				<exclude name="stockfish-windows-*"/>
 				<exclude name="src"/>
 				<exclude name="wiki"/>
 			</zipfileset>
@@ -411,7 +412,7 @@
 		</antcall>
 		<!-- add JRE -->
 		<zip destfile="${zip-file}" update="true">
-			<zipfileset src="C:/dev/jose/jre1.8.0_202.zip" prefix="${appldir}/jre-windows"/>
+			<zipfileset src="${jre-dir}/jre1.8-win-x86.zip" prefix="${appldir}/jre-windows"/>
 		</zip>
 		<delete dir="${appldir}"/>
 	</target>
@@ -518,7 +519,7 @@
 -->
 		<!-- add jre -->
 		<zip destfile="${zip-file}" update="true">
-			<zipfileset src="${jre-dir}/jre-1.5.0_05-linux.zip" prefix="${appldir}/jre-linux"/>
+			<zipfileset src="${jre-dir}/jre1.8-linux-x86.zip" prefix="${appldir}/jre-linux"/>
 		</zip>
 		<delete dir="${appldir}"/>
 	</target>

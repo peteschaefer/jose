@@ -151,7 +151,7 @@ public class UserProfile
 		"doc.move.format", 				new Integer(MoveFormatter.SHORT),
 
 		"plugin.1",						FACTORY_ENGINES,
-		"plugin.2",						"crafty",
+		"plugin.2",						"stockfish",
 
 		"time.controls",				TimeControl.FACTORY_SETTINGS,
 		"time.control.current",			new Integer(0),	//	index in "time.controls"
