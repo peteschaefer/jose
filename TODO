@@ -49,6 +49,16 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [x] add flatlaf variants to F9 list
         [x] flatlaf becomes new default
         [ ] old plaf co-exist! I.e. flatlaf needed for compilation but not at runtime.
+        
+    [ ] Fork flatlaf
+    	[ ] compile from source
+    	[ ] SplitPaneUI: individual style=plain
+    	[ ] TextPaneUI: map dark text colors (**not** in StyleContext)    
+    	[ ] TextPaneUI: fix jumping characters
+    	[ ] TextPaneUI: nicer selection
+    	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
+        
+        
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [ ] fix F4 layout
     [ ] remove l&f selection
