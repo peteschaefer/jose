@@ -53,16 +53,12 @@ libraries needed:
    [-] port JavaLauncher :(
    [x] upgrade mrjadapter 1.3
 
-[ ] "Apple Silicon"
+[ ] "Apple Silicon" = arm64
     [ ] jdk1.8_431, 11 (not 9?) is available from Oracle :)
-    [ ] MySQL >= 8.0.30
-        [x] works but is not backward compatible (can not read older *.frm files).
-            thanks Mysql, for undocumented breaking changes! again, and again ...
-            did I mention that Mysql support sucks?
+    [-] MySQL >= 8.0.30. difficult to get running (at least on Linux) :(
+    [ ] MySQL 5.7 from brew (disabled but maybe works anyway ?)
+    [ ] MySQL <= 5.0.x  difficult to find for macOS arm64
 
-            that means: users can not keep their older data :(
-            can not read .jose archive files :(
-            we need to find a fix !
     [ ] shc
         brew cask install gcc-arm-embedded ?
         clang hello.c -target arm64-apple-darwin20.1.0
