@@ -15,6 +15,7 @@ package de.jose.window;
 import de.jose.*;
 import de.jose.book.OpeningLibrary;
 import de.jose.chess.TimeControl;
+import de.jose.eboard.DialogComponent;
 import de.jose.jo3d.Util3D;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
@@ -243,8 +244,19 @@ public class OptionDialog
 
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
-		addWithLabel(ebox, 0,0,1, null, newCheckBox("eboard.chessnut", "eboard.chessnut", null));
-		addWithLabel(ebox, 1,1,1, null, newButton("eboard.connect"));
+		//addWithLabel(ebox, 0,0,1, null, );
+		//addWithLabel(ebox, 1,1,1, null, newButton("eboard.connect"));
+
+		ebox.add( newCheckBox("eboard.chessnut", "eboard.chessnut", null), 	gridConstraint(ELEMENT_ROW,0,0,3));
+
+		//ebox.add( new JLabel("         "), 												gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
+//		ebox.add( newLabel("eboard.connected"), 											gridConstraint(LABEL_INDENTED,1,1,1));
+//		ebox.add( newButton("eboard.connect","eboard.connect"), 				gridConstraint(LABEL_ONE_LEFT,2,1,1));
+		ebox.add( new de.jose.eboard.DialogComponent(), gridConstraint(ELEMENT_ROW_SMALL,0,1,1) );
+
+
+//		ebox.add( newLabel("eboard.orientation"), 										gridConstraint(LABEL_INDENTED,1,2,1));
+//		ebox.add( oriCombo,																		gridConstraint(LABEL_ONE_LEFT, 2,2,2));
 
 		addBox(tab1, 0,4,4, ebox);
 

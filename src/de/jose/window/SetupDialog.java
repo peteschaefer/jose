@@ -17,6 +17,7 @@ import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.chess.Board;
+import de.jose.eboard.DialogComponent;
 import de.jose.view.BoardEditView;
 import de.jose.view.SetupBoardAdapter;
 import de.jose.view.input.JoStyledLabel;
@@ -123,103 +124,115 @@ public class SetupDialog
 		setValue("dialog.setup.castling.bq",true);
 	}
 
-	public SetupDialog(String name)
-		{
-			super(name,false);
-			readOnFailedSave = false;	//	keep data when save fails
+	public SetupDialog(String name) {
+		super(name, false);
+		super.frame.setSize(640,480);
 
-			Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
-			center(Math.min(screensize.width,640), Math.min(screensize.height,480));
+		readOnFailedSave = false;    //	keep data when save fails
 
-			Position pos = new Position();
-			pos.setOption(Position.INCREMENT_HASH, false);
-			pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
-			pos.setOption(Position.EXPOSED_CHECK, false);
+		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
+		center(Math.min(screensize.width, 640), Math.min(screensize.height, 480));
 
-			setup = new SetupBoardAdapter(pos) {
-					public void userMove(Move mv)
-					{
-						super.userMove(mv);
-						adjustControls();
-					}
-			};
+		Position pos = new Position();
+		pos.setOption(Position.INCREMENT_HASH, false);
+		pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
+		pos.setOption(Position.EXPOSED_CHECK, false);
 
-			view = new BoardEditView(setup);
-			view.init();
-			view.setBorder(new BevelBorder(BevelBorder.LOWERED));
+		setup = new SetupBoardAdapter(pos) {
+			public void userMove(Move mv) {
+				super.userMove(mv);
+				adjustControls();
+			}
+		};
 
-			GridBagConstraints constr = new GridBagConstraints(0,0,
-					1,GridBagConstraints.REMAINDER,
-					100.0,1.0,
-					GridBagConstraints.WEST,GridBagConstraints.BOTH,
-					INSETS_NORMAL, 0,0);
-			getElementPane().add(view, constr);
+		view = new BoardEditView(setup);
+		view.init();
+		view.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
-	    JPanel controls = newGridBox(null);
+		GridBagConstraints constr = new GridBagConstraints(0, 0,
+				1, /*GridBagConstraints.REMAINDER*/6,
+				100.0, 1.0,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH,
+				INSETS_NORMAL, 0, 0);
+		getElementPane().add(view, constr);
 
-			add(controls, 0,0,2, reg(newRadioButton("dialog.setup.next.white")),ELEMENT_TWO_SMALL);
-			add(controls, 0,1,2, reg(newRadioButton("dialog.setup.next.black")),ELEMENT_TWO_SMALL);
-			newButtonGroup("dialog.setup.next");
+		JPanel controls = newGridBox(null);
 
-			JSpinner spinner = newSpinner("dialog.setup.move.no");
-			((SpinnerNumberModel)spinner.getModel()).setMinimum(new Integer(1));
-			((SpinnerNumberModel)spinner.getModel()).setMaximum(new Integer(999));
+		add(controls, 0, 0, 2, reg(newRadioButton("dialog.setup.next.white")), ELEMENT_TWO_SMALL);
+		add(controls, 0, 1, 2, reg(newRadioButton("dialog.setup.next.black")), ELEMENT_TWO_SMALL);
+		newButtonGroup("dialog.setup.next");
 
-			spinner.setMinimumSize(new Dimension(48,18));
-			add(controls, 0,2,1, newLabel("dialog.setup.move.no"), LABEL_ONE);
-			add(controls, 1,2,1, reg(spinner), ELEMENT_TWO);
-			getElementPane().add(controls,ELEMENT_TWO_SMALL);
+		JSpinner spinner = newSpinner("dialog.setup.move.no");
+		((SpinnerNumberModel) spinner.getModel()).setMinimum(new Integer(1));
+		((SpinnerNumberModel) spinner.getModel()).setMaximum(new Integer(999));
+
+		spinner.setMinimumSize(new Dimension(48, 18));
+		add(controls, 0, 2, 1, newLabel("dialog.setup.move.no"), LABEL_ONE);
+		add(controls, 1, 2, 1, reg(spinner), ELEMENT_TWO);
+		getElementPane().add(controls, ELEMENT_TWO_SMALL);
 
 //		getElementPane().add(Box.createVerticalStrut(10),ELEMENT_TWO);
 
-	    //  Castling Checkboxes
-	    Box castl = Box.createVerticalBox();
-			castl.setBorder(new TitledBorder(Language.get("dialog.setup.castling")));
-			castl.add(reg(newCheckBox("dialog.setup.castling.wk",null,this)));
-	    castl.add(reg(newCheckBox("dialog.setup.castling.wq",null,this)));
-	    castl.add(reg(newCheckBox("dialog.setup.castling.bk",null,this)));
-	    castl.add(reg(newCheckBox("dialog.setup.castling.bq",null,this)));
+		//  Castling Checkboxes
+		Box castl = Box.createVerticalBox();
+		castl.setBorder(new TitledBorder(Language.get("dialog.setup.castling")));
+		castl.add(reg(newCheckBox("dialog.setup.castling.wk", null, this)));
+		castl.add(reg(newCheckBox("dialog.setup.castling.wq", null, this)));
+		castl.add(reg(newCheckBox("dialog.setup.castling.bk", null, this)));
+		castl.add(reg(newCheckBox("dialog.setup.castling.bq", null, this)));
 
-			JCheckBox frc_castl = (JCheckBox) castl.add(reg(newCheckBox("dialog.setup.castling.frc",null,this)));
-			frc_castl.addChangeListener(this);
+		JCheckBox frc_castl = (JCheckBox) castl.add(reg(newCheckBox("dialog.setup.castling.frc", null, this)));
+		frc_castl.addChangeListener(this);
 
-	    getElementPane().add(castl,ELEMENT_TWO_SMALL);
+		getElementPane().add(castl, ELEMENT_TWO_SMALL);
 
-			//  frc spinner
-			spinner = newSpinner("dialog.setup.frc.index");
-			((SpinnerNumberModel)spinner.getModel()).setMinimum(new Integer(1));
-			((SpinnerNumberModel)spinner.getModel()).setMaximum(new Integer(2880));
-			spinner.getModel().setValue(new Integer(518));
-			spinner.addChangeListener(this);
+		//  frc spinner
+		spinner = newSpinner("dialog.setup.frc.index");
+		((SpinnerNumberModel) spinner.getModel()).setMinimum(new Integer(1));
+		((SpinnerNumberModel) spinner.getModel()).setMaximum(new Integer(2880));
+		spinner.getModel().setValue(new Integer(518));
+		spinner.addChangeListener(this);
 
-			Box frc = Box.createHorizontalBox();
-			frc.setBorder(new TitledBorder(Language.get("dialog.setup.shuffle.title")));
-			frc.add(reg(spinner));
+		Box frc = Box.createHorizontalBox();
+		frc.setBorder(new TitledBorder(Language.get("dialog.setup.shuffle.title")));
+		frc.add(reg(spinner));
 //		frc.add(newSmallButton("dialog.setup.frc",       null));
-			frc.add(newIconButton("dialog.setup.frc","menu.file.new.frc"));
-			frc.add(newIconButton("dialog.setup.shuffle","menu.file.new.shuffle"));
+		frc.add(newIconButton("dialog.setup.frc", "menu.file.new.frc"));
+		frc.add(newIconButton("dialog.setup.shuffle", "menu.file.new.shuffle"));
 
-			getElementPane().add(frc,ELEMENT_TWO_SMALL);
+		getElementPane().add(frc, ELEMENT_TWO_SMALL);
 
-	    //  Edit buttons
-	    JComponent buttons = new JPanel();
-		buttons.setLayout(new BoxLayout(buttons,BoxLayout.Y_AXIS));
-	    buttons.add(JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear", this) );
-		buttons.add(JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", this));
-		buttons.add(JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", this));
-		buttons.add(JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", this));
-		buttons.add(JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", this));
+		//  Edit buttons
+		JComponent buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+		buttons.add(JoDialog.newLinkButton("dialog.setup.clear", "menu.edit.clear", this));
+		buttons.add(JoDialog.newLinkButton("dialog.setup.initial", "menu.web.home", this));
+		buttons.add(JoDialog.newLinkButton("dialog.setup.copy", "menu.edit.copy", this));
+		buttons.add(JoDialog.newLinkButton("menu.edit.copy.fen", "menu.edit.copy", this));
+		buttons.add(JoDialog.newLinkButton("menu.edit.paste", "menu.edit.paste", this));
 
-	    getElementPane().add(buttons,ELEMENT_TWO);
+		getElementPane().add(buttons, ELEMENT_TWO);
 
-			addButtons(OK_CANCEL);
-			addSpacer(20);
-			addButton(REVERT);
-			addSpacer(10);
-			addButton(HELP);
+		JPanel ebox = newGridBox("dialog.option.eboard");
 
-			JoMenuBar.assignMnemonics(buttonPane);
-		}
+		ebox.add(newRadioButton("eboard.leads"), 		gridConstraint(LABEL_ONE_LEFT, 0,0,1));
+		ebox.add(newRadioButton("eboard.follows"), 	gridConstraint(LABEL_ONE_LEFT, 1,0,1));
+
+		//ebox.add( new JLabel("         "), 												gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
+		//ebox.add( newLabel("eboard.connected"), 											gridConstraint(LABEL_INDENTED,0,1,1));
+		//ebox.add( newButton("eboard.connect","eboard.connect"), 				gridConstraint(LABEL_ONE_LEFT,1,1,1));
+		ebox.add( new de.jose.eboard.DialogComponent(), 				gridConstraint(LABEL_ONE_LEFT,1,1,1));
+
+		getElementPane().add(ebox, ELEMENT_ONE_ROW);
+
+		addButtons(OK_CANCEL);
+		addSpacer(20);
+		addButton(REVERT);
+		addSpacer(10);
+		addButton(HELP);
+
+		JoMenuBar.assignMnemonics(buttonPane);
+	}
 
 	/**	update when shown	*/
 	public void show()
