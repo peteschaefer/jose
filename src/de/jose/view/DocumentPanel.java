@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -462,7 +464,9 @@ public class DocumentPanel
 			public void Do(Command cmd) throws Exception {
 				LineNode line = (LineNode)cmd.data;
 				//	promote line
+				theGame.printDocStructure(new PrintWriter(new FileWriter("tree-before.txt")),null);
 				theGame.promoteLine(line);
+				theGame.printDocStructure(new PrintWriter(new FileWriter("tree-after.txt")),null);
 				reformat();
 
 				cmd = new Command("move.notify",null,null,Boolean.TRUE);

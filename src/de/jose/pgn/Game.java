@@ -1045,7 +1045,7 @@ public class Game
 			node.insert(this, at);
 		} catch (BadLocationException blex) {
 			Application.error(blex);
-//			throw new RuntimeException(blex.getMessage());
+			throw new RuntimeException(blex.getMessage());
 		}
 	}
 /*
@@ -2070,6 +2070,7 @@ public class Game
 		if (out==null) out = new PrintWriter(System.out,true);
 
 		printLineStructure(out,0, root,doc);
+		out.flush();
 	}
 
 	protected void indent(PrintWriter out, int i)
@@ -2212,7 +2213,13 @@ public class Game
 		out.print(node.getLength());
 		out.print(" \"");
 		try {
-			out.print(doc.getText(node.getStartOffset(),node.getLength()));
+			String text;
+			if (doc!=null)
+				text = doc.getText(node.getStartOffset(),node.getLength());
+			else
+				text = node.toString();
+			text = text.replace("\n","\\n");
+			out.print(text);
 		} catch (BadLocationException e) {
 			e.printStackTrace();  //To change body of catch statement use Options | File Templates.
 		}
