@@ -14,6 +14,7 @@ package de.jose.db.io;
 
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
+import de.jose.util.CharUtil;
 
 import java.io.*;
 import java.sql.*;
@@ -362,17 +363,7 @@ public class DumpWriter
         for (int i=0; i < x.length(); i++)
         {
             char c = x.charAt(i);
-            if (c < 0x0080)
-                buffer[4 + len++] = (byte)(c & 0x007f);
-            else if (c < 0x0800) {
-                buffer[4 + len++] = (byte)(0xc0 | (c>>6) & 0x1f);
-	            buffer[4 + len++] = (byte)(0x80 | c & 0x3f);
-            }
-	        else {
-	            buffer[4 + len++] = (byte)(0xe0 | (c >> 12) & 0x0f);
-	            buffer[4 + len++] = (byte)(0x80 | (c >> 6) & 0x3f);
-	            buffer[4 + len++] = (byte)(0x80 | c & 0x3f);
-            }
+            len += CharUtil.encodeUtf8(c,buffer,4+len);
         }
         return len;
     }

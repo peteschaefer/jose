@@ -17,6 +17,7 @@ import de.jose.Version;
 import de.jose.chess.BinaryConstants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.util.CharUtil;
 
 import java.io.ByteArrayOutputStream;
 
@@ -195,17 +196,7 @@ public class BinWriter
 
 	protected void writeUTF(char c)
 	{
-		if (c < 0x0080)
-			comments.write((byte)(c & 0x007f));
-		else if (c < 0x0800) {
-			comments.write((byte)(0xc0 | (c>>6) & 0x1f));
-			comments.write((byte)(0x80 | c & 0x3f));
-		}
-		else {
-			comments.write((byte)(0xe0 | (c >> 12) & 0x0f));
-			comments.write((byte)(0x80 | (c >> 6) & 0x3f));
-			comments.write((byte)(0x80 | c & 0x3f));
-		}
+        CharUtil.encodeUtf8(c,comments);
 	}
 
 }

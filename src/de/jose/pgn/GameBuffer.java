@@ -844,20 +844,34 @@ public class GameBuffer
 		int max = start+len-1;
 
 		while (offset < max) {
-			if (line[offset] == '\\')
-				switch (line[offset+1]) {
-				case '\\':		if (max >= (offset+1)) {
-									System.arraycopy(line,offset+2, line,offset+1, max-offset-1);
-									max--;
-								}
-								break;
-				default:		if (max >= (offset+2)) {
-									line[offset] = CharUtil.unescape(line[offset+1],line[offset+2]);
-									System.arraycopy(line,offset+3, line,offset+1, max-offset-2);
-									max -= 2;
-								}
-								break;
+			if (line[offset] == '\\') {
+				switch (line[offset + 1]) {
+					case '\\':
+						if (max >= (offset + 1)) {
+							System.arraycopy(line, offset + 2, line, offset + 1, max - offset - 1);
+							max--;
+						}
+						break;
+					default:
+						if (max >= (offset + 2)) {
+							line[offset] = CharUtil.unescape(line[offset + 1], line[offset + 2]);
+							System.arraycopy(line, offset + 3, line, offset + 1, max - offset - 2);
+							max -= 2;
+						}
+						break;
 				}
+			}
+			else {
+				//	heuristics: if two consecutive chars look like a utf-8 sequence,
+				//	we assume they *are* a utf-8 sequence
+				//	note: max is *inclusive*
+				int ulen = CharUtil.utf8Len(line,offset,max+1-offset);
+				if (ulen >= 2) {
+					line[offset] = CharUtil.decodeUtf8(line,offset,ulen);
+					System.arraycopy(line, offset + ulen, line, offset + 1, max+1-offset-ulen);
+					max -= (ulen-1);
+				}
+			}
 			offset++;
 		}
 

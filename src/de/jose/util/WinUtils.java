@@ -242,20 +242,8 @@ public class WinUtils
 	protected static void loadLib()
 	{
 		if (!libLoaded) {
-			/*	TODO loading several dlls is prelimnary. Make a proper switch to 64bit.
-			 */
 			try {
 				System.loadLibrary("winUtils");
-				libLoaded = true;
-				return;
-			} catch (UnsatisfiedLinkError e) { }
-			try {
-				System.loadLibrary("winUtils32");
-				libLoaded = true;
-				return;
-			} catch (UnsatisfiedLinkError e) { }
-			try {
-				System.loadLibrary("winUtils64");
 				libLoaded = true;
 				return;
 			} catch (UnsatisfiedLinkError e) { }

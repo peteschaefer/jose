@@ -18,6 +18,7 @@ import de.jose.Util;
 import de.jose.Language;
 import de.jose.chess.*;
 import de.jose.util.StringUtil;
+import de.jose.util.CharUtil;
 
 import java.util.Arrays;
 
@@ -433,20 +434,21 @@ public class Parser
 
 	    //  encode UTF-8
         while (len-- > 0) {
-            char c = line[start++];
-	        if (c < 0x0080) {
-                comments[coffset++] = (byte)(c & 0x007f);
-            }
-            else if (c < 0x0800) {
-	            /** encode UTF-8    */
-                comments[coffset++] = (byte)(0xc0 | (c>>6) & 0x1f);
-                comments[coffset++] = (byte)(0x80 | c & 0x3f);
-            }
-            else {
-                comments[coffset++] = (byte)(0xe0 | (c >> 12) & 0x0f);
-                comments[coffset++] = (byte)(0x80 | (c >> 6) & 0x3f);
-                comments[coffset++] = (byte)(0x80 | c & 0x3f);
-            }
+			//	heuristics: if two consecutive chars look like a utf-8 sequence,
+			//	we assume they *are* a utf-8 sequence
+			//	(this loosens the PGN standard, which always expects iso-8859-1, but it is common practice)
+			//	(it is also a bit sloppy, because it could be two regular iso chars, but that's rather unlikely)
+			char c;
+			int ulen = CharUtil.utf8Len(line,start,len);
+			if (ulen >= 2) {
+				c = CharUtil.decodeUtf8(line,start,ulen);
+				start += ulen;
+			}
+			else {
+				c = line[start++];
+			}
+
+			coffset += CharUtil.encodeUtf8(c, comments,coffset);
         }
         comments[coffset++] = 0;		//	marks end of comment
     }
