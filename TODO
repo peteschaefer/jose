@@ -105,6 +105,8 @@ Alternative JREs:
     [x] print preview
     [x] prints as pdf (font is recognized, font metrics were out-of-date)
     [x] print as html (copy glyphs to disk)
+    [x] extra symbols (ucsf, nic, ..)
+    [ ] type $206
     [ ] help page (html)
     [ ] bump version 1.5.3
     [ ] ant package jose-153-patch

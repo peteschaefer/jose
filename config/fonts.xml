@@ -164,7 +164,7 @@
 		<SYM nag="54-59"> \uaa </SYM><!-- king's side -->
 		<SYM nag="13"> \u2dc </SYM><!-- unclear(infinity) -->
 		<SYM nag="156"> \u2db </SYM><!-- passed pawn -->
-		<SYM nag="157"> \ufb02 </SYM><!-- pawn majority -->
+		<!--SYM nag="157"> \ufb02 </SYM> pawn majority -->
 		<SYM nag="126,127,148"> \u2c7 </SYM><!-- ending -->
 		<!--SYM nag="142"> \ue1 </SYM>- is better (greater or equal) -->
 		<SYM nag="143"> \ue3 </SYM><!-- worse is (smaller or equal) -->
@@ -175,60 +175,58 @@
 		<SYM nag="192"> \ud4 </SYM> <!-- separated pawns -->
 		<SYM nag="193"> \ucc </SYM><!-- united pawns -->
 
-		<!-- \ud6 upward arrow (file?) -->
-		<!-- \ue1 greater or equal -->
-		<!-- \u7c filled triangle ? -->
-		<!-- \ue2 filled square ? -->
-		<!-- \ud1 small circle ? -->
-		<!-- \ue3 exclamation mark upside down -->
-		<!-- \uc0 fork ? -->
-		<!-- \uB6 filled circle -->
-		<!-- \uc3 pin -->
-		<!-- \uBC 1/4 -->
-		<!-- \uBD 1/2 -->
-		<!-- \uBE 3/4 -->
-		<!-- \uc6 question mark upside down -->
-		<!-- \u203a sand clock -->
-		<!-- \ufb01 notation sheet -->
-		<!-- \ufb02 book -->
-		<!-- \u2021 white flag -->
-		<!-- \u00b7 black flag -->
-		<!-- \u201a white/black flag -->
-		<!-- \ud8 contains -->
-		<!-- \u221e contains not -->
-		<!-- \u2264 not equal -->
-		<!-- \u2265 reqistered -->
-		<!-- \u00b5 copyright -->
-		<!-- \u2202 Trade Mark -->
-		<!-- \u64 small X -->
-		<!-- \u3c0 big X -->
-		<!-- \u222b square with black dot -->
-		<!-- \u00aa square with white dot -->
-		<!-- \uba half circle with plus-->
-		<!-- \u03a9 plus with black dots -->
-		<!-- \u00e6 plus with black dot -->
-		<!-- \ubf three dots -->
-		<!-- \u201e chess clock -->
-		<!-- \u2030 black chess clock -->
-		<!-- \ucb envelope -->
-		<!-- \uc8 envelope back side -->
-		<!-- \uE4 black dot with arrow-->
-		<!-- \uE5 white dot with arrow-->
-		<!-- \uE6 cup-->
-		<!-- \uE7 swords-->
-		<!-- \uE8 fork ?-->
-		<!-- \uE9 pin-->
-		<!-- \uEA crosshair ?-->
-		<!-- \uEB bold right arrow-->
-		<!-- \uEC bold up arrow -->
-		<!-- \uEE dot over arrow -->
-		<!-- \uF8 two arrows up -->
-		<!-- \uF9 C in box -->
-		<!-- \uFA S in box -->
-		<!-- \uFB white/black box -->
-		<!-- \uFC black/white box -->
-		<!-- \u178 two boxes -->
-		<!--201c, 201d, 2018, 25ca, 178, 2039 -->
+		<!-- Misc symbols, see https://markalowery.net/Chess/Symbols/symbols.html -->
+		<!-- mapping to NAG codes is quite arbitrary -->
+
+		<SYM nag="202"> \u7e </SYM> <!-- roughly level          -->
+		<SYM nag="203"> \uce </SYM> <!-- transposes to          -->
+		<SYM nag="204"> \u7c </SYM> <!-- or                     -->
+		<SYM nag="205"> \ua8 </SYM> <!-- not                    -->
+		<SYM nag="206"> \uc2 </SYM> <!-- White player           -->
+		<SYM nag="207"> \u2030 </SYM> <!-- Black player           -->
+		<SYM nag="208"> \u201d </SYM> <!-- Copyright              -->
+		<SYM nag="209"> \u2018 </SYM> <!-- Trademark              -->
+		<SYM nag="210"> \uca </SYM> <!-- championship game      -->
+		<SYM nag="211"> \uc1 </SYM> <!-- match game             -->
+		<SYM nag="212"> \ucb </SYM> <!-- fork                   -->
+		<SYM nag="213"> \uc8 </SYM> <!-- pin                    -->
+		<SYM nag="214"> \ucd </SYM> <!-- trap                   -->
+		<SYM nag="215"> \ucf </SYM> <!-- serious trouble        -->
+		<SYM nag="216"> \u201e </SYM> <!-- sealed move            -->
+		<SYM nag="217"> \u201a </SYM> <!-- postal game            -->
+		<SYM nag="218"> \ub7 </SYM> <!-- time pressure          -->
+		<SYM nag="219"> \u2021 </SYM> <!-- time control           -->
+
+		<SYM nag="220"> \u221e </SYM> <!-- compensation           -->
+		<SYM nag="221"> \uaf </SYM> <!-- development advantage  -->
+		<SYM nag="222"> \u3e </SYM> <!-- strong                  -->
+		<SYM nag="223"> \u3c </SYM> <!-- weak                    -->
+		<SYM nag="224"> \uf5 </SYM> <!-- better is               -->
+		<SYM nag="225"> \ue3 </SYM> <!-- weaker is               -->
+		<SYM nag="226"> \u2d8 </SYM> <!-- center                  -->
+		<SYM nag="227"> \u2d9 </SYM> <!-- space                   -->
+		<SYM nag="228"> \u2da </SYM> <!-- kingside                -->
+		<SYM nag="229"> \ub8 </SYM> <!-- queenside               -->
+		<SYM nag="230"> \u2dd </SYM> <!-- pair of bishops         -->
+		<SYM nag="231"> \u25ca </SYM> <!-- mate  (big X)          -->
+
+		<SYM nag="232"> \ubf </SYM> <!-- time control            -->
+		<SYM nag="233"> \ua1 </SYM> <!-- game score              -->
+		<SYM nag="234"> \uac </SYM> <!-- chess theory            -->
+		<SYM nag="235"> \uc0 </SYM> <!-- White won               -->
+		<SYM nag="236"> \uc3 </SYM> <!-- Black won               -->
+		<SYM nag="237"> \ud5 </SYM> <!-- draw                    -->
+		<SYM nag="238"> \u152 </SYM> <!-- belongs                 -->
+		<SYM nag="239"> \u153 </SYM> <!-- does not belong         -->
+		<SYM nag="240"> \u2013 </SYM> <!-- similar to              -->
+		<SYM nag="241"> \u2014 </SYM> <!-- different from          -->
+		<SYM nag="242"> \u20ac </SYM> <!-- discovered check        -->
+		<SYM nag="243"> \u2039 </SYM> <!-- gambit                  -->
+		<SYM nag="244"> \u203a </SYM> <!-- fianchetto              -->
+		<SYM nag="245"> \ufb02 </SYM> <!-- pawn chain              -->
+		<SYM nag="246"> \ud3 </SYM> <!-- pawn attack             -->
+		<SYM nag="247"> \uf1 </SYM> <!-- files                   -->
+
 	</FONT_ENCODING>
 	<FONT_ENCODING>
 		<FONT name="Traveller Standard"/>

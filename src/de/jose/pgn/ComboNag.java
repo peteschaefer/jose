@@ -7,7 +7,9 @@ import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static de.jose.Application.theApplication;
 import static de.jose.pgn.PgnConstants.NAG_MAX;
@@ -172,28 +174,42 @@ public class ComboNag
         new Application();
         theApplication.theConfig = new Config(new File(".","config"));
         Language.setLanguage(new File("config"),"en");
+        printAllSymbols();
+    }
+
+    private static void printAllSymbols() throws FileNotFoundException
+    {
+        PrintWriter out = new PrintWriter("doc/annotations.pgn");
+        out.println("[Event \"a list of all available annotation glyphs (NAG)\"]");
+        out.println();
+
         FontEncoding fontEncoding = FontEncoding.getEncoding(UserProfile.getFactorySymbolFont());
         //printAllCombos();
         for(int nag=0; nag <= NAG_MAX; ++nag) {
             String symbol = fontEncoding.getSymbol(nag);
             String text = Language.get("pgn.nag." + nag, null);
+            if (text==null) continue;
+
             String tip = Language.get("pgn.nag." + nag + ".tip", null);
             if (symbol == null && text.length() > 4) {
                 text = tip = null;
                 // jose will use text instead of symbol, anyway
             }
 
-            System.out.print("{<br> $");
-            System.out.print(nag);
-            System.out.print(" } $");
-            System.out.print(nag);
-            System.out.print(" { ");
-            if (text!=null) System.out.print(text);
+            out.print("{<br> $");
+            out.print(nag);
+            out.print(" } $");
+            out.print(nag);
+            out.print(" { ");
+            if (text!=null) out.print(text);
             if (text!=null && tip!=null)
-                System.out.print(", ");
-            if (tip!=null) System.out.print(tip);
-            System.out.println("}\n");
+                out.print(", ");
+            if (tip!=null) out.print(tip);
+            out.println("}\n");
         }
+        out.println();
+        out.println("*");
+        out.close();
     }
 
     private static void printAllCombos()
