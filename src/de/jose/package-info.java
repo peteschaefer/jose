@@ -1,0 +1,30 @@
+package de.jose;
+
+/**
+ * There are two mechanisms for decoupled communication. RPC-like.
+ * Both use messages and producer-consumer schemes.
+ *
+ * (1)  MessageProducer
+ *      MessageListener
+ *
+ *      * 1:1 connections from a producer to registered listeners
+ *      * quick
+ *      * message delivery can be deferred to the AWT event thread
+ *          which is important for all actions that modify the GUI
+ *      * message types need to be hard-coded
+ *
+ * (2)  Command
+ *      CommandListener
+ *      CommandAction
+ *      CommandDispatcher
+ *
+ *      * more flexible. there is a broadcast meachanisms: interested parties just register their listener code
+ *      * receiving end is handled through a map of message key -> lambda (see setupActionMap)
+ *      * messages can be defined on-the-fly by just introducing a string key
+ *      * deferred reception is not implemented (could it?)
+ *      * there is a singleton CommandDispatcher instance that can be used to send messages
+ *          (either to a specific destination, or broadcast)
+ *      * hierarchy of listeners
+ *
+ *  todo move to package de.jose.comm.msg and de.jose.comm
+ */
