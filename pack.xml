@@ -393,7 +393,7 @@
 		<zip destfile="${zip-file}" update="true">
 			<!-- OS X specific stuff -->
 			<!-- application bundle -->
-			<zipfileset dir="lib/j3d"
+			<zipfileset dir="lib/j3d-1.5"
 						prefix="${appldir}/lib/j3d">
 			</zipfileset>
 		</zip>

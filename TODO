@@ -60,11 +60,11 @@ Release 1.5.2 checklist
 
                         Win     Lin     Mac Intel   Mac Arm
 
-Launcher                [x]     [x]     [x]         [ ]
+Launcher                [x]     [x]     [ ]         [ ]
 JRE 21                  [x]     [x]     [x]         [ ]
-Java 3D                 [ ] 1.5 [ ] 1.5 [ ] 1.6     [ ] 1.6
+Java 3D                 [x] 1.5 [ ] 1.5 [?] 1.6     [ ] 1.6
 clean prefs             [ ]     [ ]     [ ]         [ ]
-Hi-dpi                  [x]     [x]     [?]         [ ]
+Hi-dpi                  [x]     [x]     [x]         [ ]
 Mysql 5.0.67            [x]     [x]     [x]         [ ]
 myisamchk               [x]     [x]     [x]         [ ]
 Repair Tool             [x]     [x]     [x]         [ ]
@@ -76,8 +76,9 @@ Lichess Explorer        [x]     [x]     [x]         [ ]
 Easylink                [x]     [-]     [-]         [-]
 
 [x] Java 3D
-    1.5 from Oracle. Works well for Windows and Linux. Not for Mac
+    1.5 last version from Oracle. Works well for Windows and Linux. Not for Mac
     1.6 from jogamp. better choice for Mac (but not really tested :(
+        unreliable on Windows
     1.7 massive API changes. is it worth a try??
 
 [x] mysql 5.0.67 x64 + myisamchk

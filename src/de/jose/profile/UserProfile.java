@@ -93,13 +93,13 @@ public class UserProfile
 		return "Chess Berlin";
 	}
 
-	public static String getFactorySymbolFont() { return "FigurineCB AriesSP"; }
+	public static String getFactorySymbolFont() { return "Traveller Standard"; }
 
 	public static final String FACTORY_ENGINES = "lc0;stockfish";
 
 	public static final Object[] FACTORY_SETTINGS = {
-		"meta.version",				new Integer(META_VERSION),
-		"clock.display",			new Integer(ClockPanel.ANALOG),
+		"meta.version",				META_VERSION,
+		"clock.display",			ClockPanel.ANALOG,
 		"font.diagram",             getFactoryDiagramFont(),
 
 		"board.3d",					Boolean.FALSE,
@@ -124,9 +124,9 @@ public class UserProfile
 
 //		"board.3d.model",				"std2.j3df",
 		"board.3d.model",				"fab100.j3df",
-		"board.3d.camera.distance",		new Double(2.0),
-		"board.3d.camera.latitude",		new Double(3*Math.PI/8),
-        "board.3d.knight.angle",		new Integer(0),
+		"board.3d.camera.distance",		2.0,
+		"board.3d.camera.latitude",		3*Math.PI/8,
+        "board.3d.knight.angle",		0,
 
 		"board.3d.surface.frame",		Surface.newTexture(66,45,0, "wood03.jpg"),
 		"board.3d.light.ambient",		new Color(0.1f,0.1f,0.1f),
@@ -138,24 +138,24 @@ public class UserProfile
         "board.3d.anisotropic",         Boolean.FALSE,
         "board.3d.fsaa",                Boolean.FALSE,
 
-		"doc.panel.tab.placement",		new Integer(JTabbedPane.TOP),
-		"doc.panel.tab.layout",			new Integer(JTabbedPane.WRAP_TAB_LAYOUT),
+		"doc.panel.tab.placement",		JTabbedPane.TOP,
+		"doc.panel.tab.layout",			JTabbedPane.WRAP_TAB_LAYOUT,
 		"doc.panel.antialias",          Boolean.TRUE,
 		"doc.classify.eco",				Boolean.TRUE,
 		"plugin.pv.tooltips",			Boolean.TRUE,
 
 		"game.mode",					USER_ENGINE.numval,
-		"doc.write.mode",				new Integer(Game.ASK),
+		"doc.write.mode",				Game.ASK,
 		"doc.load.history",				Boolean.TRUE,
-		"doc.move.format", 				new Integer(MoveFormatter.SHORT),
+		"doc.move.format", 				MoveFormatter.SHORT,
 
 		"plugin.1",						FACTORY_ENGINES,
 		"plugin.2",						"stockfish",
 
 		"time.controls",				TimeControl.FACTORY_SETTINGS,
-		"time.control.current",			new Integer(0),	//	index in "time.controls"
+		"time.control.current",			0,	//	index in "time.controls"
 
-        "animation.speed",              new Long(800L),
+        "animation.speed",              800L,
 	};
 
 
@@ -699,7 +699,7 @@ public class UserProfile
 		return (d!=null) ? Util.todouble(d) : defaultValue;
 	}
 
-	public final void set(String key, int value)		{ set(key, new Integer(value)); }
+	public final void set(String key, int value)		{ set(key, value); }
 
 	public final boolean getBoolean(String key) {
 		return getBoolean(key,false);
@@ -713,7 +713,7 @@ public class UserProfile
 			return Util.toboolean(b);
 	}
 
-	public final void set(String key, boolean value)	{ set(key, new Boolean(value)); }
+	public final void set(String key, boolean value)	{ set(key, value); }
 
 
 	public final Object getStyleAttr(String styleName, Object key)
@@ -976,7 +976,7 @@ public class UserProfile
 		/**	use figurine font ?		 */
 		base.addAttribute("figurine.usefont",	Boolean.TRUE);
 		/**	move output format		 */
-		base.addAttribute("move.format",		new Integer(MoveFormatter.SHORT));
+		base.addAttribute("move.format",		MoveFormatter.SHORT);
 
 		Style header	= styles.addStyle("header",base);
 		Style body		= styles.addStyle("body",base);
@@ -1081,7 +1081,7 @@ public class UserProfile
 		/**	use figurine font ?		 */
 		base.addAttribute("figurine.usefont",	Boolean.FALSE);
 		/**	move output format		 */
-		base.addAttribute("move.format",		new Integer(MoveFormatter.SHORT));
+		base.addAttribute("move.format",		MoveFormatter.SHORT);
 
 		Style header	= styles.addStyle("header",base);
 		Style body		= styles.addStyle("body",base);
@@ -1120,7 +1120,7 @@ public class UserProfile
 		StyleConstants.setForeground(line4, Color.gray);
 		StyleConstants.setFontSize(line4, 12);
 
-		line.addAttribute("move.format", new Integer(MoveFormatter.ALGEBRAIC));
+		line.addAttribute("move.format", MoveFormatter.ALGEBRAIC);
 
 
 		Style comment	= styles.addStyle("body.comment", body);
