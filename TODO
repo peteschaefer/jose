@@ -1,6 +1,6 @@
 ==== Bugs
 
-* double click insert variant; trying to delete it
+* double click insert variant; trying to delete  it
 
 [ ] BUG
 java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4cb0 is still active.
