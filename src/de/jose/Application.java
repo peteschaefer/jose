@@ -34,7 +34,6 @@ import de.jose.profile.UserProfile;
 import de.jose.task.DBTask;
 import de.jose.task.GameSource;
 import de.jose.task.GameTask;
-import de.jose.task.NalimovOnlineQuery;
 import de.jose.task.db.*;
 import de.jose.task.io.*;
 import de.jose.util.AWTUtil;
@@ -964,12 +963,11 @@ public class Application
 			public void Do(Command cmd) {
 				//  paste a variation line into the current document
 				MoveNode mvnd = null;
-				if (cmd.data instanceof NalimovOnlineQuery) {
-					NalimovOnlineQuery nq = (NalimovOnlineQuery)cmd.data;
-					mvnd = GameUtil.pasteLine(nq.getGame(), nq.getMoveNode(), nq.getText());
-				}
-				else
-					mvnd = GameUtil.pasteLine(theGame, theGame.getCurrentMove(), cmd.data.toString());
+//				if (cmd.data instanceof LichessEndgameQuery) { todo
+//					NalimovOnlineQuery nq = (NalimovOnlineQuery)cmd.data;
+//					mvnd = GameUtil.pasteLine(nq.getGame(), nq.getMoveNode(), nq.getText());
+//				}
+				mvnd = GameUtil.pasteLine(theGame, theGame.getCurrentMove(), cmd.data.toString());
 
 				if (Util.toboolean(cmd.moreData) && mvnd!=null) {
 					//  ... and replay the line
@@ -3216,7 +3214,7 @@ public class Application
 
 		if (node!=null && emv!=null) {
 			//  update move evaluation history
-			if (/*theGame.isMainLine(node) &&*/ EvalArray.isValid(emv.mappedScore)) {
+			if (emv.score!=null && emv.score.hasWDL()) {
 				node.engineValue = emv.score;
 				theGame.setDirty(true);
 			}
@@ -3285,7 +3283,7 @@ public class Application
 	        throws BadLocationException, ParseException
 	{
 //		System.err.println(move.toString()+"="+move.getValue());
-		if (!move.isValid() || game==null || engine==null
+		if (move==null || game==null || engine==null
 		        || (game.getResult()!=PgnConstants.RESULT_UNKNOWN) || game.askedAdjudicated
 		        || !game.isMainLine(node)) return false;
 
