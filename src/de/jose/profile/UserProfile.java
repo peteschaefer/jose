@@ -82,11 +82,6 @@ public class UserProfile
 			else
 				return "com.formdev.flatlaf.FlatLightLaf";
 		}
-		/**
-		 * Metouia on Windows & Linux
-		 * Metouia doesn't work on OS X, that's why we use the default, Aqua
-		 * (looks better anyway)
-		 */
 	}
 
 	public static String getFactoryTextFont() {

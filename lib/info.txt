@@ -33,6 +33,7 @@ plaf/3DLF.jar		"3D"
 plaf/gtkswing.jar	Gtk
 plaf/kunststoff.jar	Kunststoff
 plaf/metouia.jar	Metouia
+plaf/flatlaf.jar    FlatLaf
 plaf/nextlf.jar		Next
 plaf/oalnf.jar		Oyoaha
 plaf/skinlf.jar		Skin (doesn't work)
