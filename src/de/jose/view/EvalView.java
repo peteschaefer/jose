@@ -42,8 +42,11 @@ public class EvalView
 	/** current game    */
 	protected Game          game;
 	protected LineNode		branch;
+	//	last hilited move
 	protected MoveNode		last1=null;
-
+	//	for passinf info to immediate painting
+	protected MoveNode		next0, next1;
+	protected boolean		nexthi;
 	/** y-value of middle line  */
 	//protected int            middle;
 	/** size of one pawn unit, in pixels    */
@@ -69,6 +72,7 @@ public class EvalView
 
 	public EvalView()
 	{
+		setDoubleBuffered(true);
 		setBackground(BACKGROUND_COLOR);
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
@@ -137,24 +141,67 @@ public class EvalView
 			revalidate();   //  right ?
 	}
 
+	protected Rectangle moveRect(MoveNode mv)
+	{
+		int x = mv.getMoveNo() * BAR_WIDTH;
+		if (mv.getPly() % 2 == 1) x += BAR_WIDTH / 2;
+		return new Rectangle(x,0,BAR_WIDTH/2,getHeight());
+	}
+
 	protected void repaint1(MoveNode mv)
 	{
-		//repaint();
+		//repaint(); is too slow and too expensive
 		//  think of something more efficient:
-		Graphics g = getGraphics();
-		if (last1!=null && last1!=mv)
-			paint1Move(g,last1,false);
-		paint1Move(g,mv,true);	// also: last1:=mv
+		//	Graphics.paintImmediately does this trick
+		//	but needs to be called from the main event thread:
+		if (mv==next0) return; //	already scheduled for drawing
+		next0=mv;
+		if (javax.swing.SwingUtilities.isEventDispatchThread())
+			paintImmediately();
+		else SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				paintImmediately();
+			}
+		});
+	}
+
+	protected void paintImmediately()
+	{
+		if (next0!=null) {
+			if (last1 != null && last1 != next0)
+				paintImmediately(last1, false);
+			paintImmediately(next0, true);
+		}
+		next0=null;
+	}
+
+	public void paintImmediately(MoveNode mv, boolean hilite)
+	{
+		next1 = mv;
+		nexthi = hilite;
+		paintImmediately(moveRect(mv));
+		//	will call back to paint, below
+	}
+
+	public void paint(Graphics g)
+	{
+		if (next1!=null) {
+			Rectangle rect = moveRect(next1);
+			g.setClip(rect);
+			g.setColor(Color.WHITE);
+			paint1Move(g,next1,nexthi);
+			next1=null;
+		}
+		else
+			super.paint(g);
 	}
 
 	protected void paint1Move(Graphics g, MoveNode mv, boolean hilite)
 	{
-		int x0 = (int)mv.getMoveNo()*BAR_WIDTH;
-		int p = mv.getPly();
-		if (p%2==1) x0 += BAR_WIDTH/2;
-
-		paint1Value(g, x0, BAR_WIDTH/2, mv, hilite);
-		if (!hilite) drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
+		Rectangle rect = moveRect(mv);
+		paint1Value(g, rect.x, rect.width, mv, hilite);
+		/*if (!hilite)*/ drawVerticalGrid(g, rect.x, rect.x+rect.width);
 	}
 
 	protected void scrollVisible(int move)

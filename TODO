@@ -7,7 +7,7 @@
 === Database Bugs
 
 [x] database cut/copy/paste (-> --tmpdir)
-[?] db copy: NoSuchElementException (harmless but annoying)
+[x] db copy: NoSuchElementException (harmless but annoying)
 [?] db: duplicate key on insert (GameBuffer.Id?)
 [x] db import: error in sql syntax
 [ ] db: expected data on row ?
@@ -79,9 +79,9 @@ Alternative JREs:
 * replace Nalimov query with Lichess tablebase query
 
 * Graph View interactive
-    - mark current move
-    - tooltips
-    - click navigate
+    [x] mark current move. todo: no flicker?!
+    [ ] tooltips
+    [ ] click navigate
 
 * Comment search
     * regex
