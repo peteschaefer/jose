@@ -142,12 +142,10 @@ public class FOPrintableDocument
 			if (renderer!=null) return;     //  already finished, even better
 			if (fopreview!=null) return;         //  already creating
 
-			Runnable result = new Runnable() {
-				public void run() {
-					FOPrintableDocument.this.renderer = fopreview.renderer;
-					FOPrintableDocument.this.fopreview = null;
-				}
-			};
+			Runnable result = () -> {
+                FOPrintableDocument.this.renderer = fopreview.renderer;
+                FOPrintableDocument.this.fopreview = null;
+            };
 
 			Command command = new Command("doc.preview.refresh",null,FOPrintableDocument.this);
 

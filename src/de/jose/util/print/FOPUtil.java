@@ -300,8 +300,9 @@ public class FOPUtil
 
 		//  scan more directories
 		if (!fontScanned) {
-			String systemFonts = FontUtil.getSystemFontPath();
-			FontUtil.scanFontDirectories(systemFonts,false);
+			List<String> systemFonts = FontUtil.getSystemFontPaths();
+			for(String systemFont : systemFonts)
+				FontUtil.scanFontDirectories(systemFont,false);
 
 			String javaFonts = FontUtil.getJavaFontPath();
 			FontUtil.scanFontDirectories(javaFonts,false);

@@ -15,17 +15,11 @@ package de.jose;
 import de.jose.util.StringUtil;
 import de.jose.util.ListUtil;
 import de.jose.util.file.FileUtil;
-import de.jose.view.BoardEditView;
-import de.jose.image.ImgUtil;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.datatransfer.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -199,47 +193,6 @@ public class Util
 	//-------------------------------------------------------------------------------
 	//	Classpath Tweaking
 	//-------------------------------------------------------------------------------
-	
-	public static final void appendClassPath(File libDir)
-	{
-		/*		automatically append to Classpath		 */
-		ClassLoader cld = ClassLoader.getSystemClassLoader();
-		if (cld instanceof URLClassLoader) {
-			URLClassLoader ucld = (URLClassLoader)cld;
-				
-			File[] jars = libDir.listFiles();
-				
-			Vector vurls = new Vector();
-			for (int i=0; i<jars.length; i++)
-				try {
-					if (jars[i].isDirectory())
-						vurls.add(new URL("file:/"+jars[i].getAbsolutePath()+"/"));
-					else
-						vurls.add(new URL("file:/"+jars[i].getAbsolutePath()));
-				} catch (MalformedURLException muex) {
-					System.out.println(muex.getLocalizedMessage());
-				}
-			
-			appendClassPath(ucld, vurls);
-		}
-	}
-
-	private static void appendClassPath(URLClassLoader ucld, Vector urls)
-	{
-		try {
-			Class[] classes = { java.net.URL.class };
-			Object[] params = new Object[1];
-		
-			java.lang.reflect.Method method = URLClassLoader.class.getDeclaredMethod("addURL", classes);
-			method.setAccessible(true);
-			for (int i=0; i<urls.size(); i++) {
-				params[0] = urls.get(i);
-				method.invoke(ucld, params);
-			}
-		} catch (Exception ex) {
-			Application.error(ex);
-		}
-	}
 
 
     public static HashSet toHashSet(Object[] array)

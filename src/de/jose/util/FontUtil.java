@@ -17,6 +17,8 @@ import de.jose.Util;
 import de.jose.Version;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.Triplet;
+import sun.font.FontManager;
+import sun.font.PhysicalFont;
 //import sun.awt.Win32FontManager;
 
 import java.util.*;
@@ -25,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
+import java.util.List;
 
 /**
  * FontUtil
@@ -311,40 +314,36 @@ public class FontUtil
 	}
 	 */
 
-	/**
-	 */
-	public static final String getSystemFontPath()
-	{
-		Class[] types = { boolean.class };
-		Object[] values = { Boolean.TRUE };
+	public static List<String> getSystemFontPaths() {
+		List<String> result = new ArrayList<>();
 
-		return sun.font.SunFontManager.getInstance().getPlatformFontPath(true);
-/*
-		try {
-			if (Version.windows) {
-				String path = Win32FontManager.getInstance().getPlatformFontPath(false);
-				return path;
+		if (Version.windows) {
+			String path = System.getenv("WINDIR");
+			result.add( path + "\\" + "Fonts" );
+		}
+
+		if (Version.mac) {
+			result.add( System.getProperty("user.home") + File.separator + "Library/Fonts" );
+			result.add( "/Library/Fonts" );
+			result.add( "/System/Library/Fonts" );
+			return result;
+		}
+
+		if (Version.linux) {
+			result.add( System.getProperty("user.home") + File.separator + ".fonts" );
+			result.add( "/usr/share/fonts/truetype" );
+			result.add( "/usr/share/fonts/TTF" );
+		}
+
+		for (int i = result.size()-1; i>=0; i--) {
+			String path = result.get(i);
+			File tmp = new File(path);
+			if (!tmp.exists() || !tmp.isDirectory() || !tmp.canRead()) {
+				result.remove(i);
 			}
-			if (Version.java15orLater)
-			{
-				return (String)ReflectionUtil.invoke("sun.font.FontManager",null,"getFontPath",types,values);
-			}
-			else
-			{
-/ *
-			String s = Version.getSystemProperty("sun.java2d.noType1Font");
-			if(s == null)
-				type1 = sun.awt.font.NativeFontWrapper.getType1FontVar();
-			if("true".equals(s))
-				type1 = true;
-* /
-				values[0] = Boolean.FALSE;
-				return (String)ReflectionUtil.invoke("sun.awt.font.NativeFontWrapper",null,"getFontPath",types,values);
-			}
-		} catch (Exception e) {
-			Application.error(e);
-			return null;
-		}*/
+		}
+
+		return result;
 	}
 
 	public static final String getJavaFontPath()
@@ -353,7 +352,7 @@ public class FontUtil
 	}
 
     public static void main(String[] args) {
-        System.out.println("system font path = "+getSystemFontPath());;
+        System.out.println("system font path = "+getSystemFontPaths());
         System.out.println("java font path = "+getJavaFontPath());
 
         long time = System.currentTimeMillis();

@@ -12,11 +12,8 @@
 
 package de.jose.chess;
 
-import de.jose.util.ClassPathUtil;
-import de.jose.Application;
 import de.jose.Sound;
 
-import java.net.URLClassLoader;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.File;

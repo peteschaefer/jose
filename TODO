@@ -105,11 +105,10 @@ BUG: Print Preview does not work
 ==== Postponed
 
 * upgrade JDK
-    - switch to 64 bit will be inevitable -> use mysql-standalone for all platforms
     - https://github.com/JetBrains/JetBrainsRuntime
-      Jetbrains JDKs look promising, because they can fix HiDPI
+      Jetbrains JDK (21) looks promising, because they can fix HiDPI
       and are probably well maintained
-    - Oracle, OpenJDK ?
+      and support all out platforms, even 32bit
 
 * launch mysqld earlier (?)
 

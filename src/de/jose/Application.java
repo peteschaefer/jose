@@ -510,26 +510,6 @@ public class Application
 //		JoDialog.showMessageDialog(Util.toString(args));
 
 		new Application().open();
-
-/*
-        String workDir = Version.getSystemProperty("jose.workdir", ".");
-        workDir = new File(workDir).getCanonicalPath();
-
-		/**	build our own class path !	* /
-		Vector cp = new Vector();
-		cp.add(ClassPathUtil.makeAllURLs(new File(workDir,"lib")));
-		cp.add(ClassPathUtil.makeAllURLs(new File(workDir,"lib/jdbc")));
-		cp.add(ClassPathUtil.makeAllURLs(new File(workDir,"lib/plaf")));
-		cp.add(ClassPathUtil.makeAllURLs(new File(workDir,"lib/"+Version.osDir)));
-
-		URL[] urls = (URL[])ListUtil.toFlatArray(cp, URL.class);
-
-		ClassLoader myClassLoader = new URLClassLoader(urls,null);
-		Class appClass = myClassLoader.loadClass("de.jose.Application");
-
-		Application app = (Application)appClass.newInstance();
-		app.open();
-*/
 	}
 
 	//-------------------------------------------------------------------------------
