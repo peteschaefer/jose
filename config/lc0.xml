@@ -86,15 +86,14 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
-		<OPTION dirty="true" name="Backend"> eigen </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
 		<TIME> 0 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES selected="true"> 400 </NODES>
-		<TIME_CONTROL/>
+		<NODES> 400 </NODES>
+		<TIME_CONTROL selected="true"/>
 	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

@@ -9,6 +9,9 @@
 
 ==== Project
 
+* TODO check lc0.xml and stockfish.xml to have factory setings
+ (tricky because they are modified at each run)
+
 compile sources against 1.8 32bit [x]
 libraries needed:
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
