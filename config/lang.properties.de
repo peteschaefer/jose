@@ -31,14 +31,14 @@ window.help				= Hilfe
 window.print.preview    = Druckvorschau
 
 dialog.option	= Einstellungen
-dialog.about	= ï¿½ber jose
+dialog.about	= Über jose
 dialog.animate  = Animation
 dialog.setup	= Stellung Aufbauen
 dialog.message.title = Nachricht
 
 dialog.about.tab.1	= jose
 dialog.about.tab.2	= Datenbank
-dialog.about.tab.3	= Beitrï¿½ge
+dialog.about.tab.3	= Beiträge
 dialog.about.tab.4	= System
 dialog.about.tab.5	= 3D
 dialog.about.tab.6	= Lizenz
@@ -50,29 +50,29 @@ dialog.about.2	=	<b>%dbname%</b> <br> %dbversion% <br><br> \
 					Server-URL: %dburl%
 
 
-dialog.about.3	=	<b>ï¿½bersetzungen:</b><br>\
-			Frederic Raimbault, Josï¿½ de Paula, \
-			Agustï¿½n Gomila, Alex Coronado, \
+dialog.about.3	=	<b>Übersetzungen:</b><br>\
+			Frederic Raimbault, José de Paula, \
+			Agustín Gomila, Alex Coronado, \
 			Harold Roig, Hans Eriksson, \
-			Guido Grazioli, Tomasz Sokï¿½l, \
+			Guido Grazioli, Tomasz Sokól, \
 			"Direktx" <br>\
 			<br>\
-			<b>TrueType Zeichensï¿½tze:</b> <br>\
+			<b>TrueType Zeichensätze:</b> <br>\
 			Armando Hernandez Marroquin, \
 			Eric Bentzen, \
 			Alan Cowderoy, <br>\
 			Hans Bodlaender \
 			(www.chessvariants.com/d.font/fonts.html) <br>\
 			<br>\
-			<b>FlatLaf Look & Feel:</b> <br>\
-			FormDev Software (www.formdev.com/flatlaf)<br>\
+			<b>Metouia Look & Feel:</b> <br>\
+			Taoufik Romdhane (mlf.sourceforge.net)<br>\
 			<br>\
 			<b>3D Modelle:</b> <br>\
 			Renzo Del Fabbro, \
 			Francisco Barala Faura <br>\
 			<br>\
-			<b>Apple Mac Unterstï¿½tzung:</b> <br>\
-			Andreas Gï¿½ttinger, Randy Countryman
+			<b>Apple Mac Unterstützung:</b> <br>\
+			Andreas Güttinger, Randy Countryman
 
 dialog.about.4 =	Java Version: %java.version% (%java.vendor%) <br>\
 					Java VM: %java.vm.version% %java.vm.info% (%java.vm.vendor%) <br>\
@@ -87,14 +87,14 @@ dialog.about.4 =	Java Version: %java.version% (%java.vendor%) <br>\
 					Betriebssystem: %os.name%  %os.version% <br>\
 					Architektur: %os.arch%
 
-dialog.about.5.no3d = Java3D ist derzeit nicht verfï¿½gbar
+dialog.about.5.no3d = Java3D ist derzeit nicht verfügbar
 dialog.about.5.model =
 
 dialog.about.5.native = Plattform: &nbsp;
 dialog.about.5.native.unknown = unbekannt
 
 # default collection folders
-collection.trash = Mï¿½lleimer
+collection.trash = Mülleimer
 collection.autosave = Auto Speichern
 collection.clipboard = Zwischenablage
 # default name for new folders
@@ -117,11 +117,11 @@ menu.file.new.from.here		= Neue Partie ab hier
 menu.file.new.from.here.tip		= Neue Partie ab der aktuellen Stellung
 menu.file.new.frc   = Neue FRC-Partie
 menu.file.new.shuffle = Neue Shuffle-Chess-Partie
-menu.file.open		= ï¿½ffnen...
-menu.file.open.tip  = ï¿½ffnet eine PGN-Datei
-menu.file.open.url	= URL ï¿½ffnen...
-menu.file.close		= Schlieï¿½en
-menu.file.close.tip = Schlieï¿½t das aktuelle Fenster
+menu.file.open		= Öffnen...
+menu.file.open.tip  = Öffnet eine PGN-Datei
+menu.file.open.url	= URL Öffnen...
+menu.file.close		= Schließen
+menu.file.close.tip = Schließt das aktuelle Fenster
 menu.file.save		= Sichern
 menu.file.save.tip  = Aktuelle Partie in die Datenbank sichern
 menu.file.save.as	= Sichern Als...
@@ -133,16 +133,16 @@ menu.file.print		= Drucken..
 menu.file.print.tip = Partie drucken
 menu.file.print.preview = Druckvorschau...
 menu.file.print.setup	= Seite Einrichten...
-menu.file.print.setup.tip = Drucker und Papiergrï¿½ï¿½e einrichten
+menu.file.print.setup.tip = Drucker und Papiergröße einrichten
 menu.file.quit		= Beenden
 menu.file.quit.tip  = Beendet jose
 
 menu.edit			= Bearbeiten
-menu.edit.undo		= Rï¿½ckgï¿½ngig
+menu.edit.undo		= Rückgängig
 menu.edit.redo		= Wiederherstellen
-menu.edit.cant.undo = (Rï¿½ckgï¿½ngig)
+menu.edit.cant.undo = (Rückgängig)
 menu.edit.cant.redo = (Wiederherstellen)
-menu.edit.select.all    = Alle Auswï¿½hlen
+menu.edit.select.all    = Alle Auswählen
 menu.edit.select.none   = Auswahl Aufheben
 menu.edit.cut		= Ausschneiden
 menu.edit.copy		= Kopieren
@@ -157,21 +157,21 @@ menu.edit.copy.text.tip = Kopiert die Stellung als Text in die Zwischenablage
 
 menu.edit.copy.pgn  = PGN Kopieren
 menu.edit.copy.pgn.tip = Partie als PGN in die Zwischenablage kopieren
-menu.edit.paste		= Einfï¿½gen
-menu.edit.paste.tip = Aus der Zwischenablage Einfï¿½gen
-menu.edit.paste.pgn = PGN Einfï¿½gen
-menu.edit.paste.pgn.tip = Partie (PGN) aus der Zwischenablage einfï¿½gen
-menu.edit.paste.copy		= Kopie Einfï¿½gen
+menu.edit.paste		= Einfügen
+menu.edit.paste.tip = Aus der Zwischenablage Einfügen
+menu.edit.paste.pgn = PGN Einfügen
+menu.edit.paste.pgn.tip = Partie (PGN) aus der Zwischenablage einfügen
+menu.edit.paste.copy		= Kopie Einfügen
 menu.edit.paste.copy.tip = Partien aus der Zwischenablage Kopieren
-menu.edit.paste.same	= Einfï¿½gen
-menu.edit.paste.same.tip = Partien aus der Zwischenablage Einfï¿½gen
-menu.edit.clear		= Lï¿½schen
+menu.edit.paste.same	= Einfügen
+menu.edit.paste.same.tip = Partien aus der Zwischenablage Einfügen
+menu.edit.clear		= Löschen
 menu.edit.option	= Einstellungen...
-menu.edit.option.tip = ï¿½ffnet den Einstellungs-Dialog
+menu.edit.option.tip = öffnet den Einstellungs-Dialog
 
 menu.edit.games			= Datenbank
 menu.edit.collection.new = Neuer Ordner
-menu.edit.empty.trash	= Mï¿½lleimer Leeren
+menu.edit.empty.trash	= Mülleimer Leeren
 menu.edit.collection.rename	= Umbenennen
 menu.edit.restore	= Wiederherstellen
 
@@ -184,10 +184,10 @@ menu.edit.bold = Fett
 menu.edit.italic = Kursiv
 menu.edit.underline = Unterstrichen
 menu.edit.plain = Normal
-menu.edit.left = Linksbï¿½ndig
+menu.edit.left = Linksbündig
 menu.edit.center = Zentriert
-menu.edit.right = Rechtsbï¿½nding
-menu.edit.larger = Grï¿½ï¿½er
+menu.edit.right = Rechtsbünding
+menu.edit.larger = Größer
 menu.edit.smaller = Kleiner
 menu.edit.color = Farbe
 
@@ -210,20 +210,20 @@ menu.game.coords	= Koordinaten
 menu.game.coords.tip = Koordinaten anzeigen
 menu.game.animate = Animation...
 menu.game.previous = Vorheriges Tab
-menu.game.next = Nï¿½chstes Tab
-menu.game.close = Schlieï¿½en
-menu.game.close.tip = Tan schlieï¿½en
-menu.game.close.all = Alle Schlieï¿½en
-menu.game.close.all.tip = Alle Tabs schlieï¿½en
-menu.game.close.all.but = Alle Anderen Schlieï¿½en
-menu.game.close.all.but.tip = Alle offenen Tabs auï¿½er diesem schlieï¿½en
+menu.game.next = Nächstes Tab
+menu.game.close = Schließen
+menu.game.close.tip = Tan schließen
+menu.game.close.all = Alle Schließen
+menu.game.close.all.tip = Alle Tabs schließen
+menu.game.close.all.but = Alle Anderen Schließen
+menu.game.close.all.but.tip = Alle offenen Tabs außer diesem schließen
 menu.game.setup		= Stellung Aufbauen
-menu.game.text.incr = Text Vergrï¿½ï¿½ern
+menu.game.text.incr = Text Vergrößern
 menu.game.text.decr = Text Verkleinern
 menu.game.copy.line = Variante Kopieren
 menu.game.copy.line.tip = Variante in die Zwischenablage kopieren
-menu.game.paste.line = Variante Einfï¿½gen
-menu.game.paste.line.tip = Variante in die Partie einfï¿½gen
+menu.game.paste.line = Variante Einfügen
+menu.game.paste.line.tip = Variante in die Partie einfügen
 menu.game.threat = Drohungen Analysieren...
 
 tab.place = Tab Position
@@ -237,11 +237,11 @@ tab.layout.wrap = Wrap
 tab.layout.scroll = Scroll
 
 move.first	= Anfang
-move.backward = Zurï¿½ck
-move.delete = Zug zurï¿½cknehmen
+move.backward = Zurück
+move.delete = Zug zurücknehmen
 engine.stop = Pause
 move.start = Ziehen
-move.forward = Vorwï¿½rts
+move.forward = Vorwärts
 move.last = Ende
 move.animate = Animation
 
@@ -250,8 +250,8 @@ move.animate = Animation
 ###################################
 
 engine.paused.tip = %engine% ist angehalten
-engine.thinking.tip = %engine% denkt ï¿½ber den nï¿½chsten Zug nach
-engine.pondering.tip = %engine% denkt ï¿½ber ihren nï¿½chsten Zug nach
+engine.thinking.tip = %engine% denkt über den nächsten Zug nach
+engine.pondering.tip = %engine% denkt über ihren nächsten Zug nach
 engine.analyzing.tip = %engine% analysiert
 engine.hint.tip = Tip: %move%
 
@@ -259,7 +259,7 @@ engine.paused.title = %engine%
 engine.thinking.title = %engine% rechnet
 engine.pondering.title = %engine% wartet
 engine.analyzing.title = %engine% analysiert
-book.title = Erï¿½ffnungsbuch (%book%)
+book.title = Eröffnungsbuch (%book%)
 
 plugin.name = %name% %version%
 plugin.name.author = %name% %version% von %author%
@@ -272,15 +272,15 @@ plugin.tb.move = TB
 plugin.tb.move.tip = Enspiel-Datenbank
 
 plugin.depth = %depth%
-plugin.depth.tip = Suchtiefe: %depth% Halbzï¿½ge
+plugin.depth.tip = Suchtiefe: %depth% Halbzüge
 
 plugin.depth.sel = %depth% (%seldepth%)
-plugin.depth.sel.tip = Suchtiefe: %depth% Halbzï¿½ge, Selektiv: %seldepth% Halbzï¿½ge
+plugin.depth.sel.tip = Suchtiefe: %depth% Halbzüge, Selektiv: %seldepth% Halbzüge
 
 plugin.white.mates = +#%eval%
-plugin.white.mates.tip = Weiï¿½ setzt in %eval% Zï¿½gen matt
+plugin.white.mates.tip = Weiß setzt in %eval% Zügen matt
 plugin.black.mates = -#%eval%
-plugin.black.mates.tip = Schwarz setzt in %eval% Zï¿½gen matt
+plugin.black.mates.tip = Schwarz setzt in %eval% Zügen matt
 
 plugin.evaluation = %eval%
 plugin.evaluation.tip = Stellungsbewertung: %eval% Bauerneinheiten
@@ -304,14 +304,14 @@ plugin.currentmove.max = %move% %moveno%/%maxmove%
 plugin.currentmove.max.tip=Die Engine berechnet den Zug %move%. (%moveno% von %maxmove%)
 
 plugin.elapsed.time = %time%
-plugin.elapsed.time.tip = Zeit fï¿½r diese Berechnung
+plugin.elapsed.time.tip = Zeit für diese Berechnung
 plugin.nps.title = N/sec
 plugin.nps = %nps%
 plugin.nps.tip = %nps% Knoten werden pro Sekunde berechnet
 
 plugin.line.tip = Berechnete Variante
 plugin.log.file = In Datei schreiben
-plugin.pv.history = Ausfï¿½hrliche Ausgaben
+plugin.pv.history = Ausführliche Ausgaben
 
 plugin.info = Information
 plugin.options = Einstellungen
@@ -323,24 +323,24 @@ plugin.startup = Start-Sequenz
 plugin.option.Ponder = Permanent Brain
 plugin.option.Random  = Zufall
 plugin.option.Hash    = Hash Tabelle (MB)
-plugin.option.BookFile = Erï¿½ffnungsbuch
+plugin.option.BookFile = Eröffnungsbuch
 plugin.option.BookLearning = Buchlernen
-plugin.option.NalimovCache = Speicher fï¿½r Endspiel-Tabellen
+plugin.option.NalimovCache = Speicher für Endspiel-Tabellen
 plugin.option.NalimovPath = Verzeichnis mit Enspiel-Tabellen
-plugin.option.OwnBook = Erï¿½ffnungsbuch verwenden
+plugin.option.OwnBook = Eröffnungsbuch verwenden
 plugin.option.MultiPV       = Varianten anzeigen
 plugin.option.ClearHash     = Hashtabellen Leeren
 plugin.option.UCI_ShowCurrLine  = Aktuelle Varianten Anzeigen
 plugin.option.UCI_ShowRefutations = Widerlegungen Anzeigen
-plugin.option.UCI_LimitStrength = Spielstï¿½rke Begrenzen
+plugin.option.UCI_LimitStrength = Spielstärke Begrenzen
 plugin.option.UCI_Elo       = ELO
 
 menu.window			= Fenster
 menu.window.fullscreen	= Bildschirm
-menu.window.reset   = Layout Zurï¿½cksetzen
+menu.window.reset   = Layout Zurücksetzen
 
 menu.help			= Hilfe
-menu.help.splash	= ï¿½ber...
+menu.help.splash	= Über...
 menu.help.about		= Info...
 menu.help.license	= Lizenz...
 menu.help.context	= Kontext-Hilfe
@@ -360,12 +360,12 @@ menu.web.browser	= Browser...
 wait.3d = Lade 3D. Bitte etwas Geduld...
 
 message.result			= Ergebnis
-message.white 			= Weiï¿½
+message.white 			= Weiß
 message.black 			= Schwarz
 message.mate 			= Matt. \n %player% gewinnt.
 message.stalemate		= Patt. \n Das Spiel endet unentschieden.
 message.draw3			= Dreifache Stellungswiederholung. \n Das Spiel endet unentschieden.
-message.draw50			= 50 Zï¿½ge ohne Schlagzug. \n Das Spiel endet unentschieden. 
+message.draw50			= 50 Züge ohne Schlagzug. \n Das Spiel endet unentschieden. 
 message.resign			= %player% gibt auf. \n Sie gewinnen.
 message.time.draw		= Die Zeit ist abgelaufen. \n Das Spiel endet unentschieden.
 message.time.lose		= Die Zeit ist abgelaufen. \n %player% gewinnt.
@@ -377,7 +377,7 @@ message.time.lose		= Die Zeit ist abgelaufen. \n %player% gewinnt.
 panel.hide			= Fenster Ausblenden
 panel.hide.tip      = dieses Fenste ausblenden
 panel.undock		= Eigenes Fenster
-panel.undock.tip    = ï¿½ffnet eine neues Fenter
+panel.undock.tip    = öffnet eine neues Fenter
 panel.dock			= Fenster Andocken
 panel.dock.tip      = "dockt" das Fenster an seinem alten Platz an
 panel.move			= Fenster Verschieben
@@ -397,24 +397,24 @@ clock.mode.digital.tip = Digital-Uhr anzeigen
 ##############################################################################
 
 dialog.button.ok		= OK
-dialog.button.ok.tip	= ï¿½nderungen ï¿½bernehmen
+dialog.button.ok.tip	= Änderungen Übernehmen
 dialog.button.cancel	= Abbrechen
-dialog.button.cancel.tip	= Dialog Schlieï¿½en
-dialog.button.apply		= ï¿½bernehmen
-dialog.button.apply.tip	= ï¿½nderungen ï¿½bernehmen
-dialog.button.revert	= Zurï¿½cksetzen
-dialog.button.revert.tip	= ï¿½nderungen Verwerfen
-dialog.button.clear		= Zurï¿½cksetzen
-dialog.button.delete	= Lï¿½schen
+dialog.button.cancel.tip	= Dialog Schließen
+dialog.button.apply		= Übernehmen
+dialog.button.apply.tip	= Änderungen Übernehmen
+dialog.button.revert	= Zurücksetzen
+dialog.button.revert.tip	= Änderungen Verwerfen
+dialog.button.clear		= Zurücksetzen
+dialog.button.delete	= Löschen
 dialog.button.yes		= Ja
 dialog.button.no		= Nein
 dialog.button.next		= Weiter
-dialog.button.back		= Zurï¿½ck
-dialog.button.close		= Schlieï¿½en
-dialog.button.commit	= ï¿½bernehmen
-dialog.button.commit.tip = ï¿½nderungen ï¿½bernehmen
-dialog.button.rollback	= Zurï¿½cksetzen
-dialog.button.rollback.tip = ï¿½nderungen ï¿½bernehmen
+dialog.button.back		= Zurück
+dialog.button.close		= Schließen
+dialog.button.commit	= Übernehmen
+dialog.button.commit.tip = Änderungen übernehmen
+dialog.button.rollback	= Zurücksetzen
+dialog.button.rollback.tip = Änderungen übernehmen
 dialog.button.help		= Hilfe
 dialog.button.help.tip	= Zur Hilfe
 dialog.error.title		= Fehler
@@ -427,19 +427,19 @@ filechooser.html = Webdatei (*.html)
 filechooser.pdf = Acrobat Reader (*.pdf)
 filechooser.exe = Programme
 filechooser.img = Bild (*.gif,*.jpg,*.png,*.bmp)
-filechooser.book        = Erï¿½ffnungsbuch
-filechooser.crafty      = Crafty-Erï¿½ffnungsbuch
-filechooser.polyglot    = Polyglot-Erï¿½ffnungsbuch
+filechooser.book        = Eröffnungsbuch
+filechooser.crafty      = Crafty-Eröffnungsbuch
+filechooser.polyglot    = Polyglot-Eröffnungsbuch
 
-filechooser.overwrite = "%file.name%" ï¿½berschreiben ?
-filechooser.do.overwrite = ï¿½berschreiben
+filechooser.overwrite = "%file.name%" überschreiben ?
+filechooser.do.overwrite = Überschreiben
 
 error.duplicate.database.access = Bitte benutzen sie nicht zwei Instanzen von jose \n\
 	mit der gleichen Datenbank. \n\n\
-	Dadurch kï¿½nnen Daten verloren gehen. \n\
+	Dadurch können Daten verloren gehen. \n\
 	Bitte beenden Sie eine Instanz.
-error.lnf.not.supported 	= Dieses Design ist nicht verfï¿½gbar.
-error.not.selected = Bitte wï¿½hlen Sie eine Partie zum Speichern.
+error.lnf.not.supported 	= Dieses Design ist nicht verfügbar.
+error.not.selected = Bitte wählen Sie eine Partie zum Speichern.
 
 colorchooser.texture	= Textur
 colorchooser.preview	= Vorschau
@@ -471,10 +471,10 @@ dialog.export.browser = Browser-Vorschau
 
 dialog.export.paper = Papier
 dialog.export.orientation = Orientierung
-dialog.export.margins = Rï¿½nder
+dialog.export.margins = Ränder
 
 dialog.export.paper.format = Papier:
-dialog.export.paper.size = Grï¿½ï¿½e:
+dialog.export.paper.size = Größe:
 
 dialog.print.custom.paper = Benutzerdefiniert
 
@@ -486,10 +486,10 @@ dialog.export.margin.right = Rechts:
 dialog.export.ori.port = Hochformat
 dialog.export.ori.land = Querformat
 
-dialog.export.games.0 = Sie haben keine Partien ausgewï¿½hlt.
-dialog.export.games.1 = Sie haben <b>eine Partie</b> zum Drucken ausgewï¿½hlt.
-dialog.export.games.n = Sie haben <b>%n% Partien</b> zum Drucken ausgewï¿½hlt.
-dialog.export.games.? = Sie haben eine <b>unbekannte</b> Zahl von Partien zum Drucken ausgewï¿½hlt.
+dialog.export.games.0 = Sie haben keine Partien ausgewählt.
+dialog.export.games.1 = Sie haben <b>eine Partie</b> zum Drucken ausgewählt.
+dialog.export.games.n = Sie haben <b>%n% Partien</b> zum Drucken ausgewählt.
+dialog.export.games.? = Sie haben eine <b>unbekannte</b> Zahl von Partien zum Drucken ausgewählt.
 
 dialog.export.confirm = Sind sie sicher ?
 dialog.export.yes = Alle Drucken
@@ -541,7 +541,7 @@ xsl.html.img.dir = Pfad
 xsl.create.images = Bilder erzuegen
 
 xsl.pdf.embed = TrueType Fonts einbetten
-xsl.pdf.font.dir = Zusï¿½tzliche Fonts:
+xsl.pdf.font.dir = Zusätzliche Fonts:
 
 default.file.name = Partie
 
@@ -577,53 +577,53 @@ dialog.option.tab.2		= Brett
 dialog.option.tab.3		= Farben
 dialog.option.tab.4		= Zeit
 dialog.option.tab.5     = Engine
-dialog.option.tab.6     = Erï¿½ffnungsbï¿½cher
+dialog.option.tab.6     = Eröffnungsbücher
 dialog.option.tab.7     = 3D-Brett
 dialog.option.tab.8		= Schriften
 
 dialog.option.user.name	= Name
 dialog.option.user.language	= Sprache
 dialog.option.ui.look.and.feel	= Design
-doc.associate.pgn   = PGN-Dateien mit jose ï¿½ffnen
+doc.associate.pgn   = PGN-Dateien mit jose Öffnen
 
 dialog.option.font.diagram	= Diagramm
 dialog.option.font.text		= Text
 dialog.option.font.inline	= Diagramm im Text
 dialog.option.font.figurine	= Figurine
 dialog.option.font.symbol	= Symbole
-dialog.option.font.size     = Grï¿½ï¿½e
+dialog.option.font.size     = Größe
 figurine.usefont.true = Graphische Figurine
 figurine.usefont.false = Text Figurine
 doc.panel.antialias	= Text-Antialias
 
 board.hilite.squares = Felder anzeigen
-board.animation.hints = Zï¿½ge anzeigen
+board.animation.hints = Züge anzeigen
 
 dialog.option.animation = Animation
 dialog.option.animation.speed = Animations-Geschwindigkeit
 
 dialog.option.sound = Sound
 dialog.option.sound.moves.dir = Zugansagen:
-sound.moves.ack.user = Ihre Zï¿½ge bestï¿½tigen ("OK")
-sound.moves.engine = Engine-Zï¿½ge ansagen
-sound.moves.user = Ihre Zï¿½ge ansagen
+sound.moves.ack.user = Ihre Züge bestätigen ("OK")
+sound.moves.engine = Engine-Züge ansagen
+sound.moves.user = Ihre Züge ansagen
 
 
 dialog.option.board.surface.light	= Helle Felder
 dialog.option.board.surface.dark	= Dunkle Felder
-dialog.option.board.surface.white	= Weiï¿½e Steine
+dialog.option.board.surface.white	= Weiße Steine
 dialog.option.board.surface.black	= Schwarze Steine
 dialog.option.board.surface.coords		= Koordinaten
 dialog.option.board.surface.background	= Hintergrund
 dialog.option.board.surface.frame			= Rahmen
 
-doc.load.history		= Letzte Partien ï¿½ffnen
-doc.classify.eco		= Erï¿½ffnungen nach ECO einordnen
+doc.load.history		= Letzte Partien Öffnen
+doc.classify.eco		= Eröffnungen nach ECO einordnen
 
-dialog.option.doc.write.mode		= Zug Einfï¿½gen
+dialog.option.doc.write.mode		= Zug Einfügen
 write.mode.new.line				= Neue Variante
 write.mode.new.main.line		= Hauptvariante
-write.mode.overwrite			= ï¿½berschreiben
+write.mode.overwrite			= Überschreiben
 write.mode.ask					= Nachfragen
 write.mode.dont.ask				= Nicht mehr fragen
 write.mode.cancel				= Abbrechen
@@ -643,7 +643,7 @@ dialog.option.phase.1	= 1. Kontrolle
 dialog.option.phase.2	= 2. Kontrolle
 dialog.option.phase.3	= 3. Kontrolle
 dialog.option.all.moves	= alle
-dialog.option.moves.in = Zï¿½ge in
+dialog.option.moves.in = Züge in
 dialog.option.increment = plus
 dialog.option.increment.label = pro Zug
 
@@ -653,14 +653,14 @@ time.control.fischer	= Fischer-Schach
 time.control.tournament	= Turnier
 # default name for new time control
 time.control.new		= Neu
-time.control.delete		= Lï¿½schen
+time.control.delete		= Löschen
 
 doc.menu.annotate = Anmerkung
-doc.menu.delete.comment = Kommentar Lï¿½schen
+doc.menu.delete.comment = Kommentar Löschen
 doc.menu.line.promote = Variante Aufwerten
-doc.menu.line.delete = Variante Lï¿½schen
+doc.menu.line.delete = Variante Löschen
 doc.menu.line.cut = Variante Abschneiden
-doc.menu.line.uncomment = Alle Kommentare Lï¿½schen
+doc.menu.line.uncomment = Alle Kommentare Löschen
 doc.menu.remove.annotation = -Keine-
 doc.menu.more.annotations = mehr...
 
@@ -694,8 +694,8 @@ dialog.option.plugin.name = Name:
 dialog.option.plugin.startup = Start:
 dialog.option.plugin.version = Version:
 
-plugin.restart.ask = Sie haben Einstellungen geï¿½ndert. \n Engine jetzt neu starten ?
-plugin.switch.ask = Sie haben eine ander Engine gewï¿½hlt. \n Engine jetzt neu starten ?
+plugin.restart.ask = Sie haben Einstellungen geändert. \n Engine jetzt neu starten ?
+plugin.switch.ask = Sie haben eine ander Engine gewählt. \n Engine jetzt neu starten ?
 plugin.show.info = "info" anzeigen
 
 dialog.option.plugin.default    = Standard-Einstellungen
@@ -707,34 +707,34 @@ error.engine.fatal = %engine% hat ein Problem:\n %message%. \n Die Engine starte
 
 warning.engine = Warnung
 warning.engine.no.frc = Diese Engine kann kein <b>Fischer Random Chess</b> spielen. <br><br>\
-Sie kï¿½nnen die Partie fortsetzen, aber die Engine wird nicht rochieren. <br>\
-Wenn Sie wï¿½hrend der Partie eine Warnmeldung sehen, starten Sie einfach die Engine neu.<br><br>\
-<a href="http://uciengines.de/UCI-Engines/FRC/hauptteil_frc.html">Hier</a> finden Sie eine ï¿½bersicht FRC-tauglicher Engines.
+Sie können die Partie fortsetzen, aber die Engine wird nicht rochieren. <br>\
+Wenn Sie während der Partie eine Warnmeldung sehen, starten Sie einfach die Engine neu.<br><br>\
+<a href="http://uciengines.de/UCI-Engines/FRC/hauptteil_frc.html">Hier</a> finden Sie eine Übersicht FRC-tauglicher Engines.
 warning.engine.off = Diese Nachricht nicht mehr anzeigen.
 
 # Opening Book settings
 
 book.list.add =
-book.list.add.tip = ein Buch hinzufï¿½gen
+book.list.add.tip = ein Buch hinzufügen
 book.list.download =
 book.list.download.tip = ein Buch aus den Internet laden
 book.list.remove =
-book.list.remove.tip = ein Buch entfernen (die Datei wird nicht auf der Festplatte gelï¿½scht)
+book.list.remove.tip = ein Buch entfernen (die Datei wird nicht auf der Festplatte gelöscht)
 book.list.up =
-book.list.up.tip = Reihenfolge ï¿½ndern
+book.list.up.tip = Reihenfolge ändern
 book.list.down =
-book.list.down.tip = Reihenfolge ï¿½ndern
+book.list.down.tip = Reihenfolge ändern
 
 book.engine.options = Spiel gegen Engine
-book.engine.options.tip = Wenn Sie gegen eine Engine spielen, aus welchen Bï¿½chern sollen die Zï¿½ge gewï¿½hlt werden ?
-book.engine.prefer.gui = Benutzer-Bï¿½cher bevorzugen
-book.engine.prefer.gui.tip = Die hier angegebenen Bï¿½cher werden verwendet. Erst dann greift das Buch der Engine.
+book.engine.options.tip = Wenn Sie gegen eine Engine spielen, aus welchen Büchern sollen die Züge gewählt werden ?
+book.engine.prefer.gui = Benutzer-Bücher bevorzugen
+book.engine.prefer.gui.tip = Die hier angegebenen Bücher werden verwendet. Erst dann greift das Buch der Engine.
 book.engine.prefer.engine = Engine-Buch bevorzugen
-book.engine.prefer.engine.tip = Engine-Buch verwenden, wenn mï¿½glich. Ansonsten die hier angegebenen Bï¿½cher verwenden.
-book.engine.gui.only = Nur Benutzer-Bï¿½cher
-book.engine.gui.only.tip = Nur Benutzer-Bï¿½cher verwenden. Das Engine-Buch bleibt ausgeschaltet (nicht alle Engines unterstï¿½tzen diese Mï¿½glichkeit).
-book.engine.no.book = Kein Erï¿½ffnungsbuch
-book.engine.no.book.tip = Gar kein Erï¿½ffnungsbuch verwenden. Zï¿½ge werden immer von der Engine berechnet.
+book.engine.prefer.engine.tip = Engine-Buch verwenden, wenn möglich. Ansonsten die hier angegebenen Bücher verwenden.
+book.engine.gui.only = Nur Benutzer-Bücher
+book.engine.gui.only.tip = Nur Benutzer-Bücher verwenden. Das Engine-Buch bleibt ausgeschaltet (nicht alle Engines unterstützen diese Möglichkeit).
+book.engine.no.book = Kein Eröffnungsbuch
+book.engine.no.book.tip = Gar kein Eröffnungsbuch verwenden. Züge werden immer von der Engine berechnet.
 book.author = zusammengestellt von %author%
 book.download = Download
 
@@ -751,14 +751,14 @@ board.3d.defaultview        = Ausgangslage
 
 board.surface.light	= Helle Felder
 board.surface.dark	= Dunkle Felder
-board.surface.white	= Weiï¿½e Steine
+board.surface.white	= Weiße Steine
 board.surface.black	= Schwarze Steine
 
 board.surface.coords		= Koordinaten
 board.surface.background	= Hintergrund
 
 font.name 	= Zeichensatz
-font.size	= Grï¿½ï¿½e
+font.size	= Größe
 font.bold	= Fett
 font.italic	= Kursiv
 font.color	= Farbe
@@ -774,18 +774,18 @@ online.update.tab.2	= Was ist Neu ?
 online.update.tab.3 = Wichtig !
 
 update.install	= Herunterladen & Installieren
-update.download	= Jetzt Herunterladen, spï¿½ter Installieren
+update.download	= Jetzt Herunterladen, später Installieren
 update.mirror	= von einem anderen Server Herunterladen
 
 download.file.progress 			= Lade %file%
 download.file.title				= Laden
-download.error.invalid.url		= Ungï¿½ltige URL: %p%.
+download.error.invalid.url		= Ungültige URL: %p%.
 download.error.connect.fail		= Keine Verbindung mit %p%.
 download.error.parse.xml		= Lesefehler: %p%.
 download.error.version.missing	= Version nicht gefunden: %p%.
-download.error.os.missing		= Kein Paket fï¿½r dieses Betriebssystem.
+download.error.os.missing		= Kein Paket für dieses Betriebssystem.
 download.error.browser.fail		= %p% kann nicht angezeigt werden.
-download.error.update			= Fehler beim Update.\n Bitte fï¿½hren Sie das Update manuell durch.
+download.error.update			= Fehler beim Update.\n Bitte führen Sie das Update manuell durch.
 
 download.message.up.to.date		= Die installierte Version ist auf dem neuesten Stand.
 download.message.success		= jose wurde auf Version %p% upgedatet\n. Bitte starten Sie das Programm erneut.
@@ -793,15 +793,15 @@ download.message.success		= jose wurde auf Version %p% upgedatet\n. Bitte starte
 download.message			= \
   Version <b>%version%</b> liegt bereit auf <br>\
   <font color=blue>%url%</font><br>\
-  Grï¿½ï¿½e: %size%
+  Größe: %size%
 
 dialog.browser	= Bitte helfen Sie bei der Suche nach einem Web-Browser.\n Geben Sie den Befehl zum Start des Browsers ein.
 dialog.browser.title = Browser Suchen
 
 error.bug	= <center><b>Ein Fehler ist aufgetreten.</b></center><br><br> \
- Es wï¿½re hilfreich, wenn Sie einen Fehlerbericht einsenden.<br>\
- Versuchen Sie, die Schritte zu beschreiben, die zu dem Fehler fï¿½hren <br>\
- und fï¿½gen Sie diese Datei an: <br>\
+ Es wäre hilfreich, wenn Sie einen Fehlerbericht einsenden.<br>\
+ Versuchen Sie, die Schritte zu beschreiben, die zu dem Fehler führen <br>\
+ und fügen Sie diese Datei an: <br>\
   <center><b> %error.log% </b></center>
 
 ##############################################################################
@@ -814,11 +814,11 @@ header.event	= Turnier
 header.site		= Ort
 header.date		= Datum
 header.round	= Runde
-header.white	= Weiï¿½er Spieler
+header.white	= Weißer Spieler
 header.black	= Schwarzer Spieler
 header.result	= Ergebnis
 body			= Partie-Text
-body.line		= Zï¿½ge
+body.line		= Züge
 body.line.0		= Hauptvariante
 body.line.1 	= Variante
 body.line.2 	= Untervariante
@@ -849,14 +849,14 @@ dialog.query.info = Info
 dialog.query.comments = Kommentare
 dialog.query.position = Stellung
 
-dialog.query.white	= Weiï¿½:
+dialog.query.white	= Weiß:
 dialog.query.black	= Schwarz:
 
 dialog.query.flags = Einstellungen
 dialog.query.color.sensitive = Farbe beachten
 dialog.query.swap.colors.tip = Farben tauschen
-dialog.query.case.sensitive = Groï¿½/Klein beachten
-dialog.query.soundex = ï¿½hnlich
+dialog.query.case.sensitive = Groß/Klein beachten
+dialog.query.soundex = Ähnlich
 dialog.query.result = Ergebnis
 dialog.query.swap.colors =
 
@@ -864,9 +864,9 @@ dialog.query.event = Turnier:
 dialog.query.site = Ort:
 dialog.query.eco = ECO:
 dialog.query.to = bis
-dialog.query.opening = Erï¿½ffnung:
+dialog.query.opening = Eröffnung:
 dialog.query.date = Datum:
-dialog.query.movecount = Zï¿½ge:
+dialog.query.movecount = Züge:
 
 dialog.query.annotator = Kommentator:
 dialog.query.commenttext = Kommentar:
@@ -877,7 +877,7 @@ dialog.query.var.flag.tip = nach Partien mit Varianten suchen
 
 
 dialog.query.search = Suchen
-dialog.query.clear = Zurï¿½cksetzen
+dialog.query.clear = Zurücksetzen
 dialog.query.search.in.progress = Suche...
 dialog.query.0.results = Kein Ergebnis
 dialog.query.1.result = Ein Ergebnis
@@ -887,20 +887,20 @@ dialog.query.stop.results =
 dialog.query.errors = Fehler im Suchbegriff:
 query.error.date.too.small = das Datum ist zu klein
 query.error.movecount.too.small = die Zahl ist zu klein
-query.error.eco.too.long = benutzen sie 3 Zeichen fï¿½r ECO Codes
+query.error.eco.too.long = benutzen sie 3 Zeichen für ECO Codes
 query.error.eco.character.expected = ECO Codes beginnen A,B,C,D oder E
 query.error.eco.number.expected = geben Sie eine Zahl zwischen 0 und 99 ein
-query.error.number.format = ungï¿½ltiges Zahlenformat
-query.error.date.format = ungï¿½ltiges Datumsformat
+query.error.number.format = ungültiges Zahlenformat
+query.error.date.format = ungültiges Datumsformat
 
 query.setup.enable = Stellungssuche
 query.setup.next = Am Zug:
-query.setup.next.white = Weiï¿½
-query.setup.next.white.tip = findet Stellungen mit Weiï¿½ am Zug
+query.setup.next.white = Weiß
+query.setup.next.white.tip = findet Stellungen mit Weiß am Zug
 query.setup.next.black = Schwarz
 query.setup.next.black.tip = findet Stellungen mit Schwarz am Zug
-query.setup.next.any = Weiï¿½ oder Schwarz
-query.setup.next.any.tip = findet Stellungen mit Weiï¿½ oder Schwarz am Zug
+query.setup.next.any = Weiß oder Schwarz
+query.setup.next.any.tip = findet Stellungen mit Weiß oder Schwarz am Zug
 query.setup.reversed = Vertauschte Farben
 query.setup.reversed.tip = findet identische Stellungen mit vertauschten Farben
 query.setup.var = Variante
@@ -922,7 +922,7 @@ dialog.details.eventdate = Turnier-Datum:
 dialog.details.round = Runde:
 dialog.details.board = Brett:
 
-dialog.details.white = Weiï¿½
+dialog.details.white = Weiß
 dialog.details.black = Schwarz
 dialog.details.name = Name:
 dialog.details.elo = ELO:
@@ -930,7 +930,7 @@ dialog.details.title = Titel:
 dialog.details.result = Ergebnis:
 
 dialog.details.eco = ECO:
-dialog.details.opening = Erï¿½ffnung:
+dialog.details.opening = Eröffnung:
 dialog.details.annotator = Kommentator:
 
 Result.0-1 = 0-1
@@ -942,19 +942,19 @@ Result.* = *
 #	setup dialog
 ##############################################################################
 
-dialog.setup.clear		= Lï¿½schen
+dialog.setup.clear		= Löschen
 dialog.setup.initial	= Ausgangsstellung
 dialog.setup.copy		= Aktuelle Stellung
 
-dialog.setup.next.white	= Weiï¿½ am Zug
+dialog.setup.next.white	= Weiß am Zug
 dialog.setup.next.black	= Schwarz am Zug
 dialog.setup.move.no	= Zug 
 
 dialog.setup.castling			= Rochade
-dialog.setup.castling.wk		= Weiï¿½ 0-0
-dialog.setup.castling.wk.tip	= Weiï¿½e kurze Rochade
-dialog.setup.castling.wq		= Weiï¿½ 0-0-0
-dialog.setup.castling.wq.tip	= Weiï¿½e lange Rochade
+dialog.setup.castling.wk		= Weiß 0-0
+dialog.setup.castling.wk.tip	= Weiße kurze Rochade
+dialog.setup.castling.wq		= Weiß 0-0-0
+dialog.setup.castling.wq.tip	= Weiße lange Rochade
 dialog.setup.castling.bk		= Schwarz 0-0
 dialog.setup.castling.bk.tip	= Schwarze kurze Rochade
 dialog.setup.castling.bq		= Schwarz 0-0-0
@@ -962,37 +962,37 @@ dialog.setup.castling.bq.tip	= Schwarze lange Rochade
 dialog.setup.castling.frc       = FRC-Rochade
 dialog.setup.castling.frc.tip   = FRC Rochade erlauben
 
-dialog.setup.invalid.fen = Ungï¿½ltige FEN
+dialog.setup.invalid.fen = Ungültige FEN
 dialog.setup.shuffle.title  = Shuffle
-dialog.setup.frc.tip = FRC-Stellung zufï¿½llig auswï¿½hlen
-dialog.setup.shuffle.tip = Shuffle Chess-Stellung zufï¿½llig auswï¿½hlen
+dialog.setup.frc.tip = FRC-Stellung zufällig auswählen
+dialog.setup.shuffle.tip = Shuffle Chess-Stellung zufällig auswählen
 
 # errors in setup dialog
 
-pos.error.white.king.missing	= Der weiï¿½e Kï¿½nig fehlt.
-pos.error.black.king.missing	= Der schwarze Kï¿½nig fehlt.
-pos.error.too.many.white.kings	= Zu viele weiï¿½e Kï¿½nige.
-pos.error.too.many.black.kings	= Zu viele schwarze Kï¿½nige.
-pos.error.white.king.checked	= Der weiï¿½e Kï¿½nig darf nicht im Schach stehen.
-pos.error.black.king.checked	= Der schwarze Kï¿½nig darf nicht im Schach stehen.
-pos.error.white.pawn.base		= Weiï¿½e Bauern dï¿½rfen nicht auf der ersten Reihe stehen.
-pos.error.white.pawn.promo		= Weiï¿½e Bauern dï¿½rfen nicht auf der achten Reihe stehen.
-pos.error.black.pawn.base		= Schwarze Bauern dï¿½rfen nicht auf der achten Reihe stehen.
-pos.error.black.pawn.promo		= Schwarze Bauern dï¿½rfen nicht auf der ersten Reihe stehen.
-pos.warning.too.many.white.pieces	= Zu viele weiï¿½e Steine.
+pos.error.white.king.missing	= Der weiße König fehlt.
+pos.error.black.king.missing	= Der schwarze König fehlt.
+pos.error.too.many.white.kings	= Zu viele weiße Könige.
+pos.error.too.many.black.kings	= Zu viele schwarze Könige.
+pos.error.white.king.checked	= Der weiße König darf nicht im Schach stehen.
+pos.error.black.king.checked	= Der schwarze König darf nicht im Schach stehen.
+pos.error.white.pawn.base		= Weiße Bauern dürfen nicht auf der ersten Reihe stehen.
+pos.error.white.pawn.promo		= Weiße Bauern dürfen nicht auf der achten Reihe stehen.
+pos.error.black.pawn.base		= Schwarze Bauern dürfen nicht auf der achten Reihe stehen.
+pos.error.black.pawn.promo		= Schwarze Bauern dürfen nicht auf der ersten Reihe stehen.
+pos.warning.too.many.white.pieces	= Zu viele weiße Steine.
 pos.warning.too.many.black.pieces	= Zu viele schwarze Steine.
-pos.warning.too.many.white.pawns	= Zu viele weiï¿½e Bauern.
+pos.warning.too.many.white.pawns	= Zu viele weiße Bauern.
 pos.warning.too.many.black.pawns	= Zu viele schwarez Bauern.
-pos.warning.too.many.white.knights	= Zu viele weiï¿½e Springer.
+pos.warning.too.many.white.knights	= Zu viele weiße Springer.
 pos.warning.too.many.black.knights	= Zu viele schwarze Springer
-pos.warning.too.many.white.bishops	= Zu viele weiï¿½e Lï¿½ufer.
-pos.warning.too.many.black.bishops	= Zu viele schwarze Lï¿½ufer.
-pos.warning.too.many.white.rooks	= Zu viele weiï¿½e Tï¿½rme.
-pos.warning.too.many.black.rooks	= Zu viele schwarze Tï¿½rme.
-pos.warning.too.many.white.queens	= Zu viele weiï¿½e Damen.
+pos.warning.too.many.white.bishops	= Zu viele weiße Läufer.
+pos.warning.too.many.black.bishops	= Zu viele schwarze Läufer.
+pos.warning.too.many.white.rooks	= Zu viele weiße Türme.
+pos.warning.too.many.black.rooks	= Zu viele schwarze Türme.
+pos.warning.too.many.white.queens	= Zu viele weiße Damen.
 pos.warning.too.many.black.queens	= Zu viele schwarze Damen.
-pos.warning.strange.white.bishops	= Gleichfarbige weiï¿½e Lï¿½ufer ?
-pos.warning.strange.black.bishops	= Gleichfarbige schwarze Lï¿½ufer ?
+pos.warning.strange.white.bishops	= Gleichfarbige weiße Läufer ?
+pos.warning.strange.black.bishops	= Gleichfarbige schwarze Läufer ?
 
 ##############################################################################
 #	read progress dialog
@@ -1000,12 +1000,12 @@ pos.warning.strange.black.bishops	= Gleichfarbige schwarze Lï¿½ufer ?
 
 dialog.progress.time = verbleibende Zeit: %time%
 
-dialog.read-progress.title = jose - Datei ï¿½ffnen
-dialog.read-progress.text = ï¿½ffne %fileName%
+dialog.read-progress.title = jose - Datei Öffnen
+dialog.read-progress.text = öffne %fileName%
 
 dialog.eco = ECO Klassifikation
-dialog.eco.clobber.eco = ECO Code ï¿½berschreiben
-dialog.eco.clobber.name = Erï¿½ffnung ï¿½berschreiben
+dialog.eco.clobber.eco = ECO Code Überschreiben
+dialog.eco.clobber.name = Eröffnung Überschreiben
 dialog.eco.language = Sprache:
 
 ##############################################################################
@@ -1014,10 +1014,10 @@ dialog.eco.language = Sprache:
 
 column.collection.name = Name
 column.collection.gamecount = Partien
-column.collection.lastmodified = Geï¿½ndert
+column.collection.lastmodified = Geändert
 
 column.game.index = Idx
-column.game.white.name = Weiï¿½
+column.game.white.name = Weiß
 column.game.black.name = Schwarz
 column.game.event = Turnier
 column.game.site = Ort
@@ -1026,9 +1026,9 @@ column.game.result = Erg.
 column.game.round = Runde
 column.game.board = Brett
 column.game.eco = ECO
-column.game.movecount = Zï¿½ge
+column.game.movecount = Züge
 column.game.annotator = Kommentator
-column.game.opening = Erï¿½ffnung
+column.game.opening = Eröffnung
 column.game.fen = Ausgangsstellung
 
 column.problem.author =	Autor
@@ -1038,18 +1038,18 @@ column.problem.date = Datum
 column.problem.stipulation = Ford.
 column.problem.dedication = Widmung
 column.problem.award = Preis
-column.problem.solution = Lï¿½sung
+column.problem.solution = Lösung
 column.problem.cplus = C+
 column.problem.genre = Genre
-column.problem.keyword = Schlagwï¿½rter
+column.problem.keyword = Schlagwörter
 
 bootstrap.confirm = Das Verzeichnis '%datadir%' ist nicht vorhanden.\n Neu anlegen ?
 bootstrap.create = Verzeichnis neu anlegen.
 
 tab.untitled = Ohne Titel
-confirm = Bestï¿½tigung
+confirm = Bestätigung
 confirm.save.one = Partie Sichern ?
-confirm.save.all = Geï¿½nderte Partien Sichern ?
+confirm.save.all = Geänderte Partien Sichern ?
 
 dialog.confirm.save = Sichern
 dialog.confirm.dont.save = Nicht Sichern
@@ -1059,13 +1059,13 @@ dialog.engine.offers.draw = %engine% bietet Remis.
 dialog.accept.draw = Annehmen
 dialog.decline.draw = Ablehnen
 
-edit.game = ï¿½ffnen
-edit.all = In Tabs ï¿½ffnen
+edit.game = Öffnen
+edit.all = In Tabs Öffnen
 dnd.move.top.level	= Ins Hauptverzeichnis
 
-dialog.paste.message = Daten aus der Zwischenablage einfï¿½gen. \n\
+dialog.paste.message = Daten aus der Zwischenablage einfügen. \n\
      Wollen Sie die Partien verschieben, oder eine neue Kopie anlegen ?
-dialog.paste.title = Partien Einfï¿½gen
+dialog.paste.title = Partien Einfügen
 dialog.paste.same = Verschieben
 dialog.paste.copy = Kopieren
 
@@ -1075,25 +1075,25 @@ dialog.paste.copy = Kopieren
 ##############################################################################
 
 lang.cs = Tschechisch
-lang.da = Dï¿½nisch
-lang.nl = Hollï¿½ndisch
+lang.da = Dänisch
+lang.nl = Holländisch
 lang.en = Englisch
 lang.et = Estnisch
 lang.fi = Finnisch
-lang.fr = Franzï¿½sisch
+lang.fr = Französisch
 lang.de = Deutsch
 lang.hu = Ungarisch
-lang.is = Islï¿½ndisch
+lang.is = Isländisch
 lang.it = Italienisch
 lang.no = Norwegisch
 lang.pl = Polnisch
 lang.pt = Portugiesisch
-lang.ro = Rumï¿½nisch
+lang.ro = Rumänisch
 lang.es = Spanisch
 lang.sv = Schwedisch
 lang.ca = Katalanisch
 lang.ru = Russisch
-lang.he = Hebrï¿½isch
+lang.he = Hebräisch
 
 ##############################################################################
 #	PGN Annotations
@@ -1116,131 +1116,131 @@ pgn.nag.11.tip   = gleiche Chancen, ruhige Stellung
 pgn.nag.12.tip   = gleiche Chancen, aktive Stellung
 pgn.nag.13	= unklar
 pgn.nag.13.tip   = unklare Stellung
-pgn.nag.14.tip	= Weiï¿½ hat leichten Vorteil
+pgn.nag.14.tip	= Weiß hat leichten Vorteil
 pgn.nag.15.tip 	= Schwarz hat leichten Vorteil
-pgn.nag.16.tip 	= Weiï¿½ hat Vorteil
+pgn.nag.16.tip 	= Weiß hat Vorteil
 pgn.nag.17.tip 	= Schwarz hat Vorteil
-pgn.nag.18.tip  = Weiï¿½ hat entscheidenden Vorteil
+pgn.nag.18.tip  = Weiß hat entscheidenden Vorteil
 pgn.nag.19.tip 	= Schwarz hat entscheidenden Vorteil
-pgn.nag.20   = Weiï¿½ hat ï¿½berwï¿½ltigenden Vorteil (Schwarz kann aufgeben)
-pgn.nag.21   = Schwarz hat ï¿½berwï¿½ltigenden Vorteil (Weiï¿½ kann aufgeben)
-pgn.nag.22   = Weiï¿½ ist in Zugzwang
+pgn.nag.20   = Weiß hat überwältigenden Vorteil (Schwarz kann aufgeben)
+pgn.nag.21   = Schwarz hat überwältigenden Vorteil (Weiß kann aufgeben)
+pgn.nag.22   = Weiß ist in Zugzwang
 pgn.nag.23   = Schwarz ist in Zugzwang
-pgn.nag.24   = Weiï¿½ hat leichten Raumvorteil
+pgn.nag.24   = Weiß hat leichten Raumvorteil
 pgn.nag.25   = Schwarz hat leichten Raumvorteil
-pgn.nag.26   = Weiï¿½ hat Raumvorteil
+pgn.nag.26   = Weiß hat Raumvorteil
 pgn.nag.27   = Schwarz hat Raumvorteil
-pgn.nag.28   = Weiï¿½ hat entscheidenden Raumvorteil
+pgn.nag.28   = Weiß hat entscheidenden Raumvorteil
 pgn.nag.29   = Schwarz hat entscheidenden Raumvorteil
-pgn.nag.30   = Weiï¿½ hat leichten Entwicklungsvorsprung
+pgn.nag.30   = Weiß hat leichten Entwicklungsvorsprung
 pgn.nag.31   = Schwarz hat leichten Entwicklungsvorsprung
-pgn.nag.32   = Weiï¿½ hat Entwicklungsvorsprung
+pgn.nag.32   = Weiß hat Entwicklungsvorsprung
 pgn.nag.33   = Schwarz hat Entwicklungsvorsprung
-pgn.nag.34   = Weiï¿½ hat entscheidenden Entwicklungsvorsprung
+pgn.nag.34   = Weiß hat entscheidenden Entwicklungsvorsprung
 pgn.nag.35   = Schwarz hat entscheidenden Entwicklungsvorsprung
-pgn.nag.36   = Weiï¿½ hat die Initiative
+pgn.nag.36   = Weiß hat die Initiative
 pgn.nag.37   = Schwarz hat die Initiative
-pgn.nag.38   = Weiï¿½ hat anhaltende Initiative
+pgn.nag.38   = Weiß hat anhaltende Initiative
 pgn.nag.39   = Schwarz hat anhaltende Initiative
-pgn.nag.40   = Weiï¿½er Angriff
+pgn.nag.40   = Weißer Angriff
 pgn.nag.41   = Schwarzer Angriff
-pgn.nag.42   = Weiï¿½ hat keine ausreichende Kompensation
+pgn.nag.42   = Weiß hat keine ausreichende Kompensation
 pgn.nag.43   = Schwarz hat keine ausreichende Kompensation
-pgn.nag.44   = Weiï¿½ hat ausreichende Kompensation
+pgn.nag.44   = Weiß hat ausreichende Kompensation
 pgn.nag.45   = Schwarz hat ausreichende Kompensation
-pgn.nag.46   = Weiï¿½ hat mehr als ausreichende Kompensation
+pgn.nag.46   = Weiß hat mehr als ausreichende Kompensation
 pgn.nag.47   = Schwarz hat mehr als ausreichende Kompensation
-pgn.nag.48   = Weiï¿½ hat etwas Zentrumskontrolle
+pgn.nag.48   = Weiß hat etwas Zentrumskontrolle
 pgn.nag.49   = Schwarz hat etwas Zentrumskontrolle
-pgn.nag.50   = Weiï¿½ hat Zentrumskontrolle
+pgn.nag.50   = Weiß hat Zentrumskontrolle
 pgn.nag.51   = Schwarz hat Zentrumskontrolle
-pgn.nag.52   = Weiï¿½ hat entscheidende Zentrumskontrolle
+pgn.nag.52   = Weiß hat entscheidende Zentrumskontrolle
 pgn.nag.53   = Schwarz hat entscheidende Zentrumskontrolle
-pgn.nag.54   = Weiï¿½ hat leichte Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.55   = Schwarz hat leichte Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.56   = Weiï¿½ hat die Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.57   = Schwarz hat die Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.58   = Weiï¿½ hat entscheidende Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.59   = Schwarz hat entscheidende Kontrolle am Kï¿½nigsfï¿½gel
-pgn.nag.60   = Weiï¿½ hat leichte Kontrolle am Damenfï¿½gel
-pgn.nag.61   = Schwarz hat leichte Kontrolle am Damenfï¿½gel
-pgn.nag.62   = Weiï¿½ hat die Kontrolle am Damenfï¿½gel
-pgn.nag.63   = Schwarz hat die Kontrolle am Damenfï¿½gel
-pgn.nag.64   = Weiï¿½ hat entscheidende Kontrolle am Damenfï¿½gel
-pgn.nag.65   = Schwarz hat entscheidende Kontrolle am Damenfï¿½gel
-pgn.nag.66   = Weiï¿½ hat eine schwache Grundreihe
+pgn.nag.54   = Weiß hat leichte Kontrolle am Königsfügel
+pgn.nag.55   = Schwarz hat leichte Kontrolle am Königsfügel
+pgn.nag.56   = Weiß hat die Kontrolle am Königsfügel
+pgn.nag.57   = Schwarz hat die Kontrolle am Königsfügel
+pgn.nag.58   = Weiß hat entscheidende Kontrolle am Königsfügel
+pgn.nag.59   = Schwarz hat entscheidende Kontrolle am Königsfügel
+pgn.nag.60   = Weiß hat leichte Kontrolle am Damenfügel
+pgn.nag.61   = Schwarz hat leichte Kontrolle am Damenfügel
+pgn.nag.62   = Weiß hat die Kontrolle am Damenfügel
+pgn.nag.63   = Schwarz hat die Kontrolle am Damenfügel
+pgn.nag.64   = Weiß hat entscheidende Kontrolle am Damenfügel
+pgn.nag.65   = Schwarz hat entscheidende Kontrolle am Damenfügel
+pgn.nag.66   = Weiß hat eine schwache Grundreihe
 pgn.nag.67   = Schwarz hat eine schwache Grundreihe
-pgn.nag.68   = Weiï¿½ hat eine gut geschï¿½tzte Grundreihe
-pgn.nag.69   = Schwarz hat eine gut geschï¿½tzte Grundreihe
-pgn.nag.70   = Weiï¿½ hat schlechte Kï¿½nigssicherheit
-pgn.nag.71   = Schwarz hat schlechte Kï¿½nigssicherheit
-pgn.nag.72   = Weiï¿½ hat gute Kï¿½nigssicherheit
-pgn.nag.73   = Schwarz hat gute Kï¿½nigssicherheit
-pgn.nag.74   = Weiï¿½ hat eine schlechte Kï¿½nigsstellung
-pgn.nag.75   = Schwarz hat eine schlechte Kï¿½nigsstellung
-pgn.nag.76   = Weiï¿½ hat eine gute Kï¿½nigsstellung
-pgn.nag.77   = Schwarz eine gute Kï¿½nigsstellung
-pgn.nag.78   = Weiï¿½ hat eine sehr schwache Bauernstruktur
+pgn.nag.68   = Weiß hat eine gut geschützte Grundreihe
+pgn.nag.69   = Schwarz hat eine gut geschützte Grundreihe
+pgn.nag.70   = Weiß hat schlechte Königssicherheit
+pgn.nag.71   = Schwarz hat schlechte Königssicherheit
+pgn.nag.72   = Weiß hat gute Königssicherheit
+pgn.nag.73   = Schwarz hat gute Königssicherheit
+pgn.nag.74   = Weiß hat eine schlechte Königsstellung
+pgn.nag.75   = Schwarz hat eine schlechte Königsstellung
+pgn.nag.76   = Weiß hat eine gute Königsstellung
+pgn.nag.77   = Schwarz eine gute Königsstellung
+pgn.nag.78   = Weiß hat eine sehr schwache Bauernstruktur
 pgn.nag.79   = Schwarz hat eine sehr schwache Bauernstruktur
-pgn.nag.80   = Weiï¿½ hat eine schwache Bauernstruktur
+pgn.nag.80   = Weiß hat eine schwache Bauernstruktur
 pgn.nag.81   = Schwarz hat eine schwache Bauernstruktur
-pgn.nag.82   = Weiï¿½ hat eine starke Bauernstruktur
+pgn.nag.82   = Weiß hat eine starke Bauernstruktur
 pgn.nag.83   = Schwarz hat eine starke Bauernstruktur
-pgn.nag.84   = Weiï¿½ hat eine sehr starke Bauernstruktur
+pgn.nag.84   = Weiß hat eine sehr starke Bauernstruktur
 pgn.nag.85   = Schwarz hat eine sehr starke Bauernstruktur
-pgn.nag.86   = Weiï¿½ hat eine schlechte Springerstellung
+pgn.nag.86   = Weiß hat eine schlechte Springerstellung
 pgn.nag.87   = Schwarz hat eine schlechte Springerstellung
-pgn.nag.88   = Weiï¿½ hat eine gute Springerstellung
+pgn.nag.88   = Weiß hat eine gute Springerstellung
 pgn.nag.89   = Schwarz hat eine gute Springerstellung
-pgn.nag.90   = Weiï¿½ hat eine schlechte Lï¿½uferstellung
-pgn.nag.91   = Schwarz hat eine schlechte Lï¿½uferstellung
-pgn.nag.92   = Weiï¿½ hat eine gute Lï¿½uferstellung
-pgn.nag.93   = Schwarz hat eine gute Lï¿½uferstellung
-pgn.nag.94   = Weiï¿½ hat eine schlechte Turmstellung
+pgn.nag.90   = Weiß hat eine schlechte Läuferstellung
+pgn.nag.91   = Schwarz hat eine schlechte Läuferstellung
+pgn.nag.92   = Weiß hat eine gute Läuferstellung
+pgn.nag.93   = Schwarz hat eine gute Läuferstellung
+pgn.nag.94   = Weiß hat eine schlechte Turmstellung
 pgn.nag.95   = Schwarz hat eine schlechte Turmstellung
-pgn.nag.96   = Weiï¿½ hat eine gute Turmstellung
+pgn.nag.96   = Weiß hat eine gute Turmstellung
 pgn.nag.97   = Schwarz hat eine gute Turmstellung
-pgn.nag.98   = Weiï¿½ hat eine schlechte Damenstellung
+pgn.nag.98   = Weiß hat eine schlechte Damenstellung
 pgn.nag.99   = Schwarz hat eine schlechte Damenstellung
-pgn.nag.100  = Weiï¿½ hat eine gute Damenstellung
+pgn.nag.100  = Weiß hat eine gute Damenstellung
 pgn.nag.101  = Schwarz hat eine gute Damenstellung
-pgn.nag.102  = Weiï¿½ hat eine schlechte Figurenkoordination
+pgn.nag.102  = Weiß hat eine schlechte Figurenkoordination
 pgn.nag.103  = Schwarz hat eine schlechte Figurenkoordination
-pgn.nag.104  = Weiï¿½ hat eine gute Figurenkoordination
+pgn.nag.104  = Weiß hat eine gute Figurenkoordination
 pgn.nag.105  = Schwarz hat eine gute Figurenkoordination
-pgn.nag.106  = Weiï¿½ hat die Erï¿½ffnung sehr schlecht gespielt
-pgn.nag.107  = Schwarz hat die Erï¿½ffnung sehr schlecht gespielt
-pgn.nag.108  = Weiï¿½ hat die Erï¿½ffnung schlecht gespielt
-pgn.nag.109  = Schwarz hat die Erï¿½ffnung schlecht gespielt
-pgn.nag.110  = Weiï¿½ hat die Erï¿½ffnung gut gespielt
-pgn.nag.111  = Schwarz hat die Erï¿½ffnung gut gespielt
-pgn.nag.112  = Weiï¿½ hat die Erï¿½ffnung sehr gut gespielt
-pgn.nag.113  = Schwarz hat die Erï¿½ffnung sehr gut gespielt
-pgn.nag.114  = Weiï¿½ hat das Mittelspiel sehr schlecht behandelt
+pgn.nag.106  = Weiß hat die Eröffnung sehr schlecht gespielt
+pgn.nag.107  = Schwarz hat die Eröffnung sehr schlecht gespielt
+pgn.nag.108  = Weiß hat die Eröffnung schlecht gespielt
+pgn.nag.109  = Schwarz hat die Eröffnung schlecht gespielt
+pgn.nag.110  = Weiß hat die Eröffnung gut gespielt
+pgn.nag.111  = Schwarz hat die Eröffnung gut gespielt
+pgn.nag.112  = Weiß hat die Eröffnung sehr gut gespielt
+pgn.nag.113  = Schwarz hat die Eröffnung sehr gut gespielt
+pgn.nag.114  = Weiß hat das Mittelspiel sehr schlecht behandelt
 pgn.nag.115  = Schwarz hat das Mittelspiel sehr schlecht behandelt
-pgn.nag.116  = Weiï¿½ hat das Mittelspiel schlecht behandelt
+pgn.nag.116  = Weiß hat das Mittelspiel schlecht behandelt
 pgn.nag.117  = Schwarz hat das Mittelspiel schlecht behandelt
-pgn.nag.118  = Weiï¿½ hat das Mittelspiel gut behandelt
+pgn.nag.118  = Weiß hat das Mittelspiel gut behandelt
 pgn.nag.119  = Schwarz hat das Mittelspiel gut behandelt
-pgn.nag.120  = Weiï¿½ hat das Mittelspiel sehr gut behandelt
+pgn.nag.120  = Weiß hat das Mittelspiel sehr gut behandelt
 pgn.nag.121  = Schwarz hat das Mittelspiel sehr gut behandelt
-pgn.nag.122  = Weiï¿½ hat das Endspiel sehr schlecht behandelt
+pgn.nag.122  = Weiß hat das Endspiel sehr schlecht behandelt
 pgn.nag.123  = Schwarz hat das Endspiel sehr schlecht behandelt
-pgn.nag.124  = Weiï¿½ hat das Endspiel schlecht behandelt
+pgn.nag.124  = Weiß hat das Endspiel schlecht behandelt
 pgn.nag.125  = Schwarz hat das Endspiel schlecht behandelt
-pgn.nag.126  = Weiï¿½ hat das Endspiel gut behandelt
+pgn.nag.126  = Weiß hat das Endspiel gut behandelt
 pgn.nag.127  = Schwarz hat das Endspiel gut behandelt
-pgn.nag.128  = Weiï¿½ hat das Endspiel sehr gut behandelt
+pgn.nag.128  = Weiß hat das Endspiel sehr gut behandelt
 pgn.nag.129  = Schwarz hat das Endspiel sehr gut behandelt
-pgn.nag.130  = Weiï¿½ hat etwas Gegenspiel
+pgn.nag.130  = Weiß hat etwas Gegenspiel
 pgn.nag.131  = Schwarz hat etwas Gegenspiel
-pgn.nag.132  = Weiï¿½ hat Gegenspiel
+pgn.nag.132  = Weiß hat Gegenspiel
 pgn.nag.133  = Schwarz hat Gegenspiel
-pgn.nag.134  = Weiï¿½ hat entscheidendes Gegenspiel
+pgn.nag.134  = Weiß hat entscheidendes Gegenspiel
 pgn.nag.135  = Schwarz hat entscheidendes Gegenspiel
-pgn.nag.136  = Weiï¿½ ist in Zeitnot
+pgn.nag.136  = Weiß ist in Zeitnot
 pgn.nag.137  = Schwarz ist in Zeitnot
-pgn.nag.138  = Weiï¿½ hat schwere Zeitnot
+pgn.nag.138  = Weiß hat schwere Zeitnot
 pgn.nag.139  = Schwarz hat schwere Zeitnot
 
 # following codes are defined by Fritz
@@ -1249,17 +1249,17 @@ pgn.nag.140  	= mit der Idee
 pgn.nag.141  	= gerichtet gegen
 pgn.nag.142  	= ist besser
 pgn.nag.143  	= ist schlechter
-pgn.nag.144.tip = ist ï¿½quivalent
+pgn.nag.144.tip = ist äquivalent
 pgn.nag.145.tip	= redaktionelle Anmerkung
 pgn.nag.146.tip = Neuerung
 pgn.nag.147     = schwacher Punkt
 pgn.nag.148     = Endspiel
 pgn.nag.149     = Linie
 pgn.nag.150     = Diagonale
-pgn.nag.151     = Weiï¿½ hat das Lï¿½uferpaar
-pgn.nag.152     = Schwarz hat das Lï¿½uferpaar
-pgn.nag.153     = ungleichfarbige Lï¿½ufer
-pgn.nag.154     = gleichfarbige Lï¿½ufer
+pgn.nag.151     = Weiß hat das Läuferpaar
+pgn.nag.152     = Schwarz hat das Läuferpaar
+pgn.nag.153     = ungleichfarbige Läufer
+pgn.nag.154     = gleichfarbige Läufer
 pgn.nag.156     = Freibauer
 pgn.nag.157     = Mehrbauern
 pgn.nag.158     = mit
@@ -1271,8 +1271,8 @@ pgn.nag.190     = etc.
 pgn.nag.191     = Doppelbauer
 pgn.nag.192     = isolierte Bauern
 pgn.nag.193     = verbundene Bauern
-pgn.nag.194     = hï¿½ngende Bauern
-pgn.nag.195     = rï¿½ckstï¿½ndige Bauern
+pgn.nag.194     = hängende Bauern
+pgn.nag.195     = rückständige Bauern
 
 # this code is only defined by us
 pgn.nag.201  = Diagramm
