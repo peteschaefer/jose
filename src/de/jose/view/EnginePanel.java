@@ -169,6 +169,7 @@ public class EnginePanel
 		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
 
 		figStyle = styles.getStyle("body.figurine");
+		// todo what about figStyle bold? Let StyledMoveFormatter handle it?
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
