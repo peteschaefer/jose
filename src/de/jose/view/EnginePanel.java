@@ -13,6 +13,8 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.book.lichess.LiChessBookEntry;
+import de.jose.book.lichess.LiChessGameRef;
 import de.jose.chess.*;
 import de.jose.chess.Position;
 import de.jose.pgn.ECOClassificator;
@@ -826,6 +828,7 @@ public class EnginePanel
 		{
 			BookEntry entry = (BookEntry)bookEntries.get(i);
 			bookmoves.setPvModified(i);
+			bookmoves.data[i].book = entry;
 
 			StringBuffer line = bookmoves.getLine(i);
 			line.append(StringMoveFormatter.formatMove(pos,entry.move,true));
@@ -850,6 +853,21 @@ public class EnginePanel
 
 			Score score = data.eval;
 			entry.toScore(score,1000);
+
+			StringBuffer info = bookmoves.getLineInfo(i);
+			if ((entry!=null) && (entry instanceof LiChessBookEntry))
+			{
+				ArrayList<LiChessGameRef> refs = ((LiChessBookEntry)entry).gameRef;
+				if ((refs!=null && !refs.isEmpty()))
+				{
+					info.append("{");
+					for (int j=0; j < refs.size(); ++j) {
+						if (j>0) info.append(",");
+						info.append(refs.get(j).toString());
+					}
+					info.append("}");
+				}
+			}
 		}
 
 		//  always show hint that these are book moves

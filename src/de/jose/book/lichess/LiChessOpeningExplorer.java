@@ -5,15 +5,20 @@ import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.pgn.PgnConstants;
+import de.jose.pgn.PgnUtil;
+import de.jose.pgn.ResultNode;
 import de.jose.util.xml.XMLUtil;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
@@ -96,8 +101,8 @@ public class LiChessOpeningExplorer extends OpeningBook
         /*
             I would like to query Lichess asynchroneously. It's perfectly possible with ExecutorService
             but then the logic for coordinating EnginePanel with OpeningBook and Application becomes difficult.
-            In/out opening book triggers engine analysis, etc. With asynch book moves the state transitions
-            become too complicated.
+            In/out opening book triggers engine analysis, etc.
+            With asynch book moves the state transitions becomes too complicated.
 
             As a compromise, we do a *blocking* query with fixed time-out.
          */
@@ -118,7 +123,7 @@ public class LiChessOpeningExplorer extends OpeningBook
     {
         String fen = pos.toString();
         fen = URLEncoder.encode(fen);
-        String urlString = apiUrl+"?fen="+fen+"&topGames=0";    //  don't enumerate games
+        String urlString = apiUrl+"?fen="+fen+"&topGames=6";    //  don't enumerate games
 
         try {
             URL url = new URL(urlString);
@@ -128,21 +133,34 @@ public class LiChessOpeningExplorer extends OpeningBook
 
             JSONObject obj = new org.json.JSONObject(jsonText);
             JSONArray moves = obj.getJSONArray("moves");
+            HashMap<String,LiChessBookEntry> mvmap = new HashMap();
 
             for(int i=0; i<moves.length(); i++) {
-                JSONObject move = moves.getJSONObject(i);
-                String mv = move.getString("uci");
+                JSONObject json = moves.getJSONObject(i);
+                String key = json.getString("uci");
 
-                BookEntry bk = new BookEntry();
-                bk.move = Move.fromString(mv);
-                bk.countWhite = move.getInt("white");
-                bk.countDraw = move.getInt("draws");
-                bk.countBlack = move.getInt("black");
-                bk.count = (bk.countWhite+bk.countDraw+bk.countBlack);
+                LiChessBookEntry bk = new LiChessBookEntry(json);
+                mvmap.put(key,bk);
 
                 if (deep || bk.count >= MIN_GAMES_PLAYED)
                     result.add(bk);
             }
+
+            JSONArray games = obj.getJSONArray("topGames");
+            for(int j=0; j<games.length(); j++)
+            {
+                JSONObject json = games.getJSONObject(j);
+                String key = json.getString("uci");
+
+                LiChessGameRef ref = new LiChessGameRef(json);
+                LiChessBookEntry bk = mvmap.get(key);
+
+                if (bk!=null) {
+                    bk.gameRef.add(ref);
+                    System.out.println(ref);
+                }
+            }
+
             return true;
         } catch (IOException e) {
             /*  network failures are not fatal.
@@ -158,6 +176,9 @@ public class LiChessOpeningExplorer extends OpeningBook
                 });
                 NETWORK_ERROR_REPORTED = true;
             }
+            return false;
+        } catch (Throwable e) {
+            e.printStackTrace();
             return false;
         }
     }

@@ -13,6 +13,7 @@
 package de.jose.plugin;
 
 import de.jose.Util;
+import de.jose.book.BookEntry;
 import de.jose.chess.Move;
 import de.jose.util.StringUtil;
 
@@ -80,6 +81,7 @@ public class AnalysisRecord
 		public ArrayList<Move> moves; // parsed moves
 		public StringBuffer line;	// line text
 		public StringBuffer info;	// additional info
+		public BookEntry book;
 		// .. todo more to come (reference links)
 
 		void clear() {
@@ -87,6 +89,7 @@ public class AnalysisRecord
 			if (line!=null) line.setLength(0);
 			if (info!=null) info.setLength(0);
 			if (moves!=null) moves.clear();
+			book = null;
 		}
 	}
 	public LineData[] data;
