@@ -278,64 +278,80 @@ public class JoToolBar
 		return iconSize;
 	}
 
-	public static Icon[] createAwesomeIcons(String spec, int size)
-	{
-		//	spec looks like "<text>:<#color1>[:#color2][:bold][:italic]"
+	static class IconSpec {
 		String text;
 		ArrayList<Color> colors = new ArrayList<>();
 		int style = Font.PLAIN;
+		float size;
+		Insets insets = new Insets(2,2,2,2); // right ?
 
-		String[] specs = spec.split(":");
-		text = StringUtil.unescape(specs[0]);
-		for(int i=1; i<specs.length; i++) {
-			if (specs[i].equalsIgnoreCase("bold"))
-				style |= Font.BOLD;
-			if (specs[i].equalsIgnoreCase("italic"))
-				style |= Font.ITALIC;
-			if (specs[i].equalsIgnoreCase("button"))
-				style |= BUTTON;
-			if (specs[i].startsWith("#") || specs[i].startsWith("0x"))
-				colors.add(Color.decode(specs[i]));
-			if (specs[i].startsWith("%")) {
-				float scale = Float.parseFloat(specs[i].substring(1));
-				size *= scale/100.f;
+		IconSpec(String spec, float asize)
+		{
+			this.size = asize;
+			String[] specs = spec.split(":");
+			text = StringUtil.unescape(specs[0]);
+			for(int i=1; i<specs.length; i++) {
+				if (specs[i].equalsIgnoreCase("bold"))
+					style |= Font.BOLD;
+				if (specs[i].equalsIgnoreCase("italic"))
+					style |= Font.ITALIC;
+				if (specs[i].equalsIgnoreCase("button"))
+					style |= BUTTON;
+				if (specs[i].startsWith("#") || specs[i].startsWith("0x"))
+					colors.add(Color.decode(specs[i]));
+				if (specs[i].startsWith("%")) {
+					float scale = Float.parseFloat(specs[i].substring(1));
+					this.size *= scale/100.f;
+				}
+				if (specs[i].startsWith("(")) {
+					int inset = Integer.parseInt(specs[i].substring(1));
+					insets.top = insets.left = insets.bottom = insets.right = inset;
+				}
 			}
+			if (colors.isEmpty()) colors.add(Color.darkGray);
 		}
+	}
 
-		if (colors.isEmpty()) colors.add(Color.darkGray);
-		return createAwesomeIcons(text,size,style,colors);
+	public static Icon[] createAwesomeIcons(String spec, float size)
+	{
+		return create7AwesomeIcons(new IconSpec(spec,size));
+	}
+
+	public static Icon create1AwesomeIcon(String spec, float size)
+	{
+		return create1AwesomeIcon(new IconSpec(spec,size));
 	}
 
 	public static final int BUTTON = 4;
 
-	public static Icon[] createAwesomeIcons(String s, int size, int style, List<Color> colors)
+	private static Icon[] create7AwesomeIcons(IconSpec spec)
 	{
 		Font font = FontUtil.fontAwesome();
-		font = font.deriveFont(style & ~BUTTON);
+		font = font.deriveFont(spec.style & ~BUTTON);
 		TextIcon[] result = new TextIcon[7];
 
-		Color color1 = colors.get(0);
-		Color color2 = (colors.size() > 1) ? colors.get(1) : null;
+		Color color1 = spec.colors.get(0);
+		Color color2 = (spec.colors.size() > 1) ? spec.colors.get(1) : null;
 
-		if ((style&BUTTON) != 0) {
-			result[0] = new ButtonIcon(s,font,size).fixedColor(Color.lightGray);
-			result[1] = new ButtonIcon(s,font,size).huedColor(color1);
-			result[2] = new ButtonIcon(s,font,size).huedColor(color1);
-			result[3] = new ButtonIcon(s,font,size).huedColor(color1);
+		if ((spec.style&BUTTON) != 0) {
+			result[0] = new ButtonIcon(spec.text,font,spec.size).fixedColor(Color.lightGray);
+			result[1] = new ButtonIcon(spec.text,font,spec.size).huedColor(color1);
+			result[2] = new ButtonIcon(spec.text,font,spec.size).huedColor(color1);
+			result[3] = new ButtonIcon(spec.text,font,spec.size).huedColor(color1);
 			if (color2!=null) {
-				result[4] = new ButtonIcon(s,font,size).huedColor(color2);
-				result[5] = new ButtonIcon(s,font,size).huedColor(color2);
-				result[6] = new ButtonIcon(s,font,size).huedColor(color2);
+				result[4] = new ButtonIcon(spec.text,font,spec.size).huedColor(color2);
+				result[5] = new ButtonIcon(spec.text,font,spec.size).huedColor(color2);
+				result[6] = new ButtonIcon(spec.text,font,spec.size).huedColor(color2);
 			}
 		}
 		else {
-			size*=0.7f;
+			spec.size*=0.7f;
 			if (color2==null) color2 = Color.white;
 
-			result[0] = new TextShapeIcon(s,font,size,Color.lightGray,color2);
-			result[1] = new TextShapeIcon(s,font,size,color1,color2);
-			result[2] = new TextShapeIcon(s,font,size,color1,color2);
-			result[3] = new TextShapeIcon(s,font,size,color1,color2);
+			result[0] = new TextShapeIcon(spec.text,font,spec.size,Color.lightGray,color2);
+			result[1] = new TextShapeIcon(spec.text,font,spec.size,color1,color2);
+			result[2] = new TextShapeIcon(spec.text,font,spec.size,color1,color2);
+			result[3] = new TextShapeIcon(spec.text,font,spec.size,color1,color2);
 			/*if (color2!=null) {
 				result[4] = new TextShapeIcon(s,font,size,color2,Color.white);
 				result[5] = new TextShapeIcon(s,font,size,color2,Color.white);
@@ -352,10 +368,9 @@ public class JoToolBar
 			}
 */		}
 
-		Insets insets = new Insets(2,2,2,2); // right ?
 		for(TextIcon icon : result)
 			if (icon!=null)
-				icon.setInsets(insets);
+				icon.setInsets(spec.insets);
 
 		result[2].hilited();
 		result[3].pushed();
@@ -363,6 +378,29 @@ public class JoToolBar
 		if (result[5]!=null) result[5].hilited();
 		if (result[6]!=null) result[6].pushed();
 
+		return result;
+	}
+
+	public static Icon create1AwesomeIcon(IconSpec spec)
+	{
+		Font font = FontUtil.fontAwesome();
+		font = font.deriveFont(spec.style & ~BUTTON);
+		TextIcon result;
+
+		Color color1 = spec.colors.get(0);
+		Color color2 = (spec.colors.size() > 1) ? spec.colors.get(1) : null;
+
+		if ((spec.style&BUTTON) != 0) {
+			result = new ButtonIcon(spec.text,font,spec.size).huedColor(color1);
+		}
+		else {
+			spec.size*=0.7f;
+			if (color2==null) color2 = Color.white;
+
+			result = new TextShapeIcon(spec.text,font,spec.size,color1,color2);
+		}
+
+		if (result!=null) result.setInsets(spec.insets);
 		return result;
 	}
 

@@ -221,13 +221,13 @@ public class CollectionPanel
 			Collection coll = ((CollectionTreeNode)value).getCollection();
 			int cid = (coll!=null) ? coll.Id : 0;
 
-			float iconSize = 13.f;
-			final Icon	CLOSED_ICON		= new TextShapeIcon("\uf07b", FontUtil.fontAwesome(),iconSize,Color.decode("#dede63"),Color.black);
-			final Icon	OPEN_ICON		= new TextShapeIcon("\uf07c", FontUtil.fontAwesome(),iconSize,Color.decode("#eeee63"),Color.black);
-			final Icon	EMPTY_ICON		= new TextShapeIcon("\uf07b", FontUtil.fontAwesome(),iconSize,Color.decode("#a0a0a0"),Color.black);
-			final Icon	CLIPBOARD_ICON	= new TextShapeIcon("\uf328", FontUtil.fontAwesome(),iconSize*1.2f,Color.decode("#808000"),Color.white);
-			final Icon	AUTOSAVE_ICON	= new TextShapeIcon("\uf0c7", FontUtil.fontAwesome(),iconSize*1.2f,Color.decode("#800000"),Color.white);
-			final Icon	TRASH_ICON		= new TextShapeIcon("\uf1f8", FontUtil.fontAwesome(),iconSize,Color.decode("#666666"),Color.lightGray);
+			float iconSize = 20.f;
+			final Icon	CLOSED_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#dede63:#000000",iconSize);
+			final Icon	OPEN_ICON		= JoToolBar.create1AwesomeIcon("\uf07c:#eeee63:#000000", iconSize);
+			final Icon	EMPTY_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#a0a0a0:#000000", iconSize);
+			final Icon	CLIPBOARD_ICON	= JoToolBar.create1AwesomeIcon("\uf328:#808000:%120", iconSize);
+			final Icon	AUTOSAVE_ICON	= JoToolBar.create1AwesomeIcon("\uf0c7:#800000:%120", iconSize);
+			final Icon	TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf1f8:#666666:#aaaaaa", iconSize);
 
 			switch (cid) {
 			case Collection.TRASH_ID:			setIcon(TRASH_ICON,leaf,expanded); break;

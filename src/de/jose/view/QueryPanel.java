@@ -426,9 +426,10 @@ public class QueryPanel
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		//	"Search"
-		Icon searchIcon = new TextShapeIcon("\uf002",FontUtil.fontAwesome(),18,Color.black,Color.white);
-		Icon clearIcon = new TextShapeIcon("\uf057",FontUtil.fontAwesome(),18,Color.red.darker(),Color.white);
-		Icon stopIcon = new TextShapeIcon("\uf28d",FontUtil.fontAwesome(),18,Color.red.darker(),Color.white);
+		float iconSize = 24f;
+		Icon searchIcon = JoToolBar.create1AwesomeIcon("\uf002:#000000",iconSize);
+		Icon clearIcon = JoToolBar.create1AwesomeIcon("\uf057:#a00000",iconSize);
+		Icon stopIcon = JoToolBar.create1AwesomeIcon("\uf28d:#a00000",iconSize);
 
 		searchButton = JoDialog.newButton("dialog.query.search",searchIcon,"icon",this);
 		searchButton.setDefaultCapable(true);

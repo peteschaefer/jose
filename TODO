@@ -2,23 +2,22 @@
 
 * double click insert variant; trying to delete it
 
-[x] print to temporary pdf.
-[ ] ...then there is awt (wysiwig) printing. But that has too little layout control, anyway.
-    might become deprecated?
+[] BUG
+java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4cb0 is still active.
+    Only one streaming result set may be open and in use per-connection.
+    Ensure that you have called .close() on  any active result sets before attempting more queries.
+	at com.mysql.jdbc.MysqlIO.checkForOutstandingStreamingData(MysqlIO.java:2066)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1481)
+	at com.mysql.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:1124)
+	at com.mysql.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:676)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:773)
+	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:74)
+	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:97)
+	at de.jose.view.list.IntervalCacheModel.readData(IntervalCacheModel.java:698)
+	at de.jose.view.list.IntervalCacheModel.readRow(IntervalCacheModel.java:642)
+	at de.jose.view.list.IntervalCacheModel.getRowAt(IntervalCacheModel.java:601)
+	at de.jose.view.list.IntervalCacheModel.getValueAt(IntervalCacheModel.java:567)
 
-[x] copy-paste with non-ascii languages (like Russian)
-    -> fall back to English
-
-[x] bug:
-    8/5Q1p/6p1/2n1N1Pk/5P1P/P6K/2q5/8 w - - 1 56
-    -> lift Qf7 and Ph7
-    [x] don't interpret take-take sequence if there is a plausbile simple move
-
-[x] stop analysis on mate
-[x] uci figurines:
-     [x] support multi letter (like russian)
-[x] Cut from text
-[x] Type N, ? at end of comment
 
 ? Charter buggy
 

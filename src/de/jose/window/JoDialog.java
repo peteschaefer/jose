@@ -1678,14 +1678,12 @@ public class JoDialog
 	    return button;
 	}
 
-    public static JButton newLinkButton(String name, String icon, ActionListener listener)
+    public static JButton newLinkButton(String name, String iconName, ActionListener listener)
     {
-		String spec = JoMenuBar.ICON_SPECS.get(icon);
-		Icon[] icons = JoToolBar.createAwesomeIcons(spec,20);
+		String iconSpec = JoMenuBar.ICON_SPECS.get(iconName);
+		Icon icon = JoToolBar.create1AwesomeIcon(iconSpec,20);
 
-        JButton button = newButton(name, icons[1], listener);
-		button.setDisabledIcon(icons[0]);
-
+        JButton button = newButton(name, icon, listener);
 		button.setBorderPainted(false);
 		button.setBorder(new EmptyBorder(2,8,2,8));
 		button.setPreferredSize(new Dimension(92,22));

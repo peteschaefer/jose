@@ -8,13 +8,13 @@ import java.awt.geom.Point2D;
 public class ButtonIcon
     extends TextIcon
 {
-    private int size;
+    private float size;
 
     public Color[] bg;
     public Color[] fg;
     public float[] steps;
 
-    public ButtonIcon(String text, Font font, int size) {
+    public ButtonIcon(String text, Font font, float size) {
         super(text, font, size*0.65f, Color.black);
         this.size = size;
         steps = new float[] { 0.0f, 0.3f, 0.6f, 0.8f, 1.0f };
@@ -30,12 +30,12 @@ public class ButtonIcon
 
     @Override
     public int getIconHeight() {
-        return size+insets.top+insets.bottom;
+        return (int)(size+insets.top+insets.bottom+0.5);
     }
 
     @Override
     public int getIconWidth() {
-        return size+insets.left+insets.right;
+        return (int)(size+insets.left+insets.right+0.5);
     }
 
     public ButtonIcon fixedColor(Color color)
@@ -76,7 +76,7 @@ public class ButtonIcon
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         g2.setPaint(p1);
-        g2.fillOval(x+insets.left, y+insets.top, size, size);
+        g2.fillOval(x+insets.left, y+insets.top, (int)size, (int)size);
 
         //  draw text; centered
         Paint p2;

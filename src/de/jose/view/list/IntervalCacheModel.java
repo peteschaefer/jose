@@ -696,6 +696,7 @@ abstract public class IntervalCacheModel
             JoPreparedStatement pstm = conn.getPreparedStatement(dataSql1);
 			pstm.setInt(1,pk);
 			pstm.execute(false);
+			//	todo may throw if there is another *streaming* result set underway. Do reader.res.close() before!?
 
 			result = pstm.getResultSet();
 
@@ -704,7 +705,7 @@ abstract public class IntervalCacheModel
 			Row row = new Row();
 			if (result.next())
 				row.read(result, columnTypes);
-			else if (Version.mac) {
+			else if (Version.mac) {	//	todo what's that? was it meant for standalone process (so it should be used everywhere?)
                 row.setSize(columnTypes.length);
                 System.out.println("data expected at row "+rowNum+", Id="+pk);
             }
