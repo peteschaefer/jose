@@ -657,56 +657,41 @@ public class UciPlugin
 	        return;
         }
 
-	    if (canPonder())
-	    {
-		    //  start pondering
-		    int ponderOffset = moveText.indexOf("ponder");
-		    if (ponderOffset > 0)
-		    {
-			    String bestMoveText = moveText.substring(1,ponderOffset-1);
-			    String ponderMoveText = moveText.substring(ponderOffset+7);
+        //  start pondering
+        int ponderOffset = moveText.indexOf("ponder");
+        if (ponderOffset > 0)
+        {
+            String bestMoveText = moveText.substring(1,ponderOffset-1);
+            String ponderMoveText = moveText.substring(ponderOffset+7);
 
-			    Move bestMove = parseMove(bestMoveText,0);
-			    ponderMove = parseMove(ponderMoveText,0);
+            Move bestMove = parseMove(bestMoveText,0);
+            ponderMove = parseMove(ponderMoveText,0);
 
-			    //  keep enginePosition in synch
-			    enginePosition.tryMove(bestMove);   //  FRC castling ?
-			    hint = new FormattedMove(ponderMove,false,null);  //  format hint
-			    enginePosition.tryMove(ponderMove);
+            if (canPonder())
+                startPondering(bestMove, bestMoveText, ponderMoveText);
+            else {
+                //	record hint
+                enginePosition.tryMove(bestMove);   //  FRC castling ?
+                hint = new FormattedMove(ponderMove,false,null);  //  format hint
+                enginePosition.undoMove();
+                ponderMove = null;
+                setMode(PAUSED);
+            }
 
-			    /** check for mate and stalemate here
-			     */
-			    if (enginePosition.isGameFinished(true)) {
-				    /**  do not start pondering in an illegal position
-				     *  (because the engine will not respond an ignoreMoves gets out of synch !!)
-				     */
-				    ponderMove = null;
-				    setMode(PAUSED);
-			    }
-				else {
-				    setCurrentPosition(bestMoveText,ponderMoveText);
-
-			        printOut.print("go ponder");
-			        printSearchCtrl();
-			        printOut.println();
-				    setMode(PONDERING);
-			    }
-			    //  (unrequested) hint
-			    if (hint!=null)
-				    analysis.ponderMove = hint;
-			    else
-				    analysis.ponderMove = null;
-			    sendMessage(PLUGIN_HINT, hint);
-		    }
-		    else {
-			    hint = null;
-		        ponderMove = null;
-			    setMode(PAUSED);
-		    }
-
-	    }
-	    else
-	        setMode(PAUSED);
+            //  (unrequested) hint
+            if (hint!=null) {
+				analysis.ponderMove = hint;
+				analysis.ponderMove.ply = analysis.ply+1;
+			}
+            else
+                analysis.ponderMove = null;
+            sendMessage(PLUGIN_HINT, hint);
+        }
+        else {
+            hint = null;
+            ponderMove = null;
+            setMode(PAUSED);
+        }
 
         sendMessage(PLUGIN_MOVE,
                 new EvaluatedMove(mv, analysis, this));
@@ -715,7 +700,33 @@ public class UciPlugin
          */
     }
 
-    protected Move parseMove(String text, int i)
+	private void startPondering(Move bestMove, String bestMoveText, String ponderMoveText)
+	{
+		//  keep enginePosition in synch
+		enginePosition.tryMove(bestMove);   //  FRC castling ?
+		hint = new FormattedMove(ponderMove,false,null);  //  format hint
+		enginePosition.tryMove(ponderMove);
+
+		/** check for mate and stalemate here
+		 */
+		if (enginePosition.isGameFinished(true)) {
+			/**  do not start pondering in an illegal position
+			 *  (because the engine will not respond an ignoreMoves gets out of synch !!)
+			 */
+			ponderMove = null;
+			setMode(PAUSED);
+		}
+		else {
+			setCurrentPosition(bestMoveText, ponderMoveText);
+
+			printOut.print("go ponder");
+			printSearchCtrl();
+			printOut.println();
+			setMode(PONDERING);
+		}
+	}
+
+	protected Move parseMove(String text, int i)
     {
         int len = text.length();
         while (i < len && Character.isWhitespace(text.charAt(i))) i++;

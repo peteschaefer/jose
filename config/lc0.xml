@@ -95,12 +95,12 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
-		<OPTION name="Backend"> eigen </OPTION>
+		<OPTION name="Backend"> cuda-auto </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME selected="true"> 20000 </TIME>
+		<TIME selected="true"> 4000 </TIME>
 		<DEPTH> 10 </DEPTH>
 		<NODES> 100 </NODES>
 		<TIME_CONTROL/>

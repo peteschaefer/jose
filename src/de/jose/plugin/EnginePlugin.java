@@ -815,7 +815,8 @@ abstract public class EnginePlugin
 
 	public class FormattedMove extends Move
 	{
-		String text;
+		public int ply;
+		public String text;
 
 		FormattedMove (Move mv, boolean withNumber, String alternateText)
 		{

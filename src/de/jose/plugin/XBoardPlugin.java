@@ -454,8 +454,10 @@ ply
 		//	message = StringMoveFormatter.getDefaultFormatter().replaceDefaultPieceChars(moveText);
 //			message = moveText;
 
-		if (message!=null)
+		if (message!=null) {
 			analysis.ponderMove = message;
+			analysis.ponderMove.ply = analysis.ply+1;
+		}
 		else
 			analysis.ponderMove = null;
 		sendMessage(PLUGIN_HINT, message);

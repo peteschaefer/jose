@@ -16,7 +16,7 @@
 [ ] hint button behavior
     [ ] ponderMove reset, when?
         -> store ponderMove ply?
-    [ ] updateBook on "move.notify" necessary?
+    [?] updateBook on "move.notify" necessary?
         it shouldn't because there will be BOOK_PLAY
 
 [x] Application.selectBookMove needs to be asynchronized.
@@ -121,6 +121,8 @@ Alternative JREs:
 * Figurines in Opening names (like from Eco)
   - heuristic to detect moves
   - for any language
+
+* Autocompletion for database fields (Event, Player, ...)
 
 * LiChess Opening Explorer
     [ ] MoreGame.ExternalKey (:=Lichess GameId)

@@ -651,17 +651,22 @@ public class EnginePanel
 
 	private Move getHintMove()
 	{
-		if (analysis!=null && analysis.ponderMove!=null)
+		int cply = Application.theApplication.theGame.getCurrentMove().getPly();
+		if (analysis!=null
+				&& analysis.ponderMove!=null
+				&& analysis.ponderMove.ply == cply+1)
 			return analysis.ponderMove;
 		if (inBook && bookmoves!=null
 				&& bookmoves.data[0].moves!=null
 				&& !bookmoves.data[0].moves.isEmpty()
-				&& this.pvCount > 0)
+				&& this.pvCount > 0
+				&& bookmoves.ply == cply+1)
 			return bookmoves.data[0].moves.get(0);
 		if (!inBook && analysis!=null
 				&& analysis.data[0].moves!=null
 				&& !analysis.data[0].moves.isEmpty()
-				&& this.pvCount > 0)
+				&& this.pvCount > 0
+				&& analysis.ply == cply+1)
 			return analysis.data[0].moves.get(0);
 		return null;
 	}
@@ -891,8 +896,13 @@ public class EnginePanel
 					AnalysisRecord.LineData data = rec.data[idx];
 					assert(data.eval!=null);
 					assert(data.line!=null);
+					if (state==PONDERING && rec.ponderMove!=null) {
+						data.line.insert(0," ");
+						data.line.insert(0,rec.ponderMove.text);
+					}
+
 					setEvaluation(idx, data.eval);
-					setVariation(idx, data.line, data.info, data.book);
+					setVariation(idx, state, data);
 
 					if (!data.eval.hasWDL() && !bookMode && (plugin!=null))
 						plugin.mapUnit(data.eval);	// todo why has this not been done before?
@@ -934,7 +944,7 @@ public class EnginePanel
 			for (int idx=0; idx < pvCount; idx++)
 			{
 				setEvaluation(idx,new Score());
-				setVariation(idx,null,null, null);
+				setVariation(idx,null,null);
 			}
 
             tPVHistory.setText("");
@@ -1189,11 +1199,12 @@ public class EnginePanel
 		setValue(lNodesPerSecond,key,pmap);
 	}
 
-	public void setVariation(int idx, StringBuffer text, StringBuffer info, BookEntry book)
+	public void setVariation(int idx, EngineState state,
+							 AnalysisRecord.LineData rec)
 	{
-		JoStyledLabel lvar = getPvLabel(idx, (text!=null), true);
+		JoStyledLabel lvar = getPvLabel(idx, (rec!=null), true);
 		if (lvar!=null)
-			setLine(lvar,text,info,book);
+			setLine(lvar,state,rec);
 	}
 
 	public void setInfo(StringBuffer text)
@@ -1205,8 +1216,13 @@ public class EnginePanel
 		}
 	}
 
-	private void setLine(JoStyledLabel label, StringBuffer text, StringBuffer info, BookEntry book)
+	private void setLine(JoStyledLabel label, EngineState state,
+						 AnalysisRecord.LineData rec)
 	{
+		StringBuffer text = (rec!=null) ? rec.line:null;
+		StringBuffer info = (rec!=null) ? rec.info:null;
+		BookEntry book = (rec!=null) ? rec.book:null;
+
 		StyledDocument doc = label.getStyledDocument();
 		Style textStyle = doc.getStyle("engine.pv");
 		Style infoStyle = doc.getStyle("engine.pv.info");
@@ -1215,15 +1231,15 @@ public class EnginePanel
             doc.remove(0,doc.getLength());
 			if (text!=null && text.length()>0) {
 				if (formatter.getFigStyle()!=null) {
-					formatter.setDocument(doc,0);
+					formatter.setDocument(doc,doc.getLength());
 					formatter.reformatFrom(text);
 				}
 				else {
-					doc.insertString(0, text.toString(), textStyle);
+					doc.insertString(doc.getLength(), text.toString(), textStyle);
 				}
 				int i1 = text.indexOf(" ");
 				if (i1 < 0) i1 = text.length();
-				//	first word is bold
+				//	first word is bold (todo except for ponder move?)
 				doc.setCharacterAttributes(0,i1, boldStyle, false);
 			}
 			if (book != null && book.gameRefs!=null && !book.gameRefs.isEmpty()) {
@@ -1687,7 +1703,7 @@ public class EnginePanel
 					case USER_ENGINE:
 					case ENGINE_ENGINE:
 						if (wasEngineMove)
-							Application.theApplication.updateBook(wasEngineMove,false);
+							Application.theApplication.updateBook(true,false);
 						//else
 						// BOOK_PLAY will come soon
 						break;
