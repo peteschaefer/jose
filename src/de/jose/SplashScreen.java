@@ -36,9 +36,9 @@ public class SplashScreen
 		extends Frame
 		implements AWTEventListener
 {
-    public static final String version = "1.4.4";
+    public static final String version = "1.5 beta";
     public static final String author = "Peter Schäfer";
-    public static final String year = "2002-06";
+    public static final String year = "2002-24";
 	public static final String url = "jose-chess.sourceforge.net";
 
     protected static SplashScreen theSplashScreen;

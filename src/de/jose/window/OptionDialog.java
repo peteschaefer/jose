@@ -1214,7 +1214,7 @@ public class OptionDialog
 			checkbox.setSelected(option.defaultBooleanValue());
 			checkbox.setText(compTitle);
 			component = checkbox;
-			compTitle = "";
+			//compTitle = "";
 			break;
 
 		case UciPlugin.SPIN:
@@ -1222,7 +1222,7 @@ public class OptionDialog
 			break;
 
 		case UciPlugin.COMBO:
-			JComboBox combo = new JComboBox(option.values);
+			JComboBox<String> combo = new JComboBox<String>(option.values);
 			combo.setSelectedItem(option.defaultValue);
 
 			component = combo;

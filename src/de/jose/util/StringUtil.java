@@ -15,6 +15,7 @@ package de.jose.util;
 import de.jose.Util;
 import de.jose.util.map.IntHashSet;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class
@@ -1300,6 +1301,45 @@ public class
 		else
 			return result;
 	}
+
+	public static long parseLong(String line, String prefix, String suffix)
+	{
+		int i1 = line.indexOf(prefix);
+		if (i1<0) return Long.MIN_VALUE;
+		i1 += prefix.length();
+		int i2 = line.indexOf(suffix,i1);
+		if (i2<0) throw new IllegalArgumentException("expected "+suffix+" in "+line);
+		return Long.parseLong(line.substring(i1,i2).trim());
+	}
+
+	public static double parseDouble(String line, String prefix, String suffix)
+	{
+		int i1 = line.indexOf(prefix);
+		if (i1<0) return Double.NaN;
+		i1 += prefix.length();
+		int i2 = line.indexOf(suffix,i1);
+		if (i2<0) throw new IllegalArgumentException("expected "+suffix+" in "+line);
+		try {
+			return Double.parseDouble(line.substring(i1, i2).trim());
+		} catch(NumberFormatException e) {
+			return Double.NaN;
+		}
+	}
+
+	public static String formatLargeInt(long num, DecimalFormat format) {
+		if (Math.abs(num) < 1000)
+			return format.format(num);
+		double dnum = (double)num;
+		dnum /= 1000.0;
+		if (dnum < 1000.0)
+			return format.format(dnum)+"k";
+		dnum /= 1000.0;
+		if (dnum < 1000.0)
+			return format.format(dnum)+"M";
+		dnum /= 1000.0;
+		return format.format(dnum)+"G";
+	}
+
 
     public static int nextWordBreak(String text, int i)
     {

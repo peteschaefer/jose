@@ -1,6 +1,9 @@
 ==== Bugs
 
+* Leela out of synh when started for the first time
+* suggestion arrow colors don't update as they should
 * double click insert variant; trying to delete it
+* project urls
 
 ? fix Berlin font
 ? Charter buggy
@@ -15,6 +18,7 @@ libraries needed:
 * jdk 1.8 32 bit [x]
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
 ? TraceConnection probably not needed anyway
+* pack & upload jose-15b-win.zip
 
 ==== Linux build
 ? : requires mysql-embedded to be re-compiled for 64 bit.
@@ -25,6 +29,7 @@ libraries needed:
 
 * eval bar
 * suggestions
+* open last game
 
 Leela
 * logo
@@ -35,7 +40,25 @@ Leela
 
 ==== New Features
 
-* Format Leela Move Stats
+* Re-Format Leela Move Stats
+
+info string g3g4  (615 ) N:       0 (+ 0) (P:  3.48%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.22733) (S: -0.24946) (V:  -.----)
+info string d3d2  (506 ) N:       0 (+ 0) (P:  5.82%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.38028) (S: -0.09651) (V:  -.----)
+info string d3e2  (507 ) N:       0 (+ 0) (P:  5.88%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.38427) (S: -0.09252) (V:  -.----)
+info string d3c2  (505 ) N:       0 (+ 0) (P:  6.58%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.43014) (S: -0.04665) (V:  -.----)
+info string d3e3  (512 ) N:       4 (+ 0) (P: 36.13%) (WL: -0.55480) (D: 0.273) (M: 52.1) (Q: -0.55480) (U: 0.47221) (S:  0.03650) (V: -0.5221)
+info string d3c3  (511 ) N:      10 (+ 0) (P: 42.11%) (WL: -0.15743) (D: 0.562) (M: 31.8) (Q: -0.15743) (U: 0.25018) (S:  0.17150) (V: -0.2084)
+info string node  (   6) N:      15 (+ 0) (P: 78.25%) (WL: -0.28313) (D: 0.464) (M: 39.7) (Q: -0.28313) (V: -0.6209)
+
+info string g3g4  (615 ) N:       0 (+ 0) (P:  3.48%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.22733) (S: -0.24946) (V:  -.----)
+info string d3d2  (506 ) N:       0 (+ 0) (P:  5.82%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.38028) (S: -0.09651) (V:  -.----)
+info string d3e2  (507 ) N:       0 (+ 0) (P:  5.88%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.38427) (S: -0.09252) (V:  -.----)
+info string d3c2  (505 ) N:       0 (+ 0) (P:  6.58%) (WL:  -.-----) (D: -.---) (M:  -.-) (Q: -0.47679) (U: 0.43014) (S: -0.04665) (V:  -.----)
+info string d3e3  (512 ) N:       4 (+ 0) (P: 36.13%) (WL: -0.55480) (D: 0.273) (M: 52.1) (Q: -0.55480) (U: 0.47221) (S:  0.03650) (V: -0.5221)
+info string d3c3  (511 ) N:      10 (+ 0) (P: 42.11%) (WL: -0.15743) (D: 0.562) (M: 31.8) (Q: -0.15743) (U: 0.25018) (S:  0.17150) (V: -0.2084)
+info string node  (   6) N:      15 (+ 0) (P: 78.25%) (WL: -0.28313) (D: 0.464) (M: 39.7) (Q: -0.28313) (V: -0.6209)
+
+
 * Suggestions check box
 * Contempt Slider
 

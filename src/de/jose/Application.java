@@ -1090,7 +1090,7 @@ public class Application
 		map.put("menu.web.feature",action);
 		map.put("menu.web.support",action);
 		map.put("menu.web.forum",action);
-        map.put("menu.web.donate",action);
+        //map.put("menu.web.donate",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws IOException

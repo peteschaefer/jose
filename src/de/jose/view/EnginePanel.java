@@ -619,7 +619,7 @@ public class EnginePanel
 					assert(rec.eval[idx]!=null);
 					assert(rec.line[idx]!=null);
 					setEvaluation(idx, rec.eval[idx]);
-					setVariation(idx, rec.line[idx]);
+					setVariation(idx, rec.line[idx], rec.line_info[idx]);
 
 					if (! inBook) {
                     if (countPvLines() > 1)
@@ -649,7 +649,7 @@ public class EnginePanel
 			for (int idx=0; idx < pvCount; idx++)
 			{
 				setEvaluation(idx,new Score());
-				setVariation(idx,null);
+				setVariation(idx,null,null);
 			}
 
             tPVHistory.setText("");
@@ -874,32 +874,33 @@ public class EnginePanel
 		setValue(lNodesPerSecond,key,pmap);
 	}
 
-	public void setVariation(int idx, StringBuffer text)
+	public void setVariation(int idx, StringBuffer text, StringBuffer info)
 	{
 		JTextComponent lvar = getPvLabel(idx, (text!=null), true);
 		if (lvar!=null)
-			setLine(lvar,text);
+			setLine(lvar,text,info);
 	}
 
 	public void setInfo(StringBuffer text)
 	{
 		JTextComponent linfo = getInfoLabel(text!=null);
 		if (linfo!=null) {
-			setLine(linfo,text);
+			setLine(linfo,null,text);
 			setShowInfoLabel(true);
 		}
 	}
 
-	private void setLine(JTextComponent label, StringBuffer text)
+	private void setLine(JTextComponent label, StringBuffer text, StringBuffer info)
 	{
-		if (text==null) {
-			label.setText("");
-//			label.setToolTipText(null);
+		StringBuffer contents = new StringBuffer();
+		if (text!=null && text.length() > 0)
+			contents.append(text);
+		if (info!=null && info.length() > 0) {
+			if (contents.length() > 0)
+				contents.append("\n");
+			contents.append(info);
 		}
-		else {
-			label.setText(text.toString());
-//			label.setToolTipText(null);//Language.get("plugin.line.tip"));
-		}
+		label.setText(contents.toString());
 	}
 
 	protected void setIcon(JButton button, Icon[] icon)

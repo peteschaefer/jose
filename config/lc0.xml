@@ -22,7 +22,7 @@
 		<OPTION name="CPuctFactor"> 3.894000 </OPTION>
 		<OPTION name="TwoFoldDraws"> true </OPTION>
 		<OPTION dirty="true" name="VerboseMoveStats"> true </OPTION>
-		<OPTION dirty="true" name="LogLiveStats"> true </OPTION>
+		<OPTION name="LogLiveStats"> true </OPTION>
 		<OPTION name="FpuStrategy"> reduction </OPTION>
 		<OPTION name="FpuValue"> 0.330000 </OPTION>
 		<OPTION name="CacheHistoryLength"> 0 </OPTION>
@@ -69,7 +69,7 @@
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
-		<OPTION name="UCI_ShowWDL"> true </OPTION>
+		<OPTION dirty="true" name="UCI_ShowWDL"> true </OPTION>
 		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
 		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
 		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>

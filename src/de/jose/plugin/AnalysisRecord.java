@@ -78,7 +78,9 @@ public class AnalysisRecord
 	public Score[]	eval;
 	/**	the primary variations	*/
 	public StringBuffer[] line;
+	public StringBuffer[] line_info;
 	public ArrayList<Move>[] moves;
+	//	todo move struct-of-arrays to an array of structs
 
 	/** general info    */
 	public String   info;
@@ -98,6 +100,7 @@ public class AnalysisRecord
 		for(int i=0; i < eval.length; ++i)
 			eval[i] = new Score();
 		line = new StringBuffer[256];
+		line_info = new StringBuffer[256];
 		moves = new ArrayList[256];
 		pvmodified = new long[4];   // = 256 bits; one for each pv
 		maxpv = 0;
@@ -108,6 +111,13 @@ public class AnalysisRecord
 		if (pv >= maxpv) maxpv = pv+1;
 		if (line[pv]==null) line[pv] = new StringBuffer();
 		return line[pv];
+	}
+
+	public StringBuffer getLineInfo(int pv)
+	{
+		if (pv >= maxpv) maxpv = pv+1;
+		if (line_info[pv]==null) line_info[pv] = new StringBuffer();
+		return line_info[pv];
 	}
 
 	public ArrayList<Move> getMoves(int pv)
@@ -151,9 +161,10 @@ public class AnalysisRecord
 		{
 			if (moves[i]!=null && !moves[i].isEmpty() && mv.equals(moves[i].get(0)))
 			{
-				StringBuffer line = getLine(i);
-				line.append("\n");
-				line.append(info);
+				StringBuffer liinfo = getLineInfo(i);
+				liinfo.setLength(0);
+				liinfo.append("  ");
+				liinfo.append(info);
 				setPvModified(i);
 				return;
 			}
@@ -174,6 +185,7 @@ public class AnalysisRecord
 		for (int i=0; i<maxpv; i++) {
 			eval[i].clear();
 			if (line[i]!=null) line[i].setLength(0);
+			if (line_info[i]!=null) line_info[i].setLength(0);
 			if (moves[i]!=null) moves[i].clear();
 		}
 		info = null;

@@ -113,7 +113,7 @@ public class UciPlugin
 		public String defaultValue;
 		public int minValue;
 		public int maxValue;
-		public Vector values;
+		public Vector<String> values;
 
 		public int defaultIntValue()            { return StringUtil.parseInt(defaultValue); }
 		public boolean defaultBooleanValue()    { return Util.toboolean(defaultValue); }
@@ -975,7 +975,8 @@ public class UciPlugin
 				StringUtil.parseInt(tok.nextToken());     //  TODO CPU load (per mille); low priority. there are not likely many engines that can report this
 			else if (t.equals("string")) {
 				if (leelaMoveStats) {
-					String info = input.substring(20);
+					String info = input.substring(14);
+					info = LeelaMoveStats.reformat(info);
 					t = tok.nextToken();
 					if (t.equals("node")) {
 						//	summary
@@ -1114,7 +1115,7 @@ public class UciPlugin
 			else if (t.equals("var"))
 			{
 				if (value != null) {
-					if (option.values==null) option.values = new Vector();
+					if (option.values==null) option.values = new Vector<String>();
 					option.values.add(value.toString());
 				}
 				current = value = new StringBuffer();
@@ -1132,7 +1133,7 @@ public class UciPlugin
 		if (minValue!=null) option.minValue = StringUtil.parseInt(minValue.toString());
 		if (maxValue!=null) option.maxValue = StringUtil.parseInt(maxValue.toString());
 		if (value!=null) {
-			if (option.values==null) option.values = new Vector();
+			if (option.values==null) option.values = new Vector<String>();
 			option.values.add(value.toString());
 		}
 		
