@@ -314,7 +314,7 @@
 		-->
 		<zip destfile="${zip-file}" update="true">
 			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
-			<zipfileset src="lc0-onnx-dml.zip" prefix="${appldir}/engines/lc0"/>
+			<zipfileset src="engines/lc0-onnx-dml.zip" prefix="${appldir}/engines/lc0"/>
 		</zip>
 	</target>
 
@@ -335,7 +335,10 @@
 		-->
 		<zip destfile="${zip-file}" update="true">
 			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
-			<zipfileset src="lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0"/>
+			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" excludes="lc0"/>
+			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" filemode="777">
+				<include name="lc0"/>
+			</zipfileset>
 		</zip>
 	</target>
 
@@ -890,9 +893,10 @@
 	<target name="upload-file">
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
-			<arg value="-u hrimfaxi:ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA"/>
-			<arg value="-X POST" />
-			<arg value="-F files=@${file}" />
+			<arg value="--progress-bar" />
+			<arg line="-u hrimfaxi:ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA"/>
+			<arg line="-X POST" />
+			<arg line="-F files=@${file}" />
 			<arg value="https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads" />
 		</exec>
 		<!--
