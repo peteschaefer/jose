@@ -1,5 +1,6 @@
 package de.jose.book.lichess;
 
+import de.jose.Application;
 import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
@@ -9,11 +10,13 @@ import de.jose.window.JoDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class LiChessOpeningExplorer extends OpeningBook
@@ -82,6 +85,28 @@ public class LiChessOpeningExplorer extends OpeningBook
     @Override
     public boolean getBookMoves(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
     {
+        //  run asynchroneously
+        Callable<Boolean> task = new Callable() {
+            @Override
+            public Boolean call() throws Exception {
+                return getBookMoves(pos, ignoreColors, deep, result);
+            }
+        };
+
+        Future<Boolean> fut = Application.theExecutorService.submit(task);
+        try {
+            return fut.get(4000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            return false;
+        } catch (ExecutionException e) {
+            return false;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean getBookMoves1(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
+    {
         String fen = pos.toString();
         fen = URLEncoder.encode(fen);
         String urlString = apiUrl+"?fen="+fen+"&topGames=0";    //  don't enumerate games
@@ -116,7 +141,12 @@ public class LiChessOpeningExplorer extends OpeningBook
                 Then proceed without Lichess data.
              */
             if (!NETWORK_ERROR_REPORTED) {
-                JoDialog.showErrorDialog("network.error.lichess");
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JoDialog.showErrorDialog("network.error.lichess");
+                    }
+                });
                 NETWORK_ERROR_REPORTED = true;
             }
             return false;

@@ -70,6 +70,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static de.jose.chess.Board.XFEN;
 
@@ -171,6 +173,9 @@ public class Application
 
 	/** Move Announcements (by sound)   */
 	public SoundMoveFormatter   theSoundFormatter;
+
+	/** thread pool for general use */
+	public static ExecutorService theExecutorService = Executors.newFixedThreadPool(4);
 
 	/** opening books   */
 	public OpeningLibrary theOpeningLibrary;
