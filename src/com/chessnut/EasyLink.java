@@ -123,6 +123,7 @@ public class EasyLink
     public static boolean AVAILABLE = false;
     static {
         try {
+            System.loadLibrary("hidapi");
             System.loadLibrary("easylink");
             AVAILABLE = true;
         } catch (UnsatisfiedLinkError e) {
