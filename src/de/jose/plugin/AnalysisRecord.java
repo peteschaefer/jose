@@ -220,6 +220,16 @@ public class AnalysisRecord
 		clearPvModified();
 	}
 
+	public Score findScore(Move mv)
+	{
+		for(int i=0; i < maxpv; ++i) {
+			if (data[i].moves!=null && !data[i].moves.isEmpty()
+					&& mv.equals(data[i].moves.get(0)))
+				return data[i].eval;
+		}
+		return null;
+	}
+
 	public static long parseLong(char[] chars, int offset, int len)
 	{
 		if (offset >= chars.length) return 0L;

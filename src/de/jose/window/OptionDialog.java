@@ -140,7 +140,7 @@ public class OptionDialog
 	{
 		super(name, false);
 		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
-		center(Math.min(screensize.width,720), Math.min(screensize.height,540));
+		center(Math.min(screensize.width,760), Math.min(screensize.height,620));
         profile = AbstractApplication.theUserProfile;
 
 		ImageIcon user = ImgUtil.getIcon("nav","user.regular");
@@ -172,6 +172,10 @@ public class OptionDialog
 		IntHashSet mnemonicsInUse = new IntHashSet();
 		JoMenuBar.assignMnemonics(buttonPane,mnemonicsInUse);
 		JoMenuBar.assignMnemonics(getTabbedPane(),mnemonicsInUse);
+
+		Font fnt = getTabbedPane().getFont();
+		fnt = fnt.deriveFont(Font.BOLD,13);
+		getTabbedPane().setFont(fnt);
 
 		rescaleFonts(elementPane);
 		rescaleFonts(buttonPane);

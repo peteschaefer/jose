@@ -2449,18 +2449,19 @@ public class Application
 			return;
 		}
 
-		//	todo get an evaluation from current AnalysisRecord
-		//	and attach it to MoveNode
-		if (enginePanel()!=null)
-		{
-//			Score sc = enginePanel().getEvaluationFor(move);
-//			if (sc!=null)
-		}
-
 		updateClock();
 
 		if (animate && boardPanel() != null)
 			boardPanel().move(mv, (float)(mv.distance()*0.2));
+
+		//	get an evaluation from current AnalysisRecord
+		//	and attach it to MoveNode
+		if (enginePanel()!=null)
+		{
+			MoveNode mvnd = theGame.getCurrentMove();
+			mvnd.engineValue = enginePanel().findScore(mv);
+			//	otherwise: wait for the engine to respond, copy their value
+		}
 
 		Command cmd = new Command("move.notify",null,mv);
 		broadcast(cmd);
@@ -3276,14 +3277,13 @@ public class Application
 		}
 	}
 
-	private void handlePluginMove(EnginePlugin.EvaluatedMove data, Position pos) throws BadLocationException, ParseException
+	private void handlePluginMove(EnginePlugin.EvaluatedMove emv, Position pos) throws BadLocationException, ParseException
 	{
 		if (pos.isGameFinished(true)) {
 			handleEngineError(EnginePlugin.PLUGIN_ERROR, "game is already finished");
 			return;
 		}
 
-		EnginePlugin.EvaluatedMove emv = data;
 		if (emv==null) {
 			handleEngineError(EnginePlugin.PLUGIN_ERROR,"");
 			return;
@@ -3324,9 +3324,6 @@ public class Application
 		if (boardPanel() != null)
 			boardPanel().move(mv, (float)(mv.distance()*0.2));
 
-		Command cmd = new Command("move.notify", null, mv, data);
-		theCommandDispatcher.broadcast(cmd, this);
-
 		if (mv.isGameFinished(false))
 			gameFinished(mv.flags, pos.movedLast(), theGame.isMainLine());
 
@@ -3334,6 +3331,8 @@ public class Application
 
 		if (node!=null && emv!=null) {
 			//  update move evaluation history
+			if (emv.score!=null && !emv.score.hasWDL())
+				getEnginePlugin().mapUnit(emv.score);
 			if (emv.score!=null && emv.score.hasWDL()) {
 				node.engineValue = emv.score;
 				theGame.setDirty(true);
@@ -3343,6 +3342,9 @@ public class Application
 			 */
 			adjudicate(theGame, pos.movedLast(), pos.gamePly(), node,emv,getEnginePlugin());
 		}
+
+		Command cmd = new Command("move.notify", null, mv, emv);
+		theCommandDispatcher.broadcast(cmd, this);
 	}
 
 	protected void handleEngineError(int errorMessage, String errorText)
@@ -3761,14 +3763,17 @@ public class Application
 		if (boardPanel() != null)
 			boardPanel().move(entry.move, (float)(entry.move.distance()*0.2));
 
+		EnginePlugin.EvaluatedMove emv = new EnginePlugin.EvaluatedMove(entry.move,-1,new Score(),null);
+		entry.toScore(emv.score,1000);
+
 		if (node!=null && entry.move!=null) {
 			//  update move evaluation history
-			if (node.engineValue==null) node.engineValue = new Score();
-			entry.toScore(node.engineValue,1000);
+			if (node.engineValue==null)
+				node.engineValue = emv.score;
 			theGame.setDirty(true);
 		}
 
-		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move), this);
+		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move, emv), this);
 		setPlayState(PlayState.NEUTRAL);
 
 		if (entry.move.isGameFinished(false))

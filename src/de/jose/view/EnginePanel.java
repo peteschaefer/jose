@@ -928,6 +928,15 @@ public class EnginePanel
 		display(null,bookmoves, inBook);
 	}
 
+	public Score findScore(Move mv)
+	{
+		if (inBook && bookmoves!=null)
+			return bookmoves.findScore(mv);
+		if(!inBook && analysis!=null)
+			return analysis.findScore(mv);
+		return null;
+	}
+
 
 	protected boolean showInfo(String info)
 	{
@@ -1570,7 +1579,7 @@ public class EnginePanel
 		};
 		//map.put("on.broadcast",action);
 		map.put("app.state.changed",action);
-		map.put("move.notify",action);
+		//map.put("move.notify",action); below
 
 		action = new CommandAction() {
 			public void Do(Command cmd)
@@ -1592,8 +1601,6 @@ public class EnginePanel
 				{	//	todo move this stuff to Application
 					case USER_ENGINE:
 					case ENGINE_ENGINE:
-						//	will play a move and hit the Book anyway
-						break;
 					case USER_INPUT:
 						Application.theApplication.updateBook(wasEngineMove,false);
 //						Application.theApplication.pausePlugin(false); // right?

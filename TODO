@@ -8,7 +8,7 @@
 [ ] Eval Bar, Graph drawing glitches (paintImmediately?)
 [?] paint eval bar frame
 
-[ ] game vs. opening explorer:
+[?] game vs. opening explorer:
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
 

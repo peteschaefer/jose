@@ -428,7 +428,7 @@ public class EvalView
 			g.fillRect(x, p1, width, p2);
 
 			g.setColor(pal[4]);	//	white
-			g.fillRect(x, p2, width, height);
+			g.fillRect(x, p1+p2, width, height-p1-p2);
 		}
 
 		if (hilite) {
