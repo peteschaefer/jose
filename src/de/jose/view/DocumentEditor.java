@@ -130,13 +130,9 @@ public class DocumentEditor
 		docPanel = owner;
 		docPanel.getMessageProducer().addMessageListener(Application.theApplication);
 
-        //setSelectionColor(UIManager.getColor("TextPane.selectionBackground"));
-
-		moveHiliteColor = UIManager.getColor( "TextPane.selectionBackground");
-		if (moveHiliteColor!=null)
-			moveHiliteColor = moveHiliteColor.brighter();
-		else
-			moveHiliteColor = MOVE_HILITE_COLOR;
+        setSelectionColor(
+				StyleUtil.getSystemSelectionColor(),
+				Application.theApplication.isDarkLookAndFeel());
 
 		try {
             Highlighter.HighlightPainter painter =
@@ -158,6 +154,23 @@ public class DocumentEditor
 
         setupActions();
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void setSelectionColor(Color selColor, boolean dark)
+	{
+/*		moveHiliteColor = UIManager.getColor( "TextPane.selectionBackground");
+		if (moveHiliteColor!=null)
+			moveHiliteColor = moveHiliteColor.brighter();
+		else
+			moveHiliteColor = MOVE_HILITE_COLOR;
+*/
+		if (dark) selColor = StyleUtil.mapDarkTextColor(selColor);
+
+		moveHiliteColor = selColor;
+		setSelectionColor(StyleUtil.pastelize(selColor,0.6f));
+
+		UIManager.put("TextPane.selectionBackground",selColor);
+		((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
 	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException

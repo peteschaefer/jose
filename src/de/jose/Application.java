@@ -614,6 +614,7 @@ public class Application
 		}
 
 		UIManager.setLookAndFeel(lnf);
+		UIManager.put("TextPane.selectionBackground",StyleUtil.getSystemSelectionColor());
 
 		broadcast(new Command("update.ui", null, /*lnfName*/null, isDarkLookAndFeel()));
 	}

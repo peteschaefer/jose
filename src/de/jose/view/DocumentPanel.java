@@ -18,6 +18,7 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.util.FontUtil;
 import de.jose.util.icon.TextIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.window.JoMenuBar;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.*;
@@ -290,6 +291,15 @@ public class DocumentPanel
 			}
 		};
 		map.put("update.user.profile", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				DocumentPanel.this.theTextPane.setSelectionColor(
+						StyleUtil.getSystemSelectionColor(), dark);
+			}
+		};
+		map.put("update.ui", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {

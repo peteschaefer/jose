@@ -331,6 +331,7 @@ public class OptionDialog
 		label.setText(Language.get("dialog.option.ui.look.and.feel"));
 
 		addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
+		addWithLabel(sbox, 1, "lnf.select.color", newChessSurfaceButton("lnf.select.color",null));
 		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
 		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
@@ -1019,9 +1020,12 @@ public class OptionDialog
 		read(2,profile.settings);
 
 		if (Version.windows || Version.mac) {
-			Color systemAccentColor = StyleUtil.getSystemAccentColor();
 			JoSurfaceButton button = (JoSurfaceButton) getElement("lnf.accent.color");
-			button.setColor(systemAccentColor);
+			button.setColor(StyleUtil.getSystemAccentColor());
+			button.setEnabled(false);
+
+			button = (JoSurfaceButton) getElement("lnf.select.color");
+			button.setColor(StyleUtil.getSystemSelectionColor());
 			button.setEnabled(false);
 		}
 	}

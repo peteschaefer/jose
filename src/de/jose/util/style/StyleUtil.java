@@ -19,6 +19,7 @@ import de.jose.util.WinRegistry;
 import de.jose.view.style.JoFontConstants;
 import de.jose.Util;
 
+import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 
@@ -128,16 +129,11 @@ public class StyleUtil
     {
         if (Version.windows) {
             //  get system accent color from registry
-            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","ColorizationColor");
-            //  not "AccentColor"
+            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
             if (value != Integer.MIN_VALUE)
                 return new Color(value);
         }
         if (Version.linux) {
-            //  getting a usable accent color from Linux is hopeless
-            //  there *are* accent colors in Gnome and KDE, but there is no useful
-            //  API to retrieve them. Linux Desktop is fucked, believe me.
-            //  Use profile accent color instead.
             Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
             if (sf!=null) return sf.color;
         }
@@ -148,6 +144,34 @@ public class StyleUtil
 
         //  else {
         return Color.decode("#2675BF");
+    }
+
+    public static Color getSystemSelectionColor()
+    {
+        if (Version.windows) {
+            //  get system accent color from registry
+            int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","ColorizationColor");
+            //  not "AccentColor"
+            if (value != Integer.MIN_VALUE)
+                return new Color(value);
+        }
+        if (Version.linux) {
+            //  getting a usable accent color from Linux is hopeless
+            //  there *are* accent colors in Gnome and KDE, but there is no useful
+            //  API to retrieve them. Linux Desktop is fucked, believe me.
+            //  Use our own profile store instead.
+            Surface sf = (Surface)Application.theUserProfile.get("lnf.select.color");
+            if (sf!=null) return sf.color;
+        }
+        if (Version.mac) {
+            //  todo does this work ?
+            return SystemColor.textHighlight;
+        }
+
+        //  else {
+        Color col = UIManager.getColor("TextPane.selectionBackground");
+        if (col==null) col = Color.decode("#2675BF");
+        return col;
     }
 
     public static boolean getSystemDarkMode() {
