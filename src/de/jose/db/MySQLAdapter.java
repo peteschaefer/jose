@@ -22,16 +22,13 @@ import de.jose.util.KillProcess;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.window.JoDialog;
-import org.apache.tools.ant.util.StringUtils;
 
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.io.*;
 import java.sql.*;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Vector;
-import java.util.List;
 
 
 /**
@@ -159,6 +156,7 @@ public class MySQLAdapter
 					bootstrap(connection.getJdbcConnection());
 
 				Task checkIntegrity = new CheckDBTask(connection);
+				checkIntegrity.setSilentTime(5000);
 				checkIntegrity.run();
 				//	will release connection upon completion
 
@@ -435,7 +433,7 @@ public class MySQLAdapter
 		return result.toString();
 	}
 
-	public static Process repairIndexes(String[] tables, boolean repair) throws IOException, InterruptedException
+	public static Process repairIndexes(String[] tables, String switches) throws IOException, InterruptedException
 	{
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
@@ -447,10 +445,7 @@ public class MySQLAdapter
 		String execPath = binPath+File.separator+Version.osDir+File.separator+"myisamchk";
 
 		command.add(execPath);
-		if (repair)
-			command.add("-r");
-		else
-			command.add("-c");
+		command.add(switches);
 
 		for(String table : tables)
 			command.add(table);

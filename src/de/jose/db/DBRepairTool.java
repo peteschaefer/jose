@@ -182,8 +182,8 @@ public class DBRepairTool
                     switch (stage) {
                         case 1: done=closeDBWindow(); break;
                         case 2: done=shutdownDB(); break;
-                        case 3: done=checkIndexes(false); break;
-                        case 4: done=checkIndexes(true); break;
+                        case 3: done=checkIndexes("-c"); break;
+                        case 4: done=checkIndexes("-o -f"); break;
                         case 5: done=launchDB(); break;
                         case 6: done=gameRepair(); break;
                         //case 7: done=openDBWindow(); break;
@@ -255,9 +255,20 @@ public class DBRepairTool
         return false;
     }
 
-    protected boolean checkIndexes(boolean repair) throws IOException, InterruptedException {
+    /**
+     *
+     * @param switches
+     *  -c check
+     *  -r recover
+     *  -o recover slow but better(?)
+     *  -f overwrite temp files (recommended, why not?)
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    protected boolean checkIndexes(String switches) throws IOException, InterruptedException {
         String[] tables = { "MetaInfo", "Collection", "Game", "MoreGame", "Player", "Event", "Site", "Opening" };
-        Process proc = MySQLAdapter.repairIndexes(tables,repair);
+        Process proc = MySQLAdapter.repairIndexes(tables,switches);
         Thread pipeThread = new PipeThread(proc, tailStream);
         pipeThread.start();
         waitFor(pipeThread);
