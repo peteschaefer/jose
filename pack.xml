@@ -344,10 +344,6 @@
 				<!--include name="mysqladmin"/-->
 			</zipfileset>
 
-			<zipfileset dir="${dist-dir}/mac_x64/lib/j3d" prefix="${appldir}/lib/j3d">
-				<include name="*.jar"/>
-			</zipfileset>
-
 			<zipfileset dir="${dist-dir}/mac_x64/engines" prefix="${appldir}/engines" filemode="775">
 				<!--include name="Mac/unrar"/-->
 				<include name="lc0/lc0"/>
@@ -410,6 +406,11 @@
 			<!-- jose.app/Contents/Resources/** -->
 			<!--deprecated jose.app/lib/Mac/mrjadapter.jar -->
 		</zip>
+
+		<!-- Java3D 1.7 for Mac -->
+		<zipfileset dir="lib/Mac" prefix="${appldir}/lib/j3d">
+			<include name="*.jar"/>
+		</zipfileset>
 	</target>
 
 	<target name="zip-macos-arm">

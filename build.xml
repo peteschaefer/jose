@@ -13,7 +13,7 @@
 	<!-- application main class -->
 	<property name="java.main.class" value="de.jose.Main"/>
 	<!-- build version -->
-	<property name="version" value="1.8"/>
+	<property name="version" value="1.9"/>
 
 	<!-- html docs -->
 	<property name="man.html" location="doc/man"/>
@@ -135,7 +135,7 @@
 		<javac fork="yes"
             executable="${jdk-dir}/bin/javac"
 			srcdir="${java.src}" destdir="${java.classes}"
-			source="1.9" target="1.9" compiler="modern"
+			source="9" target="9" compiler="modern"
 			nowarn="on" optimize="on"
 			includeantruntime="no"
 			includejavaruntime="yes"

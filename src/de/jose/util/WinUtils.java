@@ -248,19 +248,7 @@ public class WinUtils
 			} catch (UnsatisfiedLinkError e) { }
 		}
 	}
-	// @deprecated
-	private static long getPeerHandle(Component comp)
-	{
-		try {
-			//ComponentPeer peer = comp.getPeer();
-			//Object pdata = ReflectionUtil.getValue(peer,"pData");
-			//return Util.tolong(pdata);
-			return 0;
-		} catch (Exception e)
-		{
-			return 0;
-		}
-	}
+
 
 	private static long getProcessHandle(Process proc)
 	{
@@ -276,41 +264,6 @@ public class WinUtils
 			throw new IllegalArgumentException(e.getMessage());
 		}
 		return handle.longValue();
-	}
-
-
-	private static long getWindowHandle(Frame win)
-	{
-		String title = win.getTitle();
-		if (title!=null)
-		{
-			long hwnd1 = getPeerHandle(win);
-			long hwnd2 = findWindow(title);
-			if (hwnd1==hwnd2)
-				System.err.println("OK");
-			else
-				System.err.println("failed");
-			return hwnd2;
-		}
-		else
-			return 0L;
-	}
-
-	private static long getWindowHandle(Dialog dlg)
-	{
-		String title = dlg.getTitle();
-		if (title!=null)
-		{
-			long hwnd1 = getPeerHandle(dlg);
-			long hwnd2 = findWindow(title);
-			if (hwnd1==hwnd2)
-				System.err.println("OK");
-			else
-				System.err.println("failed");
-			return hwnd2;
-		}
-		else
-			return 0L;
 	}
 
 }
