@@ -530,13 +530,13 @@ public class UciPlugin
 		if (isThinking()) {
 			//  this is rather moveNow()
 			printOut.println("stop");
-			ignoreMoves++;
+			//ignoreMoves++;
 			return;
 		}
 		//else if (isAnalyzing()) {
 		//	printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
 		//}
-		else if (isAnalyzing() || isActivelyPondering()) {
+		if (isAnalyzing() || isActivelyPondering()) {
 			printOut.println("stop");
 			ignoreMoves++;
 		}
@@ -545,7 +545,7 @@ public class UciPlugin
 
         printOut.print("go");
         printSearchCtrl();
-		//	todo we want node-restricted search, like "go nodes 10"
+
         synchronized (this) {
             printOut.println();
             setMode(THINKING);
@@ -605,12 +605,9 @@ public class UciPlugin
 	}
 
 	public void pause() {
-		if (isAnalyzing()) {
-			printOut.println("stop");       //  in analayze mode, ignoreMoves++ is called early
-		}
-		else if (isThinking() || isActivelyPondering()) {
+		if (isAnalyzing() || isThinking() || isActivelyPondering()) {
 			printOut.println("stop");
-			ignoreMoves++;
+			ignoreMoves++;	//	ignore next bestmove
 		}
         setMode(PAUSED);
 	}

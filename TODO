@@ -8,8 +8,6 @@
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
-* Chessnut loses orientation ? (switching between games?)
-
 ==== Project
 compile sources against 1.8 [x]
 libraries needed:
@@ -28,13 +26,6 @@ libraries needed:
 ==== macOS
 * which JDK is running on recent macOS ?
 * do we need a 64bit version of mysql-je? Do we already have one?
-
-==== Chessnut
-
-* checkout https://github.com/libusb/hidapi
-    - get an up-to-date version of hidapi to build easylink.dll
-    - test BLE on Windows
-    - Linux ?!
 
 === Factory Settings
 
@@ -60,10 +51,10 @@ Leela
   - if possible, redraw only modified arrows
 
 * "New Game from here"
-  - eco update !! ??
   - player names update
   - turn board on engine start
   - BUG: New Game from here can not be saved to DB (not dirty?)
+  - BUG: engine loses synch. "stop" and "ponderhit" leave ignoreMoves > 0 ???
 
 * keep playing after flagging ?
 
