@@ -3104,8 +3104,10 @@ public class Application
 
 			if (node!=null && emv!=null) {
 				//  update move evaluation history
-				if (theGame.isMainLine(node))
+				if (/*theGame.isMainLine(node) &&*/ EvalArray.isValid(emv.mappedScore)) {
 					node.engineValue = emv.mappedScore;
+					theGame.setDirty(true);
+				}
 				/** UCI engines can't resign or offer draws (stupid gits)
 				 *  we got to track the evaluation of recent moves and allow the user to adjudicate the game
 				 */
@@ -3556,8 +3558,12 @@ public class Application
 
 		if (node!=null && entry.move!=null) {
 			//  update move evaluation history
-			if (theGame.isMainLine(node))
-				node.engineValue = entry.mappedValue(node.engineValue);   //  TODO which value is more appropriate
+
+			float[] bookValue = entry.mappedValue(null);
+			if (/*theGame.isMainLine(node) &&*/EvalArray.isValid(bookValue)) {
+				node.engineValue = bookValue;
+				theGame.setDirty(true);
+			}
 //					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
 		}
 		return true;

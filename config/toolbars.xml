@@ -24,7 +24,10 @@
 <!--	<item id="menu.game.previous"/>
 		<item id="menu.game.next"/>
 		<separator/>
--->		<!-- game control -->
+-->
+		<item id="menu.game.flip"/>
+		<separator/>
+		<!-- game control -->
 		<item id="move.first"/>
 		<item id="move.backward"/>
 		<item id="move.delete"/>

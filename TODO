@@ -25,6 +25,7 @@ libraries needed:
 * requires jre 1.8 (i386)
 * requires some extra libraries (i386)
     - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
+* bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 ==== macOS
 * which JDK is running on recent macOS ?
 * do we need a 64bit version of mysql-je? Do we already have one?
@@ -48,6 +49,8 @@ Leela
 
 
 ==== New Features
+
+* eval graph: store in DB
 
 * arrows + text label
   - font size?
@@ -78,8 +81,7 @@ Leela
   - absolute path to directories?
   - can't delete?
 * BUG: Engine Panel, Opening Book, no tooltips
-* BUG: offer draw, resign doesn't work
-   Leela resigns early (probably ScoreType confusion)
+* BUG: Leela resigns early (probably ScoreType confusion). Fixed??
 
 ==== Postponed
 

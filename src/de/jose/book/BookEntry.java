@@ -114,6 +114,9 @@ public class BookEntry
 
 	public float[] mappedValue(float[] result)
 	{
+		if (count==0 || (countWhite+countDraw+countBlack)==0)
+			return null;
+
 		if (result==null)
 			result = new float[2];
 

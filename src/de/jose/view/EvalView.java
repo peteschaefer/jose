@@ -165,11 +165,6 @@ public class EvalView
 		g.fillRect(0,0,width,height);
 
 		paintValues(g);
-
-		//  paint horizontal axis
-		g.setColor(Color.black);
-		g.drawLine(0,height/2, width,height/2);
-
 		paintHorizontalTickMarks(g);
 		paintVerticalAxis(g);
 	}
@@ -181,7 +176,7 @@ public class EvalView
 		Font textFont  = FontUtil.newFont("SansSerif",Font.PLAIN, (float)Util.inBounds(9,getHeight()/48,24));
 
 		g.setFont(textFont);
-		g.setColor(Color.black);
+		g.setColor(Color.darkGray);
 		Rectangle2D textBounds = g.getFontMetrics().getStringBounds("5",g);
 
 		//  paint horizontal tick marks
@@ -216,10 +211,14 @@ public class EvalView
 
 		//  paint vertical tick marks
 		g.setFont(figFont);
-		g.setColor(Color.lightGray);
 
 		for (int i=-4; i <= +4; i++)
 		{
+			if (i==0)
+				g.setColor(Color.darkGray);
+			else
+				g.setColor(Color.lightGray);
+
 			int y = height/2 - i*height/8;
 			//  pawns
 			int figWidth = drawFigs(0,y,getFigText(i,enc), g,figFont);
@@ -341,6 +340,7 @@ public class EvalView
 			if (a!=null && a.ply>=0) {
 				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
 				setValue(a.ply-1, value);
+				updateMoveNode(value);
 			}
 			break;
 
@@ -348,16 +348,22 @@ public class EvalView
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
 			int ply = emv.getPly();
 			setValue(ply, emv.mappedValue());
-
-			if (game!=null) {
-				//  is this the right place to do this ??
-				MoveNode mvnd = game.getCurrentMove();
-				if (mvnd!=null) // && game.isMainLine(mvnd))
-					mvnd.engineValue = emv.mappedScore;
-			}
+			updateMoveNode(emv.mappedScore);
 			break;
 		}
+	}
 
+	private void updateMoveNode(float[] value)
+	{
+		if (game==null) return;
+		if (!EvalArray.isValid(value)) return;
+
+		MoveNode mvnd = game.getCurrentMove();
+		if (mvnd==null) return;
+
+		mvnd.engineValue = value;
+		if (this.isVisible())
+			game.setDirty(true);
 	}
 }
 
