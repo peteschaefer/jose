@@ -12,18 +12,19 @@
 
 package de.jose.pgn;
 
-public interface INodeConstants
+public enum INodeConstants
 {
     /** available node types
      *  as returned by Node.typeOf();
      */
+    invalid,
 
-    public static final int ANNOTATION_NODE     = 1;
-    public static final int COMMENT_NODE        = 2;
-    public static final int DIAGRAM_NODE        = 3;
-    public static final int LINE_NODE           = 4;
-    public static final int MOVE_NODE           = 5;
-    public static final int RESULT_NODE         = 6;
-    public static final int STATIC_TEXT_NODE    = 7;
-    public static final int TAG_NODE            = 8;
+    ANNOTATION_NODE,     //= 1
+    COMMENT_NODE,        //= 2
+    DIAGRAM_NODE,        //= 3
+    LINE_NODE,           //= 4
+    MOVE_NODE,           //= 5
+    RESULT_NODE,         //= 6
+    STATIC_TEXT_NODE,    //= 7
+    TAG_NODE             //= 8
 }

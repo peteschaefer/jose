@@ -35,6 +35,8 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
 
+import static de.jose.pgn.INodeConstants.*;
+
 
 /**
  *
@@ -44,7 +46,7 @@ import java.util.HashSet;
  */
 public class DocumentEditor
 		extends JTextPane
-		implements CaretListener, INodeConstants
+		implements CaretListener
 {
 	/**	Color used to hilite the current move
 	 *	(do not confuse with text hilite for copy & paste)
@@ -512,7 +514,7 @@ public class DocumentEditor
 				else if (pos1>=theGame.getLength()) {
 					//  insert text at end of document, but in front of invisible(!) result node
                     //  (which must always be the last node)
-                    Node result = theGame.getMainLine().last(Node.RESULT_NODE);
+                    Node result = theGame.getMainLine().last(RESULT_NODE);
                     if (result.getLength()==0) {
                         Node prev = result.prevEditable(false);
                         if (prev!=null){
@@ -636,7 +638,7 @@ public class DocumentEditor
 
     public boolean insertDiagram(Node node) throws BadLocationException
     {
-        if (!node.is(Node.MOVE_NODE)) {
+        if (!node.is(MOVE_NODE)) {
             node = node.previousMove();
             if (node==null) {
                 AWTUtil.beep(this);
@@ -680,16 +682,16 @@ public class DocumentEditor
 	protected Node insertDiagramAfter(Node after)
 	{
 		//  skip annotations directly after the move
-		if (after.nextIs(Node.ANNOTATION_NODE))
+		if (after.nextIs(ANNOTATION_NODE))
 			do
 				after = after.next();
-			while (after.nextIs(Node.ANNOTATION_NODE));
+			while (after.nextIs(ANNOTATION_NODE));
 		//  if there are variations, skip them too
 		Node lastline = null;
 		for (Node n = after; n!=null; n=n.next())
-			if (n.is(Node.MOVE_NODE))
+			if (n.is(MOVE_NODE))
 				break;
-			else if (n.is(Node.LINE_NODE))
+			else if (n.is(LINE_NODE))
 				lastline = n;
 
 		if (lastline!=null)
@@ -1406,7 +1408,7 @@ public class DocumentEditor
         Set result = new HashSet();
         for (Node node = firstNode; node != null; node = node.next())
         {
-            if (node.is(Node.COMMENT_NODE))
+            if (node.is(COMMENT_NODE))
                 result.add(node);
             if (node==lastNode) break;
         }

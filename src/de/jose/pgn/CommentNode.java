@@ -25,6 +25,8 @@ import org.xml.sax.SAXException;
 
 import java.awt.*;
 
+import static de.jose.pgn.INodeConstants.COMMENT_NODE;
+
 public class CommentNode
 		extends Node
 {

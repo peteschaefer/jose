@@ -23,6 +23,8 @@ import javax.swing.text.StyledDocument;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.ANNOTATION_NODE;
+
 public class AnnotationNode
 		extends Node
 {

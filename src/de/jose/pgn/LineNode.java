@@ -25,6 +25,8 @@ import java.util.Vector;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.*;
+
 public class LineNode
 		extends Node
 		implements BinaryConstants, Constants
@@ -76,14 +78,14 @@ public class LineNode
 	public final Node first()		{ return firstNode; }
 	public final Node last()		{ return lastNode; }
 	
-	public final Node first(int nodeClass) {
+	public final Node first(INodeConstants nodeClass) {
 		for (Node n = first(); n != null; n = n.next())
 			if (n.is(nodeClass))
 				return n;
 		return null;
 	}
 
-	public final Node first(int nodeClass1, int nodeClass2) {
+	public final Node first(INodeConstants nodeClass1, INodeConstants nodeClass2) {
 		for (Node n = first(); n != null; n = n.next())
 			if (n.is(nodeClass1) || n.is(nodeClass2))
 				return n;
@@ -91,14 +93,14 @@ public class LineNode
 	}
 
 
-	public final Node last(int nodeClass) {
+	public final Node last(INodeConstants nodeClass) {
 		for (Node n = last(); n != null; n = n.previous())
 			if (n.is(nodeClass))
 				return n;
 		return null;
 	}
 	
-	public final Node last(int nodeClass1, int nodeClass2) {
+	public final Node last(INodeConstants nodeClass1, INodeConstants nodeClass2) {
 		Node result1 = null;
 		Node result2 = null;
 		for (Node n = last(); n != null; n = n.previous())

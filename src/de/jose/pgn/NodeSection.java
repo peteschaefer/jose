@@ -58,24 +58,24 @@ public class NodeSection
         return len;
     }
 
-    public void trim(int type) {
+    public void trim(INodeConstants type) {
         while(first()!=last() && first().is(type)) setFirst(first().next());
         while(last()!=first() && last().is(type)) setLast(last().previous());
     }
 
-    public NodeSection trim(int type1, int type2) {
+    public NodeSection trim(INodeConstants type1, INodeConstants type2) {
         trimLeft(type1,type2);
         trimRight(type1,type2);
         return this;
     }
 
-    public NodeSection trimLeft(int type1, int type2) {
+    public NodeSection trimLeft(INodeConstants type1, INodeConstants type2) {
         while(first()!=last() && (first().is(type1) || first().is(type2))) setFirst(first().next());
         while(last()!=first() && (last().is(type1) || last().is(type2))) setLast(last().previous());
         return this;
     }
 
-    public NodeSection trimRight(int type1, int type2) {
+    public NodeSection trimRight(INodeConstants type1, INodeConstants type2) {
         while(last()!=first() && (last().is(type1) || last().is(type2))) setLast(last().previous());
         return this;
     }

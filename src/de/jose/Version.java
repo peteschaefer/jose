@@ -242,6 +242,7 @@ public class Version
     /**
      * use double buffering for 2d panels ?
      *  it is recommended but may be turned off for reasons (animation)
+	 *  todo might be always enabled
      */
     public static boolean useDoubleBuffer()
     {

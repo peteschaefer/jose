@@ -291,24 +291,6 @@ public class ImgUtil
 	//	private
 	//-------------------------------------------------------------------------------
 
-	protected static class NoTrackIcon extends ImageIcon
-	{
-		NoTrackIcon(String filename)
-		{
-			super(Toolkit.getDefaultToolkit().createImage(filename));
-		}
-
-		public void loadImage(Image image) {
-			/* don't */
-			try {
-				ReflectionUtil.setValue(this,"width", new Integer(image.getWidth(null)));
-				ReflectionUtil.setValue(this,"height", new Integer(image.getHeight(null)));
-			} catch (Exception e) {
-				Application.error(e);
-			}
-		}
-	}
-
 	public static ImageIcon getMenuIcon(String name)
 	{
 		return getMenuIcon(name,false);

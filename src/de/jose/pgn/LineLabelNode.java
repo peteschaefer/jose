@@ -18,6 +18,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.Style;
 
+import static de.jose.pgn.INodeConstants.LINE_NODE;
+
 public class LineLabelNode
 		extends StaticTextNode
 {

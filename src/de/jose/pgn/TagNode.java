@@ -24,6 +24,8 @@ import javax.swing.text.StyledDocument;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.TAG_NODE;
+
 public class TagNode
 		extends Node
 		implements PgnConstants

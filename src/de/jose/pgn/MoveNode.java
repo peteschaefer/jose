@@ -30,6 +30,8 @@ import javax.swing.text.StyledDocument;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 
+import static de.jose.pgn.INodeConstants.MOVE_NODE;
+
 public class MoveNode
 		extends Node
 		implements Constants

@@ -13,6 +13,7 @@
 package de.jose.pgn;
 
 
+import static de.jose.pgn.INodeConstants.TAG_NODE;
 
 public class TagLabelNode
 		extends StaticTextNode

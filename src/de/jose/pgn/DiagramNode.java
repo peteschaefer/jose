@@ -28,6 +28,8 @@ import javax.swing.text.StyledDocument;
 import de.jose.view.style.JoStyleContext;
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.DIAGRAM_NODE;
+
 public class DiagramNode
 		extends Node
 		implements Constants

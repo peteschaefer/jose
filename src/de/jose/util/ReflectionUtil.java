@@ -194,44 +194,4 @@ public class ReflectionUtil
 		field.set(target,value);
 	}
 
-	public static boolean isInstanceOf(Object obj, String className)
-		throws ClassNotFoundException
-	{
-		Class clazz = Class.forName(className);
-		return clazz.isInstance(obj);
-	}
-
-
-	public static void getConstants(Class clazz, Map name2value, Map value2name)
-	{
-		Field[] fields = clazz.getDeclaredFields();
-		for (int i=0; i<fields.length; i++) {
-			int mod = fields[i].getModifiers();
-			if (Modifier.isStatic(mod)) {
-				try {
-					fields[i].setAccessible(true);
-					String name = fields[i].getName();
-					Object value = fields[i].get(null);
-					if (name2value!=null) name2value.put(name,value);
-					if (value2name!=null) value2name.put(value,name);
-				} catch (Exception e) {
-					e.printStackTrace();  //To change body of catch statement use Options | File Templates.
-				}
-			}
-		}
-	}
-
-	public static String nameOfConstant(Class clazz, int value)
-	{
-		return nameOfConstant(clazz,new Integer(value));
-	}
-
-	public static String nameOfConstant(Class clazz, Object value)
-	{
-		HashMap value2name = new HashMap();
-		getConstants(clazz,null,value2name);
-		return (String)value2name.get(value);
-	}
-
-
 }

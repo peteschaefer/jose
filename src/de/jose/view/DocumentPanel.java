@@ -45,9 +45,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Vector;
 
+import static de.jose.pgn.INodeConstants.ANNOTATION_NODE;
+
 public class DocumentPanel
 		extends JoPanel
-		implements ChangeListener, INodeConstants, MouseListener, ClipboardOwner
+		implements ChangeListener, MouseListener, ClipboardOwner
 {
 	/** sent by DocumentEditor when a move is input on the keyboard */
 	public static final int EVENT_USER_MOVE = 1001;

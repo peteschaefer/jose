@@ -48,9 +48,11 @@ import java.text.SimpleDateFormat;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.*;
+
 public class Game
 		extends de.jose.Document
-		implements PgnConstants, Constants, BinaryConstants, INodeConstants
+		implements PgnConstants, Constants, BinaryConstants
 {
 	//-------------------------------------------------------------------------------
 	//	inner class
@@ -343,7 +345,7 @@ public class Game
 //		spacer.insertLast(root);
 //        spacer.insertFirst(mainLine);
 
-		result = (ResultNode)mainLine.last(Node.RESULT_NODE);
+		result = (ResultNode)mainLine.last(RESULT_NODE);
 	    String pgnResult = (String)getTagValue(TAG_RESULT);
 	    int pgnCode = RESULT_UNKNOWN;
 	    if (pgnResult!=null) pgnCode = PgnUtil.parseResult(pgnResult);
@@ -1064,7 +1066,7 @@ public class Game
 	{
 		for (Node node = line.first(); node != null; node = node.next())
 		{
-			if (node.is(Node.MOVE_NODE))
+			if (node.is(MOVE_NODE))
 			{
 				MoveNode mnode = (MoveNode)node;
 				mnode.play(position);
@@ -1075,7 +1077,7 @@ public class Game
 					return true;
 				}
 			}
-			else if (node.is(Node.LINE_NODE) && searchVariations)
+			else if (node.is(LINE_NODE) && searchVariations)
 			{
 				Move mv = position.undoMove();
 				position.startVariation();
@@ -2163,7 +2165,7 @@ public class Game
 
 		indent(out,ind);
 		out.print("[");
-		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,line.type()));
+		out.print(line.type().name());
 		out.print(" ");
 		out.print(line.getStartOffset());
 		out.print(", ");
@@ -2188,7 +2190,7 @@ public class Game
 
 		indent(out,ind);
 		out.print("[");
-		out.print(ReflectionUtil.nameOfConstant(INodeConstants.class,node.type()));
+		out.print(node.type().name());
 		out.print(" ");
 		out.print(node.getStartOffset());
 		out.print(", ");

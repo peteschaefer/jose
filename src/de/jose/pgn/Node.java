@@ -19,13 +19,15 @@ import java.io.PrintWriter;
 
 import de.jose.sax.JoContentHandler;
 
+import static de.jose.pgn.INodeConstants.*;
+
 /**
  * abstract base class for elements
  * implements double linked list
  */
 
 abstract public class Node
-			implements javax.swing.text.Element, INodeConstants
+			implements javax.swing.text.Element
 {
 	/**	link to previous node	 */
 	protected Node previousNode;
@@ -36,14 +38,14 @@ abstract public class Node
     /** length (number of characters) in document   */
     protected int length;
     /** node type (= class) */
-    protected int type;
+    protected INodeConstants type;
 	/** keep-together in print
 	 *  (that is: avoid column breaks inside this node
 	 */
 	protected boolean keepTogether;
 
-    public final int type()                 { return type; }
-	public final boolean is(int atype)      { return type==atype; }
+    public final INodeConstants type()    			{ return type; }
+	public final boolean is(INodeConstants atype)   { return type==atype; }
 
 	public final Node previous()			{ return previousNode; }
 	public final Node next()				{ return nextNode; }
@@ -57,45 +59,45 @@ abstract public class Node
 	public final boolean keepTogether()     { return keepTogether; }
 	public final void setKeepTogether(boolean keep) { this.keepTogether = keep; }
 
-    protected Node(int atype) {
+    protected Node(INodeConstants atype) {
         type = atype;
     }
 
-	public final Node previous(int nodeClass) {
+	public final Node previous(INodeConstants nodeClass) {
 		for (Node n = previous(); n != null; n = n.previous())
 			if (n.is(nodeClass))
 				return n;
 		return null;
 	}
 
-	public final Node previous(int nodeClass1, int nodeClass2) {
+	public final Node previous(INodeConstants nodeClass1, INodeConstants nodeClass2) {
 		for (Node n = previous(); n != null; n = n.previous())
 			if (n.is(nodeClass1) || n.is(nodeClass2))
 				return n;
 		return null;
 	}
 
-	public final Node next(int nodeClass) {
+	public final Node next(INodeConstants nodeClass) {
 		for (Node n = next(); n != null; n = n.next())
 			if (n.is(nodeClass))
 				return n;
 		return null;
 	}
 
-	public final Node next(int nodeClass1, int nodeClass2) {
+	public final Node next(INodeConstants nodeClass1, INodeConstants nodeClass2) {
 		for (Node n = next(); n != null; n = n.next())
 			if (n.is(nodeClass1) || n.is(nodeClass2))
 				return n;
 		return null;
 	}
 
-	public boolean nextIs(int nodeType)
+	public boolean nextIs(INodeConstants nodeType)
 	{
 		Node next = next();
 		return (next!=null) && next.is(nodeType);
 	}
 
-	public Node skip(int nodeType)
+	public Node skip(INodeConstants nodeType)
 	{
 		Node node = next();
 		while (node!=null && node.is(nodeType)) node = node.next();
@@ -135,7 +137,7 @@ abstract public class Node
                 return n;
         }
 
-        if (n.type()==LINE_NODE)
+        if (n.type()== LINE_NODE)
             return ((LineNode)n).firstLeaf();
         else
             return n;
@@ -156,13 +158,13 @@ abstract public class Node
                 p = p.parent();
             } while (n==null);
 
-            if (n.type()==LINE_NODE)
+            if (n.type()== LINE_NODE)
                 return ((LineNode)n).lastLeaf();
             else
                 return n;
         }
 
-        if (n.type()==LINE_NODE)
+        if (n.type()== LINE_NODE)
             return ((LineNode)n).lastLeaf();
         else
             return n;

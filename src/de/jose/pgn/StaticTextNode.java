@@ -20,6 +20,8 @@ import javax.swing.text.StyledDocument;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.STATIC_TEXT_NODE;
+
 public class StaticTextNode
 		extends Node
 {
