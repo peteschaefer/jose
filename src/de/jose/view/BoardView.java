@@ -27,6 +27,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 
 
@@ -253,6 +254,12 @@ abstract public class BoardView
 			hints.clear();
 			doHideAllHints(sz,repaint);
 		}
+	}
+
+	public void showAllHints(ArrayList<Hint> new_hints)
+	{
+		this.hints = new_hints;
+		doRepaintHints();
 	}
 
 

@@ -556,7 +556,7 @@ public class BoardPanel
 				if (a==null) break;
 				if (!a.wasPvModified()) break;
 
-				theView.hideAllHints(false);
+				//theView.hideAllHints(false);
 				showAnalysisHints(a,plugin);
 				break;
 			case EnginePlugin.PAUSED:
@@ -609,18 +609,13 @@ public class BoardPanel
 		{
 			double cp = (Double)hint.implData;
 			assert(cp>=cpmin && cp<=cpmax);
-			if (cpmin==cpmax)
-				cp = 1.0;
-			else
-				cp = (cp-cpmin) / (cpmax-cpmin);
+			cp = (cp-cpmin) / (cpmax-cpmin);
 			hint.color = suggestionColor((float)cp);
 		}
 		//	sort by Z order
 		Collections.sort(hints,new CompareHintsByZorder());
 		//	add to view
-		for(Hint hint : hints)
-			theView.showHint(hint,false);
-		theView.doRepaintHints();
+		theView.showAllHints(hints);
 	}
 
 	public static class CompareHintsByZorder implements Comparator<Hint>
@@ -704,7 +699,7 @@ public class BoardPanel
 	public static Color suggestionColor(float val)
 	{
 		//	0 = red, 1 = green
-		float[] hsbRed = Color.RGBtoHSB(255,0,0, null);
+		/*float[] hsbRed = Color.RGBtoHSB(255,0,0, null);
 		float[] hsbGreen = Color.RGBtoHSB(0,255,0, null);
 		float hueRed = hsbRed[0];
 		float hueGreen = hsbGreen[0];
@@ -712,7 +707,19 @@ public class BoardPanel
 		int col = Color.HSBtoRGB(hue,0.8f,0.8f);
 		//	alpha
 		col += 32<<24;
-		return new Color(col,true);
+		return new Color(col,true);*/
+		Color base;
+		if (val >= 0.95)
+			base = Color.blue;
+		else if (val >= 0.65)
+			base = Color.green;
+		else if (val >= 0.30)
+			base = Color.yellow;
+		else
+			base = Color.red;
+		int rgb = base.getRGB();
+		rgb += 48<<24;	//	alpha
+		return new Color(rgb,true);
 	}
 
 }

@@ -514,6 +514,7 @@ public class BoardView2D
 	{
 		if (hints.isEmpty()) return;
 
+		int painted=0;
 		for (int i=0; i < hints.size(); i++)
 		{
 			Hint hnt =(Hint)hints.get(i);
@@ -521,6 +522,7 @@ public class BoardView2D
 				Graphics2D g = getBufferGraphics();
 				paintArrow(g, center(hnt.from), center(hnt.to),
 						squareSize/16, hnt.color);
+				painted++;
 			}
 		}
 
@@ -752,37 +754,8 @@ public class BoardView2D
 			//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
 			b.paintBorder(this, g, inset.x - 2, inset.y - 2, boardSize + 4, boardSize + 4);
 
-			if (showCoords) {
-				/** draw coordinates    */
-				char[] c = new char[2];
-				int fontSize = (int) (squareSize * 0.3f);
-				Font f = new Font("SansSerif", Font.PLAIN, fontSize);
-				g.setFont(f);
-				FontMetrics fmx = g.getFontMetrics();
-
-				int drop = Math.max(squareSize / 48, 1);
-
-				for (int i = 0; i < 8; i++) {
-					c[0] = (char) (flipped ? ('1' + i) : ('8' - i));
-					int x0 = inset.x - fmx.charWidth(c[0]) * 9 / 8 - 4;
-					int y0 = inset.y + squareSize * i + (squareSize + fmx.getAscent()) / 2;
-
-					c[1] = (char) (flipped ? ('h' - i) : ('a' + i));
-					int x1 = inset.x + squareSize * i + (squareSize - fmx.charWidth(c[1])) / 2;
-					int y1 = inset.y + 8 * squareSize + fmx.getAscent();
-
-					g.setColor(SHADOW_64);
-					g.drawChars(c, 0, 1, x0 + drop, y0 + drop);
-					g.drawChars(c, 1, 1, x1 + drop, y1 + drop);
-
-					if (currentBackground.isDark())
-						g.setColor(Color.white);
-					else
-						g.setColor(Color.black);
-					g.drawChars(c, 0, 1, x0, y0);
-					g.drawChars(c, 1, 1, x1, y1);
-				}
-			}
+			if (showCoords)/** draw coordinates    */
+				drawCoordinates(g);
 		}
 
 		if (showEvalbar)
@@ -790,9 +763,41 @@ public class BoardView2D
 
 		synch(redraw);
 
-		paintHints();
+		if (redraw)
+			paintHints();
 
 		paintHook(redraw);
+	}
+
+	private void drawCoordinates(Graphics2D g) {
+		char[] c = new char[2];
+		int fontSize = (int) (squareSize * 0.3f);
+		Font f = new Font("SansSerif", Font.PLAIN, fontSize);
+		g.setFont(f);
+		FontMetrics fmx = g.getFontMetrics();
+
+		int drop = Math.max(squareSize / 48, 1);
+
+		for (int i = 0; i < 8; i++) {
+			c[0] = (char) (flipped ? ('1' + i) : ('8' - i));
+			int x0 = inset.x - fmx.charWidth(c[0]) * 9 / 8 - 4;
+			int y0 = inset.y + squareSize * i + (squareSize + fmx.getAscent()) / 2;
+
+			c[1] = (char) (flipped ? ('h' - i) : ('a' + i));
+			int x1 = inset.x + squareSize * i + (squareSize - fmx.charWidth(c[1])) / 2;
+			int y1 = inset.y + 8 * squareSize + fmx.getAscent();
+
+			g.setColor(SHADOW_64);
+			g.drawChars(c, 0, 1, x0 + drop, y0 + drop);
+			g.drawChars(c, 1, 1, x1 + drop, y1 + drop);
+
+			if (currentBackground.isDark())
+				g.setColor(Color.white);
+			else
+				g.setColor(Color.black);
+			g.drawChars(c, 0, 1, x0, y0);
+			g.drawChars(c, 1, 1, x1, y1);
+		}
 	}
 
 	public void drawEvalbar(Graphics2D g, Border b)
