@@ -1255,7 +1255,8 @@ public class UciPlugin
 		}
 		else if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
 		{
-			mapUnit(score, score.cp,-100,+100);
+			//	clamp at +- 100%
+			mapUnit(score, score.cp,-10000,+10000);
 		}
 		else
 		{
