@@ -15,13 +15,13 @@ package de.jose.window;
 import de.jose.*;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
+import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.chess.Position;
 import de.jose.pgn.Game;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.TagNode;
-import de.jose.view.BoardView2D;
 import de.jose.view.DocumentPanel;
 import de.jose.view.input.JDateField;
 
@@ -55,9 +55,9 @@ public class GameDetailsDialog
 
 		int iconSize = 14;
 		Color iconColor = Color.lightGray;
-		ImageIcon event = BoardView2D.getFontAwesomeIcon('\uf073',iconSize,iconColor);	//	calendar
-		ImageIcon players = BoardView2D.getFontAwesomeIcon('\ue068',iconSize,iconColor);	// two people
-		ImageIcon more = BoardView2D.getFontAwesomeIcon('\uf4ad',iconSize,iconColor);	//
+		Icon event = FontUtil.awesomeIcon('\uf073',iconSize,iconColor);	//	calendar
+		Icon players = FontUtil.awesomeIcon('\ue068',iconSize,iconColor);	// two people
+		Icon more = FontUtil.awesomeIcon('\uf4ad',iconSize,iconColor);	//
 
 		Font fnt = getTabbedPane().getFont();
 		fnt = fnt.deriveFont(Font.BOLD,13);

@@ -28,6 +28,7 @@ import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
 import de.jose.plugin.*;
 import de.jose.profile.LayoutProfile;
+import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ClipboardUtil;
@@ -124,7 +125,7 @@ public class EnginePanel
 
     protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
 	protected static ImageIcon[] iPause, iHint, iAnalyze;
-	protected static ImageIcon iBook, iEngine;
+	protected static Icon iBook, iEngine;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
 
@@ -262,8 +263,8 @@ public class EnginePanel
 
 	private void createFontIcons()
 	{
-		iBook = BoardView2D.getFontAwesomeIcon(BoardView2D.cBook,20,Color.lightGray);
-		iEngine = BoardView2D.getFontAwesomeIcon(BoardView2D.cGears,20,Color.lightGray);
+		iBook = FontUtil.awesomeIcon(BoardView2D.cBook,20,Color.lightGray);
+		iEngine = FontUtil.awesomeIcon(BoardView2D.cGears,20,Color.lightGray);
 	}
 
 	private void createComponents()
@@ -1323,7 +1324,7 @@ public class EnginePanel
 	protected void updateStatus(EngineState state)
 	{
 		String text = null;
-		ImageIcon icon = null;
+		Icon icon = null;
 		if (state==null) {
 			//text = "book.title";
 			//text = Language.get(text);

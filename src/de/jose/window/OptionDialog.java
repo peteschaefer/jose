@@ -18,17 +18,13 @@ import de.jose.chess.TimeControl;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
-import de.jose.image.ImgUtil;
 import de.jose.jo3d.Util3D;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
 import de.jose.plugin.Plugin;
 import de.jose.plugin.EngineOptionReader;
 import de.jose.profile.UserProfile;
-import de.jose.util.AWTUtil;
-import de.jose.util.ListUtil;
-import de.jose.util.StringUtil;
-import de.jose.util.WinUtils;
+import de.jose.util.*;
 import de.jose.util.file.ExecutableFileFilter;
 import de.jose.util.file.ImageFileFilter;
 import de.jose.util.map.IntHashSet;
@@ -155,16 +151,16 @@ public class OptionDialog
 		int iconSize = 20;
 		Color iconColor= Color.lightGray;
 
-		ImageIcon user = BoardView2D.getFontAwesomeIcon(BoardView2D.cUser,iconSize,iconColor);
-		ImageIcon board = BoardView2D.getFontAwesomeIcon('\uf43c',iconSize,iconColor);
-		ImageIcon palette = BoardView2D.getFontAwesomeIcon('\uf5c3',iconSize,iconColor); // swatchbook :)
-		ImageIcon clock = BoardView2D.getFontAwesomeIcon('\uf2f2',iconSize,iconColor);
+		Icon user = FontUtil.awesomeIcon(BoardView2D.cUser,iconSize,iconColor);
+		Icon board = FontUtil.awesomeIcon('\uf43c',iconSize,iconColor);
+		Icon palette = FontUtil.awesomeIcon('\uf5c3',iconSize,iconColor); // swatchbook :)
+		Icon clock = FontUtil.awesomeIcon('\uf2f2',iconSize,iconColor);
 				//ImgUtil.getIcon("nav","chess.clock");
 				// the chess clock icon is nicer, but unfortunately, not in font-awesome
-		ImageIcon book = BoardView2D.getFontAwesomeIcon(BoardView2D.cBook,iconSize,iconColor);
-		ImageIcon gears = BoardView2D.getFontAwesomeIcon(BoardView2D.cGears,iconSize,iconColor);
-		ImageIcon cubes = BoardView2D.getFontAwesomeIcon('\uf1b3',iconSize,iconColor);
-		ImageIcon font = BoardView2D.getFontAwesomeIcon('\uf031',iconSize,iconColor);
+		Icon book = FontUtil.awesomeIcon(BoardView2D.cBook,iconSize,iconColor);
+		Icon gears = FontUtil.awesomeIcon(BoardView2D.cGears,iconSize,iconColor);
+		Icon cubes = FontUtil.awesomeIcon('\uf1b3',iconSize,iconColor);
+		Icon font = FontUtil.awesomeIcon('\uf031',iconSize,iconColor);
 
 		addTab(newGridPane(),user);   // tab0
 		addTab(newGridPane(),board);   // tab1

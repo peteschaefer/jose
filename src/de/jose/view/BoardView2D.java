@@ -17,18 +17,15 @@ import de.jose.chess.*;
 import de.jose.comm.msg.MessageListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
-import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 import de.jose.util.FontUtil;
 
-import javax.media.j3d.NioImageBuffer;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.SoftBevelBorder;
-import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,10 +35,8 @@ import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -50,7 +45,6 @@ import java.awt.Graphics2D;
 import static de.jose.Application.AppMode.*;
 import static de.jose.Application.PlayState.BOOK;
 import static de.jose.image.Surface.COLOR;
-import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class BoardView2D
 		extends BoardView
@@ -86,8 +80,6 @@ public class BoardView2D
 	 * 	false	textures are aligned
 	 */
 	protected static boolean randomTxtrOffset = true;
-
-	private static Font fontAwesome=null;
 
 	static {
 		textureOffsets = new int[2*OUTER_BOARD_SIZE];
@@ -142,12 +134,6 @@ public class BoardView2D
 
 	public void init()
 	{
-		try {
-			fontAwesome = FontUtil.loadCustomFont(new File("fonts/FontAwesome.otf"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
 		UserProfile prf = AbstractApplication.theUserProfile;
 		Map map = (Map)prf.get("board.images");
 		if (map != null)
@@ -1228,7 +1214,7 @@ public class BoardView2D
 		String s = Character.toString(c);
         BufferedImage img = null;
         try {
-            img = FontCapture.getImage(fontAwesome.getFontName(), fontSize, s,
+            img = FontCapture.getImage(FontUtil.awesomeName(), fontSize, s,
 					whiteOnBlack ? light:dark,
 					whiteOnBlack ? dark:light,
 					null, false );
@@ -1243,36 +1229,6 @@ public class BoardView2D
 	public static char cUser = '\uf406';
 	public static char cBook = '\uf02d';
 	public static char cGears = '\uf085';
-
-	//	todo move to FontUtil or something
-	public static ImageIcon getFontAwesomeIcon(char c, float size, Color color)
-	{
-        try {
-            BufferedImage img = FontCapture.getImage(fontAwesome.getFontName(), (int)size, Character.toString(c),
-                    dark,light, null, false);
-			return new ImageIcon(img);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-/*
-        BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D) buffer.getGraphics();
-
-		Font font = fontAwesome.deriveFont(Font.PLAIN,size);
-		FontMetrics fm = g.getFontMetrics(font);
-		String s = Character.toString(c);
-		Rectangle2D bounds = fm.getStringBounds(s,g);
-
-		buffer = new BufferedImage((int)bounds.getWidth(),(int)bounds.getHeight(),TYPE_INT_ARGB);
-		g = (Graphics2D) buffer.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setFont(font);
-		g.setColor(color);
-		g.drawString(s,0, buffer.getHeight()-fm.getDescent());
-		return new ImageIcon(buffer);
- */
-	}
 
 	protected char evalChar(int color)
 	{

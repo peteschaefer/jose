@@ -22,6 +22,7 @@ import de.jose.image.Surface;
 import de.jose.pgn.SearchRecord;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
+import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.view.list.IDBTableModel;
 import de.jose.window.JoDialog;
@@ -56,7 +57,7 @@ public class QueryPanel
     protected static SearchRecord tempSearch = new SearchRecord();
     protected static ImageIcon searchIcon = ImgUtil.getIcon(null,"search");
     protected static ImageIcon dirtyIcon = ImgUtil.getIcon(null,"tab.dirty");
-	protected static ImageIcon[] tabIcon = new ImageIcon[3];
+	protected static Icon[] tabIcon = new Icon[3];
 
 	protected static final GridBagConstraints LABEL_ONE =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
@@ -213,9 +214,9 @@ public class QueryPanel
 	{
 		int iconSize = 16;
 		Color iconColor = Color.lightGray;
-		tabIcon[0] = BoardView2D.getFontAwesomeIcon('\uf05a',iconSize,iconColor);	//	info
-		tabIcon[1] = BoardView2D.getFontAwesomeIcon('\uf086',iconSize,iconColor);
-		tabIcon[2] = BoardView2D.getFontAwesomeIcon('\uf43c',iconSize,iconColor);
+		tabIcon[0] = FontUtil.awesomeIcon('\uf05a',iconSize,iconColor);	//	info
+		tabIcon[1] = FontUtil.awesomeIcon('\uf086',iconSize,iconColor);
+		tabIcon[2] = FontUtil.awesomeIcon('\uf43c',iconSize,iconColor);
 
 		//	set up layout
 		cardPanel = new JTabbedPane();

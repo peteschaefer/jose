@@ -17,10 +17,9 @@ import de.jose.Util;
 import de.jose.Version;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.Triplet;
-import sun.font.FontManager;
-import sun.font.PhysicalFont;
 //import sun.awt.Win32FontManager;
 
+import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.io.File;
@@ -53,7 +52,7 @@ public class FontUtil
 
 	/** soft cache  */
 	protected static SoftCache gFontCache = new SoftCache();
-
+	protected static Font fontAwesome=null;
 
 	// --------------------------------------------------------------------
 	//      Custom Font Loading & Caching
@@ -199,6 +198,20 @@ public class FontUtil
 		return font;
 	}
 
+
+	public static Font fontAwesome() {
+		try {
+			if (fontAwesome==null)
+				fontAwesome = FontUtil.loadCustomFont(new File("fonts/FontAwesome.otf"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return fontAwesome;
+	}
+
+	public static String awesomeName() {
+		return fontAwesome().getFontName();
+	}
 
 	public static Font getFont(String family, int style, boolean tolerant)
 	{
@@ -401,4 +414,37 @@ public class FontUtil
 		}
 	}
 
+	//	todo move to FontUtil or something
+	public static Icon awesomeIcon(char c, float size, Color color)
+	{
+		Font font = fontAwesome().deriveFont(Font.PLAIN,size);
+		String s = Character.toString(c);
+		return new TextIcon(s,font,color);
+/*        try {
+            BufferedImage img = FontCapture.getImage(FontUtil.awesomeName(), (int)size, Character.toString(c),
+                    dark,light, null, false);
+			return new ImageIcon(img);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+ */
+/*
+        BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) buffer.getGraphics();
+
+		Font font = fontAwesome.deriveFont(Font.PLAIN,size);
+		FontMetrics fm = g.getFontMetrics(font);
+		String s = Character.toString(c);
+		Rectangle2D bounds = fm.getStringBounds(s,g);
+
+		buffer = new BufferedImage((int)bounds.getWidth(),(int)bounds.getHeight(),TYPE_INT_ARGB);
+		g = (Graphics2D) buffer.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setFont(font);
+		g.setColor(color);
+		g.drawString(s,0, buffer.getHeight()-fm.getDescent());
+		return new ImageIcon(buffer);
+ */
+	}
 }
