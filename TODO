@@ -4,61 +4,49 @@
 
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
+* BUG? Leela keeps analyzing while playing from book
+* BUG? Leela diagnostics not always associated correctly
 
 ==== Project
 
 [x] bug: hang on start
-[?] bug: diacritics lost on save
+[x] bug: diacritics lost on save
 [x] suggestion arrow updates
+[x] utf-8 for pgn
+    (x) import = heuristics
+    (x) output = configurable
 
 1.5.1: move on to 64-bit land
 
 [x] compile against jdk 1.8
 [ ] run with Oracle 21 x64
-    [x] hidpi
-    [x] touch & drag
-    [x] Java3D 1.5
-    [ ] JavaLauncher (todo fix nOptions=0)
-
-[ ] run with JBR 21 x64
     [x] Windows
-        [-] checkout JoFileChooser with Window l+f
-    [x] Linux
+    [ ] Linux
     [ ] Mac Intel
     [ ] Mac arm
-    [ ] bug: touch+drag not detected
-[ ] run with Azul Zulu 21
-    [x] touch & drag
-[x] fixes hi-dpi issues
-    [x] dialogs
-    [x] 2d board
-    [x] 3d board (todo: fix mouse arithmetics)
+
 [ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
     [ ] Mac Intel
-[ ] JavaLauncher
-    [ ] batch compiler for Windows
-    [x] java.sh and java.desktop for Linux
-    [x] shc for Mac OS
-[ ] mysql 5.0.15
+[ ] JavaLauncher x64
+    [ ] Windows
+    [ ] Linux
+    [ ] Mac
+[ ] mysql 5.0.15 x64
     !! patch: https://bugs.mysql.com/bug.php?id=12070
-    [?] Windows (--) embedded (x) stand-alone
+    [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     [ ] Mac intel
     [ ] Mac arm
 [x] easylink: 64 bit, use latest hidapi
-    [x] Windows: (-) fixes BLE?
+    [x] Windows: (-) fixes BLE
     [ ] Linux ?
 
-Alternative: JBR 21 x86
+Alternative: JBR 21 x64, or x86
  -> all the benefits of JBR, keep old binaries (mysql-je!)
  [ ] bug: can not load 32bit dll's. Wait for fix? Get a workaround?
-
-==== macOS
-
-[ ] Java3D 1.5.1 for Mac Intel
-[ ] mysql-je for Mac
+ [ ] bug: touch & drag not detected
 
 ==== Deprecated Stuff
 
@@ -72,9 +60,6 @@ Alternative: JBR 21 x86
     -> which is pretty dumb but effective
 
 ==== New Features
-
-* BUG? Leela keeps analyzing while playing from book
-* BUG? Leela diagnostics not always associated correctly
 
 * arrows + text label
   - font size?
@@ -96,6 +81,8 @@ Alternative: JBR 21 x86
   - can't delete? (Apply !!)
 
 ==== Postponed
+
+(first fix platforms)
 
 * Graph View interactive
     - mark current move
