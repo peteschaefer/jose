@@ -31,7 +31,7 @@ libraries needed:
 [x] jdk1.8 (64 bit)
 [x] 64 bit binaries for stockfish
 [x] and lc0. via brew
-m[x] mysqld standalone 5.0.67 for MacOS 64, (remember to copy share too)
+[x] mysqld standalone 5.0.67 for MacOS 64, (remember to copy share too)
 [x] upgrade mysql.jar
 [-] Java3D
 
