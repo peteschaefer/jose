@@ -150,6 +150,7 @@ public class Application
 
 	/**	game mode	*/
 	public AppMode				theMode;
+	public PlayState			thePlayState = PlayState.NEUTRAL;
 
 	/**	database directory (for embeded databases only)
 	 * 	default is <working directory> / database
@@ -3851,8 +3852,9 @@ public class Application
 	{
 		if (mode!=theMode) {
 			theMode = mode;
+			thePlayState = PlayState.NEUTRAL;
 			Command cmd = new Command("app.state.changed", null,
-							theMode, PlayState.NEUTRAL);
+							theMode, thePlayState);
 			broadcast(cmd);
 		}
 	}
@@ -3860,8 +3862,9 @@ public class Application
 	public void setPlayState(PlayState thinkState)
 	{
 		theMode = AppMode.USER_ENGINE;
+		thePlayState = thinkState;
 		Command cmd = new Command("app.state.changed", null,
-							theMode, thinkState);
+							theMode, thePlayState);
 		broadcast(cmd);
 	}
 

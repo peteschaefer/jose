@@ -155,11 +155,8 @@ public class EnginePanel
 		createIcons();
 		createComponents();
 		createLayout();
-
-		display(PAUSED,null, inBook);
-		setOpaque(true);
-		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 	}
+
 
 	private static final Color GREY_INFO = Color.darkGray;
 	private static final Color BLUE_LINK = new Color(0,0,196);
@@ -261,9 +258,12 @@ public class EnginePanel
 		iAnalyze[1] = ImgUtil.getIcon("nav","analyze.cold");
 		iAnalyze[2] = ImgUtil.getIcon("nav","analyze.hot");
 		iAnalyze[3] = ImgUtil.getIcon("nav","analyze.pressed");
+	}
 
-		iBook = ImgUtil.getIcon("nav","book.solid");
-		iEngine = ImgUtil.getIcon("nav","gears.solid");
+	private void createFontIcons()
+	{
+		iBook = BoardView2D.getFontAwesomeIcon(BoardView2D.cBook,20,Color.lightGray);
+		iEngine = BoardView2D.getFontAwesomeIcon(BoardView2D.cGears,20,Color.lightGray);
 	}
 
 	private void createComponents()
@@ -1349,7 +1349,13 @@ public class EnginePanel
 
 	public void init()
 	{
-        showHistory = Application.theUserProfile.getBoolean("plugin.pv.history");
+		createFontIcons();
+
+		display(PAUSED,null, inBook);
+		setOpaque(true);
+		setFocusable(false);    //  don't request keyboard focus (or should we ?)
+
+		showHistory = Application.theUserProfile.getBoolean("plugin.pv.history");
 		showTooltips = Application.theUserProfile.getBoolean("plugin.pv.tooltips");
 
 		setupStyles();

@@ -17,10 +17,13 @@ import de.jose.chess.*;
 import de.jose.comm.msg.MessageListener;
 import de.jose.eboard.EBoardConnector;
 import de.jose.image.*;
+import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
+import de.jose.util.FontUtil;
 
+import javax.media.j3d.NioImageBuffer;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -35,15 +38,18 @@ import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.awt.Graphics2D;
 
-import static de.jose.Application.AppMode.ANALYSIS;
-import static de.jose.Application.AppMode.USER_INPUT;
+import static de.jose.Application.AppMode.*;
+import static de.jose.Application.PlayState.BOOK;
+import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class BoardView2D
 		extends BoardView
@@ -80,12 +86,14 @@ public class BoardView2D
 	 */
 	protected static boolean randomTxtrOffset = true;
 
+	private static Font fontAwesome=null;
+
 	static {
 		textureOffsets = new int[2*OUTER_BOARD_SIZE];
 		Random rnd = new Random(0xfafafb);
 		for (int i=0; i<textureOffsets.length; i++)
 			textureOffsets[i] = Math.abs(rnd.nextInt());
-	}
+    }
 
 	protected static final Color SHADOW_64 = new Color(0,0,0,64);
 
@@ -133,6 +141,12 @@ public class BoardView2D
 
 	public void init()
 	{
+		try {
+			fontAwesome = FontUtil.loadCustomFont(new File("fonts/FontAwesome.otf"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 		UserProfile prf = AbstractApplication.theUserProfile;
 		Map map = (Map)prf.get("board.images");
 		if (map != null)
@@ -1185,6 +1199,106 @@ public class BoardView2D
 			else
 				g.fillRect(x2 + gap, y0, wid, hblack);
 		}
+		//	paint user/engine/book icons
+		char blackIcon = evalChar(BLACK);
+		char whiteIcon = evalChar(WHITE);
+		if (blackIcon != 0 || whiteIcon != 0)
+		{
+			float fontSize = wid*0.75f;//devSquareSize * 0.2f;
+			Font font = fontAwesome.deriveFont(Font.PLAIN,fontSize);
+			FontMetrics fm = g.getFontMetrics(font);
+
+			g.setFont(font);
+			g.setColor(Color.lightGray);
+
+			int x3 = x2+gap+wid/2;
+			int y1 = y0+wid/2;
+			int y3 = y2-wid/2;
+
+			if (blackIcon != 0)
+				drawCentered(g, blackIcon, x3, flipped ? y3:y1, fm);
+			if (whiteIcon != 0)
+				drawCentered(g, whiteIcon, x3, flipped ? y1:y3, fm);
+		}
+	}
+
+	protected void drawCentered(Graphics2D g2, char c, int xc, int yc, FontMetrics fm)
+	{
+		String s = Character.toString(c);
+		Rectangle2D r = fm.getStringBounds(s,g2);
+		g2.drawString(s, (int)(xc-r.getWidth()/2), (int)(yc+r.getHeight()/2));
+	}
+
+	//	Unicode points for font-awesome characters
+	public static char cUser = '\uf406';
+	public static char cBook = '\uf02d';
+	public static char cGears = '\uf085';
+
+	//	todo move to FontUtil or something
+	public static ImageIcon getFontAwesomeIcon(char c, float size, Color color)
+	{
+		BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
+		Graphics g = buffer.getGraphics();
+		Font font = fontAwesome.deriveFont(Font.PLAIN,size);
+		FontMetrics fm = g.getFontMetrics(font);
+		String s = Character.toString(c);
+		Rectangle2D bounds = fm.getStringBounds(s,g);
+
+		buffer = new BufferedImage((int)bounds.getWidth(),(int)bounds.getHeight(),TYPE_INT_ARGB);
+		g = buffer.getGraphics();
+		g.setFont(font);
+		g.setColor(color);
+		g.drawString(s,0, buffer.getHeight()-fm.getDescent());
+		return new ImageIcon(buffer);
+	}
+
+	protected char evalChar(int color)
+	{
+		/*
+			it is not so easy to find out, whether the engine is currently playing black or white
+			because this state is nowhere persisted :)
+
+			AppMode==USER_ENGINE indicates that user is playing against engine (or book)
+			-user moves are responded with engine moves
+			-and after engine moves, the application waits for a user move
+			that's it. No need to keep a persistent state.
+
+			we have to derive the information from
+				AppMode (USER_ENGINE required)
+				PlayState (actively thinking?)
+				Position.nextColor()
+
+			Next, we need to find out, whether we are playing against a book, or against an engine.
+			EnginePanel.inBook is the interesting flag.
+			PlayState == BOOK indicates a book query in progress
+		 */
+
+		if (Application.theApplication.theMode!=USER_ENGINE)
+			return 0;	// no icons in analysis mode
+
+		int moveColor = Application.theApplication.theGame.getPosition().movesNext();
+		int engineColor=0;
+		boolean inBook = false;
+		if (Application.theApplication.thePlayState==BOOK) {
+			inBook = true;	//	book query in progress
+		}
+		else {
+			EnginePanel eng = Application.theApplication.enginePanel();
+			if (eng != null)
+				inBook = eng.inBook;
+		}
+
+		switch(Application.theApplication.thePlayState) {
+			case BOOK:
+			case ENGINE:	engineColor=moveColor; break;
+			default:
+			case NEUTRAL:	engineColor=EngUtil.oppositeColor(moveColor); break;
+		}
+
+		if (color==engineColor)
+			return inBook ? cBook:cGears;
+		else
+			return cUser;
 	}
 
 
