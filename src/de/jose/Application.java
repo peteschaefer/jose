@@ -2358,7 +2358,7 @@ public class Application
 					eng.showBook(query.result, pos);
 				} else {
 					eng.exitBook();
-					//	when out of book, switch to Engine
+					//	when out of book, switch to Engine analysis
 					if (query.onCompletion == BOOK_ANALYSIS)
 						startEngineAnalysis(true);
 				}
@@ -2400,7 +2400,8 @@ public class Application
 		if (engine_analysis) {
 			invokeWithPlugin(new Runnable() {
 				public void run() {	//  (2) enter engine analysis mode
-					pausePlugin(true);
+					//pausePlugin(true);
+					engine.analyze(theGame.getPosition());	//	right?
 					theMode = AppMode.ANALYSIS;
 				}
 			});
@@ -3839,8 +3840,10 @@ public class Application
 		EnginePlugin engine = getEnginePlugin();
 		Position position = theGame.getPosition();
 		if (engine!=null) {
-			if ( analyze && !position.isGameFinished(true))
-				engine.analyze(position);
+			if ( analyze && !position.isGameFinished(true)) {
+			//	engine.analyze(position);
+				submitBookQuery(BOOK_ANALYSIS,null);	//	right?
+			}
 			if (!analyze && !engine.isPaused()) {
 				engine.pause();
 //				if (enginePanel()!=null)
