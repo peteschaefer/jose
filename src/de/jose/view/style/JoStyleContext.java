@@ -40,7 +40,8 @@ public class JoStyleContext
 {
 	static final long serialVersionUID = 9020773135093130756L;
 
-	/** font scaling factor to adjust for screen resolution */
+	/** font scaling factor to adjust for screen resolution
+	 * @deprecated this is already handled by Graphics.transform() */
 	private float fontScale = 1.0f;
 
 	public JoStyleContext()
