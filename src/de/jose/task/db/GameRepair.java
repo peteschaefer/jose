@@ -43,6 +43,14 @@ public class GameRepair
         JoConnection conn = null;
             try {
                 conn = JoConnection.get();
+                //  restore missing System folders
+                Collection.makeAutoSave(conn);
+                Collection.makeClipboard(conn);
+                Collection.makeInTray(conn);
+                //  Downloads is re-created on demand
+                Collection.makeTrash(conn);
+
+                //  restore missing pairs of Game <-> MoreGame
                 int maxId = conn.selectMaxIntValue("Game", "Id");
                 int maxGId = conn.selectMaxIntValue("MoreGame", "GId");
                 if (maxId != maxGId) {

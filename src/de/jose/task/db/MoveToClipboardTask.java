@@ -31,7 +31,7 @@ public class MoveToClipboardTask
 	public MoveToClipboardTask(GameSource src, int clip, int trash, boolean setOId)
 	        throws Exception
 	{
-		super(src, clip, setOId, false);
+		super(src, clip, setOId, false,true);
 		trashCId = trash;
 	}
 

@@ -212,17 +212,7 @@ public class LiChessOpeningExplorer extends OpeningBook
             public void run() {
                 int[] GIds=null;
                 try {
-                    int CId = Collection.DOWNLOADS_ID;
-                    JoConnection conn = null;
-                    try {
-                        conn = JoConnection.get();
-                        Collection.makeDownloads(conn);
-
-                        GIds = findDownload(conn, CId, gameRef);
-
-                    } finally {
-                        if (conn!=null) conn.release();
-                    }
+                    int CId = Collection.makeDownloads(null);
 
                     if (GIds==null)
                         GIds = download1Game(CId, gameRef);

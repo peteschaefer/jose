@@ -260,8 +260,9 @@ public class History
         for (int i=0; i < size(); i++) {
             Game g = get(i);
             if (g.isNew()) {
-                g.saveAs(Collection.AUTOSAVE_ID, 0);
-				Application.theApplication.broadcast(new Command("collection.modified",null,Collection.AUTOSAVE_ID));
+				int CId = Collection.makeAutoSave(null);
+                g.saveAs(CId, 0);
+				Application.theApplication.broadcast(new Command("collection.modified",null,CId));
 			}
             else if (g.isDirty()) {
                 g.save();

@@ -12,6 +12,7 @@
 
 package de.jose.task.db;
 
+import de.jose.pgn.Collection;
 import de.jose.task.GameSource;
 import de.jose.task.MaintenanceTask;
 
@@ -29,14 +30,18 @@ public class MoveTask
 	/**	adjust OId settings ?	*/
 	protected boolean setOId;
 	protected boolean calcIdx;
+	//	skip system folders
+	protected boolean skipSystem;
 
-	public MoveTask(GameSource src, int CId, boolean adjustOId, boolean calcIdx) throws Exception
+	public MoveTask(GameSource src, int CId,
+					boolean adjustOId, boolean calcIdx, boolean noSystem) throws Exception
 	{
 		super("Move",true);
 		setSource(src);
 		targetCId = CId;
 		setOId = adjustOId;
 		this.calcIdx = calcIdx;
+		skipSystem = noSystem;
 	}
 
 	public void processGame(int GId) throws SQLException
@@ -51,6 +56,7 @@ public class MoveTask
 
 	public void processCollection(int CId) throws SQLException
 	{
+		if (skipSystem && Collection.isSystem(CId)) return;
 		gutil.moveCollection(CId,targetCId,setOId);
 	}
 

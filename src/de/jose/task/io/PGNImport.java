@@ -301,18 +301,6 @@ public class PGNImport
         }
 	}
 
-
-	private static int makeInTray() throws SQLException {
-		JoConnection conn = null;
-		try {
-			conn = JoConnection.get();
-			Collection.makeInTray(conn);
-		} finally {
-			if (conn!=null) conn.release();
-		}
-		return Collection.INTRAY_ID;
-	}
-
 	public static PGNImport openFile(File file)
 		throws Exception
 	{
@@ -326,7 +314,7 @@ public class PGNImport
 		String trimmedName = FileUtil.trimExtension(name);
 		PGNImport reader = null;
 
-		int ParentCId = makeInTray();
+		int ParentCId = Collection.makeInTray(null);
 
 		//  TODO streamline this !
 		if (pgnFilter.accept(null,name) || epdFilter.accept(null,name))
@@ -442,7 +430,7 @@ public class PGNImport
         int size = conn.getContentLength();
         PGNImport reader = null;
 
-		int ParentCId = makeInTray();
+		int ParentCId = Collection.makeInTray(null);
 
 		if (pgnFilter.accept(null,name) || epdFilter.accept(null,name))
         {

@@ -2822,9 +2822,10 @@ public class Application
 					//  when saving a new, non-empty game, fill in default date
 					g.setTagValue(PgnConstants.TAG_DATE, PgnUtil.currentDate(), g);
 				}
-				g.saveAs(Collection.AUTOSAVE_ID,0);
+				int CId = Collection.makeAutoSave(null);
+				g.saveAs(CId,0);
 				//	adjust database panel
-				broadcast(new Command("collection.modified",null,Collection.AUTOSAVE_ID));
+				broadcast(new Command("collection.modified",null,CId));
 			}
 			else {
 				g.save();
@@ -3189,43 +3190,47 @@ public class Application
             }
         }
 
+		int CId = Collection.makeClipboard(null);
 		if (cmd.code.equals("menu.edit.cut")) {
 			//	Cut = move to clipboard
-			task = new MoveToClipboardTask(src, Collection.CLIPBOARD_ID, Collection.TRASH_ID,  true);
+			//	except system folders
+			task = new MoveToClipboardTask(src, CId, Collection.TRASH_ID,  true);
 		}
 		else if (cmd.code.equals("menu.edit.copy")) {
 			//	Copy = copy to clipboard
-			task = new CopyToClipboardTask(src, Collection.CLIPBOARD_ID, Collection.TRASH_ID);
+			task = new CopyToClipboardTask(src, CId, Collection.TRASH_ID);
 		}
         else if (cmd.code.equals("menu.edit.paste.copy")) {
         	//	Paste = copy from clipboard
             if (target!=null)
                 task = new CopyTask(src, target.Id, true);
             else {
-                GameSource clip = GameSource.collectionContents(Collection.CLIPBOARD_ID);
+                GameSource clip = GameSource.collectionContents(CId);
 			    task = new CopyTask(clip, src.firstId(),true);
             }
 		}
 		else if (cmd.code.equals("menu.edit.paste.same")) {
 			//	Paste Same = move from clipboard
             if (target!=null)
-                task = new MoveTask(src, target.Id, false,true);
+                task = new MoveTask(src, target.Id, false,true,false);
             else {
-                GameSource clip = GameSource.collectionContents(Collection.CLIPBOARD_ID);
-                task = new MoveTask(clip, src.firstId(),false,true);
+                GameSource clip = GameSource.collectionContents(CId);
+                task = new MoveTask(clip, src.firstId(),false,true,false);
             }
 		}
 		else if (cmd.code.equals("menu.edit.clear")) {
 			//	Clear = move to trash
-			task = new MoveTask(src, Collection.TRASH_ID,true,false);
+			//	except system folders
+			task = new MoveTask(src, Collection.TRASH_ID,true,false,true);
 		}
 		else if (cmd.code.equals("menu.edit.restore")) {
 			//	Restore = move from trash
 			task = new RestoreTask(src);
 		}
 		else if (cmd.code.equals("menu.edit.erase")) {
-			//	Restore = move from trash
-			task = new EraseTask(src);
+			//	There's no need for immediate erase. Use empty.trash instead;
+			//task = new EraseTask(src);
+			throw new IllegalStateException("not supported anymore");
 		}
 		else if (cmd.code.equals("menu.edit.empty.trash")) {
 			//	Empty Trash = erase trash
@@ -3245,10 +3250,10 @@ public class Application
 				setOId = target.isInTrash() || target.isInClipboard();
 				calcIdx = !target.isInTrash() && !target.isInClipboard();
 			}
-			task = new MoveTask(src, targetId, setOId,calcIdx);
+			task = new MoveTask(src, targetId, setOId,calcIdx,false);
 		}
 		else if (cmd.code.equalsIgnoreCase("dnd.move.top.level")) {
-			task = new MoveTask(src, 0, false,true);
+			task = new MoveTask(src, 0, false,true,false);
 		}
 
 		if (!(task instanceof MoveTask) && (task.size() > 500))

@@ -192,32 +192,55 @@ public class Collection
 		//	never reached
 	}
 
-	public static int makeDownloads(JoConnection conn) throws SQLException {
-		String sql =
-			"INSERT IGNORE INTO Collection "+
-			" VALUES (?,null,null, ?, ?, ?, '-', {fn now()}, 0) ";
+	private static int makeSystemFolder(JoConnection conn, int id, String name, String path, boolean toTop) throws SQLException {
+		boolean ownConection=false;
+		if (conn==null) {
+			conn = JoConnection.get();
+			ownConection=true;
+		}
+		try {
+			String sql =
+					"INSERT IGNORE INTO Collection " +
+							" VALUES (?,null,null, ?, ?, ?, '-', {fn now()}, 0) ";
 
-		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
-		pstm.setInt(1,DOWNLOADS_ID);
-		pstm.setString(2,"collection.downloads");
-		pstm.setString(3,DOWNLOADS_PATH);
-		pstm.setInt(4, SYSTEM);
-		boolean ok = pstm.execute();
-		return DOWNLOADS_ID;
+			JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+			pstm.setInt(1, id);
+			pstm.setString(2, name);
+			pstm.setString(3, path);
+			pstm.setInt(4, SYSTEM);
+			pstm.execute();
+			boolean inserted = pstm.getUpdateCount() > 0;
+			if (!inserted && toTop) {
+				//	move to root
+				sql = "UPDATE Collection SET PId=NULL WHERE Id=?";
+				pstm = conn.getPreparedStatement(sql);
+				pstm.setInt(1, id);
+				pstm.execute();
+			}
+		} finally {
+			if (ownConection) JoConnection.release(conn);
+		}
+		return id;
+	}
+
+	public static int makeAutoSave(JoConnection conn) throws SQLException {
+		return makeSystemFolder(conn,AUTOSAVE_ID,"collection.autosave",AUTOSAVE_PATH,true);
+	}
+
+	public static int makeClipboard(JoConnection conn) throws SQLException {
+		return makeSystemFolder(conn,CLIPBOARD_ID,"collection.clipboard",CLIPBOARD_PATH,true);
+	}
+
+	public static int makeDownloads(JoConnection conn) throws SQLException {
+		return makeSystemFolder(conn,DOWNLOADS_ID,"collection.downloads",DOWNLOADS_PATH,true);
 	}
 
 	public static int makeInTray(JoConnection conn) throws SQLException {
-		String sql =
-				"INSERT IGNORE INTO Collection "+
-						" VALUES (?,null,null, ?, ?, ?, '-', {fn now()}, 0) ";
+		return makeSystemFolder(conn,INTRAY_ID,"collection.intray",INTRAY_PATH,true);
+	}
 
-		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
-		pstm.setInt(1,INTRAY_ID);
-		pstm.setString(2,"collection.intray");
-		pstm.setString(3,INTRAY_PATH);
-		pstm.setInt(4, SYSTEM);
-		boolean ok = pstm.execute();
-		return INTRAY_ID;
+	public static int makeTrash(JoConnection conn) throws SQLException {
+		return makeSystemFolder(conn,TRASH_ID,"collection.trash",TRASH_PATH,true);
 	}
 
 	public static boolean exists(int parentId, String name, JoConnection conn) throws SQLException
@@ -339,7 +362,7 @@ public class Collection
 
 	public static boolean isSystem(int CId)
 	{
-		return CId <= TRASH_ID;
+		return (CId > 0) && (CId <= 100);
 	}
 
 	public final boolean isTrash()

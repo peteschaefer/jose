@@ -63,6 +63,10 @@ java.util.EmptyStackException
     - user moves have no value (and it shows)
 
 
+[x] DON'T delete system folders (auto-save, clipboard, ...)
+    [x] re-create on demand (like for Download)
+    [x] move to top when used
+
 [ ] Annotation: layout in small panels
     [x] ScrollPane without bars; use mouse wheel scrolling
     [?] remember location when hidden
