@@ -25,6 +25,7 @@ import de.jose.util.TextIcon;
 import de.jose.view.style.JoFontConstants;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListDataListener;
 import javax.swing.text.Style;
@@ -122,7 +123,7 @@ public class SymbolBar
     protected ComboNag comboNag;
     protected JButton comboButton;
     protected JPanel comboPane;
-    //protected BoxLayout comboLayout;
+    protected LayoutManager2 comboLayout;
     protected JComboBox<String> comboColor,comboAdjective,comboSubst,comboSelector;
     protected JLabel comboVerb;
 
@@ -241,7 +242,13 @@ public class SymbolBar
     {
         //comboButton.setVisible(i>=0);
         comboPane.setVisible(i>=0);
-        comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
+        //comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
+        if (preferredAxis==BoxLayout.X_AXIS)
+            comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
+        else
+            comboLayout = new BoxLayout(comboPane,BoxLayout.Y_AXIS);
+
+        comboPane.setLayout(comboLayout);
 
         if (i >= 0) {
             //relayoutButton(comboButton, i++);
@@ -308,9 +315,11 @@ public class SymbolBar
 
 //        comboPane.add(Box.createHorizontalStrut(10));
         comboPane.add(comboButton);
+
         //comboPane.add(comboVerb = new JLabel("="));
         comboPane.add(comboColor = new JComboBox<>());
         comboPane.add(comboVerb = new JLabel());
+        comboVerb.setBorder(new EmptyBorder(0,4,2,4));
         comboPane.add(comboAdjective = new JComboBox<>());
         comboPane.add(comboSubst = new JComboBox<>());
         comboPane.add(comboSelector = new JComboBox<>(ComboNag.ALL_SELECTORS));
@@ -320,7 +329,7 @@ public class SymbolBar
         comboSubst.addActionListener(this);
         comboSelector.addActionListener(this);
 
-        comboPane.setBorder(new LineBorder(Color.lightGray,2,true));
+        //comboPane.setBorder(new LineBorder(Color.lightGray,2,true));
 
        // this.add(comboButton);
         this.add(comboPane);    //  grid constraints are added later
@@ -333,6 +342,14 @@ public class SymbolBar
         combo.setModel(new DefaultComboBoxModel(model));
     }
 
+    private void setSelectedIndex(JComboBox combo, int index)
+    {
+        if (index < combo.getModel().getSize())
+            combo.setSelectedIndex(index);
+        else
+            combo.setSelectedItem(null);
+    }
+
     private void setComboNag(ComboNag comboNag)
     {
         this.comboNag = comboNag;
@@ -341,9 +358,9 @@ public class SymbolBar
         setModel(comboAdjective, comboNag.adjective);
         setModel(comboSubst, comboNag.subst);
 
-        this.comboColor.setSelectedIndex(comboNag.selcol);
-        this.comboAdjective.setSelectedIndex(comboNag.seladj);
-        this.comboSubst.setSelectedIndex(comboNag.selsubst);
+        setSelectedIndex(this.comboColor,comboNag.selcol);
+        setSelectedIndex(this.comboAdjective,comboNag.seladj);
+        setSelectedIndex(this.comboSubst,comboNag.selsubst);
         this.comboSelector.setSelectedItem(comboNag.selector);
 
         setSymbol(comboButton,comboNag.code());
@@ -438,25 +455,7 @@ public class SymbolBar
     private void updateFormat(JButton button)
     {
         int nag = (Integer)button.getClientProperty("nag");
-        String text = null;
-        if (fontEncoding != null)
-            text = fontEncoding.getSymbol(nag);
-
-        if (text != null) {
-            button.setFont(symbolFont);
-            button.setText(text);
-        }
-        else {
-            text = Language.get("pgn.nag."+nag);
-            if (text.length() > 4) {
-                button.setFont(smallFont);
-                button.setText("$" + nag);
-            }
-            else {
-                button.setFont(textFont);
-                button.setText(text);
-            }
-        }
+        setSymbol(button,nag);
     }
 
     public void setupActionMap(Map map)
@@ -477,7 +476,7 @@ public class SymbolBar
                 if (docPanel != null) {
 					int nag = Integer.parseInt(cmd.code);
 					String text = PgnUtil.annotationString(nag);
-                    docPanel.replaceSelection(text);
+                    docPanel.replaceSelection(text,nag);
                 }
             }
         };
@@ -552,7 +551,7 @@ public class SymbolBar
         Dimension size = new Dimension(BUTTON_SIZE, BUTTON_SIZE);
         button.setMinimumSize(size);
         button.setPreferredSize(size);
-       // button.setMaximumSize(size);
+        button.setMaximumSize(size);
 
         //JoBigLabel label = new JoBigLabel(tip,1,40);
         //label.setFont(labelFont);
@@ -564,18 +563,6 @@ public class SymbolBar
 //        elementPane.add(label, (column==0) ? JoDialog.ELEMENT_TWO : JoDialog.ELEMENT_FOUR);
 		//boxPane.add(button);
 		//elementPane.add(label, JoDialog.ELEMENT_TWO);
-        return button;
-    }
-
-    public JButton makeActionButton(String icon, String command)
-    {
-        JButton button = new JButton();
-        Font awefont = FontUtil.fontAwesome().deriveFont(Font.PLAIN, 12);
-        //button.setFont(awefont);
-        //button.setText("\uf061");
-        button.setIcon(new TextIcon(icon,awefont,Color.black));
-        button.addActionListener(this);
-        button.setActionCommand(command);
         return button;
     }
 
