@@ -15,6 +15,7 @@ package de.jose.view;
 import de.jose.*;
 import de.jose.book.GameRef;
 import de.jose.book.lichess.LiChessBookEntry;
+import de.jose.book.lichess.LiChessDownload;
 import de.jose.book.lichess.LiChessGameRef;
 import de.jose.chess.*;
 import de.jose.chess.Position;
@@ -420,11 +421,12 @@ public class EnginePanel
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		 if (e.getActionCommand().equals("clicked")) {
+		 if (e.getActionCommand().equals("clicked"))
+		 {
 			 Object source = e.getSource();
 			 if (source instanceof GameRef) {
-				 GameRef ref = (GameRef)source;
-				 System.out.println(ref.toString(true));
+				 LiChessGameRef ref = (LiChessGameRef) source;
+				 LiChessDownload.download(ref.id);
 			 }
 		 }
 		 else {
@@ -1103,12 +1105,9 @@ public class EnginePanel
 			if (j>0) doc.insertString(doc.getLength(), ", ", infoStyle);
 			int pos = doc.getLength();
 			GameRef ref = refs.get(j);
-			String string = ref.toString(true);
-			doc.insertString(pos, string, linkStyle);
-			//	attach GameRef as attribute. Comes back through actionPerformed()
-			SimpleAttributeSet attributes = new SimpleAttributeSet();
-			attributes.addAttribute("clickable",ref);
-			doc.setCharacterAttributes(pos,string.length(), attributes, false);
+			String str = ref.toString(true);
+			doc.insertString(pos, str, linkStyle);
+			JoStyledLabel.setClickable(doc,pos,str.length(),ref);
 		}
 		doc.insertString(doc.getLength(),"}",infoStyle);
 	}

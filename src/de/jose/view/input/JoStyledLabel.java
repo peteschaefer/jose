@@ -340,6 +340,14 @@ public class JoStyledLabel
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
+    public static void setClickable(StyledDocument doc, int pos, int len, Object data)
+    {
+        //	attach GameRef as attribute. Comes back through actionPerformed()
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        attributes.addAttribute("clickable",data);
+        doc.setCharacterAttributes(pos,len, attributes, false);
+    }
+
     private AttributeSet getMousePosAttrs(MouseEvent e) {
         int docpos = viewToModel(e.getPoint());
         return doc.getCharacterElement(docpos).getAttributes();

@@ -70,6 +70,8 @@ public class Collection
 	public static final int		AUTOSAVE_ID		= 2;
 	/** Id of the Trash collection  */
     public static final int     TRASH_ID        = 3;
+	/** Id of the Download collection */
+	public static final int		DOWNLOADS_ID	= 4;
 
 	public static final String TRASH_PATH		= ":/"+TRASH_ID+"/";
 	public static final String CLIPBOARD_PATH	= ":/"+CLIPBOARD_ID+"/";
@@ -185,6 +187,16 @@ public class Collection
 				return newName;
 		}
 		//	never reached
+	}
+
+	public static boolean makeDownloads()
+	{
+		/*	todo
+			INSERT INTO Collection ()
+			VALUES (4,null,null, 'collection.downloads', ':/4/', 16, '-', {fn now()}, 0)
+			IF NOT EXISTS
+		 */
+		return false;
 	}
 	
 	public static boolean exists(int parentId, String name, JoConnection conn) throws SQLException
