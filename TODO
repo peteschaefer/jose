@@ -21,25 +21,6 @@
 
 ==== Project
 
-Release 1.5.2 checklist
-
-                        Win     Lin     Mac Intel   Mac Arm
-
-Launcher                [x]     [x]     [x]         [ ]
-JRE 21                  [x]     [x]     [x]         [ ]
-Java 3D                 [x] 1.5 [x] 1.5 [?] 1.6     [ ] 1.6
-clean prefs             [x]     [x]     [x]         [ ]
-Hi-dpi                  [x]     [x]     [x]         [ ]
-Mysql 5.0.67            [x]     [x]     [x]         [ ]
-myisamchk               [x]     [x]     [x]         [ ]
-Repair Tool             [x]     [x]     [x]         [ ]
-Arrows                  [x]     [x]     [x]         [ ]
-Eval Bar                [x]     [x]     [x]         [ ]
-Leela                   [x]     [x]     [x]         [ ]
-Stockfish               [x]     [x]     [x]         [ ]
-Lichess Explorer        [x]     [x]     [x]         [ ]
-Easylink                [x]     [-]     [-]         [-]
-
 [x] Java 3D
     1.5 last version from Oracle. Works well for Windows and Linux. Not for Mac
     1.6 from jogamp. better choice for Mac (but not really tested :(
@@ -106,9 +87,9 @@ Alternative JREs:
     [x] prints as pdf (font is recognized, font metrics were out-of-date)
     [x] print as html (copy glyphs to disk)
     [x] extra symbols (ucsf, nic, ..)
-    [ ] type $206
-    [ ] help page (html)
-    [ ] bump version 1.5.3
+    [x] type $206
+    [x] help page (html)
+    [x] bump version 1.5.3
     [ ] ant package jose-153-patch
 
 * font awesome icons

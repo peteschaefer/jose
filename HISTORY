@@ -146,9 +146,12 @@ the first production release.
     * Java3D 1.5
 * MySQL 5.0.67 running as a separate process (as was already the case on MacOS)
 
-=== 1.5.2 (2025-03)
+=== 1.5.2 (2025-03-14)
 * Database Repair tool fixes most (hopefully all) cases of crashed databases
 * Lichess Opening Explorer displays top reference games. Click to download.
 * minor GUI improvements (w-d-l scores, eval bar, ...)
+
+=== 1.5.3 (2025-04)
+* improved handling and printing of annotation symbols (NAGs)
 
 ==========================

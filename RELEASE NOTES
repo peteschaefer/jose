@@ -15,13 +15,13 @@ Files for Download
 * jose-152-mac-intel.zip            zip archive for macOS with Intel processors
 * jose-152-mac-arm.zip              zip archive for macOS wiht Apple Silicon (ARM 64) processors
 
+* jose-153-patch.zip                patch to be applied on top of 1.5.2
+
 * database-10k.jose                Database containing 10.000 grandmaster games
 * database-500k.jose               Database containing more than 500.000 games
 * database-1700k.jose              Database containing more than 1.7 million games
 
-in the future, I might distribute patch files that can simply be unzipped on top of
-an existing installation. Patches are (usually) platform-agnostic, and cumulative
-(i.e. only need to apply the latest patch).
+
 
 ============
 Requirements
@@ -30,7 +30,16 @@ Requirements
 * Operating Systems: 
    - Windows 98 or later
    - Linux with Intel processors
-   - macOS (since?)
+   - macOS with Intel or Apple Silicon (since?)
+
+==================
+Patch Installation
+==================
+
+* Patches are light-weight zip packages that can be installed on-top-of a full installation
+* just unzip and replace the old files
+* patches are platform-agnostic and cumulative (i.e. you need only the latest patch)
+
 
 ====================
 Windows Installation

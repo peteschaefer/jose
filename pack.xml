@@ -3,7 +3,7 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="152"/>
+	<property name="version" value="153"/>
 
 	<!-- target directory -->
 
@@ -263,6 +263,38 @@
 		</antcall>
 
 		<delete dir="${appldir}"/>
+	</target>
+
+	<target name="patch" depends="init">
+		<description>patch to be applied on-top-of an old installation</description>
+
+		<zip destfile="${target-dir}/jose-${version}-patch.zip">
+
+			<zipfileset dir=".">
+				<include name="HISTORY"/>
+				<include name="LICENSE"/>
+				<include name="RELEASE NOTES"/>
+				<include name="jose.jar"/>
+			</zipfileset>
+			<zipfileset dir="fonts" prefix="fonts">
+				<include name="FIG-??-2.TTF"/>
+			</zipfileset>
+			<zipfileset dir="xsl" prefix="xsl">
+				<include name="dhtml.xsl"/>
+				<include name="html.xsl"/>
+				<include name="html_body.xsl"/>
+				<include name="pdf.xsl"/>
+			</zipfileset>
+			<zipfileset dir="config" prefix="config">
+				<include name="fonts.xml"/>
+				<include name="lang.properties*"/>
+			</zipfileset>
+			<zipfileset dir="doc" prefix="doc">
+				<include name="annotations.pgn"/>
+				<include name="annotations.pdf"/>
+			</zipfileset>
+		</zip>
+
 	</target>
 
 	<!-- Windows plus JRE -->
