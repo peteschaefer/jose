@@ -53,7 +53,7 @@ public class JoPanel
 	
 	/**	maps panel names to implementing classes
 	 */
-	protected static final HashMap CLASS_MAP = new HashMap();
+	protected static final HashMap<String,Class<? extends JoPanel>> CLASS_MAP = new HashMap<>();
 	
 	static {
 		CLASS_MAP.put("window.board", 		    de.jose.view.MainBoardPanel.class);
@@ -78,11 +78,11 @@ public class JoPanel
 	public static String[] panelNames()
 	{
 		String[] result = new String[CLASS_MAP.size()];
-		return (String[])CLASS_MAP.keySet().toArray(result);
+		return CLASS_MAP.keySet().toArray(result);
 	}
 
-	public static Class classFor(String name) {
-		return (Class)CLASS_MAP.get(name);
+	public static Class<? extends JoPanel> classFor(String name) {
+		return CLASS_MAP.get(name);
 	}
 
 
@@ -94,7 +94,7 @@ public class JoPanel
 	 * static hash map containing all open panels
 	 * (and unused LayoutProfiles)
 	 */
-	public static final HashMap thePanels = new HashMap();
+	public static final HashMap<String,JoPanel> thePanels = new HashMap<>();
 	
 	/**	info for hidden panels
 	 */
@@ -196,7 +196,7 @@ public class JoPanel
 
         try {
 //            String className = (String)CLASS_MAP.get(name);
-            Class clazz = classFor(profile.name);
+            Class<? extends JoPanel> clazz = classFor(profile.name);
             return create(clazz, profile,withContextMenu,false);
         } catch (Exception ex) {
             AbstractApplication.error(ex);
@@ -204,7 +204,7 @@ public class JoPanel
         }
     }
 
-    public static JoPanel create(Class clazz, LayoutProfile profile,
+    public static JoPanel create(Class<? extends JoPanel> clazz, LayoutProfile profile,
                                  boolean withContextMenu, boolean withBorder)
     {
 		try {
@@ -226,14 +226,14 @@ public class JoPanel
 	}
 
 	
-	protected static JoPanel instantiate(Class clazz, LayoutProfile profile, boolean withContextMenu, boolean withBorder)
+	protected static JoPanel instantiate(Class<? extends JoPanel> clazz, LayoutProfile profile, boolean withContextMenu, boolean withBorder)
 		throws NoSuchMethodException, InstantiationException, 
 			   IllegalAccessException, InvocationTargetException
 	{
-		Class[] paramClasses = { LayoutProfile.class, boolean.class, boolean.class, };
+		Class<?>[] paramClasses = { LayoutProfile.class, boolean.class, boolean.class, };
 		Object[] paramObjects = { profile, withContextMenu, withBorder };
 		
-		Constructor ctor = clazz.getConstructor(paramClasses);
+		Constructor<?> ctor = clazz.getConstructor(paramClasses);
 		return (JoPanel)ctor.newInstance(paramObjects);
 	}
 
@@ -278,26 +278,26 @@ public class JoPanel
 
 	public static JoPanel get(String name)
 	{
-		return (JoPanel)thePanels.get(name);
+		return thePanels.get(name);
 	}
 	
-	public static Collection getAllPanels()
+	public static Collection<JoPanel> getAllPanels()
 	{
 		return thePanels.values();
 	}
 	
-	public static final boolean exists(String name)
+	public static boolean exists(String name)
 	{
 		return thePanels.containsKey(name);
 	}
 	
-	public static final boolean isVisible(String name)
+	public static boolean isVisible(String name)
 	{
 		JoPanel p = get(name);
 		return p!=null && p.isVisible();
 	}
 	
-	public static final boolean isShowing(String name)
+	public static boolean isShowing(String name)
 	{
 		JoPanel p = get(name);
 		return p!=null && p.isShowing();
@@ -307,7 +307,7 @@ public class JoPanel
 		return defaultSize;
 	}
 	
-	public static final Insets getFrameInsets(Component comp, Frame frm) {
+	public static Insets getFrameInsets(Component comp, Frame frm) {
 		Rectangle r = new Rectangle(0,0,comp.getWidth(),comp.getHeight());
 		r = ViewUtil.localRect(r, comp, frm);
 		
@@ -356,7 +356,7 @@ public class JoPanel
         }
         return null;
     }
-
+/*
 	public static JoPanel getPanel(Component comp)
 	{
 		for ( ; comp != null; comp = comp.getParent())
@@ -364,7 +364,7 @@ public class JoPanel
 				return (JoPanel)comp;
 		return null;
 	}
-
+*/
 	/**	for testing	 */
 /*	protected void paintComponent(Graphics g)
 	{
@@ -403,14 +403,14 @@ public class JoPanel
 
 	public void startContinuousResize()
 	{
-		/** JSplitPane starts resizing
+		/* JSplitPane starts resizing
 		 *  derived classes me intercept
 		 */
 	}
 
 	public void finishContinuousResize()
 	{
-		/** JSplitPane finished resizing
+		/* JSplitPane finished resizing
 		 *  derived classes me intercept
 		 */
 	}
@@ -428,8 +428,9 @@ public class JoPanel
 	}
 
 	public boolean showContextMenu()		{ return showContextMenu; }
-	
-	public void adjustContextMenu(Collection list, MouseEvent event)
+
+	@Override
+	public void adjustContextMenu(Collection<Object> list, MouseEvent event)
 	{
 		list.add("panel.hide");
 
@@ -488,7 +489,7 @@ public class JoPanel
 
 	public int numCommandChildren()
 	{
-		/**	maybe we could broadcast commands to child elements
+		/*	maybe we could broadcast commands to child elements
 		 * 	but this is not needed, yet
 		 */
 		return 0;
@@ -514,9 +515,9 @@ public class JoPanel
 		}
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
-		/**	DEFAULT command handlers	*/
+		/*	DEFAULT command handlers	*/
 
 		CommandAction action = new CommandAction() {
 			public void Do(Command cmd) {
@@ -595,7 +596,7 @@ public class JoPanel
 
 	public void updateLanguage()
 	{
-		/** overwrite   */
+		/* overwrite   */
 	}
 
 

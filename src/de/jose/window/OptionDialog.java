@@ -703,7 +703,7 @@ public class OptionDialog
 		tab5.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
 

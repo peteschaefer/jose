@@ -23,7 +23,6 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
 import de.jose.pgn.ECOClassificator;
 import de.jose.book.BookEntry;
-import de.jose.image.ImgUtil;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
 import de.jose.plugin.*;
@@ -1646,7 +1645,7 @@ public class EnginePanel
 		Language.update(infoPanel);
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
 

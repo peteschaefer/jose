@@ -520,7 +520,7 @@ public class ClockPanel
 		list.add(3);
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
 

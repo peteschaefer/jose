@@ -686,7 +686,7 @@ public class JoFrame
 		return (CommandListener)getMainComponent();
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		CommandAction action;
 		action = new CommandAction() {

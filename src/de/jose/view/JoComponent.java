@@ -84,7 +84,7 @@ public interface JoComponent
 	/**
 	 * insert items into context menu
 	 */
-	public void adjustContextMenu(Collection commands, MouseEvent event);
+	public void adjustContextMenu(Collection<Object> commands, MouseEvent event);
 	
 	/**
 	 * relative weight (horizontal

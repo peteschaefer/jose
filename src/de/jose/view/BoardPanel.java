@@ -38,7 +38,6 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 import static de.jose.plugin.EngineState.ANALYZING;
-import static de.jose.plugin.EngineState.THINKING;
 
 /**
  * Panel that displays the chess board
@@ -252,7 +251,7 @@ public class BoardPanel
 
 	public void startContinuousResize()
 	{
-		/** while continous resizing:
+		/* while continous resizing:
 		 *  don't compute piece images, it's just too expensive
 		 *  scale down the current image (looks good enough)
 		 */
@@ -261,7 +260,7 @@ public class BoardPanel
 
 	public void finishContinuousResize()
 	{
-		/**
+		/*
 		 * return to normal painting
 		 */
 		if (is2d()) get2dView().finishContinuousResize();
@@ -276,8 +275,9 @@ public class BoardPanel
 	//-------------------------------------------------------------------------------
 	//	Interface JoComponent
 	//-------------------------------------------------------------------------------
-	
-	public void adjustContextMenu(Collection list, MouseEvent event)
+
+	@Override
+	public void adjustContextMenu(Collection<Object> list, MouseEvent event)
 	{
 		super.adjustContextMenu(list,event);
 		list.add(ContextMenu.SEPARATOR);
@@ -315,7 +315,7 @@ public class BoardPanel
 		//  Clipboard
 		list.add(ContextMenu.SEPARATOR);
 
-		ArrayList submenu = new ArrayList();
+		ArrayList<Object> submenu = new ArrayList<>();
 		submenu.add("menu.edit.copy");     //  copy FEN/image
 		if (!is3d())
 			submenu.add("menu.edit.copy.imgt");
@@ -341,8 +341,9 @@ public class BoardPanel
 	//-------------------------------------------------------------------------------
 	//	Interface CommandListener
 	//-------------------------------------------------------------------------------
-	
-	public void setupActionMap(Map map)
+
+	@Override
+	public void setupActionMap(Map<String, CommandAction>/*<String,CommandAction>*/ map)
 	{
 		super.setupActionMap(map);
 

@@ -17,7 +17,7 @@ import java.util.Map;
 public interface CommandListener
 {
 
-	public void setupActionMap(Map map);
+	public void setupActionMap(Map<String, CommandAction> map);
 
 	public CommandListener getCommandParent();
 

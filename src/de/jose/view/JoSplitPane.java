@@ -13,6 +13,7 @@
 package de.jose.view;
 
 import de.jose.AbstractApplication;
+import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.Util;
 import de.jose.window.JoFrame;
@@ -481,7 +482,7 @@ public class JoSplitPane
 		}
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		/*	we do not handle event on ourselves	*/
 		return;

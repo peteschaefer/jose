@@ -787,7 +787,7 @@ public class Application
 		broadcast(new Command(code,null,null));
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		CommandAction action;
 

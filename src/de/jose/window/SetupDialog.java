@@ -47,7 +47,7 @@ public class SetupDialog
 	 * implements CommandListener
 	 */
 
-    public void setupActionMap(Map map)
+    public void setupActionMap(Map<String, CommandAction> map)
     {
         super.setupActionMap(map);    //To change body of overriden methods use Options | File Templates.
 

@@ -21,19 +21,15 @@ import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.LayoutProfile;
-import de.jose.util.TextIcon;
 import de.jose.view.style.JoFontConstants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListDataListener;
 import javax.swing.text.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -458,7 +454,7 @@ public class SymbolBar
         setSymbol(button,nag);
     }
 
-    public void setupActionMap(Map map)
+    public void setupActionMap(Map<String, CommandAction> map)
     {
         super.setupActionMap(map);
 

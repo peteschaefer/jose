@@ -92,7 +92,7 @@ public class SQLQueryPanel
 	
 	public String getDataSource()		{ return (String)dataSources.getSelectedItem(); }
 	
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
 

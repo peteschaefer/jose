@@ -172,7 +172,7 @@ public class ConsolePanel
 		}
 	}
 	
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
         super.setupActionMap(map);
 

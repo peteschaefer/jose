@@ -442,7 +442,7 @@ public class DocumentEditor
 
             StringBuffer htmlText = new StringBuffer();
             MarkupWriter.writeMarkup(theGame,pos1,pos2-pos1,StyleUtil.plainStyle(Color.black,null,12),htmlText, true);
-	        /** TODO figurines are encoded as HTML entities (&#131;) but are lost when pasting the clipboard.
+	        /* TODO figurines are encoded as HTML entities (&#131;) but are lost when pasting the clipboard.
 	         *  Why ? Entities work OK in generated HMTL files, why not on the Clipboard ?
 	         */
             String rtfText = ClipboardUtil.getRtfText(theGame,pos1,pos2-pos1);
@@ -580,7 +580,7 @@ public class DocumentEditor
 
 	@Override
     public void replaceSelection(String newText) {
-		replaceSelection(newText,-1);
+		replaceSelection(newText, getAnnotationCode(newText));
 	}
 
 	public void replaceSelection(String newText, int nag)

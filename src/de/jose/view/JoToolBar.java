@@ -101,7 +101,7 @@ public class JoToolBar
 		super.setBounds(x, y, width, height);    //To change body of overridden methods use File | Settings | File Templates.
 	}
 
-	public void setupActionMap(Map map)
+	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
 

@@ -235,7 +235,7 @@ abstract public class AbstractApplication
 		message = StringUtil.replace(message,"%error.log%",logFile.getAbsolutePath());
 
 		JoDialog dialog = new JoDialog("dialog.error",true) {
-			public void setupActionMap(Map map) {
+			public void setupActionMap(Map<String, CommandAction> map) {
 				super.setupActionMap(map);
 
 				CommandAction action = new CommandAction() {
