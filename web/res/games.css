@@ -1,0 +1,290 @@
+
+	.base {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_event {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_site {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_date {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_round {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_white {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_black {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.header_result {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_line {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_line_0 {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_line_1 {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+		text-indent: 10pt;
+	}
+	
+	
+	.body_line_2 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_line_3 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_line_4 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_figurine {
+		font-family: "Chess Berlin";
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_figurine_0 {
+		font-family: "Chess Berlin";
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_figurine_1 {
+		font-family: "Chess Berlin";
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_figurine_2 {
+		font-family: "Chess Berlin";
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_figurine_3 {
+		font-family: "Chess Berlin";
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_figurine_4 {
+		font-family: "Chess Berlin";
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #808080;
+	}
+	
+	
+	.body_symbol {
+		font-family: "FigurineSymbol S2";
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_comment {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_comment_0 {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_comment_1 {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_comment_2 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_comment_3 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_comment_4 {
+		font-family: Arial;
+		font-size: 10pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000099;
+	}
+	
+	
+	.body_inline {
+		font-family: "Chess Berlin";
+		font-size: 12pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.html_large {
+		font-family: "Chess Berlin";
+		font-size: 20pt;
+		font-weight: normal;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
+	.body_result {
+		font-family: Arial;
+		font-size: 12pt;
+		font-weight: bold;
+		font-style: normal;
+		color: #000000;
+	}
+	
+	
