@@ -14,6 +14,7 @@ package de.jose;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatGradiantoDeepOceanIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightIJTheme;
@@ -51,6 +52,7 @@ import de.jose.task.db.*;
 import de.jose.task.io.*;
 import de.jose.util.*;
 import de.jose.util.file.FileUtil;
+import de.jose.util.file.ResourceClassLoader;
 import de.jose.util.print.PrintableDocument;
 import de.jose.view.*;
 import de.jose.view.input.LookAndFeelList;
@@ -587,25 +589,29 @@ public class Application
 		else
 			try {
 				//UIManager.setLookAndFeel(className);
-				//FlatLightLaf.setup();
+				FlatLaf.registerCustomDefaultsSource(
+						"themes",
+						new ResourceClassLoader("config"));
+				//	uses a set of custom themes
+
 				FlatLightLaf.setup();
 				UIManager.setLookAndFeel(new FlatLightLaf());
 
-				UIManager.put( "ScrollBar.showButtons", true );
-				UIManager.put( "TabbedPane.showTabSeparators", true );
-				UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
-				UIManager.put( "TabbedPane.selectedBackground", Color.white );
-				UIManager.put("TabbedPane.tabColor", Color.white);
+//				UIManager.put( "ScrollBar.showButtons", true );
+//				UIManager.put( "TabbedPane.showTabSeparators", true );
+//				UIManager.put( "TabbedPane.tabSeparatorsFullHeight", true );
+//				UIManager.put( "TabbedPane.selectedBackground", Color.white );
+//				UIManager.put("TabbedPane.tabColor", Color.white);
 
-				UIManager.put("SplitPane.background", Color.decode("#ddddff"));
+//				UIManager.put("SplitPane.background", Color.decode("#dddddd"));
 //				UIManager.put("SplitPane.dividerSize",16);	see updateContinuousLayout()
 //				UIManager.put("SplitPane.border", Color.white);
-				UIManager.put("SplitPaneDivider.gripColor", Color.black);
-				UIManager.put("SplitPaneDivider.style", "grip");
-				UIManager.put("SplitPaneDivider.gripDotCount",3);
+//				UIManager.put("SplitPaneDivider.gripColor", Color.black);
+//				UIManager.put("SplitPaneDivider.style", "grip");
+//				UIManager.put("SplitPaneDivider.gripDotCount",3);
 
-				UIManager.put("TextPane.selectionForeground",Color.black);
-				UIManager.put("TextPane.selectionBackground",Color.decode("#ddddff"));
+//				UIManager.put("TextPane.selectionForeground",Color.black);
+//				UIManager.put("TextPane.selectionBackground",Color.decode("#ddddff"));
 				broadcast(new Command("update.ui", null, lookAndFeel));
 			} catch (UnsupportedLookAndFeelException usex) {
 				JoDialog.showErrorDialog("error.lnf.not.supported");

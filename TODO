@@ -41,12 +41,20 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     - embedded(!!) menu bar
     - tab titles with close button
     - file chooser
+    [x] pick up theme files  (config/themes)
     [ ] remove tab close button
+    [x] configure move highlight color
+    [ ] pick up accent color ?
     [ ] fix F4 layout
     [ ] remove l&f selection
     [ ] in-component folder button
+    [ ] jar classpath
+    [ ] from command line
     [ ] themes, dark modes: postpone
-    [ ] dark menu bar?
+    [ ] dark mode
+        [ ] buttons
+        [ ] invert style sheet color; but not for printing
+
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?

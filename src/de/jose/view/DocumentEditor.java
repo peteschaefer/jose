@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import com.formdev.flatlaf.ui.FlatTextPaneUI;
 import de.jose.Application;
 import de.jose.comm.Command;
 import de.jose.Util;
@@ -53,6 +54,7 @@ public class DocumentEditor
 {
 	/**	Color used to hilite the current move
 	 *	(do not confuse with text hilite for copy & paste)
+	 *	todo make it configurable, using flatlaf theme file
 	 */
 	protected static final Color MOVE_HILITE_COLOR = Color.yellow;
 
@@ -76,6 +78,7 @@ public class DocumentEditor
 	protected static Game emptyGame = new Game();
 	/** used to parse keyboard move input   */
 	protected Parser moveParser;
+	protected Color moveHiliteColor;
 
 	//  document position, relative to a node
 	public class NodePosition
@@ -129,9 +132,15 @@ public class DocumentEditor
 
         //setSelectionColor(UIManager.getColor("TextPane.selectionBackground"));
 
+		moveHiliteColor = UIManager.getColor( "TextPane.selectionBackground");
+		if (moveHiliteColor!=null)
+			moveHiliteColor = moveHiliteColor.brighter();
+		else
+			moveHiliteColor = MOVE_HILITE_COLOR;
+
         try {
             Highlighter.HighlightPainter painter =
-					new DefaultHighlighter.DefaultHighlightPainter(MOVE_HILITE_COLOR) {
+					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor) {
 					//new Highlighter.HighlightPainter() {
 
 						@Override
@@ -183,8 +192,7 @@ public class DocumentEditor
 
 	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view)
 	{
-		Color color = MOVE_HILITE_COLOR;
-		g.setColor(color);
+		g.setColor(moveHiliteColor);
 
         Rectangle r;
         try {
