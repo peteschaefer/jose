@@ -696,8 +696,8 @@ lnf.accent.color = Akzent-Farbe
 lnf.select.color = Auswahl-Farbe
 lnf.theme.editor = Design-Editor...
 
-accent.color.system = System Accent Colors
-accent.color.user = Override Accent Colors
+accent.color.system = System-Farben
+accent.color.user = Eigene Farben
 
 
 dialog.option.time.control          = Zeitkontrolle
