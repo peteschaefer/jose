@@ -302,9 +302,12 @@
 			<zipfileset dir="config" prefix="${appldir}/config">
 				<include name="lc0.xml"/>
 			</zipfileset>
-			<zipfileset dir="engines/lc0" prefix="${appldir}/engines/lc0">
+			<!--zipfileset dir="engines/lc0-openblas" prefix="${appldir}/engines/lc0">
 				<exclude name="more nets/**"/>
-			</zipfileset>
+			</zipfileset-->
+		</zip>
+		<zip destfile="${zip-file}" update="true">
+			<zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/>
 		</zip>
 	</target>
 
