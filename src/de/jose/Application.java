@@ -55,7 +55,6 @@ import de.jose.view.style.JoStyleContext;
 import de.jose.window.*;
 import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
-import net.roydesign.mac.MRJAdapter;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -2724,7 +2723,7 @@ public class Application
 		//  potential for optimisation...
 		pausePlugin();
 
-		Command cmd = new Command("switch.game",null, theGame, new Integer(tabIndex));
+		Command cmd = new Command("switch.game",null, theGame, tabIndex);
 		broadcast(cmd);
 	}
 
@@ -2739,11 +2738,11 @@ public class Application
 				}
 				g.saveAs(Collection.AUTOSAVE_ID,0);
 				//	adjust database panel
-				broadcast(new Command("collection.modified",null,new Integer(Collection.AUTOSAVE_ID)));
+				broadcast(new Command("collection.modified",null,Collection.AUTOSAVE_ID));
 			}
 			else {
 				g.save();
-				broadcast(new Command("game.modified",null,new Integer(g.getId())));
+				broadcast(new Command("game.modified",null,g.getId()));
 				//	adjust database panel
 			}
 	}
@@ -3093,7 +3092,6 @@ public class Application
         if (cmd.code.equals("menu.edit.paste")) {
             //  replaced by either menu.edit.paste.same or menu.edit.paste.copy
             if (!Collection.hasContents(Collection.CLIPBOARD_ID)) {
-                AWTUtil.beep(this);
                 return;
             }
             else switch (confirmDBPaste(src))
@@ -3507,10 +3505,6 @@ public class Application
 
 		theCommandDispatcher = new CommandDispatcher();
 		theCommandDispatcher.addCommandListener(this);
-
-        if (Version.mac)
-            MRJAdapter.setFramelessJMenuBar(new JoMenuBar(null));
-        //  call after Config, Language, Command Dispatcher are present
 
 		TimeControl tc = theUserProfile.getTimeControl();
 		tc.reset(theClock);

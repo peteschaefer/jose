@@ -62,8 +62,6 @@ public class BrowserWindow
         }
  		else if(Version.windows)
 			winBrowser(url);
-		else if (Version.mac)
-			de.jose.MacAdapter.openBrowser(url);
 		else
 			new BrowserWindow(url).start();
 	}

@@ -67,7 +67,7 @@ public class MoveNode
 		MoveNode clone = new MoveNode(ply, new Move(move));
 		clone.hashKey = this.hashKey;
 		clone.moveCountLen = this.moveCountLen;
-		clone.engineValue = new Score(this.engineValue);
+		clone.engineValue = (this.engineValue==null) ? null:new Score(this.engineValue);
 		return clone;
 	}
 

@@ -28,7 +28,6 @@ import de.jose.view.JoPanel;
 import de.jose.view.input.JoStyledLabel;
 import de.jose.window.JoDialog;
 
-import java.applet.Applet;
 import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -38,7 +37,6 @@ import java.util.Date;
 import java.util.Map;
 
 abstract public class AbstractApplication
-        	extends Applet
         	implements CommandListener, Constants
 {
 	//-------------------------------------------------------------------------------
@@ -64,8 +62,6 @@ abstract public class AbstractApplication
 	public static boolean		logVersion = true;
 	/**	show error dialog ?	*/
 	public static boolean		showErrors = true;
-	/**	true if this object is running as an Applet	*/
-	public boolean				isApplet = false;
 	/**	icon image (for window frames, etc.)	 */
 	public Image				theIconImage;
 	/**	show 3d frame rate on std out	*/
@@ -116,11 +112,6 @@ abstract public class AbstractApplication
 	            File file = new File(theWorkingDirectory,fileName);
 	            if (file.exists())
 	                return new URL("file",null,file.getAbsolutePath());
-	        }
-	        if (isApplet) {
-	            /*  3. look in Applet's base location    */
-	            URL base = getDocumentBase();
-	            return new URL(base,fileName);
 	        }
 	    } catch (MalformedURLException muex) {
 	        //  must not happen

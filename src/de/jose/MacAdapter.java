@@ -8,21 +8,25 @@ package de.jose;
  */
 
 import de.jose.comm.Command;
-import net.roydesign.mac.MRJAdapter;
-import net.roydesign.event.ApplicationEvent;
+//	@deprecated last version that supported MRJAdapter was jdk1.8 for Mac
+//import net.roydesign.mac.MRJAdapter;
+//import net.roydesign.event.ApplicationEvent;
+//	use java.awt.Desktop instead
+import java.awt.*;
+import java.awt.desktop.*;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.URL;
-
-import de.jose.window.JoFrame;
-        
-public class MacAdapter implements ActionListener
+public class MacAdapter implements AboutHandler, QuitHandler, PreferencesHandler, OpenFilesHandler, PrintFilesHandler
 {
 
 	public MacAdapter()
 	{
+		Desktop desktop = Desktop.getDesktop();
+		desktop.setAboutHandler(this);
+		desktop.setQuitHandler(this);
+		desktop.setPreferencesHandler(this);
+		desktop.setOpenFileHandler(this);
+		desktop.setPrintFileHandler(this);
+/*
 		MRJAdapter.addAboutListener(this);
 		MRJAdapter.addOpenApplicationListener(this);
 		MRJAdapter.addReopenApplicationListener(this);
@@ -30,55 +34,39 @@ public class MacAdapter implements ActionListener
 		MRJAdapter.addPrintDocumentListener(this);
 		MRJAdapter.addPreferencesListener(this);
 		MRJAdapter.addQuitApplicationListener(this);
+*/
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
-		ApplicationEvent ae = (ApplicationEvent)e;
-		switch (ae.getType())
-		{
-		case ApplicationEvent.ABOUT:
-			/** show about dialog */
-			Command cmd = new Command("menu.help.about");
-			Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-			break;
 
-		case ApplicationEvent.OPEN_APPLICATION:
-            /** ignored */
-            break;
-		case ApplicationEvent.OPEN_DOCUMENT:
-            String filePath = ae.getFile().getAbsolutePath();
-            cmd = new Command("menu.file.open.all",null,filePath);
-            Application.theCommandDispatcher.handle (cmd,Application.theApplication);
-            break;
-		case ApplicationEvent.REOPEN_APPLICATION:
-			/** bring to front  */
-			if (JoFrame.getActiveFrame()!=null)
-				JoFrame.getActiveFrame().toFront();
-			break;
 
-		case ApplicationEvent.PRINT_DOCUMENT:
-			/** open print dialog (doesn't make very much sense...) */
-			cmd = new Command("menu.file.print");
-			Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-			break;
-
-		case ApplicationEvent.PREFERENCES:
-			/** open options dialog */
-			cmd = new Command("menu.edit.option");
-			Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-			break;
-
-		case ApplicationEvent.QUIT_APPLICATION:
-			/** quit gracefully */
-			cmd = new Command("menu.file.quit");
-			Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-			break;
-		}
+	@Override
+	public void handleAbout(AboutEvent e) {
+		Command cmd = new Command("menu.help.about");
+		Application.theCommandDispatcher.handle(cmd,Application.theApplication);
 	}
 
-	public static void openBrowser(URL url) throws IOException
-	{
-		MRJAdapter.openURL(url.toExternalForm());
+	@Override
+	public void handlePreferences(PreferencesEvent e) {
+		Command cmd = new Command("menu.edit.option");
+		Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+	}
+
+	@Override
+	public void handleQuitRequestWith(QuitEvent e, QuitResponse response) {
+		Command cmd = new Command("menu.file.quit");
+		Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+	}
+
+	@Override
+	public void openFiles(OpenFilesEvent e) {
+		String filePath = e.getFiles().get(0).getPath();
+		Command cmd = new Command("menu.file.open.all",null,filePath);
+		Application.theCommandDispatcher.handle (cmd,Application.theApplication);
+	}
+
+	@Override
+	public void printFiles(PrintFilesEvent e) {
+		Command cmd = new Command("menu.file.print");
+		Application.theCommandDispatcher.handle(cmd,Application.theApplication);
 	}
 }

@@ -16,7 +16,6 @@ import de.jose.Version;
 import de.jose.Util;
 
 import java.awt.*;
-import java.awt.peer.ComponentPeer;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -249,13 +248,14 @@ public class WinUtils
 			} catch (UnsatisfiedLinkError e) { }
 		}
 	}
-
+	// @deprecated
 	private static long getPeerHandle(Component comp)
 	{
 		try {
-			ComponentPeer peer = comp.getPeer();
-			Object pdata = ReflectionUtil.getValue(peer,"pData");
-			return Util.tolong(pdata);
+			//ComponentPeer peer = comp.getPeer();
+			//Object pdata = ReflectionUtil.getValue(peer,"pData");
+			//return Util.tolong(pdata);
+			return 0;
 		} catch (Exception e)
 		{
 			return 0;
