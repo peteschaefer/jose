@@ -14,9 +14,7 @@ package de.jose.plugin;
 
 import de.jose.Application;
 import de.jose.Util;
-import de.jose.Version;
 import de.jose.chess.*;
-import de.jose.util.ProcessUtil;
 import de.jose.util.StringUtil;
 import org.w3c.dom.Element;
 
