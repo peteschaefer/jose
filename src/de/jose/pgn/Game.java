@@ -931,7 +931,7 @@ public class Game
 		 * identify four sections
 		 */
 		NodeSection A,B, C=null,D=null;
-		assert(a instanceof MoveNode);
+		assert(a.type==MOVE_NODE && a instanceof MoveNode);
 
 		A = new NodeSection(a,V.previous());
 		B = new NodeSection(V.first(),V.last());
@@ -944,7 +944,7 @@ public class Game
 			if (c!=null) {
 				assert(c.ply==d.ply);
 				C = new NodeSection(c, V.last());
-				B.last = c.previous();
+				B.setLast(c.previous());
 			}
 		}
 

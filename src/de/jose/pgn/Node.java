@@ -195,35 +195,37 @@ abstract public class Node
 
 	public void swap(Node that)
 	{
-		if(this.nextNode==that) {
-			Node a = this.previousNode;
-			Node b = that.nextNode;
-
-			this.previousNode = that;
-			this.nextNode = b;
-			that.previousNode = a;
-			that.nextNode = this;
-
-			a.nextNode = that;
-			b.previousNode = this;
+		if (this.next()==that) {
+			that.remove();
+			that.insertBefore(this);
 		}
-		else if (that.nextNode==this) {
-			that.swap(this);
+		else if (that.next()==this) {
+			that.remove();
+			that.insertAfter(this);
 		}
 		else {
-			Node aux = this.previousNode;
-			this.previousNode = that.previousNode;
-			that.previousNode = aux;
+			Node a = this.previous();
+			Node b = this.next();
+			Node c = that.previous();
+			Node d = that.next();
 
-			aux = this.nextNode;
-			this.nextNode = that.nextNode;
-			that.nextNode = aux;
+			that.insertBetween(a,b);
+			this.insertBetween(c,d);
+		}
+	}
 
-			this.previousNode.nextNode = that;
-			this.nextNode.previousNode = that;
+	private void insertBetween(Node a, Node b)
+	{
+		assert(a==null || b==null || a.parent()==b.parent());
+		assert(a==null || b==null || a.next()==b && a==b.previous());
 
-			that.nextNode.previousNode = this;
-			that.previousNode.nextNode = this;
+		if (a!=null)
+			this.insertAfter(a);
+		else if (b!=null)
+			this.insertBefore(b);
+		else {
+			setPrevious(null);
+			setNext(null);
 		}
 	}
 
