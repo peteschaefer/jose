@@ -209,6 +209,9 @@ abstract public class Node
 			Node c = that.previous();
 			Node d = that.next();
 
+			this.remove();
+			that.remove();
+
 			that.insertBetween(a,b);
 			this.insertBetween(c,d);
 		}

@@ -67,6 +67,9 @@ public class NodeSection
             Node c = that.previous();
             Node d = that.next();
 
+            this.remove();
+            that.remove();
+
             that.insertBetween(a,b);
             this.insertBetween(c,d);
         }
