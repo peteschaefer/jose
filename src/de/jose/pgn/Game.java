@@ -739,17 +739,19 @@ public class Game
 			//	note that there MUST be nextMove() - otherwise we wouldn't start a variation
 			/**	insert variation at end of current line	*/
 			insertNode(variation);	//	insert into document
-			currentMove = nullNode;
-			currentMove.play(position);
 
 			updateLabels(variation);
 			updateMoveCount(variation);
-			setDirty();
 		}
 		else {
 			//	just append null move
 			insertIntoCurrentLine(nullNode,current);
+			insertNode(nullNode);	//	insert into document
 		}
+
+		currentMove = nullNode;
+		currentMove.play(position);
+		setDirty();
 		return nullNode;
 	}
 

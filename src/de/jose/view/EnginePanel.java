@@ -266,7 +266,6 @@ public class EnginePanel
 		};
 		newButton("menu.game.hint",bHint);
 		bThreat			= newButton("menu.game.threat");
-		bThreat.addActionListener(Application.theApplication);
 
 		setIcon(bGo, iGoBlue);
 		setIcon(bPause,iPause);

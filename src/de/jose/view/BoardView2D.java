@@ -856,9 +856,10 @@ public class BoardView2D
 
 	protected void finishMove(Move mv, long millis)
 	{
-		if (!sprite1.isPickedUp())
+		if (!sprite1.isPickedUp() && mv.moving!=null) {
 			sprite1.pickUp(mv.from, mv.moving.piece());
-		//	maybe picked up by mouseStart(), maybe here
+			//	maybe picked up by mouseStart(), maybe here
+		}
 
 		int piece = sprite1.pc;
 		if (mv.isPromotion())
@@ -875,7 +876,8 @@ public class BoardView2D
 			sprite2.pickUp(mv.to, BLACK_ROOK); break;
 		}
 
-		sprite1.dropTo(mv, piece, millis,FPS, !mv.isCastling());
+		if (piece!=0)
+			sprite1.dropTo(mv, piece, millis,FPS, !mv.isCastling());
 
 		switch (mv.castlingMask()) {    //  FRC
 		case WHITE_KINGS_CASTLING:

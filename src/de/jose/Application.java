@@ -985,10 +985,10 @@ public class Application
 				if (mvnd==null) return;
 				if (theGame.getPosition().isGameFinished(false)) return;
 
-				MoveNode nullnd = theGame.insertNullMove(mvnd);
-				//	goto to move
-				cmd = new Command("move.goto", null, nullnd);
-				theCommandDispatcher.forward(cmd, Application.this);
+				theGame.insertNullMove(mvnd);
+				cmd = new Command("move.notify",null,Move.NULLMOVE);
+				broadcast(cmd);
+
 				//	turn on analysis
 				cmd = new Command("menu.game.analysis");
 				theCommandDispatcher.forward(cmd,enginePanel());
