@@ -6,6 +6,17 @@
 [ ] ...then there is awt (wysiwig) printing. But that has too little layout control, anyway.
     might become deprecated?
 
+[x] bug:
+    8/5Q1p/6p1/2n1N1Pk/5P1P/P6K/2q5/8 w - - 1 56
+    -> lift Qf7 and Ph7
+    -> interpreted as take-take sequence
+    -> don't do that. Qxh7 is a likely (and legal) move
+
+[ ] uci figurines:
+     [ ] use english
+     [ ] or: support multi letter (like russian)
+[ ] Cut from text
+
 ? Charter buggy
 
 [ ] BUG? "go infinite" with only one legal move

@@ -241,7 +241,10 @@
 		<SYM nag="16"> \u7D </SYM><!-- white has the upper hand -->
 		<SYM nag="17"> \u7E </SYM><!-- black has the upper hand -->
 		<SYM nag="13"> \uC4 </SYM><!-- unclear (infinity) -->
-		<SYM nag="42-47"> \uC5 </SYM><!-- with compensation for the material -->
+
+		<!--SYM nag="43,45,47"> \u?? </SYM with compensation for the material -->
+		<SYM nag="42,44,46"> \uC5 </SYM><!-- without compensation (infinity over equal) -->
+
 		<SYM nag="32-35"> \uC6 </SYM><!-- development advantage -->
 		<SYM nag="24-29"> \uC7 </SYM><!-- greater board room -->
 		<SYM nag="40,41"> \uC8 </SYM><!-- with attack -->
@@ -345,8 +348,10 @@
 		<SYM nag="48-53"> \u201D </SYM><!-- center -->
 		<SYM nag="161"> \u2014 </SYM><!-- see -->
 		<SYM nag="8"> \u2122 </SYM><!-- only move -->
-		<!-- todo fix colors for 40-47 !! -->
-		<SYM nag="44-47"> \uA9 </SYM><!-- with compensation for the material -->
+
+		<SYM nag="43,45,47"> \uA9 </SYM><!-- with compensation for the material -->
+		<SYM nag="42,44,46"> \uBO </SYM><!-- without compensation (infinity over equal) -->
+
 		<SYM nag="158"> \uAA </SYM><!-- with -->
 		<SYM nag="60-65"> \uAB </SYM><!-- queen's side -->
 		<SYM nag="126,127"> \uAC </SYM><!-- ending -->
@@ -363,14 +368,13 @@
 		<SYM nag="191"> \uDE </SYM><!-- double pawns -->
 		<SYM nag="193"> \uF7 </SYM><!-- united pawns -->
 		<SYM nag="156"> \uFE </SYM><!-- passed pawn -->
-		<SYM nag="42,43"> \uBO </SYM><!-- without compensation (infinity over equal) -->
 		<!-- \u02c6 caret -->
 		<!-- \u2022 circle -->
 		<!-- \u2013 dash -->
 		<!-- \uBC 1/4 -->
 		<!-- \uBD 1/2 -->
 		<!-- \uBE 3/4 -->
-		<!-- \u81 downward triangle todo which Unicode point? should be "against" nag 141 -->
+		<SYM nag="141"> \u81 </SYM> <!--downward triangle todo which Unicode point? should be "against" nag 141 -->
 		<!-- \u8D small X -->
 		<!-- \u9E diagram symbol-->
 	</FONT_ENCODING>

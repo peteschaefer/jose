@@ -209,7 +209,6 @@ public abstract class EBoardConnector
 
         if (Application.theApplication.theMode==USER_INPUT || Application.theApplication.theMode==ANALYSIS)
         {
-            //  todo
             //  guess take-take combination with diff_cnt = 2 or 3
             //  two origin squares empty, one occupied square
             Move[] mv2 = guessDoubleTake(st,appXFen,pos);
@@ -311,7 +310,9 @@ public abstract class EBoardConnector
         //  two origin squares empty, one occupied square
         if (st.diff_cnt < 2 || st.diff_cnt > 3) return null;
 
+        Move[] result = null;
         MoveIterator moves = new MoveIterator(pos);
+outerloop:
         while(moves.next())
         {
             Move mv = moves.getMove();
@@ -337,13 +338,29 @@ public abstract class EBoardConnector
                         case 3:  if (st.changed(mv2.to,p2)) break; else continue;
                         default: continue;
                     }
-                    return new Move[] { mv,mv2 };
+
+                    result = new Move[] { mv,mv2 };
+                    break outerloop;
                 }
             } finally {
                 pos.undoMove();
             }
         }
-        return null;
+        //  however, if there is a plausbile single move, prefer that !!
+        if (result!=null && hasPseudoLegalMove(pos,result[0].from,result[1].from))
+            result = null;
+        return result;
+    }
+
+    private boolean hasPseudoLegalMove(Position pos, int a, int b)
+    {
+        MoveIterator moves = new MoveIterator(pos);
+        while(moves.next()) {
+            Move mv = moves.getMove();
+            if(mv.from==a && mv.to==b || mv.from==b && mv.to==a)
+                return true;
+        }
+        return false;
     }
 
     private boolean guessUndone(BoardState st, Move m)

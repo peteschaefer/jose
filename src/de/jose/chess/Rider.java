@@ -50,6 +50,16 @@ abstract public class Rider
 
 		if (i1.i==0) i1.i=1;
 		while (i1.i < vector.length) {
+			if (i2.i > 0) {
+				//	previous field was occupied?
+				int to0 = result.from + i2.i * vector[i1.i];
+				if (!pos.isEmpty(to0)) {
+					i1.i++;
+					i2.i = 0;
+					continue;
+				}
+			}
+
 			result.to = result.from + (++i2.i) * vector[i1.i];
 			if (canCapture(pos.pieceAt(result.to)))
 				return true;
