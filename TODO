@@ -56,9 +56,9 @@ libraries needed:
 [ ] "Apple Silicon" = arm64
     [ ] jdk1.8_431, 11 (not 9?) is available from Oracle :)
     [-] MySQL >= 8.0.30. difficult to get running (at least on Linux) :(
+    [ ] MySQL 5.0.67 cross-compile from source (first x64, then arm64, with embedded?!)
     [ ] MySQL 5.7 from brew (disabled but maybe works anyway ?)
     [ ] MySQL <= 5.0.x  difficult to find for macOS arm64
-
     [ ] shc
         brew cask install gcc-arm-embedded ?
         clang hello.c -target arm64-apple-darwin20.1.0
