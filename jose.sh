@@ -2,7 +2,18 @@
 
 cd `dirname "$0"`
 
-localJava="jre/bin/java"
+wd=`pwd` 
+
+#
+# fill in absolute path in jose.desktop
+#
+sed -i "s:Exec = .*:Exec = $wd/jose.sh %F:g" jose.desktop
+sed -i "s:Icon = .*:Icon = $wd/images/ico/jose.svg:g" jose.desktop
+# copy to desktop
+desk=`xdg-user-dir DESKTOP`
+cp jose.desktop $desk
+chmod +x $desk/jose.desktop 
+gio set $desk/jose.desktop metadata::trusted true
 
 #
 #	Hi-DPI scaling
@@ -36,6 +47,8 @@ echo "uiscale="$uiscale
 
 # hi-dpi scaling:
 scale_args="-Dsun.java2d.uiScale.enabled=true -Dsun.java2d.uiScale=$uiscale"
+
+localJava="jre/bin/java"
 
 # path to native libs:
 lp="-Djava.library.path=lib/Linux_amd64"
