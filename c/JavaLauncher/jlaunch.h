@@ -14,9 +14,9 @@ const char* getWorkDir(const char* arg0);
 void message(const char* msg, const char* title, int code);
 void fatal(const char* msg, int code);
 
-void SetCurrentDirectory(const char*);
-bool ShowSplashScreen(const StringList& splash);
-void HideSplashScreen();
+void setCurrentDirectory(const char*);
+bool showSplashScreen(const StringList& splash);
+void hideSplashScreen();
 
 int launch(StringList* argv);
 

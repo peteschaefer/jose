@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(JavaLauncher)
 
-option(WINDOWS "build for Windows" OFF)
+option(WINDOWS "build for Windows" ON)
 option(UNIX "build for Unixes" OFF)
-option(DARWIN "build for Unixes" ON)
+option(DARWIN "build for Unixes" OFF)
 
 set(sources
         jlaunch.cpp
@@ -11,26 +11,15 @@ set(sources
         strlist.cpp
         util.cpp)
 
-if (WINDOWS)
-    include_directories(
-            "C:/Program Files (x86)/Java/jdk1.8.0_202/include"
-            "C:/Program Files (x86)/Java/jdk1.8.0_202/include/win32"
-    )
-    add_compile_definitions(WIN_REGISTRY)
+set(JDK "C:\\Users\\nightrider\\Downloads\\jbrsdk-21.0.6-windows-x64-b825.77\\jbrsdk-21.0.6-windows-x64-b825.77")
+include_directories(
+        "${JDK}\\include"
+        "${JDK}\\include\\win32"
+)
+add_compile_definitions(WIN_REGISTRY)
 
-    list(APPEND sources
-            jlaunch-win.cpp
-            winreg.cpp)
-endif ()
-
-if (DARWIN)
-    include_directories(
-            "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/include"
-            "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/include/darwin"
-    )
-
-    list(APPEND sources
-            jlaunch-unix.cpp)
-endif ()
+list(APPEND sources
+        jlaunch-win.cpp
+        winreg.cpp)
 
 add_executable(JavaLauncher ${sources})

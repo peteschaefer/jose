@@ -16,13 +16,15 @@ private:
 	/* pointer to native method interface */ 
 	JNIEnv *env;       
 	/*		function pointer to JNI_CreateJavaVM */
-	typedef _JNI_IMPORT_OR_EXPORT_ jint JNICALL (*CreateJavaVMFunc)(JavaVM **pvm, void **env, void *args);
+//	typedef _JNI_IMPORT_OR_EXPORT_
+//	jint JNICALL (*CreateJavaVMFunc) (JavaVM **pvm, void **env, void *args);
+	typedef jint (*CreateJavaVMFunc) (JavaVM **pvm, void **env, void *args);
 
 	/* JDK 1.2 VM initialization arguments */ 
 	JavaVMInitArgs vm_args; 
 
-	const char* class_path;
-	const char* library_path;
+	const char* class_path=nullptr;
+	const char* library_path=nullptr;
 
 public:
 	/**		find a jvm.dll either in a local directory, or in the registry	*/

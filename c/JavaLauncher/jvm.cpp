@@ -34,15 +34,25 @@ void JVM::setJavaVMOptions(int jni_version,
 						const char* library_path)
 {
 	vm_args.nOptions = args->size();
-	vm_args.options = new JavaVMOption[vm_args.nOptions+2];
+	vm_args.options = new JavaVMOption[vm_args.nOptions+4];
 
-	for (int i=0; i<vm_args.nOptions; i++)
+	for (int i=0; i<vm_args.nOptions; i++) {
 		vm_args.options[i].optionString = (char*)args->get(i);
+		vm_args.options[i].extraInfo = nullptr;
+	}
 
-	if (class_path != NULL)
-		vm_args.options[vm_args.nOptions++].optionString = stringcat("-Djava.class.path=",class_path,NULL);
-	if (library_path != NULL)
-		vm_args.options[vm_args.nOptions++].optionString = stringcat("-Djava.library.path=",library_path,NULL);
+	if (class_path != NULL && strlen(class_path) > 0) {
+		vm_args.options[vm_args.nOptions].optionString = stringcat("-Djava.class.path=",class_path,NULL);
+		vm_args.options[vm_args.nOptions].extraInfo = nullptr;
+		vm_args.nOptions++;
+//		vm_args.options[vm_args.nOptions++].optionString = (char*)"-cp";
+//		vm_args.options[vm_args.nOptions++].optionString = (char*)class_path;
+	}
+	if (library_path != NULL && strlen(library_path) > 0) {
+		vm_args.options[vm_args.nOptions].optionString = stringcat("-Djava.library.path=",library_path,NULL);
+		vm_args.options[vm_args.nOptions].extraInfo = nullptr;
+		vm_args.nOptions++;
+	}
 
 	vm_args.version = jni_version; /* JDK 1.4 is required */ 
 	vm_args.ignoreUnrecognized = JNI_FALSE;

@@ -4,10 +4,11 @@
 
 #include <cstdlib>
 #include <cstring>
+
 #include <jni.h>
 
-#include "jlaunch.h"
 #include "jvm.h"
+#include "jlaunch.h"
 #include "util.h"
 
 #define MISSING_JRE 	"Java Runtime Environment 1.4 or later is required\n" \
@@ -19,7 +20,7 @@
 const char* getIniFile(const char* arg0)
 {
     //		trim trailing ".exe"
-    int len = strlen(arg0);
+    size_t len = strlen(arg0);
     if (len > 4 && strcmp(arg0+len-4,".exe")==0)
         ((char*)arg0)[len-4] = 0;
     else if (len > 4 && strcmp(arg0+len-4,".EXE")==0)
@@ -135,13 +136,13 @@ int launch(StringList* argv)
 	 */
 	const char* work_dir = getWorkDir(argv->get(0));
 	if (work_dir != NULL && work_dir[0] != 0)
-		SetCurrentDirectory(work_dir);
+		setCurrentDirectory(work_dir);
 		//		otherwise: keep current dir
 
 	/*
 	 *	show splash screen
 	 */
-	if (ShowSplashScreen(splash))
+	if (showSplashScreen(splash))
 		main_args.add("splash=off");	//	tell the application not to show its own splash screen
 
 
@@ -150,7 +151,7 @@ int launch(StringList* argv)
 	 */
 	const char* jvm_path = JVM::find(&local_jvm_path, &preferred_version);
 
-	int error = jvm->launch(jvm_path, JNI_VERSION_1_8, &jvm_options);
+	int error = jvm->launch(jvm_path, JNI_VERSION_21, &jvm_options);
 	if (error >= 0)
 		error = jvm->call(main_class,&main_args);
 
@@ -167,7 +168,7 @@ int launch(StringList* argv)
 		default:										fatal("failed to launch JVM",-1);
 		}
 
-	HideSplashScreen();
+	hideSplashScreen();
 
     /* destroy immediately. AWT threads will keep running. */
     jvm->destroy();

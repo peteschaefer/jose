@@ -15,7 +15,7 @@
 						"or download Java from \n" \
 						"      http://java.sun.com"
 
-void message(char* msg, char* title, int code)
+void message(const char* msg, const char* title, int code)
 {
 	char* temp = new char[64];
 	if (code!=0) {
@@ -26,13 +26,22 @@ void message(char* msg, char* title, int code)
 		MessageBox(NULL, msg,title,MB_OK);
 }
 
-void fatal(char* msg, int code)
+void fatal(const char* msg, int code)
 {
 //	fprintf(stderr,"%s\n",message);
 	//	show message box
 	message(msg,"Error",code);
 	exit(code);
 }
+
+
+void setCurrentDirectory(const char* dir) {
+	BOOL ok = SetCurrentDirectory(dir);
+	if (!ok) message("could not set current directory","Warning",0);
+}
+
+
+extern StringList splash;
 
 //	Splash Screen Window Handle
 HWND splash_hwnd = NULL;
@@ -41,7 +50,7 @@ HWND splash_hwnd = NULL;
 	get(0) = path to jpeg
 	get(1..) additional text
 */
-StringList splash;
+
 //	application instance
 HINSTANCE hInstance;
 //	splash screen bitmap handle
@@ -110,7 +119,7 @@ BOOL InitWindowClass()
 
 
 //	create and open splash screen window
-HWND ShowSplashScreen(char* path)
+HWND showWinSplashScreen(const char* path)
 {
 	if (!InitWindowClass()) return NULL;
 
@@ -142,17 +151,18 @@ HWND ShowSplashScreen(char* path)
 }
 
 
-bool ShowSplashScreen(const StringList& splash)
+bool showSplashScreen(const StringList& splash)
 {
 	if (hInstance!=NULL && splash.size()>0)
 	{
-		if ((splash_hwnd=ShowSplashScreen(splash.get(0)))!=NULL)
+		splash_hwnd = showWinSplashScreen(splash.get(0));
+		if (splash_hwnd!=NULL)
 			return true;
 	}
     return false;
 }
 
-void HideSplashScreen()
+void hideSplashScreen()
 {
 	if (splash_hwnd!=NULL)
 		DestroyWindow(splash_hwnd);

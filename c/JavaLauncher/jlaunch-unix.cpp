@@ -25,16 +25,16 @@ void fatal(const char* msg, int code)
 	exit(code);
 }
 
-void SetCurrentDirectory(const char*) {
+void setCurrentDirectory(const char*) {
 
 }
 
-bool ShowSplashScreen(const StringList& splash) {
+bool showSplashScreen(const StringList& splash) {
 	//	no-op
 	return false;
 }
 
-void HideSplashScreen() {
+void hideSplashScreen() {
 	//	no-op
 }
 

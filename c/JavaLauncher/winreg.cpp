@@ -7,7 +7,7 @@
 #include "util.h"
 
 
-char* getRegistryValue(const char* akey, const char *version, char* subkey)
+char* getRegistryValue(const char* akey, const char *version, const char* subkey)
 {
 	HKEY hkey;
     DWORD size;
