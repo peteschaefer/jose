@@ -263,7 +263,8 @@ public class UciPlugin
 				setOption(options[i],options[i+1]);
 
 		//  wait for options to be acknowledged
-		if (!waitFor("isready","readyok",5000)) throw new IOException("engine does not respond");
+		if (!waitFor("isready","readyok",10000))
+			throw new IOException("engine does not respond");
 	}
 
 	public boolean restartRequired()
@@ -796,6 +797,7 @@ public class UciPlugin
 
 		rec.engineMode = mode;
 		rec.ply = enginePosition.gamePly();
+		rec.white_next = enginePosition.whiteMovesNext();
 
 		if (Util.allOf(AnalysisRecord.NEW_MOVE,rec.modified)) {
 			rec.clear();

@@ -17,8 +17,18 @@ libraries needed:
 
 ==== New Features
 ? eval bar
-  * fix score perspective: moving party vs. white/black
-  * score types (centipawn, percentage, etc.)
+  * fix score perspective:
+  - cp is always from whites perspective. range differs with ScoreType
+  - wdl is always from current side perspective. needs to be adjusted (how?)
+
+        Stockfish       Leela
+cp      white           white       [-2000..+2000]
+win%                    white       [ -100.. +100]  toggles with each move (why?)
+Q, W-L                  white       [ -100.. +100]
+wdl_mu                  white       [-2000..+2000]  ~= Stockfish centipawns
+
+wdl     current         current     sum=1000      toggles with each move :(
+
 
 ? score graph??
 * eval bar 3D

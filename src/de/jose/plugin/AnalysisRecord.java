@@ -53,6 +53,7 @@ public class AnalysisRecord
 	public int      engineMode;
 	/** current game ply */
 	public int      ply;
+	public boolean	white_next;
 	/** current move    */
 	public String   currentMove;
 	/** ponder move (if available)  */
@@ -131,6 +132,7 @@ public class AnalysisRecord
 		currentMove = null;
 		currentMoveNo = -1;
 		ply = UNKNOWN;
+		white_next = false;
 		depth = UNKNOWN;
 		selectiveDepth = UNKNOWN;
 		elapsedTime = UNKNOWN;

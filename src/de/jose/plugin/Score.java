@@ -31,6 +31,14 @@ public class Score
 
     public Score() { clear(); }
 
+    public Score(Score that) {
+        cp = that.cp;
+        flags = that.flags;
+        win = that.win;
+        draw = that.draw;
+        lose = that.lose;
+    }
+
     public void copy(Score that) {
         this.cp = that.cp;
         this.flags = that.flags;
@@ -48,8 +56,13 @@ public class Score
     public int sumWDL() {
         return win+draw+lose;
     }
-
     public boolean hasWDL() {
         return sumWDL() > 0;
+    }
+
+    public void swapWDL() {
+        int temp = win;
+        win = lose;
+        lose = temp;
     }
 }

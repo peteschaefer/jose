@@ -294,11 +294,21 @@ abstract public class BoardView
 
 	abstract protected void doHideAllHints(int count);
 
-	public void setScore(Score sc)
+	public void setScore(Score sc, boolean white_next)
 	{
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
 			sc = null;	//	Score object contains no useful info. Ignore.
-		this.score = sc;
+		if (sc==null) {
+			this.score = null;
+		}
+		else {
+			this.score = new Score(sc);
+			if (!white_next)
+				this.score.swapWDL();
+			//	WDL scores are given from the perspective of the current moving color
+			//	for the eval bar, we want WDL scores from whites perspective only.
+		}
+		//	todo find the score range, depending on Leela ScoreType (centipawn, win%, etc.)
 	}
 
 	/**

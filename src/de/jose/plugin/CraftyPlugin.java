@@ -68,6 +68,7 @@ tab  depth score*100
 
 		rec.modified = 0;
 		rec.ply = enginePosition.gamePly();
+		rec.white_next = enginePosition.whiteMovesNext();
 		char[] chars = input.toCharArray();
 		Score score = rec.eval[0];
 

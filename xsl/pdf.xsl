@@ -510,7 +510,7 @@
 		<fo:table-column/>
 		<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell>
 		
-		<fo:block space-before="-1em" space-after="-0.0em" text-align="center">
+		<fo:block space-before="-0.0em" space-after="-0.0em" text-align="center">
 			<!-- font attributes -->
 			<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
 			<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>

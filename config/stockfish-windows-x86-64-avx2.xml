@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
 <PLUGIN ID="stockfish" type="uci">
 	<NAME> Stockfish </NAME>
 	<EXEC os="Windows">
@@ -21,7 +22,7 @@
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_LimitStrength"> false </OPTION>
 		<OPTION name="UCI_Elo"> 1320 </OPTION>
-		<OPTION name="UCI_ShowWDL"> false </OPTION>
+		<OPTION dirty="true" name="UCI_ShowWDL"> true </OPTION>
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
 		<OPTION name="Syzygy50MoveRule"> true </OPTION>

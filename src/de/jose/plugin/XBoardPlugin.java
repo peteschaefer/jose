@@ -311,6 +311,7 @@ ply
 
 		rec.engineMode = mode;
 		rec.ply = enginePosition.gamePly();
+		rec.white_next = enginePosition.whiteMovesNext();
 
 		if (Util.allOf(AnalysisRecord.NEW_MOVE,rec.modified)) {
 			rec.clear();

@@ -10,7 +10,7 @@
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
-		<OPTION dirty="true" name="WeightsFile"> &lt;autodiscover&gt; </OPTION>
+		<OPTION name="WeightsFile"> &lt;autodiscover&gt; </OPTION>
 		<OPTION name="Backend"> cudnn-auto </OPTION>
 		<OPTION name="BackendOptions"/>
 		<OPTION name="Threads"> 7 </OPTION>
@@ -37,7 +37,7 @@
 		<OPTION name="SyzygyFastPlay"> false </OPTION>
 		<OPTION name="MultiPV"> 3 </OPTION>
 		<OPTION name="PerPVCounters"> false </OPTION>
-		<OPTION name="ScoreType"> win_percentage </OPTION>
+		<OPTION dirty="true" name="ScoreType"> Q </OPTION>
 		<OPTION name="HistoryFill"> fen_only </OPTION>
 		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
 		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>

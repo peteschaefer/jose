@@ -731,6 +731,7 @@ abstract public class EnginePlugin
 		rec.getLine(0).append(input);
 		rec.setPvModified(0);  //  first PV has bee modified
 		rec.ply = enginePosition.gamePly();
+		rec.white_next = enginePosition.whiteMovesNext();
 		rec.engineMode = mode;
 	}
 
