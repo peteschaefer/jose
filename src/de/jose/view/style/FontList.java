@@ -17,11 +17,9 @@ import de.jose.util.AWTUtil;
 import de.jose.util.ListUtil;
 import de.jose.util.style.StyleUtil;
 import de.jose.view.input.ValueHolder;
-import de.jose.Version;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -33,7 +31,7 @@ public class FontList
 {
 	protected CellRenderer rend;
 
-    protected FontList(FontSample[] entries, Dimension preferredCellSize)
+    public FontList(FontSample[] entries, Dimension preferredCellSize)
     {
         super(entries);
 //        putClientProperty("Quaqua.List.style",Version.getSystemProperty("Quaqua.List.style"));

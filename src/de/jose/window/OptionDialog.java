@@ -18,7 +18,6 @@ import de.jose.chess.TimeControl;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
-import de.jose.image.Surface;
 import de.jose.jo3d.Util3D;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
@@ -244,11 +243,15 @@ public class OptionDialog
 		JPanel tab1 = (JPanel)comp1;
 		JPanel abox = newGridBox("dialog.option.notation");
 
-		FontList fontList = FontList.createDiagramFontList(20,true);
+		FontList fontList = new FontList(
+				FontList.getDiagramFontSamples(20, true),
+				new Dimension(180, 21));
 		fontList.setVisibleRowCount(5);
-		fontList.setMinimumSize(new Dimension(80,320)); //  has no effect on fucking GridBagLayout ;-((
+//		fontList.setFixedCellHeight(21);
+//		fontList.setFixedCellWidth(120);
+		//	setting number of rows is subtle. If they don't fit, they will show nothing :(
 		//  diagram font
-		addWithLabel(abox, 0,0,4, 0.0, 0.0,
+		addWithLabel(abox, 0,0,4, 0.0, 10.0,
 				"font.diagram", fontList,
 		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
