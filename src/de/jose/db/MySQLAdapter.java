@@ -114,6 +114,8 @@ public class MySQLAdapter
 								try {
                                     props.put("user","");
                                     props.put("password","");
+									props.put("characterEncoding","UTF8");
+									//props.put("connectionCollation","latin1_english_ci");
 									result = super.createConnection(mode);
 								} catch (SQLException sqlex) {
 									//	server not yet up ? try again ...
