@@ -80,6 +80,32 @@ public class StyledMoveFormatter extends StringMoveFormatter
         return -1;
     }
 
+    public String reformatTo(StyledDocument doc)
+    {
+        String text;
+        try {
+            text = doc.getText(0,doc.getLength());
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+        StringBuffer buf = new StringBuffer(text);
+        boolean comment=false;
+        for (int i=0; i < doc.getLength(); i++)
+        {
+            char c = buf.charAt(i);
+            if (c=='{') comment=true;
+            if (!comment && doc.getCharacterElement(i).getAttributes().containsAttribute("figurine",true)) {
+                int pc = enc.pieceFromFigurine(c);
+                if (pc>0) {
+                    c = pieceChars[pc].charAt(0);
+                    buf.setCharAt(i,c);
+                }
+            }
+            if (c=='}') comment=false;
+        }
+        return buf.toString();
+    }
+
     public void reformatFrom(CharSequence str)
     {
         boolean comment=false;
@@ -89,7 +115,7 @@ public class StyledMoveFormatter extends StringMoveFormatter
             if (c=='{') comment=true;
 
             if (!comment && Character.isUpperCase(c)) {
-                int pc = pieceFromChar(pieceChars,c); //  todo
+                int pc = pieceFromChar(pieceChars,c);
                 if (pc >= PAWN) {
                     figurine(pc, false);
                     continue;

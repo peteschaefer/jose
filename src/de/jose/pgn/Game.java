@@ -891,7 +891,7 @@ public class Game
 		return variation;
 	}
 
-	public void insertNewLine(LineNode variation, Node next)
+	public void insertNewLine(LineNode variation, MoveNode next)
 	{
 		assert(variation.getGame()==this);
 		insertIntoCurrentLine(variation, next);	//	insert into structure

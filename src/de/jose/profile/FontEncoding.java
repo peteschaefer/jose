@@ -163,7 +163,23 @@ public class FontEncoding
 	public final String getFigurine(int piece) {
 		return get(piece,FIGURINE);											
 	}		
-	
+
+	public final int pieceFromFigurine(char c) {
+		int pc = pieceFrom(WHITE_FIGURINES,c);
+		if (pc==0) pc = pieceFrom(BLACK_FIGURINES,c);
+		return pc;
+	}
+
+	public int pieceFrom(int idx, char c)
+	{
+		String[] strs = chars[idx];
+		if (strs==null) return 0;
+		for(int pc=PAWN; pc<=KING; pc++)
+			if (strs[pc]!=null && strs[pc].length()==1 && strs[pc].charAt(0)==c)
+				return pc;
+		return 0;
+	}
+
 	public final String getSymbol(int nagCode) {
 		if (chars[SYMBOLS]!=null)
 			return chars[SYMBOLS][nagCode];

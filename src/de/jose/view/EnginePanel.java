@@ -189,6 +189,7 @@ public class EnginePanel
 
 		Style figStyle = styles.addStyle("engine.pv.figurine",textStyle);
 		StyleConstants.setFontFamily(figStyle,figFontName);
+		figStyle.addAttribute("figurine",true);
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
@@ -569,7 +570,11 @@ public class EnginePanel
 		JoStyledLabel pvlabel = getPvLabel(idx,false, false);
 		if (pvlabel==null) return null; //  no PV
 
-		String line = pvlabel.getText();
+		String line;
+		if (formatter!=null && formatter.getFigStyle()!=null)
+			line = formatter.reformatTo(pvlabel.getStyledDocument());
+		else
+			line = pvlabel.getText();
 		if (line==null || StringUtil.isWhitespace(line)) return null;   //  no PV
 
 		JoBigLabel elabel = getEvalLabel(idx,false, false);
@@ -1672,6 +1677,7 @@ public class EnginePanel
 				if (label==e.getSource())
 				{
 					String text = getPvText(i);
+
 					Command cmd = new Command("menu.game.paste.line",e,text,Boolean.TRUE);
 					Application.theCommandDispatcher.forward(cmd, EnginePanel.this, true);
 }

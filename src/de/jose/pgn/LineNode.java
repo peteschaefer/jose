@@ -22,9 +22,7 @@ import de.jose.sax.JoContentHandler;
 
 import javax.swing.text.*;
 import java.io.*;
-import java.util.Vector;
 
-import org.apache.tools.ant.util.optional.NoExitSecurityManager;
 import org.xml.sax.SAXException;
 
 import static de.jose.pgn.INodeConstants.*;
