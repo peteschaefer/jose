@@ -1,0 +1,5 @@
+contains font metric files for FOP.
+
+These files are dynamically created from TrueType fonts
+(both, in the system font directory, and in jose/fonts)
+

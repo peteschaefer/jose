@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+<PLUGIN type="uci" ID="shredder">
+	<NAME> Shredder </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\EngineClassic.exe </COMMAND>
+	</EXEC>
+	<DIR> C:\Programme\Shredder Classic </DIR>
+	<LOGO/>
+	<VERSION> Classic </VERSION>
+	<AUTHOR> Stefan Meyer-Kahlen </AUTHOR>
+	<OPTIONS>
+		<OPTION name="Hash"> 4 </OPTION>
+		<OPTION name="NalimovPath"/>
+		<OPTION name="NalimovCache"> 1 </OPTION>
+		<OPTION name="Ponder" dirty="true"> false </OPTION>
+		<OPTION name="MultiPV"> 1 </OPTION>
+		<OPTION name="UCI_AnalyseMode"> false </OPTION>
+		<OPTION name="UCI_ShowCurrLine"> false </OPTION>
+		<OPTION name="UCI_ShowRefutations"> false </OPTION>
+		<OPTION name="UCI_LimitStrength"> false </OPTION>
+		<OPTION name="UCI_Elo"> 1400 </OPTION>
+		<OPTION name="Keep Hash Tables"> true </OPTION>
+		<OPTION name="Position Learning"> true </OPTION>
+		<OPTION name="Prefer Open Positions"> false </OPTION>
+		<OPTION name="Use Tablebases"> true </OPTION>
+		<OPTION name="Queen"> 100 </OPTION>
+		<OPTION name="Queen (Endgame)"> 100 </OPTION>
+		<OPTION name="Rook"> 100 </OPTION>
+		<OPTION name="Rook (Endgame)"> 100 </OPTION>
+		<OPTION name="Bishop"> 100 </OPTION>
+		<OPTION name="Bishop (Endgame)"> 100 </OPTION>
+		<OPTION name="Knight"> 100 </OPTION>
+		<OPTION name="Knight (Endgame)"> 100 </OPTION>
+		<OPTION name="Pawn"> 100 </OPTION>
+		<OPTION name="Pawn (Endgame)"> 100 </OPTION>
+		<OPTION name="Draw Score"> 0 </OPTION>
+		<OPTION name="King Safety"> 100 </OPTION>
+		<OPTION name="Center Control"> 100 </OPTION>
+		<OPTION name="Pawn Structure"> 100 </OPTION>
+		<OPTION name="Pawn Structure (Endgame)"> 100 </OPTION>
+		<OPTION name="Passed Pawns"> 100 </OPTION>
+		<OPTION name="Passed Pawns (Endgame)"> 100 </OPTION>
+		<OPTION name="Bishop Pair"> 100 </OPTION>
+		<OPTION name="Bishop Pair (Endgame)"> 100 </OPTION>
+		<OPTION name="Time Usage"> 100 </OPTION>
+		<OPTION name="Knowledge or Speed"> 0 </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>

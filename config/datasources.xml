@@ -1,0 +1,131 @@
+<!-- - - - - - - - - - - -  -->
+<!--	Data Sources for jose	-->
+<!-- - - - - - - - - - - -  -->
+<data-sources>
+
+	<!-- MySQL embedded library -->
+	<data-source default="true">
+		<display-name> MySQL </display-name>
+		<jndi-name> jdbc/mysql-embedded </jndi-name>
+		<adapter-class mode="embedded"> de.jose.db.MySQLAdapter </adapter-class>
+		<driver-class> com.mysql.embedded.jdbc.MySqlEmbeddedDriver </driver-class>
+		<class-path>mysql-je.jar</class-path>
+		<jdbc-url>jdbc:mysql-embedded</jdbc-url>
+
+		<!-- more parameters are hard-coded in MySQLAdapter -->
+
+	</data-source>
+
+	<!-- MySQL separate server process -->
+	<data-source default="false">
+		<display-name> MySQL-standalone </display-name>
+		<jndi-name> jdbc/mysql-standalone </jndi-name>
+        <adapter-class mode="standalone"> de.jose.db.MySQLAdapter </adapter-class>
+		<driver-class> com.mysql.jdbc.Driver </driver-class>
+		<class-path>mysql.jar</class-path>
+		<jdbc-url> jdbc:mysql://127.0.0.1/jose </jdbc-url>
+		<!-- this argument is ignored by MySQLAdapter when running as embedded server -->
+
+		<connection-param>
+			<param-name>useServerPrepStmts</param-name>
+			<param-value>true</param-value>
+		</connection-param>
+
+		<!-- transactions are supported but not required	-->
+		<connection-param>
+			<param-name> relaxAutocommit</param-name>
+			<param-value> true </param-value>
+		</connection-param>
+
+		<!-- use Unicode ? (not really efficient) -->
+		<connection-param>
+			<param-name> useUnicode </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+
+		<connection-param>
+			<param-name>useNewIO</param-name>
+			<param-value>false</param-value>
+		</connection-param>
+
+		<!-- for debugging only: -->
+		<connection-param>
+			<param-name> profileSql </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+
+		<!-- UNIX only: path to socket file; make sure that ordinary users have access to it !!
+			note that users usually don't have access to the default /var/lib/mysql/mysql.sock
+		-->
+		<!-- (comment out to revert to TCP/IP) -->
+		<connection-param>
+			<param-name> socket-file </param-name>
+			<param-value> /tmp/mysql.jose.sock </param-value>
+		</connection-param>
+
+		<!-- Windows 2000/XP: named pipes -->
+		<!-- (comment out to revert to TCP/IP) -->
+<!--
+		<connection-param>
+			<param-name> pipe-name </param-name>
+			<param-value> mysql.jose </param-value>
+		</connection-param>
+-->
+
+	</data-source>
+
+
+	<!--
+		Example for External Server
+		use this configuration if your MySQL server is running
+		as a separate process, or on a completely different machine
+
+		before connecting to the server, create an empty database:
+			mysqladmin create jose
+			java -cp jose.jar de.jose.db.Setup -db MySQL-external -schema META
+			java -cp jose.jar de.jose.db.Setup -db MySQL-external -schema MAIN
+
+	-->
+	<data-source default="false">
+		<display-name> MySQL-external </display-name>
+		<jndi-name> jdbc/mysql-external </jndi-name>
+        <adapter-class mode="external"> de.jose.db.MySQLAdapter </adapter-class>
+		<driver-class> com.mysql.jdbc.Driver </driver-class>
+		<class-path>mysql.jar</class-path>
+		<jdbc-url> jdbc:mysql://[host]:[port]/jose </jdbc-url>
+		<!-- insert actual host name or IP address	-->
+		<!-- insert port number, unless default -->
+
+		<!-- insert user name -->
+		<connection-param>
+			<param-name> user </param-name>
+			<param-value> [user-name] </param-value>
+		</connection-param>
+
+		<!-- insert password (if required) -->
+		<connection-param>
+			<param-name> password </param-name>
+			<param-value> [password] </param-value>
+		</connection-param>
+
+		<!-- transactions are supported but not required	-->
+		<connection-param>
+			<param-name> relaxAutocommit</param-name>
+			<param-value> true </param-value>
+		</connection-param>
+
+		<!-- use Unicode ? (not really efficient) -->
+		<connection-param>
+			<param-name> useUnicode </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+
+		<!-- for debugging only: -->
+		<connection-param>
+			<param-name> profileSql </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+	</data-source>
+
+
+</data-sources>

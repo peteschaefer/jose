@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<PLUGIN ID="stockfish" type="uci">
+	<NAME> Stockfish </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\stockfish-windows-x86-64-avx2.exe </COMMAND>
+	</EXEC>
+	<DIR> C:\Users\nightrider\Desktop\stockfish </DIR>
+	<LOGO> %dir%\Stockfish-large.bmp </LOGO>
+	<VERSION> 17 </VERSION>
+	<AUTHOR> the Stockfish developers (see AUTHORS file) </AUTHOR>
+	<OPTIONS>
+		<OPTION name="Debug Log File"/>
+		<OPTION name="NumaPolicy"> auto </OPTION>
+		<OPTION name="Threads"> 7 </OPTION>
+		<OPTION name="Hash"> 1024 </OPTION>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="MultiPV"> 3 </OPTION>
+		<OPTION name="Skill Level"> 20 </OPTION>
+		<OPTION name="Move Overhead"> 10 </OPTION>
+		<OPTION name="nodestime"> 0 </OPTION>
+		<OPTION name="UCI_Chess960"> false </OPTION>
+		<OPTION name="UCI_LimitStrength"> false </OPTION>
+		<OPTION name="UCI_Elo"> 1320 </OPTION>
+		<OPTION name="UCI_ShowWDL"> false </OPTION>
+		<OPTION name="SyzygyPath"/>
+		<OPTION name="SyzygyProbeDepth"> 1 </OPTION>
+		<OPTION name="Syzygy50MoveRule"> true </OPTION>
+		<OPTION name="SyzygyProbeLimit"> 7 </OPTION>
+		<OPTION name="EvalFile"> nn-1111cefa1111.nnue </OPTION>
+		<OPTION name="EvalFileSmall"> nn-37f18f62d772.nnue </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>

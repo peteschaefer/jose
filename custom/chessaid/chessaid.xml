@@ -1,0 +1,93 @@
+<!-- custom configuration for ChessAid -->
+<config>
+    <!-- auto-import folder -->
+    <path id="auto-import">course</path>
+
+    <!-- sponsor home page -->
+    <web>
+        <sponsor>http://www.chessaid.com</sponsor>
+    </web>
+    <!-- splash screen logos (relative to images directory) -->
+<!--    <path id="sponsor-splash">sponsor-splash.png</path>-->
+    <path id="sponsor-logo">sponsor-logo.png</path>
+
+    <!-- custom layout -->
+    <!-- overrides previous layout -->
+    <layout id="chessaid" override="2">
+        <frame>
+            <bounds x="100" y="100" width="-100" height="-140"/>
+            <state HELP="1"/>
+        </frame>
+        <frame>
+            <bounds x="30" y="40" width="-40" height="-40"/>
+            <state VISIBLE="1"/>
+            <panel type="split" visible="true" orientation="HORIZ">
+                <panel type="split" visible="true" orientation="VERT">
+                    <panel type="view" name="window.toolbar.1" visible="true" border="false">
+                        <weight x="0.0" y="0.0"/>
+                    </panel>
+                    <panel type="split" visible="true" orientation="VERT">
+                        <panel type="split" visible="true" orientation="HORIZ">
+                            <panel type="view" name="window.toolbar.2" visible="true" border="false">
+                                <weight x="0.0" y="0.0"/>
+                            </panel>
+                            <panel type="split" visible="true" orientation="HORIZ">
+                                <panel type="view" name="window.collectionlist" visible="true" border="true">
+                                    <weight x="1.0" y="1.0"/>
+                                </panel>
+                                <panel type="view" name="window.board" visible="true" border="true">
+                                    <weight x="3.0" y="2.0"/>
+                                </panel>
+                            </panel>
+                        </panel>
+                        <panel type="view" name="window.gamelist" visible="true" border="true">
+                            <weight x="1.0" y="1.6"/>
+                        </panel>
+                    </panel>
+                </panel>
+                <panel type="split" visible="true" orientation="VERT">
+                    <panel type="view" name="window.clock" visible="false" border="true">
+                        <weight x="1.0" y="0.4"/>
+                    </panel>
+                    <panel type="split" visible="true" orientation="VERT">
+                        <panel type="view" name="window.game" visible="true" border="true">
+                            <weight x="2.0" y="2.0"/>
+                        </panel>
+                        <panel type="view" name="window.engine" visible="false" border="true">
+                            <weight x="1.0" y="0.3"/>
+                        </panel>
+                    </panel>
+                </panel>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="40" y="40" width="-40" height="-40"/>
+            <state/>
+            <panel type="view" name="window.print.preview" visible="true" border="true">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="33" y="80" width="480" height="260"/>
+            <state/>
+            <panel type="view" name="window.console" visible="true" border="true">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="33" y="100" width="400" height="560"/>
+            <state/>
+            <panel type="view" name="window.toolbar.symbols" visible="true" border="false">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="166" y="172" width="589" height="406"/>
+            <state/>
+            <panel type="view" name="window.query" visible="true" border="true">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+    </layout>
+
+</config>

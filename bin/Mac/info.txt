@@ -1,0 +1,2 @@
+
+contains binary code for the MySQL database on the Mac OS X operating system

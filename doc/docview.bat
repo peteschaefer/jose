@@ -1,0 +1,1 @@
+java -cp ../lib/jh.jar;../lib/hsviewer.jar sunw.demo.jhdemo.JHLauncher -helpset man/help-en.hs

@@ -1,0 +1,28 @@
+<jo3d>
+	<!-- control file for Jo3D scene graph assembler -->
+
+	<!-- standard model (about 20k triangles)	-->
+
+	<!-- store geometry by reference -->
+	<by_reference>1</by_reference>
+	<!-- store coordinates interleaved -->
+	<interleaved>1</interleaved>
+	<!-- stripify (strongly recommended) -->
+	<strips>1</strips>
+	<!-- generate normals (strongly recommended) -->
+	<normals>1</normals>
+
+	<title>Low Detail</title>
+	<title lang="de">Niedrige Details</title>
+	<author> Lorenzo del Fabbro </author>
+
+	<file name="frame.3ds">		<shape name="FRAME"/></file>
+
+	<file name="std_p.3ds">	<shape name="p"/> </file>
+	<file name="std_n.3ds">	<shape name="n"/> </file>
+	<file name="std_b.3ds">	<shape name="b"/> </file>
+	<file name="std_r.3ds">	<shape name="r"/> </file>
+	<file name="std_q.3ds">	<shape name="q"/> </file>
+	<file name="std_k.3ds">	<shape name="k"/> </file>
+
+</jo3d>

@@ -1,0 +1,12 @@
+
+contains configuration settings for jose.
+
+ datasources.xml	description for all available database servers (including the "embedded" servers)
+ default.xml		describes the default database server
+ fonts.xml		character mappings for all chess figurine fonts
+ meta.xml		describes the database schema
+ xb-engines.xml		describes the available XBoard engines
+ pdb.xml		not in use
+
+ lang.properties	english texts (default)
+ lang.properties.de	german texts

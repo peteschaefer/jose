@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<PLUGIN ID="yace2" type="uci">
+	<NAME> Yace </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\yace.exe </COMMAND>
+	</EXEC>
+	<DIR> %local%\engines\yace </DIR>
+	<LOGO> %dir%\yace.bmp </LOGO>
+	<VERSION> Paderborn </VERSION>
+	<AUTHOR> Dieter Buerssner </AUTHOR>
+	<OPTIONS>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="Hash"> 1 </OPTION>
+		<OPTION name="NalimovCache"> 2 </OPTION>
+		<OPTION name="NalimovPath"/>
+		<OPTION name="Position Learning"> true </OPTION>
+		<OPTION name="Log File"> false </OPTION>
+		<OPTION name="Show hash performance"> false </OPTION>
+		<OPTION name="Show add. EGTB info"> at end of search </OPTION>
+		<OPTION name="Endgame-Database Usage"> Normal </OPTION>
+		<OPTION name="Use only 3 and 4-men TBs"> false </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+		<OPTION name="BookFile"> dbbook.bin </OPTION>
+		<OPTION name="LearnBookFile"> D:\jose\work\engines\yace\dblearn.bin </OPTION>
+		<OPTION name="BookLearning"> false </OPTION>
+		<OPTION name="Book Random"> true </OPTION>
+		<OPTION name="BitbasePath"/>
+		<OPTION name="Selectivity"> Normal </OPTION>
+		<OPTION name="Extensions"> Normal </OPTION>
+		<OPTION name="Add. time for so many moves"> 5 </OPTION>
+		<OPTION name="null_high"> 300 </OPTION>
+		<OPTION name="null_low"> 300 </OPTION>
+		<OPTION name="null_endgame"> 200 </OPTION>
+		<OPTION name="null_split"> 550 </OPTION>
+		<OPTION name="Recapture extension"> 59 </OPTION>
+		<OPTION name="Check extension"> 100 </OPTION>
+		<OPTION name="Perpetual check extension"> 59 </OPTION>
+		<OPTION name="Mate threat extension"> 100 </OPTION>
+		<OPTION name="Passed pawn extension"> 100 </OPTION>
+		<OPTION name="Autoplayer delay (ms)"> 0 </OPTION>
+		<OPTION name="random"> false </OPTION>
+		<OPTION name="Use partitial TBs"> Use 3-6 men </OPTION>
+		<OPTION dirty="true" name="UCI_GUI"> true </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+	<EXEC os="Linux_i386">
+		<COMMAND/>
+	</EXEC>
+</PLUGIN>
+</APPLICATION_SETTINGS>

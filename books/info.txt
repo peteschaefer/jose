@@ -1,0 +1,18 @@
+Opening Books for Jose
+
+These files are Polyglot format. In addition to jose, they
+can be used with the following chess engines: 
+Fruit, Toga, GambitFruit, Polyglot UCI adapter
+
+
+Books by Dann Corbit:
+ book_small.bin
+ book.bin
+ DCbool_large.bin
+
+Books by Marc Lacrosse:
+ Performance.bin
+ Varied.bin
+
+See http://mlweb.info/chessbazaar/fruitbooks/
+for more information.

@@ -1,0 +1,83 @@
+<!-- - - - - - - - - - - - - - -->
+<!--    Statistical Queries    -->
+<!-- - - - - - - - - - - - - - -->
+<statistics>
+
+<query>
+<title>RESULTS BY PLAYER</title>
+
+select p.name as name,
+
+ sum(greatest(gp.result,0)) / 2.0 as score,
+ sum(greatest(gp.result-1,0)) as wins,
+ sum(greatest(gp.result%2,0)) as draws,
+ sum(greatest((1-gp.result)%2,0)) as lost,
+
+ count(gp.result) as games
+
+from player p, gameplayer gp
+where p.id = gp.pid
+  and p.uppername like 'SCH%'
+
+group by p.name
+order by score desc
+
+</query>
+
+<query>
+<title>MOST SUCCESSFUL OPENINGS (BY ECO)</title>
+
+select substring(g.eco,1,3),
+ sum(g.result) / 2.0 as score,
+ count(g.result) as games,
+ avg(g.result) / 2.0 as avg_score
+
+from game g
+where g.result >= 0
+
+group by substring(g.eco,1,3)
+
+order by avg_score desc
+</query>
+
+
+<query>
+<title>MOST SUCCESSFUL OPENINGS FOR WHITE</title>
+
+select g.eco, sum(result)/2.0, count(result), avg(result)/2.0 as success
+
+from game g
+where g.result >= 0
+
+group by g.eco
+order by success desc
+</query>
+
+<query>
+<title>ELO HISTORY FOR A PLAYER</title>
+
+select p.name, gp.elo, g.gamedate
+from gameplayer gp, player p, game g
+where gp.pid = p.id
+  and gp.gid = g.id
+  and p.uppername like 'SCHI%'
+order by g.gamedate
+
+<!-- TODO think about GamePlayer.ELO -->
+</query>
+
+<query>
+<title>MOST SUCCESSFUL WHITE OPENING (BY PLAYER)</title>
+
+select p.name, g.eco, sum(result)/2.0, count(result), avg(result)/2.0 as success
+
+from game g, player p
+where g.whiteid = p.id
+  and p.name like 'SCHI%'
+  and g.result >= 0
+
+group by g.eco
+order by success desc
+</query>
+
+</statistics>

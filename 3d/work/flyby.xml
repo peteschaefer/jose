@@ -1,0 +1,37 @@
+<jo3d>
+	<!-- control file for Jo3D scene graph assembler -->
+
+	<!-- model by del Fabbro - LODs 50%, 25% and 10%	-->
+
+	<!-- store geometry by reference -->
+	<by_reference>1</by_reference>
+	<!-- store coordinates interleaved -->
+	<interleaved>1</interleaved>
+	<!-- stripify (strongly recommended) -->
+	<strips>1</strips>
+	<!-- generate normals (strongly recommended) -->
+	<normals>1</normals>
+
+	<!-- mesh author -->
+	<author> Lorenzo del Fabbro</author>
+
+	<!-- suggested LOD threshholds -->
+	<threshhold lod="1">800000</threshhold>
+
+	<file name="frame.3ds">		<shape name="FRAME"/> </file>
+
+	<file name="fab50_p.3ds">	<shape name="p" lod="0"/> </file>
+	<file name="fab50_n.3ds">	<shape name="n" lod="0"/> </file>
+	<file name="fab50_b.3ds">	<shape name="b" lod="0"/> </file>
+	<file name="fab50_r.3ds">	<shape name="r" lod="0"/> </file>
+	<file name="fab50_q.3ds">	<shape name="q" lod="0"/> </file>
+	<file name="fab50_k.3ds">	<shape name="k" lod="0"/> </file>
+
+	<file name="fab25_p.3ds">	<shape name="p" lod="1"/> </file>
+	<file name="fab25_n.3ds">	<shape name="n" lod="1"/> </file>
+	<file name="fab25_b.3ds">	<shape name="b" lod="1"/> </file>
+	<file name="fab25_r.3ds">	<shape name="r" lod="1"/> </file>
+	<file name="fab25_q.3ds">	<shape name="q" lod="1"/> </file>
+	<file name="fab25_k.3ds">	<shape name="k" lod="1"/> </file>
+
+</jo3d>

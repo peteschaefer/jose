@@ -1,0 +1,183 @@
+<!-- - - - - - - - - - -->
+<!--  Menu Structure   -->
+<!-- - - - - - - - - - -->
+<menu-bar>
+	<!-- - - - - - - - - - -->
+	<!-- File Menu         -->
+	<!-- - - - - - - - - - -->
+	<menu id="menu.file">
+		<item id="menu.file.new"	key="control N"/>
+		<item id="menu.file.new.frc" key="control shift N"/>
+		<item id="menu.file.new.shuffle" key="control alt N"/>
+
+		<item id="menu.file.open"	key="control O"/>
+		<item id="menu.file.open.url"/>
+		<separator/>
+		<item id="menu.file.close"	key="control W"/>
+		<item id="menu.file.save"	key="control S"/>
+		<item id="menu.file.save.as" key="control shift S"/>
+		<item id="menu.file.save.all"	key="F2"/>
+		<item id="menu.file.revert"/>
+		<separator/>
+		<item id="menu.file.print"	key="control P"/>
+		<item id="menu.file.print.setup" key="control shift P"/>
+		<item id="menu.file.print.preview"/>
+		<separator hide="mac"/>
+		<item id="menu.file.quit"	key="control Q" hide="mac"/>
+	</menu>
+	<!-- - - - - - - - - - -->
+	<!-- Edit Menu         -->
+	<!-- - - - - - - - - - -->
+	<menu id="menu.edit">
+<!--		<item id="menu.edit.undo"			key="control Z"/>-->
+<!--		<item id="menu.edit.redo"			key="control shift Z"/>-->
+<!--		<separator/>-->
+		<item id="menu.edit.select.all"		key="control A" modal="true"/>
+		<item id="menu.edit.select.none"	key="control shift A" modal="true"/>
+		<separator/>
+		<item id="menu.edit.cut"			key="control X" modal="true"/>
+		<item id="menu.edit.copy"			key="control C" modal="true"/>
+		<item id="menu.edit.paste"			key="control V" modal="true"/>
+		<item id="menu.edit.clear"          modal="true"/>		<!--key="DELETE"-->
+
+<!--		<menu id="menu.edit.games">-->
+        <separator/>
+        <item id="menu.edit.collection.new"/>
+        <item id="menu.edit.empty.trash"/>
+<!--			<item id="menu.edit.paste.copy"/>-->
+<!--			<item id="menu.edit.paste.same"/>-->
+        <item id="menu.edit.restore"/>
+        <item id="menu.edit.ecofy"/>
+
+		<separator hide="mac"/>
+		<item id="menu.edit.option"			key="F9" hide="mac"/>
+	</menu>
+    <!-- - - - - - - - - - -->
+    <!-- Format Menu       -->
+    <!-- - - - - - - - - - -->
+    <menu id="menu.edit.style">
+        <item id="menu.edit.bold" key="control B"/>
+        <item id="menu.edit.italic" key="control I"/>
+        <item id="menu.edit.underline" key="control U"/>
+        <item id="menu.edit.plain"/>
+        <separator/>
+        <item id="menu.edit.left"/>
+        <item id="menu.edit.center"/>
+        <item id="menu.edit.right"/>
+        <separator/>
+        <item id="menu.edit.larger" key="control PLUS"/>
+        <item id="menu.edit.smaller" key="control MINUS"/>
+        <item id="menu.edit.color"/>
+        <separator/>
+        <menu id="move.format">
+            <item id="move.format.short" check="false"/>
+            <item id="move.format.long" check="false"/>
+            <item id="move.format.algebraic" check="false"/>
+            <item id="move.format.correspondence" check="false"/>
+            <item id="move.format.english" check="false"/>
+            <item id="move.format.telegraphic" check="false"/>
+        </menu>
+        <menu id="dialog.option.font.figurine">
+            <item id="figurine.usefont.true" check="false"/>
+            <separator/>
+            <item id="figurine.usefont.false" check="false"/>
+        </menu>
+        <separator/>
+        <item id="menu.edit.option" int="6"/>
+    </menu>
+
+	<!-- - - - - - - - - - -->
+	<!-- Game Menu         -->
+	<!-- - - - - - - - - - -->
+	<menu id="menu.game">
+		<item id="menu.game.details"		key="F4"/>
+
+		<menu id="menu.game.navigate">
+			<item id="move.first" key="ctrl BEGIN"/>
+			<item id="move.backward" key="ctrl LEFT"/>
+			<item id="move.delete" key="ctrl BACKSPACE"/>
+			<item id="engine.stop"		key="PAUSE"/>
+			<item id="move.forward" key="ctrl RIGHT"/>
+			<item id="move.start" key="ctrl G"/>
+			<item id="move.animate"/>
+			<item id="move.last" key="ctrl END"/>
+		</menu>
+
+		<menu id="menu.game.time.controls">
+			<item id="menu.game.time.control"/>
+			<!-- this entry will be replaced by actual time controls -->
+			<separator/>
+			<item id="menu.edit.option"	int="3"/>
+		</menu>
+
+		<separator/>
+		<item id="menu.game.2d"		check="true"/>
+		<item id="menu.game.3d"		check="false"/>
+		<item id="menu.game.flip"	check="true"/>
+		<item id="menu.game.coords"	check="true"/>
+		<separator/>
+		<item id="menu.game.analysis"/>
+		<item id="menu.game.hint"/>
+		<item id="menu.game.draw"/>
+		<item id="menu.game.resign"/>
+		<separator/>
+<!--		<item id="menu.game.previous"/>
+		<item id="menu.game.next"/>
+		<separator/>
+-->		<item id="menu.game.close" key="alt W"/>
+		<item id="menu.game.close.all"/>
+		<item id="menu.game.close.all.but"/>
+		<separator/>
+		<item id="menu.game.setup"	key="F11"/>
+		<item id="menu.game.animate"/>
+		<!--<item id="menu.game.nalimov.online"/>-->
+	</menu>
+	<!-- - - - - - - - - - -->
+	<!-- Window Menu       -->
+	<!-- - - - - - - - - - -->
+	<menu id="menu.window">
+		<item id="window.board"				check="true"	key="control 1"/>
+		<item id="window.clock"				check="true"	key="control 2"/>
+		<item id="window.game"				check="true"	key="control 3"/>
+		<item id="window.engine"			check="true"	key="control 4"/>
+<!--		<item id="window.eval"		    	check="false"/>-->
+		<item id="window.console"			check="false"/>
+		<separator/>
+		<item id="window.collectionlist"	check="true"	key="control 5"/>
+		<item id="window.query"				check="true"	key="control 6"/>
+		<item id="window.gamelist"			check="true"	key="control 7"/>
+		<!--item id="window.help"				check="false"/-->
+		<!--item id="window.sqlquery"	check="true"/-->
+		<!--item id="window.sqllist"	check="true"/-->
+		<separator/>
+		<item id="window.toolbar.symbols"	check="false"/>
+		<item id="window.toolbar.1"			check="true"/>
+		<item id="window.toolbar.2"			check="true"/>
+		<!--item id="window.toolbar.3"		check="true"/-->
+		<separator/>
+		<item id="menu.window.reset"/>
+		<separator/>
+		<item id="menu.window.fullscreen"	check="true"/>
+<!--		<item id="board.3d.screenshot"		key="PRINTSCREEN"/>-->
+	</menu>
+	<!-- - - - - - - - - - -->
+	<!-- Help Menu         -->
+	<!-- - - - - - - - - - -->
+	<menu id="menu.help">
+		<item id="menu.help.context"		key="F1"/>
+		<item id="menu.help.manual"/>
+		<separator/>
+		<item id="menu.help.about"			key="control H" hide="mac"/>
+		<item id="menu.help.license"/>
+		<separator/>
+		<item id="menu.web.home" 		url="http://jose-chess.sourceforge.net"/>
+		<item id="menu.web.update"/>
+		<item id="menu.web.report"		url="http://sourceforge.net/tracker/?func=browse&amp;group_id=60120&amp;atid=493133"/>
+        <item id="menu.web.donate"      url="http://jose-chess.sourceforge.net/main.html#donate"/>
+		<!--item id="menu.web.download"	url="http://jose-chess.sourceforge.net/download.html"/-->
+		<separator/>
+		<item id="menu.web.browser"/>
+
+	</menu>
+
+</menu-bar>

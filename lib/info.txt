@@ -1,0 +1,41 @@
+
+contains Java library files (.jar) that are needed by jose
+
+
+Windows DLL files:
+opt/libmySQL.dll	used by MySQL
+shellstub.dll		creates Windows shortcut files
+nativeskinwin32.dll	not in use
+
+Java library files:
+Acme.jar		Utilities
+portfolio.jar		Java 3D file loaders
+jsdk23.jar		servlet API (already included in JDK 1.4)
+jaxp.jar		JAXP API (already included in JDK 1.4)
+xerces.jar		XML parsers
+xalan.jar		XSL transfomers
+
+JDBC drivers and utilities:
+qed.jar			Quadcap embedded database
+antlr.jar		Utility Library (used by QED)
+caucho.jar		MySQL JDBC driver
+resin.jar		used by caucho driver
+
+JDBC drivers not included in jose release:
+classes12.jar		Oracle JDBC driver
+nls_charset12.jar	used by Oralce JDBC driver (national languages)
+cloudscape.jar		cloudscape embedded database
+dbf.jar			FoxPRO JDBC driver (not in use)
+mysql.jar		another MySQL JDBC driver (not in use)
+
+Look & Feels:
+plaf/3DLF.jar		"3D"
+plaf/gtkswing.jar	Gtk
+plaf/kunststoff.jar	Kunststoff
+plaf/metouia.jar	Metouia
+plaf/nextlf.jar		Next
+plaf/oalnf.jar		Oyoaha
+plaf/skinlf.jar		Skin (doesn't work)
+plaf/teknolust.jar	Teknolust (doesn't work)
+
+

@@ -1,0 +1,63 @@
+
+=========================
+jose - Move Announcements
+=========================
+
+jose-chess.sourceforge.net
+
+
+==================
+Files for Download
+==================
+
+* jose-sounds-english.zip             move announcements in English.
+* jose-sounds-german-1.zip            move announcements in German.
+* jose-sounds-german-2.zip            move announcements in German (phonetic alphabet).
+* jose-sounds-spanish.zip             move announcements in Spanish.
+* jose-sounds-russian.zip             move announcements in Russian.
+
+English and German files by Jörg Borchardt.
+Spanish by Federico Corigliano.
+Russian by Alex Sedykh.
+
+==========================
+Alternative Download Sites
+==========================
+
+* Arena:  http://www.playwitharena.com/directory/user.htm#announcements
+* DGT:    http://www.dgtprojects.com/downloads.htm
+
+  (note that these files can be used by both Arena, jose and DGT software !)
+
+* If you have installed Fritz on your system, you can also use its sounds files.
+  They are usually found at: C:\Program Files\ChessBase\Sounds\English\Notation
+
+============
+Requirements
+============
+
+* Operating Systems: 
+   - Windows (95/98/ME/NT/2000/XP)
+   - Linux with Intel processor
+   - Mac OS X (not yet tested)
+
+* jose version 1.2.2 or later
+  
+============
+Installation
+============
+
+* unzip packages into your jose directory (or any other directory, if you like).
+* Select Edit/Option... (or type F9)
+* Enter the path to the directory in "Sounds/MoveAnnouncements"
+* Check one of the options below ("Announce Engines Moves", etc.)
+     
+
+=========================
+
+Have fun,
+Peter
+
+
+
+

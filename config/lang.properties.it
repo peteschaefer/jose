@@ -1,0 +1,361 @@
+
+##############################################################################
+#	Italian Translation for jose
+##############################################################################
+
+#	Application Name
+application.name	= jose
+
+#	Frame Titles
+window.board	= Scacchiera
+window.console	= Console
+window.database	= Database
+window.filter	= Filtri
+window.list		= Lista Partite
+window.clock	= Orologio
+window.game		= Partita
+
+window.collectionlist	= Database
+window.query			= Cerca
+window.gamelist			= Partite
+
+window.sqlquery			= Query SQL
+window.sqllist			= Risultati
+
+window.toolbar.1		= Toolbar 1
+window.toolbar.2		= Toolbar 2
+window.toolbar.3		= Toolbar 3
+
+dialog.option	= Opzioni
+dialog.about	= Informazioni su jose
+dialog.animate  = Animazione
+
+
+##############################################################################
+# 	Menus
+##############################################################################
+
+menu.file			= File
+menu.file.new		= Nuovo 
+menu.file.new.tip		= Inizia una Nuova Partita
+menu.file.new.frc		= Nuovo FRC
+menu.file.open		= Apri
+menu.file.close		= Chiudi
+menu.file.save		= Salva
+menu.file.saveas		= Salva Come...
+menu.file.print		= Stampa...
+menu.file.print.tip		= Stampa la Partita Corrente
+menu.file.quit		= Esci
+menu.file.quit.tip		= Esci da Jose
+
+menu.edit		= Modifica
+menu.edit.undo		= Annulla (%action%)
+menu.edit.cant.undo = annullare
+menu.edit.undo.tip		= Annulla l'ultima mossa
+menu.edit.redo		= Ripeti (%action%)
+menu.edit.cant.redo = ripetere
+menu.edit.select.all    = Seleziona Tutto
+menu.edit.select.none   = Annulla Selezione
+menu.edit.cut		= Taglia
+menu.edit.copy		= Copia
+menu.edit.paste		= Incolla (Copia)
+menu.edit.paste.same = Incolla (Oggetto)
+menu.edit.clear		= Pulisci
+menu.edit.option		= Opzioni...
+menu.edit.option.tip	= Apre il Pannello Opzioni
+
+menu.edit.games				= Database
+menu.edit.collection.new 	= Nuova Cartella
+menu.edit.collection.rename = Rinomina
+menu.edit.empty.trash		= Svuota Cestino
+menu.edit.restore			= Ripristina
+
+menu.game			= Partita
+menu.game.2d		= Vista 2D
+menu.game.3d		= Vista 3D
+menu.game.flip		= Ruota Scacchiera
+menu.game.coords	= Coordinate
+menu.game.coords.tip	= Cambia Visualizzazione Coordinate
+menu.game.animate = Animazione...
+
+move.first	= Inizio della Partita
+move.backward = Indietro
+move.delete = Annulla Ultima Mossa
+engine.stop = Pausa
+move.start = Muovi Adesso
+move.forward = Avanti
+move.last = Fine della Partita
+
+menu.window		= Finestra
+
+menu.help		= Aiuto
+menu.help.splash	= Informazioni su...
+menu.help.about		= Info...
+menu.help.license	= Licenza...
+
+##############################################################################
+# 	Context Menu
+##############################################################################
+
+panel.hide			= Nascondi
+panel.hide.tip		= Nasconde questo Pannello
+panel.undock		= Nuova Finestra
+panel.undock.tip		= Apre il Pannello in una Nuova Finestra
+panel.move			= Muovi
+panel.move			= Muove il Pannello in un'altra posizione
+panel.dock			= Aggancia
+panel.dock.tip		= Aggancia questa Finestra
+
+clock.mode.analog	= Analogico
+clock.mode.analog.tip = Mostra Orologio Analogico
+clock.mode.digital	= Digitale
+clock.mode.digital.tip = Mostra Orologio Digitale
+clock.mode.both		= Entrambi
+clock.mode.both.tip	= Mostra Orologio Digitale e Analogico
+
+##############################################################################
+#	Dialog elements
+##############################################################################
+
+dialog.button.ok		= OK
+dialog.button.ok.tip	= Clicca qui per confermare i cambiamenti e chiudere la finestra
+dialog.button.cancel	= Annulla
+dialog.button.cancel.tip	= Clicca qui per annullare i cambiamenti e chiudere la finestra
+dialog.button.apply		= Applica
+dialog.button.apply.tip	= Clicca qui per confermare i cambiamenti
+dialog.button.revert	= Revert
+dialog.button.revert.tip	= Clicca qui per annullare i cambiamenti
+dialog.button.clear		= Pulisci
+dialog.button.delete	= Elimina
+dialog.button.yes		= Si
+dialog.button.no		= No
+dialog.button.next		= Avanti
+dialog.button.back		= Indietro
+dialog.button.close		= Chiudi
+
+dialog.button.commit		= Commit
+dialog.button.commit.tip	= Click here to commit updates to the database
+dialog.button.rollback		= Rollback
+dialog.button.rollback.tip	= Click here to discard updates to the database
+
+dialog.error.title		= Errore
+
+filechooser.pgn	= Portable Game Notation (*.pgn,*.zip)
+filechooser.db = Archivio jose (*.jose)
+filechooser.db.Games = Archivio Partite jose (*.jose)
+filechooser.db.Games.MySQL = Archivio Partite jose (quick save) (*.jose)
+filechooser.txt = File di Testo (*.txt)
+filechooser.html = File WEB (*.html)
+filechooser.pdf = Acrobat Reader (*.pdf)
+
+filechooser.overwrite = Sovrascrivere il file esistente "%file.name%" ?
+
+error.not.selected = Prego selezionare una partita da salvare.
+
+colorchooser.texture	= Texture
+colorchooser.preview	= Anteprima
+colorchooser.gradient   = Sfumatura
+colorchooser.gradient.color1 = Primo Colore
+colorchooser.gradient.color2 = Secondo Colore
+colorchooser.gradient.cyclic = Ciclica
+
+colorchooser.texture.mnemonic = T
+colorchooser.gradient.mnemonic = G
+
+animation.slider.fast   = veloce
+animation.slider.slow   = lento
+
+##############################################################################
+#	option dialog
+##############################################################################
+
+dialog.option.tab.1		= Utente
+dialog.option.tab.2		= Font
+dialog.option.tab.3		= Colori
+dialog.option.tab.4		= Tempo
+dialog.option.tab.5     = Engine
+dialog.option.tab.6 = Opening Book
+# TODO
+dialog.option.tab.7     = 3D
+dialog.option.tab.8 = Styles
+# TODO
+
+dialog.option.user.name	= Nome
+dialog.option.user.language	= Lingua
+dialog.option.user.look.and.feel	= Look & Feel
+
+dialog.option.font.diagram	= Diagramma
+dialog.option.font.text		= Testo
+dialog.option.font.inline	= Testo Diagramma
+dialog.option.font.figurine	= Figurine
+dialog.option.font.symbol	= Simboli
+dialog.option.font.size     = Dimensione
+figurine.usefont.true = Graphic Figurines
+figurine.usefont.false = Text Figurines
+
+dialog.option.board.surface.light	= Riquadri Chiari
+dialog.option.board.surface.dark	= Riquadri Scuri
+dialog.option.board.surface.white	= Pezzi Bianchi
+dialog.option.board.surface.black	= Pezzi Neri
+
+dialog.option.board.surface.background	= Sfondo
+dialog.option.board.surface.frame			= Cornice
+dialog.option.board.surface.coords		= Coordinate
+
+dialog.option.board.3d.model                = Modello
+dialog.option.board.3d.clock                = Orologio
+dialog.option.board.3d.surface.frame		= Cornice
+dialog.option.board.3d.light.ambient		= Luce Ambientale
+dialog.option.board.3d.light.directional	= Luce Direzionale
+
+dialog.option.time.control          = Controllo Tempo
+
+board.surface.light	= Riquadri Chiari
+board.surface.dark	= Riquadri Scuri
+board.surface.white	= Pezzi Bianchi
+board.surface.black	= Pezzi Neri
+
+board.surface.background	= Sfondo
+board.surface.coords		= Coordinate
+board.3d.clock              = Orologio
+board.3d.shadow				= Ombreggiatura
+board.3d.reflection			= Riflessi
+board.3d.anisotropic        = Filtro Anisotropico
+board.3d.fsaa               = Antialiasing a Pieno Schermo
+
+board.3d.surface.frame		= Cornice
+board.3d.light.ambient		= Luce Ambientale
+board.3d.light.directional	= Luce Direzionale
+board.3d.screenshot			= Salva Screenshot
+
+
+##############################################################################
+#	search dialog
+##############################################################################
+
+dialog.query.info = Info
+dialog.query.comments = Commenti
+dialog.query.position = Posizione
+
+dialog.query.white	= Bianco:
+dialog.query.black	= Nero:
+
+dialog.query.flags = Opzioni
+dialog.query.color.sensitive = Color Sensitive
+dialog.query.swap.colors = swap
+dialog.query.case.sensitive = Case Sensitive
+dialog.query.soundex = Sounds Like
+dialog.query.result = Risultato
+
+dialog.query.event = Evento:
+dialog.query.site = Sito:
+dialog.query.eco = ECO:
+dialog.query.annotator = Annotator:
+dialog.query.to = to
+dialog.query.opening = Apertura:
+dialog.query.date = Data:
+dialog.query.movecount = Mosse:
+
+dialog.query.commenttext = Commento:
+
+dialog.query.search = Cerca
+dialog.query.clear = Pulisci
+dialog.query.search.in.progress = Ricerca in corso...
+
+dialog.query.0.results = Nessun Risultato
+dialog.query.1.result = Un Risultato
+dialog.query.n.results = %count% Risultati
+
+dialog.query.errors = Errore nell'Espressione di Ricerca:
+query.error.date.too.small = Data is out of range
+query.error.movecount.too.small = Numero mosse troppo basso
+query.error.eco.too.long = Usare tre caratteri per i codici ECO
+query.error.eco.character.expected = Codice ECO deve iniziare con A,B,C,D o E
+query.error.eco.number.expected = Codice ECO consiste in un carattere e un numero tra 0 e 99
+query.error.number.format = Formato Numerico Errato
+query.error.date.format = Formato Data Errato
+
+##############################################################################
+#	about dialog
+##############################################################################
+
+dialog.about.tab.1	= jose
+dialog.about.tab.2	= Database
+dialog.about.tab.3	= Contributions
+dialog.about.tab.4	= Sistema
+dialog.about.tab.5	= 3D
+dialog.about.tab.6	= Licenza
+
+##############################################################################
+#	read progress dialog
+##############################################################################
+
+dialog.progress.time = rimanente: %time%
+
+dialog.read-progress.title = jose - Lettura File
+dialog.read-progress.text = Lettura in corso di %fileName%
+
+##############################################################################
+#	Database Panels
+##############################################################################
+
+# default collection folders
+collection.trash = Cestino
+collection.autosave = Salvataggio Automatico
+collection.clipboard = Clipboard
+# default name for new folders
+collection.new = Nuova Cartella
+
+column.collection.name = Nome
+column.collection.gamecount = Partite
+column.collection.lastmodified = Ultima Modifica
+
+column.game.index = Idx
+column.game.white.name = Bianco
+column.game.black.name = Nero
+column.game.event = Evento
+column.game.site = Sito
+column.game.date = Data
+column.game.result = Risultato
+column.game.round = Turno
+column.game.board = Scacchiera
+column.game.eco = ECO
+column.game.opening = Apertura
+
+column.problem.author =	Autore
+column.problem.source = Sorgente
+column.problem.number = No.
+column.problem.date = Data
+column.problem.stipulation = Stip.
+column.problem.dedication = Dedication
+column.problem.award = Award
+column.problem.solution = Soluzione
+column.problem.cplus = C+
+column.problem.genre = Genere
+column.problem.keyword = Parole Chiave
+
+bootstrap.confirm = La directory '%datadir%' non esiste.\n Crearne una nuova ? 
+boostrap.create = Crea Directory Dati
+
+
+##############################################################################
+#	foreign language names
+##############################################################################
+
+lang.cs = Czech
+lang.da = Danish
+lang.nl = Dutch
+lang.en = English
+lang.et = Estonian
+lang.fi = Finnish
+lang.fr = French
+lang.de = German
+lang.hu = Hungarian
+lang.is = Icelandic
+lang.it = Italian
+lang.no = Norwegian
+lang.pl = Polish
+lang.pt = Portuguese
+lang.ro = Romanian
+lang.es = Spanish
+lang.sv = Swedish

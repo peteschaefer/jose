@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+<PLUGIN type="xboard" ID="sjeng">
+	<NAME> Jonny </NAME>
+	<EXEC os="Linux_i386">
+		<COMMAND> %dir%/jonny261 </COMMAND>
+	</EXEC>
+	<DIR> %local%\engines\jonny </DIR>
+	<LOGO/>
+	<OPTIONS>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="random"> false </OPTION>
+	</OPTIONS>
+	<VERSION> 2.6.1 </VERSION>
+	<AUTHOR> Johannes Zwanzger </AUTHOR>
+	<ARGS/>
+	<STARTUP/>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\Jonny262beta.exe </COMMAND>
+	</EXEC>
+	<EXEC os="Mac">
+		<COMMAND/>
+	</EXEC>
+</PLUGIN>
+</APPLICATION_SETTINGS>

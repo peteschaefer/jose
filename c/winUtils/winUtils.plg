@@ -1,0 +1,36 @@
+<html>
+<body>
+<pre>
+<h1>Erstellungsprotokoll</h1>
+<h3>
+--------------------Konfiguration: winUtils - Win32 Debug--------------------
+</h3>
+<h3>Befehlszeilen</h3>
+Erstellen der temporären Datei  "C:\DOKUME~1\PETERS~1\LOKALE~1\Temp\RSP7C.tmp" mit Inhalten
+[
+/nologo /MTd /W3 /Gm /GX /ZI /I "E:\Programme\Microsoft SDK\include" /I "C:\jdk1.4\include" /I "C:\jdk1.4\include\win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WINUTILS_EXPORTS" /FR"Debug/" /Fp"Debug/winUtils.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\jose\work\c\winUtils\winUtils.cpp"
+]
+Creating command line "cl.exe @C:\DOKUME~1\PETERS~1\LOKALE~1\Temp\RSP7C.tmp" 
+Erstellen der temporären Datei  "C:\DOKUME~1\PETERS~1\LOKALE~1\Temp\RSP7D.tmp" mit Inhalten
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib shell32.lib shfolder.lib /nologo /dll /incremental:no /pdb:"Debug/winUtils.pdb" /machine:I386 /out:"Debug/winUtils.dll" /implib:"Debug/winUtils.lib" /pdbtype:sept 
+.\Debug\winUtils.obj
+"E:\Programme\Microsoft SDK\Lib\Shell32.Lib"
+"E:\Programme\Microsoft SDK\Lib\ShFolder.Lib"
+]
+Erstellen der Befehlzeile "link.exe @C:\DOKUME~1\PETERS~1\LOKALE~1\Temp\RSP7D.tmp"
+<h3>Ausgabefenster</h3>
+Kompilierung läuft...
+winUtils.cpp
+Linker-Vorgang läuft...
+LINK : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /INCREMENTAL:NO ignoriert
+   Bibliothek Debug/winUtils.lib und Objekt Debug/winUtils.exp wird erstellt
+
+
+
+<h3>Ergebnisse</h3>
+winUtils.dll - 0 Fehler, 1 Warnung(en)
+</pre>
+</body>
+</html>

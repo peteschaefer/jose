@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+	<BOOK>
+		<FILE>DCbook_large.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Dann Corbit</AUTHOR>
+		<URL pack="zip">http://osdn.dl.sourceforge.net/sourceforge/jose-chess/DCbook_large.zip</URL>
+		<COMMENT>a very large book with a broad range of openings, useful for analysis</COMMENT>
+	</BOOK>
+	<BOOK>
+		<FILE>book.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Dann Corbit</AUTHOR>
+		<URL>http://osdn.dl.sourceforge.net/sourceforge/jose-chess/book.bin</URL>
+		<COMMENT/>
+	</BOOK>
+	<BOOK>
+		<FILE>book_small.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Dann Corbit</AUTHOR>
+		<URL>http://osdn.dl.sourceforge.net/sourceforge/jose-chess/book_small.bin</URL>
+		<COMMENT/>
+	</BOOK>
+	<BOOK>
+		<FILE>Performance.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Marc Lacrosse</AUTHOR>
+		<URL>http://osdn.dl.sourceforge.net/sourceforge/jose-chess/Performance.bin</URL>
+		<COMMENT>original book for Fruit, desgined for best performance</COMMENT>
+	</BOOK>
+	<BOOK>
+		<FILE>Varied.bin</FILE>
+		<FORMAT>Polyglot</FORMAT>
+		<AUTHOR>Marc Lacrosse</AUTHOR>
+		<URL>http://osdn.dl.sourceforge.net/sourceforge/jose-chess/Varied.bin</URL>
+		<COMMENT>original book for Fruit, designed to play a broader range of openings</COMMENT>
+	</BOOK>
+</APPLICATION_SETTINGS>

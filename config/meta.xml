@@ -1,0 +1,1063 @@
+<DATABASE-META-DATA>
+	<SCHEMA>
+		<!-- - - - - - - - - - - -  -->
+		<!--	Database Definition	-->
+		<!-- - - - - - - - - - - -  -->
+		<NAME> MAIN </NAME>
+		<VERSION> 1006 </VERSION>
+		<TABLE>
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			<!--	Opening Index (maps positions to opening codes and names)  -->
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+			<NAME> Opening </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<PRIMARY_KEY/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- hash key identifying a position -->
+				<NAME> HashKey </NAME>
+				<TYPE> BIGINT </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- game ply (may be used to detect transpositions) -->
+				<NAME> Ply </NAME>
+				<TYPE> INTEGER </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<!-- ECO opening code -->
+				<NAME> ECO </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+				<NOT_NULL/>
+				<DEFAULT> '-' </DEFAULT>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- opening name -->
+				<NAME> Name </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<NOT_NULL/>
+			</COLUMN>
+			<INDEX>
+				<COLUMN>Name</COLUMN>
+				<COLUMN>Id</COLUMN>
+			</INDEX>
+			<COLUMN>
+				<!-- soundexed name -->
+				<NAME> Soundex </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 6 </SIZE>
+				<NOT_NULL/>
+				<DEFAULT> '-' </DEFAULT>
+			</COLUMN>
+			<INDEX>
+				<COLUMN>Soundex</COLUMN>
+				<COLUMN>Id</COLUMN>
+			</INDEX>
+			<INITIAL>
+				0, 0, 0, '-', '-', '-'
+			</INITIAL>
+		</TABLE>
+		<!-- - - - - - - - - -->
+		<!--	Player Names   -->
+		<!-- - - - - - - - - -->
+		<TABLE>
+			<NAME> Player </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<PRIMARY_KEY/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Name </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<NOT_NULL/>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Name </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<COLUMN>
+				<!-- soundexed name -->
+				<NAME> Soundex </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 6 </SIZE>
+				<NOT_NULL/>
+				<DEFAULT> '-' </DEFAULT>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Soundex </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<INITIAL>
+				0, '-', '-'
+			</INITIAL>
+		</TABLE>
+		<!-- - - - - - - - - -->
+		<!--	Event Names    -->
+		<!-- - - - - - - - - -->
+		<TABLE>
+			<NAME> Event </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<PRIMARY_KEY/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Name </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<NOT_NULL/>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Name </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<COLUMN>
+				<!-- soundexed name -->
+				<NAME> Soundex </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 6 </SIZE>
+				<NOT_NULL/>
+				<DEFAULT> '-' </DEFAULT>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Soundex </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<INITIAL>
+				0, '-', '-'
+			</INITIAL>
+		</TABLE>
+		<!-- - - - - - - - - -->
+		<!--	Site Names   -->
+		<!-- - - - - - - - - -->
+		<TABLE>
+			<NAME> Site </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<PRIMARY_KEY/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Name </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<NOT_NULL/>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Name </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<COLUMN>
+				<!-- soundexed name -->
+				<NAME> Soundex </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 6 </SIZE>
+				<NOT_NULL/>
+				<DEFAULT> '-' </DEFAULT>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Soundex </COLUMN>
+				<COLUMN> Id </COLUMN>
+			</INDEX>
+			<INITIAL>
+				0, '-', '-'
+			</INITIAL>
+		</TABLE>
+		<!-- - - - - - - - - - - - - - - - - - - - -->
+		<!--	Collection of Games (= one PGN file) -->
+		<!-- - - - - - - - - - - - - - - - - - - - -->
+		<TABLE>
+			<!-- models a PGN file -->
+			<NAME> Collection </NAME>
+			<VERSION> 100 </VERSION>
+			<COLUMN>
+				<!-- primary key -->
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<NOT_NULL/>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<!-- parent folder -->
+				<NAME> PId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Collection(Id) </REFERENCES>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- original parent folder (for trashed items) -->
+				<NAME> OPId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Collection(Id) </REFERENCES>
+			</COLUMN>
+			<COLUMN>
+				<!-- Collection Name (initially name of local or downloaded file) -->
+				<NAME> Name </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+      		<COLUMN>
+				<!-- folder path (with Ids) -->
+				<NAME> Path </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!--    bit set of attributes
+                    0x80    marked for deletion
+                    0x40    system collection (trash,clipboard,autosave)
+                -->
+				<NAME> Attributes </NAME>
+				<TYPE> TINYINT </TYPE>
+				<DEFAULT> 0 </DEFAULT>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- original file name or URL -->
+				<NAME> SourceURL </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- last modification date -->
+				<NAME> LastModified </NAME>
+				<TYPE> TIMESTAMP </TYPE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- number of games in this collection -->
+				<NAME> GameCount </NAME>
+				<TYPE> INTEGER </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+			</COLUMN>
+			<INITIAL>
+				1,null,null, 'collection.clipboard', ':/1/', 16, '-', {fn now()}, 0
+			</INITIAL>
+			<INITIAL>
+				2,null,null, 'collection.autosave', ':/2/', 16, '-', {fn now()}, 0
+			</INITIAL>
+			<INITIAL>
+				3,null,null, 'collection.trash', ':/3/', 16, '-', {fn now()}, 0
+			</INITIAL>
+		</TABLE>
+		<!-- - - - - - - -->
+		<!--	a Game		 -->
+		<!--	this table stores the fixed-length data for a game record		-->
+		<!--	variable lenght data is stored in MoreGame		-->
+		<!-- - - - - - - -->
+		<TABLE>
+			<!-- models a single game in a pgn file -->
+			<NAME> Game </NAME>
+			<VERSION> 102 </VERSION>
+			<COLUMN>
+				<!-- primary key -->
+				<NAME> Id </NAME>
+				<TYPE> INTEGER </TYPE>
+				<PRIMARY_KEY/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- reference to collcetion -->
+				<NAME> CId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<NOT_NULL/>
+				<REFERENCES> Collection(Id)	</REFERENCES>
+				<ON_DELETE_CASCADE/>
+			</COLUMN>
+			<COLUMN>
+				<!-- index in collection (starting at 1) -->
+				<NAME> Idx </NAME>
+				<TYPE> INTEGER </TYPE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<!--UNIQUE>	CId,Idx		</UNIQUE-->
+			<COLUMN>
+				<!-- bit set of attributes
+                    0x01    has variation lines
+                    0x02    has comments
+					etc.
+                -->
+				<NAME> Attributes </NAME>
+				<TYPE> SMALLINT </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- reference to original collection (for games in clipboard or trash) -->
+				<NAME> OCId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<!--REFERENCES> Collection(Id)	</REFERENCES-->
+				<!--ON_DELETE_CASCADE/-->
+			</COLUMN>
+			<COLUMN>
+				<!-- index if original collection (for games in clipboard or trash) -->
+				<NAME> OIdx </NAME>
+				<TYPE> INTEGER </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<!-- number of plies in game -->
+				<NAME> PlyCount </NAME>
+				<TYPE> INTEGER </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+			</COLUMN>
+			<COLUMN>
+				<!-- result of game -->
+				<NAME> Result </NAME>
+				<TYPE> TINYINT </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- white player name -->
+				<NAME> WhiteId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Player(Id) </REFERENCES>
+				<INDEX/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- black player name -->
+				<NAME> BlackId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Player(Id) </REFERENCES>
+				<INDEX/>
+				<NOT_NULL/>
+				<!-- may be empty; NOT NULL makes the index more efficient -->
+			</COLUMN>
+			<COLUMN>
+				<!-- white player's ELO rating -->
+				<NAME> WhiteELO </NAME>
+				<TYPE> INTEGER </TYPE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- black player's ELO rating -->
+				<NAME> BlackELO </NAME>
+				<TYPE> INTEGER </TYPE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- event -->
+				<NAME> EventId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Event(Id) </REFERENCES>
+				<INDEX/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- site where game was played -->
+				<NAME> SiteId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Site(Id) </REFERENCES>
+				<INDEX/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- date of game -->
+				<NAME> GameDate </NAME>
+				<TYPE> DATE </TYPE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- start of event -->
+				<NAME> EventDate </NAME>
+				<TYPE> DATE </TYPE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- date flags	-->
+				<NAME> DateFlags </NAME>
+				<TYPE> SMALLINT </TYPE>
+				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
+			</COLUMN>
+			<COLUMN>
+				<!-- opening name -->
+				<NAME> OpeningId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Opening(Id) </REFERENCES>
+				<INDEX/>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<!-- ECO opening code -->
+				<NAME> ECO </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+				<INDEX/>
+			</COLUMN>
+		    <COLUMN>
+			    <!-- annotator -->
+				<NAME> AnnotatorId </NAME>
+			    <TYPE> INTEGER </TYPE>
+			    <REFERENCES> Player(Id) </REFERENCES>
+			    <INDEX/>
+		        <NOT_NULL/>
+			    <!-- may be empty; NOT NULL makes the index more efficient -->
+		    </COLUMN>
+		<INDEX>
+			<COLUMN> CId </COLUMN>
+			<COLUMN> Id </COLUMN>
+		</INDEX>
+        <INDEX>
+            <COLUMN> CId </COLUMN>
+            <COLUMN> Idx </COLUMN>
+            <COLUMN> Id </COLUMN>
+        </INDEX>
+		</TABLE>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!--	Additional Game data that is queried rarely	-->		
+		<!--	this table contains all the variable-sized data	 -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<TABLE>
+			<NAME> MoreGame </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<NAME> GId </NAME>
+				<TYPE> INTEGER </TYPE>
+				<REFERENCES> Game(Id) </REFERENCES>
+                		<ON_DELETE_CASCADE/>
+				<NOT_NULL/>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<!-- white player's title (IM, GM, etc.) -->
+				<NAME> WhiteTitle </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 32 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- black player's title (IM, GM, etc.) -->
+				<NAME> BlackTitle </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 32 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- round (not necessarily numeric, e.g. "semi-final" -->
+				<NAME> Round </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 32 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- board (e.g. in team events) -->
+				<NAME> Board </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 32 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- initial position (if different from standard) -->
+				<NAME> FEN </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 128 </SIZE>
+				<!-- INDEX do we need an index ? -->
+			</COLUMN>
+			<COLUMN>
+				<!-- non-standard PGN tags
+			         list of "key=value", separated by semicolons
+			     -->
+				<NAME> Info </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<INDEX/>
+			</COLUMN>
+<!--
+			<COLUMN>
+				<!- - number of white pieces in final position - ->
+				<NAME> WhiteCount </NAME>
+				<TYPE> TINYINT </TYPE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!- - number of black pieces in final position - ->
+				<NAME> BlackCount </NAME>
+				<TYPE> TINYINT </TYPE>
+				<INTDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!- - material signature in final position - ->
+				<NAME> MatSignature </NAME>
+				<TYPE> BIGINT </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<!- - pawn signature in final position - ->
+				<NAME> PawnSignature </NAME>
+				<TYPE> BIGINT </TYPE>
+			</COLUMN>
+-->			
+			<COLUMN>
+				<!-- the actual game lines and variations -->
+				<NAME> Bin </NAME>
+				<TYPE> LONG VARBINARY </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<!-- comments -->
+				<NAME> Comments </NAME>
+				<TYPE> LONG VARCHAR</TYPE>
+                <INDEX type="full-text"/>
+			</COLUMN>
+            <COLUMN>
+                <!-- position hash keys (main line) -->
+                <NAME> PosMain </NAME>
+                <TYPE> LONG VARCHAR </TYPE>
+                <INDEX type="full-text"/>
+            </COLUMN>
+            <COLUMN>
+                <!-- position hash keys (var. lines) -->
+                <NAME> PosVar </NAME>
+                <TYPE> LONG VARCHAR </TYPE>
+                <INDEX type="full-text"/>
+            </COLUMN>
+		</TABLE>
+
+		<!-- - - - - - - - - - - - - - - - -->
+		<!--  Comprehensive View on Game Info  -->
+		<!-- - - - - - - - - - - - - - - - -->
+		<!--VIEW>
+			<NAME> GamePlus </NAME>
+			<VERSION> 100 </VERSION>
+			<DEFINITION>
+				SELECT		Game.*, 
+							MoreGame.*,
+							WhitePlayer.Name AS WhiteName, 
+							BlackPlayer.Name AS BlackName,
+							Event.Name AS EventName, 
+							Site.Name AS SiteName,
+							Opening.Name AS OpeningName
+				FROM		Game, MoreGame, Player WhitePlayer, Player BlackPlayer, Event, Site, 	Opening
+				WHERE		Game.Id = MoreGame.GId
+				  AND		Game.WhiteId = WhitePlayer.Id
+				  AND		Game.BlackId = BlackPlayer.Id
+				  AND		Game.EventId = Event.Id
+				  AND		Game.SiteId = Site.Id
+				  AND		Game.OpeningId = Opening.Id
+			</DEFINITION>
+		</VIEW-->
+		<!-- - - - - - - - - - - - - - - - -->
+		<!--  Player Dependent View on Game Info  -->
+		<!--	Score is the actual score of Player (0 = lose, 0.5 = draw, 1 = win)	-->
+		<!-- - - - - - - - - - - - - - - - -->
+		<!--VIEW>
+			<NAME> Game2 </NAME>
+			<VERSION> 100 </VERSION>
+			<DEFINITION>
+				SELECT		Id AS GId, 1 AS Color, greatest(Result,0)/2  AS Score,
+							WhiteId AS PlayerId, WhiteELO AS PlayerELO, WhiteTitle AS PlayerTitle,
+							BlackId AS OpponentId, BlackELO AS OpponentELO, BlackTitle AS OpponentTitle
+				FROM		Game
+								
+				UNION ALL									
+					
+				SELECT		Id AS GId, 2 AS Color, mod(2-Result,3)/2 AS Score,
+							BlackId AS PlayerId, BlackELO AS PlayerELO, BlackTitle AS PlayerTitle,
+							WhiteId AS OpponentId, WhiteELO AS OpponentELO, WhiteTitle AS OpponentTitle
+				FROM		Game
+			</DEFINITION>
+		</VIEW-->
+    </SCHEMA>
+    <SCHEMA>
+        <NAME> META </NAME>
+        <VERSION> 1001 </VERSION>
+		<!-- - - - - - - - - - - - - - - - - - - - -->
+		<!-- 	MetaInfo: stores meta data versions  -->
+		<!-- - - - - - - - - - - - - - - - - - - - -->
+		<TABLE>
+			<!-- stores information about the current meta data version -->
+			<NAME> MetaInfo </NAME>
+			<VERSION> 101 </VERSION>
+			<COLUMN>
+				<!-- Property Name (e.g. table version) 
+					DATABASE_VERSION		meta data version (compared to <VERSION>)
+					TABLE_VERSION			table version (compared to <VERSION>)
+				-->
+				<NAME> Property </NAME>
+				<TYPE> VARCHAR</TYPE>
+				<SIZE> 64 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- Schema Name -->
+				<NAME> SchemaName </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- Table Name -->
+				<NAME> TableName </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 255 </SIZE>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<!-- Version -->
+				<NAME> Version </NAME>
+				<TYPE> INTEGER </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<!--
+					0 = table is analyze
+					>0 tables needs to be anaylzed
+				-->
+				<NAME> Dirty </NAME>
+				<TYPE> TINYINT </TYPE>
+			</COLUMN>
+			<PRIMARY_KEY>
+				
+			</PRIMARY_KEY>
+		</TABLE>
+	</SCHEMA>
+
+    <SCHEMA>
+        <!-- - - - - - - - - - - -  -->
+        <!--	Import/Export Schema	-->
+        <!-- - - - - - - - - - - -  -->
+        <NAME> IO </NAME>
+        <VERSION> 1002 </VERSION>
+        <TABLE pack="true">
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!--	Opening Index (maps positions to opening codes and names)  -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <NAME> IO_Opening </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <PRIMARY_KEY/>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- hash key identifying a position -->
+                <NAME> HashKey </NAME>
+                <TYPE> BIGINT </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- game ply (may be used to detect transpositions) -->
+                <NAME> Ply </NAME>
+                <TYPE> INTEGER </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- ECO opening code -->
+                <NAME> ECO </NAME>
+                <TYPE> CHAR </TYPE>
+                <SIZE> 3 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- opening name -->
+                <NAME> Name </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+        </TABLE>
+        <!-- - - - - - - - - -->
+        <!--	Player Names   -->
+        <!-- - - - - - - - - -->
+        <TABLE pack="true">
+            <NAME> IO_Player </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <PRIMARY_KEY/>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> Name </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+        </TABLE>
+        <!-- - - - - - - - - -->
+        <!--	Event Names    -->
+        <!-- - - - - - - - - -->
+        <TABLE pack="true">
+            <NAME> IO_Event </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <PRIMARY_KEY/>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> Name </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+        </TABLE>
+        <!-- - - - - - - - - -->
+        <!--	Site Names   -->
+        <!-- - - - - - - - - -->
+        <TABLE pack="true">
+            <NAME> IO_Site </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <PRIMARY_KEY/>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> Name </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+        </TABLE>
+        <!-- - - - - - - - - - - - - - - - - - - - -->
+        <!--	Collection of Games (= one PGN file) -->
+        <!-- - - - - - - - - - - - - - - - - - - - -->
+        <TABLE pack="true">
+            <!-- models a PGN file -->
+            <NAME> IO_Collection </NAME>
+            <VERSION> 101 </VERSION>
+            <COLUMN>
+                <!-- primary key -->
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+                <PRIMARY_KEY/>
+            </COLUMN>
+            <COLUMN>
+                <!-- parent folder -->
+                <NAME> PId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- Collection Name (initially name of local or downloaded file) -->
+                <NAME> Name </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!--    bit set of attributes
+                    0x80    marked for deletion
+                    0x40    system collection (trash,clipboard,autosave)
+                -->
+                <NAME> Attributes </NAME>
+                <TYPE> TINYINT </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- original file name or URL -->
+                <NAME> SourceURL </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- number of games in this collection -->
+                <NAME> GameCount </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+        </TABLE>
+        <!-- - - - - - - -->
+        <!--	a Game		 -->
+        <!--	this table stores the fixed-length data for a game record		-->
+        <!--	variable lenght data is stored in MoreGame		-->
+        <!-- - - - - - - -->
+        <TABLE pack="true">
+            <!-- models a single game in a pgn file -->
+            <NAME> IO_Game </NAME>
+            <VERSION> 101 </VERSION>
+<!--
+            <COLUMN>
+                <! - - primary key - - >
+                <NAME> Id </NAME>
+                <TYPE> INTEGER </TYPE>
+                <PRIMARY_KEY/>
+                <NOT_NULL/>
+            </COLUMN>
+-->
+            <COLUMN>
+                <!-- reference to collcetion -->
+                <NAME> CId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- index in collection (starting at 1) -->
+                <NAME> Idx </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- bit set of attributes
+                    0x80    marked for deletion
+                    0x01    has variation lines
+                    0x02    has comments
+                -->
+                <NAME> Attributes </NAME>
+                <TYPE> TINYINT </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- number of plies in game -->
+                <NAME> PlyCount </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- result of game -->
+                <NAME> Result </NAME>
+                <TYPE> TINYINT </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- white player name -->
+                <NAME> WhiteId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- black player name -->
+                <NAME> BlackId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+                <!-- may be empty; NOT NULL makes the index more efficient -->
+            </COLUMN>
+            <COLUMN>
+                <!-- white player's ELO rating -->
+                <NAME> WhiteELO </NAME>
+                <TYPE> INTEGER </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- black player's ELO rating -->
+                <NAME> BlackELO </NAME>
+                <TYPE> INTEGER </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- event -->
+                <NAME> EventId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- site where game was played -->
+                <NAME> SiteId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- date of game -->
+                <NAME> GameDate </NAME>
+                <TYPE> DATE </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- start of event -->
+                <NAME> EventDate </NAME>
+                <TYPE> DATE </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- date flags	-->
+                <NAME> DateFlags </NAME>
+                <TYPE> SMALLINT </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- opening name -->
+                <NAME> OpeningId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <NOT_NULL/>
+            </COLUMN>
+            <COLUMN>
+                <!-- ECO opening code -->
+                <NAME> ECO </NAME>
+                <TYPE> CHAR </TYPE>
+                <SIZE> 3 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- annotator -->
+                <NAME> AnnotatorId </NAME>
+                <TYPE> INTEGER </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- white player's title (IM, GM, etc.) -->
+                <NAME> WhiteTitle </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 32 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- black player's title (IM, GM, etc.) -->
+                <NAME> BlackTitle </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 32 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- round (not necessarily numeric, e.g. "semi-final" -->
+                <NAME> Round </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 32 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- board (e.g. in team events) -->
+                <NAME> Board </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 32 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- initial position (if different from standard) -->
+                <NAME> FEN </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 128 </SIZE>
+                <!-- INDEX do we need an index ? -->
+            </COLUMN>
+            <COLUMN>
+                <!-- non-standard PGN tags
+                     list of "key=value", separated by semicolons
+                 -->
+                <NAME> Info </NAME>
+                <TYPE> VARCHAR </TYPE>
+                <SIZE> 255 </SIZE>
+            </COLUMN>
+            <COLUMN>
+                <!-- the actual game lines and variations -->
+                <NAME> Bin </NAME>
+                <TYPE> LONG VARBINARY </TYPE>
+            </COLUMN>
+            <COLUMN>
+                <!-- comments -->
+                <NAME> Comments </NAME>
+                <TYPE> LONG VARCHAR</TYPE>
+            </COLUMN>
+	        <COLUMN>
+	            <!-- position hash keys (main line) -->
+	            <NAME> PosMain </NAME>
+	            <TYPE> LONG VARCHAR </TYPE>
+	        </COLUMN>
+	        <COLUMN>
+	            <!-- position hash keys (var. lines) -->
+	            <NAME> PosVar </NAME>
+	            <TYPE> LONG VARCHAR </TYPE>
+	        </COLUMN>
+        </TABLE>
+    </SCHEMA>
+    <SCHEMA>
+        <NAME> IO_MAP </NAME>
+        <VERSION> 1002 </VERSION>
+
+        <TABLE pack="true">
+            <NAME> Map_Collection </NAME>
+            <VERSION> 101 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+        <TABLE pack="true">
+            <NAME> Map_Game </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+        <TABLE pack="true">
+            <NAME> Map_Opening </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+        <TABLE pack="true">
+            <NAME> Map_Player </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+        <TABLE pack="true">
+            <NAME> Map_Event </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+        <TABLE pack="true">
+            <NAME> Map_Site </NAME>
+            <VERSION> 100 </VERSION>
+            <COLUMN>
+                <NAME> OId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+            <COLUMN>
+                <NAME> NId </NAME>
+                <TYPE> INTEGER </TYPE>
+                <INDEX/>
+            </COLUMN>
+        </TABLE>
+     </SCHEMA>
+
+</DATABASE-META-DATA>

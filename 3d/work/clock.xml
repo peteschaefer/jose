@@ -1,0 +1,34 @@
+<jo3d>
+	<!-- control file for Jo3D scene graph assembler -->
+
+	<!-- store geometry by reference -->
+	<by_reference>1</by_reference>
+	<!-- store coordinates interleaved -->
+	<interleaved>1</interleaved>
+	<!-- stripify (strongly recommended) -->
+	<strips>1</strips>
+	<!-- generate normals (strongly recommended) -->
+	<normals>1</normals>
+
+	<title>Clock</title>
+	<author> Peter Schäfer </author>
+
+	<file name="clock.3ds">
+        <shape name="FRAME_LEFT"/>
+        <shape name="FRAME_TOP"/>
+        <shape name="FRAME_RIGHT"/>
+        <shape name="FRAME_BOTTOM"/>
+        <shape name="INNER"/>
+        <shape name="KNOB_LEFT"/>
+        <shape name="KNOB_RIGHT"/>
+
+	<point name="DIAL_CENTER">-1450,-166.688,212.625</point>
+	<float name="DIAL_RADIUS">147</float>
+	<float name="KNOB_HEIGHT">20</float>
+
+	<point name="LABEL_CENTER">-1450,0,111</point>
+	<float name="LABEL_WIDTH">114.932</float>
+	<float name="LABEL_HEIGHT">29.554</float>
+    </file>
+
+</jo3d>

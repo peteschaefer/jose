@@ -1,0 +1,249 @@
+<!-- miscellaneous config options -->
+<config>
+	<!--sound id="sound.error">sounds/Utopia Fehler.wav</sound-->
+	<sound id="sound.error">sounds/KDE_Beep_Door.wav</sound>
+	<sound id="sound.mate">sounds/KDE_Dialog_Appear.wav</sound>
+	<sound id="sound.draw">sounds/KDE_Dialog_Disappear.wav</sound>
+	<sound id="sound.notify">sounds/KDE_Notify.wav</sound>
+
+	<!-- Look and Feel Packages -->
+	<!-- Metouia is the Default setting -->
+	<look-and-feel>
+		<name>Metouia</name>
+		<class>net.sourceforge.mlf.metouia.MetouiaLookAndFeel</class>
+		<class-path>metouia.jar</class-path>
+	</look-and-feel>
+    <!-- Quaqua is the default on Mac OS X -->
+    <look-and-feel>
+        <name>Quaqua</name>
+        <class>ch.randelshofer.quaqua.QuaquaManager</class>
+    </look-and-feel>
+<!--
+    <look-and-feel>
+        <name>Quaqua Jaguar</name>
+        <theme>jaguar</theme>
+        <class>ch.randelshofer.quaqua.QuaquaManager</class>
+    </look-and-feel>
+    <look-and-feel>
+        <name>Quaqua Panther</name>
+        <theme>panther</theme>
+        <class>ch.randelshofer.quaqua.QuaquaManager</class>
+    </look-and-feel>
+-->
+	<!-- Optional packages (usually not distributed) -->
+	<look-and-feel>
+		<name>Office XP</name>
+		<class>org.fife.plaf.OfficeXP.OfficeXPLookAndFeel</class>
+		<class-path>OfficeLnFs.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>WinLAF</name>
+		<class>net.java.plaf.windows.WindowsLookAndFeel</class>
+		<class-path>winlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Office 2003</name>
+		<class>org.fife.plaf.Office2003.Office2003LookAndFeel</class>
+		<class-path>OfficeLnFs.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Kunststoff</name>
+		<class>com.incors.plaf.kunststoff.KunststoffLookAndFeel</class>
+		<class-path>kunststoff.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Oyoaha</name>
+		<class>com.oyoaha.swing.plaf.oyoaha.OyoahaLookAndFeel</class>
+		<class-path>oalnf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Next</name>
+		<class>nextlf.plaf.NextLookAndFeel</class>
+		<class-path>nextlf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>GTK</name>
+		<class>org.gtk.java.swing.plaf.gtk.GtkLookAndFeel</class>
+		<class-path>gtkswing.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>ThreeD</name>
+		<class>swing.addon.plaf.threeD.ThreeDLookAndFeel</class>
+		<class-path>3DLF.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Skin</name>
+		<class>com.l2fprod.gui.plaf.skin.SkinLookAndFeel</class>
+		<theme>themepack.zip</theme>
+		<class-path>skinlf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Skin Aqua</name>
+		<class>com.l2fprod.gui.plaf.skin.SkinLookAndFeel</class>
+		<theme>aquathemepack.zip</theme>
+		<class-path>skinlf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Skin MacOS</name>
+		<class>com.l2fprod.gui.plaf.skin.SkinLookAndFeel</class>
+		<theme>macosthemepack.zip</theme>
+		<class-path>skinlf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Goodies Windows</name>
+		<class>com.jgoodies.plaf.windows.ExtWindowsLookAndFeel</class>
+		<class-path>looks-all.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Goodies Plastic</name>
+		<class>com.jgoodies.plaf.plastic.PlasticLookAndFeel</class>
+		<class-path>plastic-1.2.0.jar</class-path><!--looks-all.jar-->
+	</look-and-feel>
+	<look-and-feel>
+		<name>Goodies Plastic 3D</name>
+		<class>com.jgoodies.plaf.plastic.Plastic3DLookAndFeel</class>
+		<class-path>plastic-1.2.0.jar</class-path><!--looks-all.jar-->
+	</look-and-feel>
+	<look-and-feel>
+		<name>Goodies Plastic XP</name>
+		<class>com.jgoodies.plaf.plastic.PlasticXPLookAndFeel</class>
+		<class-path>plastic-1.2.0.jar</class-path><!--looks-all.jar-->
+	</look-and-feel>
+	<look-and-feel>
+		<name>Teknolust</name>
+		<class>com.teknolust.plaf.teknolust.TeknolustLookAndFeel</class>
+		<class-path>teknolust_plaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Skin Linux</name>
+		<class>com.l2fprod.gui.plaf.skin.LinuxLookAndFeel</class>
+		<class-path>skinlf.jar</class-path>
+	</look-and-feel>
+	<!--look-and-feel>
+		<name>GTK+</name>
+		<class>com.sun.java.swing.plaf.gtk.GTKLookAndFeel</class>
+	</look-and-feel-->
+    	<!-- though this LnF is directly from Sun, it is so unstable that we better disable it  -->
+	<look-and-feel>
+		<name>FH</name>
+		<class>com.shfarr.ui.plaf.fh.FhLookAndFeel</class>
+		<class-path>fhlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>Liquid</name>
+		<class>com.birosoft.liquid.LiquidLookAndFeel</class>
+		<class-path>LiquidLnF.jar</class-path>
+	</look-and-feel>
+
+
+	<!-- paper sizes (don't rely on javax.print) -->
+	<paper>
+		<name>A2</name>
+		<width>420</width>
+		<height>594</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>A3</name>
+		<width>297</width>
+		<height>420</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>A4</name>
+		<width>210</width>
+		<height>297</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>A5</name>
+		<width>148</width>
+		<height>210</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>A6</name>
+		<width>105</width>
+		<height>148</height>
+		<unit>mm</unit>
+	</paper>
+
+	<paper>
+		<name>B3</name>
+		<width>353</width>
+		<height>500</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>B4</name>
+		<width>250</width>
+		<height>353</height>
+		<unit>mm</unit>
+	</paper>
+	<paper>
+		<name>B5</name>
+		<width>176</width>
+		<height>250</height>
+		<unit>mm</unit>
+	</paper>
+
+	<paper>
+		<name>Legal</name>
+		<width>8.5</width>
+		<height>14</height>
+		<unit>in</unit>
+	</paper>
+	<paper>
+		<name>Executive</name>
+		<width>7.25</width>
+		<height>10.5</height>
+		<unit>in</unit>
+	</paper>
+	<paper>
+		<name>Letter</name>
+		<width>8.5</width>
+		<height>11</height>
+		<unit>in</unit>
+	</paper>
+	<paper>
+		<name>Half Letter</name>
+		<width>5.5</width>
+		<height>8.5</height>
+		<unit>in</unit>
+	</paper>
+
+	<paper>
+		<name>US B</name>
+		<width>11</width>
+		<height>17</height>
+		<unit>in</unit>
+	</paper>
+	<paper>
+		<name>US C</name>
+		<width>17</width>
+		<height>22</height>
+		<unit>in</unit>
+	</paper>
+
+
+	<web>
+		<!-- bug tracker url -->
+		<tracker-add>http://sourceforge.net/tracker/?func=add&amp;group_id=60120&amp;atid=493133</tracker-add>
+		<tracker-action>/tracker/index.php</tracker-action>
+		<!-- online update info -->
+		<online-update>http://jose-chess.sourceforge.net/download.xml</online-update>
+        <!-- online donation -->
+        <online-donate>http://jose-chess.sourceforge.net/main.html#donate</online-donate>
+		<!-- book download -->
+		<book-download>http://jose-chess.sourceforge.net/download.html#books</book-download>
+
+		<!-- default web browser application on Windows -->
+		<browser os="Windows">rundll32 url.dll,FileProtocolHandler %url%</browser>
+		<!-- default web browser application on Unix -->
+		<browser os="Unix">mozilla %url%</browser>
+		<!-- on OS X, just call "open" -->
+		<browser os="Mac">open %url%</browser>
+ 	</web>
+
+
+</config>

@@ -1,0 +1,212 @@
+<!-- - - - - - - - - - - -  -->
+<!--	Experimental Data Sources for jose	-->
+<!-- - - - - - - - - - - -  -->
+<data-sources>
+	<!-- MySQL Server
+		connects to external MySQL Server
+	 -->
+	<data-source>
+		<jndi-name> jdbc/mysql </jndi-name>
+		<driver-class>  com.caucho.jdbc.mysql.Driver </driver-class>
+		<class-path>mysql.jar</class-path>
+        <!--driver-class> org.gjt.mm.mysql.Driver </driver-class-->
+		<adapter-class> de.jose.db.MySQLAdapter </adapter-class>
+		<display-name> MySQL-Server </display-name>
+		<!--jdbc-url> jdbc:caucho-mysql://localhost/jose </jdbc-url-->
+        <jdbc-url> jdbc:caucho-mysql://localhost/jose </jdbc-url>
+		<connection-param>
+			<!-- transactions are supported but not required	-->
+			<param-name> relaxAutocommit</param-name>
+			<param-value> true </param-value>
+		</connection-param>
+	</data-source>
+
+    <!-- FirstSQL/J embedded -->
+    <data-source>
+        <jndi-name> jdbc/firstsql </jndi-name>
+        <driver-class> COM.FirstSQL.Dbcp.DbcpDriver </driver-class>
+		<class-path>fsjclasses.jar</class-path>
+        <adapter-class embedded="true"> de.jose.db.FirstSQLAdapter </adapter-class>
+        <display-name> FirstSQL</display-name>
+        <jdbc-url> jdbc:dbcp://local;recover=yes </jdbc-url>
+        <connection-param>
+            <param-name> user </param-name>
+            <param-value> adm </param-value>
+        </connection-param>
+        <connection-param>
+            <param-name> database.path </param-name>
+            <param-value> %local%/database/firstsql </param-value>
+        </connection-param>
+    </data-source>
+
+	<!-- Quadcap Embedded (pure Java) -->
+	<data-source>
+		<jndi-name> jdbc/quadcap </jndi-name>
+		<display-name>Quadcap</display-name>
+		<driver-class> com.quadcap.jdbc.JdbcDriver </driver-class>
+		<adapter-class embedded="true"> de.jose.db.QEDAdapter </adapter-class>
+		<class-path>qed.jar;antlr.jar</class-path>
+		<display-name> Quadcap </display-name>
+		<jdbc-url> jdbc:qed:%data%/qed </jdbc-url>
+		<connection-param>
+			<param-name>cacheSize</param-name>
+			<param-value>1000000</param-value>
+		</connection-param>
+		<!-- large cache size improves performance -->
+		<connection-param>
+			<param-name>debug.level</param-name>
+			<param-value>0</param-value>
+			<!-- 5 = full debug output, 0 = none -->
+		</connection-param>
+		<connection-param>
+			<param-name>fastSynce</param-name>
+			<param-value>true</param-value>
+		</connection-param>
+		<!-- use less sync operations -> better performance -->
+		<connection-param>
+			<param-name>logger</param-name>
+			<param-value>0</param-value>
+		</connection-param>
+		<!-- logger=0 disables transaction logs -> improves performance -->
+
+		<conection-param>
+			<param-name>isCaseSensitive</param-name>
+			<param-value>true</param-value>
+			<!-- turn off case sensitve string compare -->
+		</conection-param>
+	</data-source>
+	<!-- Cloudscape Embedded -->
+	<data-source>
+		<jndi-name> jdbc/cloudscape </jndi-name>
+		<driver-class> COM.cloudscape.core.JDBCDriver </driver-class>
+		<class-path>cloudscape.jar</class-path>
+		<adapter-class embedded="true"> de.jose.db.CloudscapeAdapter </adapter-class>
+		<display-name> Cloudscape </display-name>
+		<jdbc-url> jdbc:cloudscape:%local%/database/cloudscape </jdbc-url>
+		<connection-param>
+			<param-name>cloudscape.system.home</param-name>
+			<param-value>%local%/database/cloudscape</param-value>
+		</connection-param>
+	</data-source>
+
+	<!-- JDataStore
+		embeded java database (by Borland)	-->
+	<data-source>
+		<jndi-name> jdbc/jds </jndi-name>
+		<driver-class> com.borland.datastore.jdbc.DataStoreDriver </driver-class>
+		<class-path>jds.jar;dbf.jar;dx.jar</class-path>
+		<adapter-class embedded="true"> de.jose.db.JDataStoreAdapter </adapter-class>
+		<display-name> JDataStore </display-name>
+		<jdbc-url> jdbc:borland:dslocal:%local%/database/jds/jose.jds </jdbc-url>
+		<connection-param>
+			<param-name>user</param-name>
+			<param-value>jose</param-value>
+		</connection-param>
+
+	</data-source>
+
+	<!-- Oracle Server (example) -->
+	<data-source>
+		<jndi-name> jdbc/oracle </jndi-name>
+		<driver-class> oracle.jdbc.driver.OracleDriver </driver-class>
+		<class-path>classes12.zip;nls_charset12.zip</class-path>
+		<adapter-class> de.jose.db.OracleAdapter </adapter-class>
+		<display-name> Oracle </display-name>
+		<!--jdbc-url> jdbc:oracle:thin:@OEMCOMPUTER:1521:JOSE </jdbc-url-->
+		<!-- thin driver can be installed anywhere but has a problem with large BLOBs -->
+		<jdbc-url> jdbc:oracle:oci8:@JOSE </jdbc-url>
+		<!-- oci8 driver requires client installation and is more reliable -->
+		<connection-param>
+			<param-name>user</param-name>
+			<param-value>jose</param-value>
+		</connection-param>
+		<connection-param>
+			<param-name>password</param-name>
+			<param-value>esoj</param-value>
+		</connection-param>
+		<!-- the following parameters are optional; interpreted by the Setup utility
+			assumes that there are tablespace USERS and INDX	-->
+		<connection-param>
+			<param-name>default.tablespace</param-name>
+			<param-value>USERS</param-value>
+		</connection-param>
+		<connection-param>
+			<param-name>index.tablespace</param-name>
+			<param-value>INDX</param-value>
+		</connection-param>
+	</data-source>
+	<!-- MS Access 	(experimental; SQL support is very poor) -->
+	<data-source>
+		<jndi-name> jdbc/odbc/msaccess </jndi-name>
+		<driver-class> sun.jdbc.odbc.JdbcOdbcDriver </driver-class>
+		<adapter-class embedded="true"> de.jose.db.MSAccessAdapter </adapter-class>
+		<display-name> MS-Access </display-name>
+		<jdbc-url> jdbc:odbc:jose </jdbc-url>
+	</data-source>
+	<!-- DB2 Server (example, not yet tested) -->
+	<data-source>
+		<jndi-name> jdbc/db2 </jndi-name>
+		<display-name> DB2 </display-name>
+		<driver-class> COM.ibm.db2.jdbc.net.DB2Driver </driver-class>
+		<adapter-class> de.jose.db.DB2Adapter </adapter-class>
+		<jdbc-url> jdbc:db2:net: ... </jdbc-url>
+		<connection-param>
+			<param-name>user</param-name>
+			<param-value>...</param-value>
+		</connection-param>
+		<connection-param>
+			<param-name>password</param-name>
+			<param-value>...</param-value>
+		</connection-param>
+	</data-source>
+	<!-- MS-SQL Server (example, not yet tested) -->
+	<data-source>
+		<jndi-name> jdbc/mssql </jndi-name>
+		<display-name> MS-SQL </display-name>
+		<driver-class> com.inet.tds.TdsDriver </driver-class>
+		<adapter-class> de.jose.db.MSSQLAdapter </adapter-class>
+		<jdbc-url> ... </jdbc-url>
+		<connection-param>
+			<param-name>user</param-name>
+			<param-value>...</param-value>
+		</connection-param>
+		<connection-param>
+			<param-name>password</param-name>
+			<param-value>...</param-value>
+		</connection-param>
+	</data-source>
+
+
+    <!-- PDB (Original Database on FoxPro) ->
+	<data-source>
+		<jndi-name> odbc/pdb-fox </jndi-name>
+		<driver-class> sun.jdbc.odbc.JdbcOdbcDriver </driver-class>
+		<adapter-class embedded="true"> de.jose.db.FoxProAdapter </adapter-class>
+		<display-name> PDB-Fox </display-name>
+		<!- - need to create an ODBC data source - ->
+		<jdbc-url> jdbc:odbc:pdb </jdbc-url>
+	</data-source>
+	<!- - PDB (MySQL copy) - ->
+	<data-source>
+		<jndi-name> jdbc/pdb-mysql </jndi-name>
+		<driver-class> com.caucho.jdbc.mysql.Driver </driver-class>
+		<adapter-class> de.jose.db.MySQLAdapter </adapter-class>
+		<display-name> PDB-MySQL </display-name>
+		<jdbc-url> jdbc:caucho-mysql://localhost/pdb </jdbc-url>
+		<connection-param>
+			<!- - transactions are supported but not required	- ->
+			<param-name> relaxAutocommit</param-name>
+			<param-value> true </param-value>
+		</connection-param>
+	</data-source>
+	<!- - FoxPro JDBC type 4 driver
+		this driver has very limited capabilities but is sufficient to run the CopyPDB utility
+	- ->
+	<data-source>
+		<jndi-name> jdbc/pdb-fox </jndi-name>
+		<driver-class> com.hxtt.sql.dbf.DBFDriver </driver-class>
+		<adapter-class> de.jose.db.FoxProAdapter </adapter-class>
+		<display-name> PDB-Fox (JDBC) </display-name>
+		<jdbc-url> jdbc:dbf:/%local%/database/fox </jdbc-url>
+	</data-source-->
+</data-sources>

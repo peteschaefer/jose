@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<PLUGIN ID="spike2" type="xboard">
+	<NAME> Spike </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\Spike10a.exe </COMMAND>
+	</EXEC>
+	<DIR> %local%\engines\spike </DIR>
+	<LOGO> %dir%\spike.gif </LOGO>
+	<VERSION> 1.0a XBoard </VERSION>
+	<AUTHOR> Ralf Schäfer &amp; Volker Böhm </AUTHOR>
+	<OPTIONS>
+		<OPTION name="UCI_ShowCurrLine"> false </OPTION>
+		<OPTION name="UCI_ShowRefutations"> false </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+		<OPTION name="Hash"> 32 </OPTION>
+		<OPTION name="Logfile"> false </OPTION>
+		<OPTION name="NalimovPath"> C:\TB </OPTION>
+		<OPTION name="NalimovCache"> 4 </OPTION>
+		<OPTION name="Check Extension"> 4 </OPTION>
+		<OPTION name="Threat Extension"> 3 </OPTION>
+		<OPTION name="Recapture Extension"> 3 </OPTION>
+		<OPTION name="Pawn Row7 Extension"> 3 </OPTION>
+		<OPTION name="One Reply Extension"> 0 </OPTION>
+		<OPTION name="Depth for R==2 (in 1/4 ply)"> 20 </OPTION>
+		<OPTION name="Checks in q-search after nullmove"> 1 </OPTION>
+		<OPTION name="Checks in q-search"> 1 </OPTION>
+		<OPTION name="Futility pruning"> false </OPTION>
+		<OPTION name="History pruning"> true </OPTION>
+		<OPTION name="UCI_Chess960"> false </OPTION>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="random"> false </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>

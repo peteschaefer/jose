@@ -1,0 +1,489 @@
+
+<DATABASE-META-DATA>
+	<SCHEMA>
+		<NAME> PDB </NAME>
+		<VERSION> 1000 </VERSION>
+		<!-- Meta Data Definition for PDB (the Problem Data Base)		-->
+		<TABLE>
+			<NAME> Authors </NAME>
+				<COLUMN>
+					<NAME> AuthorId </NAME>
+					<TYPE> CHAR </TYPE>
+					<SIZE> 5 </SIZE>
+					<PRIMARY_KEY/>
+				</COLUMN>
+				<COLUMN>
+					<NAME> LastName </NAME>
+					<TYPE> VARCHAR </TYPE>
+					<SIZE> 25 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> FirstName </NAME>
+					<TYPE> VARCHAR </TYPE>
+					<SIZE> 30 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> Addition </NAME>
+					<TYPE> VARCHAR </TYPE>
+					<SIZE> 12 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> Title </NAME>
+					<TYPE> VARCHAR </TYPE>
+					<SIZE> 8 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> BirthDay </NAME>
+					<TYPE> CHAR </TYPE>
+					<SIZE> 10 </SIZE>
+					<!-- should better be DATE, but well... -->
+				</COLUMN>
+				<COLUMN>
+					<NAME> Death </NAME>
+					<TYPE> CHAR </TYPE>
+					<SIZE> 10 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> Country </NAME>
+					<TYPE> CHAR </TYPE>
+					<SIZE> 3 </SIZE>
+				</COLUMN>
+				<COLUMN>
+					<NAME> Initials </NAME>
+					<TYPE> CHAR </TYPE>
+					<SIZE> 3 </SIZE>
+				</COLUMN>
+				<INDEX>
+					<COLUMN> FirstName </COLUMN>
+				</INDEX>
+				<INDEX>
+					<COLUMN> LastName </COLUMN>
+					<COLUMN> FirstName </COLUMN>
+				</INDEX>
+		</TABLE>
+		
+		<TABLE> 
+			<NAME> Genre </NAME>
+			<COLUMN>
+				<NAME> GenreId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Genre </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 15 </SIZE>
+			</COLUMN>
+		</TABLE>
+		
+		<TABLE>
+			<NAME> Judges </NAME>
+			<COLUMN>
+				<NAME> JudgeId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 6 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Source </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 30 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Date_ </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 10 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Judge </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 30 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Tourney </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 30 </SIZE>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> Source </COLUMN>
+				<COLUMN> Date_ </COLUMN>
+			</INDEX>
+		</TABLE>
+		
+		<TABLE>
+			<NAME> Keywords </NAME>
+			<COLUMN>
+				<NAME> KeyId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 4 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> KeyWord </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 40 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Text_ </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Type </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 20 </SIZE>
+			</COLUMN>
+		</TABLE>
+		
+		<TABLE> 
+			<NAME> Pieces </NAME>
+			<COLUMN>
+				<NAME> PieceId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 4 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Piece </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 40 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PieceShort </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 2 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> Text_ </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Moves </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 20 </SIZE>
+			</COLUMN>
+		</TABLE>
+		
+		<TABLE>
+			<NAME> Problems </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Stipulation </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+				<!-- should better be VARCHAR -->
+			</COLUMN>
+			<COLUMN>
+				<NAME> Solution </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Comment_ </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Dedication </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Award </NAME>
+				<TYPE> LONG VARCHAR </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> fsol </NAME>
+				<TYPE> BIT </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> fkey </NAME>
+				<TYPE> BIT </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> InputDate </NAME>
+				<TYPE> DATE </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> InputTime </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> InputBy </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> ChangeDate </NAME>
+				<TYPE> DATE </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> ChangedBy </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> CheckSum </NAME>
+				<TYPE> DOUBLE </TYPE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> CPlus </NAME>
+				<TYPE> BIT </TYPE>
+			</COLUMN>
+		</TABLE>
+	
+		<TABLE>
+			<NAME> Position </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Position </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 64 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PosMode </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 1 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PiecesW </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 2 </SIZE>
+				<!-- should better be SMALLINT -->
+			</COLUMN>
+			<COLUMN>
+				<NAME> PiecesB </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 2 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PiecesN </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 2 </SIZE>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PosNr </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 1 </SIZE>
+			</COLUMN>
+		</TABLE>
+			
+		<TABLE>
+			<NAME> Sources </NAME>
+			<COLUMN>
+				<NAME> SourceId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 5 </SIZE>
+				<PRIMARY_KEY/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Source </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 40 </SIZE>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Abbreviation </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 6 </SIZE>
+			</COLUMN>
+		</TABLE>
+	
+		<TABLE>
+			<!-- relates Problems to Authors -->
+			<NAME> refaut </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> AuthorId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 5 </SIZE>
+				<REFERENCES> Authors(AuthorId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PosNr </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 1 </SIZE>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> ProbId </COLUMN>
+				<COLUMN> AuthorId </COLUMN>
+			</INDEX>
+			<INDEX>
+				<COLUMN> AuthorId </COLUMN>
+				<COLUMN> ProbId </COLUMN>
+			</INDEX>
+		</TABLE>
+		
+		<TABLE>
+			<!-- relates Problems to Genres -->
+			<NAME> refgen </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> GenreId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 3 </SIZE>
+				<REFERENCES> Genre(GenreId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> ProbId </COLUMN>
+				<COLUMN> GenreId </COLUMN>
+			</INDEX>
+			<INDEX>
+				<COLUMN> GenreId </COLUMN>
+				<COLUMN> ProbId </COLUMN>
+			</INDEX>
+		</TABLE>
+		
+		<TABLE>
+			<!-- relates Problems to Keywords -->
+			<NAME> refkey </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> KeyId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 4 </SIZE>
+				<REFERENCES> Keywords(KeyId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> Addition </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 20 </SIZE>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> ProbId </COLUMN>
+				<COLUMN> KeyId </COLUMN>
+			</INDEX>
+			<INDEX>
+				<COLUMN> KeyId </COLUMN>
+				<COLUMN> ProbId </COLUMN>
+			</INDEX>
+		</TABLE>
+		
+		<TABLE>
+			<!-- relates Problems to Pieces -->
+			<NAME> refpce</NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PieceId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 4 </SIZE>
+				<REFERENCES> Pieces(PieceId) </REFERENCES>
+				<NOT_NULL/>
+				<INDEX/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> PieceSymb </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 2 </SIZE>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> ProbId </COLUMN>
+				<COLUMN> PieceId </COLUMN>
+			</INDEX>
+			<INDEX>
+				<COLUMN> PieceId </COLUMN>
+				<COLUMN> ProbId </COLUMN>
+			</INDEX>
+		</TABLE>
+		
+		<TABLE>
+			<!-- relates Problems to Sources -->
+			<NAME> refsrc </NAME>
+			<COLUMN>
+				<NAME> ProbId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 8 </SIZE>
+				<REFERENCES> Problems(ProbId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> Date_ </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 10 </SIZE>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> Number_ </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 10 </SIZE>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> SourceNo </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 10 </SIZE>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> Original </NAME>
+				<TYPE> BIT </TYPE>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> Page </NAME>
+				<TYPE> VARCHAR </TYPE>
+				<SIZE> 10 </SIZE>
+			</COLUMN>							
+			<COLUMN>
+				<NAME> SourceId </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 5 </SIZE>
+				<REFERENCES> Sources(SourceId) </REFERENCES>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN> 
+				<NAME> PosNr </NAME>
+				<TYPE> CHAR </TYPE>
+				<SIZE> 1 </SIZE>
+			</COLUMN>
+			<INDEX>
+				<COLUMN> ProbId </COLUMN>
+				<COLUMN> SourceId </COLUMN>
+			</INDEX>
+			<INDEX>
+				<COLUMN> SourceId </COLUMN>
+				<COLUMN> ProbId </COLUMN>
+			</INDEX>
+		</TABLE>
+	</SCHEMA>
+</DATABASE-META-DATA>

@@ -1,0 +1,3 @@
+
+contains geometry data for the 3D board display.
+the j3ds and j3df file formats are specific to 'jose'

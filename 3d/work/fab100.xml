@@ -1,0 +1,28 @@
+<jo3d>
+	<!-- control file for Jo3D scene graph assembler -->
+
+	<!-- model by del Fabbro - top detail (about 150k triangles)	-->
+
+	<!-- store geometry by reference -->
+	<by_reference>1</by_reference>
+	<!-- store coordinates interleaved -->
+	<interleaved>1</interleaved>
+	<!-- stripify (strongly recommended) -->
+	<strips>1</strips>
+	<!-- generate normals (strongly recommended) -->
+	<normals>1</normals>
+
+	<title>High Detail</title>
+	<title lang="de">Hohes Detail</title>
+	<author> Lorenzo del Fabbro</author>
+
+	<file name="frame.3ds">		<shape name="FRAME"/></file>
+
+	<file name="fab100_p.3ds">	<shape name="p"/> </file>
+	<file name="fab100_n.3ds">	<shape name="n"/> </file>
+	<file name="fab100_b.3ds">	<shape name="b"/> </file>
+	<file name="fab100_r.3ds">	<shape name="r"/> </file>
+	<file name="fab100_q.3ds">	<shape name="q"/> </file>
+	<file name="fab100_k.3ds">	<shape name="k"/> </file>
+
+</jo3d>

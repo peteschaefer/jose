@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+<PLUGIN ID="lc0" type="uci">
+	<NAME> Lc0 </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\lc0.exe </COMMAND>
+	</EXEC>
+	<DIR> C:\Users\nightrider\Desktop\lc0 </DIR>
+	<LOGO> %dir%\Leela_Chess_Zero_logo.svg.png </LOGO>
+	<VERSION> v0.31.2 </VERSION>
+	<AUTHOR> The LCZero Authors. </AUTHOR>
+	<OPTIONS>
+		<OPTION name="WeightsFile"> BT4-1024x15x32h-swa-6147500.pb.gz </OPTION>
+		<OPTION name="Backend"> cudnn-auto </OPTION>
+		<OPTION name="BackendOptions"/>
+		<OPTION name="Threads"> 7 </OPTION>
+		<OPTION name="NNCacheSize"> 2000000 </OPTION>
+		<OPTION name="MinibatchSize"> 0 </OPTION>
+		<OPTION name="MaxPrefetch"> 32 </OPTION>
+		<OPTION name="CPuct"> 1.745000 </OPTION>
+		<OPTION name="CPuctBase"> 38739.000000 </OPTION>
+		<OPTION name="CPuctFactor"> 3.894000 </OPTION>
+		<OPTION name="TwoFoldDraws"> true </OPTION>
+		<OPTION name="VerboseMoveStats"> false </OPTION>
+		<OPTION name="FpuStrategy"> reduction </OPTION>
+		<OPTION name="FpuValue"> 0.330000 </OPTION>
+		<OPTION name="CacheHistoryLength"> 0 </OPTION>
+		<OPTION name="PolicyTemperature"> 1.359000 </OPTION>
+		<OPTION name="MaxCollisionEvents"> 917 </OPTION>
+		<OPTION name="MaxCollisionVisits"> 80000 </OPTION>
+		<OPTION name="MaxCollisionVisitsScalingStart"> 28 </OPTION>
+		<OPTION name="MaxCollisionVisitsScalingEnd"> 145000 </OPTION>
+		<OPTION name="MaxCollisionVisitsScalingPower"> 1.250000 </OPTION>
+		<OPTION name="OutOfOrderEval"> true </OPTION>
+		<OPTION name="MaxOutOfOrderEvalsFactor"> 2.400000 </OPTION>
+		<OPTION name="StickyEndgames"> true </OPTION>
+		<OPTION name="SyzygyFastPlay"> false </OPTION>
+		<OPTION name="MultiPV"> 3 </OPTION>
+		<OPTION name="PerPVCounters"> false </OPTION>
+		<OPTION dirty="true" name="ScoreType"> WDL_mu </OPTION>
+		<OPTION name="HistoryFill"> fen_only </OPTION>
+		<OPTION name="MovesLeftMaxEffect"> 0.034500 </OPTION>
+		<OPTION name="MovesLeftThreshold"> 0.800000 </OPTION>
+		<OPTION name="MovesLeftSlope"> 0.002700 </OPTION>
+		<OPTION name="MovesLeftConstantFactor"> 0.000000 </OPTION>
+		<OPTION name="MovesLeftScaledFactor"> 1.652100 </OPTION>
+		<OPTION name="MovesLeftQuadraticFactor"> -0.652100 </OPTION>
+		<OPTION name="MaxConcurrentSearchers"> 1 </OPTION>
+		<OPTION name="DrawScore"> 0.000000 </OPTION>
+		<OPTION name="ContemptMode"> play </OPTION>
+		<OPTION name="Contempt"/>
+		<OPTION name="WDLCalibrationElo"> 0.000000 </OPTION>
+		<OPTION name="WDLEvalObjectivity"> 1.000000 </OPTION>
+		<OPTION name="WDLDrawRateReference"> 0.500000 </OPTION>
+		<OPTION name="NodesPerSecondLimit"> 0.000000 </OPTION>
+		<OPTION name="SolidTreeThreshold"> 100 </OPTION>
+		<OPTION name="TaskWorkers"> -1 </OPTION>
+		<OPTION name="MinimumProcessingWork"> 20 </OPTION>
+		<OPTION name="MinimumPickingWork"> 1 </OPTION>
+		<OPTION name="MinimumRemainingPickingWork"> 20 </OPTION>
+		<OPTION name="MinimumPerTaskProcessing"> 8 </OPTION>
+		<OPTION name="IdlingMinimumWork"> 0 </OPTION>
+		<OPTION name="ThreadIdlingThreshold"> 1 </OPTION>
+		<OPTION name="UCI_Opponent"/>
+		<OPTION name="UCI_RatingAdv"> 0.000000 </OPTION>
+		<OPTION name="SearchSpinBackoff"> false </OPTION>
+		<OPTION name="ConfigFile"> lc0.config </OPTION>
+		<OPTION name="SyzygyPath"/>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="UCI_Chess960"> false </OPTION>
+		<OPTION name="UCI_ShowWDL"> true </OPTION>
+		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
+		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
+		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>
+		<OPTION name="RamLimitMb"> 0 </OPTION>
+		<OPTION name="MoveOverheadMs"> 200 </OPTION>
+		<OPTION name="TimeManager"> legacy </OPTION>
+		<OPTION name="ValueOnly"> false </OPTION>
+		<OPTION name="LogFile"/>
+		<OPTION name="OwnBook"> true </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>

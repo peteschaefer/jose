@@ -1,0 +1,1275 @@
+
+##############################################################################
+#	Catalan Translation for jose by Harold Roig
+##############################################################################
+
+#	Application Name
+application.name	= jose
+
+#	Frame Titles
+window.board	= Taulell
+window.console	= Finestra del motor
+window.database	= Base
+window.filter	= Filtre
+window.list	= llista de partides
+window.clock	= Rellotge
+window.game	= Partida
+window.engine	= Motor
+
+window.collectionlist	= Base de dades
+window.query		= Buscar
+window.gamelist		= Base de dades
+
+window.sqlquery		= Consulta SQL
+window.sqllist		= Resultat
+window.print.preview   =   Vista prèvia
+
+window.toolbar.1	= Barra d'eines 1
+window.toolbar.2	= Barra d'eines 2
+window.toolbar.3	= Barra d'eines 3
+window.toolbar.symbols	= Anotacions
+window.help		= Ajuda
+
+# dialog titles
+
+dialog.option	= Opcions
+dialog.about	= Sobre jose
+dialog.animate  = Animació
+dialog.setup	= Configurar posició
+dialog.message.title = Missatge
+
+# number formats:
+format.byte		= ###0.# 'B'
+format.kilobyte		= ###0.# 'kB'
+format.megabyte		= ###0.# 'MB'
+
+
+##############################################################################
+# 	Menus
+##############################################################################
+
+# File Menu
+
+menu.file		= Arxiu
+menu.file.new		= Nova
+menu.file.new.tip	= Comença una nova partida
+menu.file.new.frc   = Nova FRC
+menu.file.open		= Obrir...
+menu.file.open.tip  	= Obre una base PGN
+menu.file.open.url	= Obrir URL...
+menu.file.close		= Tancar
+menu.file.close.tip	= Tanca la finestra actual
+menu.file.save		= Desar
+menu.file.save.tip  	= Desa la partida actual a la base
+menu.file.save.as    	= Desar com...
+menu.file.save.as.tip	= Desa una nova còpia de la partida actual a la base de dades
+menu.file.save.all   	= Desar-ho tot
+menu.file.save.all.tip  = Desa totes les partides a la base
+menu.file.revert	= Revertir partida
+menu.file.print		= Imprimir...
+menu.file.print.tip	= Imprimimeix la partida actual
+menu.file.print.setup	= Configurar pàgina...
+menu.file.print.setup.tip = Configura l'impressora i la mida del paper
+menu.file.quit		= Sortir
+menu.file.quit.tip	= Tanca Jose
+
+# Edit Menu
+
+menu.edit		= Editar
+menu.edit.undo		= Desfer (%action%)
+menu.edit.cant.undo 	= Desfer
+menu.edit.redo		= Refer (%action%)
+menu.edit.cant.redo 	= Refer
+menu.edit.select.all    = Seleccionar-ho tot
+menu.edit.select.none   = Treure selecció
+menu.edit.cut		= Retallar
+menu.edit.copy		= Copiar
+menu.edit.paste		= Enganxar
+menu.edit.paste.tip = Enganxa des del portapapers
+menu.edit.paste.copy		= Enganxar la còpia
+menu.edit.paste.copy.tip 	= Copia partides des del portapapers
+menu.edit.paste.same 	= Enganxar les partides
+menu.edit.paste.same.tip = Mou partides des del portapapers
+menu.edit.copy.fen          =   Línia FEN
+menu.edit.copy.fen.tip      =   Copia la posició actual al portapapers (com a línia FEN)
+menu.edit.copy.img          =   Imatge+Fons
+menu.edit.copy.img.tip      =   Copia la posició actual al portapapers (com a imatge)
+menu.edit.copy.imgt         =   Imatge
+menu.edit.copy.imgt.tip     =   Copia la posició actual al portapapers (com a imatge)
+menu.edit.copy.pgn          =   Copiar PGN
+menu.edit.copy.pgn.tip      =   Copia la partida actual al portapapers (as PGN text)
+menu.edit.copy.text         =   Diagrama de text
+menu.edit.copy.text.tip     =   Copia la posició actual al portapapers (amb estil text)
+menu.edit.paste.pgn         =   Enganxa PGN
+menu.edit.paste.pgn.tip     =   Inserta la partida desde el portapapers (coma text PGN)
+menu.file.print.preview     =   Vista prèvia d'impressió...
+menu.edit.clear		= Esborrar
+menu.edit.option	= Opcions...
+menu.edit.option.tip	= Obre el diàleg d'opcions
+
+menu.edit.games			= Base de dades
+menu.edit.collection.new 	= Crear una nova carpeta
+menu.edit.collection.rename 	= Reanomenar
+menu.edit.empty.trash		= Buidar la paperera
+menu.edit.restore		= Restaurar
+
+#menu.edit.position.index    = Actualitzar l'índex de posicions
+menu.edit.search.current    = Buscar aquesta posició
+menu.edit.ecofy             = Classificar ECO
+
+panel.dock.here     =   Ancorar aquí
+panel.orig.pos      =   Posició original
+panel.undock.here   =   Desancorar aquí
+
+# Game Menu
+
+menu.game		= Partida
+menu.game.details	= Detalls...
+menu.game.analysis  	= Mode d'anàlisi
+menu.game.navigate	= Anar a...
+menu.game.time.controls = Control de temps
+menu.game.time.control = Control de temps
+menu.game.details.tip 	= Edita dades de la partida (jugadors etc.)
+menu.game.hint		= Suggerència
+menu.game.hint.tip  = Mostra suggerència
+menu.game.draw		= Oferir taules
+menu.game.resign	= Abandonar
+menu.game.2d		= Vista en 2D
+menu.game.3d		= Vista en 3D
+menu.game.flip		= Girar el taulell
+menu.game.coords	= Coordenades
+menu.game.coords.tip	= Canvia la vista de les coordenades
+menu.game.animate 	= Animació...
+menu.game.previous 	= Pròxim panell
+menu.game.next 		= Següent panell
+menu.game.close 	= Tancar
+menu.game.close.tip 	= Tanca la partida actual
+menu.game.close.all 	= Tancar-ho tot
+menu.game.close.all.tip = Tanca totes les partides obertes
+menu.game.close.all.but = Tancar-les totes menys aquesta
+menu.game.close.all.but.tip = Tanca totes les partides menys l'actual
+menu.game.setup		= Configurar posició
+menu.game.text.incr = Augmentar el tamany del text
+menu.game.text.decr = Disminuir el tamany del text
+
+menu.game.copy.line = Copiar línia
+menu.game.copy.line.tip = Copia aquesta línia al portapapers
+menu.game.paste.line = Enganxar línia
+menu.game.paste.line.tip = Insera aquesta línia a la partida actual
+
+# Window Menu
+
+menu.window		= Finestra
+menu.window.fullscreen 	= Pantalla completa
+menu.window.reset   	= Reiniciar configuració
+
+# Help Menu
+
+menu.help		= Ajuda
+menu.help.splash	= Sobre jose...
+menu.help.about		= Informació...
+menu.help.license	= Llicència...
+menu.help.context   	= Ajuda contextual
+menu.help.manual    	= Manual
+menu.help.web		= jose a la xarxa
+
+menu.web.home		= Pàgina de jose
+menu.web.update		= Actualització en línia
+menu.web.download	= Descarregar
+menu.web.report		= Reportar error
+menu.web.support	= Petició d'ajuda
+menu.web.feature	= Petició de característiques
+menu.web.forum		= Forum
+menu.web.browser	= Seleccionar navegador...
+
+
+##############################################################################
+# 	Context Menu
+##############################################################################
+
+panel.hide		= Amagar
+panel.hide.tip		= Amaga aquest panell
+panel.undock		= Nova finestra
+panel.undock.tip	= Obre aquest panell en una finestra separada
+panel.move		= Moure
+panel.move.tip		= Mou aquest panell a una altra posició
+panel.dock		= Ancorar
+panel.dock.tip		= "Ancora" aquesta finestra
+
+
+#################
+# Document Panel
+#################
+
+# deprecated:
+tab.place 	= Ubicació de l'etiqueta
+tab.place.top 	= Sobre
+tab.place.left 	= Esquerra
+tab.place.bottom = Sota
+tab.place.right = Dreta
+#
+
+tab.layout 		= Configuració de l'etiqueta
+tab.layout.wrap 	= Coberta
+tab.layout.scroll 	= Enrotllada
+
+doc.menu.annotate 	= Anotació
+doc.menu.delete.comment = Esborrar comentari
+doc.menu.line.promote 	= Promoure línia
+doc.menu.line.delete 	= Esborrar línia
+doc.menu.line.cut 	= Tallar línia
+doc.menu.line.uncomment = Esborrar tots els comentaris
+doc.menu.remove.annotation = -cap-
+doc.menu.more.annotations = més...
+
+tab.untitled 	= Sense títol
+confirm 	= Confirmar
+confirm.save.one = Desar la partida actual?
+confirm.save.all = Desar les partides modificades?
+
+dialog.confirm.save = Desar
+dialog.confirm.dont.save = No desar
+
+dialog.engine.offers.draw = %engine% ofereix taules.
+
+dialog.accept.draw = Acceptar
+dialog.decline.draw = Refusar
+
+###################
+# Game Navigation
+###################
+
+move.first	= Va a l'inici de la partida
+move.backward 	= Va enrere
+move.delete 	= Desfà l'última jugada
+engine.stop 	= Atura
+move.start 	= Mou ara
+move.forward 	= Va endavant
+move.last 	= Va al final de la partida
+move.animate	 = Animació
+
+
+##################################
+# Engine Panel
+##################################
+
+engine.paused.tip 	= %engine% està aturat
+engine.thinking.tip 	= %engine% està calculant el pròxim moviment
+engine.pondering.tip 	= %engine% està ponderant el teu pròxim moviment
+engine.analyzing.tip 	= %engine% està analitzant
+engine.hint.tip 	= Consell: %move%
+
+engine.paused.title 	= %engine%
+engine.thinking.title 	= %engine% està calculant
+engine.pondering.title 	= %engine% està ponderant
+engine.analyzing.title 	= %engine% està analitzant
+
+plugin.name 		= %name% %version%
+plugin.name.author 	= %name% %version% per %author%
+
+plugin.book.move 	= BK
+plugin.book.move.tip 	= Jugada de llibre
+plugin.hash.move 	= HT
+plugin.hash.move.tip 	= Evaluat des de les hashtables
+plugin.tb.move 		= TB
+plugin.tb.move.tip 	= Evaluat des de la base de finals
+
+plugin.currentmove.title       = Moviment
+plugin.depth.title      = Profunditat
+plugin.elapsed.time.title  = Temps
+plugin.nodecount.title  = Nodes
+plugin.nps.title        = N/seg.
+
+plugin.currentmove = %move%
+plugin.currentmove.max = %move% %moveno%/%maxmove%
+
+plugin.currentmove.tip = L'actual moviment evaluat és %move%.
+plugin.currentmove.max.tip = L'actual moviment evaluat és %move%. (no. %moveno% of %maxmove%)
+
+plugin.depth 		= %depth%
+plugin.depth.tip 	= Profunditat de recerca: %depth% plies
+
+plugin.depth.sel 	= %depth% (%seldepth%)
+plugin.depth.sel.tip 	= Profunditat de recerca: %depth% mitjos moviments, profunditat selectiva: %seldepth% mitjos moviments
+
+plugin.white.mates 	= +#%eval%
+plugin.white.mates.tip 	= El blanc fa mat en %eval% jugades
+plugin.black.mates 	= -#%eval%
+plugin.black.mates.tip 	= El negre fa mat en %eval% jugades
+
+plugin.evaluation 	= %eval%
+plugin.evaluation.tip 	= El valor de la posició és %eval%
+
+plugin.line.tip = Línia calculada
+
+plugin.elapsed.time = %time%
+plugin.elapsed.time.tip = Temps transcorregut per aquest càlcul
+
+plugin.nodecount 	= %nodecount%
+plugin.nodecount.tip 	= %nodecount% posicions avaluades
+
+plugin.nps      = %nps%
+plugin.nps.tip  = %nps% Nodes que són avaluats per segon
+
+plugin.pv.history      =   Mode expert
+
+restart.plugin		= Reengegar motor
+
+
+######################
+# Board Panel
+######################
+
+wait.3d = Carregant 3D. Espereu si us plau...
+
+message.result			= Resultat
+message.white 			= Blanques
+message.black 			= Negres
+message.mate 			= Mat. \n %player% guanya.
+message.stalemate		= Ofegat. \n La partida és taules.
+message.draw3			= Tercera repetició de posició. \n La partida és taules.
+message.draw50			= 50 moviments sense capturar cap peca. \n La partida és taules.
+message.resign			= %player% abandona. \n Tu guanyes.
+message.time.draw		= S'ha acabat el temps. \n La partida és taules.
+message.time.lose		= S'ha acabat el temps. \n %player% guanya.
+
+
+################
+# Clock Panel
+################
+
+clock.mode.analog	= Analògic
+clock.mode.analog.tip 	= Mostra el rellotge analògic
+clock.mode.digital	= Digital
+clock.mode.digital.tip 	= Mostra el rellotge digital
+
+
+##############################################################################
+#	Dialogs
+##############################################################################
+
+dialog.button.ok		= D'acord
+dialog.button.ok.tip		= Clica aquí per a aplicar els canvis
+dialog.button.cancel		= Cancel·lar
+dialog.button.cancel.tip	= Clica aquí per a tancar la finestra de diàleg sense aplicar els canvis
+dialog.button.apply		= Aplicar
+dialog.button.apply.tip		= Clica aquí per a aplicar els canvis immediatament
+dialog.button.revert		= Revertir
+dialog.button.revert.tip	= Clica aquí per a descartar els canvis
+dialog.button.clear		= Esborrar
+dialog.button.delete		= Esborrar
+dialog.button.yes		= Si
+dialog.button.no		= No
+dialog.button.next		= Següent
+dialog.button.back		= Anterior
+dialog.button.close		= Tancar
+dialog.button.help		= Ajuda
+dialog.button.help.tip		= Mostra tema d'ajuda
+
+dialog.button.commit		= Aplicar
+dialog.button.commit.tip	= Clica aquí per a aplicar les actualitzacions
+dialog.button.rollback		= Desfer
+dialog.button.rollback.tip	= Clica aquí per a descartar les actualitzacions
+
+
+dialog.error.title		= Error
+
+###################################
+#  File Chooser Dialog
+###################################
+
+filechooser.pgn			= Portable Game Notation (*.pgn,*.zip)
+filechooser.epd         = EPD or FEN (*.epd,*.fen)
+filechooser.db 			= Arxiu jose (*.jose)
+filechooser.db.Games 		= Arxiu de partides jose (*.jose)
+filechooser.db.Games.MySQL 	= Arxiu de partides jose (dest ràpid) (*.jose)
+filechooser.txt 		= Arxiu de text (*.txt)
+filechooser.html 		= Arxiu de Web (*.html)
+filechooser.pdf 		= Acrobat Reader (*.pdf)
+filechooser.exe         = Arxius executables
+filechooser.img         = Arxius d'imatges (*.gif,*.jpg,*.png,*.bmp)
+
+filechooser.overwrite 	= Sobreescriure l'arxiu "%file.name%" existent?
+filechooser.do.overwrite = Sobreescriure
+
+#################
+# Color Chooser
+#################
+
+colorchooser.texture	= Textura
+colorchooser.preview	= Vista prèvia
+colorchooser.gradient   = Gradient
+colorchooser.gradient.color1 = Primer color
+colorchooser.gradient.color2 = Segon color
+colorchooser.gradient.cyclic = Cíclic
+
+colorchooser.texture.mnemonic = T
+colorchooser.gradient.mnemonic = G
+
+animation.slider.fast   = Ràpida
+animation.slider.slow   = Lenta
+
+##############################################################################
+# Option dialog
+##############################################################################
+
+# Tab Titles
+
+dialog.option.tab.1	= Usuari
+dialog.option.tab.2	= Fonts
+dialog.option.tab.3	= Colors
+dialog.option.tab.4	= Temps
+dialog.option.tab.5     = Motor
+dialog.option.tab.6 = Opening Book
+# TODO
+dialog.option.tab.7     = 3D
+dialog.option.tab.8	= Estils
+
+# User settings
+
+dialog.option.user.name		= Nom
+dialog.option.user.language	= Idioma
+dialog.option.ui.look.and.feel	= Aspecte i comportament
+
+doc.load.history	= Carregar partides recents
+doc.classify.eco	= Classificar obertures per ECO
+
+dialog.option.animation = Animació
+dialog.option.animation.speed = Velocitat
+
+dialog.option.doc.write.mode	= Insertar un nou moviment
+write.mode.new.line		= Nova línia
+write.mode.new.main.line	= Nova línia principal
+write.mode.overwrite		= Sobreescriure
+write.mode.ask			= Preguntar
+write.mode.dont.ask		= No preguntar mai
+write.mode.cancel		= Cancel·lar
+
+board.animation.hints   = Mostrar consells durant l'animació
+
+dialog.option.sound = So
+dialog.option.sound.moves.dir = Anunciar jugades:
+sound.moves.engine  = Anunciar jugades del motor
+sound.moves.ack.user = Reconeixer les jugades de l'usuari
+sound.moves.user = Anunciar jugades de l'usuari
+
+# Fonts
+
+dialog.option.font.diagram	= Diagrama
+dialog.option.font.text		= Text
+dialog.option.font.inline	= Text del diagrama
+dialog.option.font.figurine	= Figuretes
+dialog.option.font.symbol	= Simbol
+dialog.option.font.size     	= Mida
+figurine.usefont.true 		= Figuretes gràfiques
+figurine.usefont.false 		= Figuretes de text
+
+doc.panel.antialias		= Usar fonts antiàlies
+
+# Notation
+
+dialog.option.doc.move.format	= Notació:
+move.format			= Notació
+move.format.short		= Curta
+move.format.long		= Larga
+move.format.algebraic		= Algebraica
+move.format.correspondence	= Correspondència
+move.format.english		= Anglès
+move.format.telegraphic		= Telegràfic
+
+# Colors
+
+dialog.option.board.surface.light	= Quadres blancs
+dialog.option.board.surface.dark	= Quadres negres
+dialog.option.board.surface.white	= Peces blanques
+dialog.option.board.surface.black	= Peces negres
+
+dialog.option.board.surface.background	= Fons
+dialog.option.board.surface.frame	= Marc
+dialog.option.board.surface.coords	= Coordenades
+
+dialog.option.board.3d.model            = Model:
+dialog.option.board.3d.clock            = Rellotge
+dialog.option.board.3d.surface.frame	= Marc:
+dialog.option.board.3d.light.ambient	= Llum ambiental:
+dialog.option.board.3d.light.directional = Llum direccional:
+dialog.option.board.3d.knight.angle     = Cavalls:
+
+board.surface.light	= Quadres blancs
+board.surface.dark	= Quadres negres
+board.surface.white	= Peces blanques
+board.surface.black	= Peces negres
+board.hilite.squares 	= Quadre ressaltat
+
+# Time Controls
+
+dialog.option.time.control      = Control de temps
+dialog.option.phase.1		= Primer control
+dialog.option.phase.2		= Segon control
+dialog.option.phase.3		= Tercer control
+dialog.option.all.moves		= Totes les
+dialog.option.moves.in 		= jugades en
+dialog.option.increment 	= més
+dialog.option.increment.label 	= per jugada
+
+time.control.blitz		= Blitz
+time.control.rapid		= Rapid
+time.control.fischer		= Fischer
+time.control.tournament		= Torneig
+# default name for new time control
+time.control.new		= Nou
+time.control.delete		= Esborrar
+
+# Engine Settings
+
+dialog.option.plugin.1		= Motor 1
+dialog.option.plugin.2		= Motor 2
+
+plugin.add =
+plugin.delete =
+plugin.duplicate =
+plugin.add.tip = Afegeix un nou motor
+plugin.delete.tip = Esborra la configuració
+plugin.duplicate.tip = Duplica la configuració
+
+dialog.option.plugin.file 	= Arxiu de configuració:
+dialog.option.plugin.name 	= Nom:
+dialog.option.plugin.version 	= Versió:
+dialog.option.plugin.author 	= Autor:
+dialog.option.plugin.dir 	= Directori:
+dialog.option.plugin.logo 	= Logo:
+dialog.option.plugin.startup 	= Iniciar:
+
+dialog.option.plugin.exe = Executable:
+dialog.option.plugin.args = Arguments:
+dialog.option.plugin.default = Parametres per defecte
+
+plugin.info                 = Informació general
+plugin.protocol.xboard      = Protocol XBoard
+plugin.protocol.uci         = Protocol UCI 
+plugin.options              = Opcions del motor
+plugin.startup              = Més opcions
+plugin.show.logos           = Mostrar logos
+plugin.show.text            = Mostrar text
+
+plugin.switch.ask           = Has seleccionat un altre motor.\n Engegar-lo ara ?
+plugin.restart.ask          = Has modificat paràmetres del motor.\n Reengerar-lo ara ?
+plugin.show.info            = Mostrar "info"
+plugin.log.file             = Desar el Log a una arxiu
+
+# UCI option name
+plugin.option.Ponder        = Ponderar
+plugin.option.Random        = Aleatori
+plugin.option.Hash          = Mida de les Hash Tables (MB)
+plugin.option.NalimovPath   = Ruta a les bases de finals Nalimov
+plugin.option.NalimovCache  = Cache per les bases de finals Nalimov (MB)
+plugin.option.OwnBook       = Usar llibre d'obertures
+plugin.option.BookFile      = Llibre d'obertures
+plugin.option.BookLearning  = Aprenentatge del llibre
+plugin.option.MultiPV       = Variacions primàries
+plugin.option.ClearHash     = Esborrar les Hash Tables
+
+# 3D Settings
+
+board.surface.background	= Fons
+board.surface.coords		= Coordenades
+board.3d.clock              	= Rellotge
+board.3d.shadow			= Ombra
+board.3d.reflection		= Refleccions
+board.3d.anisotropic        	= Filtre antiisotròpic 
+board.3d.fsaa               	= Pantalla completa antiàlies
+
+board.3d.surface.frame		= Marc
+board.3d.light.ambient		= Llum ambiental
+board.3d.light.directional	= Llum direccional
+board.3d.screenshot		= Capturar pantalla
+board.3d.defaultview    = Vista per defecte
+
+# Text Styles
+
+font.color 	= Color
+font.name	= Font
+font.size	= Mida
+font.bold	= Negreta
+font.italic	= Itàlica
+font.sample	= Text de mostra
+
+
+##############################################################################
+#	Export/Print Dialog
+##############################################################################
+
+dialog.export          =    Exportar & Imprimir
+dialog.export.tab.1    =    Depuració
+dialog.export.tab.2    =    Configurar pàgina
+dialog.export.tab.3    =    Estils
+
+dialog.export.print    =    Imprimir...
+dialog.export.save     =    Desar
+dialog.export.saveas   =    Desar com...
+dialog.export.preview  =    Vista prèvia
+dialog.export.browser  =    Navegador de vista prèvia
+
+dialog.export.paper         =    Paper
+dialog.export.orientation   =    Orientació
+dialog.export.margins       =    Marges
+
+dialog.export.paper.format  =    Paper:
+dialog.export.paper.size    =    Tamany:
+
+dialog.print.custom.paper   =    Acostumar
+
+dialog.export.margin.top    =    Dalt:
+dialog.export.margin.bottom =    Baix:
+dialog.export.margin.left   =    Esquerra:
+dialog.export.margin.right  =    Dreta:
+
+dialog.export.ori.port   =    Retrat
+dialog.export.ori.land   =    Vista
+
+dialog.export.games.0    =    No has sel·leccionat cap partida per a imprimir.
+dialog.export.games.1    =    Has sel·leccionat<b>una partida</b> per a imprimir.
+dialog.export.games.n    =    Has sel·leccionat <b>%n% partides</b> per a imprimir.
+dialog.export.games.?    =    Has sel·leccionat un <b>desconegut</b> nombre de partides per a imprimir.
+
+dialog.export.confirm    =    N'estàs segur ?
+dialog.export.yes        =    Imprimir-ho tot
+
+# xsl stylesheet options
+
+export.pgn     =    Base PGN
+export.pgn.tip =    Exporta partides com a base PGN.
+
+print.awt      =    Imprimir
+print.awt.tip  =    Imprimir les partides de la pantalla.<br> \
+				    <li>Click <b>Print...</b> imprimir amb la impressora sel·leccionada \
+				    <li>Click <b>Vista prèvia</b> per a veure el document
+
+xsl.html       =    HTML<br>pàgina web
+xsl.html.tip   =    Crea auna pàgina web (HTML file).<br> \
+				   <li>Click <b>Desa com...</b> per a desar la base al disc dur \
+				   <li>Click <b>navegador de vista prèvia</b> per a veure la pàgina amb el navegador
+
+xsl.dhtml      =    Pàgina<br>Web dinàmica
+xsl.dhtml.tip  =    Crea una pàgina web amb <i>efectes</i> dinamics.<br> \
+				   <li>Click <b>Desa com...</b> per desar la base al disc dur \
+				   <li>Click <b>Vista prèvia de navegador</b> per a veure la pàgina amb el navegador <br> \
+				  El JavaScript ha d'estar activat en el nagegador.
+
+xsl.debug      =    Base XML <br>(depuració)
+export.xml.tip =    Crea una base XML per la depuració.
+
+xsl.pdf        =    Imprimir PDF
+xsl.pdf.tip    =    Crea o imprimeix un fitxer PDF.<br> \
+				<li>Click <b>Desa com...</b> per a desar la carpeta al disc dur \
+				<li>Click <b>Imprimeix...</b> per a imrimir el document \
+				<li>Click <b>preveu</b> per a veure el document
+
+xsl.html.figs.tt    =    Figuretes TrueType
+xsl.html.figs.img   =    Imatges figuretes
+xsl.css.standalone  =    Estil CSS en fitxer separat
+
+xsl.html.img.dir    =    Locació
+xsl.create.images   =    Crear imatges
+
+xsl.pdf.embed       =    Empotrar fonts TrueType
+xsl.pdf.font.dir    =    Fonts addicionals:
+
+
+##############################################################################
+#	Print Preview Dialog
+##############################################################################
+
+print.preview.page.one.tip  =    Mostra una pàgina
+print.preview.page.two.tip  =    Mostra dues pàgines
+
+print.preview.ori.land.tip  =    Usa vista d'orientació del paper
+print.preview.ori.port.tip  =    Usa retrat d'orientació del paper
+
+print.preview.fit.page      =    Pàgina sencera
+print.preview.fit.width     =    Amplada de pàgina
+print.preview.fit.textwidth =    Amplada de text
+
+preview.wait = Espereu si us plau...
+
+##############################################################################
+#	Database Panels
+##############################################################################
+
+# default collection folders
+
+collection.trash 	= Paperera
+collection.autosave 	= Autosalvar
+collection.clipboard 	= Portapapers
+
+# default name for new folders
+collection.new 		= Nova carpeta
+
+# name of starter database
+collection.starter 	= Partides de capablanca
+
+# column titles
+
+column.collection.name 		= Nom
+column.collection.gamecount 	= Partides
+column.collection.lastmodified 	= Modificat
+
+column.game.index 	= Índex
+column.game.white.name 	= Blanques
+column.game.black.name 	= Negres
+column.game.event 	= Event
+column.game.site 	= Lloc
+column.game.date 	= Data
+column.game.result 	= Resultat
+column.game.round 	= Ronda
+column.game.board 	= Taulell
+column.game.eco 	= ECO
+column.game.opening 	= Obertura
+column.game.movecount 	= Nom. jugada
+column.game.annotator 	= Anotador
+
+#deprecated
+column.problem.author 	= Autor
+column.problem.source 	= Font
+column.problem.number 	= No.
+column.problem.date 	= Data
+column.problem.stipulation = Tira
+column.problem.dedication = Dedicació
+column.problem.award = Premi
+column.problem.solution = Solució
+column.problem.cplus = C+
+column.problem.genre = Genere
+column.problem.keyword = Paraula clau
+#deprecated
+
+bootstrap.confirm 	= El directori de dades'%datadir%' no existeix.\n Crear-ne un de nou? 
+bootstrap.create 	= Crear directori de dades
+
+edit.game = Obrir
+edit.all = Obrir en panells
+dnd.move.top.level	= Moure a un nivell superior
+
+
+##############################################################################
+#  Search Panel
+##############################################################################
+
+# Tab Titles
+dialog.query.info 		= Informació
+dialog.query.comments 		= Comentaris
+dialog.query.position 		= Posició
+
+dialog.query.search 	= Cerca
+dialog.query.clear 	= Esborrar
+dialog.query.search.in.progress = Buscant...
+
+dialog.query.0.results 	= Sense resultats
+dialog.query.1.result 	= Un resultat
+dialog.query.n.results 	= %count% Resultats
+
+dialog.query.white		= Blanques:
+dialog.query.black		= Negres:
+
+dialog.query.flags 		= Opcions
+dialog.query.color.sensitive 	= Color demanat
+dialog.query.swap.colors 	=
+dialog.query.swap.colors.tip = Intercanvia els colors
+dialog.query.case.sensitive 	= Nom exacte
+dialog.query.soundex 		= Nom similar
+dialog.query.result 		= Resultat
+dialog.query.stop.results   =
+
+dialog.query.event 		= Event:
+dialog.query.site 		= Lloc:
+dialog.query.eco 		= ECO:
+dialog.query.annotator 		= Comentarista:
+dialog.query.to 		= a
+dialog.query.opening 		= Obertura:
+dialog.query.date 		= Data:
+dialog.query.movecount 		= Jugades:
+
+dialog.query.commenttext 	= Comentari:
+dialog.query.com.flag 		= Amb comentaris
+dialog.query.com.flag.tip 	= Busca partides comentades
+
+dialog.query.var.flag 		= Amb variants
+dialog.query.var.flag.tip 	= Busca partides comentades
+
+dialog.query.errors 		= Error al configurar la posició:
+query.error.date.too.small 	= La data està fora rang
+query.error.movecount.too.small = El número està fora de rang
+query.error.eco.too.long 	= Usar tres caràcters pels codis ECO
+query.error.eco.character.expected = Els codis ECO han de començar amb A,B,C,D,o E
+query.error.eco.number.expected = Els codis ECO consisteixen en una lletra i un número de 0 a 99
+query.error.number.format 	= Format de número equivocat
+query.error.date.format 	= Format de data equivocat
+
+query.setup.enable 		= Buscar posició
+query.setup.next 		= Moviments següents:
+query.setup.next.white 		= Blanques
+query.setup.next.white.tip 	= Busca posició on el blanc mou primer
+query.setup.next.black 		= Negres
+query.setup.next.black.tip 	= Busca posició on el negre mou primer
+query.setup.next.any 		= Blanques o negres
+query.setup.next.any.tip 	= Busca posicions on mou qualsevol
+query.setup.reversed 		= Buscar amb els colors invertits
+query.setup.reversed.tip 	= Busca posicions idèntiques amb els colors canviats
+query.setup.var 		= Buscar dintre de les variants
+query.setup.var.tip 		= Busca dintre de les variants
+
+
+
+##############################################################################
+#	Game Details dialog
+##############################################################################
+
+dialog.game		= Detalls de la partida
+dialog.game.tab.1	= Event
+dialog.game.tab.2	= Jugadors
+dialog.game.tab.3	= Més
+
+dialog.details.event 	= Event:
+dialog.details.site 	= Lloc:
+dialog.details.date 	= Data:
+dialog.details.eventdate = Data de l'event:
+dialog.details.round 	= Ronda:
+dialog.details.board 	= Taulell:
+
+dialog.details.white 	= Blanques
+dialog.details.black 	= Negres
+dialog.details.name 	= Nom:
+dialog.details.elo 	= ELO:
+dialog.details.title 	= Títol:
+dialog.details.result 	= Resultat:
+
+dialog.details.eco 	= ECO:
+dialog.details.opening 	= Obertura:
+dialog.details.annotator = Anotador:
+
+Result.0-1 = 0-1
+Result.1-0 = 1-0
+Result.1/2 = 1/2
+Result.* = *
+
+
+##############################################################################
+#	Setup dialog
+##############################################################################
+
+dialog.setup.clear	= Esborrar
+dialog.setup.initial	= Posició inicial
+dialog.setup.copy	= Copiar del taulell principal
+
+dialog.setup.next.white	= Juguen blanques
+dialog.setup.next.black	= Juguen negres
+dialog.setup.move.no	= Jugada núm.
+
+dialog.setup.castling		= Enroc
+dialog.setup.castling.wk	= Blanc 0-0
+dialog.setup.castling.wk.tip	= Cantó de l'enroc blanc
+dialog.setup.castling.wq	= Blanc 0-0-0
+dialog.setup.castling.wq.tip	= Cantó de l'enroc blanc
+dialog.setup.castling.bk	= Negre 0-0
+dialog.setup.castling.bk.tip	= Cantó de l'enroc negre
+dialog.setup.castling.bq	= Negre 0-0-0
+dialog.setup.castling.bq.tip	= Cantó de l'enroc negre
+dialog.setup.invalid.fen   =   Línia FEN invàlida.
+
+##############################################################################
+#	About dialog
+##############################################################################
+
+dialog.about.tab.1	= jose
+dialog.about.tab.2	= Base de dades
+dialog.about.tab.3	= Contribucions
+dialog.about.tab.4	= Sistema
+dialog.about.tab.5	= 3D
+dialog.about.tab.6	= Llicència
+
+dialog.about.5.no3d = Java3D no es troba
+dialog.about.5.model =
+
+dialog.about.5.native = Plataforma nàtiva: &nbsp;
+dialog.about.5.native.unknown = actualment desconegut
+
+
+
+##############################################################################
+#	Online Update Dialog
+##############################################################################
+
+online.update.title	= Actualització en línia
+online.update.tab.1	= Nova versió
+online.update.tab.2	= Que és nou ?
+online.update.tab.3 	= Notes importants
+
+update.install	= Descarregar i instalar ara
+update.download	= Descarregar ara, instalar després
+update.mirror	= Desacerregar des d'un web mirall
+
+download.file.progress 			= Descarregant %file%
+download.file.title			= Descarregar
+download.error.invalid.url		= URL invàlida: %p%.
+download.error.connect.fail		= Connexió a %p% fallada.
+download.error.parse.xml		= Parse error: %p%.
+download.error.version.missing	= No es pot llegir la versió des de %p%.
+download.error.os.missing		= No s'ha trobat cap paquet pel teu sistema operatiu.
+download.error.browser.fail		= No es pot mostrar %p%.
+download.error.update			= Hi ha hagut un error al actualitzar jose.\n si et plau, actualitza manualment.
+
+download.message.up.to.date		= Tens l'última versió
+download.message.success		= jose s'ha actualitzat amb éxit %p% \n. Si et plau, reengega l'aplicació.
+
+download.message			= \
+  Version <b>%version%</b> is available from <br>\
+  <font color=blue>%url%</font><br>\
+  Size: %size%
+
+dialog.browser		= Si et plau, ajuda'm a engegar el meu navegador HTML.\n Entra la comanda que s'utilitza per a carregar el navegador.
+dialog.browser.title 	= Localitzar navegador
+
+# deprecated
+#online.report.title	= Reportar
+#online.report.bug	= Notificar error
+#online.report.feature	= Requerir característica
+#online.report.support	= Requerir suport
+
+#online.report.type	= Tipus:
+#online.report.subject	= Subjecte:
+#online.report.description	= Descripció:
+#online.report.email		= EMail:
+
+#online.report.default.subject		= <Subject>
+#online.report.default.description	= <Please try to describe the steps that caused the error>
+#online.report.default.email		= <your e-mail address - optional>
+#online.report.info			= This report will be sent to http://jose-chess.sourceforge.net
+
+#online.report.success		= El teu raport s'ha enviat.
+#online.report.failed		= No s'ha pogut enviar el teu raport.
+# deprecated
+
+
+##########################################
+# 	Error Messages
+##########################################
+
+error.not.selected 		= Si et plau, selecciona la partida a desar.
+error.duplicate.database.access = Si et plau, no tinguis jose engegat dues vegades alhora \n\
+	i amb la mateixa base de dades.\n\n\
+	Podries perdre dades. \n\
+	Si et plau, tanca una aplicació de jose.
+error.lnf.not.supported 	= Aquest aspecte i comportament no funciona amb \n l'actual plataforma.
+
+error.bad.uci = No sembla que aquest motor sigui UCI.\n N'estàs segur?
+
+error.bug   =   <center><b>Ha esdevingut un error inesperat.</b></center><br><br>\
+	 Seria útil que ens enviessis l'error per internet.<br>\
+	 Si et plau, intenta descriure els passos que han portat a l'error <br>\
+	 i adjunta les dades al teu raport: <br><center><b> %error.log% </b></center>
+
+# errors in setup dialog
+
+pos.error.white.king.missing	= No es troba el Rei blanc.
+pos.error.black.king.missing	=  No es troba el Rei negre.
+pos.error.too.many.white.kings	= Massa Reis blancs.
+pos.error.too.many.black.kings	= Massa Reis negres.
+pos.error.white.king.checked	= El Rei blanc no pot estar en escac.
+pos.error.black.king.checked	= El Rei negre no pot estar en escac.
+pos.error.white.pawn.base		= Els peons blancs no poden estar a la primera fila.
+pos.error.white.pawn.promo		= Els peons blancs no poden estar a la vuitena fila.
+pos.error.black.pawn.base		= Els peons negres no poden estar a la primera fila.
+pos.error.black.pawn.promo		= Els peons negres no poden estar a la vuitena fila.
+pos.warning.too.many.white.pieces	= Massa peces blanques.
+pos.warning.too.many.black.pieces	= Massa peces negres.
+pos.warning.too.many.white.pawns	= Massa peons blancs.
+pos.warning.too.many.black.pawns	= Massa peons negres.
+pos.warning.too.many.white.knights	= Massa cavalls blancs.
+pos.warning.too.many.black.knights	= Massa cavalls negres.
+pos.warning.too.many.white.bishops	= Massa àlfils blancs.
+pos.warning.too.many.black.bishops	= Massa àlfils negres.
+pos.warning.too.many.white.rooks	= Massa torres blanques.
+pos.warning.too.many.black.rooks	= Massa torres negres.
+pos.warning.too.many.white.queens	= Massa dames blanques.
+pos.warning.too.many.black.queens	= Massa damens negres.
+pos.warning.strange.white.bishops	= Àlfils blancs del mateix color ?
+pos.warning.strange.black.bishops	= Àlfils negres del mateix color ?
+
+
+##############################################################################
+#	Style Names
+##############################################################################
+
+
+base			= Estil bàsic
+header			= Informació de la partida
+header.event	= Event
+header.site		= Lloc
+header.date		= Data
+header.round	= Ronda
+header.white	= Jugador blanc
+header.black	= Jugador negre
+header.result	= Resultat
+body			= Text de la partida
+body.line		= Jugades
+body.line.0		= Línia principal
+body.line.1		= Variant
+body.line.2		= Subvariant
+body.line.3		= 2ona subvariant
+body.line.4		= 3ra subvariant
+body.symbol		= Simbols
+body.inline		= Diagrames de text
+body.figurine	= Figuretes
+body.figurine.0	= Línia principal
+body.figurine.1	= Variant
+body.figurine.2	= Subvariant
+body.figurine.3	= 2ona subvariant
+body.figurine.4	= 3ra subvariant
+body.comment	= Comentaris
+body.comment.0	= Línia principal
+body.comment.1	= Variant
+body.comment.2	= Subvariant
+body.comment.3	= 2ona subvariant
+body.comment.4	= 3ra subvariant
+body.result		= Resultat
+html.large  =   Diagrama a pàgina web
+
+##############################################################################
+#	Task Dialogs (progress)
+##############################################################################
+
+dialog.progress.time 		= Temps restant: %time%
+
+dialog.read-progress.title 	= jose - llegir arxiu
+dialog.read-progress.text 	= Llegint %fileName%
+
+dialog.eco 			= Classificar ECO
+dialog.eco.clobber.eco 		= Sobreescriure codis ECO
+dialog.eco.clobber.name 	= Sobreescriure noms d'obertura
+dialog.eco.language 		= Idioma:
+
+##############################################################################
+#	foreign language names
+##############################################################################
+
+lang.cs = Txec
+lang.da = Danès
+lang.nl = Holandès
+lang.en = Anglès
+lang.et = Estonià
+lang.fi = Finès
+lang.fr = Francès
+lang.de = Alemany
+lang.hu = Hongarès
+lang.is = Islandès
+lang.it = Italià
+lang.no = Noruec
+lang.pl = Polonès
+lang.pt = Portuguès
+lang.ro = Romanès
+lang.es = Espanyol
+lang.ca = Català
+lang.sv = Suec
+lang.ru = Rus
+lang.he = Hebreu
+
+
+##############################################################################
+#	PGN Annotations
+##############################################################################
+
+pgn.nag.0    = Anotació nula
+pgn.nag.1    	= !
+pgn.nag.1.tip	= Bona jugada
+pgn.nag.2	= ?
+pgn.nag.2.tip	= Jugada dolenta
+pgn.nag.3    	= !!
+pgn.nag.3.tip	= Molt bona jugada
+pgn.nag.4    	= ??
+pgn.nag.4.tip	= Jugada molt dolenta
+pgn.nag.5    	= !?
+pgn.nag.5.tip	= Jugada interessant
+pgn.nag.6    	= ?!
+pgn.nag.6.tip	= Jugada qüestionable
+pgn.nag.7    = Forçada
+pgn.nag.7.tip = Jugada forçada (totes les altres perden) 
+pgn.nag.8    = Jugada singular
+pgn.nag.8.tip    = Jugada singular (no hi ha alternatives raonables)
+pgn.nag.9    = La pitjor jugada
+pgn.nag.10.tip   = Posició taulífera
+pgn.nag.11.tip   = Igualtat, posició tranquila
+pgn.nag.12   = Igualtat, posició activa
+pgn.nag.13   = Poc clar
+pgn.nag.13.tip   = Posició poc clara
+pgn.nag.14	= +=
+pgn.nag.14.tip	= Les blanques tenen un lleuger avantatge
+pgn.nag.15   	= =+
+pgn.nag.15.tip 	= Les negres tenen un lleuger avantatge
+pgn.nag.16	= +/-
+pgn.nag.16.tip 	= Les blanques tenen un moderat avantatge
+pgn.nag.17	= -/+
+pgn.nag.17.tip 	= Les negres tenen un moderat avantatge
+pgn.nag.18	= +-
+pgn.nag.18.tip  = Les blanques tenen un avantatge decisiu
+pgn.nag.19	= -+
+pgn.nag.19.tip 	= Les negres tenen un avantatge decisiu
+pgn.nag.20   = Les blanques tenen un avantatge aclaparador (Les negres haurien d'abandonar)
+pgn.nag.21   = Les negres tenen un avantatge aclaparador (Les blanques haurien d'abandonar)
+pgn.nag.22   = Les blanques estan en zugzwang
+pgn.nag.23   = Les negres estan en zugzwang
+pgn.nag.24   = Les blanques tenen un lleuger avantatge d'espai
+pgn.nag.25   = Les negres tenen un lleuger avantatge d'espai
+pgn.nag.26   = Les blanques tenen un moderat avantatge d'espai
+pgn.nag.27   = Les negres tenen un moderat avantatge d'espai
+pgn.nag.28   = Les blanques tenen un avantatge d'espai decisiu
+pgn.nag.29   = Les negres tenen un avantatge d'espai decisiu
+pgn.nag.30   = Les blanques tenen un lleuger avantatge de desenvolupament
+pgn.nag.31   = Les negres tenen un lleuger avantatge de desenvolupament
+pgn.nag.32   = Les blanques tenen un moderat avantatge de desenvolupament
+pgn.nag.33   = Les negres tenen un moderat avantatge de desenvolupament
+pgn.nag.34   = Les blanques tenen un avantatge de desenvolupament decisiu
+pgn.nag.35   = Les negres tenen un avantatge de desenvolupament decisiu
+pgn.nag.36   = Les blanques tenen la iniciativa
+pgn.nag.37   = Les negres tenen la iniciativa
+pgn.nag.38   = Les blanques tenen duradora iniciativa
+pgn.nag.39   = Les negres tenen duradora iniciativa
+pgn.nag.40   = Les blanques tenen atac
+pgn.nag.41   = Les negres tenen atac
+pgn.nag.42   = Les blanques no tenen compensació pel material de menys
+pgn.nag.43   = Les negres no tenen compensació pel material de menys
+pgn.nag.44   = Les blanques tenen compensació pel material de menys
+pgn.nag.45   = Les negres tenen compensació pel material de menys
+pgn.nag.46   = Les blanques tenen més que adequada compensació pel material de menys
+pgn.nag.47   = Les negres tenen més que adequada compensació pel material de menys
+pgn.nag.48   = Les blanques tenen un lleuger control del centre
+pgn.nag.49   = Les negres tenen un lleuger control del centre
+pgn.nag.50   = Les blanques tenen un moderat control del centre
+pgn.nag.51   = Les negres tenen un moderat control del centre
+pgn.nag.52   = Les blanques tenen un decisiu control del centre
+pgn.nag.53   = Les negres tenen un decisiu control del centre
+pgn.nag.54   = Les blanques tenen un lleuger control del flanc de Rei
+pgn.nag.55   = Les negres tenen un lleuger control del flanc de Rei
+pgn.nag.56   = Les blanques tenen un moderat control del flanc de Rei
+pgn.nag.57   = Les negres tenen un moderat control del flanc de Rei
+pgn.nag.58   = Les blanques tenen un decisiu control del flanc de Rei
+pgn.nag.59   = Les negres tenen un decisiu control del flanc de Rei
+pgn.nag.60   = Les blanques tenen un lleuger control del flanc de dama
+pgn.nag.61   = Les negres tenen un lleuger control del flanc de dama
+pgn.nag.62   = Les blanques tenen un moderat control del flanc de dama
+pgn.nag.63   = Les negres tenen un moderat control del flanc de dama
+pgn.nag.64   = Les blanques tenen un decisiu control del flanc de dama
+pgn.nag.65   = Les negres tenen un decisiu control del flanc de dama
+pgn.nag.66   = Les blanques tenen la primera línia vulnerable
+pgn.nag.67   = Les negres tenen la primera línia vulnerable
+pgn.nag.68   = Les blanques tenen la primera línia ben protegida
+pgn.nag.69   = Les negres tenen la primera línia ben protegida
+pgn.nag.70   = Les blanques tenen el Rei mal protegit
+pgn.nag.71   = Les negres tenen el Rei mal protegit
+pgn.nag.72   = Les blanques tenen el Rei ben protegit
+pgn.nag.73   = Les negres tenen el Rei ben protegit
+pgn.nag.74   = Les blanques tenen el Rei mal colocat
+pgn.nag.75   = Les negres tenen el Rei mal colocat
+pgn.nag.76   = Les blanques tenen el Rei ben colocat
+pgn.nag.77   = Les negres tenen el Rei ben colocat
+pgn.nag.78   = Les blanques tenen l'estructura de peons molt dèbil
+pgn.nag.79   = Les negres tenen l'estructura de peons molt dèbil
+pgn.nag.80   = Les blanques tenen l'estructura de peons una mica dèbil
+pgn.nag.81   = Les negres tenen l'estructura de peons una mica dèbil
+pgn.nag.82   = Les blanques tenen l'estructura de peons bastant forta
+pgn.nag.83   = Les negres tenen l'estructura de peons bastant forta
+pgn.nag.84   = Les blanques tenen l'estuctura de peons molt forta
+pgn.nag.85   = Les negres tenen l'estuctura de peons molt forta
+pgn.nag.86   = Les blanques tenen un cavall mal colocat
+pgn.nag.87   = Les negres tenen un cavall mal colocat
+pgn.nag.88   = Les blanques tenen un cavall ben colocat
+pgn.nag.89   = Les negres tenen un cavall ben colocat
+pgn.nag.90   = Les blanques tenen un mal àlfil
+pgn.nag.91   = Les negres tenen un mal àlfil
+pgn.nag.92   = Les blanques tenen un bon àlfil
+pgn.nag.93   = Les negres tenen un bon àlfil
+pgn.nag.94   = Les blanques tenen una torre mal colocada
+pgn.nag.95   = Les negres tenen una torre mal colocada
+pgn.nag.96   = Les blanques tenen una torre ben colocada
+pgn.nag.97   = Les negres tenen una torre ben colocada
+pgn.nag.98   = Les blanques tenen la dama mal colocada
+pgn.nag.99   = Les negres tenen la dama mal colocada
+pgn.nag.100  = Les blanques tenen la dama ben colocada
+pgn.nag.101  = Les negres tenen la dama ben colocada
+pgn.nag.102  = Les blanques tenen les peces mal coordinades
+pgn.nag.103  = Les negres tenen les peces mal coordinades
+pgn.nag.104  = Les blanques tenen les peces ben coordinades
+pgn.nag.105  = Les negres tenen les peces ben coordinades
+pgn.nag.106  = Les blanques han jugat l'obertura molt malament
+pgn.nag.107  = Les negres han jugat l'obertura molt malament
+pgn.nag.108  = Les blanques han jugat l'obertura malament
+pgn.nag.109  = Les negres han jugat l'obertura malament
+pgn.nag.110  = Les blanques han jugat bé l'obertura
+pgn.nag.111  = Les negres han jugat bé l'obertura
+pgn.nag.112  = Les blanques han jugat molt bé l'obertura
+pgn.nag.113  = Les negres han jugat molt bé l'obertura
+pgn.nag.114  = Les blanques han jugat el migjoc molt malament
+pgn.nag.115  = Les negres han jugat el migjoc molt malament
+pgn.nag.116  = Les blanques han jugat el migjoc malament
+pgn.nag.117  = Les negres han jugat el migjoc malament
+pgn.nag.118  = Les blanques han jugat el migjoc bé
+pgn.nag.119  = Les negres han jugat el migjoc bé
+pgn.nag.120  = Les blanques han jugat el migjoc molt bé
+pgn.nag.121  = Les negres han jugat el migjoc molt bé
+pgn.nag.122  = Les blanques han jugat el final molt malament
+pgn.nag.123  = Les negres han jugat el final molt malament
+pgn.nag.124  = Les blanques han jugat el final malament
+pgn.nag.125  = Les negres han jugat el final malament
+pgn.nag.126  = Les blanques han jugat el final bé
+pgn.nag.127  = Les negres han jugat el final bé
+pgn.nag.128  = Les blanques han jugat el final molt bé
+pgn.nag.129  = Les negres han jugat el final molt bé
+pgn.nag.130  = Les blanques tenen un lleuger contrajoc
+pgn.nag.131  = Les negres tenen un lleuger contrajoc
+pgn.nag.132  = Les blanques tenen un moderat contrajoc
+pgn.nag.133  = Les negres tenen un moderat contrajoc
+pgn.nag.134  = Les blanques tenen un contrajoc decisiu
+pgn.nag.135  = Les negres tenen un contrajoc decisiu
+pgn.nag.136  = Les blanques tenen una mica de pressió del temps
+pgn.nag.137  = Les negres tenen una mica de pressió del temps
+pgn.nag.138  = Les blanques tenen molta de pressió del temps
+pgn.nag.139  = Les negres tenen molta de pressió del temps
+
+
+# following codes are defined by Fritz
+
+pgn.nag.140  	= Amb idea de 
+pgn.nag.141  	= Contra
+pgn.nag.142  	= És millor 
+pgn.nag.143  	= És pitjor
+pgn.nag.144  	= =
+pgn.nag.144.tip = És equivalent
+pgn.nag.145  	= RR
+pgn.nag.145.tip	= Anotació de la redacció ?
+pgn.nag.146  	= N
+pgn.nag.146.tip = Novetat
+pgn.nag.149		= Fila
+
+# following codes are defined by us (equivalent to Informator symbols)
+# (is there a standard definition for these symbols ?)
+
+pgn.nag.150		= Diagonal
+pgn.nag.151		= Parella d'àlfils
+
+pgn.nag.153		= Àlfils de difernts colors
+pgn.nag.154		= Àlfils del mateix color
+pgn.nag.156		= Peó passat
+pgn.nag.157		= Més peons
+pgn.nag.158		= Amb
+pgn.nag.159		= Sense
+pgn.nag.161		= Veure
+pgn.nag.163		= Columna
+
+pgn.nag.190		= etc.
+pgn.nag.191		= Peons doblats
+pgn.nag.192		= Peons separats
+pgn.nag.193		= Peons lligats
+
+# this code is only defined by us
+pgn.nag.201  = Diagrama
+pgn.nag.250  = Diagrama
+
+

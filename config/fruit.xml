@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<PLUGIN ID="fruit2" type="uci">
+	<NAME> Fruit </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\fruit.exe </COMMAND>
+	</EXEC>
+	<DIR> %local%/engines/fruit </DIR>
+	<LOGO> %dir%/fruit.bmp </LOGO>
+	<VERSION> 2.0 </VERSION>
+	<AUTHOR> Fabien Letouzey </AUTHOR>
+	<OPTIONS>
+		<OPTION dirty="true" name="Hash"> 16 </OPTION>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION dirty="true" name="NullMove Pruning"> Fail High </OPTION>
+		<OPTION dirty="true" name="NullMove Reduction"> 3 </OPTION>
+		<OPTION dirty="true" name="Verification Search"> Endgame </OPTION>
+		<OPTION dirty="true" name="Verification Reduction"> 5 </OPTION>
+		<OPTION name="SingleReply Extension"> true </OPTION>
+		<OPTION name="History Pruning"> true </OPTION>
+		<OPTION dirty="true" name="History Move Number"> 3 </OPTION>
+		<OPTION dirty="true" name="History Threshold"> 60 </OPTION>
+		<OPTION name="Futility Pruning"> false </OPTION>
+		<OPTION dirty="true" name="Futility Margin"> 50 </OPTION>
+		<OPTION name="Delta Pruning"> false </OPTION>
+		<OPTION dirty="true" name="Delta Margin"> 50 </OPTION>
+		<OPTION dirty="true" name="Quiescence Check Plies"> 1 </OPTION>
+		<OPTION dirty="true" name="Material"> 100 </OPTION>
+		<OPTION dirty="true" name="Piece Activity"> 100 </OPTION>
+		<OPTION dirty="true" name="King Safety"> 100 </OPTION>
+		<OPTION dirty="true" name="Pawn Structure"> 100 </OPTION>
+		<OPTION dirty="true" name="Passed Pawns"> 100 </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+	<EXEC os="Linux_i386">
+		<COMMAND> %dir%/fruit_linux </COMMAND>
+	</EXEC>
+	<EXEC os="Mac">
+		<COMMAND> %dir%/fruit_mac_g4 </COMMAND>
+	</EXEC>
+</PLUGIN>
+</APPLICATION_SETTINGS>

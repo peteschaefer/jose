@@ -1,0 +1,367 @@
+<!-- - - - - - - - - - - - - - - - - -->
+<!--	Global Configuration for jose	-->
+<!-- - - - - - - - - - - - - - - - - -->
+<APPLICATION_SETTINGS>
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Addtional Paths to TrueType fonts             -->
+	<!-- (usually, Java will find those paths anyway)  -->
+	<!--                                               -->
+	<!-- jose/fonts will be picked up in any case      -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!--FONT-PATH os="Windows"> C:\Windows\Fonts </FONT-PATH>-->
+	<!--FONT-PATH os="Linux"> /usr/X11R6/lib/X11/fonts/truetype </FONT-PATH-->
+	<!-- - - - - - - - - - - - - - -->
+	<!--	TrueType Font Encodings	-->
+	<!-- - - - - - - - - - - - - - -->
+	<FONT_ENCODING>
+		<FONT name="Chess Berlin"/>
+		<CHARS color="white"> \ phbrqk </CHARS>
+		<CHARS color="black">   ojntwl </CHARS>
+		<CHARS color="white" bg="dark">  +PHBRQK </CHARS>
+		<CHARS color="black" bg="dark">   OJNTWL </CHARS>
+		<CHARS color="white" bg="fig"> \u0087\u0086\u0085\u0084\u0083\u0082 </CHARS>
+		<CHAR name="knight" color="white">  \u00D1\u00D2 </CHAR>
+		<CHAR name="knight" color="black">  \u00D3\u00D4 </CHAR>
+		<CHARS color="white" orientation="right"> \u00C9\u00BD\u00B1\u00A5\u0096 </CHARS>
+		<CHARS color="white" orientation="right" bg="dark"> \u00CA\u00BE\u00B2\u00A6\u0097 </CHARS>
+		<CHARS color="black" orientation="right"> \u00CF\u00C3\u00B7\u00AB\u009C </CHARS>
+		<CHARS color="black" orientation="right" bg="dark"> \u00D0\u00C4\u00B8\u00AC\u009F </CHARS>
+		<CHARS color="white" orientation="down"> \u00C5\u00B9\u00AD\u00A1\u0092 </CHARS>
+		<CHARS color="white" orientation="down" bg="dark"> \u00C6\u00BA\u00AE\u00A2\u0093 </CHARS>
+		<CHARS color="black" orientation="down"> \u00CB\u00BF\u00B3\u00A7\u0098 </CHARS>
+		<CHARS color="black" orientation="down" bg="dark"> \u00CC\u00C0\u00B4\u00A8\u0099 </CHARS>
+		<CHARS color="white" orientation="left"> \u00C7\u00BB\u00AF\u00A3\u0094 </CHARS>
+		<CHARS color="white" orientation="left" bg="dark"> \u00C8\u00BC\u00B0\u00A4\u0095 </CHARS>
+		<CHARS color="black" orientation="left"> \u00CD\u00C1\u00B5\u00A9\u009A </CHARS>
+		<CHARS color="black" orientation="left" bg="dark"> \u00CE\u00C2\u00B6\u00AA\u009B </CHARS>
+		<FRAME> 123 45 789 </FRAME>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="Chess"/>
+		<CHARS color="white"> \ phbrqk </CHARS>
+		<CHARS color="black">   ojntwl </CHARS>
+		<CHARS color="white" bg="dark">  +PHBRQK </CHARS>
+		<CHARS color="black" bg="dark">   OJNTWL </CHARS>
+	</FONT_ENCODING>
+    <FONT_ENCODING>
+        <FONT name="Smart"/>
+        <CHARS color="white"> MABCDEF </CHARS>
+        <CHARS color="black"> mabcdef </CHARS>
+        <CHARS color="white" bg="dark"> GHIJKL </CHARS>
+        <CHARS color="black" bg="dark"> ghijkl </CHARS>
+    </FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="Chess Alpha"/>
+		<CHARS color="white" bg="fig"> \u0087\u0086\u0085\u0084\u0083\u0082 </CHARS>
+		<CHARS color="black" bg="fig"> \u0091\u008c\u008b\u008a\u0089\u0088 </CHARS>
+		<CHARS color="white"> \ \uF070\uF068\uF062\uF0a0\uF071\uF06b</CHARS>
+		<CHARS color="black"> \uF06f\uF06a\uF06e\uF074\uF077\uF06c </CHARS>
+		<CHARS color="white" bg="dark"> \u002b\u0050\u0048\u0042\u0052\u0051\u004b</CHARS>
+		<CHARS color="black" bg="dark"> \u004f\u004a\u004e\u0054\u0057\u004c</CHARS>
+		<FRAME type="single"> \u0021\u0022\u0023 \u0024\u0025 \u0026\u0027\u0028 </FRAME>
+		<FRAME type="double"> \u0031\u0032\u0033 \u0034\u0035 \u0036\u0037\u0038 </FRAME>
+		<FRAME part="files" type="single"> \u00e8\u00e9\u00ea\u00eb\u00ec\u00ed\u00ee\u00ef </FRAME>
+		<FRAME part="files" type="double"> \u00c8\u00c9\u00ca\u00cb\u00cc\u00cd\u00ce\u00cf </FRAME>
+		<FRAME part="rows" type="single"> \u00e0\u00e1\u00e2\u00e3\u00e4\u00e5\u00e6\u00e7 </FRAME>
+		<FRAME part="rows" type="double"> \u00c0\u00c1\u00c2\u00c3\u00c4\u00c5\u00c6\u00c7 </FRAME>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="Chess Adventurer"/>
+		<FONT name="Chess Alfonso-X"/>
+		<FONT name="Chess Cases"/>
+		<FONT name="Chess Condal"/>
+		<FONT name="Chess Harlequin"/>
+		<FONT name="Chess Kingdom"/>
+		<FONT name="Chess Leipzig"/>
+		<FONT name="Chess Line"/>
+		<FONT name="Chess Lucena"/>
+		<FONT name="Chess Magnetic"/>
+		<FONT name="Chess Mark"/>
+		<FONT name="Chess Marroquin"/>
+		<FONT name="Chess Maya"/>
+		<FONT name="Chess Mediaeval"/>
+		<FONT name="Chess Merida"/>
+		<FONT name="Chess Millennia-D"/>
+		<FONT name="Chess Millennia-L"/>
+		<FONT name="Chess Motif"/>
+		<CHARS color="white"> *pnbrqk</CHARS>
+		<CHARS color="black">   omvtwl	</CHARS>
+		<CHARS color="white" bg="dark">	+PNBRQK	</CHARS>
+		<CHARS color="black" bg="dark">  OMVTWL	</CHARS>
+		<CHARS color="white" bg="fig"> \u00A7\u00A4\u00A5\u00A6\u00A3\u00A2 </CHARS>
+		<CHAR name="dot"> .: </CHAR>
+		<CHAR name="x"> xX </CHAR>
+		<FRAME type="single"> 123 45 789 </FRAME>
+		<FRAME type="double"> \u0021\u0022\u0023 \u0024\u0025 \u002F\u0028\u0029 </FRAME>
+		<FRAME part="rows" type="single"> \u00C0\u00C1\u00C2\u00C3\u00C4\u00C5\u00C6\u00C7 </FRAME>
+		<FRAME part="files" type="single"> \u00C8\u00C9\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF </FRAME>
+		<FRAME part="rows" type="double"> \u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u00E6\u00E7 </FRAME>
+		<FRAME part="files" type="double"> \u00E8\u00E9\u00EA\u00EB\u00EC\u00ED\u00EE\u00EF </FRAME>
+		<FRAME part="edges" type="single,round"> asdf </FRAME>
+		<FRAME part="edges" type="double,round"> ASDF </FRAME>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<!-- similar to the above but without dedicated figurines -->
+		<FONT name="Chess Usual"/>
+		<CHARS color="white"> \ pnbrqk</CHARS>
+		<CHARS color="black">   omvtwl	</CHARS>
+		<CHARS color="white" bg="dark">	+PNBRQK	</CHARS>
+		<CHARS color="black" bg="dark">  OMVTWL	</CHARS>
+		<!--CHARS color="white" bg="fig"> pnbrqk </CHARS-->
+		<!-- figurines don't fit (no descent) -->
+		<CHAR name="dot"> .: </CHAR>
+		<FRAME type="single"> 123 45 789 </FRAME>
+		<FRAME type="double"> \u0021\u0022\u0023 \u0024\u0025 \u002F\u0028\u0029 </FRAME>
+		<FRAME part="rows" type="single"> \u00C0\u00C1\u00C2\u00C3\u00C4\u00C5\u00C6\u00C7 </FRAME>
+		<FRAME part="files" type="single"> \u00C8\u00C9\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF </FRAME>
+		<FRAME part="edges" type="single,round"> asdf </FRAME>
+		<FRAME part="edges" type="double,round"> ASDF </FRAME>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="Chess Utrecht"/>
+		<CHARS color="white"> \ pnbrqk </CHARS>
+		<CHARS color="black">  /PNBRQK </CHARS>
+		<CHARS color="white" bg="dark"> omvtwl </CHARS>
+		<CHARS color="black" bg="dark"> OMVTWL </CHARS>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="FigurineSymbol S1"/>
+		<FONT name="FigurineSymbol S2"/>
+		<FONT name="FigurineSymbol S3"/>
+		<FONT name="FigurineSymbol T1"/>
+		<FONT name="FigurineSymbol T2"/>
+		<FONT name="FigurineSymbol T3"/>
+		<CHARS bg="fig"> \u00A7\u00A4\u00A5\u00A6\u00A3\u00A2 </CHARS>
+		<SYM nag="40,41"> \u82 </SYM><!-- with attack -->
+		<SYM nag="36,37"> \u83 </SYM><!-- with initiave -->
+		<SYM nag="132-135"> \u84 </SYM><!-- with counterplay -->
+		<SYM nag="140"> \u85 </SYM><!-- with the idea -->
+		<SYM nag="24-29"> \u86 </SYM><!-- greater board room -->
+		<SYM nag="22,23"> \u87 </SYM><!-- zugzwang -->
+		<SYM nag="32-35"> \u89 </SYM><!-- development advantage -->
+		<SYM nag="162"> \u91 </SYM><!-- file -->
+		<SYM nag="164"> \u92 </SYM><!-- diagonal -->
+		<SYM nag="136-139"> \u93 </SYM><!-- time pressure -->
+		<SYM nag="48-53"> \u94 </SYM><!-- center -->
+		<SYM nag="163"> \u96 </SYM><!-- rank -->
+		<SYM nag="161"> \u79 </SYM><!-- see -->
+		<SYM nag="8"> \u99 </SYM><!-- only move -->
+		<SYM nag="44-47"> \uA9  </SYM><!-- with compensation for the material -->
+		<SYM nag="158"> \uAA </SYM><!-- with -->
+		<SYM nag="60-65"> \uAB </SYM><!-- queen's side -->
+		<SYM nag="151,152"> \uAD </SYM><!-- pair of bishops -->
+		<SYM nag="153"> \uAE </SYM><!-- bishops of opposite color -->
+		<SYM nag="154"> \uAF </SYM><!-- bishops of same color -->
+		<SYM nag="16"> \uB1 </SYM><!-- white has the upper hand -->
+		<SYM nag="14"> \uB2 </SYM><!-- white stands slightly better -->
+		<SYM nag="15"> \uB3 </SYM><!-- black stands slightly better -->
+		<SYM nag="17"> \uB5 </SYM><!-- black has the upper hand -->
+		<SYM nag="142"> \uB9 </SYM><!-- better is -->
+		<SYM nag="159"> \uBA </SYM><!-- without -->
+		<SYM nag="54-59"> \uBB </SYM><!-- king's side -->
+		<SYM nag="13"> \uF7 </SYM><!-- unclear(infinity) -->
+		<SYM nag="156"> \uFE </SYM><!-- passed pawn -->
+		<SYM nag="126,127"> \uFF </SYM><!-- ending -->
+		<SYM nag="143"> \u8B </SYM><!-- worse is (smaller or equal) -->
+		<SYM nag="144"> \uD0 </SYM> <!-- equivalent -->
+		<SYM nag="191"> \uDE </SYM><!-- double pawns -->
+		<SYM nag="192"> \uEF </SYM> <!-- separated pawns -->
+		<SYM nag="193"> \uED </SYM><!-- united pawns -->
+		<!-- \u9B greater or equal -->
+		<!-- \u8C filled triangle ? -->
+		<!-- \u9C filled square ? -->
+		<!-- \u95 circle ? -->
+		<!-- \uA1 exclamation mark upside down -->
+		<!-- \uB0 inifinity over equal ? -->
+		<!-- \uAC hook ? --> 
+		<!-- \uB6 filled circle -->
+		<!-- \uBC 1/4 -->
+		<!-- \uBD 1/2 -->
+		<!-- \uBE 3/4 -->
+		<!-- \uBF question mark upside down -->
+		<!-- \uC0 sand clock -->
+		<!-- \uC1 notation sheet -->
+		<!-- \uC2 book -->
+		<!-- \uCB white flag -->
+		<!-- \uCC black flag -->
+		<!-- \uCD white/black flag -->
+		<!-- \uCE contains -->
+		<!-- \uCF contains not -->
+		<!-- \uD1 not equal -->
+		<!-- \uD2 reqistered -->
+		<!-- \uD3 copyright -->
+		<!-- \uD4 Trade Mark -->
+		<!-- \u78 small X -->
+		<!-- \uD7 big X -->
+		<!-- \uD9 square with black dot -->
+		<!-- \uDA square with white dot -->
+		<!-- \uDB half circle with plus-->
+		<!-- \uDC plus with black dots -->
+		<!-- \uDD plus with black dot -->
+		<!-- \uDF three dots -->
+		<!-- \uE0 chess clock -->
+		<!-- \uE1 black chess clock -->
+		<!-- \uE2 envelope -->
+		<!-- \uE3 envelope back side -->
+		<!-- \uE4 black dot with arrow-->
+		<!-- \uE5 white dot with arrow-->
+		<!-- \uE6 cup-->
+		<!-- \uE7 swords-->
+		<!-- \uE8 fork ?-->
+		<!-- \uE9 pin-->
+		<!-- \uEA crosshair ?-->
+		<!-- \uEB bold right arrow-->
+		<!-- \uEC bold up arrow -->
+		<!-- \uEE dot over arrow -->
+		<!-- \uF8 two arrows up -->
+		<!-- \uF9 C in box -->
+		<!-- \uFA S in box -->
+		<!-- \uFB white/black box -->
+		<!-- \uFC black/white box -->
+		<!-- \uFD two boxes -->
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="Traveller Standard"/>
+		<CHARS color="white"> \ PNBRQK	</CHARS>
+		<CHARS color="black">   pnbrqk	</CHARS>
+		<CHARS color="white" bg="dark">	0\u002A\u0029\u0027\u002C\u002B\u0028 </CHARS>
+		<CHARS color="black" bg="dark">	 \u0024\u0023\u0021\u0026\u0025\u0022 </CHARS>
+		<FRAME> 789 46 123 </FRAME>
+		<SYM nag="14"> \u7B </SYM><!-- white stands slightly better -->
+		<SYM nag="15"> \u7C </SYM><!-- black stands slightly better -->
+		<SYM nag="16"> \u7D </SYM><!-- white has the upper hand -->
+		<SYM nag="17"> \u7E </SYM><!-- black has the upper hand -->
+		<SYM nag="13"> \uCD </SYM><!-- unclear (infinity) -->
+		<SYM nag="40-47"> \uC5 </SYM><!-- with compensation for the material -->
+		<SYM nag="32-35"> \uC6 </SYM><!-- development advantage -->
+		<SYM nag="24-29"> \uC7 </SYM><!-- greater board room -->
+		<SYM nag="40,41"> \uC8 </SYM><!-- with attack -->
+		<SYM nag="36,37"> \uC9 </SYM><!-- with initiative -->
+		<SYM nag="132-135"> \uCA </SYM><!-- with counterplay -->
+		<SYM nag="22,23"> \uCB </SYM><!-- zugzwang -->
+		<!-- \uCC  mate -->
+		<SYM nag="140"> \uCD </SYM><!-- with the idea -->
+		<SYM nag="8"> \uCE </SYM><!-- only move -->
+		<SYM nag="142"> \uCF </SYM><!-- better is -->
+		<SYM nag="161"> \uD0 </SYM><!-- file -->
+		<SYM nag="163"> \uD1 </SYM><!-- diagonal -->
+		<SYM nag="48-53"> \uD2 </SYM><!-- center -->
+		<SYM nag="54-59"> \uD3 </SYM><!-- king's side -->
+		<SYM nag="60-65"> \uD4 </SYM><!-- queen's side -->
+		<SYM nag="126,127"> \uD6 </SYM><!-- ending -->
+		<SYM nag="136-139"> \uDF </SYM><!-- time pressure -->
+		<SYM nag="42,43"> \uC5 </SYM><!-- no compensation (equal over infinity) -->
+		<!-- non-standard NAGs equivalent to Informator symbols -->
+		<SYM nag="151,152"> \uD7 </SYM><!-- pair of bishops -->
+		<SYM nag="153"> \uD8 </SYM><!-- bishops of opposite color -->
+		<SYM nag="154"> \uD9 </SYM><!-- bishops of same color -->
+		<SYM nag="156"> \uDD </SYM><!-- passed pawn -->
+		<SYM nag="157"> \uDE </SYM><!-- more pawns -->
+		<SYM nag="158"> \uE0 </SYM><!-- with -->
+		<SYM nag="159"> \uE1 </SYM><!-- without -->
+		<SYM nag="161"> \uE3 </SYM><!-- see -->
+		<SYM nag="190"> \uE2 </SYM><!-- etc. -->
+		<SYM nag="191"> \uDC </SYM><!-- double pawns -->
+		<SYM nag="192"> \uDB </SYM><!-- separated pawns -->
+		<SYM nag="193"> \uDA </SYM><!-- united pawns -->
+		<!-- \uD5 big X -->
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<!-- the standard symbol font contains /some/ annotation symbols -->
+		<FONT name="Symbol"/>
+		<SYM nag="16"> \uB1 </SYM><!-- white has the upper hand -->
+		<SYM nag="36,37"> \u2191 </SYM><!-- with initiative -->
+		<SYM nag="40,41"> \u2192 </SYM><!-- with attack -->
+		<SYM nag="149"> \u21D4 </SYM><!-- file -->
+		<SYM nag="140"> \u2206 </SYM><!-- with idea -->
+		<SYM nag="141"> \u2207 </SYM><!-- against -->
+		<SYM nag="161"> \u2212 </SYM><!-- see -->
+		<SYM nag="136-139"> \u2295 </SYM><!-- time pressure -->
+		<SYM nag="126,127"> \u22A5 </SYM><!-- ending -->
+		<SYM nag="157"> \u232A </SYM><!-- more pawns -->
+		<SYM nag="13"> \u221E</SYM><!-- unclear -->
+	</FONT_ENCODING>
+    <!-- Unicode encoding -->
+    <!-- there are not many fonts that actually do implement it -->
+    <!-- the only known is "Arial Unicode MS" which is present on many Windows installations -->
+    <FONT_ENCODING>
+        <FONT name="Arial Unicode MS"/>
+
+        <CHARS color="white" bg="fig"> \u2659\u2658\u2657\u2656\u2655\u2654 </CHARS>
+        <CHARS color="black" bg="fig"> \u265F\u265E\u265D\u265C\u265B\u265A </CHARS>
+
+        <CHARS letter="true"/>
+        <!-- supports normal letters, of course -->
+    </FONT_ENCODING>
+	<!--
+			the following TrueType fonts are not included with jose
+			but they are installed with ChessBase and Fritz
+			
+			visit ... to download a trial version of ChessBase
+			(including these fonts)
+	-->
+	<FONT_ENCODING>
+		<FONT name="DiagramTTFritz"/>
+		<FONT name="DiagramTTOldstyle"/>
+		<FONT name="DiagramTTUSCF"/>
+		<FONT name="DiagramTTCrystals"/>
+		<FONT name="DiagramTTHabsburg"/>
+		<FONT name="DiagramTTBlindAll"/>
+		<FONT name="DiagramTTBlindBlack"/>
+		<FONT name="DiagramTTBlindwhite"/>
+		<CHARS color="white"> \ PNLRQK </CHARS>
+		<CHARS color="black">   pnlrqk </CHARS>
+		<!--CHARS bg="fig"> PNLRQK </CHARS-->
+		<!-- figurines don't fit (too much descent) -->
+		<CHARS color="white" bg="dark" sep=","> +,zP,sN,vL,tR,wQ,mK	</CHARS>
+		<CHARS color="black" bg="dark" sep=",">   zp,sn,vl,tr,wq,mk	</CHARS>
+	</FONT_ENCODING>
+	<FONT_ENCODING>
+		<FONT name="FigurineCB AriesSP"/>
+		<FONT name="FigurineCB LetterSP"/>
+		<FONT name="FigurineCB TimeSP"/>
+		<CHARS bg="fig"> \u00A7\u00A4\u00A5\u00A6\u00A3\u00A2 </CHARS>
+		<CHARS letter="true"/>
+		<!-- has text letters, too -->
+		<SYM nag="40,41"> \u201A </SYM><!-- with attack -->
+		<SYM nag="39-39"> \u0129 </SYM><!-- with initiative -->
+		<SYM nag="132-135"> \u201e </SYM><!-- with counterplay -->
+		<SYM nag="140"> \u2026 </SYM><!-- with the idea -->
+		<SYM nag="24-29"> \u2020 </SYM><!-- greater board room -->
+		<SYM nag="22,23"> \u2021 </SYM><!-- zugzwang -->
+		<SYM nag="32-35"> \u2030 </SYM><!-- development advantage -->
+		<SYM nag="149"> \u2018 </SYM><!-- file -->
+		<SYM nag="150"> \u2019 </SYM><!-- diagonal -->
+		<SYM nag="136-139"> \u201C </SYM><!-- time -->
+		<SYM nag="48-53"> \u201D </SYM><!-- center -->
+		<SYM nag="161"> \u2014 </SYM><!-- see -->
+		<SYM nag="8"> \u2122 </SYM><!-- only move -->
+		<SYM nag="40-47"> \uA9 </SYM><!-- with compensation for the material -->
+		<SYM nag="158"> \uAA </SYM><!-- with -->
+		<SYM nag="60-65"> \uAB </SYM><!-- queen's side -->
+		<SYM nag="126,127"> \uAC </SYM><!-- ending -->
+		<SYM nag="151,152"> \uAD </SYM><!-- pair of bishops -->
+		<SYM nag="153"> \uAE </SYM><!-- bishops of opposite color -->
+		<SYM nag="154"> \uAF </SYM><!-- bishops of same color -->
+		<SYM nag="16"> \uB1 </SYM><!-- white has the upper hand -->
+		<SYM nag="14"> \uB2 </SYM><!-- white stands slightly better -->
+		<SYM nag="15"> \uB3 </SYM><!-- black stands slightly better -->
+		<SYM nag="17"> \uB5 </SYM><!-- black has the upper hand -->
+		<SYM nag="142"> \uB9 </SYM><!-- better is -->
+		<SYM nag="159"> \uBA </SYM><!-- without -->
+		<SYM nag="54-59"> \uBB </SYM><!-- king's side -->
+		<SYM nag="191"> \uDE </SYM><!-- double pawns -->
+		<SYM nag="193"> \uF7 </SYM><!-- united pawns -->
+		<SYM nag="156"> \uFE </SYM><!-- passed pawn -->
+		<SYM nag="42,43"> \uBO </SYM><!-- without compensation (infinity over equal) -->
+		<!-- \u02c6 caret -->
+		<!-- \u2022 circle -->
+		<!-- \u2013 dash -->
+		<!-- \uBC 1/4 -->
+		<!-- \uBD 1/2 -->
+		<!-- \uBE 3/4 -->
+		<!-- \u81 downward triangle -->
+		<!-- \u8D small X -->
+		<!-- \u9E diagram symbol-->
+	</FONT_ENCODING>
+</APPLICATION_SETTINGS>

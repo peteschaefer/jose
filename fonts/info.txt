@@ -1,0 +1,3 @@
+
+contains TrueType fonts for chess figurines.
+feel free to install these fonts on your system...

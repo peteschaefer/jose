@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+<PLUGIN ID="aristarch" type="uci">
+	<NAME> Aristarch </NAME>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\Aristarch.exe </COMMAND>
+	</EXEC>
+	<DIR> %local%\engines\aristarch </DIR>
+	<LOGO> %dir%\Aristarch.bmp </LOGO>
+	<VERSION> 4.21 </VERSION>
+	<AUTHOR> Stefan Zipproth </AUTHOR>
+	<OPTIONS>
+		<OPTION name="Hash"> 14 </OPTION>
+		<OPTION name="NalimovCache"> 2 </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+		<OPTION name="NalimovPath"/>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="piece_square_tables"> 10 </OPTION>
+		<OPTION name="weak_pawns"> -4.0 </OPTION>
+		<OPTION name="rook_attacks_weak_pawns"> 6 </OPTION>
+		<OPTION name="dynamic_king_safety"> 0 </OPTION>
+		<OPTION name="tablebase_depth"> 1 </OPTION>
+		<OPTION name="null_moves"> true </OPTION>
+		<OPTION name="razoring"> true </OPTION>
+		<OPTION name="fail_high_reductions"> false </OPTION>
+		<OPTION name="search_scheme"> 1 </OPTION>
+		<OPTION name="lazy_evaluation"> true </OPTION>
+		<OPTION name="blitz_playing_speed"> 30 </OPTION>
+		<OPTION name="dynamic_time_management"> 10 </OPTION>
+		<OPTION name="sloppy_time_management"> 4 </OPTION>
+		<OPTION name="minimum_time_usage"> 3 </OPTION>
+		<OPTION name="fifty_move_rule"> 50 </OPTION>
+		<OPTION name="check_extensions"> 8 </OPTION>
+		<OPTION name="recapture_extensions"> 6 </OPTION>
+		<OPTION name="single_response_extensions"> 6 </OPTION>
+		<OPTION name="null_threat_extensions"> 6 </OPTION>
+		<OPTION name="passed_pawn_extensions"> 6 </OPTION>
+		<OPTION name="strategic_extensions"> 0 </OPTION>
+		<OPTION name="endgame_extensions"> 0 </OPTION>
+		<OPTION name="perpetual_check_extensions"> 0 </OPTION>
+		<OPTION name="restrict_extensions_(1/ply)"> true </OPTION>
+		<OPTION name="book_during_analysis"> true </OPTION>
+		<OPTION name="book_learning"> false </OPTION>
+	</OPTIONS>
+	<STARTUP/>
+	<ARGS/>
+	<EXEC os="Linux_i386">
+		<COMMAND/>
+	</EXEC>
+</PLUGIN></APPLICATION_SETTINGS>

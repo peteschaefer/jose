@@ -1,0 +1,88 @@
+<!-- - - - - - - - - - - - - - - - - - - - - -->
+<!--    Default Window Layout                -->
+<!-- - - - - - - - - - - - - - - - - - - - - -->
+<config>
+
+    <layout id="factory" override="0">
+        <frame>
+            <bounds x="100" y="100" width="-100" height="-140"/>
+            <state HELP="1"/>
+        </frame>
+        <frame>
+            <bounds x="30" y="40" width="-40" height="-40"/>
+            <state VISIBLE="1"/>
+            <panel type="split" visible="true" orientation="HORIZ">
+                <panel type="split" visible="true" orientation="VERT">
+                    <panel type="view" name="window.toolbar.1" visible="true" border="false">
+                        <weight x="0.0" y="0.0"/>
+                    </panel>
+                    <panel type="view" name="window.board" visible="true" border="true">
+                        <weight x="2.5" y="2.0"/>
+                    </panel>
+                </panel>
+                <panel type="split" visible="true" orientation="VERT">
+                    <panel type="view" name="window.clock" visible="true" border="true">
+                        <weight x="1.0" y="0.2"/>
+                    </panel>
+                    <panel type="split" visible="true" orientation="VERT">
+                        <panel type="view" name="window.game" visible="true" border="true">
+                            <weight x="1.0" y="1.0"/>
+                        </panel>
+                        <panel type="split" visible="true" orientation="VERT">
+                            <panel type="view" name="window.eval" visible="false" border="true">
+                                <weight x="1.0" y="0.2"/>
+                            </panel>
+                            <panel type="view" name="window.engine" visible="false" border="true">
+                                <weight x="1.0" y="0.3"/>
+                            </panel>
+                        </panel>
+                    </panel>
+                </panel>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="20" y="60" width="-40" height="-40"/>
+            <state/>
+            <panel type="split" visible="true" orientation="VERT">
+                <panel type="split" visible="true" orientation="HORIZ">
+                    <panel type="split" visible="true" orientation="VERT">
+                        <panel type="view" name="window.collectionlist" visible="true" border="true">
+                            <weight x="1.0" y="1.0"/>
+                        </panel>
+                        <panel type="view" name="window.toolbar.2" visible="true" border="false">
+                            <weight x="0.0" y="0.0"/>
+                        </panel>
+                    </panel>
+                    <panel type="view" name="window.query" visible="true" border="true">
+                        <weight x="1.0" y="1.0"/>
+                    </panel>
+                </panel>
+                <panel type="view" name="window.gamelist" visible="true" border="true">
+                    <weight x="1.0" y="2.4"/>
+                </panel>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="40" y="40" width="-40" height="-40"/>
+            <state/>
+            <panel type="view" name="window.print.preview" visible="true" border="true">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="20" y="80" width="480" height="260"/>
+            <state/>
+            <panel type="view" name="window.console" visible="true" border="true">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+        <frame>
+            <bounds x="20" y="100" width="400" height="560"/>
+            <state/>
+            <panel type="view" name="window.toolbar.symbols" visible="true" border="false">
+                <weight x="1.0" y="1.0"/>
+            </panel>
+        </frame>
+    </layout>
+
+</config>

@@ -1,0 +1,85 @@
+<!-- - - - - - - - - - - - - -->
+<!--	Toolbar Definitions	 -->
+<!-- - - - - - - - - - - - - -->
+<!--	(in the future, toolbars should be editable by the user -->
+<!--	 currently, they are not) -->
+<toolbars>
+	<!-- this toolbar appears in the main window -->
+	<toolbar id="window.toolbar.1">
+		<!-- file control -->
+		<item id="menu.file.new"/>
+		<item id="menu.file.save"/>
+		<item id="menu.file.save.all"/>
+		<item id="menu.file.save.as"/>
+		<iten id="menu.file.print"/>
+		<separator/>
+		<!-- edit
+		<item id="menu.edit.cut"/>
+		<item id="menu.edit.copy"/>
+		<item id="menu.edit.paste"/>
+		<item id="menu.edit.clear"/>
+		<separator/-->
+<!--	<item id="menu.game.previous"/>
+		<item id="menu.game.next"/>
+		<separator/>
+-->		<!-- game control -->
+		<item id="move.first"/>
+		<item id="move.backward"/>
+		<item id="move.delete"/>
+		<item id="move.start"/>
+		<item id="move.forward"/>
+		<item id="move.last"/>
+		<item id="move.animate"/>
+		<item id="engine.stop"/>
+		<separator/>
+		<item id="menu.game.analysis"/>
+		<item id="menu.game.hint"/>
+		<item id="menu.game.draw"/>
+		<item id="menu.game.resign"/>
+
+		<separator/>
+		<item id="menu.game.details"/>	<!-- game details -->
+		<item id="window.gamelist"/>	<!-- database window -->
+		<item id="menu.edit.option"/>	<!-- option dialog -->
+
+		<separator/>
+		<separator/>
+		
+		<item id="menu.edit.bold"/>
+		<item id="menu.edit.italic"/>
+		<item id="menu.edit.underline"/>
+		<item id="menu.edit.plain"/>
+		<separator/>
+		<item id="menu.edit.left"/>
+		<item id="menu.edit.center"/>
+		<item id="menu.edit.right"/>
+		<separator/>
+		<item id="menu.edit.larger"/>
+		<item id="menu.edit.smaller"/>
+		<item id="menu.edit.color"/>
+	</toolbar>
+
+	<!-- this toolbar is used in the database window -->
+	<toolbar id="window.toolbar.2">
+		<item id="menu.edit.collection.new"/>
+		<item id="menu.file.open"/>
+		<item id="menu.file.save.as"/>
+		<item id="menu.file.print"/>
+		<separator/>
+		<item id="menu.edit.cut"/>
+		<item id="menu.edit.copy"/>
+        <item id="menu.edit.paste"/>
+<!--		<item id="menu.edit.paste.copy"/>-->
+<!--		<item id="menu.edit.paste.same"/>-->
+		<item id="menu.edit.clear"/>
+		<separator/>
+		<item id="menu.edit.empty.trash"/>
+		<!--item id="menu.edit.restore"/-->
+	</toolbar>
+
+	<!-- this toolbar is not yet in use -->
+	<toolbar id="window.toolbar.3">
+
+	</toolbar>
+
+</toolbars>

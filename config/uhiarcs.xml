@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
+<PLUGIN type="uci" ID="hiarcs 9">
+	<NAME> HIARCS </NAME>
+	<EXEC os="Mac">
+		<COMMAND> %dir%/uhiarcs </COMMAND>
+	</EXEC>
+	<DIR> /Applications/Sigma Chess HIARCS/HIARCS </DIR>
+	<LOGO/>
+	<VERSION> 9.60 UCI </VERSION>
+	<AUTHOR> Mark John Uniacke </AUTHOR>
+	<OPTIONS>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="Hash" dirty="true"> 32 </OPTION>
+		<OPTION name="Retain Hash"> true </OPTION>
+		<OPTION name="Playing Style" dirty="true"> Normal </OPTION>
+		<OPTION name="Smart Search"> true </OPTION>
+		<OPTION name="Selectivity" dirty="true"> 7 </OPTION>
+		<OPTION name="Threat Depth" dirty="true"> 3 </OPTION>
+		<OPTION name="Swindle"> false </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+		<OPTION name="Book Style" dirty="true"> Tournament </OPTION>
+		<OPTION name="Book Positions" dirty="true"> 377379 </OPTION>
+		<OPTION name="Book Learning"> true </OPTION>
+		<OPTION name="Position Learning"> true </OPTION>
+		<OPTION name="Combinations"> false </OPTION>
+		<OPTION name="Hyper-Modern Play"> false </OPTION>
+		<OPTION name="Use Tablebases"> true </OPTION>
+		<OPTION name="UCI_EngineAbout" dirty="true"> &lt;html&gt;
+  &lt;head&gt;
+    
+  &lt;/head&gt;
+  &lt;body&gt;
+    HIARCS 9.60 Copyright (c) 1992-2005 Applied Computer Concepts Ltd. All 
+    rights reserved. www.hiarcs.com. Fully Registered and Activated.
+  &lt;/body&gt;
+&lt;/html&gt; </OPTION>
+		<OPTION name="NalimovCache" dirty="true"> 1 </OPTION>
+		<OPTION name="NalimovPath" dirty="true"> /tbs </OPTION>
+		<OPTION name="UCI_LimitStrength"> false </OPTION>
+		<OPTION name="UCI_Elo" dirty="true"> 1925 </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>

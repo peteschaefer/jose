@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<APPLICATION_SETTINGS>
+ 	<PLUGIN ID="crafty" type="xboard">
+	<NAME> Crafty </NAME>
+	<DIR> %local%\engines\crafty </DIR>
+	<AUTHOR> Robert Hyatt </AUTHOR>
+	<VERSION> 19.18 </VERSION>
+	<LOGO> %dir%\Crafty2.JPG </LOGO>
+	<ADAPTER-CLASS> de.jose.plugin.CraftyPlugin </ADAPTER-CLASS>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\Windows\Crafty-1918.exe </COMMAND>
+	</EXEC>
+	<EXEC os="Linux_i386">
+		<COMMAND> %dir%/Linux_i386/crafty-19.18 </COMMAND>
+	</EXEC>
+	<EXEC os="Mac">
+		<COMMAND> %dir%/Mac/crafty-19.18 </COMMAND>
+	</EXEC>
+	<ARGS> xboard bookpath=. </ARGS>
+	<STARTUP> log off
+flag off
+hash 16M </STARTUP>
+	<FEATURES> ping=1 setboard=1 san=1 time=1 draw=1
+		sigint=0 sigterm=0 reuse=1 analyze=1
+		name=1
+		playother=1 colors=0
+		variants="normal,nocastle"
+		done=1 </FEATURES>
+	<OPTIONS>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="random"> true </OPTION>
+	</OPTIONS>
+</PLUGIN>
+
+</APPLICATION_SETTINGS>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<APPLICATION_SETTINGS>
+<PLUGIN ID="toga" type="uci">
+	<NAME> Toga II </NAME>
+	<VERSION> 1.1a </VERSION>
+	<AUTHOR> Thomas Gaksch and Fabien Letouzey </AUTHOR>
+	<DIR> %local%\engines\toga </DIR>
+	<LOGO> %dir%\TogaII.jpg </LOGO>
+	<EXEC os="Windows">
+		<COMMAND> %dir%\TogaII.exe </COMMAND>
+	</EXEC>
+	<EXEC os="Linux_i386">
+		<COMMAND> %dir%/TogaII-Linux </COMMAND>
+	</EXEC>
+	<EXEC os="Mac">
+		<COMMAND> %dir%/TogaII-Mac </COMMAND>
+	</EXEC>
+	<OPTIONS>
+		<OPTION name="Hash"> 16 </OPTION>
+		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="OwnBook"> true </OPTION>
+		<OPTION name="BookFile" dirty="true"> ..\books\book.bin </OPTION>
+		<OPTION name="MultiPV"> 4 </OPTION>
+		<OPTION name="NullMove Pruning"> Always </OPTION>
+		<OPTION name="NullMove Reduction"> 3 </OPTION>
+		<OPTION name="Verification Search"> Always </OPTION>
+		<OPTION name="Verification Reduction"> 5 </OPTION>
+		<OPTION name="History Pruning"> true </OPTION>
+		<OPTION name="History Threshold"> 70 </OPTION>
+		<OPTION name="Futility Pruning"> true </OPTION>
+		<OPTION name="Futility Margin (Depth=1)"> 250 </OPTION>
+		<OPTION name="Futility Margin (Depth=2)"> 550 </OPTION>
+		<OPTION name="Delta Pruning"> true </OPTION>
+		<OPTION name="Delta Margin"> 70 </OPTION>
+		<OPTION name="Quiescence Check Plies"> 1 </OPTION>
+		<OPTION name="Material"> 100 </OPTION>
+		<OPTION name="Piece Activity"> 100 </OPTION>
+		<OPTION name="King Safety"> 100 </OPTION>
+		<OPTION name="Pawn Structure"> 100 </OPTION>
+		<OPTION name="Passed Pawns"> 100 </OPTION>
+		<OPTION name="Toga Lazy Eval"> true </OPTION>
+		<OPTION name="Toga Lazy Eval Margin"> 200 </OPTION>
+		<OPTION name="Toga Exchange Bonus"> 40 </OPTION>
+		<OPTION name="Toga King Safety"> false </OPTION>
+		<OPTION name="Toga King Safety Margin"> 1600 </OPTION>
+		<OPTION name="Toga Extended History Pruning"> false </OPTION>
+		<OPTION name="Toga History Threshold"> 15 </OPTION>
+		<OPTION name="Search Time"> 0 </OPTION>
+		<OPTION name="Search Depth"> 0 </OPTION>
+		<OPTION name="Futility Margin"> 125 </OPTION>
+		<OPTION name="Extended Futility Margin"> 325 </OPTION>
+	</OPTIONS>
+	<ARGS/>
+	<STARTUP/>
+</PLUGIN>
+</APPLICATION_SETTINGS>
