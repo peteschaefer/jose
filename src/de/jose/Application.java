@@ -1729,7 +1729,17 @@ public class Application
 								context.target = File.createTempFile("jose",".pdf");
 								Version.loadFop();
 								XSLFOExport fotask = new XSLFOExport(context);
-								fotask.printOnCompletion = true;
+								fotask.printOnCompletion = new Runnable() {
+									@Override
+									public void run() {
+                                        try {
+											Desktop desktop = Desktop.getDesktop();
+                                            desktop.open((File)context.target);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+								};
 								fotask.start();
 								prdoc=null;
 							}
