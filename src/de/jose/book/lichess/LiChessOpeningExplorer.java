@@ -89,13 +89,14 @@ public class LiChessOpeningExplorer extends OpeningBook
         Callable<Boolean> task = new Callable() {
             @Override
             public Boolean call() throws Exception {
-                return getBookMoves(pos, ignoreColors, deep, result);
+                return getBookMoves1(pos, ignoreColors, deep, result);
             }
         };
 
         Future<Boolean> fut = Application.theExecutorService.submit(task);
         try {
-            return fut.get(4000, TimeUnit.MILLISECONDS);
+            //  .. synchroneously, but with fixed time-out
+            return fut.get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             return false;
         } catch (ExecutionException e) {

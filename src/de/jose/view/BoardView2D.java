@@ -578,6 +578,9 @@ public class BoardView2D
 
 		if (showAnimationHints) showHint(mv, millis, ANIM_HINT_COLOR);
 
+		//	just in case that an old animation is still running:
+		sprite1.drop();
+
 		/*	set up sprite */
 		finishMove(mv, millis);
 	}

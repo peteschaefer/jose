@@ -4255,6 +4255,9 @@ public class Application
 			Application.error(thr);
 		}
 
+		//	close thread pool
+		theExecutorService.shutdown();
+
 		return true;
 	}
 
