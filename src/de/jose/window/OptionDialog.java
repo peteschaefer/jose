@@ -137,7 +137,7 @@ public class OptionDialog
 	{
 		super(name, false);
 		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
-		center(Math.min(screensize.width,720), Math.min(screensize.height,540));
+		center(Math.min(screensize.width,720), Math.min(screensize.height,660));
         profile = AbstractApplication.theUserProfile;
 
 		addTab(newGridPane());   // tab0
@@ -205,10 +205,11 @@ public class OptionDialog
 		JPanel tab1 = (JPanel)comp1;
 
 		FontList fontList = FontList.createDiagramFontList(20,true);
-		fontList.setVisibleRowCount(4);
-		fontList.setMinimumSize(new Dimension(80,120)); //  has no effect on fucking GridBagLayout ;-((
+		fontList.setVisibleRowCount(5);
+		fontList.setMinimumSize(new Dimension(80,360)); //  has no effect on fucking GridBagLayout ;-((
 		//  diagram font
-		addWithLabel(tab1, 0,0,4, "font.diagram", fontList,
+		addWithLabel(tab1, 0,0,4, 0.0, 10.0,
+				"font.diagram", fontList,
 		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 

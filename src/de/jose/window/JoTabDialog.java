@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@ package de.jose.window;
 
 import de.jose.Language;
 import de.jose.Util;
+import de.jose.Version;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -230,7 +231,9 @@ public class JoTabDialog
 	
 	public void addTab(Component comp, Icon icon)
 	{
-		String name = getName()+".tab."+(getTabbedPane().getComponentCount()+1);
+		int indx = getTabbedPane().getComponentCount()+1;
+		if (Version.mac) indx--; // don't ask why
+		String name = getName()+".tab."+indx;
 		comp.setName(name);
 		tabElements.add(new HashMap());
 		listenTabChanges = false;
