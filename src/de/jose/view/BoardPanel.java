@@ -609,7 +609,10 @@ public class BoardPanel
 		{
 			double cp = (Double)hint.implData;
 			assert(cp>=cpmin && cp<=cpmax);
-			cp = (cp-cpmin) / (cpmax-cpmin);
+			if (cpmin==cpmax)
+				cp = 1.0;
+			else
+				cp = (cp-cpmin) / (cpmax-cpmin);
 			hint.color = suggestionColor((float)cp);
 		}
 		//	sort by Z order

@@ -507,7 +507,7 @@ public class ImgUtil
 			return null;
 	}
 
-	public static ImageIcon getIcon(File file)
+	public static ImageIcon getIcon(File file, int width, int height)
 	{
 		ImageIcon icon = (ImageIcon)SoftCache.gInstance.get(file);
 		if (icon!=null) return icon;
@@ -515,10 +515,15 @@ public class ImgUtil
 		if (FileUtil.hasExtension(file.getName(),"bmp"))
 		{
 			Image img = readBmp(file);
+			img = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			icon = new ImageIcon(img);
 		}
-		else
+		else {
 			icon = new ImageIcon(file.getAbsolutePath());
+			Image img = icon.getImage();
+			img = img.getScaledInstance(width,height,Image.SCALE_SMOOTH);
+			icon.setImage(img);
+		}
 
 		SoftCache.gInstance.put(file,icon);
 		return icon;

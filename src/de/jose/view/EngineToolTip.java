@@ -93,29 +93,32 @@ public class EngineToolTip
 					}
 				}
 			}
-			else
-			{
-			EnginePlugin plugin = tt.panel.getPlugin();
-			if (plugin==null) return;
-			
-			File logoFile = plugin.getLogo();
-			if (logoFile!=null)
-				label.setIcon(icon = ImgUtil.getIcon(logoFile));
-			else
-				label.setIcon(icon = null);
+			else {
+				EnginePlugin plugin = tt.panel.getPlugin();
+				if (plugin == null) return;
 
-			String name = plugin.getDisplayName();
-			String author = plugin.getAuthor();
+				File logoFile = plugin.getLogo();
+				if (logoFile != null) {
+					icon = ImgUtil.getIcon(logoFile,100,50);
+				}
+				else {
+					icon = null;
+				}
 
-			if (name!=null) {
-				text.append("<b>");
-				text.append(name);
-				text.append("</b>");
-			}
-			if (name!=null && author!=null)
-				text.append("<br>");
-			if (author!=null)
-				text.append(author);
+				label.setIcon(icon);
+
+				String name = plugin.getDisplayName();
+				String author = plugin.getAuthor();
+
+				if (name != null) {
+					text.append("<b>");
+					text.append(name);
+					text.append("</b>");
+				}
+				if (name != null && author != null)
+					text.append("<br>");
+				if (author != null)
+					text.append(author);
 
 			}
 

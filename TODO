@@ -1,5 +1,7 @@
 ==== Bugs
 
+* double click insert variant; trying to delete it
+
 ? fix Berlin font
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.

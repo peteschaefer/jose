@@ -187,7 +187,7 @@ public class PluginList
 		else {
 			img = (ImageIcon)SoftCache.gInstance.get(file);
 			if (img==null) {
-				img = ImgUtil.getIcon(file);
+				img = ImgUtil.getIcon(file,100,50);
 				SoftCache.gInstance.put(file,img);
 			}
 		}

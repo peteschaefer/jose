@@ -739,8 +739,10 @@ public class UciPlugin
 			parseOption(s);
 
         if (s.startsWith("info")) {
-	        parseAnalysis(StringUtil.rest(s),analysis);
-            sendMessage(mode,analysis);
+			if (ignoreMoves==1) {
+				parseAnalysis(StringUtil.rest(s), analysis);
+				sendMessage(mode, analysis);
+			}
         }
 
 		if (s.startsWith("register")) {
@@ -811,7 +813,7 @@ public class UciPlugin
 		rec.white_next = enginePosition.whiteMovesNext();
 
 		if (Util.allOf(AnalysisRecord.NEW_MOVE,rec.modified)) {
-			rec.clear();
+			rec.reset();
 			rec.modified = AnalysisRecord.CURRENT_MOVE +
 					AnalysisRecord.CURRENT_MOVE_NO +
 					AnalysisRecord.ELAPSED_TIME +
