@@ -16,7 +16,7 @@ private:
 	/* pointer to native method interface */ 
 	JNIEnv *env;       
 	/*		function pointer to JNI_CreateJavaVM */
-	jint (JNICALL *CreateJavaVM)(JavaVM **pvm, void **env, void *args);
+	typedef _JNI_IMPORT_OR_EXPORT_ jint JNICALL (*CreateJavaVMFunc)(JavaVM **pvm, void **env, void *args);
 
 	/* JDK 1.2 VM initialization arguments */ 
 	JavaVMInitArgs vm_args; 

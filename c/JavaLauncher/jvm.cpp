@@ -5,6 +5,9 @@
 #ifdef WIN_REGISTRY
 #include "winreg.h"
 #endif
+#ifdef __APPLE__
+#include <dlfcn.h>
+#endif
 
 #include "jvm.h"
 #include "util.h"
@@ -56,9 +59,12 @@ int JVM::launch(const char* dll_path, int jni_version, const StringList* jvm_opt
 	 */
 #ifdef _WINDOWS
 	HINSTANCE dll_handle = LoadLibrary(dll_path);
+#endif
+#ifdef __APPLE__
+	void* dll_handle = dlopen(dll_path,RTLD_LAZY);
+#endif
 	if (dll_handle==NULL)
 		return JVM_ERROR_DLL_NOT_FOUND;
-#endif
 
 	/* setup JVM arguments
 	 */ 
@@ -66,14 +72,19 @@ int JVM::launch(const char* dll_path, int jni_version, const StringList* jvm_opt
 
 	/*	launch VM; call method from jvm.dll
 	 */
+	CreateJavaVMFunc create = (CreateJavaVMFunc)
 #ifdef _WINDOWS
-	CreateJavaVM = (jint (JNICALL *)(JavaVM **,void **, void *))
-						GetProcAddress(dll_handle, "JNI_CreateJavaVM");
+		GetProcAddress(dll_handle, "JNI_CreateJavaVM");
 #endif
-	if (CreateJavaVM==NULL)
+#ifdef __APPLE__
+		dlsym(dll_handle, "JNI_CreateJavaVM");
+#endif
+
+	if (create==NULL)
 		return JVM_ERROR_CREATE_JAVA_VM_NOT_FOUND;
 
-	int res = CreateJavaVM(&jvm, (void**)&env, &vm_args);
+	vm_args.nOptions = 0;
+	int res = create(&jvm, (void**)&env, &vm_args);
 	if (res < 0)
 		return JVM_ERROR_CREATE_JAVA_VM_FAILED;
 	return +1;

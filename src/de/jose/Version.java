@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,6 @@ public class Version
 	public static final boolean linux			= osName.startsWith("Linux");
 	public static boolean linuxIntel;
 	public static final boolean mac				= osName.startsWith("Mac OS");
-	public static final boolean macIntel        = false;    //  not yet implemented
 
 	public static final boolean unix			= !windows;
 
@@ -130,11 +129,6 @@ public class Version
 	private static String 	java3dImpl;
 
 	private static boolean checkedFop = false;
-
-	public static String mysqlVersion = "4.1.8";
-
-	public static boolean mysql41 = mysqlVersion.startsWith("4.1");
-	public static boolean mysql40 = mysqlVersion.startsWith("4.0");
 
 	/**	Java3D
 	 */

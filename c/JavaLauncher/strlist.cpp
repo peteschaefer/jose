@@ -104,6 +104,7 @@ int StringList::parse(const char* line)
 				break;
 
 		case '\\':		//		DON'T escape
+		case '/':
 //				strcpy(s,s+1);
 				//		fall through intended
 		default:		//		text char
@@ -152,6 +153,7 @@ int StringList::parse1(const char* line)
 				break;
 
 		case '\\':		//	DON'T	escape
+		case '/':
 //				strcpy(s,s+1);
 				//		fall through intended
 		default:		//		text char

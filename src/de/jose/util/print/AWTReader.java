@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.apache.fop.fonts.apps.TTFReader;
 import org.apache.fop.fonts.TTFFile;
 import org.apache.fop.fonts.TTFCmapEntry;
-import org.apache.fop.fonts.TTFMtxEntry;
+//import org.apache.fop.fonts.TTFMtxEntry;
 
 /**
  * AWTReader
@@ -216,6 +216,7 @@ public class AWTReader
 		handler.startElement("cid-widths",cid_width_attrs);
 
 //			int[] wx = ttf.getWidths();
+		/*
 			TTFMtxEntry[] gmx = ttf.getGlyphMetrics();
 			for (int i = 0; i < gmx.length; i++) {
 				int width = gmx[i].getWidth();
@@ -232,7 +233,7 @@ public class AWTReader
 				handler.element("wx",null,wx_attrs);
 				//  TODO get width from fmx; but in which order ?
 			}
-
+		*/
 		handler.endElement("cid-widths");
 	}
 

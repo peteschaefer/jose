@@ -232,7 +232,6 @@ public class JoTabDialog
 	public void addTab(Component comp, Icon icon)
 	{
 		int indx = getTabbedPane().getComponentCount()+1;
-		if (Version.mac) indx--; // don't ask why
 		String name = getName()+".tab."+indx;
 		comp.setName(name);
 		tabElements.add(new HashMap());

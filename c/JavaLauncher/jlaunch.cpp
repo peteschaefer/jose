@@ -30,7 +30,7 @@ const char* getIniFile(const char* arg0)
 const char* getWorkDir(const char* arg0)
 {
     const char* s = arg0+strlen(arg0);
-    while (s > arg0 && s[-1] != '\\')
+    while (s > arg0 && s[-1] != DIRSEP)
         s--;
     ((char*)s)[0] = 0;
     return arg0;
@@ -64,6 +64,9 @@ int launch(StringList* argv)
 
 	if (ini_file != NULL) {
 			FILE* file = fopen(ini_file,"r");
+			if (file==NULL)
+				fatal("could not read .ini file",0);
+
 			char* line = new char[256];
 
 			while (fgets(line,256,file)!=NULL)
@@ -147,7 +150,7 @@ int launch(StringList* argv)
 	 */
 	const char* jvm_path = JVM::find(&local_jvm_path, &preferred_version);
 
-	int error = jvm->launch(jvm_path, JNI_VERSION_1_4, &jvm_options);
+	int error = jvm->launch(jvm_path, JNI_VERSION_1_8, &jvm_options);
 	if (error >= 0)
 		error = jvm->call(main_class,&main_args);
 

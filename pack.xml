@@ -7,7 +7,7 @@
 
 	<!-- target directory -->
 
-	<property name="target-dir" location="C:/dev/jose/Release/${version}"/>
+	<property name="target-dir" location="/Users/hrimfaxi/Release/${version}"/>
 	<property name="jre-dir" location="C:/dev/jose"/>
 
 <!--
@@ -52,7 +52,7 @@
 				<include name="layout.xml"/>
             </zipfileset>
 
-			<zipfileset dir="database" prefix="${appldir}/database" dirmode="777">
+			<zipfileset dir="database" prefix="${appldir}/database" dirmode="664">
 				<include name="starter.pgn"/>
 				<include name="mysql/info.txt"/>
 			</zipfileset>
@@ -86,7 +86,7 @@
 				<include name="komodo.bin"/>
 			</zipfileset>
 
-			<zipfileset dir="fop" prefix="${appldir}/fop" includes="info.txt" dirmode="777"/>
+			<zipfileset dir="fop" prefix="${appldir}/fop" includes="info.txt" dirmode="664"/>
 
 			<zipfileset dir="images" prefix="${appldir}/images">
 				<exclude name="etc/**"/>
@@ -336,7 +336,7 @@
 		<zip destfile="${zip-file}" update="true">
 			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
 			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" excludes="lc0"/>
-			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" filemode="777">
+			<zipfileset src="engines/lc0-linux-eigen.zip" prefix="${appldir}/engines/lc0" filemode="775">
 				<include name="lc0"/>
 			</zipfileset>
 		</zip>
@@ -369,7 +369,7 @@
 				<exclude name="src"/>
 				<exclude name="wiki"/>
 			</zipfileset>
-			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish" filemode="777">
+			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish" filemode="775">
 				<include name="stockfish-ubuntu-*"/>
 			</zipfileset>
 		</zip>
@@ -461,13 +461,13 @@
 
 		<zip destfile="${zip-file}" update="true">
 			<!-- Linux specific stuff -->
-			<zipfileset dir="." prefix="${appldir}" filemode="777">
+			<zipfileset dir="." prefix="${appldir}" filemode="775">
 				<include name="jose.sh"/>
 			</zipfileset>
 			<zipfileset dir="bin" prefix="${appldir}/bin">
 				<include name="share/**"/>
 			</zipfileset>
-			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">
+			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="775">
 				<include name="Linux_i386/unrar"/>
 			</zipfileset>
 			<zipfileset dir="lib/Linux_i386" prefix="${appldir}/lib/Linux_i386">
@@ -578,7 +578,9 @@
 				<include name="PkgInfo"/>
             </zipfileset>
 			<zipfileset dir="Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
-				<include name="JavaApplicationStub"/>
+				<!--include name="JavaApplicationStub"/-->
+				<include name="jose.sh"/>
+				<include name="jose"/>
             </zipfileset>
 			<zipfileset dir="Contents/Resources" prefix="${appldir}/Contents/Resources">
 				<include name="jose.icns"/>
@@ -589,20 +591,36 @@
 			<zipfileset dir="bin" prefix="${appldir}/bin">
 				<include name="share/**"/>
 			</zipfileset>
-			<zipfileset dir="bin" prefix="${appldir}/bin" filemode="777">
-				<include name="Mac/unrar"/>
-				<include name="Mac/mysqld"/>
+			<zipfileset dir="bin/Mac" prefix="${appldir}/bin/Mac" filemode="775">
+				<!--include name="Mac/unrar"/-->
+				<include name="mysqld"/>
 			</zipfileset>
 			<zipfileset dir="lib/Mac" prefix="${appldir}/lib/Mac">
 				<include name="MRJAdapter.jar"/>
 				<!--<include name="libmysqlje.jnilib"/>-->
                 <include name="libquaqua.jnilib"/>
+				<include name="libquaqua64.jnilib"/>
+				<include name="libquaqua64.dylib"/>
 			</zipfileset>
             <zipfileset dir="lib/plaf" prefix="${appldir}/lib/plaf">
                 <include name="quaqua.jar"/>
+				<include name="VAaqua13.jar"/>
             </zipfileset>
 			<zipfileset dir="lib/jdbc" prefix="${appldir}/lib/jdbc">
 			    <include name="mysql.jar"/>
+			</zipfileset>
+
+			<!-- the jre -->
+			<zipfileset dir="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/jre"
+						prefix="${appldir}/jre">
+				<exclude name="bin/java"/>
+				<exclude name="lib/jspawnhelper"/>
+			</zipfileset>
+			<zipfileset dir="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/jre"
+						prefix="${appldir}/jre"
+						filemode="775">
+				<include name="bin/java"/>
+				<include name="lib/jspawnhelper"/>
 			</zipfileset>
        	</zip>
 	</target>
@@ -649,13 +667,13 @@
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
 <!--
-		<antcall target="toga-macosx">
+		<antcall target="stockfish-macosx">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
 -->
 <!--
-		<antcall target="crafty-macosx">
+		<antcall target="leela-macosx">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>

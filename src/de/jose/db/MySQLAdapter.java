@@ -95,7 +95,7 @@ public class MySQLAdapter
 				synchronized (this) {
 					if (serverProcess==null && killProcess==null)
 						try {
-							serverProcess = startStandaloneServer(false);
+							serverProcess = startStandaloneServer(true);
 							/**	since the server is running in a separate process,
 							 * 	this may take some time to complete.
 							 * 	to account for that, we sleep a bit, then try several connect requests
@@ -467,8 +467,6 @@ public class MySQLAdapter
 		*/
 		command.add("--lower_case_table_names=0");   //  means: always use exact case
 
-		if (Version.mysql40)
-			command.add("--key_buffer_size=64M");
 //		large key buffer is useful(?) for bulk inserts
 
 		boolean tcpConnect = false;

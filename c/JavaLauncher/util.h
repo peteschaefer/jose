@@ -3,6 +3,12 @@
 #define __UTIL_DEFINED__
 
 
+#ifdef _WINDOWS
+#define DIRSEP '\\'
+#else
+#define DIRSEP '/'
+#endif
+
 bool existsFile(const char* file);
 
 /**		string utility	*/
@@ -22,6 +28,6 @@ int unicodeStrlen(unsigned short* unicde);
 
 char* replace(char* str, char a, char b);
 
-char* unescape(char* to, char* from);
+//char* unescape(char* to, char* from);
 
-#endif;
+#endif

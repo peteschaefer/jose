@@ -89,7 +89,9 @@ public class PrintScaleComboBox
 		super(DEFAULT_VALUES);
 		setEditable(true);
 //		setMaximumSize(new Dimension(160,24));
-		((JLabel)getRenderer()).setHorizontalAlignment(JLabel.RIGHT);
+		ListCellRenderer renderer = getRenderer();
+		if (renderer instanceof JLabel)
+			((JLabel)renderer).setHorizontalAlignment(JLabel.RIGHT);
 		setEditor(new RightAlignedComboBoxEditor());
 		this.view = view;
 	}

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,9 @@ package de.jose.view;
 
 import de.jose.util.ReflectionUtil;
 import de.jose.view.input.StyledToolTip;
+import org.jetbrains.annotations.NotNull;
+import org.violetlib.aqua.AquaAppearance;
+import org.violetlib.aqua.AquaComponentUI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,7 +35,7 @@ import java.awt.event.MouseListener;
  * unfortunately, mouse handling is buried deep in the hierarchy, so we have to do some hacking
  *
  *
- * @author Peter Schäfer 
+ * @author Peter Schï¿½fer 
  */
 public class JoTabbedPane
 		extends JTabbedPane

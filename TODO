@@ -22,7 +22,7 @@ libraries needed:
 * todo cross-compile easylink for i386. Which extra libaries are needed?
 * bin/unrar: either put libstdc++.so.5 into LD_LIBRARY_PATH, or use Linux_x86_64/unrar
 
-[ ] port JavaLauncher
+[ ] port JavaLauncher, or use shc
 [ ] java.desktop
 
 ==== macOS
@@ -56,8 +56,13 @@ mysqld 5.0.24a i686 from 11-07-2005
    - good news: jre can be bundled
    [ ] bundle leela
    [ ] bundle stockfish
-   [-] make jose.sh executable ?
-   [ ] port JavaLauncher
+   [-] Quaqua
+   [-] VAqua
+   [ ] default lnf
+   [ ] Print Preview
+   [x] make jose.sh executable: shc
+   [-] port JavaLauncher
+   [ ] problem with MRJAdapter? Main > Quit hangs
 
 [ ] "Apple Silicon"
     [ ] jdk1.8, 11 (not 9?) is available from Oracle :)

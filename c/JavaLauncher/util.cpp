@@ -1,8 +1,12 @@
 
 #include "util.h"
 
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <cstdio>
+
+#ifdef _WINDOWS
 #include <windows.h>
 
 bool existsFile(const char* file)
@@ -17,6 +21,17 @@ bool existsFile(const char* file)
 	}
 	return 0;
 }
+#else
+bool existsFile(const char* file)
+{
+	FILE* f = fopen(file,"r");
+	if (f) {
+		fclose(f);
+		return true;
+	}
+	return false;
+}
+#endif
 
 
 
@@ -131,20 +146,4 @@ char* replace(char* str, char a, char b)
 		s++;
 	}
 	return str;
-}
-
-char* unescape(char* to, char* from)
-{
-	char* result = to;
-
-	for (;;)
-		switch (*to++ = *from++)
-		{
-		case 0:
-			*to++ = 0;
-			return result;
-		case '\\': 
-			*to++ = '\\';
-			break;
-		}
 }

@@ -69,9 +69,9 @@ public class UserProfile
 
 	public static String getFactoryLookAndFeel() {
 		if (Version.mac)
-//			return null;    //  default = Aqua
-            return "ch.randelshofer.quaqua.QuaquaManager";  //  improved Aqua
-			//return "org.violetlib.aqua.AquaLookAndFeel";
+			return null;    //  default = Aqua
+            //return "ch.randelshofer.quaqua.QuaquaManager";  //  improved Aqua
+			//return "org.violetlib.aqua.AquaLookAndFeel";	//	VAqua
 		else
 			return "net.sourceforge.mlf.metouia.MetouiaLookAndFeel";
 		/**

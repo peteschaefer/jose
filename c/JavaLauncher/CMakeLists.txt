@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 project(JavaLauncher)
 
 option(WINDOWS "build for Windows" OFF)
-option(UNIX "build for Unixes" ON)
+option(UNIX "build for Unixes" OFF)
+option(DARWIN "build for Unixes" ON)
 
 set(sources
         jlaunch.cpp
@@ -22,10 +23,10 @@ if (WINDOWS)
             winreg.cpp)
 endif ()
 
-if (UNIX)
+if (DARWIN)
     include_directories(
-            "C:/Program Files (x86)/Java/jdk1.8.0_202/include"
-            "C:/Program Files (x86)/Java/jdk1.8.0_202/include/win32"
+            "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/include"
+            "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/include/darwin"
     )
 
     list(APPEND sources

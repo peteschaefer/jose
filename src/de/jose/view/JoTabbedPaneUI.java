@@ -2,6 +2,9 @@ package de.jose.view;
 
 import de.jose.util.ReflectionUtil;
 import de.jose.Version;
+import org.jetbrains.annotations.NotNull;
+import org.violetlib.aqua.AquaAppearance;
+import org.violetlib.aqua.AquaComponentUI;
 
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.ComponentUI;
@@ -24,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Peter Schäfer
  */
 public class JoTabbedPaneUI
-        extends BasicTabbedPaneUI
+        extends BasicTabbedPaneUI  implements AquaComponentUI
 {
     /** delegate to... */
     protected TabbedPaneUI delegate;
@@ -141,4 +144,13 @@ public class JoTabbedPaneUI
           }
       }
 
+    @Override
+    public void appearanceChanged(@NotNull JComponent c, @NotNull AquaAppearance appearance) {
+        c.repaint();
+    }
+
+    @Override
+    public void activeStateChanged(@NotNull JComponent c, boolean isActive) {
+        c.repaint();
+    }
 }
