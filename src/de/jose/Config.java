@@ -376,7 +376,7 @@ public class Config
 		FileUtil.restoreFrom(target, temp);
 	}
 
-fal	protected class ElementEnumeration
+	protected class ElementEnumeration
 		implements Enumeration
 	{
 		protected String tagName;

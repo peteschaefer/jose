@@ -1196,6 +1196,10 @@ public class Application
 
 
 		action = new CommandAction() {
+			@Override
+			public boolean isEnabled(String cmd) {
+				return ! Desktop.isDesktopSupported();
+			}
 			public void Do(Command cmd) {
 				BrowserWindow.getBrowser(BrowserWindow.ALWAYS_ASK);
 			}

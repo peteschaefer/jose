@@ -21,13 +21,14 @@ import de.jose.util.StringUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
 /**
  *
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class BrowserWindow
             extends Thread
@@ -51,7 +52,15 @@ public class BrowserWindow
 		 * launching the default browser in Windows is accomplished
 		 * by a call to url.dll
 		 */
- 		if(Version.windows)
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(url.toURI());
+            } catch (URISyntaxException e) {
+                throw new IOException(e);
+            }
+        }
+ 		else if(Version.windows)
 			winBrowser(url);
 		else if (Version.mac)
 			de.jose.MacAdapter.openBrowser(url);
