@@ -24,6 +24,7 @@ import javax.swing.text.StyledDocument;
 import org.xml.sax.SAXException;
 
 import static de.jose.pgn.INodeConstants.ANNOTATION_NODE;
+import static de.jose.pgn.PgnConstants.NAG_MAX;
 
 public class AnnotationNode
 		extends Node
@@ -115,9 +116,25 @@ public class AnnotationNode
 		if (from >= (getLength()-1)) from = getLength()-1;
 		if (to >= (getLength()-1)) to = getLength()-1;
 
+		//	1. textual replacement
 		StringBuffer text = new StringBuffer(toString());
 		text.replace(from,to,newText);
-		return PgnUtil.annotationCode(text.toString());
+		int nag = PgnUtil.annotationCode(text.toString());
+		if (nag>=0) return nag;
+		//	2. numerial append
+		if (from >= getLength()-1) {
+			text.setLength(0);
+			text.append(Integer.toString(code));
+			text.append(newText);
+            try {
+                nag = Integer.parseInt(text.toString());
+				if (nag>=0 && nag <= NAG_MAX)
+					return nag;
+            } catch (NumberFormatException e) {
+                /**/
+            }
+        }
+		return -1;
 	}
 
 	public boolean isCoveredBy(int pos1, int pos2)
