@@ -1,6 +1,7 @@
 package de.jose.eboard;
 
 import de.jose.Application;
+import de.jose.CommandListener;
 import de.jose.Language;
 import de.jose.image.ImgUtil;
 import de.jose.profile.UserProfile;
@@ -54,6 +55,12 @@ public class DialogComponent extends JComponent implements ActionListener
 
         ori.addActionListener(this);
 
+        updateStatus();
+    }
+
+    public void useAppBoard(IBoardAdapter anAppBoard, EBoardConnector.Mode anMode, CommandListener anListener)
+    {
+        eboard.useAppBoard(anAppBoard, anMode, anListener);
         updateStatus();
     }
 
@@ -114,10 +121,14 @@ public class DialogComponent extends JComponent implements ActionListener
             ori.setEnabled(false);
         }
 
-        if (synchLead!=null)
-            synchLead.setSelected(eboard.connected && eboard.getMode()==EBoardConnector.Mode.SETUP_LEAD);
-        if (synchFollow!=null)
-            synchFollow.setSelected(eboard.connected && eboard.getMode()==EBoardConnector.Mode.SETUP_FOLLOW);
+        if (synchLead!=null) {
+            synchLead.setEnabled(eboard.connected);
+            synchLead.setSelected(eboard.connected && eboard.getMode() == EBoardConnector.Mode.SETUP_LEAD);
+        }
+        if (synchFollow!=null) {
+            synchFollow.setEnabled(eboard.connected);
+            synchFollow.setSelected(eboard.connected && eboard.getMode() == EBoardConnector.Mode.SETUP_FOLLOW);
+        }
     }
 
     @Override

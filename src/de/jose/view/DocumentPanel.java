@@ -467,7 +467,7 @@ public class DocumentPanel
 				//theGame.printDocStructure("tree-before.txt");
 				theGame.promoteLine(line);
 				//theGame.printDocStructure("tree-after.txt");
-				reformat();
+				reformat();	// todo necessary ?
 
 				cmd = new Command("move.notify",null,null,Boolean.TRUE);
 				Application.theApplication.broadcast(cmd);

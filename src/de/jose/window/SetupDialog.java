@@ -274,7 +274,7 @@ public class SetupDialog
 		super.show();
 		read();
 
-		eboardCtrl.eboard.useAppBoard(view.board,EBoardConnector.Mode.SETUP_LEAD,this);
+		eboardCtrl.useAppBoard(view.board,EBoardConnector.Mode.SETUP_LEAD,this);
 	}
 
 	@Override

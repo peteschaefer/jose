@@ -138,6 +138,7 @@ public class BoardPanel
 		if (view2d==null) {
 			view2d = new BoardView2D(this,true);
 			view2d.init();
+			view2d.useAppBoard(EBoardConnector.Mode.PLAY,Application.theApplication);
 			add(view2d, "2d");
 		}
 		

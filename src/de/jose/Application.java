@@ -2358,9 +2358,9 @@ public class Application
 		action = new CommandAction() {
 			@Override
 			public void Do(Command cmd) throws Exception {
-				if (cmd.equals("eboard.connect"))
+				if (cmd.code.equals("eboard.connect"))
 					getEBoardConnector().connect();
-				if (cmd.equals("eboard.disconnect"))
+				if (cmd.code.equals("eboard.disconnect"))
 					getEBoardConnector().disconnect();
 			}
 			@Override
