@@ -7,6 +7,9 @@
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
+[X] fix: scrolling DEAD-LOCK in large databases
+    the code in IntervalCacheModel is horrifying...
+
 ==== Project
 
 1.5.1: move on to 64-bit land

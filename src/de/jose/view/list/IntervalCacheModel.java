@@ -252,8 +252,10 @@ abstract public class IntervalCacheModel
 	        if (synch_conn!=null) synch_conn.cancelQuery();
 	        if (executor!=null) executor.halt();    //  let executor run into nirvana
 
-	        //  before preceeding, make sure that the previous cycle is completed
-	        while (status!=WAITING) interrupt();
+	        //  before proceeding, make sure that the previous cycle is completed
+	        //while (status!=WAITING) interrupt();
+			//	attention: this is dangerous, because there is nobody else who would set status=WAITING
+			//	so, this creates a DEAD-LOCK (pretty reliably with huge result sets)
 
 	        //  now prepare the next query
 	        fetchAll = allRows;
