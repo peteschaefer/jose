@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ import java.util.*;
  *  FRC
  *      option UCI_Chess960
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class UciPlugin
@@ -543,13 +543,31 @@ public class UciPlugin
 		setPosition(applPosition);
 
         printOut.print("go");
-        printTimeCtrl();
+        printSearchCtrl();
 		//	todo we want node-restricted search, like "go nodes 10"
         synchronized (this) {
             printOut.println();
             setMode(THINKING);
         }
     }
+
+	private static String[] GoParams = { "", "movetime", "depth", "nodes" };
+
+	private void printSearchCtrl()
+	{
+		Element search = getSearchControls(config);
+		SearchType type = getSelectedSearchControl(search);
+		if (type==SearchType.TIME_CONTROL) {
+			printTimeCtrl();
+		}
+		else {
+			int val = getSearchControlArgument(search,type);
+			printOut.print(" ");
+			printOut.print(GoParams[type.ordinal()]);
+			printOut.print(" ");
+			printOut.print(val);
+		}
+	}
 
     private void printTimeCtrl()
     {
