@@ -105,6 +105,10 @@ public class MySQLAdapter
 		return false;
 	}
 
+	/**
+	 * Background thread to start the mysqld server process
+	 * and setup the first Connection
+	 */
 	protected class MySqlLauncher extends Thread {
 		public MySqlLauncher() {
 			super("MySql Launcher");
@@ -116,8 +120,7 @@ public class MySQLAdapter
             try {
                 sleep(40000);	//	artificial delay; for testing only
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+			}
 
             switch(getServerMode()) {
 				case MODE_STANDALONE:
@@ -129,7 +132,7 @@ public class MySQLAdapter
                         serverProcess = startStandaloneServer(true);
 						waitForStandaloneServer();
                     } catch (IOException e) {
-						throw new RuntimeException(e);
+						Application.error(e);
 					}
                    break;
 
@@ -140,16 +143,18 @@ public class MySQLAdapter
 
 			watchDirectory();
 
-			init_server = true;
+            try {
+				//	stock connection pool with at least one connection
+				JoConnection connection = JoConnection.get();
 
-			if (bootstrap) {
-                try {
-                    Connection connection = createConnection(READ_WRITE);
-					bootstrap(connection);
-					connection.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+				if (bootstrap)
+					bootstrap(connection.getJdbcConnection());
+
+				init_server = true;
+
+				JoConnection.release(connection);
+            } catch (SQLException e) {
+                Application.error(e);
             }
 
 			for(Command cmd : deferredActions)
