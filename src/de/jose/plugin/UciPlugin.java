@@ -544,6 +544,7 @@ public class UciPlugin
 
         printOut.print("go");
         printTimeCtrl();
+		//	todo we want node-restricted search, like "go nodes 10"
         synchronized (this) {
             printOut.println();
             setMode(THINKING);

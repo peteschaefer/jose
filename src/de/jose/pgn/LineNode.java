@@ -173,7 +173,7 @@ public class LineNode
 		else {
 			Node last = last(RESULT_NODE);
 			if (last!=null)
-				last = last.previous().previous();      //  skip result and line suffix
+				last = last.previous();//.previous();      //  skip result (Q: and line suffix ??)
 			else
 				last = last().previous();       //  skip line suffix
 
