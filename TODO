@@ -10,13 +10,14 @@
 
 ==== Project
 
-[ ] bug: hang on start
+[?] bug: hang on start
 [x] bug: diacritics lost on save
 [x] eval splitpane size (getMaximumSize())
 [x] suggestion arrow updates
 [x] utf-8 for pgn
     (x) import = heuristics
     (x) output = configurable
+[x] 000 checkboxes in Setup
 
 1.5.1: move on to 64-bit land
 

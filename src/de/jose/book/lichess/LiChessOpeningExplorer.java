@@ -93,6 +93,14 @@ public class LiChessOpeningExplorer extends OpeningBook
             }
         };
 
+        /*
+            I would like to query Lichess asynchroneously. It's perfectly possible with ExecutorService
+            but then the logic for coordinating EnginePanel with OpeningBook and Application becomes difficult.
+            In/out opening book triggers engine analysis, etc. With asynch book moves the state transitions
+            become too complicated.
+
+            As a compromise, we do a *blocking* query with fixed time-out.
+         */
         Future<Boolean> fut = Application.theExecutorService.submit(task);
         try {
             //  .. synchroneously, but with fixed time-out

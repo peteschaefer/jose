@@ -70,6 +70,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -1951,7 +1952,11 @@ public class Application
 							engine_analysis = ! eng_panel.updateBook(false);
 						} catch (IOException e) {
 							error(e);
-					}
+						}
+
+						//	todo invokeWithPlugin() is not really necessary,
+						//	since we don't need a plugin, if engine_analysis==false
+						//	better think about something like "postCommandWithPlugin"
 
 						//  (2) enter engine analysis mode
 						pausePlugin(engine_analysis);
@@ -2106,10 +2111,7 @@ public class Application
 				else if (getEnginePlugin()!=null)
 				{
 					//  (2) Hint from Plugin
-					Runnable gethint = new Runnable() {
-						public void run() { getEnginePlugin().getHint(); }
-					};
-					invokeWithPlugin(gethint);
+					getEnginePlugin().getHint();
 					//	plugin will eventually respond with a Hint message
 				}
 			}
@@ -3530,6 +3532,15 @@ public class Application
 	}
 */
 
+	/*
+		todo
+		invokeWithPlugin starts an engine plugin, then executes a lambda.
+		The mechanims seems very fragile, since we don't know when the lambda
+		is executed & whether the application state still fits with it.
+
+		Better: trigger a deferred Command, similar to MySqlLauncher.
+		"postCommandWithPlugin"
+	 */
 	public void invokeWithPlugin(final Runnable work)
 	{
 		if (getEnginePlugin()!=null) {
@@ -3538,17 +3549,18 @@ public class Application
 		}
 		else {
 			//  open plugin and invoke later
-			Thread thread = new Thread() {
-				public void run() {
+			Callable task = new Callable() {
+				public Object call() {
 					try {
 						if (openEnginePlugin())
 							SwingUtilities.invokeLater(work);
 					} catch (IOException e) {
 						Application.error(e);
 					}
+					return null;
 				}
 			};
-			thread.start();
+			Application.theExecutorService.submit(task);
 		}
 	}
 

@@ -99,8 +99,8 @@
 	<SEARCH>
 		<TIME> 0 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES> 400 </NODES>
-		<TIME_CONTROL selected="true"/>
+		<NODES selected="true"> 400 </NODES>
+		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>
 </APPLICATION_SETTINGS>

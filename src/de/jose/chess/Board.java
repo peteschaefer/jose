@@ -76,6 +76,7 @@ public class Board
 	public static final int XFEN                    = 2;
 	//  ShredderFEN: FRC castlings are always identifier by file
 	public static final int SHREDDER_FEN    = 3;
+	//	position only, on castling rigths, etc.
 	public static final int SIMPLE_FEN    = 4;
 
 	//-------------------------------------------------------------------------------
@@ -675,6 +676,10 @@ public class Board
 			return;
 		}
 
+		int oldFlags = theFlags;
+		int oldFirstPly = firstPly;
+		int oldSilentPlies = theSilentPlies;
+
 		clear();
 
 		if (fenString.length()==0 || fenString.equals(EMPTY_POSITION))
@@ -709,6 +714,8 @@ public class Board
 			case 'w':	theFlags = EngUtil.plus(theFlags,WHITE); break;
 			case 'b':	theFlags = EngUtil.plus(theFlags,BLACK); break;
 			}
+		else
+			theFlags = oldFlags & COLORS;	//	keep old flags
 
 		if (tokens.hasMoreTokens()) {
 			s = tokens.nextToken();
@@ -750,6 +757,13 @@ public class Board
 			    }
 			}
 		}
+		else {
+			theFlags |= oldFlags & CASTLING;    //	keep old flags
+			setCastlingRookSquare(WHITE_KINGS_CASTLING,H1);
+			setCastlingRookSquare(WHITE_QUEENS_CASTLING,A1);
+			setCastlingRookSquare(BLACK_KINGS_CASTLING,H8);
+			setCastlingRookSquare(BLACK_QUEENS_CASTLING,A8);
+		}
 
 		/*	en-passant square	*/
 		if (tokens.hasMoreTokens()) {
@@ -757,10 +771,14 @@ public class Board
 			if(c >= 'a' && c <= 'h')
 			    theFlags = EngUtil.plus(theFlags, FILE_A + (c-'a'));
 		}
+		else
+			theFlags |= oldFlags & EN_PASSANT_FILE;
 
 		/*	silent plies	*/
 		if (tokens.hasMoreTokens())
 			setSilentPlies(Integer.parseInt(tokens.nextToken()));
+		else
+			setSilentPlies(oldSilentPlies);
 
 		/*	move count plies	*/
 		if (tokens.hasMoreTokens()) {
@@ -770,6 +788,8 @@ public class Board
 			else
 				setFirstPly((move-1)*2 + 1);
 		}
+		else
+			setFirstPly(oldFirstPly);
 	}
 
 	/** FRC */
@@ -1506,6 +1526,9 @@ public class Board
 			if (mv.captured!=null && !mv.moving.canCapture(mv.captured.piece()))
 					return false;
 		}
+
+		if (mv.isCastling() && ((mv.flags & CASTLING & theFlags) == 0))
+			return false;	//	illegal castling
 
 		if (whiteMovesNext())
 			return mv.moving.isWhite();

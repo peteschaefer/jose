@@ -45,6 +45,7 @@ abstract public class Leaper
 		byte[] vector = getVector();
 		
 		result.from = square();
+		if (i1.i >= vector.length) return false;
 		while (++i1.i < vector.length) {
 			result.to = result.from + vector[i1.i];
 			if (canCapture(pos.pieceAt(result.to)))
