@@ -44,19 +44,17 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     - file chooser
     [x] pick up theme files  (config/themes)
     [x] remove tab close button
-    [x] configure move highlight color
-    [x] pick up accent color
-    [x] add flatlaf variants to F9 list
-        [x] flatlaf becomes new default
-        [x] old plaf co-exist! I.e. flatlaf needed for compilation but not at runtime.
-        
-    [ ] Fork flatlaf
+    [ ] configure move highlight color. lighter?
+
+    [x] Fork flatlaf
     	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
     	[x] SplitPaneUI: individual style=plain
+
+    [ ] flatlaf bugs
     	[ ] TextPaneUI: fix jumping characters
     	[ ] TextPaneUI: nicer selection
-    	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
-        
+        [ ] initial selection color in StyleChooser
+
     [x] add to F9 Color Tab
         [-] background color
         [x] accent color
@@ -70,18 +68,10 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [x] from command line
 
     [x] dark mode
-        [x] toolbar icons
-        [x] other buttons
-        [ ] export dialog
-        [ ] gnome/kde accent color?
+        [x] export dialog
+        [-] gnome/kde accent color?
         [x] EnginePanel background
         [ ] board auto, or manually?
-        [x] StyleChooser: left panel layout
-        [x] font sample for screen
-    	[x] StyleContext / "default" / foreground = black, or grey in dark mode. Set by system.
-    	    [x] choosing black = default (which may be gray in dark mode).
-    	        Fallback mechanism already implemented :)
-    	    [x] invert colors in dark mode (StyleContext.getForeground)
 
 
 [ ] Undo

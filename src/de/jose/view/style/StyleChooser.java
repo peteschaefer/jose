@@ -199,6 +199,12 @@ public class StyleChooser
 		fontPreviewScreen.setVisible(dark);
 	}
 
+	public void forPrintOnly(boolean print)
+	{
+		fontPreviewExplain.setVisible(!print);
+		fontPreviewScreen.setVisible(!print);
+	}
+
 	private JPanel createRightPanel()
 	{
 		JPanel editPanel = createEditPanel();

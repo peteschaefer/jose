@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class ExportList
@@ -53,6 +53,7 @@ public class ExportList
 	protected static Dimension MIN_SIZE = new Dimension(CELL_SIZE.width,CELL_SIZE.height);
 	protected static Dimension PREF_SIZE = new Dimension(CELL_SIZE.width,CELL_SIZE.height);
 	protected static Dimension MAX_SIZE = new Dimension(CELL_SIZE.width,Integer.MAX_VALUE);
+	protected static Color SELECTED = new Color(0xa0,0xa0,0xb0);
 
 	public ExportList(int orientation)
 	{
@@ -86,7 +87,8 @@ public class ExportList
 			setVisibleRowCount(1);  //  means: no wrap
 		}
 
-		setBackground(ExportDialog.BACKGROUND);//UIManager.getColor("Panel.background"));
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		setBackground(dark ? Color.gray : ExportDialog.BACKGROUND);//UIManager.getColor("Panel.background"));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setCellRenderer(new ExportCellRenderer());
 
@@ -177,12 +179,8 @@ public class ExportList
 			ExportListElement rec = (ExportListElement)value;
 			cfg = rec.exportConfig;
 
-			if (isSelected)
-				setBackground(ExportDialog.SELECTED);
-			else
-				setBackground(Color.white);//UIManager.getColor("Panel.background"));//ExportDialog.BACKGROUND);
-
-
+			setForeground(Color.black);
+			setBackground(getListBackground(isSelected));
 			setIcon(ExportList.this.getIcon(ExportConfig.getOutput(cfg)));
 
 			String title = ExportConfig.getDisplayTitle(cfg);
@@ -191,6 +189,14 @@ public class ExportList
 
 			return this;
 		}
+	}
+
+	protected Color getListBackground(boolean isSelected)
+	{
+		if (isSelected)
+			return SELECTED;
+		else
+			return UIManager.getColor("background");
 	}
 
 	protected Icon getIcon(int output)

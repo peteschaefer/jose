@@ -67,10 +67,12 @@ public class ExportDialog
 	public static final String BROWSER  = "dialog.export.browser";
 	public static final String SAVE     = "dialog.export.save";
 	public static final String SAVEAS   = "dialog.export.saveas";
-
-
-	public static Color SELECTED = new Color(0xa0,0xa0,0xb0);
 	public static Color BACKGROUND = new Color(0xee,0xee,0xef);
+
+	public static Color getInfoBackground() {
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		return dark ? Color.gray : BACKGROUND;
+	}
 
 	protected ExportContext context;
 
@@ -506,7 +508,7 @@ public class ExportDialog
 		sourceInfo = new JLabel();
 //		reg(sourceInfo);
 		sourceInfo.setOpaque(true);
-		sourceInfo.setBackground(BACKGROUND);
+		sourceInfo.setBackground(getInfoBackground());
 		sourceInfo.setBorder(new CompoundBorder(
 		                    new BevelBorder(BevelBorder.LOWERED),
 		                    new EmptyBorder(4,8,4,4)));
@@ -518,7 +520,7 @@ public class ExportDialog
 		        new BevelBorder(BevelBorder.LOWERED),
 		        new EmptyBorder(4,4,4,4)));
 		exportUserInfo.setOpaque(true);
-		exportUserInfo.setBackground(BACKGROUND);
+		exportUserInfo.setBackground(getInfoBackground());
 
 		/** options */
 		exportOptions = newGridBox(null);
@@ -562,6 +564,7 @@ public class ExportDialog
 		JPanel tab2 = (JPanel)comp2;
 
 		styleChooser = new StyleChooser();
+		styleChooser.forPrintOnly(true);
 
 		add(tab2, styleChooser, ELEMENT_NEXTROW_REMAINDER);
 	}
