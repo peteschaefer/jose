@@ -254,15 +254,15 @@ public class BoardView2D
 				double sx = (double)this.getWidth()/buffer.getWidth();
 				double sy = (double)this.getHeight()/buffer.getHeight();
 				AffineTransform scale = AffineTransform.getScaleInstance(sx,sy);
-				AffineTransform save_tf = g2.getTransform();
-				g2.setTransform(scale);
-
-				g2.drawImage(buffer, 0,0, null);
+				g2.drawImage(buffer, scale, null);
 				//	todo sprites !! ?? !!
-				if (sprite1.isMoving()) sprite1.paint(g2);
-				if (sprite2.isMoving()) sprite2.paint(g2);
-
-				g2.setTransform(save_tf);
+				if (sprite1.isMoving() || sprite2.isMoving()) {
+					AffineTransform save_tf = g2.getTransform();
+					g2.setTransform(scale);
+					if (sprite1.isMoving()) sprite1.paint(g2);
+					if (sprite2.isMoving()) sprite2.paint(g2);
+					g2.setTransform(save_tf);
+				}
 			}
 		}
 	}
@@ -322,11 +322,12 @@ public class BoardView2D
 		float scale = getBufferScaleFactor();
 		devSquareSize = (int)(userSquareSize*scale+0.5);
 
-		userInset = calcInsetPoint(true);
-		devInset = calcInsetPoint(false);
+		userInset = calcUserInsetPoint();
+		devInset.x = (int)(userInset.x*scale+0.5);
+		devInset.y = (int)(userInset.y*scale+0.5);
 	}
 
-	protected Point calcInsetPoint(boolean userSpace)
+	protected Point calcUserInsetPoint()
 	{
 		float divx = 8.0f, divy = 8.0f;
 		if (showCoords) {
@@ -337,12 +338,11 @@ public class BoardView2D
 			divx += 0.4f;
 
 		Point inset = new Point(0,0);
-		int squareSize = userSpace ? userSquareSize : devSquareSize;
 
-		inset.x = (int)(getWidth()-divx*squareSize) / 2;
-		if (showCoords) userInset.x += 0.4*squareSize;
+		inset.x = (int)(getWidth()-divx*userSquareSize) / 2;
+		if (showCoords) userInset.x += 0.4*userSquareSize;
 
-		inset.y = (int)(getHeight()-divy*squareSize) / 2;
+		inset.y = (int)(getHeight()-divy*userSquareSize) / 2;
 		return inset;
 	}
 
@@ -807,10 +807,16 @@ public class BoardView2D
 		showSuggestions(prf.getBoolean("board.suggestions"));
 	}
 
+	private Point screenSize = new Point(0,0);
+
 	private boolean sizeChanged() {
-		return buffer!=null &&
-			(getWidth() != buffer.getWidth() ||
-			 getHeight() != buffer.getHeight());
+		if (getWidth()==screenSize.x && getHeight()==screenSize.y)
+			return false;
+
+		screenSize.x = getWidth();
+		screenSize.y = getHeight();
+		return true;
+
 		//	todo we would also like to recognize resolution changes
 		//	(e.g. when the window is moved to a hi-dpi screen)
 	}
@@ -833,7 +839,7 @@ public class BoardView2D
 		boolean redraw = forceRedraw;
 		forceRedraw = false;
 
-		if (buffer==null || sizeChanged())
+		if (sizeChanged() || buffer==null)
 		{
 			/*	size has changed	*/
 			recalcSize();
@@ -1071,11 +1077,10 @@ public class BoardView2D
 	{
 		//  create a copy
 		BufferedImage img;
-		forceRedraw = true;
-
 		Surface oldBackground = currentBackground;
 		BufferedImage oldBuffer = buffer;
 		boolean wasRedraw = forceRedraw;
+		forceRedraw = true;
 
 		try {
 			if (transparent) {
