@@ -26,8 +26,8 @@ public class JoHeaderCellRenderer
         extends DefaultTableCellRenderer
         implements TableCellRenderer
 {
-    protected static ImageIcon downArrow = null;
-    protected static ImageIcon upArrow = null;
+    protected static Icon downArrow = null;
+    protected static Icon upArrow = null;
     protected static Border headerBorder = new BevelBorder(BevelBorder.RAISED);
     protected static Border pressedBorder = new BevelBorder(BevelBorder.LOWERED);
 
@@ -40,9 +40,9 @@ public class JoHeaderCellRenderer
         setPreferredSize(new Dimension(100,18));
 
         if (downArrow==null)
-            downArrow = ImgUtil.getIcon(null,"down8");
+            downArrow = JoToolBar.create1AwesomeIcon("\uf107:flat",12f);//ImgUtil.getIcon(null,"down8");
         if (upArrow==null)
-            upArrow = ImgUtil.getIcon(null,"up8");
+            upArrow = JoToolBar.create1AwesomeIcon("\uf106:flat",12f);//ImgUtil.getIcon(null,"up8");
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
