@@ -36,29 +36,17 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [ ] db: expected data on row ?
 
-[ ] https://www.formdev.com/flatlaf is a must-have!
-    - modern l&f
-    - embedded(!!) menu bar
-    - tab titles with close button
-    - file chooser
-
-    [x] Fork flatlaf
-    	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
-    	[x] SplitPaneUI: individual style=plain
-
-    [ ] flatlaf related bugs
-    	[ ] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
-    	    [ ] for dark mode
-    	[ ] bug TextPaneUI: jagged selection
-        [ ] layout in F9, F11
-        [ ] bug: Board coordinates in F9
-        [ ] scroll engine panel to top
-        [ ] 3D?
+[x] FlatLaf
+    [ ] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
+        [ ] for dark mode
+    [ ] bug TextPaneUI: jagged selection
+    [ ] layout in F9, F11
+    [ ] bug: Board coordinates in F9
+    [ ] scroll engine panel to top
+    [?] wdl label height; adjust to font
+    [?] 3D?
     [ ] add flatlaf to jar classpath; + theme-editor
         [ ] add class SplitPaneUI
-
-      [x] initial selection color in StyleChooser
-        [?] wdl label height; adjust to font
 
     [-] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [-] remove l&f selection
