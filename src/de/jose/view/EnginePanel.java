@@ -335,6 +335,7 @@ public class EnginePanel
 
 		makeLabel(label, name,normalFont,JLabel.LEFT,
                                     JoLineBorder.ALL, 3,3,3,3);
+		label.addActionListener(this); // click Lichess top game
 		return label;
 	}
 
@@ -415,6 +416,20 @@ public class EnginePanel
 		tElapsedTime.setForeground(timeVisible ? Color.black:Color.lightGray);
 		tNodeCount.setForeground(nodecountVisible ? Color.black:Color.lightGray);
 		tNodesPerSecond.setForeground(npsVisible ? Color.black:Color.lightGray);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		 if (e.getActionCommand().equals("clicked")) {
+			 Object source = e.getSource();
+			 if (source instanceof GameRef) {
+				 GameRef ref = (GameRef)source;
+				 System.out.println(ref.toString(true));
+			 }
+		 }
+		 else {
+			 super.actionPerformed(e);
+		 }
 	}
 
 	protected int countPvLines()
@@ -1086,7 +1101,14 @@ public class EnginePanel
 
 		for (int j=0; j < refs.size(); ++j) {
 			if (j>0) doc.insertString(doc.getLength(), ", ", infoStyle);
-			doc.insertString(doc.getLength(), refs.get(j).toString(true), linkStyle);	//	todo linkStyle
+			int pos = doc.getLength();
+			GameRef ref = refs.get(j);
+			String string = ref.toString(true);
+			doc.insertString(pos, string, linkStyle);
+
+			SimpleAttributeSet attributes = new SimpleAttributeSet();
+			attributes.addAttribute("clickable",ref);
+			doc.setCharacterAttributes(pos,string.length(), attributes, false);
 		}
 		doc.insertString(doc.getLength(),"}",infoStyle);
 	}

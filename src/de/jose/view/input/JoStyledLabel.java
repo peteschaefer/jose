@@ -15,21 +15,13 @@ package de.jose.view.input;
 import de.jose.image.ImgUtil;
 import de.jose.view.PreferredHeightComponent;
 import de.jose.window.BrowserWindow;
-import de.jose.Application;
-import de.jose.Util;
-import de.jose.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
@@ -44,7 +36,7 @@ import java.util.ArrayList;
 
 public class JoStyledLabel
 		extends JTextPane
-        implements PreferredHeightComponent, HyperlinkListener, FocusListener
+        implements PreferredHeightComponent, HyperlinkListener, FocusListener, MouseMotionListener, MouseListener
 {
 	protected static HTMLEditorKit htmlKit = null;
 	protected static StyleSheet theStyleSheet = null;
@@ -90,6 +82,9 @@ public class JoStyledLabel
 		setName(text);
 		addHyperlinkListener(this);
         addFocusListener(this);
+
+        addMouseListener(this);
+        addMouseMotionListener(this);
 	}
 
     @Override
@@ -299,5 +294,59 @@ public class JoStyledLabel
         setFont(uimodel.getFont());
         setForeground(uimodel.getForeground());
         setBackground(uimodel.getBackground());
+    }
+
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Object clicked = getClickRef(e);
+        if (clicked!=null) {
+            ActionEvent action = new ActionEvent(clicked,0,"clicked");
+            fireActionEvent(action);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if (getClickRef(e) != null)
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        else
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    private AttributeSet getMousePosAttrs(MouseEvent e) {
+        int docpos = viewToModel(e.getPoint());
+        return doc.getCharacterElement(docpos).getAttributes();
+    }
+
+    private Object getClickRef(MouseEvent e) {
+        AttributeSet attrs = getMousePosAttrs(e);
+        return attrs.getAttribute("clickable");
     }
 }
