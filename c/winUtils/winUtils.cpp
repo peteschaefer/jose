@@ -38,7 +38,7 @@ void throwRuntimeException(JNIEnv* env, const char* pattern, ...)
 }
 
 #define catch_all(env) \
-	catch (exception& ex) { throwRuntimeException(env,"exception in native code: %s",ex.what()); } \
+	catch (std::exception& ex) { throwRuntimeException(env,"exception in native code: %s",ex.what()); } \
 	catch (char* ex) { throwRuntimeException(env,"exception in native code: %s",ex); } \
 	catch (int ex) { throwRuntimeException(env,"exception in native code: %i",ex); } \
 	catch (...) { throwRuntimeException(env,"exception in native code"); }

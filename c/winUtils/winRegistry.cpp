@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 #define catch_all(env) \
-	catch (exception& ex) { throwRuntimeException(env,"exception in native code: %s",ex.what()); } \
+	catch (std::exception& ex) { throwRuntimeException(env,"exception in native code: %s",ex.what()); } \
 	catch (char* ex) { throwRuntimeException(env,"exception in native code: %s",ex); } \
 	catch (int ex) { throwRuntimeException(env,"exception in native code: %i",ex); } \
 	catch (...) { throwRuntimeException(env,"exception in native code"); }
@@ -138,8 +138,8 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 			assertSuccess( RegEnumValue(hkey,index, valueName,&maxValueNameLen, NULL, &type, buffer,&size),
 				env,"could not read value");
 			
-			delete buffer;
-			delete valueName;
+			delete[] buffer;
+			delete[] valueName;
 		}
 
 		RegCloseKey(hkey);

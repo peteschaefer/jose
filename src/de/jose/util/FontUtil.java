@@ -318,8 +318,9 @@ public class FontUtil
 		List<String> result = new ArrayList<>();
 
 		if (Version.windows) {
-			String path = System.getenv("WINDIR");
-			result.add( path + "\\" + "Fonts" );
+			//String path = System.getenv("WINDIR");
+			//result.add( path + "\\" + "Fonts" );
+			result.add(WinUtils.getFontPath());
 		}
 
 		if (Version.mac) {
