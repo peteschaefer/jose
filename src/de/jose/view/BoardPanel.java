@@ -612,7 +612,7 @@ public class BoardPanel
 		{
 			if (a.moves[idx]==null || a.moves[idx].isEmpty())
 				continue;
-			cp = a.eval[idx].cp*pov;
+			cp = (a.eval[idx].cp *= pov);
 			if (cp < (cpmin-SCORE_DROP))
 				break;	//	move is not interesting
 
@@ -622,7 +622,9 @@ public class BoardPanel
 			Move mv = a.moves[idx].get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
+			hint.label = plugin.printScore(a.eval[idx],false);
 			hints.add(hint);
+			a.eval[idx].cp *= pov;
 		}
 		//	update colors
 		for(Hint hint : hints)

@@ -9,6 +9,7 @@ public class Hint extends Timer
 	int from;
 	int to;
 	Color color;
+	String label=null;
 	Object implData;
 
 	Hint(int delay, int from, int to, Color color, ActionListener listener)

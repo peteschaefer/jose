@@ -26,14 +26,12 @@ libraries needed:
 
 === Factory Settings
 
-* eval bar
-* suggestions
-
-* board tooltips
-* wdl
-* move stats
-
-* open last game
+* eval bar = true
+* suggestions = true
+* board tooltips = true
+* wdl = true
+* move stats = true
+* open last game = true
 
 Leela
 * logo
@@ -44,7 +42,13 @@ Leela
 
 ==== New Features
 
-* Suggestions check box
+* arrows + text label
+  - contrast over black pieces
+  - font size?
+
+* sort uci controls by _importance_
+  - group by importance
+
 * Contempt Slider
 
         White seeks a draw - neutral - Black seeks a draw - Armageddon
@@ -72,8 +76,8 @@ WDLContemptAtenuation = 1.0
 ScoreType = WDL_mu
         (for compatibilty with Stockfish)
 
-
-* mouse hover PV: display position (on main board? no. in tooltip is better)
+? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
+ there is some confusion about the effective parameters. Online docu is not up-to-date :(
 
 * score POV adjustable?
   * uci reports current pov
@@ -90,10 +94,3 @@ ScoreType = WDL_mu
 ==== Interesting Leela settings.
 ? temperature for more variations in the opening
 ? contempt for sharp/dull play
-
-Contempt
-? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
-* there is some confusion about the effective parameters. Online docu is not up-to-date :(
-
-* DrawScore / ContemptMode ?
-* WDLDrawRate ?

@@ -31,6 +31,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.FileNotFoundException;
@@ -522,7 +523,7 @@ public class BoardView2D
 			if (hnt!=null) {
 				Graphics2D g = getBufferGraphics();
 				paintArrow(g, center(hnt.from), center(hnt.to),
-						squareSize/16, hnt.color);
+						squareSize/16, hnt.color, hnt.label);
 				painted++;
 			}
 		}
@@ -533,13 +534,13 @@ public class BoardView2D
 
 	public static final int[] createArrowXCoordinates(int length, int width, int tip)
 	{
-		int[] x = {  0,          0, length-tip, length-tip, length, length-tip, length-tip, };
+		int[] x = {  0,          0, length-tip, length-tip, length, length-tip, length-tip, /*text anchor: */ length-tip };
 		return x;
 	}
 
 	public static final int[] craeteArrowYCoordinates(int length, int width, int tip)
 	{
-		int[] y = { -width, +width,     +width,        tip,      0,       -tip,     -width, };
+		int[] y = { -width, +width,     +width,        tip,      0,       -tip,     -width, /*text anchor: */ 0 };
 		return y;
 	}
 
@@ -553,12 +554,14 @@ public class BoardView2D
 			length-tip,         tip,            0,
 			length-tip,         +width,         0,
 			0,                  +width,         0,
+			//	text anchor point:
+			length-tip,			0,				0,
 		};
 		return xyz;
 	}
 
 	private void paintArrow(Graphics2D g, Point p1, Point p2,
-	                        int width, Color color)
+	                        int width, Color color, String label)
 	{
 		/** set up a a polygon of normal width */
 		int length = (int)Math.round(p1.distance(p2));
@@ -569,18 +572,38 @@ public class BoardView2D
 
 		/** rotate into place   */
 		AffineTransform oldTransform = g.getTransform();
-		AffineTransform tf = (AffineTransform)oldTransform.clone();
-		tf.translate(p1.x,p1.y);
+		AffineTransform rot1 = (AffineTransform)oldTransform.clone();
+		rot1.translate(p1.x,p1.y);
+
 //		tf.scale(box.width/100.0, box.height/100.0);
 		double angle = Math.atan2(p2.y-p1.y, p2.x-p1.x);
-		tf.rotate(angle);    //  TODO
-		g.setTransform(tf);
+		rot1.rotate(angle);    //  TODO
 
+		g.setTransform(rot1);
 		g.setColor(color);
-		g.fillPolygon(x,y, x.length);
+		g.fillPolygon(x,y, x.length-1);
 
 		g.setColor(Color.black);
-		g.drawPolygon(x,y, x.length);
+		g.drawPolygon(x,y, x.length-1);
+
+		if (label!=null) {
+			FontMetrics mtx = g.getFontMetrics();
+			Rectangle2D box = mtx.getStringBounds(label,g);
+			Point textAnchor = new Point(x[x.length-1],y[x.length-1]);
+			int texty = (int) (textAnchor.y + box.getHeight() / 2 - mtx.getDescent());
+			//	todo font size scales with width?
+			if (angle >= -Math.PI/2 && angle <= Math.PI/2) {
+				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);
+			}
+			else {
+				//	rotate text box, too
+				AffineTransform rot2 = (AffineTransform) oldTransform.clone();
+				rot2.translate(p1.x,p1.y);
+				rot2.rotate(angle-Math.PI);
+				g.setTransform(rot2);
+				g.drawString(label, -textAnchor.x, texty);
+			}
+		}
 
 		g.setTransform(oldTransform);
 	}
