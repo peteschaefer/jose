@@ -98,7 +98,7 @@ public class MySQLAdapter
 				return false;
 			String line = bin.readLine();
 			System.out.println(line);
-			if (line.contains("ready for connections"))
+			if (line!=null && line.contains("ready for connections"))
 				return true;
 		}
 		return false;
@@ -457,6 +457,17 @@ public class MySQLAdapter
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
 		command.add("--console");	// do write to std-out
+
+		command.add("--key_buffer=16M");
+		command.add("--max_allowed_packet=1M");
+		command.add("--table_cache=64");
+		command.add("--net_buffer_length=8K");
+		command.add("--read_buffer_size=256K");
+		command.add("--read_rnd_buffer_size=512K");
+		command.add("--sort_buffer_size=256M");
+		command.add("--myisam_sort_buffer_size=256M");
+		command.add("--myisam-recover=FORCE");  //  always check for corrupted index files, etc.
+
 		//	MySQL 8.0.x
 //		command.add("--upgrade=NONE");	//	don't upgrad old MyISAM tables
 //		command.add("--mysqld="+execPath);	//	used for "mysqld_safe"
@@ -464,7 +475,20 @@ public class MySQLAdapter
 //		command.add("--secure-file-priv="+Application.theDatabaseDirectory);
 
 
+		/** delayed key write is optional   */
+		if (can("delayed_key_write"))
+		{
+			command.add("--delay-key-write=ALL");
+			props.put("--delay_key_write","ALL");
+			/** when delayed key writing is enabled,
+			 *  "myisam-recover" is especially important
+			 */
+
+		}
+
 		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
+		command.add("--skip-locking");
+
 		// only connect to local host; skip DNS name resolve
 //		if (Version.mysql40) {
 //			command.add("--skip-thread-priority");
