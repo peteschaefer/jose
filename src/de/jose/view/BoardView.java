@@ -17,6 +17,7 @@ import de.jose.Language;
 import de.jose.Command;
 import de.jose.MessageListener;
 import de.jose.chess.*;
+import de.jose.plugin.Score;
 import de.jose.profile.UserProfile;
 import de.jose.view.input.StyledToolTip;
 import de.jose.window.JoMenuBar;
@@ -57,11 +58,12 @@ abstract public class BoardView
 
 	protected boolean flipped;
 	protected boolean showCoords;
+	protected boolean showEvalbar;
     protected boolean hiliteSquares;
 	/** current hints
 	 *  Vector<Hint>
 	 * */
-	protected Vector hints;
+	protected Vector<Hint> hints;
 
 	protected class Hint
 	        extends Timer
@@ -85,6 +87,9 @@ abstract public class BoardView
 	public static final Color   ANIM_HINT_COLOR     = new Color(0,255,0, 64); //  green (transparent)
 	/** show hint arrows during animation ? */
 	protected boolean showAnimationHints;
+
+	//	score for eval bard
+	protected Score score = null;
 
 	public BoardView(IBoardAdapter theBoard)
 	{
@@ -154,11 +159,20 @@ abstract public class BoardView
 		refresh(true);
 	}
 
+	public void showEvalbar(boolean on)
+	{
+		if (on==showEvalbar) return;
+		doShowEvalbar(showEvalbar = on);
+		refresh(true);
+	}
+
 	abstract public Point getScreenLocation(int square);
 
 	abstract public void doFlip(boolean on);
 
 	abstract public void doShowCoords(boolean on);
+
+	abstract public void doShowEvalbar(boolean on);
 
 	/**
 	 * set a piece at a given square and draw it immediately
@@ -279,6 +293,13 @@ abstract public class BoardView
 	abstract protected void doHideHint(Hint hnt);
 
 	abstract protected void doHideAllHints(int count);
+
+	public void setScore(Score sc)
+	{
+		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
+			sc = null;	//	Score object contains no useful info. Ignore.
+		this.score = sc;
+	}
 
 	/**
 	 * @return a millisecond value, relative to the current animation speed

@@ -34,6 +34,15 @@ public class EnginePanelLayout
 		engPanel = engpanel;
 	}
 
+    protected int getPreferredLineHeight(JoBigLabel evalLabel, JoBigLabel pvLabel, int width)
+    {
+        assert(evalLabel!=null);
+        assert(pvLabel!=null);
+        return Math.max(
+                getPreferredHeight(evalLabel,MIN_EVAL_WIDTH),
+                getPreferredHeight(pvLabel,width-MIN_EVAL_WIDTH));
+    }
+
 	public void layoutContainer(Container parent)
 	{
         if (engPanel.showHistory) {
@@ -60,7 +69,7 @@ public class EnginePanelLayout
 
                 if (evalLabel != null && pvLabel != null) {
                     int linewidth = width-MIN_EVAL_WIDTH;
-                    int lineheight = getPreferredHeight(pvLabel,linewidth);
+                    int lineheight = getPreferredLineHeight(evalLabel,pvLabel,width);
 
                     evalLabel.setBounds(0,y, MIN_EVAL_WIDTH,lineheight);
                     pvLabel.setBounds(MIN_EVAL_WIDTH,y, linewidth,lineheight);
@@ -83,7 +92,7 @@ public class EnginePanelLayout
 
                 if (evalLabel != null && pvLabel != null) {
                     int linewidth = width - MIN_EVAL_WIDTH;
-                    int lineheight = Math.max(getPreferredHeight(pvLabel, linewidth), parent.getHeight() - infoheight - y);
+                    int lineheight = Math.max(getPreferredLineHeight(evalLabel, pvLabel,width), parent.getHeight() - infoheight - y);
 
                     evalLabel.setBounds(0, y, MIN_EVAL_WIDTH, lineheight);
                     pvLabel.setBounds(MIN_EVAL_WIDTH, y, linewidth, lineheight);
@@ -145,7 +154,6 @@ public class EnginePanelLayout
         else {
             int height = 0;
             int max = engPanel.countPvLines();
-            int linewidth = containerWidth-MIN_EVAL_WIDTH;
 
             /** lay out info line   */
             if (engPanel.showInfoLabel())
@@ -158,9 +166,10 @@ public class EnginePanelLayout
             /** lay out primary variation lines */
             for (int i=0; i < max; i++)
             {
+                JoBigLabel evalLabel = engPanel.getEvalLabel(i,false, false);
                 JoBigLabel pvLabel = engPanel.getPvLabel(i,false, false);
-                if (pvLabel!=null)
-                    height += getPreferredHeight(pvLabel,linewidth);
+                if (evalLabel!=null && pvLabel!=null)
+                    height += getPreferredLineHeight(evalLabel,pvLabel,containerWidth);
             }
 
             /** expend remaining space for the bottom PV */

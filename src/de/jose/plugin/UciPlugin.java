@@ -812,6 +812,8 @@ public class UciPlugin
 			rec.modified = 0;
 
 		int pvidx = 0;  // 0 = main line, might differ for multi-pv
+		Score score = new Score();
+		boolean pvmod=false;
 		StringTokenizer tok = new StringTokenizer(input);
 
 		if (rec.info!=null &&
@@ -868,111 +870,108 @@ public class UciPlugin
 				//  TODO parse current line (low prio)
 				//  currently, UCI_ShowCurrLine is always disabled
 			}
-			else {
-				Score score = rec.eval[pvidx];
-				if (t.equals("multipv")) {
-					pvidx = StringUtil.parseInt(tok.nextToken()) - 1;    //  multi pv line
-					score = rec.eval[pvidx];
-				}
-				else if (t.equals("score"))
-				{
-					score.clear();
-					score.flags = Score.EVAL_EXACT;
+			else if (t.equals("multipv")) {
+				pvidx = StringUtil.parseInt(tok.nextToken()) - 1;    //  multi pv line
+			}
+			else if (t.equals("score"))
+			{
+				score.flags = Score.EVAL_EXACT;
 
-					t = tok.nextToken();
-					if (t.equals("cp")) {
-						int cp = StringUtil.parseInt(tok.nextToken());
-						int abscp = Math.abs(cp);
-						if (abscp > 29000) {
-							/** unfortunately, UCI engines are not consistent in reporting mates
-							 *  we accept some variants:
-							 *
-							 * the return value is always 30.000 + x
-							 */
-							if (abscp < 30000)
-								score.cp = mateScore(cp>0, 29999-abscp);   // 30.000 - x
-							else if (abscp < 31000)
-								score.cp = mateScore(cp>0, abscp-30000);   // 30.000 + x
-	//						else if (abscp < 32700)
-	//							rec.eval[pvidx] = mateScore(cp>0, 32700-abscp);   //  32.700 - x
-	//						else if (abscp < 32734)
-	//							rec.eval[pvidx] = mateScore(cp>0, abscp-32700);   //  32.700 + x
-							else
-								score.cp = mateScore(cp>0, 32767-abscp);   //  32.767 - x
-						}
+				t = tok.nextToken();
+				if (t.equals("cp")) {
+					int cp = StringUtil.parseInt(tok.nextToken());
+					int abscp = Math.abs(cp);
+					if (abscp > 29000) {
+						/** unfortunately, UCI engines are not consistent in reporting mates
+						 *  we accept some variants:
+						 *
+						 * the return value is always 30.000 + x
+						 */
+						if (abscp < 30000)
+							score.cp = mateScore(cp>0, 29999-abscp);   // 30.000 - x
+						else if (abscp < 31000)
+							score.cp = mateScore(cp>0, abscp-30000);   // 30.000 + x
+//						else if (abscp < 32700)
+//							rec.eval[pvidx] = mateScore(cp>0, 32700-abscp);   //  32.700 - x
+//						else if (abscp < 32734)
+//							rec.eval[pvidx] = mateScore(cp>0, abscp-32700);   //  32.700 + x
 						else
-							score.cp = cp;
+							score.cp = mateScore(cp>0, 32767-abscp);   //  32.767 - x
 					}
-					else if (t.equals("mate")) {
-						int moves = StringUtil.parseInt(tok.nextToken());
-						if (moves > 0)
-							score.cp = Score.WHITE_MATES + 2*moves;
-						else
-							score.cp = Score.BLACK_MATES + 2*moves;
-					}
-
-					score.cp = adjustPointOfView(score.cp);
-
-					rec.setPvModified(pvidx);
-				}
-				else if (t.equals("lowerbound"))
-					score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_LOWER_BOUND:Score.EVAL_UPPER_BOUND;
-				else if (t.equals("upperbound"))
-					score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_UPPER_BOUND:Score.EVAL_LOWER_BOUND;
-				else if (t.equals("wdl")) {
-					score.win = StringUtil.parseInt(tok.nextToken());
-					score.draw = StringUtil.parseInt(tok.nextToken());
-					score.lose = StringUtil.parseInt(tok.nextToken());
-				}
-				else if (t.equals("movesleft")) {
-					int moves_left = StringUtil.parseInt(tok.nextToken());
-					//	ignore for now
-				}
-				else if (t.equals("currmove"))
-				{
-					Move mv = parseMove(t = tok.nextToken(),0);       //  parse & format move
-					String formatted = StringMoveFormatter.formatMove(enginePosition,mv,false);
-					if (formatted != null)
-						t = formatted;
-
-					rec.currentMove = t;
-					rec.modified |= AnalysisRecord.CURRENT_MOVE;
-				}
-				else if (t.equals("currmovenumber")) {
-					rec.currentMoveNo = StringUtil.parseInt(tok.nextToken());
-					rec.modified |= AnalysisRecord.CURRENT_MOVE_NO;
-				}
-				else if (t.equals("hashfull"))
-					Double.parseDouble(tok.nextToken()); //  TODO hash full (per mille); low priority..
-				else if (t.equals("nps")) {
-					rec.nodesPerSecond = Long.parseLong(tok.nextToken());
-					rec.modified |= AnalysisRecord.NODES_PER_SECOND;
-				}
-				else if (t.equals("tbhits"))
-					StringUtil.parseInt(tok.nextToken());     //  TODO table base hits; low priority..
-				else if (t.equals("cpuload"))
-					StringUtil.parseInt(tok.nextToken());     //  TODO CPU load (per mille); low priority. there are not likely many engines that can report this
-				else if (t.equals("string")) {
-					rec.info = input;
-					rec.info_ttl = System.currentTimeMillis()+5000;
-					rec.modified |= AnalysisRecord.INFO;
-				}
-				else if (ispv) {
-					Move mv = parseMove(t,0);       //  parse & format move
-
-					String formatted = printMove(mv, rec.getLine(pvidx).length()==0);
-					if (formatted!=null)
-						appendMove(rec,formatted,pvidx);
 					else
-						appendMove(rec,t,pvidx);
-					//  TODO handle refutation lines and current lines (low prio)
-					tokispv = true;
+						score.cp = cp;
 				}
+				else if (t.equals("mate")) {
+					int moves = StringUtil.parseInt(tok.nextToken());
+					if (moves > 0)
+						score.cp = Score.WHITE_MATES + 2*moves;
+					else
+						score.cp = Score.BLACK_MATES + 2*moves;
+				}
+
+				score.cp = adjustPointOfView(score.cp);
+				pvmod = true;
+			}
+			else if (t.equals("lowerbound"))
+				score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_LOWER_BOUND:Score.EVAL_UPPER_BOUND;
+			else if (t.equals("upperbound"))
+				score.flags = enginePosition.whiteMovesNext() ? Score.EVAL_UPPER_BOUND:Score.EVAL_LOWER_BOUND;
+			else if (t.equals("wdl")) {
+				score.win = StringUtil.parseInt(tok.nextToken());
+				score.draw = StringUtil.parseInt(tok.nextToken());
+				score.lose = StringUtil.parseInt(tok.nextToken());
+			}
+			else if (t.equals("movesleft")) {
+				int moves_left = StringUtil.parseInt(tok.nextToken());
+				//	ignore for now
+			}
+			else if (t.equals("currmove"))
+			{
+				Move mv = parseMove(t = tok.nextToken(),0);       //  parse & format move
+				String formatted = StringMoveFormatter.formatMove(enginePosition,mv,false);
+				if (formatted != null)
+					t = formatted;
+
+				rec.currentMove = t;
+				rec.modified |= AnalysisRecord.CURRENT_MOVE;
+			}
+			else if (t.equals("currmovenumber")) {
+				rec.currentMoveNo = StringUtil.parseInt(tok.nextToken());
+				rec.modified |= AnalysisRecord.CURRENT_MOVE_NO;
+			}
+			else if (t.equals("hashfull"))
+				Double.parseDouble(tok.nextToken()); //  TODO hash full (per mille); low priority..
+			else if (t.equals("nps")) {
+				rec.nodesPerSecond = Long.parseLong(tok.nextToken());
+				rec.modified |= AnalysisRecord.NODES_PER_SECOND;
+			}
+			else if (t.equals("tbhits"))
+				StringUtil.parseInt(tok.nextToken());     //  TODO table base hits; low priority..
+			else if (t.equals("cpuload"))
+				StringUtil.parseInt(tok.nextToken());     //  TODO CPU load (per mille); low priority. there are not likely many engines that can report this
+			else if (t.equals("string")) {
+				rec.info = input;
+				rec.info_ttl = System.currentTimeMillis()+5000;
+				rec.modified |= AnalysisRecord.INFO;
+			}
+			else if (ispv) {
+				Move mv = parseMove(t,0);       //  parse & format move
+
+				String formatted = printMove(mv, rec.getLine(pvidx).length()==0);
+				if (formatted!=null)
+					appendMove(rec,formatted,pvidx);
+				else
+					appendMove(rec,t,pvidx);
+				//  TODO handle refutation lines and current lines (low prio)
+				tokispv = true;
 			}
 			//  else: what ? unrecgonized info
-
 			if (!tokispv) ispv = false;
 		}
+
+		rec.eval[pvidx] = score;
+		if (pvmod)
+			rec.setPvModified(pvidx);
 
 		if (Util.noneOf(rec.modified, AnalysisRecord.ELAPSED_TIME))
 		{

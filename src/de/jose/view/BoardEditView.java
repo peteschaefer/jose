@@ -97,6 +97,11 @@ public class BoardEditView
 		super.showCoords(true);
 	}
 
+	public void showEvalbar(boolean on) {
+		//	never show eval bar
+		super.showEvalbar(false);
+	}
+
 	public void updateProfile(UserProfile prf)
 	{
 		super.updateProfile(prf);

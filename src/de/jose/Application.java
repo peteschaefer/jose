@@ -2125,6 +2125,19 @@ public class Application
 		map.put("menu.game.coords", action);
 
 		action = new CommandAction() {
+			public boolean isSelected(String code) {
+				return AbstractApplication.theUserProfile.getBoolean("board.evalbar");
+			}
+			public void Do(Command cmd) {
+				boolean showEvalbar = theUserProfile.getBoolean("board.evalbar");
+				showEvalbar = !showEvalbar;
+				theUserProfile.set("board.evalbar", showEvalbar);
+				broadcast(new Command("broadcast.board.evalbar", Util.toBoolean(showEvalbar)));
+			}
+		};
+		map.put("menu.game.evalbar", action);
+
+		action = new CommandAction() {
 			public CommandListener forward(CommandListener current)
 			{
 				return JoFrame.getActiveFrame();

@@ -617,7 +617,9 @@ public class EnginePanel
             boolean scrollhist = false;
 			for (int idx=0; idx <= rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
-					setEvaluation(idx, rec.eval[idx], pmap);	//	todo pass Score object
+					assert(rec.eval[idx]!=null);
+					assert(rec.line[idx]!=null);
+					setEvaluation(idx, rec.eval[idx], pmap);
 					setVariation(idx, rec.line[idx]);
 
 					if (! inBook) {
@@ -890,7 +892,7 @@ public class EnginePanel
 			pmap.put("lose",Integer.toString(score.lose));
 			key = "plugin.wdl";
 			text += "\n"+textValue(key,pmap);
-			tip += "<br>"+tipValue(key,pmap);
+			tip = "<html>"+tip+"<br>"+tipValue(key,pmap)+"</html>";
 		}
 
 		leval.setText(text);

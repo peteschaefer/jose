@@ -901,6 +901,7 @@ public class BoardView3D
 		showCoords(prf.getBoolean("board.coords"));
 		//	flip board ?
 		flip(prf.getBoolean("board.flip"));
+		showEvalbar(prf.getBoolean("board.evalbar"));
         //  hilite squares ?
         hiliteSquares = prf.getBoolean("board.hilite.squares");
 
@@ -930,6 +931,11 @@ public class BoardView3D
 			coordinateGroup.setWhichChild(Switch.CHILD_ALL);
 		else
 			coordinateGroup.setWhichChild(Switch.CHILD_NONE);
+	}
+
+	public void doShowEvalbar(boolean on) {
+		//	todo currently, we don't show an eval bar in 3D.
+		//	but hey, we could :)
 	}
 
 

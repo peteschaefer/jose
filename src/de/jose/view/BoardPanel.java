@@ -18,8 +18,10 @@ import de.jose.image.ImgUtil;
 import de.jose.chess.Constants;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.plugin.AnalysisRecord;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Plugin;
+import de.jose.plugin.Score;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.profile.FontEncoding;
@@ -142,6 +144,7 @@ public class BoardPanel
 		if (theView != null) {
 			view2d.flip(theView.flipped);
 			view2d.showCoords(theView.showCoords);
+			view2d.showEvalbar(theView.showEvalbar);
 		}
 		
 		theView=view2d;
@@ -206,6 +209,7 @@ public class BoardPanel
             if (theView != null) {
                 view3d.flip(theView.flipped);
                 view3d.showCoords(theView.showCoords);
+				view3d.showEvalbar(theView.showEvalbar);
             }
 
             theView = view3d;
@@ -287,6 +291,9 @@ public class BoardPanel
 		
 		list.add(AbstractApplication.theUserProfile.get("board.coords"));
 		list.add("menu.game.coords");
+
+		list.add(AbstractApplication.theUserProfile.get("board.evalbar"));
+		list.add("menu.game.evalbar");
 
 		if (is3d()) {
             list.add(AbstractApplication.theUserProfile.get("board.3d.clock"));
@@ -378,6 +385,21 @@ public class BoardPanel
 			}
 		};
 		map.put("broadcast.board.coords", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				if (theView!=null) {
+					boolean show;
+					if (cmd.data != null)
+						show = ((Boolean)cmd.data).booleanValue();
+					else
+						show = !theView.showEvalbar; //	toggle
+					AbstractApplication.theUserProfile.set("board.evalbar",show);
+					theView.showEvalbar(show);
+				}
+			}
+		};
+		map.put("broadcast.board.evalbar", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
@@ -506,6 +528,24 @@ public class BoardPanel
 
 		case EnginePlugin.THINKING:	mouseSelect = false; break;
 		default:				    mouseSelect = true; break;
+		}
+		//	update eval bar
+		switch(what) {
+			case EnginePlugin.THINKING:
+			case EnginePlugin.ANALYZING:
+			case EnginePlugin.PONDERING:
+				AnalysisRecord a = (AnalysisRecord)data;
+				if (a==null || a.maxpv==0)
+					theView.setScore(null);	//	nothing to be done
+				else
+					theView.setScore(a.eval[0]);
+				theView.repaint();
+				break;
+
+			case EnginePlugin.PAUSED:
+				theView.setScore(null);
+				theView.repaint();
+				break;
 		}
 	}
 

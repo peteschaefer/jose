@@ -17,6 +17,7 @@ import de.jose.chess.EngUtil;
 import de.jose.chess.Move;
 import de.jose.chess.Rook;
 import de.jose.image.*;
+import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.profile.UserProfile;
 
@@ -136,6 +137,7 @@ public class BoardView2D
 		updateProfile(prf);
 		showCoords(prf.getBoolean("board.coords"));
 		flip(prf.getBoolean("board.flip"));
+		showEvalbar(prf.getBoolean("board.evalbar"));
 	}
 
 	public void refresh(boolean stopAnimation)	{
@@ -216,7 +218,7 @@ public class BoardView2D
 		Rectangle screen = new Rectangle(0,0,getWidth(),getHeight());
 		Rectangle dst = new Rectangle(0,0,getWidth(),getHeight());
 
-		double scale = (double)calcSquareSize(screen.width,screen.height) / (double)squareSize;
+		double scale = (double)calcSquareSize() / (double)squareSize;
 
 		dst.width = (int)Math.round(src.width*scale);
 		dst.height = (int)Math.round(src.height*scale);
@@ -255,16 +257,29 @@ public class BoardView2D
 	/**	calculate square size and inset after resize	 */
 	public void recalcSize()
 	{
-		float div = showCoords ? 8.4f : 8.0f;
-		squareSize = (int)((float)Math.min(getWidth()-4, getHeight()-4) / div);
-		inset.x = (int)(getWidth()-8*squareSize) / 2;
-		inset.y = (int)(getHeight()-div*squareSize) / 2;
+		squareSize = calcSquareSize();
+
+		int right = getWidth();
+		if (showEvalbar) right -= 0.4f * squareSize;
+		inset.x = (int)(right-8*squareSize) / 2;
+
+		int bottom = getHeight();
+		if (showCoords) bottom -= 0.4f*squareSize;
+		inset.y = (int)(bottom -8*squareSize) / 2;
 	}
 
-	private int calcSquareSize(int imgWidth, int imgHeight)
+	private int calcSquareSize()
 	{
-		float div = showCoords ? 8.4f : 8.0f;
-		return (int)((float)Math.min(getWidth()-4, getHeight()-4) / div);
+		float divx = 8.0f, divy = 8.0f;
+		if (showCoords) {
+			divx += 0.4f;
+			divy += 0.4f;
+		}
+		if (showEvalbar) {
+			divx += 0.4f;
+		}
+
+		return (int)(float)Math.min((getWidth()-4)/divx, (getHeight()-4)/divy);
 	}
 
 	public Graphics2D getBufferGraphics()
@@ -605,6 +620,12 @@ public class BoardView2D
 		forceRedraw = true;
 	}
 
+	public void doShowEvalbar(boolean on)
+	{
+		recalcSize();
+		forceRedraw = true;
+	}
+
 	public void updateProfile(UserProfile prf)
 	{
 		String user_font = prf.getString("font.diagram");
@@ -701,67 +722,126 @@ public class BoardView2D
 		int y2 = inset.y+boardSize;
 
 		if (redraw) {
-			if (lockImgCache) FontCapture.unlock();	//	make outdated images available for gc
+			if (lockImgCache) FontCapture.unlock();    //	make outdated images available for gc
 
 			if (currentBackground.useTexture()) {
 				Image txtr = TextureCache.getTexture(currentBackground.texture, TextureCache.LEVEL_MAX);
-				TextureCache.paintTexture(g, 0,0, getWidth(), inset.y, txtr);
-				TextureCache.paintTexture(g, 0,inset.y, inset.x, boardSize, txtr);
-				TextureCache.paintTexture(g, x2,inset.y, getWidth()-x2, boardSize, txtr);
-				TextureCache.paintTexture(g, 0,y2, getWidth(), getHeight()-y2, txtr);
-			}
-			else {
-				g.setPaint(currentBackground.getPaint(getWidth(),getHeight()));
-				g.fillRect(0,0, getWidth(), inset.y);
-				g.fillRect(0,inset.y, inset.x, boardSize);
-				g.fillRect(x2,inset.y, getWidth()-x2, boardSize);
-				g.fillRect(0,y2, getWidth(), getHeight()-y2);
+				TextureCache.paintTexture(g, 0, 0, getWidth(), inset.y, txtr);
+				TextureCache.paintTexture(g, 0, inset.y, inset.x, boardSize, txtr);
+				TextureCache.paintTexture(g, x2, inset.y, getWidth() - x2, boardSize, txtr);
+				TextureCache.paintTexture(g, 0, y2, getWidth(), getHeight() - y2, txtr);
+			} else {
+				g.setPaint(currentBackground.getPaint(getWidth(), getHeight()));
+				g.fillRect(0, 0, getWidth(), inset.y);
+				g.fillRect(0, inset.y, inset.x, boardSize);
+				g.fillRect(x2, inset.y, getWidth() - x2, boardSize);
+				g.fillRect(0, y2, getWidth(), getHeight() - y2);
 			}
 
 
 			g.setColor(Color.black);
-	//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
+			//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
 			Border b = new SoftBevelBorder(BevelBorder.RAISED);
-			b.paintBorder(this,g, inset.x-2, inset.y-2, boardSize+4,boardSize+4);
+			b.paintBorder(this, g, inset.x - 2, inset.y - 2, boardSize + 4, boardSize + 4);
 
 			if (showCoords) {
-                /** draw coordinates    */
+				/** draw coordinates    */
 				char[] c = new char[2];
-				int fontSize = (int)(squareSize*0.3f);
-				Font f = new Font("SansSerif",Font.PLAIN, fontSize);
+				int fontSize = (int) (squareSize * 0.3f);
+				Font f = new Font("SansSerif", Font.PLAIN, fontSize);
 				g.setFont(f);
 				FontMetrics fmx = g.getFontMetrics();
 
-				int drop = Math.max(squareSize/48,1);
+				int drop = Math.max(squareSize / 48, 1);
 
-				for (int i=0; i<8; i++) {
-					c[0] = (char)(flipped ? ('1'+i):('8'-i));
-					int x0 = inset.x - fmx.charWidth(c[0])*9/8 - 4;
-					int y0 = inset.y + squareSize*i + (squareSize+fmx.getAscent()) / 2;
+				for (int i = 0; i < 8; i++) {
+					c[0] = (char) (flipped ? ('1' + i) : ('8' - i));
+					int x0 = inset.x - fmx.charWidth(c[0]) * 9 / 8 - 4;
+					int y0 = inset.y + squareSize * i + (squareSize + fmx.getAscent()) / 2;
 
-					c[1] = (char)(flipped ? ('h'-i):('a'+i));
-					int x1 = inset.x + squareSize*i + (squareSize-fmx.charWidth(c[1])) / 2;
-					int y1 = inset.y + 8*squareSize + fmx.getAscent();
+					c[1] = (char) (flipped ? ('h' - i) : ('a' + i));
+					int x1 = inset.x + squareSize * i + (squareSize - fmx.charWidth(c[1])) / 2;
+					int y1 = inset.y + 8 * squareSize + fmx.getAscent();
 
 					g.setColor(SHADOW_64);
-					g.drawChars(c,0,1, x0+drop,y0+drop);
-					g.drawChars(c,1,1, x1+drop,y1+drop);
+					g.drawChars(c, 0, 1, x0 + drop, y0 + drop);
+					g.drawChars(c, 1, 1, x1 + drop, y1 + drop);
 
 					if (currentBackground.isDark())
 						g.setColor(Color.white);
 					else
 						g.setColor(Color.black);
-					g.drawChars(c,0,1, x0,y0);
-					g.drawChars(c,1,1, x1,y1);
+					g.drawChars(c, 0, 1, x0, y0);
+					g.drawChars(c, 1, 1, x1, y1);
 				}
-            }
+			}
 		}
+
+		if (showEvalbar)
+			drawEvalbar(g);	//	always draw it
 
 		synch(redraw);
 
 		paintHints();
 
 		paintHook(redraw);
+	}
+
+	public void drawEvalbar(Graphics2D g)
+	{
+		if (!showEvalbar) return;	//	that was easy
+		if (this.score==null) return;	//	no useful score
+
+		int boardSize = 8*squareSize;
+		int hwhite,hgrey;
+
+		if (score.hasWDL()) {
+			//	prefer WDL if present
+			int sum = score.sumWDL();
+			hwhite = score.win * boardSize / sum;
+			hgrey = score.draw * boardSize / sum;
+		}
+		else if (score.cp != Score.UNKNOWN) {
+			//	todo get score range from Engine (centipawn = [-400..+400] but can differ for modern Engines)
+			int minScore = -400;
+			int maxScore = +400;
+			int cp = score.cp;
+			cp = Math.min(maxScore,cp);
+			cp = Math.max(minScore,cp);
+			hwhite = (cp-minScore) * boardSize / (maxScore-minScore);
+			hgrey = 0;
+		}
+		else {
+			return;
+		}
+
+		int hblack = boardSize - hwhite - hgrey;
+		int x2 = inset.x+boardSize;
+		int y2 = inset.y+boardSize;
+		int gap = (int)(squareSize*0.1f);
+		int wid = (int)(squareSize*0.25f);
+
+		if (hwhite > 0) {
+			g.setColor(Color.white);
+			if (flipped)
+				g.fillRect(x2+gap, inset.y, wid, hwhite);
+			else
+				g.fillRect(x2+gap, y2-hwhite, wid, hwhite);
+		}
+		if (hgrey > 0) {
+			g.setColor(Color.gray);
+			if (flipped)
+				g.fillRect(x2+gap, y2-hblack-hgrey, wid, hgrey);
+			else
+				g.fillRect(x2+gap, y2-hwhite-hgrey, wid, hgrey);
+		}
+		if (hblack > 0) {
+			g.setColor(Color.black);
+			if (flipped)
+				g.fillRect(x2+gap, y2-hblack, wid, hblack);
+			else
+				g.fillRect(x2+gap, inset.y, wid, hblack);
+		}
 	}
 
 

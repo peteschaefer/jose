@@ -203,6 +203,7 @@ menu.game.resign	= Aufgeben
 menu.game.2d		= 2D Brett
 menu.game.3d		= 3D Brett
 menu.game.flip		= Brett Drehen
+menu.game.evalbar   = Bewertung anzeigen
 menu.game.coords	= Koordinaten
 menu.game.coords.tip = Koordinaten anzeigen
 menu.game.animate = Animation...
