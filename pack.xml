@@ -7,7 +7,7 @@
 
 	<!-- target directory -->
 
-	<property name="target-dir" location="/Users/hrimfaxi/Release/${version}"/>
+	<property name="target-dir" location="C:/dev/Release/${version}"/>
 	<property name="jre-dir" location="C:/dev/jose"/>
 
 <!--
@@ -318,7 +318,7 @@
 		</zip>
 	</target>
 
-	<target name="leela-mac">
+	<target name="leela-mac-intel">
 		<description> Leela (Lc0) engine for MacOS </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
 			<zipfileset dir="config" prefix="${appldir}/config">
@@ -393,7 +393,7 @@
 		</zip>
 	</target>
 
-	<target name="stockfish-mac">
+	<target name="stockfish-mac-intel">
 		<description> Stockfish engine for Linux </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
 			<zipfileset dir="config" prefix="${appldir}/config">
@@ -604,7 +604,7 @@
 		<delete dir="${appldir}"/>
 	</target>
 
-	<target name="zip-macosx">
+	<target name="zip-macos-intel">
 		<description> add Mac OS X specific stuff to zip </description>
 
 		<zip destfile="${zip-file}" update="true">
@@ -689,10 +689,10 @@
 	</target>
 -->
 	<!-- MacOSX w/out JRE -->
-	<target name="macosx">
+	<target name="macos-intel">
 		<description> installation package for Mac OS X (not including JRE) </description>
 		
-		<property name="zip-file" location="${target-dir}/jose-${version}-macosx.zip"/>
+		<property name="zip-file" location="${target-dir}/jose-${version}-macos-intel.zip"/>
 		<property name="appldir" value="jose.app"/>
 		<delete dir="${appldir}"/>
 
@@ -700,15 +700,15 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-macosx">
+		<antcall target="zip-macos-intel">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="stockfish-mac">
+		<antcall target="stockfish-mac-intel">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="leela-mac">
+		<antcall target="leela-mac-intel">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
@@ -946,7 +946,7 @@
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
 			<arg value="--progress-bar" />
-			<arg line="-u hrimfaxi:ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA"/>
+			<arg line="-u hrimfaxi:ATBBJuQyZqUZYaDatD9bccvF2CC2EF45F3EF"/>
 			<arg line="-X POST" />
 			<arg line="-F files=@${file}" />
 			<arg value="https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads" />
@@ -965,14 +965,16 @@
 
 	<target name="upload-bitbucket">
 		<description>upload to bitbucket</description>
+		<!--
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-windows.zip"/>
 		</antcall>
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-linux.zip"/>
 		</antcall>
+		-->
 		<antcall target="upload-file">
-			<param name="file" value="jose-${version}-macosx.zip"/>
+			<param name="file" value="jose-${version}-macos-intel.zip"/>
 		</antcall>
 	</target>
 

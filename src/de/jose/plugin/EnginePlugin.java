@@ -841,8 +841,8 @@ abstract public class EnginePlugin
 	public static class EvaluatedMove extends Move
 	{
 		public int ply;
-//		public Score score = new Score();	//	todo still needed ?
-		public float[] mappedScore = new float[2];
+//		public Score score = new Score();	//	todo still needed ? Yes.
+		public float[] mappedScore = new float[2];	// todo use Score instead
 
 		public EvaluatedMove(Move move, int ply, Score score, EnginePlugin plugin)
 		{
