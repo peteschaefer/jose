@@ -116,6 +116,7 @@ public class BoardView2D
 	* */
 	protected boolean forceRedraw = false;
 	protected Rectangle2D drawEval = null;
+	protected Border evalBorder = new SoftBevelBorder(BevelBorder.RAISED);
 	/**	lock cached images (i.e. prevent them from Garbage collection)	*/
 	protected boolean lockImgCache;
 
@@ -231,15 +232,15 @@ public class BoardView2D
 		if (drawEval!=null) {
 //			g.setClip(drawEval);
 			Graphics2D g2 = (Graphics2D)g;
-			Border b = new SoftBevelBorder(BevelBorder.RAISED);
-			Util.grow(drawEval,b.getBorderInsets(this));
+			//Border b = new SoftBevelBorder(BevelBorder.RAISED);
+			//Util.grow(drawEval,b.getBorderInsets(this));
 			//g2.setClip(drawEval);
 
 			AffineTransform save_tf = null;
 			try {
 				save_tf = ImgUtil.setIdentityTransform(g2,true);
 				//g2.setClip(evalRect(false));
-				drawEvalbar((Graphics2D)g,b,evalRect(false));
+				drawEvalbar((Graphics2D)g,evalBorder,evalRect(false));
 			}
 			finally {
 				if (save_tf != null) g2.setTransform(save_tf);
@@ -1013,7 +1014,7 @@ public class BoardView2D
 		int boardSize = 8*devSquareSize;
 		int x2 = devInset.x+boardSize;
 		int y2 = devInset.y+boardSize;
-		Border b = new SoftBevelBorder(BevelBorder.RAISED);
+		//Border b = new SoftBevelBorder(BevelBorder.RAISED);
 
 		if (redraw) {
 			if (lockImgCache) FontCapture.unlock();    //	make outdated images available for gc
@@ -1039,15 +1040,18 @@ public class BoardView2D
 
 			g.setColor(Color.black);
 			//		g.drawRect(inset.x-2, inset.y-2, boardSize+4,boardSize+4);
-			b.paintBorder(this, g, devInset.x - 2, devInset.y - 2,
-					boardSize + 4, boardSize + 4);
+			Insets binsets = evalBorder.getBorderInsets(this);
+			evalBorder.paintBorder(this, g,
+						devInset.x - binsets.left, devInset.y - binsets.top,
+					boardSize + binsets.left+binsets.right,
+					boardSize + binsets.top+binsets.bottom);
 
 			if (showCoords)/** draw coordinates    */
 				drawCoordinates(g);
 		}
 
 		if (showEvalbar)
-			drawEvalbar(g,b,evalRect(false));	//	always draw it
+			drawEvalbar(g,evalBorder,evalRect(false));	//	always draw it
 
 		synch(redraw);
 
@@ -1106,6 +1110,7 @@ public class BoardView2D
 
 		Rectangle2D rect = new Rectangle2D.Double();
 		rect.setRect(x2+gap, inset.getY(),	wid, boardSize);
+		Util.grow(rect,evalBorder.getBorderInsets(this));
 		return rect;
 	}
 
