@@ -56,31 +56,14 @@ Leela
   - player names update
   - turn board on engine start
   - turn board in toolbar
-  - BUG: Lc0 resigns too early ???
+  - BUG: Lc0 resigns too early -> MoveNode.engineValue
   - BUG: opening book, "plugin.eval.1"
   - BUG: analysis out of synch; should not appear in play mode. Caused by "move now" ?
   - BUG: analysis in play mode; appears (randomly?) on/off
   - BUG: New Game from here can not be saved to DB (not dirty?)
 
- ---- Fri Jan 03 10:47:22 CET 2025 ----
-java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\mysql\jose\Event.MYI'; try to repair it
-	at com.mysql.embedded.api.stmt.mysql_stmt_execute(Native Method)
-	at com.mysql.embedded.jdbc.MyPreparedStatement.execute(MyPreparedStatement.java:101)
-	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:74)
-	at de.jose.db.JoPreparedStatement.selectInt(JoPreparedStatement.java:326)
-	at de.jose.task.db.GameUtil.resolveString(GameUtil.java:936)
-	at de.jose.task.db.GameUtil.resolveEvent(GameUtil.java:912)
-	at de.jose.pgn.Game.setGameParameters(Game.java:1255)
-	at de.jose.pgn.Game.save(Game.java:1372)
-	at de.jose.pgn.Game.save(Game.java:1329)
-	at de.jose.pgn.Game.save(Game.java:1312)
-
 * keep playing after flagging ?
 
-
-java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
-	at java.util.ArrayList.get(ArrayList.java:433)
 
 * Chessnut
   - settings: board orientation white/black/auto
@@ -121,9 +104,25 @@ java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
   * suggestions arrows **must** use current pov * [0..1]
 
 ? score graph??
-* eval bar 3D
+* eval bar 3D -> see EvalPanel !
 ? commentary arrows and highlights
 
 
-==== Interesting Leela settings.
-? temperature for more variations in the opening
+==== Misc Errors
+
+java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
+	at java.util.ArrayList.get(ArrayList.java:433)
+
+ ---- Fri Jan 03 10:47:22 CET 2025 ----
+java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\mysql\jose\Event.MYI'; try to repair it
+	at com.mysql.embedded.api.stmt.mysql_stmt_execute(Native Method)
+	at com.mysql.embedded.jdbc.MyPreparedStatement.execute(MyPreparedStatement.java:101)
+	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:74)
+	at de.jose.db.JoPreparedStatement.selectInt(JoPreparedStatement.java:326)
+	at de.jose.task.db.GameUtil.resolveString(GameUtil.java:936)
+	at de.jose.task.db.GameUtil.resolveEvent(GameUtil.java:912)
+	at de.jose.pgn.Game.setGameParameters(Game.java:1255)
+	at de.jose.pgn.Game.save(Game.java:1372)
+	at de.jose.pgn.Game.save(Game.java:1329)
+	at de.jose.pgn.Game.save(Game.java:1312)

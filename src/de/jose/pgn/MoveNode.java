@@ -42,7 +42,7 @@ public class MoveNode
 	protected Move move;
     protected long hashKey;
 	protected int moveCountLen;
-	protected int engineValue;
+	public double[] engineValue;
 
     protected static MoveNodeFormatter formatter = new MoveNodeFormatter();
 	protected static SAXMoveFormatter saxFormatter = new SAXMoveFormatter();
@@ -56,7 +56,7 @@ public class MoveNode
         super(MOVE_NODE);
         ply = pl;
 		move = mv;
-		engineValue = Score.UNKNOWN;
+		engineValue = null;
 	}
 
 	public final Move getMove()		{ return move; }
@@ -103,16 +103,6 @@ public class MoveNode
 			case COMMENT_NODE:			return true;
 			}
 		return true;
-	}
-
-	public int getEngineValue()
-	{
-		return engineValue;
-	}
-
-	public void setEngineValue(int engineValue)
-	{
-		this.engineValue = engineValue;
 	}
 
 	public Style getDefaultStyle(StyledDocument doc)

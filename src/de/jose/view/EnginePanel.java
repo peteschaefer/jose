@@ -1161,9 +1161,8 @@ public class EnginePanel
         list.add(ContextMenu.SEPARATOR);
 
 		list.add("menu.game.hint");
-		//list.add("menu.game.draw");
-		//list.add("menu.game.resign");
-		/* draw and resign are disabled until we come up with a really good heuristic */
+		list.add("menu.game.draw");
+		list.add("menu.game.resign");
 
 		list.add(ContextMenu.SEPARATOR);
 

@@ -20,8 +20,7 @@ import de.jose.Util;
 
 /**
  * Maintains an array of position evaluations
- * todo record WDL scores, too
- * todo can we use this for an eval graph?
+ * todo use WDL scoring. This also makes min/max tracking obsolete.
  * @author Peter Schäfer
  */
 
@@ -92,7 +91,10 @@ public class EvalArray
 		int ply = firstPly = gm.getPosition().firstPly();
 		MoveNode node = gm.getMainLine().firstMove();
 		for ( ; node != null; node = node.nextMove())
-			setPlyValue(ply++, node.getEngineValue());
+			if (node.engineValue!=null)
+				setPlyValue(ply++, (int)node.engineValue[0]);	//	todo adjust for WDL scoring
+			else
+				setPlyValue(ply++, Score.UNKNOWN);	//	todo adjust for WDL scoring
 	}
 
 	public void setAdjustMax(int flags)

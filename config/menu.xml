@@ -143,7 +143,7 @@
 		<item id="window.clock"				check="true"	key="control 2"/>
 		<item id="window.game"				check="true"	key="control 3"/>
 		<item id="window.engine"			check="true"	key="control 4"/>
-<!--		<item id="window.eval"		    	check="false"/>-->
+		<item id="window.eval"		    	check="false"/>
 		<item id="window.console"			check="false"/>
 		<separator/>
 		<item id="window.collectionlist"	check="true"	key="control 5"/>

@@ -411,16 +411,15 @@ public class EvalView
 
 		case EnginePlugin.PLUGIN_MOVE:
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
-			int value  = emv.getValue();
 			int ply = emv.getPly();
 
-			setValue(ply/2,value,true);
+			setValue(ply/2, emv.getValue(),true);
 
 			if (game!=null) {
 				//  is this the right place to do this ??
 				MoveNode mvnd = game.getCurrentMove();
-				if (mvnd!=null && game.isMainLine(mvnd))
-					mvnd.setEngineValue(value);
+				if (mvnd!=null) // && game.isMainLine(mvnd))
+					mvnd.engineValue = emv.mappedScore;
 			}
 			break;
 		}

@@ -79,7 +79,7 @@ abstract public class BoardView
 	/** show hint arrows during animation ? */
 	protected boolean showAnimationHints;
 
-	//	score for eval bard
+	//	score for eval bar
 	protected double[] eval = null;
 
 	public BoardView(IBoardAdapter theBoard)
@@ -320,7 +320,7 @@ abstract public class BoardView
 		else if (plugin==null)
 			this.eval = null;
 		else
-			this.eval = plugin.mapUnitWDL(sc);
+			this.eval = plugin.mapUnitWDL(sc,eval);
 	}
 
 	/**

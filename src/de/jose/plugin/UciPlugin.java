@@ -686,7 +686,7 @@ public class UciPlugin
 	        setMode(PAUSED);
 
         sendMessage(PLUGIN_MOVE,
-                new EvaluatedMove(mv, analysis));
+                new EvaluatedMove(mv, analysis, this));
         /**	note that MoveParser holds a fixed pool of move objects
          * 	got to clone the result
          */

@@ -432,7 +432,7 @@ ply
 		else
 			enginePosition.tryMove(mv);
 
-		sendMessage(PLUGIN_MOVE, new EvaluatedMove(mv,analysis));
+		sendMessage(PLUGIN_MOVE, new EvaluatedMove(mv,analysis,this));
 		/**	note that MoveParser holds a fixed pool of move objects
 		 * 	better clone the result
 		 */

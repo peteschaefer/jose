@@ -3091,7 +3091,7 @@ public class Application
 			if (node!=null && emv!=null) {
 				//  update move evaluation history
 				if (theGame.isMainLine(node))
-					node.setEngineValue(emv.getValue());
+					node.engineValue = emv.mappedScore;
 				/** UCI engines can't resign or offer draws (stupid gits)
 				 *  we got to track the evaluation of recent moves and allow the user to adjudicate the game
 				 */
@@ -3524,7 +3524,7 @@ public class Application
 		if (node!=null && entry.move!=null) {
 			//  update move evaluation history
 			if (theGame.isMainLine(node))
-				node.setEngineValue(entry.centipawnValue());   //  TODO which value is more appropriate
+				node.engineValue = entry.mappedValue(node.engineValue);   //  TODO which value is more appropriate
 //					adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
 		}
 		return true;

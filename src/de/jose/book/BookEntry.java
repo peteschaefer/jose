@@ -112,6 +112,17 @@ public class BookEntry
 			return (int)Math.round(userValue);
 	}
 
+	public double[] mappedValue(double[] result)
+	{
+		if (result==null)
+			result = new double[3];
+
+		result[0] = (double)countWhite/count;
+		result[1] = (double)countDraw/count;
+		result[2] = (double)countBlack/count;
+		return result;
+	}
+
 	protected void add(BookEntry that)
 	{
 		if (! this.move.equals(that.move))

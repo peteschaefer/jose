@@ -83,12 +83,13 @@ abstract public class EnginePlugin
 	 * resign threshold: if the evaluation drops below this value,
 	 * ask user to adjudicate the game
 	 */
-	public static final int RESIGN_THRESHOLD    = -800;  //= 8 pawn units
+	public static final double RESIGN_THRESHOLD    = 0.01;  //= 1 % estimated result
 	/**
 	 * draw threshold: if the evaluation stays within this interval,
 	 * ask ust to adjudicate the game
 	 */
-	public static final int DRAW_THRESHOLD      = 2;    //= +/-0.02 pawn units
+	public static final double DRAW_WDL_THRESHOLD   = 0.99;    //= 98 % draw probability
+	public static final double DRAW_THRESHOLD     	= 0.01;    //= 1 % evaluation diff
 	/**
 	 * minimum game ply when DRAW_THRESHOLD becomes effective.
 	 * don't accept early draws
@@ -814,8 +815,9 @@ abstract public class EnginePlugin
 
 	public static class EvaluatedMove extends Move
 	{
-		int ply;
-		Score score = new Score();
+		public int ply;
+		public Score score = new Score();
+		public double[] mappedScore = new double[3];
 
 		public EvaluatedMove(Move move, int ply, int value, int flags)
 		{
@@ -826,16 +828,17 @@ abstract public class EnginePlugin
 			this.score.flags = flags;
 		}
 
-		public EvaluatedMove(Move move, int ply, Score ascore)
+		public EvaluatedMove(Move move, int ply, Score ascore, EnginePlugin plugin)
 		{
 			super(move);
 			this.ply = ply;
 			this.score.copy(ascore);
+			plugin.mapUnitWDL(this.score, mappedScore);
 		}
 
-		protected EvaluatedMove(Move move, AnalysisRecord a)
+		protected EvaluatedMove(Move move, AnalysisRecord a, EnginePlugin plugin)
 		{
-			this(move,a.ply, a.eval[0]);
+			this(move,a.ply, a.eval[0], plugin);
 		}
 
 		public int getPly()             { return ply; }
@@ -868,16 +871,19 @@ abstract public class EnginePlugin
 	{
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			int value = node.getEngineValue();
+			double[] value = node.engineValue;
 			//  value is from white's point of view !
-			if (value <= Score.UNKNOWN)
+			if (value==null)
 				return false; //  unknown value
 			//	todo mapUnit(Score) !!
 
-			if (EngUtil.isBlack(engineColor)) value = -value;
-			//  now value is from the engine's point of view
-			if (value > EnginePlugin.RESIGN_THRESHOLD)
-				return false;   //  above threshold; no reason to resign
+			double dont_lose;
+			if (EngUtil.isBlack(engineColor))
+				dont_lose = value[1]+value[2];
+			else
+				dont_lose = value[0]+value[1];
+			if (dont_lose >= EnginePlugin.RESIGN_THRESHOLD)
+				return false; //  above threshold; no reason to resign
 
 			//  go to previous (full) moves
 			node = node.previousMove();
@@ -895,13 +901,21 @@ abstract public class EnginePlugin
 
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			int value = node.getEngineValue();
+			double[] value = node.engineValue;
 			//	todo mapUnitWDL(Score) !!
 
-			if (value <= Score.UNKNOWN)
+			if (value == null)
 				return false; //  unknown value
-			if ((value < -EnginePlugin.DRAW_THRESHOLD) || (value > EnginePlugin.DRAW_THRESHOLD))
-				return false;   //  out of interval; no reason for draw
+
+			if (value[1] != 0.0) {
+				if (value[1] < DRAW_WDL_THRESHOLD)
+					return false;
+			}
+			else
+			{
+				if (Math.abs(value[0]-value[2]) > DRAW_THRESHOLD)
+					return false;
+			}
 
 			//  go to previous (full) moves
 			node = node.previousMove();
@@ -1047,9 +1061,10 @@ abstract public class EnginePlugin
 	 * @param sc
 	 * @return double[3] for white wins, draw, black wins
 	 */
-	public double[] mapUnitWDL(Score sc)
+	public double[] mapUnitWDL(Score sc, double[] result)
 	{
-		double[] result = new double[3];
+		if (result==null)
+			result = new double[3];
 		if (!sc.hasWDL()) {
 			//	use linear score
 			result[0] = mapUnit(sc);
