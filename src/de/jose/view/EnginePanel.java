@@ -13,12 +13,11 @@
 package de.jose.view;
 
 import de.jose.*;
-import de.jose.chess.Move;
+import de.jose.chess.*;
+import de.jose.chess.Position;
 import de.jose.pgn.ECOClassificator;
 import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
-import de.jose.chess.Position;
-import de.jose.chess.StringMoveFormatter;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
@@ -33,10 +32,11 @@ import de.jose.util.ClipboardUtil;
 import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.JoStyledLabel;
 import de.jose.view.input.WdlLabel;
+import de.jose.view.style.JoStyleContext;
 import javafx.stage.PopupWindow;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -107,6 +107,9 @@ public class EnginePanel
 	protected int pvCount;
 	protected boolean showInfoLabel;
 
+	protected StyledMoveFormatter formatter;
+	protected Style textStyle, boldStyle, figStyle, infoStyle;
+
 	/** status info    */
 	protected JLabel    lStatus;
 
@@ -146,6 +149,35 @@ public class EnginePanel
 		display(EnginePlugin.PAUSED,null, inBook);
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
+
+		setupStyles();
+	}
+
+	private void setupStyles()
+	{
+		JoStyleContext styles = Application.theUserProfile.getStyleContext();
+		//textStyle = styles.getStyle("body.line");
+		textStyle = styles.addStyle("engine.pv",null);
+		StyleConstants.setFontFamily(textStyle, "sans-serif");
+		StyleConstants.setFontSize(textStyle, 12);
+
+		boldStyle = styles.addStyle("engine.pv.bold",textStyle);
+		StyleConstants.setBold(boldStyle, true);
+
+		infoStyle = styles.addStyle("engine.pv.info",textStyle);
+		StyleConstants.setFontSize(infoStyle, 10);
+		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
+
+		figStyle = styles.getStyle("body.figurine");
+
+		formatter = new StyledMoveFormatter();
+		formatter.setTextStyle(textStyle);
+
+		int moveFormat = Application.theUserProfile.getInt("doc.move.format", MoveFormatter.SHORT);
+		formatter.setFormat(moveFormat);
+
+		boolean useFigurines = styles.useFigurineFont();
+		formatter.setFigStyle(useFigurines ? figStyle : null);
 	}
 
 	private void createIcons()
@@ -972,7 +1004,7 @@ public class EnginePanel
 
 	public void setVariation(int idx, StringBuffer text, StringBuffer info)
 	{
-		JTextComponent lvar = getPvLabel(idx, (text!=null), true);
+		JoStyledLabel lvar = getPvLabel(idx, (text!=null), true);
 		if (lvar!=null)
 			setLine(lvar,text,info);
 	}
@@ -981,22 +1013,25 @@ public class EnginePanel
 	{
 		JTextComponent linfo = getInfoLabel(text!=null);
 		if (linfo!=null) {
-			setLine(linfo,null,text);
+			linfo.setText(text.toString());
 			setShowInfoLabel(true);
 		}
 	}
 
-	private void setLine(JTextComponent label, StringBuffer text, StringBuffer info)
+	private void setLine(JoStyledLabel label, StringBuffer text, StringBuffer info)
 	{
-		StringBuffer contents = new StringBuffer();
-		if (text!=null && text.length() > 0)
-			contents.append(text);
-		if (info!=null && info.length() > 0) {
-			if (contents.length() > 0)
-				contents.append("<br>");
-			contents.append(info);
-		}
-		label.setText(contents.toString());
+		StyledDocument doc = label.getStyledDocument();
+        try {
+            doc.remove(0,doc.getLength());
+			if (text!=null && text.length()>0)
+				doc.insertString(0,text.toString(),textStyle);
+			if (info!=null && info.length()>0) {
+				doc.insertString(doc.getLength(), "\n", null);
+				doc.insertString(doc.getLength(), info.toString(), infoStyle);
+			}
+        } catch (BadLocationException e) {
+            Application.error(e);
+        }
 	}
 
 	protected void setIcon(JButton button, Icon[] icon)

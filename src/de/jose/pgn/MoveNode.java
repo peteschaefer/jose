@@ -13,12 +13,9 @@
 package de.jose.pgn;
 
 import de.jose.Application;
-import de.jose.plugin.AnalysisRecord;
-import de.jose.export.ExportConfig;
 import de.jose.plugin.Score;
 import de.jose.sax.JoContentHandler;
 import de.jose.chess.*;
-import de.jose.image.FontCapture;
 import de.jose.profile.FontEncoding;
 import de.jose.view.style.JoStyleContext;
 import de.jose.view.style.JoFontConstants;
@@ -28,7 +25,6 @@ import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
 
 import static de.jose.pgn.INodeConstants.MOVE_NODE;
 
@@ -46,7 +42,7 @@ public class MoveNode
 	protected int moveCountLen;
 	public Score engineValue;
 
-    protected static MoveNodeFormatter formatter = new MoveNodeFormatter();
+    protected static StyledMoveFormatter formatter = new StyledMoveFormatter();
 	protected static SAXMoveFormatter saxFormatter = new SAXMoveFormatter();
 
 	//-------------------------------------------------------------------------------
@@ -118,10 +114,9 @@ public class MoveNode
 	public void insert(StyledDocument doc, int at)
 		throws BadLocationException
 	{
-		formatter.textStyle = getDefaultStyle(doc);
+		formatter.setTextStyle(getDefaultStyle(doc));
 
-		int format = Application.theUserProfile.getInt("doc.move.format",MoveFormatter.SHORT);
-        boolean figurines = JoStyleContext.useFigurineFont(formatter.textStyle);
+		int moveFormat = Application.theUserProfile.getInt("doc.move.format",MoveFormatter.SHORT);
 
 		de.jose.chess.Position pos = getGame().getPosition();
 		moveCountLen = 0;
@@ -136,25 +131,22 @@ public class MoveNode
 			formatter.text(moveCount, 0);
 		}
 
-        formatter.doc = doc;
-        formatter.at = at;
-        formatter.setFormat(format);
+        formatter.setDocument(doc,at);
+        formatter.setFormat(moveFormat);
 
-		if (figurines) {
-			formatter.figStyle = parent().getStyle(doc,"body.figurine");
-			String fontName = JoFontConstants.getFontFamily(formatter.figStyle);
-			formatter.enc = FontEncoding.getEncoding(fontName);
+		boolean useFigurines = JoStyleContext.useFigurineFont(formatter.getTextStyle());
+		if (useFigurines) {
+			Style figStyle = parent().getStyle(doc,"body.figurine");
+			formatter.setFigStyle(figStyle);
 		}
 		else {
-            formatter.figStyle = null;
-			String language = JoStyleContext.getFigurineLanguage(formatter.textStyle);
-			formatter.setLanguage(language);
+            formatter.setFigStyle(null);
 		}
 
         formatter.format(move,pos);
         formatter.text(' ');
         formatter.flush();
-        int len = formatter.at - at;
+        int len = formatter.position() - at;
 
 		pos.tryMove(move);
 		if (move.moving==null)
@@ -193,47 +185,6 @@ public class MoveNode
 			return "missing move?";
 	}
 
-
-	static class MoveNodeFormatter extends StringMoveFormatter
-    {
-        StyledDocument doc;
-        int at;
-        Style textStyle;
-        Style figStyle;
-        FontEncoding enc;
-
-        public void figurine(int pc, boolean promotion) {
-            if (figStyle==null)
-                buf.append(pieceChars[EngUtil.uncolored(pc)]);
-            else try {
-
-                flush();
-
-                String ptxt = enc.getFigurine(pc);
-	            String family = JoFontConstants.getFontFamily(figStyle);
-                ptxt = FontCapture.checkPrintable(ptxt, family);
-
-                doc.insertString(at, ptxt, figStyle);
-                at += ptxt.length();
-
-            } catch (BadLocationException blex) {
-                Application.error(blex);
-                throw new RuntimeException(blex.getMessage());
-            }
-        }
-
-        public String flush() {
-            String result = super.flush();
-            if (result != null) try {
-                doc.insertString(at, result, textStyle);
-                at += result.length();
-            } catch (BadLocationException blex) {
-                Application.error(blex);
-                throw new RuntimeException(blex.getMessage());
-            }
-            return result;
-        }
-    }
 
 	static class SAXMoveFormatter extends StringMoveFormatter
     {
