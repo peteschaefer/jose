@@ -74,4 +74,11 @@ public class Score
         win = lose;
         lose = temp;
     }
+
+    public void mapWDL(float[] result)
+    {
+        int sum = sumWDL();
+        result[0] = (float)win / sum;
+        result[1] = (float)draw / sum;
+    }
 }

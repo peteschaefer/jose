@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import de.jose.MessageListener;
 import de.jose.Util;
 import de.jose.Application;
@@ -115,10 +116,10 @@ public class EvalView
 		if (game!=null) setGame(game);
 	}
 
-	public void setValue(int move, float[] value)
+	public void setValue(int move, int color, float[] value)
 	{
         if (move >= 0)
-		    values.setMoveValue(move,Constants.WHITE,value);
+		    values.setMoveValue(move,color,value);
 
 		adjustWidth();
 		scrollVisible(move);
@@ -328,7 +329,7 @@ public class EvalView
 			AnalysisRecord a = (AnalysisRecord)data;
 			if (a!=null) {
 				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
-				setValue(a.ply/2, value);
+				setValue(a.ply/2, a.white_next ? Constants.BLACK:Constants.WHITE, value);
 			}
 			break;
 
@@ -336,7 +337,7 @@ public class EvalView
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
 			int ply = emv.getPly();
 
-			setValue(ply/2, emv.mappedValue());
+			setValue(ply/2, (ply%2==0) ? Constants.WHITE: Constants.BLACK, emv.mappedValue());
 
 			if (game!=null) {
 				//  is this the right place to do this ??

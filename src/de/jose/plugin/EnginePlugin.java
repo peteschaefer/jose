@@ -837,24 +837,20 @@ abstract public class EnginePlugin
 	public static class EvaluatedMove extends Move
 	{
 		public int ply;
-		public Score score = new Score();
+//		public Score score = new Score();	//	todo still needed ?
 		public float[] mappedScore = new float[2];
 
-		public EvaluatedMove(Move move, int ply, int value, int flags)
+		public EvaluatedMove(Move move, int ply, Score score, EnginePlugin plugin)
 		{
 			super(move);
 			this.ply = ply;
-			this.score.cp = value;
-			this.score.cp_current = value; // todo or what?
-			this.score.flags = flags;
-		}
-
-		public EvaluatedMove(Move move, int ply, Score ascore, EnginePlugin plugin)
-		{
-			super(move);
-			this.ply = ply;
-			this.score.copy(ascore);
-			plugin.mapUnitWDL(this.score, mappedScore);
+			//score.copy(ascore);
+			if (plugin!=null)
+				plugin.mapUnitWDL(score, mappedScore);
+			else if (score.hasWDL())
+				score.mapWDL(mappedScore);
+			else
+				mappedScore[0] = mappedScore[1] = Float.NaN;
 		}
 
 		protected EvaluatedMove(Move move, AnalysisRecord a, EnginePlugin plugin)
@@ -863,12 +859,12 @@ abstract public class EnginePlugin
 		}
 
 		public int getPly()             { return ply; }
-		public int centipawnValue()		{ return score.cp;}
+//		public int centipawnValue()		{ return score.cp;}
 		public float[] mappedValue()    { return mappedScore; }
-		public boolean isValid()        { return score.cp > Score.UNKNOWN; }
-		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
-		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
-		public boolean isUpperBound()   { return score.flags == Score.EVAL_UPPER_BOUND; }
+		public boolean isValid()        { return mappedScore!=null && !Float.isNaN(mappedScore[0]); }
+//		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
+//		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
+//		public boolean isUpperBound()   { return score.flags == Score.EVAL_UPPER_BOUND; }
 	}
 
 
@@ -1094,9 +1090,7 @@ abstract public class EnginePlugin
 			return result;
 		}
 		else {
-			int sum = sc.sumWDL();
-			result[0] = (float)sc.win / sum;
-			result[1] = (float)sc.draw / sum;
+			sc.mapWDL(result);
 		}
 		return result;
 	}

@@ -36,7 +36,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 
 /**
- *
+ * @deprecated
  */
 public class NalimovOnlineQuery
         extends Task
@@ -73,7 +73,7 @@ public class NalimovOnlineQuery
 		if (value==0)
 			buf.append("{EGTB: Draw} ");
 		else if (value >= Score.WHITE_MATES)
-			buf.append("{EGTB: Win in "+(value-Score.WHITE_MATES)/2+"} ");
+			buf.append("{EGTB: Win in "+(value- Score.WHITE_MATES)/2+"} ");
 		else if (value <= Score.BLACK_MATES)
 			buf.append("{EGTB: Win in "+(Score.BLACK_MATES-value)/2+"} ");
 
@@ -104,17 +104,22 @@ public class NalimovOnlineQuery
 			moveList = new ArrayList();
 
 			EnginePlugin.EvaluatedMove move = getBestMove(pos.toString());
-			value = move.centipawnValue();
-
 			int maxPlies;
-			if (value==0)
+			if (move.mappedScore[1]==1.0) {    //	draw
 				maxPlies = 12;
-			else if (value >= Score.WHITE_MATES)
+				value = 0;
+			}
+			else if (move.mappedScore[0]==1.0) {    //	white wins
 				maxPlies = 100;
-			else if (value <= Score.BLACK_MATES)
+				value = Score.WHITE_MATES;
+			}
+			else if (move.mappedScore[0]==0.0 && move.mappedScore[1]==0.0) { //	black wins
 				maxPlies = 100;
-			else
+				value = Score.BLACK_MATES;
+			}
+			else {
 				maxPlies = 12;
+			}
 
 			for (int i=0; i < maxPlies; i++)
 			{
@@ -159,31 +164,37 @@ public class NalimovOnlineQuery
         InputStream in = url.openStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-		int value = parseEval(br.readLine());   //  evaluation
+		Score sc = parseEval(br.readLine());   //  evaluation
 		//  only the first (=best) line is interesting for us
 		Move mv = parseMove(br.readLine());
-		return new EnginePlugin.EvaluatedMove(mv,0,value,0);
+		return new EnginePlugin.EvaluatedMove(mv,0,sc,null);
     }
 
-	private int parseEval(String line)
+	private Score parseEval(String line)
 	{
 		//  Win in 12
 		//  Lose in 5
 		//  Draw
+		Score sc = new Score();
 		if (line.startsWith("Win in "))
 		{
 			int plies = Integer.parseInt(line.substring(7));
-			return Score.WHITE_MATES+plies;
+			sc.cp = Score.WHITE_MATES+plies;
+			sc.win = 1000;
 		}
 		if (line.startsWith("Lose in "))
 		{
 			int plies = Integer.parseInt(line.substring(8));
-			return Score.BLACK_MATES-plies;
+			sc.cp = Score.BLACK_MATES-plies;
+			sc.lose = 1000;
 		}
-		if (line.startsWith("Draw"))
-			return 0;
+		if (line.startsWith("Draw")) {
+			sc.cp = 0;
+			sc.draw = 1000;
+		}
+
 		//  else
-		return Score.UNKNOWN;
+		return sc;
 	}
 
 
