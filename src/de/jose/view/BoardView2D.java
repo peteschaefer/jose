@@ -240,7 +240,8 @@ public class BoardView2D
 			try {
 				save_tf = ImgUtil.setIdentityTransform(g2,true);
 				//g2.setClip(evalRect(false));
-				drawEvalbar((Graphics2D)g,evalBorder,evalRect(false));
+				Util.scale(drawEval,save_tf);
+				drawEvalbar((Graphics2D)g,evalBorder,drawEval);
 			}
 			finally {
 				if (save_tf != null) g2.setTransform(save_tf);
@@ -1110,7 +1111,7 @@ public class BoardView2D
 
 		Rectangle2D rect = new Rectangle2D.Double();
 		rect.setRect(x2+gap, inset.getY(),	wid, boardSize);
-		Util.grow(rect,evalBorder.getBorderInsets(this));
+		//Util.grow(rect,evalBorder.getBorderInsets(this));
 		return rect;
 	}
 

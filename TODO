@@ -37,11 +37,16 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 [ ] db: expected data on row ?
 
 [ ] https://www.formdev.com/flatlaf is a must-have!
-    - great modern l&f
-    - embedded menu bar
-    - tab title
-    - dark mode
+    - modern l&f
+    - embedded(!!) menu bar
+    - tab titles with close button
     - file chooser
+    [ ] remove tab close button
+    [ ] fix F4 layout
+    [ ] remove l&f selection
+    [ ] in-component folder button
+    [ ] themes, dark modes: postpone
+    [ ] dark menu bar?
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?
