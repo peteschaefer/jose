@@ -3726,7 +3726,7 @@ public class Application
 			if (plugin==null)
 				return;
 			plugin.setLaunchHook(lambda);
-			openEnginePlugin();
+			openEnginePlugin();	// todo may be lenghty. put to worker thread?
 		} catch(IOException e) {
 			error(e);
 		}
@@ -3923,7 +3923,7 @@ public class Application
 //	            showPanel("window.eval");
 		showPanel("window.engine");
 
-		engine.open(Version.osDir);
+		engine.open(Version.osDir);	//	todo maybe lenghty (setOptions)
 		engine.addMessageListener(this);
 
 		TimeControl tc = theUserProfile.getTimeControl();

@@ -98,19 +98,19 @@ Alternative JREs:
 ==== Interesting New Features
 
 * nicer annotation palette
-    [x] figurinesymbol: $141 against
     [-] most recent list
-    [x] make a demo pgn with all nags.
-    [x] print preview
-    [x] prints as pdf (font is recognized, font metrics were out-of-date)
-    [x] print as html (copy glyphs to disk)
-    [x] extra symbols (ucsf, nic, ..)
-    [x] type $206
-    [x] help page (html)
-    [x] bump version 1.5.3
-    [ ] ant package jose-153-patch
 
 * font awesome icons
+    [ ] <toolbar> <item icon="unicode;color;color">
+        unicode = font awesome code point
+        color = normal color, hilited color; disable color = light gray
+        with button ("nav") frame
+     [ ]fall back 1: images/nav (already existing)
+     [ ]fall back 2: <menu><item icon>  (reference needs to be found)
+     [ ]fall back 3: images/menu (already existing)
+    [ ] <menu> <item icon="unicode;color"> optional
+    [ ] animation dialog
+    [ ] buttons
 
 * RFT export? currently possible via copy/paste.
   - fop 0.20 does not support it
