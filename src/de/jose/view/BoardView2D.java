@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -454,11 +454,12 @@ public class BoardView2D
 	{
 		if (repaint) doRepaintHints();
 	}
-
+/*
 	protected void doHideAllHints(int count, boolean repaint)
 	{
 		if (repaint) doRepaintHints();
 	}
+*/
 
 	protected void doRepaintHints() {
 		forceRedraw = true;

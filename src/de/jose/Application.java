@@ -1615,6 +1615,7 @@ public class Application
 
 				prepareNewGame(setupFen,setupMoves,false);	//	todo
 				switchGame(theHistory.currentIndex());
+				docPanel().reformat();// to update eco etc. ?
 
 				cmd.code = "move.notify";
 				cmd.moreData = null;
@@ -2096,6 +2097,21 @@ public class Application
 			public void Do(Command cmd)
 					throws IOException
 			{
+				Move mv = null;
+				if (cmd.data!=null && cmd.data instanceof Move)
+					mv = (Move)cmd.data;
+				else if (enginePanel()!=null)
+					mv = enginePanel().getHintMove();
+
+				if (mv!=null) {
+					enginePanel().handleMessage(getEnginePlugin(), Plugin.PLUGIN_REQUESTED_HINT, mv);
+					Application.this.handleMessage(getEnginePlugin(), Plugin.PLUGIN_REQUESTED_HINT, mv);
+					return;
+				}
+
+				/**
+				 * otherwise: request hint from Book or Engine
+				 */
 				Position pos = theGame.getPosition();
 				BookEntry hint = theOpeningLibrary.selectMove(pos, true, pos.whiteMovesNext());
 				if (hint!=null) {
@@ -2461,7 +2477,7 @@ public class Application
 		}
 	}
 
-	private void classifyOpening()
+	private boolean classifyOpening()
 	{
 		if (theGame.isMainLine() &&
 			theGame.isLast() &&
@@ -2473,9 +2489,12 @@ public class Application
 			if (result != ECOClassificator.NOT_FOUND) {
 				theGame.setTagValue(PgnConstants.TAG_ECO, classificator.getEcoCode(result,3));
 				theGame.setTagValue(PgnConstants.TAG_OPENING, classificator.getOpeningName(result));
-				if (docPanel()!=null) docPanel().reformat();
+				if (docPanel()!=null)
+					docPanel().reformat();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public JoPanel createPanel(String name)
@@ -2732,6 +2751,7 @@ public class Application
 			for(Move mv : setupMoves)
 				theGame.insertMove(-1,mv,Game.OVERWRITE);
 			theGame.clearDirty();
+			classifyOpening();
 			theGame.fireEvents=true;
 		}
 

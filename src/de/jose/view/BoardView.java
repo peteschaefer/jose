@@ -72,7 +72,7 @@ abstract public class BoardView
 	 * */
 	protected ArrayList<Hint> hints;
 
-	public static final Color   ENGINE_HINT_COLOR   = new Color(255,255,0, 64); //  yellow (transparent)
+	public static final Color   ENGINE_HINT_COLOR   = new Color(255,255,0, 255); //  yellow (transparent)
 	public static final Color   ANIM_HINT_COLOR     = new Color(0,255,0, 64); //  green (transparent)
 	/** show hint arrows during animation ? */
 	protected boolean showAnimationHints;
@@ -268,11 +268,20 @@ abstract public class BoardView
 			}
 		}
 		//  hide Move hints (implemented by subclass)
-		if (hints.size() > 0) {
-			int sz = hints.size();
-			hints.clear();
-			doHideAllHints(sz,repaint);
-		}
+		if (removePermanentHints() > 0 && repaint)
+			doRepaintHints();
+	}
+
+	private int removePermanentHints()
+	{
+		int count = 0;
+		for(int i=hints.size()-1; i>=0; i--)
+			if (hints.get(i).getDelay() == 0) {
+				hints.remove(i);
+				count++;
+			}
+		return count;
+		//	but keep all deĺayed hints
 	}
 
 	public void showAllHints(ArrayList<Hint> new_hints)
@@ -280,7 +289,8 @@ abstract public class BoardView
 		//	todo
 		//	identical arrows can be painted over
 		//	only do a force redraw if necessary
-		this.hints = new_hints;
+		removePermanentHints();
+		this.hints.addAll(new_hints);
 		doRepaintHints();
 	}
 
@@ -308,7 +318,7 @@ abstract public class BoardView
 
 	abstract protected void doHideHint(Hint hnt,boolean repaint);
 
-	abstract protected void doHideAllHints(int count,boolean repaint);
+	//abstract protected void doHideAllHints(int count, boolean repaint);
 
 	abstract protected void doRepaintHints();
 

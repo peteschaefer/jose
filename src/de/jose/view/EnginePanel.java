@@ -1063,7 +1063,7 @@ public class EnginePanel
 		case EnginePlugin.PLUGIN_HINT:
 		case EnginePlugin.PLUGIN_REQUESTED_HINT:
 				//  requested or unrequested hint: show as tool tip
-				bHint.setToolTipText(getHintTip(data));
+				receiveHint(data);
 			//  TODO asociate hint with games, switch hint when games are switched
 				break;
 
@@ -1072,6 +1072,11 @@ public class EnginePanel
 			showInfo(data.toString());
 			break;
 		}
+	}
+
+	public Move getHintMove()
+	{
+		return (Move)bHint.getClientProperty("hint");
 	}
 
 	public static String getHintTip(Object data)
@@ -1083,9 +1088,16 @@ public class EnginePanel
 	}
 
 
+	private void receiveHint(Object data)
+	{
+		bHint.putClientProperty("hint", data);
+		bHint.setToolTipText(getHintTip(data));
+	}
+
     private void hideHint()
     {
 //      bHint.setText(null);
+		bHint.putClientProperty("hint", null);
         bHint.setToolTipText(Language.getTip("menu.game.hint"));
     }
 

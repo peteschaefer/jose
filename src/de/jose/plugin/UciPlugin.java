@@ -686,7 +686,7 @@ public class UciPlugin
 				    setCurrentPosition(bestMoveText,ponderMoveText);
 
 			        printOut.print("go ponder");
-			        printTimeCtrl();
+			        printSearchCtrl();
 			        printOut.println();
 				    setMode(PONDERING);
 			    }
