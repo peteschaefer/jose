@@ -917,8 +917,8 @@ public class Game
 
 			updateLabels(V);
 			updateLabels((LineNode)a);
-			updateMoveCount(V.first());
-			updateMoveCount(a);
+			//updateMoveCount(V.first());
+			//updateMoveCount(a);
 			return;
 		}
 
@@ -937,7 +937,7 @@ public class Game
 		if (d!=null) {
 			D = new NodeSection(d,P.last());
 
-			MoveNode c = V.firstMove();
+			MoveNode c = V.secondMove();
 			if (c!=null) {
 				assert(c.ply==d.ply);
 				C = new NodeSection(c, V.last());
@@ -951,6 +951,7 @@ public class Game
 		if (D!=null) {
 			D.trim(STATIC_TEXT_NODE);
 			D.trim(RESULT_NODE);
+			D.trim(STATIC_TEXT_NODE);
 		}
 
 		//	swap A with B

@@ -116,7 +116,14 @@ public class LineNode
 	}
 
 	public final MoveNode firstMove()	{ return (MoveNode)first(MOVE_NODE); }
-	
+	public final MoveNode secondMove()	{
+		MoveNode m = firstMove();
+		if (m==null)
+			return null;
+		else
+			return (MoveNode)m.next(MOVE_NODE);
+	}
+
 	public final MoveNode lastMove()	{ return (MoveNode)last(MOVE_NODE); }
 
 	public final boolean contains(Node nd)
