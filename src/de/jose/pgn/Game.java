@@ -2132,7 +2132,8 @@ public class Game
 
 			MoveNode oldMove = currentMove;
 			try {
-				position.reset();   //  reset
+				String fen = (String)getTagValue(TAG_FEN);
+				position.setup(fen);
 
 				if (position.hasStartFEN())
 					DiagramNode.toSAX(position,handler);

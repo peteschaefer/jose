@@ -38,6 +38,7 @@
 	<!-- Annotation -->
 	<xsl:template match="a">
 		<xsl:value-of select="text"/>
+		<xsl:text> </xsl:text>
 	</xsl:template>
 	
 	<!-- Comment -->

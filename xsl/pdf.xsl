@@ -459,12 +459,6 @@
 		</fo:inline>
 	</xsl:template>
 	
-	<!-- Annotation -->
-	<xsl:template match="a">
-		<!-- inherit style from v -->
-		<xsl:value-of select="text"/>
-	</xsl:template>
-
 	<!-- Result -->
 	<xsl:template match="result">
 		<xsl:param name="style" select="$styles//style[name='body.result']"/>

@@ -55,6 +55,11 @@ public class ExportContext implements Cloneable
 	/** preview document (optional) */
 	public PrintableDocument    preview;
 
+	/**	hide null moves */
+	public boolean hide_nullmoves = true;
+	/**	hide close variations */
+	public boolean hide_closedupls = true;
+
 
 	public ExportContext()
 	{

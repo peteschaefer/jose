@@ -26,6 +26,7 @@ import javax.swing.text.StyledDocument;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.INodeConstants.LINE_NODE;
 import static de.jose.pgn.INodeConstants.MOVE_NODE;
 
 public class MoveNode
@@ -246,17 +247,41 @@ public class MoveNode
 		}
     }
 
+	public boolean isCloseDuplicate()
+	{
+		//	first in variation ?
+		if (previous(MOVE_NODE)!=null) return false;
+		//	nest level >= 2
+		LineNode line = parent();
+		if (line.level() <= 1) return false;
+		//
+		Node anchor = line.previous(LINE_NODE,MOVE_NODE);
+		if (anchor.is(MOVE_NODE)) {
+			MoveNode ma = (MoveNode)anchor;
+			return ma.move.equals(this.move);
+		}
+		return false;
+	}
+
 	public void toSAX(JoContentHandler handler) throws SAXException
 	{
 		de.jose.chess.Position pos = getGame().getPosition();
 
-		saxBeforeMove(pos, ply,move,showNumber(), handler);
+		boolean hide=false;
+		if (handler.context.hide_nullmoves && move.isNullMove())
+			hide = true;
+		if (handler.context.hide_closedupls && isCloseDuplicate())
+			hide = true;
+
+		if (!hide)
+			saxBeforeMove(pos, ply,move,showNumber(), handler);
 
 		pos.tryMove(move);
-		if (move.moving==null)
+		if (!move.isNullMove() && (move.moving==null))
 			throw new ReplayException(pos,move);
 
-		saxAfterMove(pos, move, handler);
+		if (!hide)
+			saxAfterMove(pos, move, handler);
 	}
 
 	public static void saxBeforeMove(de.jose.chess.Position pos,

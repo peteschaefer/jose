@@ -671,8 +671,8 @@ public class LineNode
 
 			if (l >= 2) {
 			    pos.startVariation();
-				System.err.println();
-				System.err.print(" (");
+				//System.err.println();
+				//System.err.print(" (");
 			}
 		}
 		else
@@ -684,7 +684,7 @@ public class LineNode
 		if (name==null) {
 			if (l >= 2) {
 				pos.undoVariation();
-				System.err.println(") ");
+				//System.err.println(") ");
 			}
 
 			handler.endElement("v");
