@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ import java.util.Comparator;
 /**
  * IBookEntry
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class BookEntry
 {
@@ -112,14 +112,13 @@ public class BookEntry
 			return (int)Math.round(userValue);
 	}
 
-	public double[] mappedValue(double[] result)
+	public float[] mappedValue(float[] result)
 	{
 		if (result==null)
-			result = new double[3];
+			result = new float[2];
 
-		result[0] = (double)countWhite/count;
-		result[1] = (double)countDraw/count;
-		result[2] = (double)countBlack/count;
+		result[0] = (float)countWhite/count;
+		result[1] = (float)countDraw/count;
 		return result;
 	}
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.pgn;
 
 import de.jose.plugin.Score;
+import de.jose.util.FloatArray;
 import de.jose.util.IntArray;
 import de.jose.chess.EngUtil;
 import de.jose.plugin.AnalysisRecord;
@@ -20,194 +21,110 @@ import de.jose.Util;
 
 /**
  * Maintains an array of position evaluations
- * todo use WDL scoring. This also makes min/max tracking obsolete.
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
-public class EvalArray
-{
-	/** the array (one value for each ply)  */
-	protected IntArray values;
-	/** offset of first ply */
+public class EvalArray {
+	/**
+	 * the array (2 W-D values for each ply)
+	 */
+	protected FloatArray values;
+	/**
+	 * offset of first ply
+	 */
 	protected int firstPly;
-	/** positive maximum    */
-	protected int posMax;
-	/** negative maximum    */
-	protected int negMax;
-	/** max was just modified */
-	protected boolean maxDirty;
-	/** adjust max values ? */
-	protected int adjustMax;
 
-	public static final int ADJUST_NONE     = 0;
-	public static final int ADJUST_HIGH     = 1;
-	public static final int ADJUST_LOW      = 2;
-	public static final int ADJUST_LOW_HIGH = 3;
-
-
-	public EvalArray(int first)
-	{
-		values = new IntArray(120);
+	public EvalArray(int first) {
+		values = new FloatArray(2 * 120);
 		firstPly = first;
-		adjustMax = ADJUST_LOW_HIGH;
+		//adjustMax = ADJUST_LOW_HIGH;
 		clear();
 	}
 
-	public int firstPly()
-	{
+	public int firstPly() {
 		return firstPly;
 	}
 
-	public int plyCount()
-	{
-		return firstPly+values.size();
+	public int plyCount() {
+		return firstPly + values.size() / 2;
 	}
 
 
-	public int firstMove()
-	{
-		return firstPly/2;
+	public int firstMove() {
+		return firstPly / 2;
 	}
 
-	public int moveCount()
-	{
-		return (plyCount()+1)/2;
+	public int moveCount() {
+		return (plyCount() + 1) / 2;
 	}
 
 
-	public void clear()
-	{
+	public void clear() {
 		values.clear();
 		firstPly = 0;
-		posMax = 0;
-		negMax = 0;
-		maxDirty = false;
 	}
 
-	public void setGame(Game gm)
-	{
+	public void setGame(Game gm) {
 		clear();
 
 		int ply = firstPly = gm.getPosition().firstPly();
 		MoveNode node = gm.getMainLine().firstMove();
-		for ( ; node != null; node = node.nextMove())
-			if (node.engineValue!=null)
-				setPlyValue(ply++, (int)node.engineValue[0]);	//	todo adjust for WDL scoring
+		for (; node != null; node = node.nextMove())
+			if (node.engineValue != null)
+				setPlyValue(ply++, node.engineValue);
 			else
-				setPlyValue(ply++, Score.UNKNOWN);	//	todo adjust for WDL scoring
+				setPlyValue(ply++, null);
 	}
 
-	public void setAdjustMax(int flags)
-	{
-		adjustMax = flags;
-	}
-
-	public int plyValue(int ply)
-	{
+	public float[] plyValue(int ply, float[] result) {
 		if (ply < firstPly)
-			return 0;
+			return null;
 		ply -= firstPly;
 		if (ply >= values.size())
-			return 0;
-		else
-			return values.get(ply);
-	}
-
-	public int moveValue(int move, int color)
-	{
-		if (EngUtil.isWhite(color))
-			return plyValue(2*move);
-		else
-			return plyValue(2*move+1);
-	}
-
-	public int moveValue(int move)
-	{
-		int whiteValue = plyValue(2*move);
-		int blackValue = plyValue(2*move+1);
-
-		if (whiteValue==0)
-			return blackValue;
-		else
-			return whiteValue;
-	}
-
-
-	public int setPlyValue(int ply, int value)
-	{
-		if (ply < firstPly) throw new ArrayIndexOutOfBoundsException(ply+" < "+firstPly);
-		ply -= firstPly;
-
-		int oldValue = (ply < values.size()) ? values.get(ply) : 0;
-		boolean wasPosMax = (oldValue==posMax);
-		boolean wasNegMax = (oldValue==negMax);
-
-		if (!isValid(value))
-			;
-		else if (value > posMax && Util.allOf(adjustMax,ADJUST_HIGH)) {
-			posMax = value;
-			maxDirty = true;
+			return null;
+		else {
+			if (result == null)
+				result = new float[2];
+			result[0] = values.get(2 * ply);
+			result[1] = values.get(2 * ply + 1);
 		}
-		else if (value < negMax && Util.allOf(adjustMax,ADJUST_HIGH)) {
-			negMax = value;
-			maxDirty = true;
-		}
-
-		values.set(ply,value);
-
-		if ((wasPosMax && Util.allOf(adjustMax,ADJUST_LOW) && (value < oldValue || !isValid(value))) ||
-		    (wasNegMax && Util.allOf(adjustMax,ADJUST_LOW) && (value > oldValue || !isValid(value))))
-			calcMax();
-
-		return oldValue;
-	}
-
-	public int setMoveValue(int move, int color, int value)
-	{
-		if (EngUtil.isWhite(color))
-			return setPlyValue(2*move,value);
-		else
-			return setPlyValue(2*move+1,value);
-	}
-
-	public int getMaximum()         { return posMax; }
-
-	public int getMinimum()         { return negMax; }
-
-	public boolean isMaxDirty()     { return isMaxDirty(true); }
-
-	public boolean isMaxDirty(boolean reset)
-	{
-		boolean result = maxDirty;
-		if (reset) maxDirty = false;
 		return result;
 	}
 
-	private static boolean isValid(int value)
-	{
-		if (value <= Score.UNKNOWN) return false;
-		if (value >= Score.WHITE_MATES) return false;
-		if (value <= Score.BLACK_MATES) return false;
-
-		return true;
+	public float[] moveValue(int move, int color, float[] result) {
+		if (EngUtil.isWhite(color))
+			return plyValue(2 * move, result);
+		else
+			return plyValue(2 * move + 1, result);
 	}
 
-	private void calcMax()
-	{
-		int newPosMax = 0;
-		int newNegMax = 0;
+	public float[] moveValue(int move, float[] result) {
+		float[] whiteValue = plyValue(2 * move, result);
+		if (whiteValue != null) return whiteValue;
 
-		for (int i=values.size()-1; i >= 0; i--)
-		{
-			int value = values.get(i);
-			if (!isValid(value)) continue;
+		float[] blackValue = plyValue(2 * move + 1, result);
+		return blackValue;
+	}
 
-			if (value > newPosMax) newPosMax = value;
-			if (value < newNegMax) newNegMax = value;
+	public void setPlyValue(int ply, float[] value) {
+		if (ply < firstPly) throw new ArrayIndexOutOfBoundsException(ply + " < " + firstPly);
+		ply -= firstPly;
+
+		if (value==null) {
+			values.set(2*ply,Float.NaN);
+			values.set(2*ply+1,Float.NaN);
 		}
+		else {
+			values.set(2 * ply, value[0]);
+			values.set(2 * ply + 1, value[1]);
+		}
+	}
 
-		maxDirty = (newPosMax!=posMax) || (newNegMax!=negMax);
-		posMax = newPosMax;
-		negMax = newNegMax;
+	public void setMoveValue(int move, int color, float[] value) {
+		if (EngUtil.isWhite(color))
+			setPlyValue(2 * move, value);
+		else
+			setPlyValue(2 * move + 1, value);
 	}
 }
+

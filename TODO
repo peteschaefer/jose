@@ -25,6 +25,10 @@ libraries needed:
 * requires jre 1.8 (i386)
 * requires some extra libraries (i386)
     - libXrender.so.1, libXtst.so.6, libXi.so6, libstdc++.so.5
+==== macOS
+* which JDK is running on recent macOS ?
+* do we need a 64bit version of mysql-je? Do we already have one?
+
 
 === Factory Settings
 
@@ -38,8 +42,6 @@ libraries needed:
 
 Leela
 * logo
-* "go nodes 1"
-  - depth <x>, nodes <x>, movetime <msecs>, (mate <x>)
 * MultiPV = 8 (?)
 * VerboseMoveStats = true
 * LogLiveStats = true
@@ -66,8 +68,9 @@ Leela
 
 
 * Chessnut
-  - settings: board orientation white/black/auto
+  - persist in user settings: board orientation white/black/auto
   - beep: after each move
+  - flip option with new game
   - check mate: fanfare, animation ...
 
 * BUG: engine configurations
@@ -76,17 +79,16 @@ Leela
 * BUG: Engine Panel, Opening Book, no tooltips
 * BUG: offer draw, resign doesn't work
    Leela resigns early (probably ScoreType confusion)
-* BUG: link buttons (Setup Dialog, Engine Dialog)
 
 ==== Postponed
 
-* Resign, Offer draw. Offering draws is not that trivial.
-    WDL, DrawScore and Contempt need to be considered.
-    Draws must not be offered too frequently.
-    With DrawScore ~= +-1 one side will *always* offer draw, the opponent will *always* decline; which is rather pointless.
+* Resign, Offer draw. Current heuristics is similar to TCEC
+  - no draw offer before move 30
+  - offer/accept draw if drawish for 5 consecutive moves
+  - drawish: WDL draw>=99%, or score ~= 0.5
+  - resign if: WDL lose>=99% or score <= 0.02
 
 * Contempt Slider
-
         White seeks a draw - neutral - Black seeks a draw - Armageddon
     -1   ...............        0         ............         +1
         Black avoids a draw            White avoids a draw
@@ -103,8 +105,6 @@ Leela
   * eval bar **must** use white pov [0..1]
   * suggestions arrows **must** use current pov * [0..1]
 
-? score graph??
-* eval bar 3D -> see EvalPanel !
 ? commentary arrows and highlights
 
 

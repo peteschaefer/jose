@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class EvalView
@@ -50,13 +50,13 @@ public class EvalView
 
 
 	/** y-value of middle line  */
-	protected int            middle;
+	//protected int            middle;
 	/** size of one pawn unit, in pixels    */
-	protected int            pawnUnit;
+	//protected int            pawnUnit;
 	/** positive max, in pawnUnits  */
-	protected double         maxPawn;
+	//protected double         maxPawn;
 	/** negiatvie min, int pawnUnits */
-	protected double         minPawn;
+	//protected double         minPawn;
 
 
 	/** height of horizontal tick marks */
@@ -70,9 +70,11 @@ public class EvalView
 
 	protected Paint goodPaint, badPaint;
 
+	protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
+
 	public EvalView()
 	{
-		setBackground(Color.white);
+		setBackground(BACKGROUND_COLOR);
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 
@@ -85,11 +87,10 @@ public class EvalView
 	public void clear()
 	{
 		values.clear();
-		calcUnits();
 
 		Dimension minsize = getMinimumSize();
 		setMinimumSize(new Dimension(20, minsize.height));
-		setPreferredSize(new Dimension(10*BAR_WIDTH, (int)(pawnUnit*(maxPawn-minPawn))));
+		setPreferredSize(new Dimension(10*BAR_WIDTH, (int)getPreferredSize().getHeight()));
 
 		repaint();
 	}
@@ -97,14 +98,13 @@ public class EvalView
 	public void setGame(Game gm)
 	{
 		game = gm;
-		values.setAdjustMax(EvalArray.ADJUST_LOW_HIGH);
+		//values.setAdjustMax(EvalArray.ADJUST_LOW_HIGH);
 		values.setGame(gm);
-		calcUnits();
 
 		Dimension minsize = getMinimumSize();
 		int minwidth = (values.moveCount()-values.firstMove())*BAR_WIDTH;
 		setMinimumSize(new Dimension(minwidth, minsize.height));
-		setPreferredSize(new Dimension(minwidth, (int)(pawnUnit*(maxPawn-minPawn))));
+		setPreferredSize(new Dimension(minwidth, (int)getPreferredSize().getHeight()));
 
 		revalidate();
 	}
@@ -115,65 +115,18 @@ public class EvalView
 		if (game!=null) setGame(game);
 	}
 
-	public void setValue(int move, int value, boolean adjustLow)
+	public void setValue(int move, float[] value)
 	{
-		if (adjustLow)
-			values.setAdjustMax(EvalArray.ADJUST_LOW_HIGH);
-		else
-			values.setAdjustMax(EvalArray.ADJUST_HIGH);
-
         if (move >= 0)
 		    values.setMoveValue(move,Constants.WHITE,value);
 
 		adjustWidth();
 		scrollVisible(move);
 
-		if (values.isMaxDirty() && calcUnits())
-			repaint();
-		else
-			repaint1(move);
+		repaint1(move);
 	}
 
-	protected boolean calcUnits()
-	{
-		int height = getHeight();
 
-		int oldPawnUnit = pawnUnit;
-		int oldMiddle = middle;
-		double oldMaxPawn = maxPawn;
-		double oldMinPawn = minPawn;
-
-		if (game==null) {
-			maxPawn = +1.0;
-			minPawn = -1.0;
-		}
-		else {
-			maxPawn = Math.max((double)values.getMaximum()/100.0, 1.0);
-			minPawn = Math.min((double)values.getMinimum()/100.0, -1.0);
-		}
-
-		//  round up to next 1.5 pawn
-		maxPawn = Math.floor(2*maxPawn+1.0)/2.0;
-		minPawn = Math.floor(2*minPawn-1.0)/2.0;
-
-		pawnUnit = (int)((double)height/(maxPawn-minPawn));
-		if (pawnUnit < 1) pawnUnit = 1;
-		middle = (int)(maxPawn*pawnUnit);
-
-		maxPawn = (double)middle/pawnUnit;
-		minPawn = (double)(middle-height)/pawnUnit;
-
-		boolean dirty =
-		        (oldPawnUnit!=pawnUnit) || (oldMiddle!=middle) ||
-		        (oldMaxPawn!=maxPawn) || (oldMinPawn!=minPawn);
-
-		if (dirty) {
-			goodPaint = STYLE_GOOD.getPaint(0,middle, 0.0f, -(float)(3*pawnUnit));
-			badPaint = STYLE_BAD.getPaint(0,middle, 0.0f, (float)(3*pawnUnit));
-		}
-
-		return dirty;
-	}
 
 	protected void adjustWidth()
 	{
@@ -181,17 +134,11 @@ public class EvalView
 		Dimension minsize = getMinimumSize();
 		if (minWidth > minsize.width)  {
 			setMinimumSize(new Dimension(minWidth, minsize.height));
-			setPreferredSize(new Dimension(minWidth, (int)(pawnUnit*(maxPawn-minPawn))));
+			setPreferredSize(new Dimension(minWidth, (int)getPreferredSize().getHeight()));
 		}
 
 		if (minWidth > getWidth())
 			revalidate();   //  right ?
-	}
-
-	public void setBounds(int x, int y, int width, int height)
-	{
-		super.setBounds(x, y, width, height);
-		calcUnits();
 	}
 
 	protected void repaint1(int move)
@@ -213,13 +160,14 @@ public class EvalView
 		int height = getHeight();
 
 		ImgUtil.setTextAntialiasing((Graphics2D)g, true);
-		g.clearRect(0,0,width,height);
-
-		//  paint horitzontal axis
-		g.setColor(Color.black);
-		g.drawLine(0,middle, width,middle);
+		g.setColor(BACKGROUND_COLOR);
+		g.fillRect(0,0,width,height);
 
 		paintValues(g);
+
+		//  paint horizontal axis
+		g.setColor(Color.black);
+		g.drawLine(0,height/2, width,height/2);
 
 		paintHorizontalTickMarks(g);
 		paintVerticalAxis(g);
@@ -229,7 +177,7 @@ public class EvalView
 	{
 		int width = getWidth();
 
-		Font textFont  = FontUtil.newFont("SansSerif",Font.PLAIN, (float)Util.inBounds(9,pawnUnit/6,24));
+		Font textFont  = FontUtil.newFont("SansSerif",Font.PLAIN, (float)Util.inBounds(9,getHeight()/48,24));
 
 		g.setFont(textFont);
 		g.setColor(Color.black);
@@ -238,28 +186,29 @@ public class EvalView
 		//  paint horizontal tick marks
 		int first = values.firstMove();
 		int p = first-first%5+5;
-
+		int height = getHeight();
 		for (;; p += 5)
 		{
 			int x = (p-first-1)*BAR_WIDTH;
 			if (x > width) break;
 
-			g.drawLine(x,middle-TICK_HEIGHT/2, x,middle+TICK_HEIGHT/2);
+			g.drawLine(x,(height-TICK_HEIGHT)/2, x,(height+TICK_HEIGHT)/2);
 			if (x > 0)
 				g.drawString(String.valueOf(p),
-				        x, middle+(int)textBounds.getHeight());
+				        x, height/2+(int)textBounds.getHeight());
 		}
 	}
 
 	protected void paintVerticalAxis(Graphics g)
 	{
 		int width = getWidth();
+		int height = getHeight();
 
 		String figFontName = Application.theUserProfile.getStyleAttribute("body.figurine",
 		                            StyleConstants.FontConstants.Family);
 		//  TODO use CSS.Attributes
 		FontEncoding enc = FontEncoding.getEncoding(figFontName);
-		Font figFont = FontUtil.newFont(figFontName,Font.PLAIN, (float)Util.inBounds(6,(int)pawnUnit/2,24));
+		Font figFont = FontUtil.newFont(figFontName,Font.PLAIN, (float)Util.inBounds(6,(int)height/16,24));
 
 		Rectangle2D pawnBounds = g.getFontMetrics(figFont).getStringBounds("p",g);
 		int tickInset = (int)(pawnBounds.getWidth()/4);
@@ -268,27 +217,9 @@ public class EvalView
 		g.setFont(figFont);
 		g.setColor(Color.lightGray);
 
-		int step = 1;
-		if (maxPawn >= 8) step = 2;
-		if (maxPawn >= 16) step = 4;
-
-		for (int i=step; i <= maxPawn; i += step)
+		for (int i=-4; i <= +4; i++)
 		{
-			int y = middle - (int)Math.round(i*pawnUnit);
-			//  pawns
-			int figWidth = drawFigs(0,y,getFigText(i,enc), g,figFont);
-			//  ticks
-			g.drawLine(0,y, tickInset,y);
-			g.drawLine((int)(figWidth-tickInset),y, width,y);
-		}
-
-		step = -1;
-		if (maxPawn <= -8) step = -2;
-		if (maxPawn <= -16) step = -4;
-
-		for (int i=step; i >= minPawn; i += step)
-		{
-			int y = middle - (int)Math.round(i*pawnUnit);
+			int y = height/2 - i*height/8;
 			//  pawns
 			int figWidth = drawFigs(0,y,getFigText(i,enc), g,figFont);
 			//  ticks
@@ -335,50 +266,36 @@ public class EvalView
 
 	protected void paintValues(Graphics g)
 	{
-		int height = getHeight();
-
 		//  paint bars !
 		int first = values.firstMove();
 		int last = values.moveCount();
+		float[] svalue = new float[2];
 
 		for (int p = first; p < last; p++)
 		{
-			int value = values.moveValue(p);
-			if (value==Score.UNKNOWN) continue;
-
-			double barheight;
-			String text = null;
-
-			if (value >= Score.WHITE_MATES) {
-				text = "#"+((value-Score.WHITE_MATES+1)/2);
-				barheight = middle;
-			}
-			else if (value <= Score.BLACK_MATES) {
-				text = "#"+((Score.BLACK_MATES-value+1)/2);
-				barheight = middle-height;
-			}
-			else
-				barheight = (double)value/100.0*pawnUnit;
-
-			paint1Value((Graphics2D)g, p-first,
-			        (int)Math.floor(barheight+0.5), text);
+			float[] value = values.moveValue(p,svalue);
+			paint1Value((Graphics2D)g, p-first, value);
 		}
 	}
 
-	protected void paint1Value(Graphics2D g, int offset, int height, String text)
+	protected void paint1Value(Graphics2D g, int offset, float[] value)
 	{
-		int x = offset*BAR_WIDTH;
+		if (value==null || Float.isNaN(value[0]) || Float.isNaN(value[1])) return;
 
-		if (height >= 0)
-		{
-			g.setPaint(goodPaint);
-			g.fillRect(x, middle-height, BAR_WIDTH, height+1);
-		}
-		else
-		{
-			g.setPaint(badPaint);
-			g.fillRect(x, middle, BAR_WIDTH, -height+1);
-		}
+		int x = offset*BAR_WIDTH;
+		int height = getHeight();
+
+		int p1 = (int)(height*(1.0f - value[0]-value[1]));
+		int p2 = (int)(height*(1.0f - value[0]));
+
+		g.setPaint(Color.black);
+		g.fillRect(x, 0, BAR_WIDTH, p1);
+
+		g.setPaint(Color.gray);
+		g.fillRect(x, p1, BAR_WIDTH, p2);
+
+		g.setPaint(Color.white);
+		g.fillRect(x, p2, BAR_WIDTH, height);
 	}
 
 
@@ -398,6 +315,8 @@ public class EvalView
 		engine = null;
 	}
 
+	private static float[] svalue = new float[2];
+
 	public void handleMessage(Object source, int what, Object data)
 	{
 		switch (what)
@@ -405,15 +324,19 @@ public class EvalView
 		case EnginePlugin.THINKING:
 //		case EnginePlugin.PONDERING:
 		case EnginePlugin.ANALYZING:
+			EnginePlugin plugin = (EnginePlugin)source;
 			AnalysisRecord a = (AnalysisRecord)data;
-			if (a!=null) setValue(a.ply/2, a.eval[0].cp,false);
+			if (a!=null) {
+				float[] value = plugin.mapUnitWDL(a.eval[0],svalue);
+				setValue(a.ply/2, value);
+			}
 			break;
 
 		case EnginePlugin.PLUGIN_MOVE:
 			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
 			int ply = emv.getPly();
 
-			setValue(ply/2, emv.getValue(),true);
+			setValue(ply/2, emv.mappedValue());
 
 			if (game!=null) {
 				//  is this the right place to do this ??

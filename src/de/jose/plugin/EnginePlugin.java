@@ -838,7 +838,7 @@ abstract public class EnginePlugin
 	{
 		public int ply;
 		public Score score = new Score();
-		public double[] mappedScore = new double[3];
+		public float[] mappedScore = new float[2];
 
 		public EvaluatedMove(Move move, int ply, int value, int flags)
 		{
@@ -863,7 +863,8 @@ abstract public class EnginePlugin
 		}
 
 		public int getPly()             { return ply; }
-		public int getValue()           { return score.cp; }
+		public int centipawnValue()		{ return score.cp;}
+		public float[] mappedValue()    { return mappedScore; }
 		public boolean isValid()        { return score.cp > Score.UNKNOWN; }
 		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
 		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
@@ -892,7 +893,7 @@ abstract public class EnginePlugin
 	{
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			double[] value = node.engineValue;
+			float[] value = node.engineValue;
 			//  value is from white's point of view !
 			if (value==null)
 				return false; //  unknown value
@@ -900,7 +901,7 @@ abstract public class EnginePlugin
 
 			double dont_lose;
 			if (EngUtil.isBlack(engineColor))
-				dont_lose = value[1]+value[2];
+				dont_lose = 1.0f - value[0];
 			else
 				dont_lose = value[0]+value[1];
 			if (dont_lose >= EnginePlugin.RESIGN_THRESHOLD)
@@ -922,7 +923,7 @@ abstract public class EnginePlugin
 
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
-			double[] value = node.engineValue;
+			float[] value = node.engineValue;
 			//	todo mapUnitWDL(Score) !!
 
 			if (value == null)
@@ -934,7 +935,7 @@ abstract public class EnginePlugin
 			}
 			else
 			{
-				if (Math.abs(value[0]-value[2]) > DRAW_THRESHOLD)
+				if (Math.abs(2*value[0] + value[1] - 1.0f) > DRAW_THRESHOLD)
 					return false;
 			}
 
@@ -1063,18 +1064,18 @@ abstract public class EnginePlugin
 	 * @param sc
 	 * @return value in [0..1]
 	 */
-	public double mapUnit(Score sc) {
+	public float mapUnit(Score sc) {
 		assert(sc.cp >= Score.UNKNOWN);
 		//	we assume arbitrary, but practicable, upper limits for centipawns
 		//	fitting the eval bar (4 squares = 4 pawn units = 400 centipawns
 		return mapUnit(sc.cp,-400,+400);
 	}
 
-	protected double mapUnit(int cp, int cpmin, int cpmax) {
-		if (cp >= cpmax) return 1.0;
-		if (cp <= cpmin) return 0.0;
+	protected float mapUnit(int cp, int cpmin, int cpmax) {
+		if (cp >= cpmax) return 1.0f;
+		if (cp <= cpmin) return 0.0f;
 		//	derived classes may implement different mappings, e.g. for percentage scores, etc.
-		return (double) (cp - cpmin) / (cpmax - cpmin);
+		return (float) (cp - cpmin) / (cpmax - cpmin);
 	}
 
 	/**
@@ -1082,22 +1083,20 @@ abstract public class EnginePlugin
 	 * @param sc
 	 * @return double[3] for white wins, draw, black wins
 	 */
-	public double[] mapUnitWDL(Score sc, double[] result)
+	public float[] mapUnitWDL(Score sc, float[] result)
 	{
 		if (result==null)
-			result = new double[3];
+			result = new float[2];
 		if (!sc.hasWDL()) {
 			//	use linear score
 			result[0] = mapUnit(sc);
-			result[1] = 0.0;
-			result[2] = 1.0-result[0];
+			result[1] = 0.0f;
 			return result;
 		}
 		else {
 			int sum = sc.sumWDL();
-			result[0] = (double)sc.win / sum;
-			result[1] = (double)sc.draw / sum;
-			result[2] = (double)sc.lose / sum;
+			result[0] = (float)sc.win / sum;
+			result[1] = (float)sc.draw / sum;
 		}
 		return result;
 	}
