@@ -919,21 +919,12 @@ public class Game
 		if (a.is(LINE_NODE)) {
 			//	swap with sibling
 			V.swap(a);
-
-			/* todo necessary ?
-			updateLabels(V);
-			updateLabels((LineNode)a);
-
-			//updateMoveCount(V.first());
-			//updateMoveCount(a);
-			*/
 			return;
 		}
 
 		/**
 		 * see doc/Promotion.drawio.svg
-		 *
-		 * identify four sections
+		 * identify four sections:
 		 */
 		NodeSection A,B, C=null,D=null;
 		assert(a.is(MOVE_NODE) && a instanceof MoveNode);
@@ -942,9 +933,8 @@ public class Game
 		B = new NodeSection(V.first(),V.last());
 
 		MoveNode d = (MoveNode)V.next(MOVE_NODE);
-		if (d!=null) {
+		if (d!=null)
 			D = new NodeSection(d,P.last());
-		}
 
 		MoveNode c = V.secondMove();
 		if (c!=null) {
@@ -960,8 +950,6 @@ public class Game
 
 		//	swap A with B (A and B must not be empty)
 		A.swap(B);
-		setDirty();
-
 		//	swap C with D (border cases if C or D are empty)
 		if (C!=null && D!=null) {
 			C.swap(D);
@@ -974,7 +962,7 @@ public class Game
 			//	put C in place of (empty) D
 			C.remove();
 			//	put C at the end of P. but before static text and result
-			//	todo can we model and *empty* NodeSection better ?
+			//	todo can we model an *empty* NodeSection better ?
 			D = new NodeSection(V.next(),P.last());
 			Node d1 = D.trimRight(STATIC_TEXT_NODE,RESULT_NODE).last();
 			if (d1.is(STATIC_TEXT_NODE) || d1.is(RESULT_NODE))
@@ -982,6 +970,7 @@ public class Game
 			else
 				C.insertAfter(d1);
 		}
+		setDirty();
 	}
 
 
