@@ -13,6 +13,7 @@ import java.awt.*;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class DBRepairTool
     extends JoDialog {
@@ -65,7 +66,8 @@ public class DBRepairTool
 
         addButton("dialog.button.next");
         addButton("dialog.button.close");
-        addButton("menu.file.quit");
+        JButton quit = addButton("dialog.button.quit");
+        quit.setText(Language.get("menu.file.quit"));
 
         updateLabels(stage = 0, false);
 
@@ -123,8 +125,8 @@ public class DBRepairTool
                     switch (stage) {
                         case 1: closeDBWindow(); break;
                         case 2: shutdownDB(); break;
-                        case 3: checkIndexes(false); break;
-                        case 4: checkIndexes(true); break;
+                        case 3: /*checkIndexes(false);*/ break;
+                        case 4: /*checkIndexes(true);*/ break;
                         case 5: launchDB(); break;
                         case 6: gameRepair(); break;
                         case 7: openDBWindow(); break;
@@ -143,7 +145,7 @@ public class DBRepairTool
                 Application.theApplication.quit(cmd);
             }
         };
-        map.put("menu.file.quit", action);
+        map.put("dialog.button.quit", action);
     }
 
     protected void closeDBWindow() {
@@ -183,11 +185,11 @@ public class DBRepairTool
     protected void checkIndexes(boolean repair) throws IOException, InterruptedException {
         String[] tables = { "MetaInfo", "Collection", "Game", "MoreGame", "Player", "Event", "Site", "Opening" };
         Process proc = MySQLAdapter.repairIndexes(tables,repair);
-        pipeOutput(proc);
+        pipeOutput(proc);   //  todo move to worker thread
         int result = proc.waitFor();
     }
 
-    protected void launchDB() {
+    protected void launchDB() throws IOException, InterruptedException {
         MySQLAdapter ad = (MySQLAdapter)JoConnection.getAdapter(true);
         Thread launcher = ad.launchProcess(false);
         while(launcher.isAlive())

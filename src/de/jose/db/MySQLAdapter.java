@@ -455,7 +455,7 @@ public class MySQLAdapter
 		ProcessBuilder pb = new ProcessBuilder(args);
 		pb.directory(new File(mysqldir,"jose"));
 		pb.redirectErrorStream(true);
-		pb.redirectOutput(ProcessBuilder.Redirect.PIPE);
+		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 		return pb.start();
 	}
 
@@ -640,8 +640,11 @@ public class MySQLAdapter
 			System.err.println();
 		}
 
-		Process result = Runtime.getRuntime().exec(commandArray,envArray);
-		Runtime.getRuntime().addShutdownHook(killProcess = new KillMySqlProcess(serverProcess));
+		Runtime runtime = Runtime.getRuntime();
+		Process result = runtime.exec(commandArray,envArray);
+		if (killProcess!=null)
+			runtime.removeShutdownHook(killProcess);
+		runtime.addShutdownHook(killProcess = new KillMySqlProcess(serverProcess));
 		return result;
 	}
 /*
