@@ -278,6 +278,7 @@
 			</zipfileset>
 			<zipfileset dir="fonts" prefix="fonts">
 				<include name="FIG-??-2.TTF"/>
+				<include name="FontAwesome.otf"/>
 			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
@@ -290,6 +291,8 @@
 			</zipfileset>
 			<zipfileset dir="config" prefix="config">
 				<include name="fonts.xml"/>
+				<include name="menu.xml"/>
+				<include name="toolbars.xml"/>
 				<include name="lang.properties*"/>
 			</zipfileset>
 			<zipfileset dir="doc" prefix="doc">

@@ -6,7 +6,7 @@
 	<!-- File Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.file">
-		<item id="menu.file.new"			icon="\uf15b:#ffffff:#000000" 	key="control N"/>
+		<item id="menu.file.new"			icon="\uf016:#ffffff:#000000" 	key="control N"/>
 		<item id="menu.file.new.from.here"	icon="\uf56d:#ffffff:#000000" 	key="control shift N"/>
 		<item id="menu.file.new.frc" key="control alt N"/>
 		<item id="menu.file.new.shuffle"/>
@@ -17,11 +17,11 @@
 		<item id="menu.file.close"									key="control W"/>
 		<item id="menu.file.save"			icon="\uf0ba:#000080"	key="control S"/>
 		<item id="menu.file.save.all"		icon="\uf0bb:#800080"	key="F2"/>
-		<item id="menu.file.save.copy"		icon="\uf0ba:#800000"/>
-		<item id="menu.file.save.as" 		icon="\uf0ba:#0000dd"	key="control shift S"/>
+		<item id="menu.file.save.copy"		icon="\uf0bc:#800000"/>
+		<item id="menu.file.save.as" 		icon="\uf0bd:#0000bb"	key="control shift S"/>
 		<item id="menu.file.revert"/>
 		<separator/>
-		<item id="menu.file.print"			icon="\uf02f:#ddddff" key="control P"/>
+		<item id="menu.file.print"			icon="\uf02f:#4040ff" key="control P"/>
 		<item id="menu.file.print.setup" key="control shift P"/>
 		<item id="menu.file.print.preview"/>
 		<separator hide="mac"/>
