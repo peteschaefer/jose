@@ -5,7 +5,7 @@
 ? Charter buggy
 
 [x] asynch book lookups (branch async-book)
-[ ] Eval Bar drawing glitches (paintImmediately?)
+[ ] Eval Bar, Graph drawing glitches (paintImmediately?)
 [?] paint eval bar frame
 
 [ ] game vs. opening explorer:
@@ -16,16 +16,20 @@
     [x] pause button should pause engine;
         book is shown in both, USER_INPUT and ANALYSIS
     [?] no duplicate Book Queries
-[x] fix pause button activation
-[?] fix play button activation
-[ ] fix hint button activation
-[ ] fix hint button behavior
+[x] pause button activation
+[?] play button activation
+[ ] hint button activation
+[ ] hint button behavior
     switch(engine state)
     case THINKING:  hint disabled
     case PONDERTING: hint = ponder move
-    case ANAYLSIS: hint = current analysis (with arrows)
+    case ANAYLSIS: hint = current analysis (arrows)
     case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
-    -> no need for PLUGIN_REQUESTED_HINT
+    -> no need for PLUGIN_REQUESTED_HINT messaging
+
+[ ] test with/without book
+[ ] test with/without engine
+[ ] test input/analysis/play
 
 === Database Bugs
 
@@ -101,19 +105,21 @@ Alternative JREs:
 
 ==== Interesting New Features
 
+* Logos: Engine, Lichess, User
+    - in engine panel (info label)
+    - eval bar
+    - svg
+    - document? (would have to be stored in db :(
+
 * threat arrows
     -> like hint, but with reversed color
     - take care to never play a threat move, actually !
 
-* heuristic: figurines in Opening names (like from Eco)
+* Figurines in Opening names (like from Eco)
+  - heuristic to detect moves
   - for any language
 
 * LiChess Opening Explorer
-    [x] download top games for a variation
-    [x] show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)
-    [x] insert as sub-lines (most convenient, but a lot of text)
-    [x] open in tab
-    [x] copy to local db
     [ ] MoreGame.ExternalKey (:=Lichess GameId)
 
 * replace Nalimov query with Lichess tablebase query
