@@ -58,11 +58,11 @@ mysqld 5.0.24a i686 from 11-07-2005
    [ ] bundle stockfish
    [-] Quaqua
    [-] VAqua
-   [ ] default lnf
+   [x] default lnf
    [ ] Print Preview
    [x] make jose.sh executable: shc
    [-] port JavaLauncher
-   [ ] problem with MRJAdapter? Main > Quit hangs
+   [x] upgrade mrjadapter 1.3
 
 [ ] "Apple Silicon"
     [ ] jdk1.8, 11 (not 9?) is available from Oracle :)

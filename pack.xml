@@ -594,18 +594,19 @@
 			<zipfileset dir="bin/Mac" prefix="${appldir}/bin/Mac" filemode="775">
 				<!--include name="Mac/unrar"/-->
 				<include name="mysqld"/>
+				<include name="mysqladmin"/>
 			</zipfileset>
 			<zipfileset dir="lib/Mac" prefix="${appldir}/lib/Mac">
 				<include name="MRJAdapter.jar"/>
 				<!--<include name="libmysqlje.jnilib"/>-->
-                <include name="libquaqua.jnilib"/>
-				<include name="libquaqua64.jnilib"/>
-				<include name="libquaqua64.dylib"/>
+                <!--include name="libquaqua.jnilib"/-->
+				<!--include name="libquaqua64.jnilib"/-->
+				<!--include name="libquaqua64.dylib"/-->
 			</zipfileset>
-            <zipfileset dir="lib/plaf" prefix="${appldir}/lib/plaf">
+            <!--zipfileset dir="lib/plaf" prefix="${appldir}/lib/plaf">
                 <include name="quaqua.jar"/>
 				<include name="VAaqua13.jar"/>
-            </zipfileset>
+            </zipfileset-->
 			<zipfileset dir="lib/jdbc" prefix="${appldir}/lib/jdbc">
 			    <include name="mysql.jar"/>
 			</zipfileset>

@@ -53,7 +53,7 @@
 		<pathelement location="lib/plaf/skinlf.jar"/>
 <!--        <pathelement location="lib/plaf/nativeskin.jar"/>-->
 		<pathelement location="lib/jdbc/mysql.jar"/>
-		<pathelement location="lib/Mac/MRJAdapter.jar"/>
+		<pathelement location="lib/Mac/mrjadapter-1.3.jar"/>
 <!--		<pathelement location="lib/jdbc/jds.jar"/>-->
 <!--		<pathelement location="lib/lucene.jar"/>-->
 	</path>
