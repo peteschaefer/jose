@@ -13,7 +13,9 @@
 package de.jose.export;
 
 import de.jose.profile.FontEncoding;
+import de.jose.util.FontUtil;
 import de.jose.util.file.FileUtil;
+import de.jose.view.style.JoFontConstants;
 import de.jose.view.style.JoStyleContext;
 import de.jose.chess.Constants;
 import de.jose.chess.EngUtil;
@@ -39,6 +41,8 @@ import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static de.jose.pgn.PgnConstants.NAG_MAX;
+
 /**
  * @author Peter Schäfer
  */
@@ -60,17 +64,65 @@ public class HtmlUtil
 		createFigurineImages(context.styles, figStyle, targetDir);
 
 		Style inlineStyle = context.styles.getStyle("body.inline");
-		Font font = context.styles.getFont(inlineStyle);
-		createInlineImages(font,targetDir);
+		Font inlineFont = context.styles.getFont(inlineStyle);
+		createInlineImages(inlineFont,targetDir);
 
 		//  create diagrams for JavaScript
 		if (ExportConfig.getBooleanParam(context.config,"large-icons",false)) {
 			//  use style "html.large"
 //			int size = context.profile.getInt("xsl.dhtml.diasize",20);  //  OLD
 			Style diaStyle = context.profile.getStyleContext().getStyle("html.large");
-			font = context.styles.getFont(diaStyle);
-			createInlineImages(font,targetDir);
+			Font diaFont = context.styles.getFont(diaStyle);
+			createInlineImages(diaFont,targetDir);
 		}
+
+		//	create annotation symbols "nag-xx.png"
+		Style symbolStyle = context.styles.getStyle("body.symbol");
+		if (symbolStyle != null) {
+			Font symbolFont = context.styles.getFont(symbolStyle);
+			String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
+			FontEncoding fontEncoding = FontEncoding.getEncoding(fontFamily);
+			File subDir = new File(targetDir,inlineFont.getFamily()+"/"+inlineFont.getSize());
+			//	note we abuse the same directory as inline figurines
+			createAnnotationImages(symbolFont,fontEncoding,subDir);
+		}
+	}
+
+	private static void createAnnotationImages(Font symbolFont, FontEncoding fontEncoding, File subDir) throws Exception
+	{
+		Set<Character> syms = new HashSet<>();
+		//symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 16);
+		for(int i=0; i < NAG_MAX; ++i) {
+			String sym = fontEncoding.getSymbol(i);
+			if (sym==null) continue;
+			char c = sym.charAt(0);
+			if (syms.contains(c)) continue;
+			syms.add(c);
+			String filename = "nag-"+Integer.toHexString(c)+".png";
+			//	todo create annotation symbols "nag-xx.png"
+			createAnnotationImage(symbolFont,sym,subDir,filename);
+		}
+	}
+
+	private static void createAnnotationImage(Font font, String sym, File subDir, String fileName) throws Exception {
+		File targetFile = new File(subDir,fileName);
+		if (targetFile.exists()) return;
+
+		subDir.mkdirs();
+
+		int size = font.getSize();
+
+		Rectangle bounds = new Rectangle();
+		BufferedImage img1 = new BufferedImage(size,size,BufferedImage.TYPE_4BYTE_ABGR);
+		BufferedImage img0 = FontCapture.capture1(font.getFamily(),font.getSize(), sym,
+				WHITE,BLACK,bounds, false, false);
+
+		img1.getGraphics().drawImage(img0,
+				bounds.x, bounds.y,
+				bounds.x+bounds.width, bounds.y+bounds.height,
+				0,0, bounds.width,bounds.height, null);
+
+		ImgUtil.writePng(img1,targetFile);
 	}
 
 	public static void createCSS(ExportContext context, File xslFile, File targetFile) throws Exception

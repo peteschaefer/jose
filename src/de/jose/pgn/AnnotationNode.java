@@ -144,8 +144,10 @@ public class AnnotationNode
 
 		handler.startElement("a");
 			handler.element("nag",code);
-			if (symText!=null) //  use symbol font (if available)
-				handler.element("sym",symText);
+			if (symText!=null) {//  use symbol font (if available)
+				handler.element("sym", symText);
+				handler.element("chr", Integer.toHexString(symText.charAt(0)));
+			}
 			handler.element("text",plainText);
 		handler.endElement("a");
 	}

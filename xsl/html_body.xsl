@@ -55,9 +55,28 @@
 
 	<!-- Annotation -->
 	<xsl:template match="a">
-		<xsl:value-of select="text"/>
+		<xsl:choose>
+			<xsl:when test="$imgfig and count(sym)&gt;0">
+				<img border="0">
+					<xsl:attribute name="src">
+						<xsl:value-of select="$inlineurl"/><xsl:text>/nag-</xsl:text>
+						<xsl:value-of select="chr"/><xsl:text>.png</xsl:text>
+					</xsl:attribute>
+					<xsl:attribute name="alt">
+						<xsl:value-of select="text"/>
+					</xsl:attribute>
+					<xsl:attribute name="title">
+						<xsl:value-of select="text"/>
+					</xsl:attribute>
+				</img>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- plain text -->
+				<xsl:value-of select="text"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Comment -->
 	<xsl:template match="c">
 		<xsl:param name="style" select="concat('body.comment.',../depth)"/>

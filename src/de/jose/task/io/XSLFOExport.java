@@ -105,13 +105,13 @@ public class XSLFOExport
 		FOPUtil.config();
 		if (styles!=null)
 			FOPUtil.assertFontMetrics(styles,true,embed_fonts);
-        /** note that this doesn't work for inlined styles !
+        /* note that this doesn't work for inlined styles !
          *  inlined styles are parsed directly from the DB, so there's little chance to fetch the fonts
          *  before processing them...
          *  @see de.jose.util.style.MarkupParser
          * */
 
-		/** transform source via XSL into XSL-FO    */
+		/* transform source via XSL into XSL-FO    */
 		if (FileUtil.hasExtension(targetName,"txt"))
 			driver = FOPUtil.getDriver(Driver.RENDER_TXT);
 		else if (FileUtil.hasExtension(targetName,"ps"))

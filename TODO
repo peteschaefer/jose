@@ -103,8 +103,10 @@ Alternative JREs:
     [-] most recent list
     [x] make a demo pgn with all nags.
     [x] print preview
-    [ ] prints as pdf (font is recognized, but wrong Unicodes !)
-    [ ] print as html (copy glyphs to disk)
+    [x] prints as pdf (font is recognized, font metrics were out-of-date)
+    [x] print as html (copy glyphs to disk)
+    [ ] bump version 1.5.3
+    [ ] ant package jose-153-patch
 
 * font awesome icons
 

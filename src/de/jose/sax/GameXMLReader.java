@@ -292,7 +292,7 @@ public class GameXMLReader extends CSSXMLReader implements GameHandler
 
 	/**
 	 * Generates SAX events for a ProjectMember object.
-	 * @param game Game object to use
+	 * @ param GId Game object to use
 	 * @throws org.xml.sax.SAXException In case of a problem during SAX event generation
 	 * /
 	protected Game createGame(int GId) throws IOException,SAXException
