@@ -1204,11 +1204,7 @@ public class EnginePanel
 		if (Application.theApplication.getEnginePlugin() != null)
 			connectTo(Application.theApplication.getEnginePlugin());
 
-		try {
-			Application.theApplication.updateBook(false,false);   //  is this the right place ?
-		} catch (IOException e) {
-			Application.error(e);
-	}
+		Application.theApplication.updateBook(false,false);   //  is this the right place ?
 	}
 
 	protected void connectTo(EnginePlugin plugin)
@@ -1542,7 +1538,8 @@ public class EnginePanel
 					/* stay in engine mode */;
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					Application.theApplication.updateBook(wasEngineMove,!wasEngineMove); // todo switchAnalysis ??
+					Application.theApplication.updateBook(wasEngineMove,
+					!wasEngineMove && Application.theApplication.theMode==Application.ANALYSIS);
 				}
 			}
 		};

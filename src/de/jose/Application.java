@@ -1929,11 +1929,9 @@ public class Application
 					//	switch from Book to Engine analysis
 					startEngineAnalysis(true);
 				}
-				else try {
+				else {
 					updateBook(false,true);
 					//	todo call asynch, switch to engine analysis on completion
-				} catch (IOException e) {
-					error(e);
 				}
 			}
 		};
@@ -2349,7 +2347,6 @@ public class Application
 	}
 
 	public void updateBook(boolean onEngineMove, boolean switchAnalysis)
-			throws IOException
 	{
 		boolean inBook;
 		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
@@ -2365,6 +2362,23 @@ public class Application
 			BookQuery query = new BookQuery(pos,switchAnalysis);
 			theExecutorService.submit(query);
 			//	will call back with message BOOK_RESPONSE
+		}
+	}
+
+	private void onBookUpdate(BookQuery query, Position pos)
+	{
+		if (!query.isValid())
+			return;
+
+		EnginePanel eng = enginePanel();
+		if (!query.result.isEmpty()) {
+			eng.showBook(query.result, pos);
+		}
+		else {
+			eng.exitBook();
+			//	when out of book, switch to Engine
+			if (query.switchEngineAnalysis)
+				startEngineAnalysis(true);
 		}
 	}
 
@@ -3180,19 +3194,7 @@ public class Application
 
 		case Plugin.BOOK_RESPONSE:
 			BookQuery query = (BookQuery)data;
-			if (!query.isValid())
-				break;
-
-			EnginePanel eng = enginePanel();
-			if (!query.result.isEmpty()) {
-				eng.showBook(query.result, pos);
-			}
-			else {
-				eng.exitBook();
-				//	when out of book, switch to Engine
-				if (query.switchEngineAnalysis)
-					startEngineAnalysis(true);
-			}
+			onBookUpdate(query, pos);
 			break;
 		}
 	}
