@@ -169,7 +169,7 @@ public class LiChessOpeningExplorer extends OpeningBook
 
                 if (bk!=null) {
                     bk.gameRefs.add(ref);
-                    System.out.println(ref);
+                    //System.out.println(ref);
                 }
             }
 
@@ -205,6 +205,7 @@ public class LiChessOpeningExplorer extends OpeningBook
         Runnable job = new Runnable() {
             @Override
             public void run() {
+                PGNImport reader = null;
                 try {
                     int CId = Collection.DOWNLOADS_ID;
                     JoConnection conn = null;
@@ -215,12 +216,12 @@ public class LiChessOpeningExplorer extends OpeningBook
                         if (conn!=null) conn.release();
                     }
 
-                    //  DEBug
-                    HttpsUtil.acceptAll();
                     String urlStr = downloadUrl+"/"+lichessId+"?evals=false&literate=true";
                     URL url = new URL(urlStr);
 
-                    PGNImport reader = PGNImport.newPgnImporter(CId,url);
+                    reader = PGNImport.newPgnImporter(CId,url);
+                    reader.setSilentTime(2000);
+
                     //  todo choose Idx
                     reader.start();
                     reader.join();
@@ -229,6 +230,9 @@ public class LiChessOpeningExplorer extends OpeningBook
                     //  fetch inserted Game.Id
                     int GId = reader.getLastGameId();
                     //  open in Tab
+                } catch(FileNotFoundException e) {
+                  //    this can happen if the advertised ID is not available
+                  //    not our fault :(
                 } catch (Exception e) {
                     Application.error(e);
                 }

@@ -37,10 +37,7 @@ import de.jose.task.GameSource;
 import de.jose.task.GameTask;
 import de.jose.task.db.*;
 import de.jose.task.io.*;
-import de.jose.util.AWTUtil;
-import de.jose.util.ClipboardUtil;
-import de.jose.util.StringUtil;
-import de.jose.util.WinUtils;
+import de.jose.util.*;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.PrintableDocument;
 import de.jose.util.xml.XMLUtil;
@@ -3359,6 +3356,9 @@ public class Application
 	public void open()
 		throws Exception
 	{
+		//  DEBug: don't check SSL certificates on download (because pgn files are not that critical in the first place)
+		HttpsUtil.acceptAll();
+
 		/**	load user profile		 */
 		readProfile();
 

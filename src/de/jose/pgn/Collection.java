@@ -193,12 +193,13 @@ public class Collection
 	public static int makeDownloads(JoConnection conn) throws SQLException {
 		String sql =
 			"INSERT IGNORE INTO Collection "+
-			" VALUES (?,null,null, ?, ?, 16, '-', {fn now()}, 0) ";
+			" VALUES (?,null,null, ?, ?, ?, '-', {fn now()}, 0) ";
 
 		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
 		pstm.setInt(1,DOWNLOADS_ID);
 		pstm.setString(2,"collection.downloads");
 		pstm.setString(3,DOWNLOADS_PATH);
+		pstm.setInt(4, SYSTEM);
 		boolean ok = pstm.execute();
 		return DOWNLOADS_ID;
 	}
