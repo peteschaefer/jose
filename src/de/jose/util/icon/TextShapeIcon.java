@@ -44,6 +44,9 @@ public class TextShapeIcon extends TextIcon
         Graphics2D g2 = (Graphics2D) g;
         save(g2);
 
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
         AffineTransform tf1 = AffineTransform.getTranslateInstance(x+insets.left, y+insets.top+ascent);
         AffineTransform tf2 = g2.getTransform();
         tf1.preConcatenate(tf2);
@@ -52,8 +55,6 @@ public class TextShapeIcon extends TextIcon
         g2.setColor(bgColor);
         ImgUtil.fill(g2,mask);
 
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setFont(font);
         g2.setColor(color);
 

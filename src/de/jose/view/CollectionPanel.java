@@ -23,6 +23,9 @@ import de.jose.profile.LayoutProfile;
 import de.jose.task.DBSelectionModel;
 import de.jose.task.GameSource;
 import de.jose.task.DBTask;
+import de.jose.util.FontUtil;
+import de.jose.util.icon.TextIcon;
+import de.jose.util.icon.TextShapeIcon;
 import de.jose.util.map.IntHashSet;
 import de.jose.util.IntArray;
 import de.jose.view.dnd.GameTransferHandler;
@@ -45,13 +48,6 @@ public class CollectionPanel
 	//-------------------------------------------------------------------------------
 	//	Constants
 	//-------------------------------------------------------------------------------
-
-	public static final ImageIcon	CLOSED_ICON		= ImgUtil.getMenuIcon("folder");
-	public static final ImageIcon	OPEN_ICON		= ImgUtil.getMenuIcon("folder.open");
-	public static final ImageIcon	CLIPBOARD_ICON	= ImgUtil.getMenuIcon("clipboard");
-	public static final ImageIcon	TRASH_ICON		= ImgUtil.getMenuIcon("trash");
-	public static final ImageIcon	AUTOSAVE_ICON	= ImgUtil.getMenuIcon("menu.file.save");
-	public static final ImageIcon	EMPTY_ICON		= ImgUtil.getMenuIcon("folder.grey");
 
 	//-------------------------------------------------------------------------------
 	//	Fields
@@ -224,6 +220,14 @@ public class CollectionPanel
 		{
 			Collection coll = ((CollectionTreeNode)value).getCollection();
 			int cid = (coll!=null) ? coll.Id : 0;
+
+			float iconSize = 13.f;
+			final Icon	CLOSED_ICON		= new TextShapeIcon("\uf07b", FontUtil.fontAwesome(),iconSize,Color.decode("#dede63"),Color.black);
+			final Icon	OPEN_ICON		= new TextShapeIcon("\uf07c", FontUtil.fontAwesome(),iconSize,Color.decode("#eeee63"),Color.black);
+			final Icon	CLIPBOARD_ICON	= new TextShapeIcon("\uf328", FontUtil.fontAwesome(),iconSize,Color.decode("#808000"),Color.white);
+			final Icon	TRASH_ICON		= new TextShapeIcon("\uf1f8", FontUtil.fontAwesome(),iconSize,Color.decode("#666666"),Color.lightGray);
+			final Icon	AUTOSAVE_ICON	= new TextShapeIcon("\uf0c7", FontUtil.fontAwesome(),iconSize,Color.decode("#800000"),Color.white);
+			final Icon	EMPTY_ICON		= new TextShapeIcon("\uf07b", FontUtil.fontAwesome(),iconSize,Color.decode("#a0a0a0"),Color.black);
 
 			switch (cid) {
 			case Collection.TRASH_ID:			setIcon(TRASH_ICON,leaf,expanded); break;
