@@ -39,6 +39,10 @@
     [x] Windows: (-) fixes BLE?
     [ ] Linux ?
 
+Alternative: JBR 21 x86
+ -> all the benefits of JBR, keep old binaries (mysql-je!)
+ [ ] bug: can not load 32bit dll's. Wait for fix? Get a workaround?
+
 ==== macOS
 
 [ ] Java3D 1.5.1 for Mac Intel
