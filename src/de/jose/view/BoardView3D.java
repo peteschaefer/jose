@@ -1246,7 +1246,7 @@ public class BoardView3D
 			}
 			else if (couldBePromotion(mouseMove)) {
 				/*	show popup	*/
-				Point p = getScreenLocation(destSquare);
+				Point p = getLocationOnScreen(destSquare);
 				showPromotionPopup(board.movesNext(), p);
 				/*	when the user selects an item, mouseEnd will be called again	*/
 				return;
@@ -1270,7 +1270,9 @@ public class BoardView3D
 	/**
 	 * calculate the location of a square <b>in screen coordinates</b>
 	 */
-	public Point getScreenLocation(int square)
+
+	@Override
+	public Point getLocationOnScreen(int square)
 	{
 		Point3d local = new Point3d();
 		local.x = (EngUtil.fileOf(square)-FILE_A-4)*PieceGroup.squareSize;

@@ -855,8 +855,8 @@ dialog.about.3	=	<b>T³umacze:</b><br>\
 			Hans Bodlaender \
 			(www.chessvariants.com/d.font/fonts.html) <br>\
 			<br>\
-			<b>Interfejs Metouia:</b> <br>\
-			Taoufik Romdhane (mlf.sourceforge.net)<br>\
+			<b>Interfejs FlatLaf:</b> <br>\
+               FormDev Software (www.formdev.com/flatlaf)<br>\
 			<br>\
 			<b>Modelowanie 3D:</b> <br>\
 			Renzo Del Fabbro, \

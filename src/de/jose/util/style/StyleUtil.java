@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,16 +12,21 @@
 
 package de.jose.util.style;
 
+import de.jose.Application;
+import de.jose.Version;
+import de.jose.image.Surface;
+import de.jose.util.WinRegistry;
 import de.jose.view.style.JoFontConstants;
 import de.jose.Util;
 
+import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 
 /**
  * StyleUtil
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class StyleUtil
@@ -120,6 +125,68 @@ public class StyleUtil
         return !Util.equals(StyleConstants.getFontFamily(style), StyleConstants.getFontFamily(base));
     }
 
+    private static Color getWindowsSystemColor(String key)
+    {
+        int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM",key);
+        if (value != Integer.MIN_VALUE)
+            return new Color(value);
+        else
+            return null;
+    }
+
+    public static boolean supportsSystemAccentColors()
+    {
+        return getSystemSelectionColor()!=null;
+    }
+
+    public static Color getSystemAccentColor()
+    {
+        if (Version.windows) //  get system accent color from registry
+            return getWindowsSystemColor("AccentColor");
+        if (Version.mac)
+            return SystemColor.controlHighlight;
+        // otherwise: (Linux)
+        return null;
+    }
+
+    public static Color getSystemSelectionColor()
+    {
+        if (Version.windows) //  get system accent color from registry
+            return getWindowsSystemColor("ColorizationColor");
+            //  not "AccentColor"
+        if (Version.mac)
+            return SystemColor.textHighlight;
+        // otherwise: (Linux)
+        return null;
+    }
+
+    public static boolean getSystemDarkMode() {
+         if (Version.windows) {
+             int value = WinRegistry.getIntValue(
+                "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize","AppsUseLightTheme");
+             if (value != Integer.MIN_VALUE)
+                 return (value==0);
+         }
+        return false;
+    }
+
+    private static int rgbDiff(Color a, Color b)
+    {
+        return Math.abs(a.getRed()-b.getRed())
+                + Math.abs(a.getGreen()-b.getGreen())
+                + Math.abs(a.getBlue()-b.getBlue());
+    }
+
+    public static Color contrast(Color from, Color a, Color b)
+    {
+        int da = rgbDiff(from,a);
+        int db = rgbDiff(from,b);
+        if (da < db)
+            return b;
+        else
+            return a;
+    }
+
     /**
      * @return true if a contiguous area has the same attribute (in this case: bold)
      */
@@ -162,5 +229,67 @@ public class StyleUtil
                   (StyleConstants.getFontSize(style) != StyleConstants.getFontSize(base)) ||
                   (!StyleConstants.getForeground(style).equals(StyleConstants.getForeground(base)));
       }
+
+    /**
+     * @param acol
+     * @return a color suitable for dark mode; with high contrast
+     */
+    public static Color mapDarkTextColor(Color acol)
+    {
+        if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - acol.getRed();
+            return new Color(red,red,red);
+        }
+        else {
+            //  we want high contrast:
+            //  - bright, but not too bright
+            //  - close to white = low saturation
+            return pastelize(acol,0.3f);
+        }
+    }
+
+    public static Color pastelize(Color col, float f) {
+        //  this creates pastel-like colors; which suit dark-mode nicely
+        float[] hsb = new float[4];
+        Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
+        hsb[1] = f*hsb[1];   //  low saturation
+        hsb[2] = 1.0f - (1.0f-hsb[2])*f; //  bright ?
+        return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+    }
+
+    public static Color invertColor(Color col) {
+        if (col.getRed()==col.getGreen() && col.getGreen()==col.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - col.getRed();
+            return new Color(red,red,red);
+        }
+        else {
+            float[] hsb = new float[4];
+            Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
+            //hsb[1] = f*hsb[1];   //  low saturation
+            hsb[2] = 1.0f - hsb[2]; //  bright ?
+            return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+        }
+    }
+
+    public static Color mapDarkIconColor(Color acol, float pastel)
+    {
+        if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - 64 - acol.getRed()/2;
+            return new Color(red,red,red);
+        }
+        else {
+           return pastelize(acol,pastel);
+        }
+    }
+
+    public static Color getLinkColor() {
+        Color col = Color.blue;
+        if (Application.theApplication.isDarkLookAndFeel())
+            return col = mapDarkTextColor(col);
+        return col;
+    }
 
 }

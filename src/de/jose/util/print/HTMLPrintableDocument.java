@@ -147,15 +147,17 @@ public class HTMLPrintableDocument
 				//  not really used; but needed for determining temp dir
 				context.target = File.createTempFile("jose","html");
 				File collateralDir = HtmlUtil.createCollateral(context);
-				final URL collateralURL = new URL("file",null,collateralDir.getAbsolutePath()+"/dummy.html");
+				URL collateralURL = null;
+				if (collateralDir!=null)
+					collateralURL = new URL("file", null, collateralDir.getAbsolutePath() + "/dummy.html");
+				final URL finalCollateralURL = collateralURL;
 
 				//  create HTML document from source
 				final StringWriter htmlSource = new StringWriter();
-
 				Runnable onComplete = new Runnable() {
 					public void run() {
 						try {
-							setNewDoc(htmlSource,collateralURL);
+							setNewDoc(htmlSource, finalCollateralURL);
 							xmlpreview = null;
 						} catch (Exception e) {
 							Application.error(e);

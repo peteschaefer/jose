@@ -20,6 +20,7 @@ import de.jose.chess.MoveFormatter;
 import de.jose.chess.TimeControl;
 import de.jose.image.Surface;
 import de.jose.pgn.Game;
+import de.jose.util.style.StyleUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.XObjectInputStream;
 import de.jose.util.print.SerializablePageFormat;
@@ -68,18 +69,22 @@ public class UserProfile
 	public static final int ZIP		= 2;
 	public static final int GZIP	= 3;
 
+	public static final Color DEFAULT_SELECTION_COLOR = Color.decode("#2675BF");
+	public static final Color DEFAULT_ACCENT_COLOR = Color.decode("#2675BF");
+
 	public static String getFactoryLookAndFeel() {
-		if (Version.mac)
-			return null;    //  default = Aqua
-            //return "ch.randelshofer.quaqua.QuaquaManager";  //  improved Aqua
-			//return "org.violetlib.aqua.AquaLookAndFeel";	//	VAqua
-		else
-			return "net.sourceforge.mlf.metouia.MetouiaLookAndFeel";
-		/**
-		 * Metouia on Windows & Linux
-		 * Metouia doesn't work on OS X, that's why we use the default, Aqua
-		 * (looks better anyway)
-		 */
+		if (Version.mac) {
+			if (StyleUtil.getSystemDarkMode())
+				return "com.formdev.flatlaf.themes.FlatMacDarkLaf";
+			else
+				return "com.formdev.flatlaf.themes.FlatMacLightLaf";
+		}
+		else {
+			if (StyleUtil.getSystemDarkMode())
+				return "com.formdev.flatlaf.FlatDarkLaf";
+			else
+				return "com.formdev.flatlaf.FlatLightLaf";
+		}
 	}
 
 	public static String getFactoryTextFont() {
@@ -122,6 +127,9 @@ public class UserProfile
 		"board.surface.coords",		Surface.newColor(Color.black, "marble02.jpg"),
         "board.hilite.squares",		Boolean.FALSE,
 		"board.animation.hints",    Boolean.FALSE,
+		"lnf.select.color",			Surface.newColor(DEFAULT_SELECTION_COLOR),
+		"lnf.accent.color",			Surface.newColor(DEFAULT_ACCENT_COLOR),
+		"accent.color",				"system",
 
 //		"board.3d.model",				"std2.j3df",
 		"board.3d.model",				"fab100.j3df",
@@ -263,7 +271,7 @@ public class UserProfile
 				//	in versions up to ... toolbars are not editable (though they are stored in the preferences)
 				//	always revert to factory settings
 				if (Version.getSystemProperty("jose.discard.lnf",false))
-					set("ui.look.and.feel", getFactoryLookAndFeel());
+					set("ui.look.and.feel2", getFactoryLookAndFeel());
 				if (Version.getSystemProperty("jose.discard.font.map",false)) {
 					set("font.map",new HashMap());
 					set("sys.font.map",new HashMap());
@@ -401,6 +409,32 @@ public class UserProfile
     }
 
 
+	public Color[] getAccentColors()
+	{
+		Color[] result = new Color[2];
+
+		if (StyleUtil.supportsSystemAccentColors()) {
+			String accent = getString("accent.color", "system");
+			if (accent.equals("system")) {
+				//	use system accent colors
+				result[0] = StyleUtil.getSystemSelectionColor();
+				result[1] = StyleUtil.getSystemAccentColor();
+			}
+		}
+		//	otherwise: use profile accent colors
+		if (result[0]==null) {
+			Surface srf = (Surface)get("lnf.select.color");
+			if (srf!=null) result[0] = srf.color;
+		}
+		if (result[1]==null) {
+			Surface srf = (Surface)get("lnf.accent.color");
+			if (srf!=null) result[1] = srf.color;
+		}
+		if (result[0]==null) result[0] = DEFAULT_SELECTION_COLOR;
+		if (result[1]==null) result[1] = DEFAULT_ACCENT_COLOR;
+		return result;
+	}
+
 
 	public void crossover()
 	{
@@ -447,12 +481,12 @@ public class UserProfile
         if (oldVersion <= 1007) {
             //  new default l6f on Macs
             if (Version.mac) {
-                String lnf = getString("ui.look.and.feel");
+                String lnf = getString("ui.look.and.feel2");
                 if ("apple.laf.AquaLookAndFeel".equals(lnf) ||
                     "com.apple.mrj.swing.MacLookAndFeel".equals(lnf))
                 {
                     lnf = getFactoryLookAndFeel();
-                    set("ui.look.and.feel",lnf);
+                    set("ui.look.and.feel2",lnf);
                 }
             }
         }

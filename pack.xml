@@ -3,7 +3,7 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="154"/>
+	<property name="version" value="155"/>
 
 	<!-- target directory -->
 
@@ -54,6 +54,7 @@
 				<include name="misc.xml"/>
 				<include name="toolbars.xml"/>
 				<include name="layout.xml"/>
+				<include name="themes"/>
             </zipfileset>
 
 			<zipfileset dir="database" prefix="${appldir}/database" dirmode="664">
@@ -107,6 +108,8 @@
 				<include name="jdbc/mysql.jar"/>
 				<include name="jdbc/mysql-je.jar"/>
 				<include name="plaf/metouia.jar"/>
+				<include name="plaf/flatlaf.jar"/>
+				<include name="plaf/flatlaf-theme-editor.jar"/>
 				<include name="com.sun.jar" />
 				<include name="json.jar" />
 			</zipfileset>
@@ -281,6 +284,13 @@
 				<include name="FIG-??-2.TTF"/>
 				<include name="FontAwesome.otf"/>
 			</zipfileset>
+			<zipfileset dir="lib/plaf" prefix="lib/plaf">
+				<include name="flatlaf.jar"/>
+				<include name="flatlaf-theme-editor.jar"/>
+			</zipfileset>
+			<zipfileset dir="lib/Windows" prefix="lib/Windows">
+				<include name="winUtils.dll"/>
+			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
 			</zipfileset>
@@ -293,8 +303,10 @@
 			<zipfileset dir="config" prefix="config">
 				<include name="fonts.xml"/>
 				<include name="menu.xml"/>
+				<include name="misc.xml"/>
 				<include name="toolbars.xml"/>
 				<include name="lang.properties*"/>
+				<include name="themes/*"/>
 			</zipfileset>
 			<zipfileset dir="doc" prefix="doc">
 				<include name="annotations.pgn"/>

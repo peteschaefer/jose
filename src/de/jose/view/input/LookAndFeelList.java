@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -240,11 +241,18 @@ public class LookAndFeelList
 		return UIManager.getSystemLookAndFeelClassName();
     }
 
-	private static Vector getInstalledLookAndFeels()
+	private static LookAndFeelEntry[] getInstalledLookAndFeels()
 	{
+		ArrayList<LookAndFeelEntry> result = new ArrayList<>();
+		//	add our own look & feels, as defined in the Config
+		LookAndFeelEntry[] factory = getDefinedLookAndFeels();
+		for (int i=0; i < factory.length; i++)
+			if (!result.contains(factory[i]))
+				result.add(factory[i]);
+
+		//result.add(null); //	separator
 		//	get the look & feels that are installed with the JDK
 		UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
-		Vector result = new Vector();
 		for (int i=0; i<info.length; i++) {
 			if (info[i].getClassName().equals("javax.swing.plaf.metal.MetalLookAndFeel"))
 			{
@@ -255,13 +263,7 @@ public class LookAndFeelList
 				result.add(new LookAndFeelEntry(info[i]));
 			//  TODO what about Synth (simce JDK 1.5)
 		}
-
-		//	add our own look & feels, as defined in the Config
-        LookAndFeelEntry[] factory = getDefinedLookAndFeels();
-		for (int i=0; i < factory.length; i++)
-			if (!result.contains(factory[i]))
-				result.add(factory[i]);
-		return result;
+		return result.toArray(new LookAndFeelEntry[result.size()]);
 	}
 
 

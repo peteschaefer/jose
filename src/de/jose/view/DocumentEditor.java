@@ -25,7 +25,6 @@ import de.jose.util.ClipboardUtil;
 import de.jose.util.style.StyleUtil;
 import de.jose.util.style.MarkupWriter;
 
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -53,8 +52,9 @@ public class DocumentEditor
 {
 	/**	Color used to hilite the current move
 	 *	(do not confuse with text hilite for copy & paste)
+	 *	todo make it configurable, using flatlaf theme file
 	 */
-	protected static final Color MOVE_HILITE_COLOR = ImgUtil.lightBlue;
+	protected static final Color MOVE_HILITE_COLOR = Color.yellow;
 
 	protected static final int PADDING_NONE         = 0x00;
 	protected static final int PADDING_LEADING      = 0x01;
@@ -76,6 +76,7 @@ public class DocumentEditor
 	protected static Game emptyGame = new Game();
 	/** used to parse keyboard move input   */
 	protected Parser moveParser;
+	protected Color moveHiliteColor;
 
 	//  document position, relative to a node
 	public class NodePosition
@@ -127,26 +128,57 @@ public class DocumentEditor
 		docPanel = owner;
 		docPanel.getMessageProducer().addMessageListener(Application.theApplication);
 
-        //setSelectionColor(UIManager.getColor("TextPane.selectionBackground"));
+        setSelectionColor(Application.theApplication.isDarkLookAndFeel());
+		installMoveHighlight();
 
-        try {
+		setupActions();
+		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	private void installMoveHighlight()
+	{
+		try {
             Highlighter.HighlightPainter painter =
-					new DefaultHighlighter.DefaultHighlightPainter(MOVE_HILITE_COLOR) {
+					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor); /*{
+					// @deprecated only needed to fix jagged painting in paintLayer()
+					//	but the better(?) choice is to disable layered painting at all
 					//new Highlighter.HighlightPainter() {
 
 						@Override
 						public Shape paintLayer(Graphics g, int offs0, int offs1,
 												Shape bounds, JTextComponent c, View view) {
-							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view);
+							//return super.paintLayer(g, offs0, offs1, bounds, c, view);
+							//return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
+							throw new IllegalStateException("layered highlight not supposed to be called");
 						}
-					};
-            hiliteCurrentMove = getHighlighter().addHighlight(0,0, painter);
+						@Override
+						public void paint(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c) {
+							DocumentEditor.this.paintHighlight(g,offs0,offs1,bounds,c,moveHiliteColor);
+						}
+					};*/
+
+			getHighlighter().removeAllHighlights();
+			((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
+            hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
         } catch (BadLocationException e) {
             Application.error(e);
         }
+	}
 
-        setupActions();
-		ToolTipManager.sharedInstance().registerComponent(this);
+	public void setSelectionColor(boolean dark)
+	{
+		Color selColor = Application.theUserProfile.getAccentColors()[0];
+		if (dark) selColor = StyleUtil.mapDarkTextColor(selColor);
+
+		moveHiliteColor = StyleUtil.pastelize(selColor,0.6f);
+		setSelectionColor(selColor);
+
+	//	UIManager.put("TextPane.selectionBackground",selColor);
+	//	((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
+		//	will effectively disable our move hiliter. why?
+		installMoveHighlight();
+		adjustHighlight(getSelectionStart(), getSelectionEnd());
+		//((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
 	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException
@@ -181,12 +213,42 @@ public class DocumentEditor
 		}
 	}
 
-	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view)
+	public void paintHighlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, Color color) {
+		Rectangle alloc = bounds.getBounds();
+		try {
+			// --- determine locations ---
+			TextUI mapper = c.getUI();
+			Rectangle p0 = mapper.modelToView(c, offs0);
+			Rectangle p1 = mapper.modelToView(c, offs1);
+
+			//	todo adjust descent/ascent
+
+			g.setColor(color);
+			// --- render ---
+			if (p0.y == p1.y) {
+				// same line, render a rectangle
+				Rectangle r = p0.union(p1);
+				g.fillRect(r.x, r.y, r.width, r.height);
+			} else {
+				// different lines
+				int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
+				g.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
+				if ((p0.y + p0.height) != p1.y) {
+					g.fillRect(alloc.x, p0.y + p0.height, alloc.width,
+							p1.y - (p0.y + p0.height));
+				}
+				g.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
+			}
+		} catch (BadLocationException e) {
+			// can't render
+		}
+	}
+
+	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view, Color color)
 	{
-		Color color = MOVE_HILITE_COLOR;
 		g.setColor(color);
 
-        Rectangle r;
+        Rectangle r,ret;
         try {
             // --- determine locations ---
             r = viewRect(view,offs0,offs1,bounds);
@@ -194,6 +256,9 @@ public class DocumentEditor
             // can't render
             return null;
         }
+		r = (Rectangle)r.clone();	//	important: don't modify reference to Shape
+		r.width = Math.max(r.width, 1);
+		ret = (Rectangle)r.clone();
 
         //	check ascent/descent of adjacent regions
         if (offs0 > 0)
@@ -211,7 +276,7 @@ public class DocumentEditor
         }
 
         g.fillRect(r.x,r.y,r.width,r.height);
-        return r;
+        return ret;	//	important: return uncorrected value
     }
 
 	public void setDocument(Game doc)

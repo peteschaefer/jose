@@ -47,8 +47,8 @@ public class DockingZone
 		this.color = color;
 		this.text = text;
 
-		glassPane.add(this);
 		setBounds(calcBounds(source, glassPane));
+		glassPane.add(this);
 
 		isActive = false;
 	}
@@ -74,11 +74,14 @@ public class DockingZone
 
 	public void paintComponent(Graphics g)
 	{
+		Rectangle r = getBounds();
 		if (isActive) {
-			g.setColor(color);
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(color);
 //			g.fillRect(0,0, getWidth(), getHeight());
-			for (int i=0; i<12; i++)
-				g.drawRect(i,i, getWidth()-2*i, getHeight()-2*i);
+			g2.setStroke(new BasicStroke(12));
+			//for (int i=0; i<12; i++)
+			g2.drawRect(6,6,r.width-12,r.height-12);
 
 			//  show text
 //			g.setColor(Color.black);
@@ -87,7 +90,7 @@ public class DockingZone
 			p.x = (int)Math.round((getWidth()-strbounds.getWidth())/2);
 			p.y = (int)Math.round((getHeight()-strbounds.getHeight())/2);
 
-			g.drawString(text,p.x,p.y);
+			g2.drawString(text,p.x,p.y);
 		}
 
 		//show hotspot
@@ -124,9 +127,9 @@ public class DockingZone
 		}
 	}
 
-	protected Rectangle calcBounds(Component source, Component parent) {
-		Rectangle r = new Rectangle(0,0, target.getWidth(), target.getHeight());
-		r = ViewUtil.localRect(r, target, parent);
+	protected Rectangle calcBounds(Component source, Component glass) {
+		Rectangle r = target.getBounds();//new Rectangle(0,0, target.getWidth(), target.getHeight());
+		r = ViewUtil.localRect(r, target, glass);
 
 		int width = r.width;
 		int height = r.height;

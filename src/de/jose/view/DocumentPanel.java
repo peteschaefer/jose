@@ -18,6 +18,7 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.util.FontUtil;
 import de.jose.util.icon.TextIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.window.JoMenuBar;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.*;
@@ -45,12 +46,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.IntConsumer;
 
 import static de.jose.pgn.INodeConstants.ANNOTATION_NODE;
 
 public class DocumentPanel
 		extends JoPanel
-		implements ChangeListener, MouseListener, ClipboardOwner
+		implements ChangeListener, ClipboardOwner
 {
 	/** sent by DocumentEditor when a move is input on the keyboard */
 	public static final int EVENT_USER_MOVE = 1001;
@@ -59,7 +61,6 @@ public class DocumentPanel
 	/**	provisional; this will be replaced by de.jose.Document	 */
 
 	protected JoTabbedPane theTabPane;
-	protected JButton closeButton;
 	/**	-1 indicates that we do not use a tab pane	*/
 	protected int currentTabIndex;
 
@@ -69,35 +70,6 @@ public class DocumentPanel
 //	protected static ImageIcon tabIcon 		= ImgUtil.getIcon(null,"tab.close");
 //	protected static ImageIcon tabIconOff 	= ImgUtil.getIcon(null,"tab.close.off");
 	protected static Icon dirtyIcon    = null;
-
-	class DocumentPanelLayout extends OverlayLayout
-	{
-		DocumentPanelLayout() {
-			super(DocumentPanel.this);
-		}
-
-		public void layoutContainer(Container target)
-        {
-			super.layoutContainer(target);            
-			if (currentTabIndex >= 0 && theTabPane != null) {
-				//  put the close button in the upper right corner
-				Rectangle bounds = target.getBounds();
-				Rectangle tabBounds = theTabPane.getBoundsAt(theTabPane.getSelectedIndex());
-
-                if (Version.mac)
-                    closeButton.setBounds(12,4, 24,24);
-                else switch (theTabPane.getTabLayoutPolicy())
-                {
-				case JTabbedPane.SCROLL_TAB_LAYOUT:
-						closeButton.setBounds(bounds.width-48, tabBounds.y+4, 15,15);
-						break;
-				case JTabbedPane.WRAP_TAB_LAYOUT:
-						closeButton.setBounds(bounds.width-18, tabBounds.y+5, 15,15);
-						break;
-				}
-			}
-		}
-	}
 
 	protected Object[] STYLE_MENU = {
 		"menu.edit.style",  //  title
@@ -124,7 +96,7 @@ public class DocumentPanel
 	public DocumentPanel(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
 	{
 		super(profile,withContextMenu,withBorder);
-		setLayout(new DocumentPanelLayout());
+		setLayout(new OverlayLayout(this));
         focusPriority = 2;
 		titlePriority = 9;
 	}
@@ -138,24 +110,13 @@ public class DocumentPanel
 		theGame = Application.theApplication.theGame;
 		theTextPane = new DocumentEditor(DocumentEditor.emptyGame,this);
 
-		Icon closeIcon = JoToolBar.create1AwesomeIcon("\uf00d",24f);
-	    closeButton = new JButton(closeIcon);
-	    closeButton.setActionCommand("menu.game.close");
-	    closeButton.addActionListener(this);
-	    closeButton.setName("menu.game.close");
-	    closeButton.setToolTipText(Language.getTip("menu.game.close"));
-	    closeButton.setVisible(false);
-		if (Version.mac) {
-            closeButton.setMargin(new Insets(2,2,2,2));
-            closeButton.putClientProperty("JButton.buttonType","toolbar");
-        }
-
-		add(closeButton);
-
 		theTabPane = new JoTabbedPane();	//	not yet visible !
 		currentTabIndex = -1;
-
-		theTabPane.addMouseListener(this);
+		theTabPane.putClientProperty("JTabbedPane.tabClosable", true );
+		theTabPane.putClientProperty( "JTabbedPane.tabCloseCallback",
+				(IntConsumer) tabIndex -> {
+					closeTab(null,tabIndex);
+				} );
 
 		updateFromProfile(Application.theUserProfile);
 
@@ -330,6 +291,14 @@ public class DocumentPanel
 			}
 		};
 		map.put("update.user.profile", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				DocumentPanel.this.theTextPane.setSelectionColor(dark);
+			}
+		};
+		map.put("update.ui", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
@@ -668,7 +637,7 @@ public class DocumentPanel
 			theTabPane.setTabPlacement(tabPlacement);
 		if (tabLayout > 0)
 			theTabPane.setTabLayoutPolicy(tabLayout);
-		theTextPane.setTextAntialising(prf.getBoolean("doc.panel.antialias"));
+		theTextPane.setTextAntialising(true);
 	}
 
 	public void reformat()
@@ -702,13 +671,11 @@ public class DocumentPanel
 		if (needsTabPane && !useTabPane) {
 			remove(theScroller);
 			add(theTabPane);
-			closeButton.setVisible(true);
 			currentTabIndex = 0;
 		}
 
 		if (!needsTabPane && useTabPane) {
 			remove(theTabPane);
-			closeButton.setVisible(false);
 			theTabPane.removeAll();
 			theScroller.setBounds(theTabPane.getBounds());
 			add(theScroller);
@@ -1048,54 +1015,13 @@ public class DocumentPanel
 	}
 
 
-
-    //  implements MouseListener
-
-    public void mouseClicked(MouseEvent e)
-    {
-/*
-        Node nd = getNode(e.getPoint());
-        if (nd != null) {
-            if (nd instanceof MoveNode) {
-                //  goto move
-            }
-            if (nd instanceof CommentNode) {
-                //  move caret
-            }
-        }
-*/
-	    //  middle mouse -> close tab
-	    int mods = e.getModifiers();
-	    if (Util.allOf(mods,MouseEvent.BUTTON2_MASK))
-	    {
-		    int tab = getTabClicked(e);
-		    if (tab >= 0)
-		    {
-			    //  close tab
-			    final Command cmd = new Command("menu.game.close",e,tab);
-			    SwingUtilities.invokeLater(new Runnable() {
-				    public void run()
-				    {
-						Application.theCommandDispatcher.handle(cmd,Application.theApplication);
-				    }
-			    });
-		    }
-	    }
-    }
-
-    public void mousePressed(MouseEvent e)
-    {
-    }
-
-    public void mouseReleased(MouseEvent e)
-    {
-    }
-
-    public void mouseEntered(MouseEvent e)
-    {
-    }
-
-    public void mouseExited(MouseEvent e)
-    {
-    }
+	private static void closeTab(MouseEvent e, int tab) {
+		final Command cmd = new Command("menu.game.close", e, tab);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+			}
+		});
+	}
 }

@@ -38,18 +38,20 @@
 		<item id="move.last"/>
 		<item id="move.animate"/>
 		<item id="engine.stop"/>
-		<separator/>
-		<item id="menu.game.analysis"/>
-<!--		<item id="menu.game.hint"/> -->
-		<item id="menu.game.draw"/>
-		<item id="menu.game.resign"/>
 
 		<separator/>
+		<item id="window.toolbar.symbols"/>
 		<item id="menu.game.details"/>	<!-- game details -->
 		<item id="window.gamelist"/>	<!-- database window -->
 		<item id="menu.edit.option"/>	<!-- option dialog -->
 
 		<separator/>
+
+		<item id="menu.game.analysis"/>
+		<!--		<item id="menu.game.hint"/> -->
+		<item id="menu.game.draw"/>
+		<item id="menu.game.resign"/>
+
 		<separator/>
 		
 		<item id="menu.edit.bold"/>

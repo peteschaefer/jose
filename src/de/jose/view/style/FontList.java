@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,11 @@ package de.jose.view.style;
 import de.jose.profile.FontEncoding;
 import de.jose.util.AWTUtil;
 import de.jose.util.ListUtil;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.input.ValueHolder;
-import de.jose.Version;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -32,7 +31,7 @@ public class FontList
 {
 	protected CellRenderer rend;
 
-    protected FontList(FontSample[] entries, Dimension preferredCellSize)
+    public FontList(FontSample[] entries, Dimension preferredCellSize)
     {
         super(entries);
 //        putClientProperty("Quaqua.List.style",Version.getSystemProperty("Quaqua.List.style"));
@@ -100,7 +99,7 @@ public class FontList
 
     public static FontList createDiagramFontList(int size, boolean installed)
     {
-        return new FontList(getDiagramFontSamples(size, installed),new Dimension(100,28));
+        return new FontList(getDiagramFontSamples(size, installed),new Dimension(100,21));
     }
 
 
@@ -229,12 +228,14 @@ public class FontList
 
 		public void paintComponent(Graphics g)
 		{
-			g.setColor(getBackground());
+			Color bg = getBackground();
+			g.setColor(bg);
 			g.fillRect(0,0,getWidth(),getHeight());
-			g.setColor(Color.black);
 
-			if (current!=null)
+			if (current!=null) {
+				current.fontColor = StyleUtil.contrast(bg, Color.black, Color.lightGray);
 				current.paint(g, getBounds(), RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			}
 		}
 
     }

@@ -604,16 +604,24 @@ public class JoPanel
 	public String getDockingSpots()	{ return DOCK_ALL; }
 	
 	public Point getDockingSpot(char location) {
-		Point p = new Point(getWidth(),getHeight());
+	//	Point p = new Point(getWidth(),getHeight());
+		Rectangle r = getBounds();
+		Point p = new Point(r.x, r.y);
 		
 		switch (location) {
-		case DOCK_NORTH:	p.x/=2; p.y=0; break;
-		case DOCK_SOUTH:	p.x/=2; break;
-		case DOCK_EAST:		p.y/=2; break;
-		case DOCK_WEST:		p.x=0; p.y/=2; break;
-		case DOCK_CENTER:	p.x/=2; p.y/=2; break;
+		case DOCK_NORTH:
+		case DOCK_SOUTH:
+		case DOCK_CENTER:	p.x+=r.width/2; break;
+		case DOCK_EAST:		p.x+=r.width; break;
 		}
-		
+
+		switch (location) {
+		case DOCK_SOUTH:	p.y+=r.height; break;
+		case DOCK_EAST:
+		case DOCK_WEST:
+		case DOCK_CENTER:	p.y+=r.height/2; break;
+		}
+
 		return p;
 	}
 

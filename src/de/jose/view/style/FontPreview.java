@@ -50,7 +50,8 @@ public class FontPreview
         g.setColor(getBackground());
         g.fillRect(0,0,getWidth(),getHeight());
 
-		sample.setStyle(style,scale);
+        boolean dark = !getBackground().equals(Color.white);
+        sample.setStyle(style,scale,dark);
         sample.paint(g, AWTUtil.getInsetBounds(this),
                 antiAlias ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON
                  : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);

@@ -12,6 +12,7 @@
 
 package de.jose.view;
 
+import com.formdev.flatlaf.ui.FlatSplitPaneUI;
 import de.jose.AbstractApplication;
 import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
@@ -19,6 +20,8 @@ import de.jose.Util;
 import de.jose.window.JoFrame;
 
 import javax.swing.*;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.metal.MetalSplitPaneUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -29,26 +32,6 @@ public class JoSplitPane
 		extends JSplitPane
 		implements JoComponent, CommandListener
 {
-	static class JoSplitPaneUI extends MetalSplitPaneUI
-	{
-		/** overwrites startDragging() and stopDragging() to notify the parent JSplitPane   */
-		protected void startDragging()
-		{
-			/* notify the children that we are starting to resize  !   */
-			((JoSplitPane)getSplitPane()).startContinuousResize();
-
-			super.startDragging();
-		}
-
-		protected void finishDraggingTo(int location)
-		{
-			super.finishDraggingTo(location);
-
-			/* notify the children that resizing is finished  !   */
-			((JoSplitPane)getSplitPane()).finishContinuousResize();
-		}
-	}
-
 	//-------------------------------------------------------------------------------
 	//	Constants
 	//-------------------------------------------------------------------------------
@@ -61,6 +44,7 @@ public class JoSplitPane
 	public static final int DIVIDE_WEIGHT	= -3;
 	/*  don't adjust divider location, just keep it */
 	public static final int DIVIDE_USER     = -4;
+	public static final int DIVIDER_SIZE = 8;
 
 	protected int dividerMethod;
 
@@ -81,8 +65,8 @@ public class JoSplitPane
          * (note that the actual divider size will be overwritten, anyway)
          */
 //        System.out.println(UIManager.getDefaults().get("SplitPaneUI"));
-        UIManager.getDefaults().put("SplitPane.dividerSize",6);
-		setUI(new JoSplitPaneUI());
+//        UIManager.put("SplitPane.dividerSize",16);
+//		setUI(new JoSplitPaneUI());
 
 		if (size==null)
 			size = getSize();
@@ -350,19 +334,16 @@ public class JoSplitPane
 		/*
 		 * hide dividers for fixed-size components (toolbars, in particular)
 		 */
-		if (getOrientation()==HORIZONTAL_SPLIT) {
-			if (firstJoComponent().getWeightX()<=0.0 || secondJoComponent().getWeightX()<=0.0)
-				setDividerSize(2);
-			else
-				setDividerSize(4);
-		}
-		else {
-			if (firstJoComponent().getWeightY()<=0.0 || secondJoComponent().getWeightY()<=0.0)
-				setDividerSize(2);
-			else
-				setDividerSize(4);
-		}
+		if (getOrientation()==HORIZONTAL_SPLIT)
+			setDividerEnabled(firstJoComponent().getWeightX() > 0.0 && secondJoComponent().getWeightX() > 0.0);
+		else
+			setDividerEnabled(firstJoComponent().getWeightY() > 0.0 && secondJoComponent().getWeightY() > 0.0);
+	}
 
+	private void setDividerEnabled(boolean movable) {
+		Object value = UIManager.get("SplitPane.dividerSize");
+		int dividerSize = (int)Util.nvl(value,Integer.valueOf(DIVIDER_SIZE));
+		setDividerSize(movable ? dividerSize:2);
 	}
 
 	public void startContinuousResize()

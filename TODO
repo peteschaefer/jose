@@ -36,12 +36,19 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [ ] db: expected data on row ?
 
-[ ] https://www.formdev.com/flatlaf is a must-have!
-    - great modern l&f
-    - embedded menu bar
-    - tab title
-    - dark mode
-    - file chooser
+[ ] Annotation: layout in small panels
+    [ ] ScrollPane without bars; use mouse wheel scrolling
+    [ ] remember location when hidden
+
+[x] FlatLaf
+    [?] bug TextPaneUI: jagged selection
+    [?] wdl label height; adjust to font
+    [?] 3D?
+
+    [-] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
+    [-] remove l&f selection
+    [ ] from command line
+
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?

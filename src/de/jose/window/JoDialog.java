@@ -22,6 +22,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.WinUtils;
 import de.jose.util.icon.TextIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.JoToolBar;
 import de.jose.view.colorchooser.JoColorButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
@@ -76,6 +77,11 @@ public class JoDialog
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
 							   GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
 							   INSETS_NORMAL, 90,0);
+	//	todo why such a large padding? who needs it?
+	public static final GridBagConstraints LABEL_ONE_NOPAD =
+			new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
+					GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
+					INSETS_NORMAL, 0,0);
 
 	public static final GridBagConstraints LABEL_INDENTED =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
@@ -363,6 +369,7 @@ public class JoDialog
 
     public int getHeight()                          { return frame.getHeight(); }
 
+	public Rectangle getBounds()					{ return frame.getBounds(); }
     public void setLocation(Point p)                { frame.setLocation(p); }
 
     public String getTitle()
@@ -853,14 +860,14 @@ public class JoDialog
 		add(cont,component,constraint);
 	}
 
-	public final void addWithLabel(Container cont, int column,
+	public final JLabel addWithLabel(Container cont, int column,
 										  String compName,
 										  Component component)
 	{
-		addWithLabel(cont,column,compName,component,-1,-1);
+		return addWithLabel(cont,column,compName,component,-1,-1);
 	}
 
-	public final void addWithLabel(Container cont, int column,
+	public final JLabel addWithLabel(Container cont, int column,
 										  String compName,
 										  Component component,
 	                                      int vsbPolicy, int hsbPolicy)
@@ -869,31 +876,37 @@ public class JoDialog
 		label.setLabelFor(component);
 		component.setName(compName);
 		addWith(cont,column, label, component, vsbPolicy,hsbPolicy);
+		return label;
 	}
 
-	public final void addWithLabel(Container cont,
+	public final Component addWithLabel(Container cont,
 	                               int x, int y, int colspan,
 	                               Object labelName, Component component)
 	{
-		addWithLabel(cont, x,y,colspan, 0.0,0.0, labelName,component, -1,-1);
+		return addWithLabel(cont, x,y,colspan, 0.0,0.0, labelName,component, -1,-1);
 	}
 
-	public final void addWithLabel(Container cont,
+	public final Component addWithLabel(Container cont,
 	                               int x, int y, int colspan, double weightx, double weighty,
 	                               Object labelName, Component component,
 	                               int vsbPolicy, int hsbPolicy)
 	{
 		GridBagConstraints lconst = (GridBagConstraints)LABEL_ONE.clone();
 		GridBagConstraints cconst = (GridBagConstraints)ELEMENT_TWO.clone();
+		Component labelComponent = null;
 
 		if (labelName!=null)
 		{
-			Component labelComponent;
 			if (labelName instanceof String) {
-				JLabel label = newLabel(getName()+"."+labelName);
+				JLabel label;
+				if (((String) labelName).isEmpty())
+					label = newLabel("");
+				else
+					label = newLabel(getName()+"."+labelName);
 				if (component!=null) {
 					label.setLabelFor(component);
-					component.setName((String)labelName);
+					if (!((String) labelName).isEmpty())
+						component.setName((String)labelName);
 				}
 				labelComponent = label;
 			}
@@ -923,6 +936,7 @@ public class JoDialog
 
 			cont.add(component,cconst);
 		}
+		return labelComponent;
 	}
 
 	public final void addBox(Container cont,
@@ -1689,6 +1703,7 @@ public class JoDialog
 
         JButton button = newButton(name, icon, listener);
 		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
 		button.setBorder(new EmptyBorder(2,8,2,8));
 		button.setPreferredSize(new Dimension(92,22));
 
@@ -1697,7 +1712,7 @@ public class JoDialog
 		attrs.put(TextAttribute.UNDERLINE,TextAttribute.UNDERLINE_ON);
 		font = font.deriveFont(attrs);
 		button.setFont(font);
-		button.setForeground(Color.BLUE);
+		button.setForeground(StyleUtil.getLinkColor());
 		return button;
     }
 

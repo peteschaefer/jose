@@ -23,10 +23,7 @@ import java.net.URLDecoder;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Vector;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -83,7 +80,6 @@ public class FileUtil
 	 * move all files from one directory to another
 	 *
 	 * @param srcDir
-	 * @param destDir
 	 * @throws IOException
 	 */
 	public static int moveAllFiles(File srcDir, File dstDir)
@@ -97,6 +93,17 @@ public class FileUtil
 			if (src.renameTo(dst)) count++;
 		}
 		return count;
+	}
+
+	public static boolean wasFileTouched(File dir, Date since)
+	{
+		String[] fileNames = dir.list();
+		for (int i=0; i < fileNames.length; i++) {
+			File src = new File(dir,fileNames[i]);
+			if (src.lastModified() > since.getTime())
+				return true;
+		}
+		return false;
 	}
 
 	public static boolean isChildOf(File target, File root)

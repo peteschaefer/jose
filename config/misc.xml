@@ -7,23 +7,56 @@
 	<sound id="sound.notify">sounds/KDE_Notify.wav</sound>
 
 	<!-- Look and Feel Packages -->
-	<!-- Metouia is the Default setting -->
+	<look-and-feel>
+		<name>FlatLaf Light</name>
+		<class>com.formdev.flatlaf.FlatLightLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>FlatLaf Dark</name>
+		<class>com.formdev.flatlaf.FlatDarkLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>FlatLaf Darcula</name>
+		<class>com.formdev.flatlaf.FlatDarculaLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>FlatLaf IntelliJ</name>
+		<class>com.formdev.flatlaf.FlatIntelliJLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+
+	<look-and-feel>
+		<name>FlatLaf Mac Light</name>
+		<class>com.formdev.flatlaf.themes.FlatMacLightLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+	<look-and-feel>
+		<name>FlatLaf Mac Dark</name>
+		<class>com.formdev.flatlaf.themes.FlatMacDarkLaf</class>
+		<class-path>flatlaf.jar</class-path>
+	</look-and-feel>
+
+	<!-- Metouia is the Old Default setting -->
 	<look-and-feel>
 		<name>Metouia</name>
 		<class>net.sourceforge.mlf.metouia.MetouiaLookAndFeel</class>
 		<class-path>metouia.jar</class-path>
 	</look-and-feel>
     <!-- Quaqua is the default on Mac OS X -->
+<!--
     <look-and-feel>
         <name>Quaqua</name>
         <class>ch.randelshofer.quaqua.QuaquaManager</class>
     </look-and-feel>
-	<!-- VAqua is the new default on Mac OS X -->
+	< - VAqua is the new default on Mac OS X - - >
 	<look-and-feel>
 		<name>VAqua</name>
 		<class>org.violetlib.aqua.AquaLookAndFeel</class>
 	</look-and-feel>
-
+-->
 <!--
     <look-and-feel>
         <name>Quaqua Jaguar</name>

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,10 +13,12 @@
 
 package de.jose.view.style;
 
+import de.jose.Application;
 import de.jose.Language;
 import de.jose.Util;
 import de.jose.profile.UserProfile;
 import de.jose.view.colorchooser.JoColorButton;
+import de.jose.view.input.JoBigLabel;
 import de.jose.view.input.MoveFormatList;
 import de.jose.view.input.LanguageList;
 import de.jose.view.input.JoButtonGroup;
@@ -44,7 +46,7 @@ import java.util.Map;
 /**
  * A panel for editing text styles.
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class StyleChooser
 		extends JPanel
@@ -79,8 +81,8 @@ public class StyleChooser
 	protected JSpinner fontSize;
     protected JToggleButton fontBold, fontItalic;
     protected JoColorButton fontColor;
-	protected JCheckBox antiAliasing;
-    protected FontPreview fontPreview;
+    protected FontPreview fontPreview,fontPreviewScreen;
+	protected JLabel fontPreviewExplain;
 	protected MoveFormatList moveFormat;
 	protected LanguageList moveLanguage;
 	protected JRadioButton useFontTrue,useFontFalse;
@@ -89,65 +91,73 @@ public class StyleChooser
 	/** models for FontList */
 	protected DefaultComboBoxModel textFontModel, figFontModel, inlineFontModel, diagFontModel, symbolFontModel;
 
-	public StyleChooser(boolean showAntialiasing)
+	public StyleChooser()
 	{
-		createLayout(showAntialiasing);
+		createLayout();
 		startListen();
 	}
 
-	private void createLayout(boolean withAntialiasing)
+	private void createLayout()
 	{
 		setLayout(new BorderLayout());
 
-		JPanel leftPanel = createLeftPanel(withAntialiasing);
+		JPanel leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
+
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		updateUI(dark);
 
 		add(leftPanel,BorderLayout.CENTER);
 		add(rightPanel,BorderLayout.EAST);
 	}
 
-	private JPanel createLeftPanel(boolean withAntialiasing)
-	{
-		JScrollPane styleScroller = createStyleTree();
-		JPanel optionPane = createOptionPanel(withAntialiasing);
-
-		JPanel leftPanel = new JPanel(new BorderLayout());
-		leftPanel.add(styleScroller, BorderLayout.CENTER);
-		leftPanel.add(optionPane, BorderLayout.SOUTH);
-		return leftPanel;
-	}
-
-	private JScrollPane createStyleTree()
+	private JComponent createStyleTree()
 	{
 		styleTree = new JTree() {
 			public boolean getScrollableTracksViewportWidth() {
 				return false;
 			}
 		};
-		styleTree.setCellRenderer(new CellRenderer(new Dimension(160,20)));
+		CellRenderer rend = new CellRenderer(new Dimension(160, 20));
+		styleTree.setCellRenderer(rend);
 		styleTree.setDragEnabled(false);
 		styleTree.setEditable(false);
 		styleTree.setVisibleRowCount(12);
 		styleTree.setRootVisible(true);
 		styleTree.setShowsRootHandles(false);
+		styleTree.setBackground(Color.white);
 
 		JScrollPane scroll = new JScrollPane(styleTree,
 		            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setBackground(Color.white);
 		scroll.getViewport().setBackground(Color.white);
-		return scroll;
+
+		CompoundBorder border2 = new CompoundBorder(
+				new BevelBorder(BevelBorder.LOWERED),
+				new EmptyBorder(8,8,4,4)
+		);
+		scroll.setBorder(border2);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBackground(Color.white);
+		panel.add(scroll,BorderLayout.CENTER);
+		return panel;
 	}
 
-	private JPanel createOptionPanel(boolean withAntialiasing)
+	private JPanel createOptionPanel()
 	{
-		JPanel optionPanel = new JPanel(new GridBagLayout());
-
-		JPanel notationPanel = new JPanel(new GridBagLayout());
-		notationPanel.setBorder(new TitledBorder(Language.get("dialog.option.doc.move.format")));
+		JPanel notationPanel = JoDialog.newGridPane();
+		notationPanel.setBorder(
+				//new CompoundBorder(
+					new BevelBorder(BevelBorder.LOWERED));
+				//	new TitledBorder(Language.get("dialog.option.doc.move.format"))));
 
 		//  notation
 		moveFormat = new MoveFormatList();
-		notationPanel.add(JoDialog.newLabel("move.format"), JoDialog.gridConstraint(JoDialog.LABEL_ONE,0,0,1));
+		GridBagConstraints labelOne = (GridBagConstraints) JoDialog.LABEL_ONE.clone();
+		labelOne.ipadx=60;
+		notationPanel.add(JoDialog.newLabel("move.format"), JoDialog.gridConstraint(labelOne,0,0,1));
 		notationPanel.add(moveFormat, JoDialog.gridConstraint(JoDialog.ELEMENT_TWO,1,0,3));
 
 		//  figurine font
@@ -165,23 +175,64 @@ public class StyleChooser
 		useFont.add(useFontTrue);
 		useFont.add(useFontFalse);
 
-		optionPanel.add(notationPanel, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,0,4));
-
-		if (withAntialiasing) {
+		//optionPanel.add(notationPanel, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,0,4));
+/*
+		if (true) {
 			antiAliasing = JoDialog.newCheckBox("doc.panel.antialias");
 			optionPanel.add(antiAliasing, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,1,4));
 		}
-		return optionPanel;
+ */
+		return notationPanel;
+	}
+
+	private JPanel createLeftPanel()
+	{
+		JComponent styleScroller = createStyleTree();
+		fontPreview = createPreview("font.sample",Color.white);
+		fontPreviewScreen = createPreview("font.sample.screen",UIManager.getColor("background"));
+		fontPreviewExplain = new JLabel(Language.get("dialog.option.dark.explain"));
+		fontPreviewExplain.setBorder(
+				new CompoundBorder(
+						new BevelBorder(BevelBorder.LOWERED),
+						new EmptyBorder(8,8,8,8)));
+
+		JPanel leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(styleScroller, BorderLayout.CENTER);
+
+		JPanel previewPanel = new JPanel();
+		previewPanel.setLayout(new BoxLayout(previewPanel, BoxLayout.Y_AXIS));
+		previewPanel.add(fontPreview);
+		previewPanel.add(fontPreviewExplain);
+		previewPanel.add(fontPreviewScreen);
+		leftPanel.add(previewPanel, BorderLayout.SOUTH);
+
+		return leftPanel;
+	}
+
+	public void updateUI(boolean dark)
+	{
+		fontPreviewExplain.setVisible(dark);
+		fontPreviewScreen.setVisible(dark);
+
+		Color selBgColor = Color.lightGray;UIManager.getColor("Table.selectionBackground");
+		((CellRenderer)styleTree.getCellRenderer()).setBackgroundSelectionColor(selBgColor);
+		fontList.setSelectionBackground(selBgColor);
+	}
+
+	public void forPrintOnly(boolean print)
+	{
+		fontPreviewExplain.setVisible(!print);
+		fontPreviewScreen.setVisible(!print);
 	}
 
 	private JPanel createRightPanel()
 	{
 		JPanel editPanel = createEditPanel();
-		JComponent preview = createPreview();
+		JPanel optionPane = createOptionPanel();
 
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		rightPanel.add(editPanel,BorderLayout.CENTER);
-		rightPanel.add(preview,BorderLayout.SOUTH);
+		rightPanel.add(optionPane,BorderLayout.SOUTH);
 		return rightPanel;
 	}
 
@@ -194,16 +245,18 @@ public class StyleChooser
 		fontList.setVisibleRowCount(9);
 
         fontSize = new JSpinner();
-		((SpinnerNumberModel)fontSize.getModel()).setMinimum(new Integer(1));
+		((SpinnerNumberModel)fontSize.getModel()).setMinimum(1);
 		fontSize.setPreferredSize(new Dimension(64,24));
 
-        editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE);
-        editPanel.add(new JScrollPane(fontList,
+        editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE_NOPAD);
+		GridBagConstraints constr = JoDialog.gridConstraint(JoDialog.ELEMENT_TWO, 1, 0, 1, GridBagConstraints.BOTH);
+		constr.weighty = 20.0;
+		editPanel.add(new JScrollPane(fontList,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
-                JoDialog.gridConstraint(JoDialog.ELEMENT_TWO,1,0,1));
+				constr);
 
-        editPanel.add(JoDialog.newLabel("font.size"), JoDialog.LABEL_ONE);
+        editPanel.add(JoDialog.newLabel("font.size"), JoDialog.LABEL_ONE_NOPAD);
         editPanel.add(fontSize, JoDialog.gridConstraint(JoDialog.ELEMENT_TWO_SMALL,1,1,1));
 
 		Box box1 = Box.createHorizontalBox();
@@ -224,20 +277,20 @@ public class StyleChooser
 		return editPanel;
 	}
 
-	private JComponent createPreview()
+	private FontPreview createPreview(String text, Color bgColor)
 	{
-		fontPreview = new FontPreview(Language.get("font.sample"),null);
-		fontPreview.setPreferredSize(new Dimension(40,72));
-
-		fontPreview.setBackground(Color.white);
-		fontPreview.setBorder(new CompoundBorder(
-		                new BevelBorder(BevelBorder.RAISED, Color.lightGray,Color.darkGray),
+		FontPreview preview = new FontPreview(Language.get(text),null);
+		preview.setPreferredSize(new Dimension(40,72));
+		preview.setBackground(bgColor);
+		preview.setBorder(new CompoundBorder(
+		                //new BevelBorder(BevelBorder.RAISED, Color.lightGray,Color.darkGray),
+						new BevelBorder(BevelBorder.LOWERED),
 		                new EmptyBorder(2,12,2,2)));
 
 //		fontPreview.setBorder(
 //		        new JoLineBorder(JoLineBorder.ALL, Color.lightGray, 8, 10,16,10,10));
 
-		return fontPreview;
+		return preview;
 	}
 
 	protected void startListen()
@@ -247,10 +300,9 @@ public class StyleChooser
 		fontList.addListSelectionListener(this);
 
 		fontSize.addChangeListener(this);
-		fontBold.addChangeListener(this);
-		fontItalic.addChangeListener(this);
-		fontColor.addChangeListener(this);
-		if (antiAliasing!=null) antiAliasing.addChangeListener(this);
+		fontBold.addItemListener(this);
+		fontItalic.addItemListener(this);
+		fontColor.addItemListener(this);
 
 		useFontTrue.addChangeListener(this);
 		useFontFalse.addChangeListener(this);
@@ -267,7 +319,6 @@ public class StyleChooser
 		fontBold.removeChangeListener(this);
 		fontItalic.removeChangeListener(this);
 		fontColor.removeChangeListener(this);
-		if (antiAliasing!=null) antiAliasing.removeChangeListener(this);
 
 		useFontTrue.removeChangeListener(this);
 		useFontFalse.removeChangeListener(this);
@@ -390,20 +441,6 @@ public class StyleChooser
 		set("base","figurine.language",lang);
 	}
 
-	public boolean getAntiAliasing()
-	{
-		if (antiAliasing==null)
-			return true;
-		else
-			return antiAliasing.isSelected();
-	}
-
-	public void setAntiAliasing(boolean on)
-	{
-		if (antiAliasing==null) throw new IllegalStateException();
-		antiAliasing.setSelected(on);
-	}
-
 	public int getMoveFormat()
 	{
 		return moveFormat.getFormat();
@@ -447,13 +484,16 @@ public class StyleChooser
 
 			fontList.setSelectedFont(JoFontConstants.getFontFamily(currentStyle));
 
-			fontSize.setValue(new Integer(JoFontConstants.getFontSize(currentStyle)));
+			fontSize.setValue(JoFontConstants.getFontSize(currentStyle));
 			fontBold.setSelected(JoFontConstants.isBold(currentStyle));
 			fontItalic.setSelected(JoFontConstants.isItalic(currentStyle));
 			fontColor.setColor(JoFontConstants.getForeground(currentStyle));
 
-			fontPreview.setAntiAliasing(getAntiAliasing());
+			fontPreview.setAntiAliasing(true);
 			fontPreview.setStyle(currentStyle,styles.getFontScale());
+
+			fontPreviewScreen.setAntiAliasing(true);
+			fontPreviewScreen.setStyle(currentStyle,styles.getFontScale());
 
 		} finally {
 			startListen();
@@ -465,9 +505,15 @@ public class StyleChooser
 		/**	invalidate font sample	*/
 		styleTree.repaint();
 		fontPreview.repaint();
+		if (fontPreviewScreen.isVisible())
+			fontPreviewScreen.repaint();
+	}
+	protected boolean updateAttribute(Style style, Object key, Object value)
+	{
+		return updateAttribute(style,key,value,null);
 	}
 
-	protected boolean updateAttribute(Style style, Object key, Object value)
+	protected boolean updateAttribute(Style style, Object key, Object value, Object defaultValue)
 	{
 		Object thisValue = style.getAttribute(key);
 		if (Util.equals(thisValue,value))
@@ -475,6 +521,8 @@ public class StyleChooser
 
 		style.removeAttribute(key);
 		Object parentValue = style.getAttribute(key);
+		if (parentValue==null)
+			parentValue = defaultValue;
 
 		boolean isdefined = ! Util.equals(parentValue,value);
 		if (isdefined)
@@ -503,20 +551,6 @@ public class StyleChooser
 			updateAttribute(currentStyle, StyleConstants.FontSize, size);
 			JoFontConstants.removeFontScaleFactor(currentStyle);
 		}
-		if (e.getSource()==fontBold) {
-			boolean isBold = fontBold.isSelected();
-			updateAttribute(currentStyle, StyleConstants.Bold, Boolean.valueOf(isBold));
-		}
-		if (e.getSource()==fontItalic) {
-			boolean isItalic = fontItalic.isSelected();
-			updateAttribute(currentStyle, StyleConstants.Italic, Boolean.valueOf(isItalic));
-		}
-		if (e.getSource()==fontColor) {
-			Color color = fontColor.getColor();
-			updateAttribute(currentStyle, StyleConstants.Foreground, color);
-		}
-		if (e.getSource()==antiAliasing)
-			updateViews();
 		if (e.getSource()==useFontTrue) {
 			boolean useFont = useFontTrue.isSelected();
 			if (useFont!=styles.useFigurineFont()) {
@@ -558,6 +592,9 @@ public class StyleChooser
 
 	public void itemStateChanged(ItemEvent e)
 	{
+		if (e.getStateChange()!=ItemEvent.SELECTED
+			&& e.getStateChange()!=ItemEvent.DESELECTED) return;
+
 		if (e.getSource()==moveLanguage)
 		{
 			String language = moveLanguage.getSelectedLanguage();
@@ -566,16 +603,17 @@ public class StyleChooser
 				dirty = true;
 			}
 		}
-	}
-
-	static class SortStyleByName implements Comparator
-	{
-		public int compare(Object a, Object b)
-		{
-			Style sa = (Style)a;
-			Style sb = (Style)b;
-
-			return sa.getName().compareTo(sb.getName());
+		if (e.getSource()==fontBold) {
+			boolean isBold = fontBold.isSelected();
+			updateAttribute(currentStyle, StyleConstants.Bold, Boolean.valueOf(isBold));
+		}
+		if (e.getSource()==fontItalic) {
+			boolean isItalic = fontItalic.isSelected();
+			updateAttribute(currentStyle, StyleConstants.Italic, Boolean.valueOf(isItalic));
+		}
+		if (e.getSource()==fontColor) {
+			Color color = fontColor.getColor();
+			updateAttribute(currentStyle, StyleConstants.Foreground, color, Color.black);
 		}
 	}
 
@@ -624,7 +662,8 @@ public class StyleChooser
 			if (style!=null) {
 				Rectangle bounds = getBounds();
 				String name = Language.get(style.getName());
-				sample.setStyle(style, styles.getFontScale(), name, 0); // JoStyleContext.getNestLevel(style));
+				boolean dark = !getBackground().equals(Color.white);
+				sample.setStyle(style, styles.getFontScale(), name, 0, dark); // JoStyleContext.getNestLevel(style));
 				sample.paint(g, bounds, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			}
 			else

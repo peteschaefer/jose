@@ -12,6 +12,8 @@
 
 package de.jose;
 
+import com.formdev.flatlaf.FlatLaf;
+import com.mysql.jdbc.CommunicationsException;
 import de.jose.book.BookQuery;
 import de.jose.chess.*;
 import de.jose.comm.Command;
@@ -29,6 +31,7 @@ import de.jose.export.ExportConfig;
 import de.jose.export.ExportContext;
 import de.jose.export.HtmlUtil;
 import de.jose.help.HelpSystem;
+import de.jose.image.Surface;
 import de.jose.image.TextureCache;
 import de.jose.pgn.Collection;
 import de.jose.pgn.*;
@@ -46,7 +49,9 @@ import de.jose.task.db.*;
 import de.jose.task.io.*;
 import de.jose.util.*;
 import de.jose.util.file.FileUtil;
+import de.jose.util.file.ResourceClassLoader;
 import de.jose.util.print.PrintableDocument;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.*;
 import de.jose.view.input.LookAndFeelList;
 import de.jose.view.input.WriteModeDialog;
@@ -56,6 +61,7 @@ import de.jose.window.*;
 import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
@@ -286,6 +292,11 @@ public class Application
             //  show grow box in lower-right corner ?
             //  I think this is the default for Aqua lnf, so we let it be...
             Version.setDefaultSystemProperty("apple.awt.showGrowBox","true");
+
+			// adapt window title bars
+			System.setProperty("apple.awt.application.appearance","system");
+			//	application menu name
+			System.setProperty("apple.awt.application.name", "jose");
 
             Version.setDefaultSystemProperty("apple.awt.brushMetalLook","false");
             Version.setDefaultSystemProperty("apple.awt.graphics.EnableLazyDrawing","true");
@@ -581,11 +592,56 @@ public class Application
 			JoDialog.showErrorDialog("error.lnf.not.supported");
 		else
 			try {
-				UIManager.setLookAndFeel(className);
-				broadcast(new Command("update.ui", null, lookAndFeel));
+				Class<?> lnfClass = Class.forName(className);
+				LookAndFeel lnf = (LookAndFeel) (lnfClass.newInstance());
+				useLookAndFeel(lnf);
 			} catch (UnsupportedLookAndFeelException usex) {
 				JoDialog.showErrorDialog("error.lnf.not.supported");
 			}
+	}
+
+	private void useLookAndFeel(LookAndFeel lnf) throws UnsupportedLookAndFeelException
+	{
+		if (lnf instanceof FlatLaf) {
+			FlatLaf.setSystemColorGetter(name -> {
+				if (name.equals("accent"))
+					return theUserProfile.getAccentColors()[1];
+				return null;
+			});
+
+			FlatLaf.registerCustomDefaultsSource(
+					"themes",
+					new ResourceClassLoader("config"));
+			//	uses a set of custom themes
+
+			FlatLaf.setup(lnf);
+
+			boolean isdark = ((FlatLaf) lnf).isDark();
+		}
+
+		UIManager.setLookAndFeel(lnf);
+		UIManager.put("TextPane.selectionBackground", theUserProfile.getAccentColors()[0]);
+
+		broadcast(new Command("update.ui", null, /*lnfName*/null, isDarkLookAndFeel()));
+	}
+
+	public final void resetLookAndFeel()
+	{
+		LookAndFeel lnf = UIManager.getLookAndFeel();
+        try {
+            useLookAndFeel(lnf);
+        } catch (UnsupportedLookAndFeelException e) {
+			JoDialog.showErrorDialog("error.lnf.not.supported");
+        }
+    }
+
+	public boolean isDarkLookAndFeel()
+	{
+		LookAndFeel lnf = UIManager.getLookAndFeel();
+		if (lnf instanceof FlatLaf) {
+			return ((FlatLaf) lnf).isDark();
+		}
+		return false;
 	}
 
 	//-------------------------------------------------------------------------------
@@ -3543,17 +3599,7 @@ public class Application
 		TextureCache.setDirectory(new File(theWorkingDirectory, "images/textures"));
 
 		/**	set look & feel	 */
-        String lnfClassName = Version.getSystemProperty("jose.look.and.feel");
-		if ("default".equalsIgnoreCase(lnfClassName))
-			lnfClassName = LookAndFeelList.getDefaultClassName();
-		if (lnfClassName==null)
-            lnfClassName = theUserProfile.getString("ui.look.and.feel");
-        if (lnfClassName==null) {
-            lnfClassName = UserProfile.getFactoryLookAndFeel();
-            if (lnfClassName==null)
-                lnfClassName = LookAndFeelList.getDefaultClassName();
-            theUserProfile.set("ui.look.and.feel",lnfClassName);
-        }
+		String lnfClassName = getLookAndFeelClassName();
 		setLookAndFeel(lnfClassName);
 
 		if (Version.mac) new MacAdapter();      //  listens to application menu
@@ -3607,6 +3653,27 @@ public class Application
 		setMode(firstMode);	//	set now so that it can be broadcast
 
 		SwingUtilities.invokeLater(new Startup());
+	}
+
+	private static String getLookAndFeelClassName()
+	{
+		/*
+			1. from cli -Djose.look.and.feel
+			2. from user profile "ui.look.and.feel.new"
+			3. from factory setting
+		 */
+		String lnfClassName = Version.getSystemProperty("jose.look.and.feel");
+		if ("default".equalsIgnoreCase(lnfClassName))
+			lnfClassName = LookAndFeelList.getDefaultClassName();
+		if (lnfClassName==null)
+            lnfClassName = theUserProfile.getString("ui.look.and.feel2");
+		if (lnfClassName==null) {
+			lnfClassName = UserProfile.getFactoryLookAndFeel();
+			if (lnfClassName==null)
+				lnfClassName = LookAndFeelList.getDefaultClassName();
+			theUserProfile.set("ui.look.and.feel2",lnfClassName);
+		}
+		return lnfClassName;
 	}
 
 
@@ -4025,10 +4092,13 @@ public class Application
 
 //		Point location;
 		WriteModeDialog dialog = (WriteModeDialog)getDialog("dialog.write.mode");
-		if (boardPanel() != null)
-			dialog.setLocation(boardPanel().getView().getScreenLocation(mv.to));
-		else
-			dialog.stagger(JoFrame.getActiveFrame(),10,10);
+		if (boardPanel() != null) {
+			Point locationOnScreen = boardPanel().getView().getLocationOnScreen(mv.to);
+			dialog.fitInto(locationOnScreen,boardPanel());
+		}
+		else {
+			dialog.stagger(JoFrame.getActiveFrame(), 10, 10);
+		}
 
 		dialog.show(writeMode);
 		writeMode = dialog.getWriteMode();
@@ -4347,8 +4417,12 @@ public class Application
 		//  close connection pool
 		try {
 			DBAdapter ad = JoConnection.getAdapter(false);
-			if (ad!=null && (ad.getServerMode()==DBAdapter.MODE_STANDALONE) && JoConnection.isConnected()) {
-				ad.shutDown(JoConnection.get());
+			if (ad!=null && (ad.getServerMode()==DBAdapter.MODE_STANDALONE) && JoConnection.isConnected())
+			try {
+				JoConnection conn = JoConnection.get();
+				ad.shutDown(conn);
+			} catch (CommunicationsException ioex) {
+				//	can't connect. so be it
 			}
 
 			JoConnection.closeAll();

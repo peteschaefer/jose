@@ -23,6 +23,7 @@ import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.icon.TextIcon;
 import de.jose.util.icon.TextShapeIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
@@ -40,17 +41,6 @@ public class JoToolBar
 	private static final Insets margin = new Insets(0,2,0,2);
 
 	protected Dimension minDimension = new Dimension(28,28);
-
-	public void actionPerformed(ActionEvent e)
-	{
-		/*	forward menu events to CommandDispatcher	*/
-		CommandListener target = getCommandListener();
-
-		/** forward all event to the target
-		 *  JoToolBar handles only "on.broadcast" commands by itself
-		 */
-		AbstractApplication.theCommandDispatcher.handle(e, target);
-	}
 
 	public JoToolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
 	{
@@ -127,6 +117,14 @@ public class JoToolBar
 		};
 		map.put("on.broadcast",action);
 
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				updateButtonStyle(dark);
+			}
+		};
+		map.put("update.ui",action);
+
 		/**
 		 * note that we don't handle button events directly
 		 * they are directed to the focus panel
@@ -173,13 +171,14 @@ public class JoToolBar
 
 	public void addButtons(List buttons)
 	{
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
 		if (buttons!=null)
 			for (int i=0; i < buttons.size(); i++) {
 				Object button = buttons.get(i);
 				if (button==null)
-					addSpacer(16);
+					addSpacer(10);
 				else 
-					addButton(button.toString());
+					addButton(button.toString(),dark);
 			}
 	}
 
@@ -194,7 +193,7 @@ public class JoToolBar
 		return result;
 	}
 		
-	private void addButton(String name)
+	private void addButton(String name, boolean dark)
 	{
 		if (name==null)
 			addSpacer(20);
@@ -203,19 +202,10 @@ public class JoToolBar
 			button.setName(name);
 			button.setActionCommand(name);
 
-			Dimension iconSize = createIcons(name, button);
-
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-
+			Dimension iconSize = createIcons(name, button, dark);
 			minDimension.width = Math.max(minDimension.width, iconSize.width);
 			minDimension.height = Math.max(minDimension.height, iconSize.height);
-			if (iconSize.width < 32)
-				button.setBorder(new EmptyBorder(2,2,2,2));
-			else
-				button.setBorder(new EmptyBorder(0,0,0,0));
 
-			button.setMargin(margin);
 			button.setToolTipText(Language.getTip(name));
             if (Version.mac)
                 button.putClientProperty("JButton.buttonType","toolbar");
@@ -223,7 +213,20 @@ public class JoToolBar
 		}
 	}
 
-	private static Dimension createIcons(String name, JButton button)
+	private void updateButtonStyle(boolean dark)
+	{
+		for(int i=0;i<getComponentCount();i++) {
+			Component comp = getComponent(i);
+			if (comp instanceof JButton) {
+				JButton button = (JButton)comp;
+				String name = button.getName();
+				createIcons(name, button, dark);
+			}
+		}
+	}
+
+
+	private static Dimension createIcons(String name, JButton button, boolean dark)
 	{
 		//	get icon specification from menu entry
 		String spec = JoMenuBar.ICON_SPECS.get(name);
@@ -231,7 +234,7 @@ public class JoToolBar
 		Icon[] icons = null;
 		if (spec != null) {
 			//	(1) create from Font Awesome
-			icons = createAwesomeIcons(spec,28);
+			icons = createAwesomeIcons(spec,28,dark);
 		}
 		if (icons==null) {
 			//	(2) lookup .gif in images/nav
@@ -246,6 +249,10 @@ public class JoToolBar
 		}
 
 		Dimension iconSize = new Dimension();
+
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
+		button.setContentAreaFilled(false);
 
 		if (icons!=null) {
 			assert(icons.length>=6);
@@ -266,6 +273,20 @@ public class JoToolBar
 
 			iconSize.width = icons[1].getIconWidth();
 			iconSize.height = icons[1].getIconHeight();
+
+			IconSpec ispec = new IconSpec(spec, 28);
+			if ((ispec.style & BUTTON) != 0) {
+				button.setFocusable(false); //  don't steal keyboard focus from game panel
+//		button.setBorder(null);
+				button.setBorderPainted(true);
+				button.setFocusPainted(true);
+				button.setContentAreaFilled(true);
+				button.setRolloverEnabled(true);
+				button.putClientProperty("JButton.buttonType","roundRect");
+				button.putClientProperty("Button.arc",999);
+			}
+			//	pad
+			padButtonMargin(button, iconSize, 24);
 		}
 		else {
 			button.setIcon(null);
@@ -276,6 +297,12 @@ public class JoToolBar
 			iconSize.height = 16;
 		}
 		return iconSize;
+	}
+
+	private static void padButtonMargin(JButton button, Dimension iconSize, int size) {
+		int hmargin = size - iconSize.width;
+		int vmargin = size - iconSize.height;
+		button.setMargin(new Insets(vmargin/2,(hmargin+1)/2, (vmargin+1)/2, hmargin/2));
 	}
 
 	static class IconSpec {
@@ -314,9 +341,82 @@ public class JoToolBar
 		}
 	}
 
-	public static Icon[] createAwesomeIcons(String spec, float size)
+	public static void makeDarkIcons(Icon[] icons) {
+		for(Icon icon : icons)
+			if (icon!=null)
+				makeDarkIcon(icon,0.5f);
+	}
+
+
+	public static void makeDarkIcons(Container container) {
+		for(int i=0; i < container.getComponentCount(); ++i) {
+			Component comp = container.getComponent(i);
+			if (comp instanceof JButton) {
+				makeDarkIcons((JButton)comp);
+			}
+			if (comp instanceof Container) {
+				makeDarkIcons((Container)comp);
+			}
+		}
+	}
+
+	public static void makeDarkIcons(JButton button) {
+		Icon[] icons = new Icon[] {
+				button.getIcon(),
+				button.getDisabledIcon(),
+				button.getPressedIcon(),
+				button.getRolloverIcon(),
+				button.getDisabledSelectedIcon(),
+				button.getSelectedIcon(),
+				button.getRolloverSelectedIcon(),
+		};
+		makeDarkIcons(icons);
+	}
+
+	public static void makeDarkIcon(Icon icon, float pastel) {
+		if (icon instanceof TextIcon) {
+			TextIcon textIcon = (TextIcon)icon;
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor(),pastel) );
+		}
+		if (icon instanceof TextShapeIcon) {
+			TextShapeIcon textIcon = (TextShapeIcon)icon;
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor(),pastel) );
+			textIcon.setBackgroundColor( StyleUtil.mapDarkIconColor(textIcon.getBackgroundColor(),pastel) );
+		}
+	}
+
+
+	public static Icon[] createAwesomeIcons(String sp, float size, boolean dark)
 	{
-		return create7AwesomeIcons(new IconSpec(spec,size));
+		IconSpec spec = new IconSpec(sp, size);
+		boolean isButton = ((spec.style&BUTTON)!=0);
+		if (isButton) {
+			//	button style icons
+			spec.style &= ~BUTTON;
+			spec.style |= FLAT;
+			spec.size *= 0.6f;
+		}
+
+		if (dark) {
+			//	high contrast colors!
+			spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0),0.3f));
+			if (spec.colors.size() < 2)
+				spec.colors.add(Color.darkGray);
+			else
+				spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1),0.3f));
+		}
+		else {
+			if (spec.colors.size() < 2)
+				spec.colors.add(Color.white);
+		}
+
+		Icon[] result = create7AwesomeIcons(spec);
+
+		if (isButton) {
+			spec.style &= BUTTON;
+		}
+
+		return result;
 	}
 
 	public static Icon create1AwesomeIcon(String spec, float size)
@@ -445,6 +545,23 @@ public class JoToolBar
 		for (int i=0; i < getComponentCount(); i++)
 			if (getComponent(i) instanceof AbstractButton) 
 				((AbstractButton)getComponent(i)).addActionListener(listener);
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		/*	forward menu events to CommandDispatcher	*/
+		if (e.getSource() instanceof JButton) {
+			//	tppl buttons clicked
+			CommandListener target = getCommandListener();
+			/** forward all event to the target
+			 *  JoToolBar handles only "on.broadcast" commands by itself
+			 */
+			AbstractApplication.theCommandDispatcher.handle(e, target);
+		}
+		if (e.getSource() instanceof JMenuItem) {
+			//	from context menu
+			AbstractApplication.theCommandDispatcher.handle(e, this);
+		}
 	}
 
 	public float getWeightX()	{ return 0.0f; }

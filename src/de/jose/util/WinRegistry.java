@@ -13,6 +13,7 @@
 
 package de.jose.util;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -82,6 +83,16 @@ public class WinRegistry
         WinUtils.loadLib();
         key = key.replace('/','\\');
         return get_value(key,value);
+    }
+
+    public static int getIntValue(String key, String value)
+    {
+        Object val = WinRegistry.getValue(key,value);
+        if (val!=null && val instanceof Number) {
+            int i = ((Number) val).intValue();
+            return i;
+        }
+        return Integer.MIN_VALUE;
     }
 
 	/**

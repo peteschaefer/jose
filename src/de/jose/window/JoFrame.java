@@ -259,8 +259,8 @@ public class JoFrame
 		if (r.x < screenBounds.x)	r.x = screenBounds.x;
 		if (r.y < screenBounds.y)	r.y = screenBounds.y;
 
-        if (r.width < 0) r.width = screenBounds.width+r.width-r.x;
-        if (r.height < 0) r.height = screenBounds.height+r.height-r.y;
+        if (r.width < 0) r.width = screenBounds.width+r.width;
+        if (r.height < 0) r.height = screenBounds.height+r.height;
 
 		if (r.x > (screenBounds.x+screenBounds.width-80)) r.x = screenBounds.x+screenBounds.width-r.width;
 		if (r.y > (screenBounds.y+screenBounds.height-80)) r.y = screenBounds.y+screenBounds.height-r.height;

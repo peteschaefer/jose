@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@ import de.jose.Util;
 import de.jose.util.AWTUtil;
 import de.jose.util.FontUtil;
 import de.jose.util.print.Triplet;
+import de.jose.util.style.StyleUtil;
 
 import javax.swing.text.*;
-import javax.swing.text.html.StyleSheet;
 import javax.swing.text.html.CSS;
 import java.util.*;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.awt.*;
  *  - styles maintain a parent-child hierarchy
  *
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class JoStyleContext
 		extends StyleContext
@@ -56,6 +56,31 @@ public class JoStyleContext
 		copyFrom(copy);
 	}
 
+	/**
+	 *
+	 * @return the root of the style hierarchy
+	 */
+	public Style getDefaultStyle() {
+		return getStyle("default");
+	}
+
+	public Color getDefaultColor() {
+		return StyleConstants.getForeground(getDefaultStyle());
+	}
+
+	@Override
+	public Color getForeground(AttributeSet attr)
+	{
+		Color acol = super.getForeground(attr);
+		Color dcol = getDefaultColor();
+		if (dcol.equals(Color.black) || dcol.equals(acol))
+			return acol;
+
+		//	else: dark mode, re-map the color!
+		Color rcol = StyleUtil.mapDarkTextColor(acol);
+		return rcol;
+	}
+
 	public JoStyleContext copy()
 	{
 		return new JoStyleContext(this);
@@ -65,7 +90,6 @@ public class JoStyleContext
 	{
 		return copy();
 	}
-
 
 	public float getFontScale()     	        { return fontScale; }
 
@@ -139,7 +163,7 @@ public class JoStyleContext
 	public Style[] getStylesPreOrder()
 	{
 		ArrayList collect = new ArrayList();
-		Style root = getStyle("base");
+		Style root = getStyle("bas");
 		collectStyles(root,collect);
 		Style[] result = new Style[collect.size()];
 		collect.toArray(result);
@@ -270,8 +294,9 @@ public class JoStyleContext
 	{
 		copyTree((StyleContext.NamedStyle)that.getStyle("base"),null);
 
-		if (that instanceof JoStyleContext)
-			this.fontScale = ((JoStyleContext)that).fontScale;
+		if (that instanceof JoStyleContext) {
+			this.fontScale = ((JoStyleContext) that).fontScale;
+		}
 	}
 
 	private void clearAttributes(MutableAttributeSet style)

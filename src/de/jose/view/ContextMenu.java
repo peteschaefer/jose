@@ -203,7 +203,8 @@ public class ContextMenu
 	{
 //System.err.println("create "+frame.getTitle());
 		JPanel glassPane = new JPanel(null);
-		glassPane.setSize(frame.getRootPane().getSize());
+		Rectangle bounds = frame.getContentPane().getBounds();
+		glassPane.setBounds(bounds);
 		glassPane.setOpaque(false);
 		frame.setGlassPane(glassPane);
 		glassPane.setVisible(true);
@@ -335,7 +336,8 @@ public class ContextMenu
 		switch (event.getID()) {
 		case MouseEvent.MOUSE_MOVED:
 			MouseEvent mevent = (MouseEvent)event;
-			if (dockDragging) {
+			Component comp = (Component)event.getSource();
+			if (dockDragging && comp.isShowing()) {
 				DockingZone z = findCurrentZone(ViewUtil.globalPoint(mevent));
 				setCurrentZone(z, (MouseEvent)event);
 			}

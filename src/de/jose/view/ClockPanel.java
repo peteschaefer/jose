@@ -23,6 +23,8 @@ import de.jose.image.ImgUtil;
 import de.jose.image.Surface;
 import de.jose.image.TextureCache;
 import de.jose.profile.LayoutProfile;
+import de.jose.profile.UserProfile;
+import de.jose.util.style.StyleUtil;
 import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
@@ -66,8 +68,8 @@ public class ClockPanel
 	/**	angle constants	 */
 	public static final double FULL_CIRCLE	= Math.PI*2;
 
-	public static final Color SHADOW_64 = new Color(0,0,0,64);
-	public static final Color SHADOW_96 = new Color(0,0,0,96);
+	public static final Color WHITE_96 = new Color(255,255,255,96);
+	public static final Color BLACK_96 = new Color(0,0,0,96);
 
     protected Icon WHITE_ICON  = null;
     protected Icon BLACK_ICON  = null;
@@ -89,6 +91,9 @@ public class ClockPanel
     protected Rectangle whiteBox;
     protected Rectangle blackBox;
 
+	protected Surface background;
+	protected boolean darkBackground = false;
+
 	//-------------------------------------------------------------------------------
 	//	Constructors
 	//-------------------------------------------------------------------------------
@@ -103,7 +108,8 @@ public class ClockPanel
 		super(profile,withContextMenu,withBorder);
 		theClock = clock;
 		setOpaque(true);
-		setFocusable(false);    //  don't request keyboard focus
+		setFocusable(false);
+		updateColors();
 	}
 
 	/**	called when first shown	 */
@@ -153,8 +159,15 @@ public class ClockPanel
 		return AbstractApplication.theUserProfile.getInt("clock.display");
 	}
 
-	public final Surface getBackgroundSurface() {
-		return (Surface)AbstractApplication.theUserProfile.get("board.surface.background");
+	public final void updateColors() {
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		updateColors(dark);
+	}
+
+	public final void updateColors(boolean dark) {
+		background = (Surface)AbstractApplication.theUserProfile.get("board.surface.background");
+		darkBackground = background.isDark();
+		repaint();
 	}
 
 	public final void setDisplayMode(int mod)	{
@@ -262,14 +275,13 @@ public class ClockPanel
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		Surface srf = getBackgroundSurface();
 		Rectangle r = g.getClipBounds();
-		if (srf.useTexture()) {
-			Image txtr = TextureCache.getTexture(srf.texture, TextureCache.LEVEL_MAX);
+		if (background.useTexture()) {
+			Image txtr = TextureCache.getTexture(background.texture, TextureCache.LEVEL_MAX);
 			TextureCache.paintTexture(g, r.x,r.y,r.width,r.height, txtr);
 		}
 		else {
-			g.setPaint(srf.getPaint(r.width,r.height));
+			g.setPaint(background.getPaint(r.width,r.height));
 			g.fillRect(r.x,r.y,r.width,r.height);
 		}
 
@@ -289,7 +301,8 @@ public class ClockPanel
 		}
 	}
 
-	public static void drawAnalogBackground(Graphics2D g, Rectangle box, boolean active)
+	public static void drawAnalogBackground(Graphics2D g, Rectangle box,
+											Color innerCol, Color rimCol)
 	{
 		Point center = ViewUtil.center(box);
 		AffineTransform oldTransform = g.getTransform();
@@ -305,10 +318,12 @@ public class ClockPanel
 		atf.scale(2.0, 2.0);
 		g.setTransform(atf);
 
-		g.setColor(Color.white);
+		//	inner
+		g.setColor(innerCol);
 		g.fillOval(-25,-25,50,50);
 
-		g.setColor(active ? Color.black:Color.lightGray);
+		//	rim
+		g.setColor(rimCol);
 		//g.setColor(SHADOW_64);
 		g.drawOval(-25,-25,50,50);
 		//g.setColor(active ? Color.black:Color.lightGray);
@@ -382,7 +397,10 @@ public class ClockPanel
           icon.paintIcon(this,g, box.x, box.y+box.height-icon.getIconHeight());
 
 //		time -= time%SECOND;	//	no use to show fractions of a second
-		drawAnalogBackground(g, box, active);
+		Color innerColor = getBackground();
+		Color activeColor = StyleUtil.invertColor(innerColor);
+		Color outerColor = active ? activeColor : Color.lightGray;
+		drawAnalogBackground(g, box, innerColor, outerColor );
 
   		Point center = ViewUtil.center(box);
 		AffineTransform oldTransform = g.getTransform();
@@ -402,7 +420,7 @@ public class ClockPanel
 		atf = (AffineTransform)baseTransform.clone();
 		atf.rotate(-hourAngle+FULL_CIRCLE/2);
 		g.setTransform(atf);
-		g.setColor(active ? Color.black : Color.lightGray);
+		g.setColor(activeColor);
 		g.fillPolygon(hourX, hourY, hourX.length);
 
 		/*	minute	*/
@@ -467,11 +485,13 @@ public class ClockPanel
 /*			g.setColor(SHADOW_64);
 			ViewUtil.drawCentered(g, text, p.x+box.height/24, p.y+box.height/24);
 */
-			g.setColor(Color.black);
+			Color activeColor = darkBackground ? Color.white:Color.black;
+			g.setColor(activeColor);
 			ViewUtil.drawCentered(g, text, p);
 		}
 		else {
-			g.setColor(SHADOW_96);
+			Color inactiveColor = darkBackground ? WHITE_96 : BLACK_96;
+			g.setColor(inactiveColor);
 			ViewUtil.drawCentered(g, text, p);
 		}
 
@@ -556,6 +576,21 @@ public class ClockPanel
 		};
 		map.put("broadcast.board.flip", action);
 
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				updateColors(dark);
+			}
+		};
+		map.put("update.ui", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				updateColors();
+			}
+		};
+		map.put("update.user.profile", action);
 	}
 
 

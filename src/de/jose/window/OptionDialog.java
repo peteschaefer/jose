@@ -26,8 +26,10 @@ import de.jose.plugin.EngineOptionReader;
 import de.jose.profile.UserProfile;
 import de.jose.util.*;
 import de.jose.util.file.ExecutableFileFilter;
+import de.jose.util.file.FileUtil;
 import de.jose.util.file.ImageFileFilter;
 import de.jose.util.map.IntHashSet;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.BoardPanel;
 import de.jose.view.BoardView2D;
 import de.jose.view.BoardView3D;
@@ -45,6 +47,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -77,6 +80,7 @@ public class OptionDialog
 	private OpeningBookList bookList;
 	private EngineOptionReader engOptionReader;
 	private de.jose.eboard.DialogComponent eboardCtrl;
+	private Date lnfTouched;
 
 	protected static String yellowIcon = ":#dddd00:#444444";
 	protected static String greenIcon = ":#22cc00:#444444";
@@ -197,26 +201,27 @@ public class OptionDialog
 	protected void initTab0(Component comp0)
 	{
 		JPanel tab0 = (JPanel)comp0;
+		JPanel sbox = newGridBox("dialog.option.user.title");
 
-		addWithLabel(tab0,0,0,4, "user.name", new JTextField(24));
-		addWithLabel(tab0,0,1,4, "user.language", new LanguageList(
+		addWithLabel(sbox,0,0,4, "user.name", new JTextField(24));
+		addWithLabel(sbox,0,1,4, "user.language", new LanguageList(
 						Language.getAvailableLanguages(Application.theApplication.theLanguageDirectory)));
-		addWithLabel(tab0,0,2,4, "ui.look.and.feel", new LookAndFeelList());
 
 		//  load recent games
-		addWithLabel(tab0, 0,3,4, null, newCheckBox("doc.load.history"));
+		addWithLabel(sbox, 0,2,4, null, newCheckBox("doc.load.history"));
 		//  classify by ECO
-		addWithLabel(tab0, 0,4,4, null, newCheckBox("doc.classify.eco"));
+		addWithLabel(sbox, 0,3,4, null, newCheckBox("doc.classify.eco"));
 		//  associate PGN files with jose
         if (Version.windows)
-		    addWithLabel(tab0, 0,5,4, null, newCheckBox("doc.associate.pgn"));
+		    addWithLabel(sbox, 0,4,4, null, newCheckBox("doc.associate.pgn"));
         /**
          * hardcoded on Mac OS X (in Contents/Info.plist)
          * don't know how to do on Linux ?! 
          */
+		addBox(tab0, 0,0,4, sbox);
 
 		//  sound
-		JPanel sbox = newGridBox("dialog.option.sound");
+		sbox = newGridBox("dialog.option.sound");
 
 		FileInput sinput = newFileInputField("sound.moves.dir");
 		sinput.setBaseDirectory(new File(Application.theWorkingDirectory,"sounds"));
@@ -229,7 +234,7 @@ public class OptionDialog
 		addWithLabel(sbox, 0,2,4, null, newCheckBox("sound.moves.ack.user"));   //  acknowledge user moves
 		addWithLabel(sbox, 0,3,4, null, newCheckBox("sound.moves.user"));   //  speak user moves
 
-		addBox(tab0, 0,6,4, sbox);
+		addBox(tab0, 0,1,4, sbox);
 
 		tab0.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
@@ -237,18 +242,28 @@ public class OptionDialog
 	protected void initTab1(Component comp1)
 	{
 		JPanel tab1 = (JPanel)comp1;
+		JPanel abox = newGridBox("dialog.option.notation");
 
 		FontList fontList = FontList.createDiagramFontList(20,true);
-		fontList.setVisibleRowCount(5);
-		fontList.setMinimumSize(new Dimension(80,320)); //  has no effect on fucking GridBagLayout ;-((
-		//  diagram font
-		addWithLabel(tab1, 0,0,4, 0.0, 0.0,
-				"font.diagram", fontList,
-		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		fontList.setVisibleRowCount(9);
+		fontList.setFixedCellHeight(21);
+
+		JScrollPane fontScroller = new JScrollPane(fontList,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		fontScroller.setMinimumSize(new Dimension(80,5*21));
+		fontScroller.setPreferredSize(new Dimension(80,9*21));
+		//	Important: for FontList to fill available space, we need to set sizes it at the enclosing JScrollPane !!
+
+		GridBagConstraints constr = (GridBagConstraints) ELEMENT_TWO.clone();
+		constr.fill = GridBagConstraints.BOTH;
+		constr.weighty = 4;
+		abox.add(fontScroller, constr);
+		fontList.setName("font.diagram");
+		reg(fontList);
 
 		//  write mode
-		addWithLabel(tab1, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode
+		addWithLabel(abox, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode
+
+		addBox(tab1, 0, 0, 4, abox);
 
 		//  Animation
 		JSlider aslider = AnimationDialog.createSlider("animation.speed");
@@ -261,17 +276,17 @@ public class OptionDialog
 		JPanel sbox = newGridBox("dialog.option.animation");
 
 		addWithLabel(sbox, 0,0,4, null, aslider);
-		addWithLabel(sbox, 1,1,3, null, newCheckBox("board.animation.hints"));    //  show hints
+		addWithLabel(sbox, 1,1,3, "", newCheckBox("board.animation.hints"));    //  show hints
 
 		addBox(tab1, 0,2,4, sbox);
 
 		// 	Board options
 		JPanel bbox = newGridBox("dialog.option.board");
 
-		addWithLabel(bbox, 0,0,2, null, newCheckBox("board.flip", "menu.game.flip", null));
+		addWithLabel(bbox, 0,0,2, "", newCheckBox("board.flip", "menu.game.flip", null));
 		addWithLabel(bbox, 2,0, 2, null, newCheckBox("board.evalbar", "menu.game.evalbar", null));
 
-		addWithLabel(bbox, 0,1,2, null, newCheckBox("board.coords", "menu.game.coords", null));
+		addWithLabel(bbox, 0,1,2, "", newCheckBox("board.coords", "menu.game.coords", null));
 		addWithLabel(bbox, 2,1,2, null, newCheckBox("board.suggestions", "menu.game.suggestions", null));
 
 		addBox(tab1, 0,3,4,bbox);
@@ -305,18 +320,52 @@ public class OptionDialog
 	{
 		JPanel tab2 = (JPanel)comp2;
 
-		addWithLabel(tab2,1, "board.surface.light", newChessSurfaceButton("board.surface.light",null));
-		addWithLabel(tab2,1, "board.surface.dark", newChessSurfaceButton("board.surface.dark",null));
+		JPanel sbox = newGridBox("dialog.option.board.title");
 
-		addWithLabel(tab2,1, "board.surface.white", newChessSurfaceButton("board.surface.white",null));
-		addWithLabel(tab2,1, "board.surface.black", newChessSurfaceButton("board.surface.black",null));
+		addWithLabel(sbox,1, "board.surface.light", newChessSurfaceButton("board.surface.light",null));
+		addWithLabel(sbox,1, "board.surface.dark", newChessSurfaceButton("board.surface.dark",null));
+		addWithLabel(sbox,1, "board.surface.white", newChessSurfaceButton("board.surface.white",null));
+		addWithLabel(sbox,1, "board.surface.black", newChessSurfaceButton("board.surface.black",null));
+		addWithLabel(sbox,1, "board.surface.background", newChessSurfaceButton("board.surface.background",null));
+		addWithLabel(sbox,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
 
-		addWithLabel(tab2,1, "board.surface.background", newChessSurfaceButton("board.surface.background",null));
+		addBox(tab2, 0,0,4, sbox);
 
-		addWithLabel(tab2,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
+		sbox = newGridBox("dialog.option.lnf.title");
+
+		LookAndFeelList lookAndFeelList = new LookAndFeelList();
+		JLabel label = (JLabel)addWithLabel(sbox,0,0,4, "ui.look.and.feel2", lookAndFeelList);
+		label.setText(Language.get("dialog.option.ui.look.and.feel"));
+
+		JoSurfaceButton sbutton1 = newChessSurfaceButton("lnf.select.color", null);
+		sbutton1.setTexturesEnabled(false);
+		sbutton1.setGradientsEnabled(false);
+
+		JoSurfaceButton sbutton2 = newChessSurfaceButton("lnf.accent.color",null);
+		sbutton2.setTexturesEnabled(false);
+		sbutton2.setGradientsEnabled(false);
+
+		JRadioButton radSystem = newRadioButton("accent.color.system");
+		JRadioButton radUser = newRadioButton("accent.color.user");
+		JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		radioPanel.add(reg(radSystem));
+		radioPanel.add(reg(radUser));
+		radSystem.addActionListener(this);
+		radUser.addActionListener(this);
+
+		add(sbox, radioPanel, ELEMENT_TWO);
+		newButtonGroup("accent.color");
+
+		radioPanel.setVisible(StyleUtil.supportsSystemAccentColors());
+
+		add(sbox, sbutton1, ELEMENT_TWO);
+		add(sbox, sbutton2, ELEMENT_TWO);
+		add(sbox, newButton("lnf.theme.editor",null,null,this), ELEMENT_TWO);
+		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
+
+		addBox(tab2, 0,1,4, sbox);
 
 		tab2.add(new JLabel(""), ELEMENT_REMAINDER);
-
 	}
 
 	protected void initTab3(Component comp3)
@@ -331,9 +380,10 @@ public class OptionDialog
 		JTextComponent editor = (JTextComponent)timeControls.getEditor().getEditorComponent();
 		editor.getDocument().addDocumentListener(this);
 
-		tab3.add(newLabel("dialog.option.time.control"), LABEL_ONE);
-		add(tab3, "time.control.popup", timeControls,
-		        gridConstraint(ELEMENT_ROW, 1,0,1));
+		JPanel sbox = newGridBox("dialog.option.time.control");
+		add(sbox, "time.control.popup", timeControls, ELEMENT_ONE);
+		add(sbox, null, new JLabel(""), ELEMENT_TWO);
+		addBox(tab3, 0,0,4, sbox);
 
 		Box box;
 		for (int phase=0; phase < 3; phase++) {
@@ -558,24 +608,25 @@ public class OptionDialog
 		}
 
 		JPanel tab6 = (JPanel)comp6;
+		JPanel sbox = newGridBox("board.3d.title");
 
         File dir3d = new File(Application.theWorkingDirectory, "3d");
-		addWithLabel(tab6, 0,0,2, "board.3d.model", new Model3dList(dir3d,Language.theLanguage.langCode,false));
+		addWithLabel(sbox, 0,0,2, "board.3d.model", new Model3dList(dir3d,Language.theLanguage.langCode,false));
 
         JCheckBox chkbox1, chkbox2;
 
-		addWithLabel(tab6, 0,1,2, "board.3d.surface.frame", newSurfaceButton("board.3d.surface.frame",null));
-		addWithLabel(tab6, 0,2,2, "board.3d.light.ambient", newColorButton("board.3d.light.ambient",null));
-		addWithLabel(tab6, 0,3,2, "board.3d.light.directional", newColorButton("board.3d.light.directional",null));
+		addWithLabel(sbox, 0,1,2, "board.3d.surface.frame", newSurfaceButton("board.3d.surface.frame",null));
+		addWithLabel(sbox, 0,2,2, "board.3d.light.ambient", newColorButton("board.3d.light.ambient",null));
+		addWithLabel(sbox, 0,3,2, "board.3d.light.directional", newColorButton("board.3d.light.directional",null));
 
-		addWithLabel(tab6, 2,0,2, null, newCheckBox("board.3d.clock"));
-        addWithLabel(tab6, 2,1,2, null, newCheckBox("board.hilite.squares"));
+		addWithLabel(sbox, 2,0,2, null, newCheckBox("board.3d.clock"));
+        addWithLabel(sbox, 2,1,2, null, newCheckBox("board.hilite.squares"));
 
-		addWithLabel(tab6, 2,2,2, null, newCheckBox("board.3d.shadow"));
-		addWithLabel(tab6, 2,3,2, null, newCheckBox("board.3d.reflection"));
+		addWithLabel(sbox, 2,2,2, null, newCheckBox("board.3d.shadow"));
+		addWithLabel(sbox, 2,3,2, null, newCheckBox("board.3d.reflection"));
 
-        addWithLabel(tab6, 0,4,2, null, chkbox2 = newCheckBox("board.3d.fsaa"));
-        addWithLabel(tab6, 2,4,2, null, chkbox1 = newCheckBox("board.3d.anisotropic"));
+        addWithLabel(sbox, 0,4,2, null, chkbox2 = newCheckBox("board.3d.fsaa"));
+        addWithLabel(sbox, 2,4,2, null, chkbox1 = newCheckBox("board.3d.anisotropic"));
 
 		chkbox1.setEnabled(false);
 		chkbox2.setEnabled(false);
@@ -590,14 +641,15 @@ public class OptionDialog
 //		tab5.add(tab5,1,newLabel("board.3d.knight.angle"));
 		JSlider slider = createAngleSlider("board.3d.knight.angle");
 		slider.addChangeListener(this);
-		addWithLabel(tab6, 0,5,4, "board.3d.knight.angle", slider);
+		addWithLabel(sbox, 0,5,4, "board.3d.knight.angle", slider);
 
 		if (Version.windows) {
 			//  choose OpenGL on Windows. Default is DirectX
 			//  there is no choice on Linux
-			addWithLabel(tab6, 0,6,2, null, newCheckBox("board.3d.ogl"));
+			addWithLabel(sbox, 0,6,2, null, newCheckBox("board.3d.ogl"));
 		}
 
+		addBox(tab6,0,0,4,sbox);
         tab6.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
 
@@ -629,7 +681,7 @@ public class OptionDialog
 	{
 		JPanel tab7 = (JPanel)comp7;
 
-		theStyleChooser = new StyleChooser(true);
+		theStyleChooser = new StyleChooser();
 		add(tab7, theStyleChooser, ELEMENT_NEXTROW_REMAINDER);
 	}
 
@@ -641,7 +693,8 @@ public class OptionDialog
 		bookList.addListSelectionListener(this);
 
 		//  list of opening books
-		add(tab5, "book.list", new JScrollPane(bookList),
+		JPanel sbox = newGridBox("book.list.title");
+		add(sbox, "book.list", new JScrollPane(bookList),
 		        gridConstraint(ELEMENT_ONE, 0,0,1, GridBagConstraints.BOTH));
 
 		float iconSize = 24f;
@@ -665,12 +718,16 @@ public class OptionDialog
 		buttonBox.add(reg(downloadButton), ELEMENT_ONE_ROW);
 		downloadButton.setVisible(false);
 
-		add(tab5, "book.buttons", buttonBox,
+		add(sbox, "book.buttons", buttonBox,
 				gridConstraint(LABEL_ONE, 1,0,1));
+		addBox(tab5, 0,0, 4, sbox);
 
 		//  engine play options
 		Box engineBox = Box.createVerticalBox();
-		engineBox.setBorder(new TitledBorder(Language.get("book.engine.options")));
+		engineBox.setBorder(
+				new CompoundBorder(
+					new TitledBorder(Language.get("book.engine.options")),
+						new EmptyBorder(8,8,8,8)));
 		//  When playing against a chess engine:
 		engineBox.add(newLabel("book.engine.options.tip")); //, gridConstraint(ELEMENT_ONE,0,0,2));
 
@@ -886,6 +943,13 @@ public class OptionDialog
 		map.put("dialog.option.plugin.default",action);
 
 		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				openThemeEditor();
+			}
+		};
+		map.put("lnf.theme.editor",action);
+
+		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
 			{
 				//  notification from style editor
@@ -899,12 +963,44 @@ public class OptionDialog
 		map.put("styles.modified",action);
 
 		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception
+			{
+				boolean dark = (Boolean)cmd.moreData;
+				if (theStyleChooser!=null)
+					theStyleChooser.updateUI(dark);
+				//	forward to JoDialog
+				SwingUtilities.updateComponentTreeUI(OptionDialog.this.frame);
+			}
+		};
+		map.put("update.ui",action);
+
+
+
+
+		action = new CommandAction() {
 			@Override
 			public void Do(Command cmd) throws Exception {
 				OptionDialog.super.getTabbedPane().setSelectedIndex(4);
 			}
 		};
 		map.put("plugin.search.time.control.link",action);
+	}
+
+	private void openThemeEditor()
+	{
+		lnfTouched = new Date();
+		String[] args = new String[] {
+				"jre/bin/java",
+				"-jar", "lib/plaf/flatlaf-theme-editor.jar",
+				"config/themes" };
+        try {
+            Runtime.getRuntime().exec(args);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //com.formdev.flatlaf.themeeditor.FlatLafThemeEditor.main( args );
+		//	would work too, but hangs up sooner or later
 	}
 
 	public void addBooks(File[] files)
@@ -953,7 +1049,47 @@ public class OptionDialog
 		//eboardCtrl.eboard.readProfile(profile);
 	}
 
-	public void readTab2()  { read(2,profile.settings); }
+	public void readTab2()  {
+		read(2,profile.settings);
+
+		if (StyleUtil.supportsSystemAccentColors()) {
+			String accent = profile.getString("accent.color", "system");
+			useSystemAccentColors(accent.equals("system"));
+		}
+		else {
+			useSystemAccentColors(false);
+		}
+	}
+
+	private void useSystemAccentColors(boolean system)
+	{
+		JoSurfaceButton button1 = (JoSurfaceButton) getElement("lnf.select.color");
+		JoSurfaceButton button2 = (JoSurfaceButton) getElement("lnf.accent.color");
+
+		if (system) {
+			button1.setColor(StyleUtil.getSystemSelectionColor());
+			button2.setColor(StyleUtil.getSystemAccentColor());
+		}
+		//	else: retrieve from profile
+		button1.setEnabled(!system);
+		button2.setEnabled(!system);
+
+		JRadioButton radsys = (JRadioButton)getElement("accent.color.system");
+		JRadioButton radusr = (JRadioButton)getElement("accent.color.user");
+
+		if (radsys!=null) radsys.setSelected(  system);
+		if (radusr!=null) radusr.setSelected(! system);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("accent.color.system"))
+			useSystemAccentColors(true);
+		if (e.getActionCommand().equals("accent.color.user"))
+			useSystemAccentColors(false);
+
+		super.actionPerformed(e);
+	}
 
 	public void readTab3()  {
 		read(3,profile.settings);
@@ -1042,8 +1178,6 @@ public class OptionDialog
 			theStyleChooser.expand("body");
 			theStyleChooser.expand("body.line");
 		}
-
-		theStyleChooser.setAntiAliasing(profile.getBoolean("doc.panel.antialias"));
 	}
 
 	public void readTab5()
@@ -1132,7 +1266,7 @@ public class OptionDialog
 		if (isInited(7))
 		{
 			styleDirty = styleDirty || theStyleChooser.isDirty();
-			profile.set("doc.panel.antialias", theStyleChooser.getAntiAliasing());
+			profile.set("doc.panel.antialias", true);	//	@deprecated
 			profile.set("doc.move.format",theStyleChooser.getMoveFormat());
 		}
 
@@ -1157,8 +1291,13 @@ public class OptionDialog
 		try {
 			if (profile.changed("user.language", oldValues))
 				Application.theApplication.setLanguage(profile.getString("user.language"));
-			if (profile.changed("ui.look.and.feel", oldValues))
-				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel"));
+			if (profile.changed("ui.look.and.feel2", oldValues))
+				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel2"));
+			if (profile.changed("lnf.accent.color", oldValues) ||
+				profile.changed("lnf.select.color", oldValues) ||
+				profile.changed("accent.color", oldValues) ||
+				(lnfTouched!=null) && FileUtil.wasFileTouched(new File("config/themes"),lnfTouched))
+				Application.theApplication.resetLookAndFeel();
 			if (profile.changed("font.diagram",oldValues) ||
 			    profile.changed("board.surface.light",oldValues) ||
 				profile.changed("board.surface.dark",oldValues) ||
@@ -1186,10 +1325,9 @@ public class OptionDialog
 					Application.theApplication.boardPanel().updateProfile(profile);
 			if (profile.changed("board.surface.background",oldValues))
 				if (Application.theApplication.clockPanel() != null)
-					Application.theApplication.clockPanel().repaint();
+					Application.theApplication.clockPanel().updateColors();
 			if (profile.changed("doc.panel.tab.placement",oldValues) ||
-				profile.changed("doc.pabel.tab.layout",oldValues) ||
-			    profile.changed("doc.panel.antialias",oldValues))
+				profile.changed("doc.pabel.tab.layout",oldValues))
 				if (Application.theApplication.docPanel() != null)
 					Application.theApplication.docPanel().updateFromProfile(profile);
 			if (profile.changed("doc.associate.pgn",oldValues))
@@ -1614,6 +1752,13 @@ public class OptionDialog
                 }
 			}
 		}
+		//pluginScroller.getVerticalScrollBar().setValue(0);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				pluginScroller.getViewport().setViewPosition(new Point(0,0));
+			}
+		});
+		//System.out.println("engine options read");
 	}
 
 	protected void readPluginInfo(Element cfg, boolean strictErrors) throws FileNotFoundException
@@ -1638,7 +1783,9 @@ public class OptionDialog
 		File logo =(File)getValueByName("plugin.logo");
 
 		try {
-			if (EnginePlugin.setPaths(cfg, Version.osDir, dir,exe,logo, Application.theWorkingDirectory))
+			if (EnginePlugin.setPaths(cfg, Version.osDir, dir,exe, Application.theWorkingDirectory))
+				dirty = true;
+			if (EnginePlugin.setLogoPath(cfg, Version.osDir, dir,logo))
 				dirty = true;
 
 		} catch (FileNotFoundException e) {

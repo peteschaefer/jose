@@ -16,12 +16,14 @@ import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.Version;
 import de.jose.pgn.Game;
+import de.jose.view.ViewUtil;
 import de.jose.window.JoDialog;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
@@ -67,28 +69,28 @@ public class WriteModeDialog
 
 		JButton button;
 		button = addButton("write.mode.new.line");
-		button.putClientProperty("value",new Integer(Game.NEW_LINE));
+		button.putClientProperty("value",Game.NEW_LINE);
 		button.setFont(bfont);
 		button.setPreferredSize(butSize);
 		button.setMnemonic('N');
 		frame.getRootPane().setDefaultButton(button);
 
 		button = addButton("write.mode.new.main.line");
-		button.putClientProperty("value",new Integer(Game.NEW_MAIN_LINE));
+		button.putClientProperty("value",Game.NEW_MAIN_LINE);
 		button.setFont(bfont);
 		button.setPreferredSize(butSize);
 		button.setMnemonic('M');
 		button.setSize(butSize);
 
 		button = addButton("write.mode.overwrite");
-		button.putClientProperty("value",new Integer(Game.OVERWRITE));
+		button.putClientProperty("value",Game.OVERWRITE);
 		button.setFont(bfont);
 		button.setPreferredSize(butSize);
 		button.setMnemonic('O');
 		button.setSize(butSize);
 
 		button = addButton("write.mode.cancel");
-		button.putClientProperty("value",new Integer(Game.CANCEL));
+		button.putClientProperty("value",Game.CANCEL);
 		button.setFont(bfont);
 		button.setMnemonic('C');
 		//button.setMnemonic(KeyEvent.VK_ESCAPE);
@@ -99,6 +101,23 @@ public class WriteModeDialog
 		dontAsk.setFont(font);
 
 		frame.getContentPane().remove(elementPane);
+
+		frame.getRootPane().registerKeyboardAction(e -> {
+			result = Game.CANCEL;
+			hide();
+		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_FOCUSED);
+	}
+
+	public void fitInto(Point locationOnScreen, Component board)
+	{
+		//	global bounds of board panel
+		Rectangle bbounds = ViewUtil.boundsOnScreen(board);
+		//	global bounds of popup dialog
+		Rectangle dbounds = this.getBounds();
+		dbounds.x = locationOnScreen.x;
+		dbounds.y = locationOnScreen.y;
+		ViewUtil.fitInto(dbounds,bbounds);
+		this.setLocation(new Point(dbounds.x,dbounds.y));
 	}
 
 

@@ -17,6 +17,8 @@ import de.jose.util.ListUtil;
 import de.jose.util.file.FileUtil;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -103,6 +105,16 @@ public class Util
 			if (equals(which,what)) result++;
 		}
 		return result;
+	}
+	public static void scale(Rectangle2D rect, AffineTransform tf)
+	{
+		scale(rect,tf.getScaleX(),tf.getScaleY());
+	}
+
+	public static void scale(Rectangle2D rect, double scaleX, double scaleY)
+	{
+		rect.setRect(rect.getX()*scaleX, rect.getY()*scaleY,
+				rect.getWidth()*scaleX, rect.getHeight()*scaleY);
 	}
 
 	//-------------------------------------------------------------------------------

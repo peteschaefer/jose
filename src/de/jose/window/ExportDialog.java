@@ -67,10 +67,12 @@ public class ExportDialog
 	public static final String BROWSER  = "dialog.export.browser";
 	public static final String SAVE     = "dialog.export.save";
 	public static final String SAVEAS   = "dialog.export.saveas";
-
-
-	public static Color SELECTED = new Color(0xa0,0xa0,0xb0);
 	public static Color BACKGROUND = new Color(0xee,0xee,0xef);
+
+	public static Color getInfoBackground() {
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
+		return dark ? Color.gray : BACKGROUND;
+	}
 
 	protected ExportContext context;
 
@@ -413,10 +415,12 @@ public class ExportDialog
 
 		unit = new Units.UnitPopup();
 
-		add(pp,newLabel("dialog.export.paper.format"), LABEL_ONE);
+		GridBagConstraints labelOne = (GridBagConstraints) LABEL_ONE.clone();
+		labelOne.ipadx = 60;
+		add(pp,newLabel("dialog.export.paper.format"), labelOne);
 		add(pp,paperList, ELEMENT_ROW);
 
-		add(pp,newLabel("dialog.export.paper.size"), LABEL_ONE);
+		add(pp,newLabel("dialog.export.paper.size"), labelOne);
 
 		Box box = Box.createHorizontalBox();
 		box.add(tWidth);
@@ -436,13 +440,13 @@ public class ExportDialog
 		tLeft = new JTextField("dialog.export.margin.left");
 		tRight = new JTextField("dialog.export.margin.right");
 
-		add(pm,newLabel("dialog.export.margin.top"), LABEL_ONE);
+		add(pm,newLabel("dialog.export.margin.top"), labelOne);
 		add(pm,tTop, ELEMENT_TWO);
 
 		add(pm,newLabel("dialog.export.margin.left"), LABEL_THREE);
 		add(pm,tLeft, ELEMENT_FOUR);
 
-		add(pm,newLabel("dialog.export.margin.bottom"), LABEL_ONE);
+		add(pm,newLabel("dialog.export.margin.bottom"), labelOne);
 		add(pm,tBottom, ELEMENT_TWO);
 
 		add(pm,newLabel("dialog.export.margin.right"), LABEL_THREE);
@@ -506,7 +510,7 @@ public class ExportDialog
 		sourceInfo = new JLabel();
 //		reg(sourceInfo);
 		sourceInfo.setOpaque(true);
-		sourceInfo.setBackground(BACKGROUND);
+		sourceInfo.setBackground(getInfoBackground());
 		sourceInfo.setBorder(new CompoundBorder(
 		                    new BevelBorder(BevelBorder.LOWERED),
 		                    new EmptyBorder(4,8,4,4)));
@@ -518,7 +522,7 @@ public class ExportDialog
 		        new BevelBorder(BevelBorder.LOWERED),
 		        new EmptyBorder(4,4,4,4)));
 		exportUserInfo.setOpaque(true);
-		exportUserInfo.setBackground(BACKGROUND);
+		exportUserInfo.setBackground(getInfoBackground());
 
 		/** options */
 		exportOptions = newGridBox(null);
@@ -561,7 +565,8 @@ public class ExportDialog
 	{
 		JPanel tab2 = (JPanel)comp2;
 
-		styleChooser = new StyleChooser(false);
+		styleChooser = new StyleChooser();
+		styleChooser.forPrintOnly(true);
 
 		add(tab2, styleChooser, ELEMENT_NEXTROW_REMAINDER);
 	}
@@ -711,13 +716,13 @@ public class ExportDialog
 		 //  create images & css NOW
 		add(exportOptions, newButton("xsl.create.images"), gridConstraint(ELEMENT_TWO_SMALL,1,6,3));
 
-		add(exportOptions,newLabel(""),ELEMENT_REMAINDER);
+		add(exportOptions,newLabel(" "),ELEMENT_REMAINDER);
 	}
 
 	protected void createFOPanel()
 	{
-		//  embed fonts in PDF
-		add(exportOptions, newCheckBox("xsl.pdf.embed"), gridConstraint(ELEMENT_TWO_SMALL,1,1,3));
+		//  embed fonts in PDF. @deprecated. ALWAYS true
+		//add(exportOptions, newCheckBox("xsl.pdf.embed"), gridConstraint(ELEMENT_TWO_SMALL,1,1,3));
 		//  additional font path (optional)
 /*
 		FileInput dirInput = newFileInputField("xsl.pdf.font.dir");
@@ -727,7 +732,7 @@ public class ExportDialog
 		add(exportOptions,dirInput, gridConstraint(ELEMENT_TWO,1,2,3));    		//  image & css directory (optional)
 */
 
-		add(exportOptions,newLabel(""),ELEMENT_REMAINDER);
+		add(exportOptions,newLabel(" "),ELEMENT_REMAINDER);
 	}
 
 	protected JFileChooser getFileChooser(boolean embedded)

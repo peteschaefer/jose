@@ -840,8 +840,8 @@ dialog.about.3	=	<b>Översättningar:</b><br>\
 			Hans Bodlaender \
 			(www.chessvariants.com/d.font/fonts.html) <br>\
 			<br>\
-			<b>Metouia Look & Feel:</b> <br>\
-			Taoufik Romdhane (mlf.sourceforge.net)<br>\
+               <b>FlatLaf Look & Feel:</b> <br>\
+               FormDev Software (www.formdev.com/flatlaf)<br>\
 			<br>\
 			<b>3D Modellering:</b> <br>\
 			Renzo Del Fabbro, \

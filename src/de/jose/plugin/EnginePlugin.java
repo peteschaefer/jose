@@ -220,19 +220,10 @@ abstract public class EnginePlugin
 	abstract public int getEvaluationPointOfView();
 
 	public static boolean setPaths(Element cfg, String os,
-	                            File dir, File exe, File logo,
+	                            File dir, File exe,
 	                            File workingDir) throws FileNotFoundException
 	{
 		boolean dirty = false;
-
-		//  dirPath is either relative to workingDir, or absolute
-		String dirPath = getLocalPath(dir,workingDir,"%local%");
-
-		//  exePath is either relative to dir, or absolute
-		String exePath = getLocalPath(exe,dir,"%dir%");
-
-		//  same with logo
-		String logoPath = getLocalPath(logo,dir,"%dir%");
 
 		//  apply
 		if (getExecElement(cfg,os,false)==null) {
@@ -241,9 +232,33 @@ abstract public class EnginePlugin
 			dirty = true;
 		}
 
+		//  dirPath is either relative to workingDir, or absolute
+		String dirPath = getLocalPath(dir,workingDir,"%local%");
 		if (setDir(cfg,dirPath)) dirty = true;
+
+		//  exePath is either relative to dir, or absolute
+		String exePath = getLocalPath(exe,dir,"%dir%");
 		if (setExecutable(cfg,os,exePath)) dirty = true;
+
+		return dirty;
+	}
+
+	public static boolean setLogoPath(Element cfg, String os,
+									  File dir, File logo) throws FileNotFoundException
+	{
+		boolean dirty = false;
+
+		//  apply
+		if (getExecElement(cfg,os,false)==null) {
+			//  create if necessary
+			getExecElement(cfg,os,true);
+			dirty = true;
+		}
+
+		//  same with logo
+		String logoPath = getLocalPath(logo,dir,"%dir%");
 		if (setLogo(cfg,logoPath)) dirty = true;
+
 		return dirty;
 	}
 
@@ -273,15 +288,12 @@ abstract public class EnginePlugin
 		addInputListener(this,1);
 
 		File dir = getDir(osName);
-        if ((dir==null) || !dir.exists())
-            throw new IOException("can't run on "+osName);
+		if ((dir==null) || !dir.exists() || !dir.isDirectory())
+			throw new FileNotFoundException("home directory "+dir+" not found");
 
         File executable = getExecutable(osName,dir);
-
-        if (!dir.exists() || !dir.isDirectory())
-            throw new FileNotFoundException("home directory "+dir+" not found");
         if (executable==null)
-            throw new FileNotFoundException("not executable");
+            throw new FileNotFoundException("executable not set");
         else if (!executable.exists())
             throw new FileNotFoundException("executable "+executable+" not found");
 

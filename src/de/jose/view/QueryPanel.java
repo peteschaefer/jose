@@ -220,6 +220,7 @@ public class QueryPanel
 
 		//	set up layout
 		cardPanel = new JTabbedPane();
+		cardPanel.setOpaque(true);
 
 		initInfoPanel();
 		initCommentPanel();
@@ -236,18 +237,6 @@ public class QueryPanel
 
 		JoDialog.rescaleFonts(this);
 	}
-
-/*
-	public void startContinuousResize()
-	{
-		if (posEditor!=null) posEditor.startContinuousResize();
-	}
-
-	public void finishContinuousResize()
-	{
-		if (posEditor!=null) posEditor.finishContinuousResize();
-	}
-*/
 
 	protected void setInitialValues()
 	{
@@ -389,7 +378,7 @@ public class QueryPanel
         controls.add(Box.createVerticalStrut(10));
 
         //  Edit buttons
-		createEditButtons(controls,this);
+		createEditButtons(controls,this, Application.theApplication.isDarkLookAndFeel());
 
 		posPanel.add(posEditor, BorderLayout.CENTER);
 		posPanel.add(controls, BorderLayout.WEST);
@@ -397,13 +386,16 @@ public class QueryPanel
 		addTab("dialog.query.position", posPanel, tabIcon[2],true);
 	}
 
-	public static void createEditButtons(JComponent controls, ActionListener list)
+	public static void createEditButtons(JComponent controls, ActionListener list, boolean dark)
 	{
 		controls.add( JoDialog.newLinkButton("dialog.setup.clear",     "menu.edit.clear",list) );
 		controls.add( JoDialog.newLinkButton("dialog.setup.initial",   "menu.web.home", list) );
 		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", list) );
+
+		if (dark)
+			JoToolBar.makeDarkIcons(controls);
 	}
 
 	protected void addTab(String id, JComponent component, Icon icon, boolean scrollable)
@@ -552,6 +544,15 @@ public class QueryPanel
 			}
 		};
 		map.put("menu.edit.paste",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				if (dark) JoToolBar.makeDarkIcons(posPanel);
+				//posEditor.setBackground(dark ? Color.darkGray:Color.lightGray);	//	todo why not? UIManager.getColor("Panel.background"));
+			}
+		};
+		map.put("update.ui", action);
 	}
 
     protected void search()
@@ -688,15 +689,8 @@ public class QueryPanel
 
 	public void stateChanged(ChangeEvent evt)
 	{
-		if (colorSens.isSelected()) {
-			whiteLabel.setForeground(Color.black);
-			blackLabel.setForeground(Color.black);
-		}
-		else {
-			whiteLabel.setForeground(Color.lightGray);
-			blackLabel.setForeground(Color.lightGray);
-		}
-
+		whiteLabel.setVisible(colorSens.isSelected());
+		blackLabel.setVisible(colorSens.isSelected());
 		caseSens.setEnabled(! soundSens.isSelected());
 
 		activate(evt.getSource());

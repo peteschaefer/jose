@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import java.awt.event.ItemEvent;
  *	a button that displays a color selection
  * 	on clicking the button, a ColorChooser pops up
  *
- *	@author Peter Schäfer
+ *	@author Peter Schï¿½fer
  */
 
 public class JoColorButton
@@ -98,7 +98,7 @@ public class JoColorButton
 		if (evt.getActionCommand().equals("OK"))
 		{
 			setColor(chooserPane.getColor());
-			fireItemStateChanged(new ItemEvent(this,ItemEvent.ITEM_STATE_CHANGED, 
+			fireItemStateChanged(new ItemEvent(this,ItemEvent.SELECTED,
 									color,ItemEvent.SELECTED));
 			repaint();
 			chooser.dispose();

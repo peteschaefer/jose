@@ -154,12 +154,12 @@
 		<separator/>
 		<item id="window.collectionlist"	check="true"	key="control 5"/>
 		<item id="window.query"				check="true"	key="control 6"/>
-		<item id="window.gamelist"			check="true"	icon="\uf00b:#0000aa:%110" key="control 7"/>
+		<item id="window.gamelist"			check="true"	icon="\uf00b:#0000aa" key="control 7"/>
 		<!--item id="window.help"				check="false"/-->
 		<!--item id="window.sqlquery"	check="true"/-->
 		<!--item id="window.sqllist"	check="true"/-->
 		<separator/>
-		<item id="window.toolbar.symbols"	check="false"/>
+		<item id="window.toolbar.symbols"	check="false"	icon="\uf249:#eecc00"/> <!--icon="\uf06a:#ffaaaa"-->
 		<item id="window.toolbar.1"			check="true"/>
 		<item id="window.toolbar.2"			check="true"/>
 		<!--item id="window.toolbar.3"		check="true"/-->

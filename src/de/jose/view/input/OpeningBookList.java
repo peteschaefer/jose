@@ -207,8 +207,10 @@ public class OpeningBookList
 		{
 			if (isSelected)
 				setBackground(getSelectionBackground());
-			else
-				setBackground(Color.white);
+			else {
+				Color background = UIManager.getColor("List.background");
+				setBackground(background.brighter());
+			}
 
 			setValue((BookFile)value);
 

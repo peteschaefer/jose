@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
  *	a button that displays a surface selection (color, or gradient, or texture)
  * 	on clicking the button, a JoSurfaceChooser pops up
  *
- *	@author Peter Schäfer
+ *	@author Peter Schï¿½fer
  */
 
 public class JoSurfaceButton
@@ -38,6 +38,7 @@ public class JoSurfaceButton
 	protected Surface surface;
 	protected static JoSurfaceChooser chooserPane;
 	protected JDialog chooser;
+	protected boolean gradientsEnabled=true, texturesEnabled=true;
 
 	public JoSurfaceButton()
 	{
@@ -52,9 +53,23 @@ public class JoSurfaceButton
         }
 	}
 	
-	public Surface getSurface()				{ return surface.copy(); }
+	public Surface getSurface()				{
+		if (surface == null)
+			return null;
+		else
+			return surface.copy();
+	}
 
-	public void setSurface(Surface surf)	{ surface = surf.copy(); }
+	public void setSurface(Surface surf)	{
+		if (surf!=null)
+			surface = surf.copy();
+		else
+			surface = null;
+	}
+
+	public void setColor(Color col) {
+		setSurface(Surface.newColor(col));
+	}
 
 	//  implements ValueHolder
 	public Object getValue()                { return getSurface(); }
@@ -98,12 +113,18 @@ public class JoSurfaceButton
 
     protected JoSurfaceChooser createChooser()
     {
-        return new JoSurfaceChooser();
+		JoSurfaceChooser result = new JoSurfaceChooser();
+		result.setTexturesEnabled(texturesEnabled);
+		result.setGradientsEnabled(gradientsEnabled);
+		return result;
     }
 
 	public void paintComponent(Graphics g)
 	{
-		if (surface.useTexture())
+		if (surface==null) {
+
+		}
+		else if (surface.useTexture())
 		{	
 			try {
 				TextureCache.paintTexture(g, 0, 0, getWidth(), getHeight(),
@@ -133,4 +154,14 @@ public class JoSurfaceButton
 		return (col.getRed()+col.getGreen()+col.getBlue()) <= (3*256/2);
 	}
 
+	public void setTexturesEnabled(boolean b) {
+		texturesEnabled=b;
+		if (chooserPane!=null)
+			chooserPane.setTexturesEnabled(b);
+	}
+	public void setGradientsEnabled(boolean b) {
+		gradientsEnabled=b;
+		if (chooserPane!=null)
+			chooserPane.setGradientsEnabled(b);
+	}
 }

@@ -868,8 +868,8 @@ dialog.about.3	=	<b>Traducciones:</b><br>\
 			Hans Bodlaender \
 			(www.chessvariants.com/d.font/fonts.html) <br>\
 			<br>\
-			<b>Presentación Metouia:</b> <br>\
-			Taoufik Romdhane (mlf.sourceforge.net)<br>\
+			<b>Presentación FlatLaf:</b> <br>\
+               FormDev Software (www.formdev.com/flatlaf)<br>\
 			<br>\
 			<b>Modelado 3D:</b> <br>\
 			Renzo Del Fabbro, \
