@@ -62,10 +62,8 @@ java.util.EmptyStackException
 [?] game vs. opening explorer:
     - user moves have no value (and it shows)
 
-
-[x] DON'T delete system folders (auto-save, clipboard, ...)
-    [x] re-create on demand (like for Download)
-    [x] move to top when used
+[ ] bug: offer draw, resign
+[ ] linux: fill in jose.desktop from shell script
 
 [ ] Annotation: layout in small panels
     [x] ScrollPane without bars; use mouse wheel scrolling
