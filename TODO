@@ -70,8 +70,6 @@ Alternative JREs:
 
 ==== Interesting New Features
 
-* show wdl scores with bars (instead of plain text)
-
 * LiChess Opening Explorer
     - download top games for a variation
     1. show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)

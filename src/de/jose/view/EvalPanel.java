@@ -71,6 +71,7 @@ public class EvalPanel
 				//  adjust array, if necessary !
 				boolean destructive = Util.toboolean(cmd.moreData);
 				if (destructive) view.updateGame();
+				view.repaint1(view.game.getCurrentMove());
 			}
 		};
 		map.put("move.notify", action);

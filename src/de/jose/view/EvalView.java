@@ -42,7 +42,7 @@ public class EvalView
 	/** current game    */
 	protected Game          game;
 	protected LineNode		branch;
-
+	protected MoveNode		last1=null;
 
 	/** y-value of middle line  */
 	//protected int            middle;
@@ -141,13 +141,20 @@ public class EvalView
 	protected void repaint1(MoveNode mv)
 	{
 		//repaint();
-		//  TODO think of something more efficient
+		//  think of something more efficient:
 		Graphics g = getGraphics();
+		if (last1!=null && last1!=mv)
+			paint1Move(g,last1,false);
+		paint1Move(g,mv,true);	// also: last1:=mv
+	}
+
+	protected void paint1Move(Graphics g, MoveNode mv, boolean hilite)
+	{
 		int x0 = (int)mv.getMoveNo()*BAR_WIDTH;
 		int p = mv.getPly();
 		if (p%2==1) x0 += BAR_WIDTH/2;
 
-		paint1Value(g, x0, BAR_WIDTH/2, mv.engineValue);
+		paint1Value(g, x0, BAR_WIDTH/2, mv, hilite);
 		drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
 	}
 
@@ -291,6 +298,8 @@ public class EvalView
 		LineNode line = branch;
 		MoveNode mv = line.lastMove();
 		MoveNode nxt = null;
+		MoveNode current = game.getCurrentMove();
+		last1=null;	// unless...
 
 		while(mv!=null) {
 			Score sc = mv.engineValue;
@@ -300,12 +309,12 @@ public class EvalView
 
 				if (nxt!=null && nxt.getMoveNo()==mno) {
 					//	paint both
-					paint1Value(g, x0, BAR_WIDTH/2, mv.engineValue);
-					paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt.engineValue);
+					paint1Value(g, x0, BAR_WIDTH/2, mv, mv==current);
+					paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt, false);
 				}
 				else {
 					//	paint one
-					paint1Value(g, x0, BAR_WIDTH, mv.engineValue);
+					paint1Value(g, x0, BAR_WIDTH, mv, mv==current);
 				}
 				nxt = mv;
 			}
@@ -321,33 +330,76 @@ public class EvalView
 
 	protected void paintBackground(Graphics g)
 	{
+		paintBackground(g,0,moveCount()*BAR_WIDTH, NORMAL);
+	}
+
+	protected void paintBackground(Graphics g, int x0, int width, Color[] pal)
+	{
 		Graphics2D g2 = (Graphics2D) g;
-		float[] fractions = new float[] { 0.0f, 0.35f, 0.65f, 1.0f };
-		Color[] colors = new Color[] { Color.black, Color.darkGray, Color.lightGray, Color.white };
+		float[] fractions = new float[] { 0.0f, 0.35f, 0.5f,  0.65f, 1.0f };
 		int height = getHeight();
 
 		LinearGradientPaint gp = new LinearGradientPaint(
 				new Point(0,0),new Point(0,height),
-				fractions, colors);
+				fractions, pal);
 		g2.setPaint(gp);
 		//g.setColor(Color.lightGray);
-		g2.fillRect(0, 0, moveCount()*BAR_WIDTH, height);
+		g2.fillRect(x0, 0, width, height);
 	}
 
-	protected void paint1Value(Graphics g, int x, int width, Score value)
+	private static final Color WHITE_HI = new Color(255, 210, 210);
+	private static final Color BLACK_HI = new Color(45, 0, 0);
+	private static final Color GREY_HI = new Color(183, 128, 128);
+
+	private static final Color[] NORMAL = {
+			Color.black, Color.darkGray, Color.gray, Color.lightGray, Color.white };
+
+	private static final Color tinted (Color c1, Color c2, float f)
+	{
+		float r = c1.getRed()+c2.getRed()*f;
+		float g = c1.getGreen()+c2.getGreen()*f;
+		float b = c1.getBlue()+c2.getBlue()*f;
+		float max = Math.max(r,Math.max(g,b));
+
+		return new Color(r/max,g/max,b/max);
+	}
+
+	private static final Color[] HILITED = {
+			tinted(Color.black,Color.red,0.3f),
+			tinted(Color.darkGray,Color.red,0.3f),
+			tinted(Color.gray,Color.red,0.3f),
+			tinted(Color.lightGray,Color.red,0.3f),
+			tinted(Color.white,Color.red,0.3f) };
+
+	protected void paint1Value(Graphics g, int x, int width, MoveNode mvnd, boolean hilite)
 	{
 		int height = getHeight();
-		int p1 = (int)(height*(1.0f - value.rel(value.win-value.draw)));
-		int p2 = (int)(height*(1.0f - value.rel(value.win)));
+		Score value = mvnd.engineValue;
+		Color[] pal = hilite ? HILITED : NORMAL;
 
-		g.setColor(Color.black);
-		g.fillRect(x, 0, width, p1);
+		if (value==null) {
+			paintBackground(g,x,width,pal);
+		}
+		else {
+			int p1 = (int) (height * (1.0f - value.rel(value.win - value.draw)));
+			int p2 = (int) (height * (1.0f - value.rel(value.win)));
 
-		g.setColor(Color.gray);
-		g.fillRect(x, p1, width, p2);
+			g.setColor(pal[0]);
+			g.fillRect(x, 0, width, p1);
 
-		g.setColor(Color.white);
-		g.fillRect(x, p2, width, height);
+			g.setColor(pal[2]);
+			g.fillRect(x, p1, width, p2);
+
+			g.setColor(pal[4]);
+			g.fillRect(x, p2, width, height);
+		}
+/*
+		if (hilite) {
+			g.setColor(Color.red);
+			g.drawLine(x+width-4,0,x+width-4,height);
+		}
+ */		if (hilite)
+	 		last1 = mvnd;
 	}
 
 	protected void updateValue(int ply, MoveNode mvnd, Score value)
