@@ -26,7 +26,6 @@ libraries needed:
 
 ==== New Features
 
-* InfoDialog: version and home page
 * BUG: black evals during (after) book phase
 * BUG: Leela keeps analyzing while playing from book
 * BUG: Leela diagnostics not always associated correctly
