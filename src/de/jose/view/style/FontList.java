@@ -99,7 +99,7 @@ public class FontList
 
     public static FontList createDiagramFontList(int size, boolean installed)
     {
-        return new FontList(getDiagramFontSamples(size, installed),new Dimension(100,28));
+        return new FontList(getDiagramFontSamples(size, installed),new Dimension(100,21));
     }
 
 

@@ -134,67 +134,29 @@ public class StyleUtil
             return null;
     }
 
-    public static Color getProfileAccentColor() {
-        Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
-        if (sf!=null)
-            return sf.color;
-        else
-            return null;
-    }
-
-    public static Color getProfileSelectionColor() {
-        Surface sf = (Surface)Application.theUserProfile.get("lnf.select.color");
-        if (sf!=null)
-            return sf.color;
-        else
-            return null;
-    }
-
     public static boolean supportsSystemAccentColors()
     {
-        if (Version.windows)
-        {
-            return getWindowsSystemColor("AccentColor") != null;
-        }
-        if (Version.linux) {
-            //  getting a usable accent color from Linux is hopeless
-            //  there *are* accent colors in Gnome and KDE, but there is no useful
-            //  API to retrieve them. Linux Desktop is fucked, believe me.
-            //  Use our own profile store instead.
-            return false;
-        }
-        if (Version.mac) {
-            //  TODO
-            return true;
-        }
-        return false;
+        return getSystemSelectionColor()!=null;
     }
 
     public static Color getSystemAccentColor()
     {
-        if (Version.windows) {
-            //  get system accent color from registry
+        if (Version.windows) //  get system accent color from registry
             return getWindowsSystemColor("AccentColor");
-        }
-        if (Version.mac) {
+        if (Version.mac)
             return SystemColor.controlHighlight;
-        }
+        // otherwise: (Linux)
         return null;
     }
 
     public static Color getSystemSelectionColor()
     {
-        if (Version.windows) {
-            //  get system accent color from registry
+        if (Version.windows) //  get system accent color from registry
             return getWindowsSystemColor("ColorizationColor");
             //  not "AccentColor"
-        }
-        if (Version.linux) {
-            return null;
-        }
-        if (Version.mac) {
+        if (Version.mac)
             return SystemColor.textHighlight;
-        }
+        // otherwise: (Linux)
         return null;
     }
 

@@ -244,18 +244,21 @@ public class OptionDialog
 		JPanel tab1 = (JPanel)comp1;
 		JPanel abox = newGridBox("dialog.option.notation");
 
-		FontList fontList = new FontList(
-				FontList.getDiagramFontSamples(20, true),
-				new Dimension(180, 21));
-		fontList.setVisibleRowCount(5);
-//		fontList.setFixedCellHeight(21);
-//		fontList.setFixedCellWidth(120);
-		//	setting number of rows is subtle. If they don't fit, they will show nothing :(
-		//  diagram font
-		addWithLabel(abox, 0,0,4, 0.0, 10.0,
-				"font.diagram", fontList,
-		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		FontList fontList = FontList.createDiagramFontList(20,true);
+		fontList.setVisibleRowCount(9);
+		fontList.setFixedCellHeight(21);
+
+		JScrollPane fontScroller = new JScrollPane(fontList,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		fontScroller.setMinimumSize(new Dimension(80,5*21));
+		fontScroller.setPreferredSize(new Dimension(80,9*21));
+		//	Important: for FontList to fill available space, we need to set sizes it at the enclosing JScrollPane !!
+
+		GridBagConstraints constr = (GridBagConstraints) ELEMENT_TWO.clone();
+		constr.fill = GridBagConstraints.BOTH;
+		constr.weighty = 4;
+		abox.add(fontScroller, constr);
+		fontList.setName("font.diagram");
+		reg(fontList);
 
 		//  write mode
 		addWithLabel(abox, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode

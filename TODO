@@ -37,16 +37,6 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 [ ] db: expected data on row ?
 
 [x] FlatLaf
-    [x] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
-    [x] System/Custom option, Theme Editor button
-    [x] F9 layout, Chessnut
-    [x] F9 Board / Notation -> Appearance
-    [x] tool button Annotations
-    [x] pack WinUtils.dll
-    [x] more flexible pastellizing
-    [x] re-dock toolbar
-        [x] wire menu events
-        [x] docking targets shifted? contentPane()!
     [x] popup window out of screen (Windows only?)
         [x] write mode
         [x] promotion
