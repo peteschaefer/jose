@@ -27,6 +27,13 @@
     case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
     -> no need for PLUGIN_REQUESTED_HINT messaging
 
+[ ] BOOK_PLAY ~= THINKING
+    - while a book_play query is under way, the user can not move
+     (see BoardPanel.mouseSelect, not sufficient)
+    - thinking status should be managed by application
+        USER_ENGINE && plugin.THINKING || BOOK_PLAY query
+
+
 [ ] test with/without book
 [ ] test with/without engine
 [ ] test input/analysis/play
