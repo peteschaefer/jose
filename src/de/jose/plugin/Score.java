@@ -22,8 +22,10 @@ public class Score
     public static final int EVAL_GAME_COUNT         = 0x03;
 
 
-    //  evaluation in centipawns. Encodes mate in ..., too.
+    //  evaluation in centipawns. Encodes mate in ..., too. POV = White
     public int cp;
+    //  POV = current
+    public int cp_current;
     //  kind of score (exact, lower, upper bound)
     public int flags;
     //  win-draw-lose evaluation (optional)
@@ -33,6 +35,7 @@ public class Score
 
     public Score(Score that) {
         cp = that.cp;
+        cp_current = that.cp_current;
         flags = that.flags;
         win = that.win;
         draw = that.draw;
@@ -41,6 +44,7 @@ public class Score
 
     public void copy(Score that) {
         this.cp = that.cp;
+        this.cp_current = that.cp_current;
         this.flags = that.flags;
         this.win = that.win;
         this.draw = that.draw;
@@ -48,7 +52,7 @@ public class Score
     }
 
     public void clear() {
-        cp=UNKNOWN;
+        cp=cp_current=UNKNOWN;
         flags=EVAL_EXACT;
         win=draw=lose=0;
     }

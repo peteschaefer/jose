@@ -73,30 +73,85 @@ public class OptionDialog
 	private OpeningBookList bookList;
 	private EngineOptionReader engOptionReader;
 
-	/**
-	 * in the pluginInfo section, these options are show on top
-	 * (because they are most widely used)
-	 */
-	private static String[] PREFERRED_OPTIONS = {
-        "UCI_EngineAbout",
-		"Ponder", "OwnBook",
-		"Random", "MultiPV",
-		"UCI_LimitStrength", "UCI_Elo",
+	//
+ 	//	Sort options by *Importance*
+ 	//
+	private static String[][] IMPORTANCE = {
+				//	hidden options
+				{ "",
+					"UCI_ShowCurrLine", //  always disabled (TODO)
+					"UCI_ShowRefutations",  //  always disabled (TODO)
+					"UCI_AnalyseMode",   //  is automatically set when entering analysis mode
+					"UCI_Opponent", //  not in use (TODO)
+					"UCI_Chess960", //  FRC
+				},
+				//	topmost options
+				{
+					"",
+					"UCI_EngineAbout",
+					"Ponder", "OwnBook",
+					"Random", "MultiPV",
+					//"UCI_LimitStrength", "UCI_Elo",
+				},
+				//	Scores and Info
+				{
+					"",
+					"ScoreType", "UCI_ShowWDL", "UCO_ShowMovesLeft",
+					"VerboseMoveStats", "LogLiveStats"
+				},
+				//	Leela settings
+				{
+					"",
+					"WeightsFile", "Threads", "Backend", "BackendOptions", "Hash", "ConfigFile"
+				},
+				//	Contempt Settings
+				{
+					"Contempt",
+					"ContemptMode", "Contempt",
+					"WDLCalibrationElo", "WDLEvalObjectivity", "WDLDrawRateReference",
+					"DrawScore",
+				},
+				//	Endgame Bases
+				{
+					"Endgame Database",
+					"SyzygyPath", "SyzygyProbeDepth", "Syzygy50MoveRule", "SyzygyProbeLimit"
+				}
 	};
 
-	private static String[] HIDDEN_OPTIONS = {
-		"UCI_ShowCurrLine", //  always disabled (TODO)
-		"UCI_ShowRefutations",  //  always disabled (TODO)
-		"UCI_AnalyseMode",   //  is automatically set when entering analysis mode
-		"UCI_Opponent", //  not in use (TODO)
-		"UCI_Chess960", //  FRC
-	};
+	private static HashMap<String,Integer> MAP_IMPORTANCE = new HashMap<String,Integer>();
+	static {
+		for(int i = 0; i < IMPORTANCE.length; i++)
+		{
+			String[] group = IMPORTANCE[i];
+			for(int j=1; j < group.length; j++)
+				MAP_IMPORTANCE.put(group[j], i<<16 + j);
+		}
+	}
+
+	private static int importance(String option, int inputOrder)
+	{
+		Integer result = MAP_IMPORTANCE.get(option);
+		if (result != null)
+			return result;
+		else
+			return (100<<16) + inputOrder;
+	}
+
+	private static int importanceGroup(String option)
+	{
+		Integer result = MAP_IMPORTANCE.get(option);
+		if (result != null)
+			return result>>16;
+		else
+			return 100;
+	}
+
 
 	public OptionDialog(String name)
 	{
 		super(name, false);
 		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
-		center(Math.min(screensize.width,580), Math.min(screensize.height,460));
+		center(Math.min(screensize.width,720), Math.min(screensize.height,540));
         profile = AbstractApplication.theUserProfile;
 
 		addTab(newGridPane());   // tab0
@@ -1436,7 +1491,7 @@ public class OptionDialog
 					continue;
 				else {
 					String name = comp.getName();
-					if (name.startsWith("plugin.option."))
+					if (name!=null && name.startsWith("plugin.option."))
                     {
                         String optionname = name.substring(14);
                         if (EnginePlugin.setOptionValue(cfg, optionname, getValue(comp))) optionDirty = dirty = true;
@@ -1629,31 +1684,33 @@ public class OptionDialog
 
 	private void displayOptions(ArrayList<UciPlugin.Option> optionList)
 	{
-		/**
-		 * some options are displayed first:
-		 *  Ponder, Random, OwnBook, MultiPV, etc..
-		 */
-		for (int i=0; i<PREFERRED_OPTIONS.length; i++)
+		for(int i=optionList.size()-1; i >= 0; i--)
 		{
-			UciPlugin.Option option = UciPlugin.getOption(optionList,PREFERRED_OPTIONS[i]);
-			if (option != null) {
-				createUciOption(option);
-				optionList.remove(option);
+			UciPlugin.Option option = optionList.get(i);
+			if (importanceGroup(option.name)==0) {
+				//	hidden
+				optionList.remove(i);
+				continue;
 			}
+			option.importance = importance(option.name,i+1);
 		}
-		/**
-		 * some options are not displayed, or are not yet implemented
-		 */
-		for (int i=0; i<HIDDEN_OPTIONS.length; i++)
+
+		optionList.sort(new Comparator<UciPlugin.Option>() {
+			@Override
+			public int compare(UciPlugin.Option a, UciPlugin.Option b) {
+				return a.importance-b.importance;
+			}
+		});
+
+		for(int i=0; i<optionList.size(); i++)
 		{
-			UciPlugin.Option option = UciPlugin.getOption(optionList,HIDDEN_OPTIONS[i]);
-			if (option != null)
-				optionList.remove(option);
-		}
-		//  display rest
-		for (int i=0; i<optionList.size(); i++)
-		{
-			UciPlugin.Option option = (UciPlugin.Option)optionList.get(i);
+			UciPlugin.Option option = optionList.get(i);
+			if (i > 0 && importanceGroup(option.name)!=importanceGroup(optionList.get(i-1).name))
+			{
+				//	named separator
+				pluginOptions.add(new JSeparator(), ELEMENT_ONE_ROW);
+			}
+
 			createUciOption(option);
 		}
 

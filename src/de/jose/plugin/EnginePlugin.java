@@ -776,6 +776,7 @@ abstract public class EnginePlugin
 			super(move);
 			this.ply = ply;
 			this.score.cp = value;
+			this.score.cp_current = value; // todo or what?
 			this.score.flags = flags;
 		}
 
@@ -875,6 +876,7 @@ abstract public class EnginePlugin
 	 */
 	public void adjustPointOfView(Score score, boolean white_next)
 	{
+		score.cp_current = score.cp;
 		switch (getEvaluationPointOfView())
 		{
 			case POINT_OF_VIEW_WHITE:
@@ -891,13 +893,16 @@ abstract public class EnginePlugin
 		}
 	}
 
-	protected String prepareCentipawnScore(Score score, HashMap pmap)
+	protected String prepareCentipawnScore(Score score, HashMap pmap, boolean white_pov)
 	{
 		String cptext;
+		double cpd = (double)(white_pov ? score.cp:score.cp_current)/100.0;
 		if (score.cp==0)
 			cptext = "0";
+		else if (white_pov)
+			cptext = CENTIPAWN_FORMAT.format(cpd);
 		else
-			cptext = CENTIPAWN_FORMAT.format((double)score.cp/100.0);
+			cptext = CENTIPAWN_FORMAT.format(cpd);
 
 		switch (score.flags)
 		{
@@ -909,7 +914,7 @@ abstract public class EnginePlugin
 		return "plugin.evaluation";
 	}
 
-	private String printScoreText(Score score, boolean tooltip, boolean with_wdl)
+	private String printScoreText(Score score, boolean tooltip, boolean with_wdl, boolean white_pov)
 	{
 		if (score.cp <=  Score.UNKNOWN) {
 			return "?";
@@ -939,7 +944,7 @@ abstract public class EnginePlugin
 			key = "plugin.black.mates";
 		}
 		else {
-			key = prepareCentipawnScore(score,pmap);
+			key = prepareCentipawnScore(score,pmap,white_pov);
 		}
 
 		String result = tooltip ? Language.argsTip(key,pmap) : Language.args(key,pmap);
@@ -962,12 +967,12 @@ abstract public class EnginePlugin
 			return result;
 	}
 
-	public String printScore(Score score, boolean with_wdl) {
-		return printScoreText(score, false, with_wdl);
+	public String printScore(Score score, boolean with_wdl, boolean white_pov) {
+		return printScoreText(score, false, with_wdl, white_pov);
 	}
 
 	public String printScoreTooltip(Score score, boolean with_wdl) {
-		return printScoreText(score, true, with_wdl);
+		return printScoreText(score, true, with_wdl, true);
 	}
 
 	/**

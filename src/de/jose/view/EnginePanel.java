@@ -729,8 +729,9 @@ public class EnginePanel
 				line.append("}");
 			}
 
-			bookmoves.eval[i].flags = Score.EVAL_GAME_COUNT;
-			bookmoves.eval[i].cp = BookEntry.nvl(entry.count);
+			Score score = bookmoves.eval[i];
+			score.flags = Score.EVAL_GAME_COUNT;
+			score.cp = score.cp_current = BookEntry.nvl(entry.count);
 		}
 
 		//  always show hint that these are book moves
@@ -854,7 +855,7 @@ public class EnginePanel
 		if (leval==null) return;
 
 		if (plugin!=null) {
-			String text = plugin.printScore(score, true);
+			String text = plugin.printScore(score, true,true);
 			String tooltip = plugin.printScoreTooltip(score, true);
 
 			leval.setText(text);

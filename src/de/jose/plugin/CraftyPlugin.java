@@ -81,14 +81,14 @@ tab  depth score*100
 			if (eval > 32000) {
 				//	engine mates in ... plies
 				int plies = 32768-eval;
-				score.cp = Score.WHITE_MATES+plies;
+				score.cp = score.cp_current = Score.WHITE_MATES+plies;
 			}
 			else if (eval < -32000) {
 				int plies = -32768-eval;
-				score.cp = Score.BLACK_MATES-plies;
+				score.cp = score.cp_current = Score.BLACK_MATES-plies;
 			}
 			else
-				score.cp = eval;
+				score.cp = score.cp_current = eval;
 
 			adjustPointOfView(score,rec.white_next);
 
@@ -118,7 +118,7 @@ tab  depth score*100
 			//	uses endgame table bases
 			rec.depth = AnalysisRecord.ENDGAME_TABLE;
 			rec.selectiveDepth = Score.UNKNOWN;
-			score.cp = Score.UNKNOWN;
+			score.cp = score.cp_current = Score.UNKNOWN;
 			rec.elapsedTime = Score.UNKNOWN;
 			rec.nodes = Score.UNKNOWN;
 

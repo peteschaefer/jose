@@ -18,6 +18,7 @@ libraries needed:
 * com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
 ? TraceConnection probably not needed anyway
 * pack & upload jose-15b-win.zip
+* move old stuff from Sourceforge: databases, sounds, ...
 
 ==== Linux build
 ? : requires mysql-embedded to be re-compiled for 64 bit.
@@ -43,11 +44,11 @@ Leela
 ==== New Features
 
 * arrows + text label
-  - contrast over black pieces
   - font size?
+  - if possible, redraw only modified arrows
 
 * sort uci controls by _importance_
-  - group by importance
+  - fix order
 
 * Contempt Slider
 

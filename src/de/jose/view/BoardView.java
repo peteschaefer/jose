@@ -269,6 +269,9 @@ abstract public class BoardView
 
 	public void showAllHints(ArrayList<Hint> new_hints)
 	{
+		//	todo
+		//	identical arrows can be painted over
+		//	only do a force redraw if necessary
 		this.hints = new_hints;
 		doRepaintHints();
 	}

@@ -584,13 +584,13 @@ public class BoardView2D
 		g.fillPolygon(x,y, x.length-1);
 
 		g.setColor(Color.black);
-		g.drawPolygon(x,y, x.length-1);
+		//g.drawPolygon(x,y, x.length-1);
 
 		if (label!=null) {
 			FontMetrics mtx = g.getFontMetrics();
 			Rectangle2D box = mtx.getStringBounds(label,g);
 			Point textAnchor = new Point(x[x.length-1],y[x.length-1]);
-			int texty = (int) (textAnchor.y + box.getHeight() / 2 - mtx.getDescent());
+			int texty = (int) (textAnchor.y + (mtx.getAscent()-2)/2);
 			//	todo font size scales with width?
 			if (angle >= -Math.PI/2 && angle <= Math.PI/2) {
 				g.drawString(label, (int) (textAnchor.x - box.getWidth()), texty);

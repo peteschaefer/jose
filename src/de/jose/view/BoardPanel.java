@@ -599,45 +599,51 @@ public class BoardPanel
 		ArrayList<Hint> hints = new ArrayList<Hint>();
 		if (a.maxpv==0) return;
 
-		int pov = (a.white_next) ? 1 : -1;
-		int cp = a.eval[0].cp*pov;
-		int cpmin = cp;
-		int cpmax = cp;
+		int cpmin = Integer.MAX_VALUE;
+		int cpmax = Integer.MIN_VALUE;
 
-		int MAX_HINTS = 6;	//	don't show too many
-		int SCORE_DROP = 15;	//	don't shaw bad moves
+		for (int idx=0; idx < a.maxpv; idx++) {
+			if (a.moves[idx]==null || a.moves[idx].isEmpty())
+				continue;
+			cpmin = Math.min(cpmin,a.eval[idx].cp_current);
+			cpmax = Math.max(cpmax,a.eval[idx].cp_current);
+		}
+
+		int MAX_HINTS = 8;	//	don't show too many
+		float SCORE_DROP = 0.3f;	//	don't shaw bad moves
+		int cpprev = Score.UNKNOWN;
+		float cpf;
 
 		//	find interesting moves from PV list
 		for (int idx=0; idx < a.maxpv && hints.size() < MAX_HINTS; idx++)
 		{
 			if (a.moves[idx]==null || a.moves[idx].isEmpty())
 				continue;
-			cp = (a.eval[idx].cp *= pov);
-			if (cp < (cpmin-SCORE_DROP))
-				break;	//	move is not interesting
 
-			if (cp > cpmax) cpmax = cp;
-			if (cp < cpmin) cpmin = cp;
+			int cp = a.eval[idx].cp_current;
+			if (cpprev!=Score.UNKNOWN) {
+				int gap = Math.abs(cp-cpprev);
+				if (gap > (cpmax-cpmin)*SCORE_DROP)
+					break;
+			}
 
 			Move mv = a.moves[idx].get(0);
 			Hint hint = new Hint(0,mv.from,mv.to,null,null);
 			hint.implData = cp;
-			hint.label = plugin.printScore(a.eval[idx],false);
-			hints.add(hint);
-			a.eval[idx].cp *= pov;
-		}
-		//	update colors
-		for(Hint hint : hints)
-		{
-			cp = (Integer)hint.implData;
-			assert(cp>=cpmin && cp<=cpmax);
-			float cp1;
+			hint.label = plugin.printScore(a.eval[idx],false, a.white_next);	//	todo apply pov
+
+			//	update color
 			if (cpmin==cpmax)
-				cp1 = 1.0f;
+				cpf = 1.0f;
 			else
-				cp1 = (float)(cp-cpmin) / (cpmax-cpmin);
-			hint.color = suggestionColor(cp1);
+				cpf = (float)(cp-cpmin) / (cpmax-cpmin);
+			hint.color = suggestionColor(cpf);
+
+			hints.add(hint);
+			//a.eval[idx].cp *= pov;
+			cpprev = cp;
 		}
+
 		//	sort by Z order
 		Collections.sort(hints,new CompareHintsByZorder());
 		//	add to view
@@ -722,20 +728,28 @@ public class BoardPanel
 //		 bHint.setText(data.toString());
 	}
 
+	static float hueBlue = Color.RGBtoHSB(0,0,255,null)[0];
+	static float hueGreen = Color.RGBtoHSB(0,255,0,null)[0];
+	static float hueYellow = Color.RGBtoHSB(255,255,0,null)[0];
+	static float hueRed = Color.RGBtoHSB(255,0,0,null)[0];
+
 	public static Color suggestionColor(float val)
 	{
-		Color base;
+		float hue;
 		if (val >= 0.95)
-			base = Color.blue;
+			hue = hueBlue;
 		else if (val >= 0.65)
-			base = Color.green;
+			hue = hueGreen;
 		else if (val >= 0.30)
-			base = Color.yellow;
+			hue = hueYellow;
 		else
-			base = Color.red;
-		int rgb = base.getRGB();
-		rgb += 48<<24;	//	alpha
-		return new Color(rgb,true);
+			hue = hueRed;
+
+		int rgb = Color.HSBtoRGB(hue, 0.3f, 1.0f);
+		return new Color(rgb,false);
+		//int rgb = base.getRGB();
+		//rgb += 48<<24;	//	alpha is nice, but low contrast on black pieces !
+		//return new Color(rgb,true);
 	}
 
 }

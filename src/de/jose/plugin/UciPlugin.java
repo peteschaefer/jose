@@ -112,6 +112,7 @@ public class UciPlugin
 		public int minValue;
 		public int maxValue;
 		public Vector<String> values;
+		public int importance; // used for sortings
 
 		public int defaultIntValue()            { return StringUtil.parseInt(defaultValue); }
 		public boolean defaultBooleanValue()    { return Util.toboolean(defaultValue); }
@@ -1162,10 +1163,10 @@ public class UciPlugin
 
 
 	@Override
-	protected String prepareCentipawnScore(Score score, HashMap pmap)
+	protected String prepareCentipawnScore(Score score, HashMap pmap, boolean white_pov)
 	{
 		String scoreType = getOptionValue(config,"ScoreType");
-		double perc = (double)score.cp/100.0;
+		double perc = (double)(white_pov ? score.cp:score.cp_current)/100.0;
 
 		if (scoreType!=null && scoreType.equals("win_percentage"))
 		{
@@ -1184,7 +1185,7 @@ public class UciPlugin
 			return "plugin.percentage";
 		}
 		//	else
-		return super.prepareCentipawnScore(score, pmap);
+		return super.prepareCentipawnScore(score, pmap, white_pov);
 	}
 
 	@Override
