@@ -218,11 +218,24 @@ public class StyleUtil
             //  we want high contrast:
             //  - bright, but not too bright
             //  - close to white = low saturation
+            //  this creates pastel-like colors; which is fine for dark mode?
             float[] hsb = new float[4];
             Color.RGBtoHSB(acol.getRed(), acol.getGreen(), acol.getBlue(), hsb);
             hsb[1] = 0.2f*hsb[1];   //  low saturation
             hsb[2] = 1.0f - (1.0f-hsb[2])*0.2f; //  bright ?
             return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+        }
+    }
+
+    public static Color mapDarkIconColor(Color acol)
+    {
+        if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - 64 - acol.getRed()/2;
+            return new Color(red,red,red);
+        }
+        else {
+           return mapDarkTextColor(acol);
         }
     }
 }

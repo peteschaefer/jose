@@ -901,6 +901,19 @@ public class OptionDialog
 		map.put("styles.modified",action);
 
 		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception
+			{
+				boolean dark = (Boolean)cmd.moreData;
+				if (theStyleChooser!=null)
+					theStyleChooser.updateUI(dark);
+			}
+		};
+		map.put("update.ui",action);
+
+
+
+
+		action = new CommandAction() {
 			@Override
 			public void Do(Command cmd) throws Exception {
 				OptionDialog.super.getTabbedPane().setSelectedIndex(4);

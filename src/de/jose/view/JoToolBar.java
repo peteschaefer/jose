@@ -23,6 +23,7 @@ import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.icon.TextIcon;
 import de.jose.util.icon.TextShapeIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
@@ -127,6 +128,14 @@ public class JoToolBar
 		};
 		map.put("on.broadcast",action);
 
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				updateButtonStyle(dark);
+			}
+		};
+		map.put("update.ui",action);
+
 		/**
 		 * note that we don't handle button events directly
 		 * they are directed to the focus panel
@@ -173,13 +182,14 @@ public class JoToolBar
 
 	public void addButtons(List buttons)
 	{
+		boolean dark = Application.theApplication.isDarkLookAndFeel();
 		if (buttons!=null)
 			for (int i=0; i < buttons.size(); i++) {
 				Object button = buttons.get(i);
 				if (button==null)
 					addSpacer(16);
 				else 
-					addButton(button.toString());
+					addButton(button.toString(),dark);
 			}
 	}
 
@@ -194,7 +204,7 @@ public class JoToolBar
 		return result;
 	}
 		
-	private void addButton(String name)
+	private void addButton(String name, boolean dark)
 	{
 		if (name==null)
 			addSpacer(20);
@@ -203,7 +213,7 @@ public class JoToolBar
 			button.setName(name);
 			button.setActionCommand(name);
 
-			Dimension iconSize = createIcons(name, button);
+			Dimension iconSize = createIcons(name, button, dark);
 
 			button.setBorderPainted(false);
 			button.setFocusPainted(false);
@@ -223,7 +233,20 @@ public class JoToolBar
 		}
 	}
 
-	private static Dimension createIcons(String name, JButton button)
+	private void updateButtonStyle(boolean dark)
+	{
+		for(int i=0;i<getComponentCount();i++) {
+			Component comp = getComponent(i);
+			if (comp instanceof JButton) {
+				JButton button = (JButton)comp;
+				String name = button.getName();
+				createIcons(name, button, dark);
+			}
+		}
+	}
+
+
+	private static Dimension createIcons(String name, JButton button, boolean dark)
 	{
 		//	get icon specification from menu entry
 		String spec = JoMenuBar.ICON_SPECS.get(name);
@@ -231,7 +254,7 @@ public class JoToolBar
 		Icon[] icons = null;
 		if (spec != null) {
 			//	(1) create from Font Awesome
-			icons = createAwesomeIcons(spec,28);
+			icons = createAwesomeIcons(spec,28,dark);
 		}
 		if (icons==null) {
 			//	(2) lookup .gif in images/nav
@@ -316,7 +339,35 @@ public class JoToolBar
 
 	public static Icon[] createAwesomeIcons(String spec, float size)
 	{
-		return create7AwesomeIcons(new IconSpec(spec,size));
+		return createAwesomeIcons(spec,size,false);
+	}
+
+	public static Icon[] createAwesomeIcons(String sp, float size, boolean dark)
+	{
+		IconSpec spec = new IconSpec(sp, size);
+		if ((spec.style&BUTTON)!=0) {
+			//	button style icons
+		}
+		else if ((spec.style&FLAT)!=0) {
+			//	flat text icons
+		}
+		else {
+			//	outlined text icons
+
+			if (dark) {
+				//	high contrast colors!
+				spec.colors.set(0, StyleUtil.mapDarkIconColor(spec.colors.get(0)));
+				if (spec.colors.size() < 2)
+					spec.colors.add(Color.darkGray);
+				else
+					spec.colors.set(1, StyleUtil.mapDarkIconColor(spec.colors.get(1)));
+			}
+			else {
+				if (spec.colors.size() < 2)
+					spec.colors.add(Color.white);
+			}
+		}
+		return create7AwesomeIcons(spec);
 	}
 
 	public static Icon create1AwesomeIcon(String spec, float size)

@@ -70,7 +70,9 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [x] from command line
 
     [x] dark mode
-        [ ] buttons + icons
+        [x] toolbar icons
+        [ ] other buttons
+        [ ] export dialog
         [ ] gnome/kde accent color?
         [x] EnginePanel background
         [ ] board auto, or manually?

@@ -82,6 +82,7 @@ public class StyleChooser
     protected JToggleButton fontBold, fontItalic;
     protected JoColorButton fontColor;
     protected FontPreview fontPreview,fontPreviewScreen;
+	protected JLabel fontPreviewExplain;
 	protected MoveFormatList moveFormat;
 	protected LanguageList moveLanguage;
 	protected JRadioButton useFontTrue,useFontFalse;
@@ -171,8 +172,8 @@ public class StyleChooser
 		JScrollPane styleScroller = createStyleTree();
 		fontPreview = createPreview("font.sample",Color.white);
 		fontPreviewScreen = createPreview("font.sample.screen",UIManager.getColor("background"));
-		JLabel explainLabel = new JLabel(Language.get("dialog.option.dark.explain"));
-		explainLabel.setBorder(
+		fontPreviewExplain = new JLabel(Language.get("dialog.option.dark.explain"));
+		fontPreviewExplain.setBorder(
 				new CompoundBorder(
 						new BevelBorder(BevelBorder.LOWERED),
 						new EmptyBorder(8,8,8,8)));
@@ -183,15 +184,19 @@ public class StyleChooser
 		JPanel previewPanel = new JPanel();
 		previewPanel.setLayout(new BoxLayout(previewPanel, BoxLayout.Y_AXIS));
 		previewPanel.add(fontPreview);
-		previewPanel.add(explainLabel);
+		previewPanel.add(fontPreviewExplain);
 		previewPanel.add(fontPreviewScreen);
 		leftPanel.add(previewPanel, BorderLayout.SOUTH);
 
 		boolean dark = Application.theApplication.isDarkLookAndFeel();
-		explainLabel.setVisible(dark);
-		fontPreviewScreen.setVisible(dark);
-		//	todo adjust on demand
+		updateUI(dark);
 		return leftPanel;
+	}
+
+	public void updateUI(boolean dark)
+	{
+		fontPreviewExplain.setVisible(dark);
+		fontPreviewScreen.setVisible(dark);
 	}
 
 	private JPanel createRightPanel()
