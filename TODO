@@ -56,14 +56,18 @@ Leela
   - turn board in toolbar
   - BUG: Lc0 resigns too early ???
   - BUG: opening book, "plugin.eval.1"
+  - BUG: analysis out of synch; should not appear in play mode
+
+* keep playing after flaggin ?
 
 java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
 	at java.util.ArrayList.get(ArrayList.java:433)
 
 * Chessnut
-  >> https://github.com/chessnutech/EasyLinkSDK
-   + jni interface
+  - settings: board orientation white/black/auto
+  - beep: after each move
+  - check mate: fanfare, animtation ...
 
 
 

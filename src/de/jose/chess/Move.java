@@ -114,7 +114,14 @@ public class Move
 
 	public final boolean isPromotion()			{ return EngUtil.isPromotion(flags); }
 	public final int getPromotionPiece()		{ return EngUtil.getPromotionPiece(flags); }
-	
+
+	public final int getDestinationPiece() {
+		if (isPromotion())
+			return getPromotionPiece();
+		else
+			return moving.piece;
+	}
+
 	public final void setPromotionPiece(int p) 	{ flags = EngUtil.setPromotionPiece(flags,p); }
 	
 	public final boolean isEnPassant()			{ return EngUtil.isEnPassant(flags); }
@@ -181,5 +188,16 @@ public class Move
 			return BinaryConstants.SHORT_NULLMOVE;
 		else
 			return moving.encodeMove(this);
+	}
+
+	/**
+	 *
+	 * @return number of squares that are affected by this move
+	 */
+	public int diffCount()
+	{
+		if (isCastling()) return 4;
+		if (isEnPassant()) return 3;
+		return 2;
 	}
 }

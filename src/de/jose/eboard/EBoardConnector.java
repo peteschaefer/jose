@@ -1,10 +1,17 @@
 package de.jose.eboard;
 
 import com.chessnut.EasyLink;
-import de.jose.chess.EngUtil;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import de.jose.AbstractApplication;
+import de.jose.Application;
+import de.jose.Command;
+import de.jose.chess.*;
 import de.jose.util.StringUtil;
 import de.jose.view.IBoardAdapter;
-import de.jose.chess.Constants;
+
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import java.text.ParseException;
 
 public class EBoardConnector implements EasyLink.IRealTimeCallback
 {
@@ -43,6 +50,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         if (EasyLink.connect()!=0) {
             EasyLink.setRealtimeCallback(this);
             EasyLink.switchRealTimeMode();
+            EasyLink.led(EasyLink.NO_LEDS);
             mode = Mode.PLAY;
             synchFromApp();
         }
@@ -60,12 +68,11 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     @Override
     public void realTimeCallback(String fen) {
         //  called from E-Board
-        if (!fen.equals(lastFen))
-            synchFromBoard(lastFen=fen);
+        synchFromBoard(fen);
     }
 
 
-    public void synchFromBoard(String fen)
+    public synchronized void synchFromBoard(String fen)
     {
         if (mode == Mode.DISCONNECTED) {
             //  now connected
@@ -73,8 +80,10 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
             EasyLink.beep(800,500);
         }
 
-        setExplodedFen(fen,board[0].fen);
-        if (appFen==null) return;   //  nothing to do, yet
+        if (setExplodedFen(fen,board[0].fen)==0)
+            return; //  nothing has changed
+        if (appXFen==null)
+            return;   //  nothing to do, yet
 
         computeDiff();
         showLeds(board[currentOri.ordinal()].diff,currentOri);
@@ -87,6 +96,9 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         switch(mode) {
             case PLAY:
                 //  todo look for (a) legal move,
+                Move mv = guessMove(board[currentOri.ordinal()],appXFen,appBoard.getPosition());
+                if (mv!=null /*&& appBoard.isLegal(mv)*/)
+                    userMove(mv);
                 //  todo (b) retract last _human_ move
                 break;
             case SETUP_LEAD:
@@ -98,9 +110,60 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
         }
     }
 
-    public void synchFromApp()
+    private void userMove(Move mv)
     {
-        setExplodedFen(appBoard,appFen);
+        Command cmd = new Command("move.user", null, mv);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
+            }
+        });
+    }
+
+    private static int squareAt(int xfenIndex)
+    {
+        int row = Constants.ROW_8 - (xfenIndex/9);
+        int file = Constants.FILE_A + xfenIndex % 9;
+        return EngUtil.square(file,row);
+    }
+
+    private static int xfenIndex(int square)
+    {
+        int row = Constants.ROW_8-EngUtil.rowOf(square);
+        int file = EngUtil.fileOf(square)-Constants.FILE_A;
+        return row*9+file;
+    }
+
+    private Move guessMove(BoardState st, StringBuilder fen, Position pos)
+    {
+        MoveIterator moves = new MoveIterator(pos);
+        while(moves.next())
+        {
+            Move mv = moves.getMove();
+            //  check move against diff and ..
+            if (mv.diffCount() != st.diff_cnt) continue;
+            int ifrom = xfenIndex(mv.from);
+            int ito = xfenIndex(mv.to);
+
+            if (st.diff.charAt(ifrom)!='1') continue;
+            if (st.diff.charAt(ito)!='1') continue;
+            if (st.fen.charAt(ifrom)!='1') continue;
+
+            if (!pos.checkMove(mv)) continue;
+
+            //char pfrom = EngUtil.coloredPieceCharacter(pos.pieceAt(mv.from));
+            char pto = EngUtil.coloredPieceCharacter(mv.getDestinationPiece());
+            if (st.fen.charAt(ito)!=pto) continue;
+            return mv;
+        }
+        return null;
+    }
+
+    public synchronized void synchFromApp()
+    {
+        if (setExplodedFen(appBoard,appXFen)==0)
+            return;
 
         if (mode == Mode.DISCONNECTED)
             return;
@@ -123,9 +186,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
     // ---------------------------------------------
 
     private BoardState[] board;
-    private StringBuilder appFen = new StringBuilder();
-
-    private String lastFen = "";
+    private StringBuilder appXFen = new StringBuilder(EMPTY_X_FEN);
     private String lastLeds = EasyLink.NO_LEDS;
 
     private void computeDiff()
@@ -150,7 +211,7 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
 
     private int computeDiff(BoardState state)
     {
-        return state.diff_cnt = computeDiff(state.fen,appFen,state.diff);
+        return state.diff_cnt = computeDiff(state.fen,appXFen,state.diff);
     }
     
     private static int computeDiff(StringBuilder afen, StringBuilder bfen, StringBuilder diff)
@@ -186,38 +247,66 @@ public class EBoardConnector implements EasyLink.IRealTimeCallback
             EasyLink.led(lastLeds = newLeds);
     }
 
-    private static void setExplodedFen(String fen, StringBuilder exploded)
+    private static int setExplodedFen(String fen, StringBuilder exploded)
     {
-        exploded.setLength(0);
+        assert(exploded.length()==71);
+        int xat=0;
+        int mod=0;
+
         for(int i=0; i<fen.length(); i++)
         {
             char c = fen.charAt(i);
-            if (c=='/')
-                exploded.append('/');
+            if (c=='/') {
+                assert(exploded.charAt(xat)=='/');
+                xat++;
+            }
             else if (c>='1' && c<='8') {
                 int empty = (c-'0');
-                for(int j=0; j < empty; ++j)
-                    exploded.append('1');
+                for(int j=0; j < empty; ++j) {
+                    if (exploded.charAt(xat)!='1') {
+                        exploded.setCharAt(xat, '1');
+                        mod++;
+                    }
+                    xat++;
+                }
             }
-            else
-                exploded.append(c);
+            else {
+                if (exploded.charAt(xat)!=c) {
+                    exploded.setCharAt(xat, c);
+                    mod++;
+                }
+                xat++;
+            }
         }
+        assert(xat==71);
+        return mod;
     }
 
-    private static void setExplodedFen(IBoardAdapter board, StringBuilder exploded)
+    private static int setExplodedFen(IBoardAdapter board, StringBuilder exploded)
     {
-        exploded.setLength(0);
+        assert(exploded.length()==71);
+        int xat=0;
+        int mod=0;
+
         for(int row=Constants.ROW_8; row >= Constants.ROW_1; row--)
         {
             for(int file=Constants.FILE_A; file <= Constants.FILE_H; file++) {
                 int pc = board.pieceAt(file, row);
                 char ch = EngUtil.coloredPieceCharacter(pc);
                 if (ch==' ') ch = '1';
-                exploded.append(ch);
+                if (exploded.charAt(xat)!=ch) {
+                    exploded.setCharAt(xat, ch);
+                    mod++;
+                }
+                xat++;
             }
-            if (row > Constants.ROW_1)
-                exploded.append('/');
+            if (row > Constants.ROW_1) {
+                assert (exploded.charAt(xat) == '/');
+                xat++;
+            }
         }
+        assert(xat==71);
+        return mod;
     }
 
     private static void setReversed(StringBuilder a, StringBuilder b)

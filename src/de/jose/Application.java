@@ -2332,7 +2332,7 @@ public class Application
         map.put("debug.layout.dump",action);
 	}
 
-	private void handleUserMove(Move move, boolean animate)
+	public void handleUserMove(Move move, boolean animate)
 	        throws BadLocationException, ParseException
 	{
 		final Move mv = new Move(move,theGame.getPosition());
