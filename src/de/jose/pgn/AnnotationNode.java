@@ -17,9 +17,7 @@ import de.jose.view.style.JoFontConstants;
 import de.jose.sax.JoContentHandler;
 import de.jose.profile.FontEncoding;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 
 import org.xml.sax.SAXException;
 
@@ -85,20 +83,26 @@ public class AnnotationNode
 	public void insert(StyledDocument doc, int at)
 		throws BadLocationException
 	{
-		Style textStyle = parent().getStyle(doc, "body.line");
+		Style plainStyle = parent().getStyle(doc, "body.line");
 		Style symStyle = getDefaultStyle(doc);
 		String symFont = JoFontConstants.getFontFamily(symStyle);
 		String text = FontEncoding.getSymbol(symFont,code);
+
+		doc.insertString(at," ", plainStyle);
 		if (text != null) {
-			doc.insertString(at," ", textStyle);
 			doc.insertString(at,text, symStyle);
-			setLength(text.length()+1);
 		}
 		else {
-			text = toString()+" ";
-			doc.insertString(at, text, textStyle);
-			setLength(text.length());
-		}		
+			//	replace color,bold,italic from symStyle
+			Style symTextStyle = doc.addStyle("body.symbol.text", plainStyle);
+			StyleConstants.setForeground(symTextStyle, StyleConstants.getForeground(symStyle));
+			StyleConstants.setBold(symTextStyle, StyleConstants.isBold(symStyle));
+			StyleConstants.setItalic(symTextStyle, StyleConstants.isItalic(symStyle));
+
+			text = toString();
+			doc.insertString(at, text, symTextStyle);
+		}
+		setLength(text.length()+1);
 	}
 
 	public void replace(StyledDocument doc, int newCode)

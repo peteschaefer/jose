@@ -365,7 +365,9 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- plain text -->
-				<xsl:value-of select="text"/>
+				<xsl:call-template name="text-annotation">
+					<xsl:with-param name="text" select="text"/>
+				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -395,7 +397,31 @@
 
 			<xsl:value-of select="$sym"/>
 		</fo:inline>
+	</xsl:template>
 
+
+	<xsl:template name="text-annotation">
+		<xsl:param name="text"/>
+
+		<xsl:param name="style" select="$styles//style[name='body.symbol']"/>
+		<xsl:param name="color" select="$style/a[key='foreground']/value"/>
+
+		<fo:inline>
+			<xsl:choose>
+				<xsl:when test="string-length($color)=0"><xsl:attribute name="color">black</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="color"><xsl:value-of select="$color"/></xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="$style/a[key='bold']/value='true'"><xsl:attribute name="font-weight">bold</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="font-weight">normal</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="$style/a[key='italic']/value='true'"><xsl:attribute name="font-style">italic</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="font-style">normal</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+
+			<xsl:value-of select="$text"/>
+		</fo:inline>
 	</xsl:template>
 
 	<!-- - - - - - - - - - - - - - - - - -->

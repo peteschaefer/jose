@@ -155,18 +155,18 @@ public class SymbolBar
  *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
  */
     protected static final int[] EASY_CODES = new int[] {
-            1,2,3,4,5,6, // ! ?
+            1,2,3,4,5,6, 10,// ! ?
             14,15,16,17,18,19 // +/-
     };
     protected static final int[] NORMAL_CODES = new int[] {
             44, 45, 7,/*8,9,*/
-            10, /*11,12,*/ 13,
+            /*11,12,*/ 13,
             140,141,142,143,144,145,146,147,
             148,149,150,
             151,/*152,*/153,154,
             156,/*157,*/ 191,192,193,
             158,159, /*160,*/ 161,/*162,*//*163,*/
-            190, /*194,195,*/
+            /*190,*/ /*194,195,*/
             /*201*//*,250*/
             //  also available as Combos
             24, 32, 50, 62, 56,
