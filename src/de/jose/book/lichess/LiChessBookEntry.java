@@ -9,8 +9,6 @@ import java.util.ArrayList;
 public class LiChessBookEntry
     extends BookEntry
 {
-    public ArrayList<LiChessGameRef> gameRef  = new ArrayList<>();
-
     public LiChessBookEntry(JSONObject json)
     {
         String mv = json.getString("uci");
@@ -19,5 +17,6 @@ public class LiChessBookEntry
         countDraw = json.getInt("draws");
         countBlack = json.getInt("black");
         count = (countWhite+countDraw+countBlack);
+        gameRefs = new ArrayList<>();
     }
 }

@@ -1,20 +1,19 @@
 package de.jose.book.lichess;
 
+import de.jose.book.GameRef;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import org.json.JSONObject;
 
-public class LiChessGameRef
+public class LiChessGameRef extends GameRef
 {
-    public String white, black;
-    public int year;
-    public int result;
     public String id;
 
     public LiChessGameRef(JSONObject json)
     {
         String uci = json.getString("uci");
         this.id = json.getString("id");
+        this.year = json.getInt("year");
 
         Object owinner = json.get("winner");
         this.result = PgnConstants.RESULT_UNKNOWN;
@@ -26,17 +25,9 @@ public class LiChessGameRef
                 this.result = PgnConstants.BLACK_WINS;
         }
 
-        this.year = json.getInt("year");
         JSONObject owhite = json.getJSONObject("white");
         this.white = owhite.getString("name");
         JSONObject oblack = json.getJSONObject("black");
         this.black = oblack.getString("name");
-    }
-
-    @Override
-    public String toString() {
-        return "["+white+"-"+black+" ("+year+") "
-                +" "+ PgnUtil.resultString(result)
-                +" ["+id+"]]";
     }
 }

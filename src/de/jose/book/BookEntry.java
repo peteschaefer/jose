@@ -15,6 +15,7 @@ package de.jose.book;
 import de.jose.chess.Move;
 import de.jose.plugin.Score;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -53,6 +54,8 @@ public class BookEntry
 	public double learnValue = FUNKNOWN;
 	/** user assigned value */
 	public double userValue = FUNKNOWN;
+	/** top game from Lichess Opening Explorer */
+	public ArrayList<GameRef> gameRefs = null;
 
 	// -------- Comparators ---------------------------------------------------------
 

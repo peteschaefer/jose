@@ -156,7 +156,7 @@ public class LiChessOpeningExplorer extends OpeningBook
                 LiChessBookEntry bk = mvmap.get(key);
 
                 if (bk!=null) {
-                    bk.gameRef.add(ref);
+                    bk.gameRefs.add(ref);
                     System.out.println(ref);
                 }
             }

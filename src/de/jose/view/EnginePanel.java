@@ -13,6 +13,7 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.book.GameRef;
 import de.jose.book.lichess.LiChessBookEntry;
 import de.jose.book.lichess.LiChessGameRef;
 import de.jose.chess.*;
@@ -175,6 +176,11 @@ public class EnginePanel
 		Style infoStyle = styles.addStyle("engine.pv.info",textStyle);
 		StyleConstants.setFontSize(infoStyle, 10);
 		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
+
+		Style linkStyle = styles.addStyle("engine.pv.link",textStyle);
+		StyleConstants.setFontSize(linkStyle, 10);
+		StyleConstants.setForeground(linkStyle, Color.blue);
+		StyleConstants.setUnderline(linkStyle, true);
 
 		Style userFigStyle = userStyles.getStyle("body.figurine");
 		String figFontName = StyleConstants.getFontFamily(userFigStyle);
@@ -754,17 +760,17 @@ public class EnginePanel
 					assert(data.eval!=null);
 					assert(data.line!=null);
 					setEvaluation(idx, data.eval);
-					setVariation(idx, data.line, data.info);
+					setVariation(idx, data.line, data.info, data.book);
 
 					if (idx==0)
 						broadcastMoveValue(rec.ply, data.eval);
 
 					if (! inBook) {
-                    if (countPvLines() > 1)
-						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
-                    else
-						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
-				}
+						if (countPvLines() > 1)
+							scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
+						else
+							scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
+					}
 			}
 
 			if (rec.wasModified(AnalysisRecord.INFO)) {
@@ -787,7 +793,7 @@ public class EnginePanel
 			for (int idx=0; idx < pvCount; idx++)
 			{
 				setEvaluation(idx,new Score());
-				setVariation(idx,null,null);
+				setVariation(idx,null,null, null);
 			}
 
             tPVHistory.setText("");
@@ -853,21 +859,6 @@ public class EnginePanel
 
 			Score score = data.eval;
 			entry.toScore(score,1000);
-
-			StringBuffer info = bookmoves.getLineInfo(i);
-			if ((entry!=null) && (entry instanceof LiChessBookEntry))
-			{
-				ArrayList<LiChessGameRef> refs = ((LiChessBookEntry)entry).gameRef;
-				if ((refs!=null && !refs.isEmpty()))
-				{
-					info.append("{");
-					for (int j=0; j < refs.size(); ++j) {
-						if (j>0) info.append(",");
-						info.append(refs.get(j).toString());
-					}
-					info.append("}");
-				}
-			}
 		}
 
 		//  always show hint that these are book moves
@@ -1038,11 +1029,11 @@ public class EnginePanel
 		setValue(lNodesPerSecond,key,pmap);
 	}
 
-	public void setVariation(int idx, StringBuffer text, StringBuffer info)
+	public void setVariation(int idx, StringBuffer text, StringBuffer info, BookEntry book)
 	{
 		JoStyledLabel lvar = getPvLabel(idx, (text!=null), true);
 		if (lvar!=null)
-			setLine(lvar,text,info);
+			setLine(lvar,text,info,book);
 	}
 
 	public void setInfo(StringBuffer text)
@@ -1054,9 +1045,12 @@ public class EnginePanel
 		}
 	}
 
-	private void setLine(JoStyledLabel label, StringBuffer text, StringBuffer info)
+	private void setLine(JoStyledLabel label, StringBuffer text, StringBuffer info, BookEntry book)
 	{
 		StyledDocument doc = label.getStyledDocument();
+		Style textStyle = doc.getStyle("engine.pv");
+		Style infoStyle = doc.getStyle("engine.pv.info");
+		Style boldStyle = doc.getStyle("bold");
         try {
             doc.remove(0,doc.getLength());
 			if (text!=null && text.length()>0) {
@@ -1065,20 +1059,36 @@ public class EnginePanel
 					formatter.reformatFrom(text);
 				}
 				else {
-					doc.insertString(0, text.toString(), styles.getStyle("engine.pv"));
+					doc.insertString(0, text.toString(), textStyle);
 				}
 				int i1 = text.indexOf(" ");
 				if (i1 < 0) i1 = text.length();
 				//	first word is bold
-				doc.setCharacterAttributes(0,i1, styles.getStyle("bold"), false);
+				doc.setCharacterAttributes(0,i1, boldStyle, false);
+			}
+			if (book != null && book.gameRefs!=null && !book.gameRefs.isEmpty()) {
+				insertGameRefs(doc,book.gameRefs);
 			}
 			if (info!=null && info.length()>0) {
-				doc.insertString(doc.getLength(), "\n", styles.getStyle("engine.pv"));
-				doc.insertString(doc.getLength(), info.toString(), styles.getStyle("engine.pv.info"));
+				doc.insertString(doc.getLength(), "\n", textStyle);
+				doc.insertString(doc.getLength(), info.toString(), infoStyle);
 			}
         } catch (BadLocationException e) {
             Application.error(e);
         }
+	}
+
+	protected void insertGameRefs(StyledDocument doc, ArrayList<GameRef> refs) throws BadLocationException
+	{
+		Style infoStyle = doc.getStyle("engine.pv.info");
+		Style linkStyle = doc.getStyle("engine.pv.link");
+		doc.insertString(doc.getLength()," {", infoStyle);
+
+		for (int j=0; j < refs.size(); ++j) {
+			if (j>0) doc.insertString(doc.getLength(), ", ", infoStyle);
+			doc.insertString(doc.getLength(), refs.get(j).toString(true), linkStyle);	//	todo linkStyle
+		}
+		doc.insertString(doc.getLength(),"}",infoStyle);
 	}
 
 	protected void setIcon(JButton button, Icon[] icon)
