@@ -296,6 +296,10 @@ public class JoToolBar
 				style |= BUTTON;
 			if (specs[i].startsWith("#") || specs[i].startsWith("0x"))
 				colors.add(Color.decode(specs[i]));
+			if (specs[i].startsWith("%")) {
+				float scale = Float.parseFloat(specs[i].substring(1));
+				size *= scale/100.f;
+			}
 		}
 
 		if (colors.isEmpty()) colors.add(Color.darkGray);
