@@ -143,12 +143,12 @@
 		<SYM nag="150"> \ued </SYM><!-- diagonal -->
 		<SYM nag="136-139"> \uec </SYM><!-- time pressure -->
 		<SYM nag="48-53"> \uee </SYM><!-- center -->
-		<SYM nag="163"> \ud6 </SYM><!-- rank todo is NAG 163 defined ?? -->
+		<!--SYM nag="163"> \ud6 </SYM--><!-- rank todo is NAG 163 defined ?? -->
 		<SYM nag="161"> \uf3 </SYM><!-- see -->
-		<SYM nag="8"> \uf4 </SYM><!-- only move -->
+		<SYM nag="7,8,9"> \uf4 </SYM><!-- only move -->
 		<!-- todo fix colors for 40-47 -->
-		<SYM nag="42,44,46"> \ua9  </SYM><!-- with compensation for the material -->
-		<SYM nag="43,45,47"> \u221e  </SYM><!-- with compensation for the material -->
+		<SYM nag="42,44,46"> \u221e  </SYM><!-- with compensation for the material -->
+		<SYM nag="43,45,47"> \ua9  </SYM><!-- with compensation for the material -->
 		<SYM nag="158"> \u2122 </SYM><!-- with -->
 		<SYM nag="60-65"> \ub4 </SYM><!-- queen's side -->
 		<SYM nag="151,152"> \u2dd </SYM><!-- pair of bishops -->
@@ -167,6 +167,7 @@
 		<SYM nag="126,127,148"> \u2c7 </SYM><!-- ending -->
 		<!--SYM nag="142"> \ue1 </SYM>- is better (greater or equal) -->
 		<SYM nag="143"> \ue3 </SYM><!-- worse is (smaller or equal) -->
+		<SYM nag="147"> \u78 </SYM><!-- worse is (smaller or equal) -->
 
 		<SYM nag="144"> \u2013 </SYM> <!-- equivalent -->
 		<SYM nag="191"> \ufb01 </SYM><!-- double pawns -->
