@@ -238,12 +238,11 @@ public class SymbolBar
     {
         //comboButton.setVisible(i>=0);
         comboPane.setVisible(i>=0);
-        relayoutButton(comboButton,i++);
-        comboLayout.setRowSize((gridCols-(i%gridCols))*BUTTON_SIZE,BUTTON_SIZE);
+        comboButton.setVisible(i>=0);
 
         //comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
         /*if (preferredAxis==BoxLayout.X_AXIS) {
-            comboVerb.setBorder(new EmptyBorder(2,4,2,4));
+
             comboSelector.setBorder(new EmptyBorder(4,0,2,0));
             comboSubst.setBorder(new EmptyBorder(4,0,2,0));
             comboColor.setBorder(new EmptyBorder(4,0,2,0));
@@ -260,6 +259,10 @@ public class SymbolBar
         //comboPane.setLayout(comboLayout);
 
         if (i >= 0) {
+            relayoutButton(comboButton,i++);
+            int rest = gridCols-(i%gridCols);
+            comboLayout.setRowSize(rest*BUTTON_SIZE);
+            comboLayout.invalidateLayout(comboPane);
             //relayoutButton(comboButton, i++);
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = i % gridCols;
@@ -268,6 +271,7 @@ public class SymbolBar
             c.gridheight = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
             c.fill = GridBagConstraints.NONE;
+            c.insets = new Insets(5,0,0,0);
             gridLayout.setConstraints(comboPane, c);
         }
     }
@@ -318,6 +322,7 @@ public class SymbolBar
     {
         comboPane = new JPanel();
         comboLayout = new RowLayout();
+        comboPane.setLayout(comboLayout);
 
         //comboPane.add(makeActionButton("\uf060","switch.symbols"));
         //comboPane.add();
@@ -333,10 +338,11 @@ public class SymbolBar
         comboPane.add(comboSubst = new JComboBox<>());
         comboPane.add(comboSelector = new JComboBox<>(ComboNag.ALL_SELECTORS));
 
-        comboColor.setMaximumSize(new java.awt.Dimension(980,24));
-        comboAdjective.setMaximumSize(new java.awt.Dimension(980,24));
-        comboSubst.setMaximumSize(new java.awt.Dimension(980,24));
-        comboSelector.setMaximumSize(new java.awt.Dimension(980,24));
+        comboColor.setMaximumSize(new java.awt.Dimension(980,20));
+        comboVerb.setBorder(new EmptyBorder(1,3,0,3));
+        comboAdjective.setMaximumSize(new java.awt.Dimension(980,20));
+        comboSubst.setMaximumSize(new java.awt.Dimension(980,20));
+        comboSelector.setMaximumSize(new java.awt.Dimension(980,20));
 
         comboColor.addActionListener(this);
         comboAdjective.addActionListener(this);

@@ -2,34 +2,19 @@ package de.jose.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 public class RowLayout
     implements LayoutManager2
 {
-    private int rowWidth,rowHeight;
+    private int rowWidth;//rowHeight;
+    private Rectangle current = new Rectangle();
+    private Dimension max = new Dimension();
 
-    public void setRowSize(int rowWidth,int rowHeight) {
+    public void setRowSize(int rowWidth) {
         this.rowWidth = rowWidth;
-        this.rowHeight = rowHeight;
+        //this.rowHeight = rowHeight;
     }
-
-    @Override
-    public void addLayoutComponent(Component comp, Object constraints) {}
-
-    @Override
-    public float getLayoutAlignmentX(Container target) { return 0; }
-
-    @Override
-    public float getLayoutAlignmentY(Container target) { return 0; }
-
-    @Override
-    public void invalidateLayout(Container target) {}
-
-    @Override
-    public void addLayoutComponent(String name, Component comp) {}
-
-    @Override
-    public void removeLayoutComponent(Component comp) {}
 
     interface ComponentVisitor {
         Dimension visit(Component c);
@@ -65,27 +50,32 @@ public class RowLayout
         }
     };
 
-    void placeNext(Rectangle r, Dimension d)
+    void placeNext(Dimension d)
     {
-        if (r.x+r.width+d.width > rowWidth)
+        if (current.x+current.width+d.width > rowWidth)
             //  line break
-            r.setBounds( 0, r.y+rowHeight, d.width, d.height);
+            current.setBounds( 0, max.height, d.width, d.height);
         else
             //  continue line
-            r.setBounds( r.x+r.width, r.y, d.width, d.height);
+            current.setBounds( current.x+current.width, current.y, d.width, d.height);
     }
 
     private Dimension forEach(Container target,
                               ComponentVisitor visitor, boolean update)
     {
-        Rectangle r = new Rectangle(0,0,0,0);
+        current.setBounds(0, 0, 0,0);
+        max.width = max.height = 0;
         for(int i=0; i < target.getComponentCount(); i++) {
             Component c = target.getComponent(i);
+            if (!c.isVisible()) continue;
+
             Dimension d2 = visitor.visit(c);
-            placeNext(r,d2);
-            if (update) c.setBounds(r);
+            placeNext(d2);
+            max.width = Math.max(max.width, current.x+current.width);
+            max.height = Math.max(max.height, current.y+current.height);
+            if (update) c.setBounds(current);
         }
-        return new Dimension(r.x+r.width,r.y+r.height);
+        return max;
     }
 
     @Override
@@ -108,4 +98,26 @@ public class RowLayout
         Dimension d = forEach(parent, GetBestSize, true);
         parent.setSize(d.width, d.height);
     }
+
+
+    @Override
+    public void addLayoutComponent(Component comp, Object constraints) {}
+
+    @Override
+    public float getLayoutAlignmentX(Container target) { return 0; }
+
+    @Override
+    public float getLayoutAlignmentY(Container target) { return 0; }
+
+    @Override
+    public void invalidateLayout(Container target) {
+        layoutContainer(target);
+    }
+
+    @Override
+    public void addLayoutComponent(String name, Component comp) {}
+
+    @Override
+    public void removeLayoutComponent(Component comp) {}
+
 }
