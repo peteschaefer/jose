@@ -59,7 +59,8 @@ libraries needed:
     [ ] MySQL 5.0.67 compile from source
         [x] Ubuntu x86_64
         [ ] macOS x86_64 standalone
-        [ ] macOS x86_64 embedded
+        [ ] macOS x86_64 embedded. if unstable, try
+            [ ] 5.0.15 instead
         [ ] macOS arm64
     [ ] MySQL 5.7 from brew (disabled but maybe works anyway ?)
     [ ] MySQL <= 5.0.x  difficult to find for macOS arm64
@@ -68,6 +69,11 @@ libraries needed:
         clang hello.c -target arm64-apple-darwin20.1.0
     [ ] stockfish
     [ ] Lc0
+
+-> if we have a stable MySQL build (5.0.15, or 5.0.67)
+-> and, if mysql-je is stable
+-> we can move on to 64bit-land for all platforms :)
+-> jdk upgrades are not an obstacle anymore
 
 ==== Deprecated Stuff
 
