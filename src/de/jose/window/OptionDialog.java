@@ -1281,7 +1281,7 @@ public class OptionDialog
 					Application.theApplication.boardPanel().updateProfile(profile);
 			if (profile.changed("board.surface.background",oldValues))
 				if (Application.theApplication.clockPanel() != null)
-					Application.theApplication.clockPanel().repaint();
+					Application.theApplication.clockPanel().updateColors();
 			if (profile.changed("doc.panel.tab.placement",oldValues) ||
 				profile.changed("doc.pabel.tab.layout",oldValues))
 				if (Application.theApplication.docPanel() != null)

@@ -358,7 +358,7 @@ public class Clock3d
         g2.fillRect(0,0, size,size);
         //  draw dial
         Rectangle box = new Rectangle(4,4,size-8,size-8);
-        ClockPanel.drawAnalogBackground(g2, box, true);
+        ClockPanel.drawAnalogBackground(g2, box, Color.white, Color.black);
 
         //  turn it into a texture
         ImageComponent2D i2d = new ImageComponent2D(ImageComponent2D.FORMAT_RGBA, bimg, false, true);

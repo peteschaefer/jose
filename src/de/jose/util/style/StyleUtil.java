@@ -286,6 +286,21 @@ public class StyleUtil
         return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
     }
 
+    public static Color invertColor(Color col) {
+        if (col.getRed()==col.getGreen() && col.getGreen()==col.getBlue()) {
+            //  grey colors get inverted
+            int red = 255 - col.getRed();
+            return new Color(red,red,red);
+        }
+        else {
+            float[] hsb = new float[4];
+            Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
+            //hsb[1] = f*hsb[1];   //  low saturation
+            hsb[2] = 1.0f - hsb[2]; //  bright ?
+            return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+        }
+    }
+
     public static Color mapDarkIconColor(Color acol)
     {
         if (acol.getRed()==acol.getGreen() && acol.getGreen()==acol.getBlue()) {
@@ -304,4 +319,5 @@ public class StyleUtil
             return col = mapDarkTextColor(col);
         return col;
     }
+
 }
