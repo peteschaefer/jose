@@ -30,6 +30,9 @@
 	<target name="zip-base">
 		<description> basic installation package (not including platform specific stuff) </description>
 
+		<mkdir dir="database/mysql/jose"/>
+		<mkdir dir="database/tmp"/>
+
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="false">
 
 			<zipfileset dir="." prefix="${appldir}">
@@ -56,6 +59,7 @@
 			<zipfileset dir="database" prefix="${appldir}/database" dirmode="664">
 				<include name="starter.pgn"/>
 				<include name="mysql/info.txt"/>
+				<include name="tmp"/>
 			</zipfileset>
 
 			<zipfileset dir="doc" prefix="${appldir}/doc">
@@ -277,7 +281,7 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
-		<antcall target="zip-linux-x64">
+		<antcall target="zip-windows-x64">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
@@ -790,17 +794,20 @@
 
 	<target name="upload-bitbucket">
 		<description>upload to bitbucket</description>
-		<!--
+
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-windows.zip"/>
 		</antcall>
+		<!--
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-linux.zip"/>
 		</antcall>
-		-->
+	-->
+		<!--
 		<antcall target="upload-file">
 			<param name="file" value="jose-${version}-macos-intel.zip"/>
 		</antcall>
+		-->
 		<!--antcall target="upload-file">
 			<param name="file" value="jose-${version}-macos-arm.zip"/>
 		</antcall-->

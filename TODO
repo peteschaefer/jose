@@ -3,41 +3,27 @@
 * double click insert variant; trying to delete it
 
 ? Charter buggy
-? Windows file chooser; worked-around by using LnF. Windows original is desirable.
-* BUG? Leela keeps analyzing while playing from book
-* BUG? Leela diagnostics not always associated correctly
 
+[x] database cut/copy/paste (-> --tmpdir)
+[ ] db copy: NoSuchElementException (harmless but annoying)
 
 ==== Project
 
-[?] bug: hang on start
-[x] bug: diacritics lost on save
-[x] eval splitpane size (getMaximumSize())
-[x] suggestion arrow updates
-[x] utf-8 for pgn
-    (x) import = heuristics
-    (x) output = configurable
-[x] 000 checkboxes in Setup
 
 1.5.1: move on to 64-bit land
 
 [x] compile against jdk 1.8
-[ ] run with Oracle 21 x64
-    [x] Windows
-    [x] Linux (uiscale needs to be set from script. JBR 21 could do it out-of-the-box, but has touch-drag bug :(
-    [ ] Mac Intel
-    [ ] Mac arm
+[x] run with Oracle 21 x64
+    [x] Windows hi-dpi works well
+    [x] Linux: uiscale needs to be set from script
 
-[ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
+[x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
     [ ] Mac Intel
-[ ] JavaLauncher x64
+[x] JavaLauncher x64
     [x] Windows
-    [-] Linux
-    [-] Mac
-[ ] mysql 5.0.15 x64
-    !! patch: https://bugs.mysql.com/bug.php?id=12070
+[x] mysql 5.0.67 x64
     [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     [ ] Mac intel
@@ -46,9 +32,11 @@
     [x] Windows: (-) fixes BLE
     [-] Linux builds but don't work
 
-Alternative: JBR 21 (x64, or x86)
- [ ] bug: can not load 32bit dll's.
- [ ] bug: touch & drag not detected
+Alternative JREs:
+* JBR 21: better hidpi support, but touch&drag bug (which is a showstopper for me).
+    if ... that bug gets fixed, JBR would be the top candidate
+* Zulu 21: small footprint, but blanks on fractional uiscale
+* Oracle 23: seems to work, but don't hurry
 
 ==== Deprecated Stuff
 
@@ -59,12 +47,11 @@ Alternative: JBR 21 (x64, or x86)
     -> makes sense because they would increase the db size x8
   - position search is performed exhaustively !?!
     - with shortcut for mat signature
-    -> which is pretty dumb but effective
+    -> which is a bit dumb but effective
 
-==== New Features
+==== Old New Features
 
 * arrows + text label
-  - font size?
   - if possible, redraw only modified arrows
 
 * "New Game from here"
@@ -82,19 +69,15 @@ Alternative: JBR 21 (x64, or x86)
   - absolute path to directories?
   - can't delete? (Apply !!)
 
-==== Postponed
+==== Interesting New Features
 
-(first fix platforms)
-
-* Comment search
-    * regex
-    * replace
-
-* Graph View interactive
-    - mark current move
-    - tooltips
-    - click navigate
-* show wdl scores with bars (instead of plain text)
+* Refactor Scoring !!
+    - no more float[]. Use Score.wdl instead.
+        Normalisation (and validity) can be based on wdl (plus engine knowledge).
+    - only one ground truth: MoveNode.score
+    - drop EvalArray (read data from Game tree directly)
+    - drop BoardView.eval (read from Game.currentMove())
+    - use similar updating mechanism for Engine and Book evals
 
 * LiChess Opening Explorer
     - download top games for a variation
@@ -104,13 +87,16 @@ Alternative: JBR 21 (x64, or x86)
     4. copy to local db?
 * replace Nalimov query with Lichess tablebase query
 
-* Refactor Scoring !!
-    - no more float[]. Use Score.wdl instead.
-        Normalisation (and validity) can be based on wdl (plus engine knowledge).
-    - only one ground truth: MoveNode.score
-    - drop EvalArray (read data from Game tree directly)
-    - drop BoardView.eval (read from Game.currentMove())
-    - use similar updating mechanism for Engine and Book evals
+* show wdl scores with bars (instead of plain text)
+
+* Graph View interactive
+    - mark current move
+    - tooltips
+    - click navigate
+
+* Comment search
+    * regex
+    * replace
 
 * Contempt Slider
         White seeks a draw - neutral - Black seeks a draw - Armageddon

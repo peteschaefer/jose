@@ -438,6 +438,7 @@ public class MySQLAdapter
 		 *  -u root
 		 */
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 
 		Vector command = new Vector();
 		Vector env = new Vector();
@@ -580,6 +581,9 @@ public class MySQLAdapter
 		//	set data directory
 		command.add("--datadir");
 		command.add(mysqldir.getAbsolutePath());
+
+		command.add("--tmpdir");
+		command.add(tmpdir.getAbsolutePath());
 
 		//	set base directory
 		command.add("--basedir");
