@@ -1331,19 +1331,29 @@ public class Application
 
 		action = new CommandAction() {
 			public boolean isEnabled(String cmd) {
+				EnginePlugin engine = getEnginePlugin();
 				return 	(theGame.getResult()==Game.RESULT_UNKNOWN) &&
-						(getEnginePlugin()!=null);
+						!theGame.askedAdjudicated &&
+						(engine!=null);
 			}
 
 			public void Do(Command cmd) throws Exception
 			{
 				EnginePlugin xplug = getEnginePlugin();
-				if (xplug.hasOfferedDraw()) {
-					//	accept draw from engine
-					gameDraw();
-				}
-				else {
-					xplug.offerDrawToEngine();
+				if (xplug!=null) {
+					if (xplug.hasOfferedDraw()) {
+						//	accept draw from engine
+						gameDraw();
+					} else if (xplug.canAcceptDraw()) {
+						xplug.offerDrawToEngine();
+					}
+					else {
+						//	else: use heuristics for adjudication
+						Position pos = theGame.getPosition();
+						xplug.offerDrawToEngine();
+						adjudicate(theGame, pos.movedLast(), pos.gamePly(),
+								theGame.getCurrentMove(), getEnginePlugin());
+					}
 				}
 			}
 		};
@@ -1351,7 +1361,8 @@ public class Application
 
 		action = new CommandAction() {
 			public boolean isEnabled(String cmd) {
-				return (theGame.getResult()==Game.RESULT_UNKNOWN);
+				return (theGame.getResult()==Game.RESULT_UNKNOWN)
+						&& !theGame.askedAdjudicated;
 			}
 
 			public void Do(Command cmd)  throws Exception
@@ -1365,10 +1376,9 @@ public class Application
 				theClock.halt();
 
 				if (EngUtil.isWhite(whichColor))
-					theGame.setResult(Game.BLACK_WINS,theGame);
+					theGame.setResult(Game.BLACK_WINS);
 				else
-					theGame.setResult(Game.WHITE_WINS,theGame);
-//				if (docPanel()!=null) docPanel().reformat();
+					theGame.setResult(Game.WHITE_WINS);
 			}
 		};
 		map.put("menu.game.resign", action);
@@ -3460,7 +3470,7 @@ public class Application
 			/** UCI engines can't resign or offer draws (stupid gits)
 			 *  we got to track the evaluation of recent moves and allow the user to adjudicate the game
 			 */
-			adjudicate(theGame, pos.movedLast(), pos.gamePly(), node,emv,getEnginePlugin());
+			adjudicate(theGame, pos.movedLast(), pos.gamePly(), node,getEnginePlugin());
 		}
 
 		Command cmd = new Command("move.notify", null, mv, emv);
@@ -3522,11 +3532,11 @@ public class Application
 
 
 	protected boolean adjudicate(Game game, int engineColor, int gamePly, MoveNode node,
-	                                  EnginePlugin.EvaluatedMove move, EnginePlugin engine)
+	                                  EnginePlugin engine)
 	        throws BadLocationException, ParseException
 	{
 //		System.err.println(move.toString()+"="+move.getValue());
-		if (move==null || game==null || engine==null
+		if (game==null || engine==null
 		        || (game.getResult()!=PgnConstants.RESULT_UNKNOWN) || game.askedAdjudicated
 		        || !game.isMainLine(node)) return false;
 
@@ -4128,7 +4138,7 @@ public class Application
 	protected void gameDraw()
 	{
 		try {
-			theGame.setResult(Game.DRAW,theGame);
+			theGame.setResult(Game.DRAW);
 //			if (docPanel()!=null) docPanel().reformat();
 		} catch (Exception e) {
 			Application.error(e);
@@ -4165,9 +4175,9 @@ public class Application
 			message = StringUtil.replace(message,"%player%",getPlayerName(color));
 			if (mainLine) {
 				if (EngUtil.isWhite(color))
-					resultDirty = theGame.setResult(Game.BLACK_WINS,theGame);
+					resultDirty = theGame.setResult(Game.BLACK_WINS);
 				else
-					resultDirty = theGame.setResult(Game.WHITE_WINS,theGame);
+					resultDirty = theGame.setResult(Game.WHITE_WINS);
 			}
 		}
 		else if (flags==Clock.TIME_ELAPSED) {
@@ -4177,19 +4187,19 @@ public class Application
 			if (whiteLose && blackLose) {
 				message = Language.get("message.time.draw");
 				if (mainLine)
-					resultDirty = theGame.setResult(Game.DRAW,theGame);
+					resultDirty = theGame.setResult(Game.DRAW);
 			}
 			else if (whiteLose) {
 				message = Language.get("message.time.lose");
 				message = StringUtil.replace(message,"%player%",getLastPlayerName());
 				if (mainLine)
-					resultDirty = theGame.setResult(Game.BLACK_WINS,theGame);
+					resultDirty = theGame.setResult(Game.BLACK_WINS);
 			}
 			else {
 				message = Language.get("message.time.lose");
 				message = StringUtil.replace(message,"%player%",getLastPlayerName());
 				if (mainLine)
-					resultDirty = theGame.setResult(Game.WHITE_WINS,theGame);
+					resultDirty = theGame.setResult(Game.WHITE_WINS);
 			}
 		}
 		else if (EngUtil.isMate(flags)) {
@@ -4197,34 +4207,34 @@ public class Application
 				message = Language.get("message.mate");
 				message = StringUtil.replace(message,"%player%",getPlayerName(Game.WHITE));
 				if (mainLine)
-					resultDirty = theGame.setResult(Game.WHITE_WINS,theGame);
+					resultDirty = theGame.setResult(Game.WHITE_WINS);
 			}
 			else {
 				message = Language.get("message.mate");
 				message = StringUtil.replace(message,"%player%",getPlayerName(Game.BLACK));
 				if (mainLine)
-					resultDirty = theGame.setResult(Game.BLACK_WINS,theGame);
+					resultDirty = theGame.setResult(Game.BLACK_WINS);
 			}
 		}
 		else if (EngUtil.isStalemate(flags)) {
 			message = Language.get("message.stalemate");
 			if (mainLine)
-				resultDirty = theGame.setResult(Game.DRAW,theGame);
+				resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else if (EngUtil.isDraw3(flags)) {
 			message = Language.get("message.draw3");
 			if (mainLine)
-				resultDirty = theGame.setResult(Game.DRAW,theGame);
+				resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else if (EngUtil.isDraw50(flags)) {
 			message = Language.get("message.draw50");
 			if (mainLine)
-				resultDirty = theGame.setResult(Game.DRAW,theGame);
+				resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else if (EngUtil.isDrawMat(flags)) {
 			message = Language.get("message.drawmat");
 			if (mainLine)
-				resultDirty = theGame.setResult(Game.DRAW,theGame);
+wor				resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else
 			return;

@@ -658,7 +658,13 @@ public class Game
 	{
 		String str = (res==PgnConstants.RESULT_UNKNOWN) ? null:PgnUtil.resultString(res);
 		boolean dirty = setTagValue(TAG_RESULT, str) || (result.getResult()!=res);
-		if (dirty) result.setResult(res);
+		if (dirty) {
+            try {
+                result.setResult(res,this);
+            } catch (BadLocationException e) {
+                Application.error(e);
+            }
+        }
 		return dirty;
 	}
 
