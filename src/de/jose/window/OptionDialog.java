@@ -352,9 +352,10 @@ public class OptionDialog
 		JTextComponent editor = (JTextComponent)timeControls.getEditor().getEditorComponent();
 		editor.getDocument().addDocumentListener(this);
 
-		tab3.add(newLabel("dialog.option.time.control"), LABEL_ONE);
-		add(tab3, "time.control.popup", timeControls,
-		        gridConstraint(ELEMENT_ROW, 1,0,1));
+		JPanel sbox = newGridBox("dialog.option.time.control");
+		add(sbox, "time.control.popup", timeControls, ELEMENT_ONE);
+		add(sbox, null, new JLabel(""), ELEMENT_TWO);
+		addBox(tab3, 0,0,4, sbox);
 
 		Box box;
 		for (int phase=0; phase < 3; phase++) {
@@ -579,24 +580,25 @@ public class OptionDialog
 		}
 
 		JPanel tab6 = (JPanel)comp6;
+		JPanel sbox = newGridBox("board.3d.title");
 
         File dir3d = new File(Application.theWorkingDirectory, "3d");
-		addWithLabel(tab6, 0,0,2, "board.3d.model", new Model3dList(dir3d,Language.theLanguage.langCode,false));
+		addWithLabel(sbox, 0,0,2, "board.3d.model", new Model3dList(dir3d,Language.theLanguage.langCode,false));
 
         JCheckBox chkbox1, chkbox2;
 
-		addWithLabel(tab6, 0,1,2, "board.3d.surface.frame", newSurfaceButton("board.3d.surface.frame",null));
-		addWithLabel(tab6, 0,2,2, "board.3d.light.ambient", newColorButton("board.3d.light.ambient",null));
-		addWithLabel(tab6, 0,3,2, "board.3d.light.directional", newColorButton("board.3d.light.directional",null));
+		addWithLabel(sbox, 0,1,2, "board.3d.surface.frame", newSurfaceButton("board.3d.surface.frame",null));
+		addWithLabel(sbox, 0,2,2, "board.3d.light.ambient", newColorButton("board.3d.light.ambient",null));
+		addWithLabel(sbox, 0,3,2, "board.3d.light.directional", newColorButton("board.3d.light.directional",null));
 
-		addWithLabel(tab6, 2,0,2, null, newCheckBox("board.3d.clock"));
-        addWithLabel(tab6, 2,1,2, null, newCheckBox("board.hilite.squares"));
+		addWithLabel(sbox, 2,0,2, null, newCheckBox("board.3d.clock"));
+        addWithLabel(sbox, 2,1,2, null, newCheckBox("board.hilite.squares"));
 
-		addWithLabel(tab6, 2,2,2, null, newCheckBox("board.3d.shadow"));
-		addWithLabel(tab6, 2,3,2, null, newCheckBox("board.3d.reflection"));
+		addWithLabel(sbox, 2,2,2, null, newCheckBox("board.3d.shadow"));
+		addWithLabel(sbox, 2,3,2, null, newCheckBox("board.3d.reflection"));
 
-        addWithLabel(tab6, 0,4,2, null, chkbox2 = newCheckBox("board.3d.fsaa"));
-        addWithLabel(tab6, 2,4,2, null, chkbox1 = newCheckBox("board.3d.anisotropic"));
+        addWithLabel(sbox, 0,4,2, null, chkbox2 = newCheckBox("board.3d.fsaa"));
+        addWithLabel(sbox, 2,4,2, null, chkbox1 = newCheckBox("board.3d.anisotropic"));
 
 		chkbox1.setEnabled(false);
 		chkbox2.setEnabled(false);
@@ -611,14 +613,15 @@ public class OptionDialog
 //		tab5.add(tab5,1,newLabel("board.3d.knight.angle"));
 		JSlider slider = createAngleSlider("board.3d.knight.angle");
 		slider.addChangeListener(this);
-		addWithLabel(tab6, 0,5,4, "board.3d.knight.angle", slider);
+		addWithLabel(sbox, 0,5,4, "board.3d.knight.angle", slider);
 
 		if (Version.windows) {
 			//  choose OpenGL on Windows. Default is DirectX
 			//  there is no choice on Linux
-			addWithLabel(tab6, 0,6,2, null, newCheckBox("board.3d.ogl"));
+			addWithLabel(sbox, 0,6,2, null, newCheckBox("board.3d.ogl"));
 		}
 
+		addBox(tab6,0,0,4,sbox);
         tab6.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
 
@@ -662,7 +665,8 @@ public class OptionDialog
 		bookList.addListSelectionListener(this);
 
 		//  list of opening books
-		add(tab5, "book.list", new JScrollPane(bookList),
+		JPanel sbox = newGridBox("book.list.title");
+		add(sbox, "book.list", new JScrollPane(bookList),
 		        gridConstraint(ELEMENT_ONE, 0,0,1, GridBagConstraints.BOTH));
 
 		float iconSize = 24f;
@@ -686,8 +690,9 @@ public class OptionDialog
 		buttonBox.add(reg(downloadButton), ELEMENT_ONE_ROW);
 		downloadButton.setVisible(false);
 
-		add(tab5, "book.buttons", buttonBox,
+		add(sbox, "book.buttons", buttonBox,
 				gridConstraint(LABEL_ONE, 1,0,1));
+		addBox(tab5, 0,0, 4, sbox);
 
 		//  engine play options
 		Box engineBox = Box.createVerticalBox();

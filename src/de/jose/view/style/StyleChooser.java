@@ -111,7 +111,7 @@ public class StyleChooser
 		add(rightPanel,BorderLayout.EAST);
 	}
 
-	private JScrollPane createStyleTree()
+	private JComponent createStyleTree()
 	{
 		styleTree = new JTree() {
 			public boolean getScrollableTracksViewportWidth() {
@@ -130,16 +130,28 @@ public class StyleChooser
 		JScrollPane scroll = new JScrollPane(styleTree,
 		            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setBackground(Color.white);
 		scroll.getViewport().setBackground(Color.white);
-		return scroll;
+
+		CompoundBorder border2 = new CompoundBorder(
+				new BevelBorder(BevelBorder.LOWERED),
+				new EmptyBorder(8,8,4,4)
+		);
+		scroll.setBorder(border2);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBackground(Color.white);
+		panel.add(scroll,BorderLayout.CENTER);
+		return panel;
 	}
 
 	private JPanel createOptionPanel()
 	{
-		JPanel optionPanel = new JPanel(new GridBagLayout());
-
-		JPanel notationPanel = new JPanel(new GridBagLayout());
-		notationPanel.setBorder(new TitledBorder(Language.get("dialog.option.doc.move.format")));
+		JPanel notationPanel = JoDialog.newGridPane();
+		notationPanel.setBorder(
+				//new CompoundBorder(
+					new BevelBorder(BevelBorder.LOWERED));
+				//	new TitledBorder(Language.get("dialog.option.doc.move.format"))));
 
 		//  notation
 		moveFormat = new MoveFormatList();
@@ -163,19 +175,19 @@ public class StyleChooser
 		useFont.add(useFontTrue);
 		useFont.add(useFontFalse);
 
-		optionPanel.add(notationPanel, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,0,4));
+		//optionPanel.add(notationPanel, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,0,4));
 /*
 		if (true) {
 			antiAliasing = JoDialog.newCheckBox("doc.panel.antialias");
 			optionPanel.add(antiAliasing, JoDialog.gridConstraint(JoDialog.ELEMENT_ROW,0,1,4));
 		}
  */
-		return optionPanel;
+		return notationPanel;
 	}
 
 	private JPanel createLeftPanel()
 	{
-		JScrollPane styleScroller = createStyleTree();
+		JComponent styleScroller = createStyleTree();
 		fontPreview = createPreview("font.sample",Color.white);
 		fontPreviewScreen = createPreview("font.sample.screen",UIManager.getColor("background"));
 		fontPreviewExplain = new JLabel(Language.get("dialog.option.dark.explain"));
@@ -271,7 +283,8 @@ public class StyleChooser
 		preview.setPreferredSize(new Dimension(40,72));
 		preview.setBackground(bgColor);
 		preview.setBorder(new CompoundBorder(
-		                new BevelBorder(BevelBorder.RAISED, Color.lightGray,Color.darkGray),
+		                //new BevelBorder(BevelBorder.RAISED, Color.lightGray,Color.darkGray),
+						new BevelBorder(BevelBorder.LOWERED),
 		                new EmptyBorder(2,12,2,2)));
 
 //		fontPreview.setBorder(
