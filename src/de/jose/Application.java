@@ -259,7 +259,7 @@ public class Application
         String dataDir          = Version.getSystemProperty("jose.datadir",null);
         if (dataDir != null)    theDatabaseDirectory = new File(dataDir).getCanonicalFile();
 
-        showFrameRate           = Version.getSystemProperty("jose.framerate",false);
+        //showFrameRate           = Version.getSystemProperty("jose.framerate",false);
         logErrors               = Version.getSystemProperty("jose.log",true);
 		showErrors				= Version.getSystemProperty("jose.show.errors",true);
 

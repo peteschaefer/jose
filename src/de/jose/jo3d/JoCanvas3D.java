@@ -12,7 +12,7 @@
 
 package de.jose.jo3d;
 
-import com.sun.j3d.utils.timer.J3DTimer;
+//import com.sun.j3d.utils.timer.J3DTimer;
 import de.jose.Application;
 import de.jose.comm.msg.MessageListener;
 import de.jose.view.BoardView;
@@ -50,7 +50,7 @@ public class JoCanvas3D extends Canvas3D
 	private float quality;
 
 	/**	record frame count ? */
-	private boolean recordFrames;
+	//private boolean recordFrames;
 	/**	frame start times */
 	private long[][] timer;
 	/**	next report */
@@ -83,7 +83,7 @@ public class JoCanvas3D extends Canvas3D
 
 	public int getFrameCount()						{ return frameCount; }
 
-	public void setFrameRecord(boolean on)			{ recordFrames = on; }
+	//public void setFrameRecord(boolean on)			{ recordFrames = on; }
 
 	public final long[] times(int frameOffset)		{ return timer[(frameCount-frameOffset) % timer.length]; }
 
@@ -118,7 +118,7 @@ public class JoCanvas3D extends Canvas3D
 	public void preRender()
 	{
 		frameCount++;
-		if (recordFrames) times(0)[0] = J3DTimer.getValue();
+		//if (recordFrames) times(0)[0] = J3DTimer.getValue();
 		if (viewCtrl!=null)
 			viewCtrl.preRender();
 	}
@@ -126,7 +126,7 @@ public class JoCanvas3D extends Canvas3D
 	/**	called after rendering */
 	public void postRender()
 	{
-		if (recordFrames) times(0)[1] = J3DTimer.getValue();
+		//if (recordFrames) times(0)[1] = J3DTimer.getValue();
 		if (viewCtrl!=null)
 			viewCtrl.postRender();
 	}
@@ -134,13 +134,13 @@ public class JoCanvas3D extends Canvas3D
 	/**	called after swapping the buffers */
     public void postSwap()
 	{
-		if (recordFrames) {
+		/*if (recordFrames) {
 			long nanos = J3DTimer.getValue();
 			times(0)[2] = nanos;
 
 			if (nanos >= (lastReport+NANOS_PER_SECOND))
 				frameReport();
-		}
+		}*/
 
 		if(captureNext)
 			capture();

@@ -206,7 +206,7 @@ public class BoardView3D
 			}
 
 	       	canvas = new JoCanvas3D(gc, 0.9f, !runContinuous);
-			canvas.setFrameRecord(AbstractApplication.theAbstractApplication.showFrameRate);
+			//canvas.setFrameRecord(AbstractApplication.theAbstractApplication.showFrameRate);
 			canvas.addMouseListener(this);
 		}
 		/*	DON'T ...	*/

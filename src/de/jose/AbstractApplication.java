@@ -65,7 +65,7 @@ abstract public class AbstractApplication
 	/**	icon image (for window frames, etc.)	 */
 	public Image				theIconImage;
 	/**	show 3d frame rate on std out	*/
-	public 	boolean				showFrameRate = false;
+	//public 	boolean				showFrameRate = false;
 	/**	Current Game	 */
 	public Game					theGame;
 	/**	Clock	 */
