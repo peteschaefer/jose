@@ -122,13 +122,13 @@ abstract public class BoardView
 	abstract public void captureImage(MessageListener callbackTarget, boolean transparent);
 
 	/**	paint one square	 */
-	public final void updateOne(int file, int row)
+	/*public final void updateOne(int file, int row)
 	{
 		updateOne(getGraphics2D(), file,row);
-	}
+	}*/
 
 	/**	paint one square	 */
-	abstract public void updateOne(Graphics2D g, int file, int row);
+	//abstract public void updateOne(Graphics2D g, int file, int row);
 
 	public void refresh(boolean stopAnimation)	{ super.repaint(); }
 

@@ -82,6 +82,8 @@ public class EasyLink
      */
     public static native int led(String leds);
 
+    public static String NO_LEDS = "00000000/00000000/00000000/00000000/00000000/00000000/00000000/00000000";
+
     /**
      * @return the MCU hardware version.
      */
@@ -110,18 +112,11 @@ public class EasyLink
 
     /**
      * \brief CAUTION: Retrieve the next available game file from internal storage
-     * and then delete (!) the file from internal storage.
+     * and optionally delete (!) the file from internal storage.
      *
-     * @param game_data The content of the game file will be written to this
-     *                  string (char*). The content records the change of each FEN
-     *                  of the game, separated by ';'. Make sure the size of the
-     *                  provided pointer is sufficiently large, otherwise calling
-     *                  this function will result in losing the respective game
-     *                  file!
-     * @return Length of the content string written to the provided data pointer.
-     *         0 if the game file is empty
-     *         -2 if the provided data pointer is too small to hold the content of
-     *         the game file.
+     * @param andDelete if true, delete the file after reading.
+     *                      Note that this is the only way to retrieve succesive files.
+     * @return The content of the game file will be written to an array of FEN strings.
      */
     public static native String[] getFile(boolean andDelete);
 

@@ -467,9 +467,9 @@ public class BoardView3D
 				pieceGroups[i].adaptLOD(screenSize);
 	}
 
-	public void updateOne(Graphics2D g, int file, int row)
+	/*public void updateOne(Graphics2D g, int file, int row)
 	{
-	}
+	}*/
 
 	/**	we don't use buffering
 	 * 	Java3D draws directly into the graphics memory

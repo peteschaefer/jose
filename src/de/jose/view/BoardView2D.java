@@ -294,12 +294,12 @@ public class BoardView2D
 	}
 
 	/**	repaint one square	 */
-	public void updateOne(Graphics2D g, int file, int row)
+	/*public void updateOne(Graphics2D g, int file, int row)
 	{
 		prepareImage(g);
 
 		paintImmediate(g,EngUtil.square(file,row));
-	}
+	}*/
 
 	protected void paintImmediate(Graphics2D g, int square)
 	{
