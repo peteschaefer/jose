@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import ch.randelshofer.quaqua.QuaquaManager;
 /**
  * a dropdown list with look and feels
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class LookAndFeelList
@@ -246,8 +246,7 @@ public class LookAndFeelList
 		UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
 		Vector result = new Vector();
 		for (int i=0; i<info.length; i++) {
-			if (Version.java15orLater &&
-			        info[i].getClassName().equals("javax.swing.plaf.metal.MetalLookAndFeel"))
+			if (info[i].getClassName().equals("javax.swing.plaf.metal.MetalLookAndFeel"))
 			{
 				result.add(new LookAndFeelEntry(info[i],"ocean", "Ocean"));
 				result.add(new LookAndFeelEntry(info[i],"steel", null));

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ public class JoFrame
 		this();
 		profile = fpf;
 
-		if (Version.java14orLater && isMaximized(fpf.state))
+		if (isMaximized(fpf.state))
 		{
 			//	workaround for 1.4: maximizing works only when the frame is visible
 			setBounds(adjustBounds(fpf.userBounds,false));		//	normal bounds
@@ -216,10 +216,6 @@ public class JoFrame
 	{
 		if (Util.anyOf(state,FULLSCREEN))
 			setFullScreen(true);
-		else if (Version.java13) {
-			int vstate = Util.minus(state,VISIBLE);
-			if (vstate != 0) super.setState(vstate);
-		}
 		else
 			super.setExtendedState(Util.minus(state,FULLSCREEN+VISIBLE));	//	new in JDK 1.4
 	}
@@ -231,8 +227,6 @@ public class JoFrame
 		int result;
 		if (isFullScreen())
 			result = FULLSCREEN+VISIBLE;
-		else if (Version.java13)
-			result = super.getState();
 		else
 			result = super.getExtendedState();	//	new in JDK 1.4
 

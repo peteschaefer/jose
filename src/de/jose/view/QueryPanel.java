@@ -433,8 +433,7 @@ public class QueryPanel
 		rowCount.setMinimumSize(new Dimension(160,20));
 		rowCount.setHorizontalAlignment(JLabel.RIGHT);
 //		rowCount.setHorizontalTextPosition(JLabel.LEADING);
-        if (Version.java14orLater)
-    		rowCount.setIconTextGap(8);
+  		rowCount.setIconTextGap(8);
 	}
 
 

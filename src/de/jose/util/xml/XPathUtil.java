@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import org.w3c.dom.traversal.NodeIterator;
 import javax.xml.transform.TransformerException;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class XPathUtil
@@ -30,10 +30,7 @@ public class XPathUtil
 	private static IXPathAdapter impl;
 
 	static {
-		if (Version.java15orLater)
-			impl = new XPathImpl15();
-		else
-			throw new UnsupportedOperationException("java 1.4 is not supported anymore");
+		impl = new XPathImpl15();
 	}
 
 	/**

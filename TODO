@@ -53,10 +53,6 @@ Q: is the db already running in standalone mode?
 
 ==== Deprecated Stuff
 
-* ghost installer
-* version check at startup
-* Version.java15orLater
-* BootError
 * NalimovOnlineQuery -> replace with LichessTablebaseQuery
 
 * Positional Index !!

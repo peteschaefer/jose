@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * NOTE requires Java 1.5 to compile
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class WinUtils
 {
@@ -82,10 +82,10 @@ public class WinUtils
 	 */
 	public static boolean setTopMost(Frame win)
 	{
-		if (Version.java15orLater) {
+//		if (Version.java15orLater) {
 			win.setAlwaysOnTop(true);
 			return true;    //  no way to detect success !?
-		}
+/*		}
 		else if (Version.windows) {
 			loadLib();
 			long hwnd = getWindowHandle(win);
@@ -95,14 +95,15 @@ public class WinUtils
 			//  can't do it
 			return false;
 		}
+ */
 	}
 
 	public static boolean setTopMost(Dialog dlg)
 	{
-        if (Version.java15orLater) {
+//        if (Version.java15orLater) {
             dlg.setAlwaysOnTop(true);
             return true;
-        }
+  /*      }
         else if (Version.windows) {
 			loadLib();
 			long hwnd = getWindowHandle(dlg);
@@ -112,6 +113,7 @@ public class WinUtils
             //  can't do it
             return false;
         }
+   */
 	}
 
 	//------------------------------------------------------------------
@@ -317,11 +319,7 @@ public class WinUtils
 	{
 		Number handle = null;
 		try {
-			Class clazz;
-			if (Version.java15orLater)
-				clazz = Class.forName("java.lang.ProcessImpl");
-			else
-			    clazz = Class.forName("java.lang.Win32Process");
+			Class clazz = Class.forName("java.lang.ProcessImpl");
 			Field field = clazz.getDeclaredField("handle");
 			field.setAccessible(true);
 			handle = (Number)field.get(proc);

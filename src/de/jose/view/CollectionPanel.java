@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,10 +98,8 @@ public class CollectionPanel
         tree.addTreeExpansionListener(this);
         tree.setEditable(true);
         tree.getModel().addTreeModelListener(this);
-        if (Version.java14orLater) {
-            tree.setDragEnabled(true);
-            tree.setTransferHandler(new GameTransferHandler());
-        }
+		tree.setDragEnabled(true);
+		tree.setTransferHandler(new GameTransferHandler());
 
         scroll = new JScrollPane(tree,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -409,7 +407,7 @@ public class CollectionPanel
 
 		//	sending this event will automatically adjust the ListPanel
 		//	don't do it during DnD
-		if (Version.java14orLater && !GameTransferHandler.isDragging()) {
+		if (!GameTransferHandler.isDragging()) {
             //  show/hide the looking glass icon
 			Command cmd = new Command("collection.selection.changed",e,selectedIds);
 			Application.theApplication.broadcast(cmd);

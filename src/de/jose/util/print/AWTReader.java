@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ import org.apache.fop.fonts.TTFMtxEntry;
  * Note that the generated metrics files are identical to the metrics info use by AWTRenderer
  * (i.e. if you use PDFRenderer with these files you should get exactly the same layout).
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class AWTReader
@@ -317,10 +317,7 @@ public class AWTReader
 		/**
 		 * package has moved in JDK 1.5 got to use reflection
 		 */
-		String className = Version.java15orLater ?
-		        "com.sun.org.apache.xml.internal.utils.MutableAttrListImpl":
-		        "org.apache.xml.utils.MutableAttrListImpl";
-
+		String className = "com.sun.org.apache.xml.internal.utils.MutableAttrListImpl";
 		try {
 
 			return (AttributesImpl)Class.forName(className).newInstance();

@@ -16,7 +16,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
-//import com.sun.media.jai.codec.*;
+
 import de.jose.Application;
 import de.jose.Version;
 import de.jose.util.ReflectionUtil;
@@ -650,38 +650,16 @@ public class ImgUtil
 
 	public static Image readBmp(File file)
 	{
-		//   TODO migrate to 1.5
-		osbaldeston.image.BMP bmp = new osbaldeston.image.BMP(file);
-		return bmp.getImage();
+        try {
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 	}
 
 	public static Image readBmp(InputStream input) throws IOException
 	{
-		//   TODO migrate to 1.5
-		osbaldeston.image.BMP bmp = new osbaldeston.image.BMP(input);
-		return bmp.getImage();
-	}
-
-	public static void writeBmp(Image img, File file)
-	{
-		if (Version.java15orLater)
-		{
-
-		}
-		else {
-			osbaldeston.image.BMP bmp = new osbaldeston.image.BMP(img);
-			bmp.write(file);
-			ImgUtil.setImageSize(file, img.getWidth(null),img.getHeight(null));
-		}
-	}
-
-
-	public static byte[] createBmp(Image img)
-	{
-		osbaldeston.image.BMP bmp = new osbaldeston.image.BMP(img);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		bmp.write(out);
-		return out.toByteArray();
+		return ImageIO.read(input);
 	}
 
 	public static Shape getOutline(Font fnt, String text)

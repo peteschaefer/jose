@@ -305,16 +305,6 @@ public class Application
 //		System.out.println("com.apple.mrj.application.apple.menu.about.name="+Version.getSystemProperty("com.apple.mrj.application.apple.menu.about.name"));
         }
 
-        if (Version.java13) {
-            if (! XMLUtil.preferImplementation(XMLUtil.CAUCHO))
-            {
-                XMLUtil.preferImplementation(XMLUtil.XERCES);
-                XMLUtil.preferImplementation(XMLUtil.XALAN);
-                //  otherwise: use the default implementation (whatever this may be ...)
-            }
-        }
-        //  else: Java 1.4 has built-in XML support
-
 		if (theDatabaseId == null)
 			theDatabaseId = theConfig.getDefaultDataSource();
 		if (theDatabaseId == null)

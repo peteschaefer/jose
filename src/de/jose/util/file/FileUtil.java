@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -263,7 +263,7 @@ public class FileUtil
 		if (dst.isDirectory())
 			dst = new File(dst,src.getName());
 
-        if (Version.java14orLater)
+        if (true)
             FileUtilNIO.copyFile(src,dst);
         else {
             FileInputStream in = new FileInputStream(src);
@@ -283,7 +283,7 @@ public class FileUtil
 		throws IOException
 	{
 		long bytesCopied=0;
-        if (Version.java14orLater) {
+        if (true) {
             bytesCopied = FileUtilNIO.copyFile(src,out);
         }
         else {
@@ -425,7 +425,7 @@ public class FileUtil
             FileInputStream stream = null;
             try {
                 stream = new FileInputStream(fil);
-                if (Version.java14orLater)
+                if (true)
                     FileUtilNIO.addToZip(zip,stream.getChannel(), path, fil.length(),fil.lastModified());
                 else
                     addToZip(zip,stream, path, fil.length(),fil.lastModified());

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -337,7 +337,7 @@ public class FlyBy
 			theWindow.setUndecorated(true);
 			theWindow.setBounds(screen.x,screen.y, screen.width,screen.height);
 
-			boolean canFullScreen = Version.java14orLater && gd.isFullScreenSupported();
+			boolean canFullScreen = gd.isFullScreenSupported();
 			if (canFullScreen) {
 				//	full screen
 				isFullScreen = true;
@@ -357,7 +357,7 @@ public class FlyBy
 		Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 
 		if (isFullScreen && changeDisplay) {
-			boolean canChangeDisplay = Version.java14orLater && gd.isDisplayChangeSupported();
+			boolean canChangeDisplay = gd.isDisplayChangeSupported();
 			if (canChangeDisplay) {
 				//	note that changes to display mode may only work in fullscreen
 				//	that's why the call to setFullScreenWindow was made first
