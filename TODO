@@ -44,7 +44,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     - file chooser
     [x] pick up theme files  (config/themes)
     [x] remove tab close button
-    [ ] configure move highlight color. lighter?
+    [x] configure move highlight color. lighter? use theme editor!
 
     [x] Fork flatlaf
     	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
@@ -54,6 +54,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[ ] TextPaneUI: fix jumping characters
     	[ ] TextPaneUI: nicer selection
         [ ] initial selection color in StyleChooser
+        [ ] wdl label height; adjust to font
 
     [x] add to F9 Color Tab
         [-] background color

@@ -204,7 +204,7 @@ public class OptionDialog
 						Language.getAvailableLanguages(Application.theApplication.theLanguageDirectory)));
 		LookAndFeelList lookAndFeelList = new LookAndFeelList();
 		JLabel label = (JLabel)addWithLabel(tab0,0,2,4, "ui.look.and.feel2", lookAndFeelList);
-		label.setText(Language.get("ui.look.and.feel"));
+		label.setText(Language.get("dialog.option.ui.look.and.feel"));
 
 		//  load recent games
 		addWithLabel(tab0, 0,3,4, null, newCheckBox("doc.load.history"));
@@ -684,7 +684,10 @@ public class OptionDialog
 
 		//  engine play options
 		Box engineBox = Box.createVerticalBox();
-		engineBox.setBorder(new TitledBorder(Language.get("book.engine.options")));
+		engineBox.setBorder(
+				new CompoundBorder(
+					new TitledBorder(Language.get("book.engine.options")),
+						new EmptyBorder(8,8,8,8)));
 		//  When playing against a chess engine:
 		engineBox.add(newLabel("book.engine.options.tip")); //, gridConstraint(ELEMENT_ONE,0,0,2));
 
