@@ -103,7 +103,7 @@ JNIEXPORT jint JNICALL Java_de_jose_util_WinUtils_findWindow
 		hwnd = FindWindowA(NULL,str);
 		
 		env->ReleaseStringUTFChars(title, str);
-		return (jint) hwnd;
+		return (jlong) hwnd;
 	} catch_all(env)
 }
 

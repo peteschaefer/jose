@@ -86,14 +86,37 @@ int wstrlen(WCHAR* str)
 	return i;
 }
 
+jobject NewInteger(JNIEnv* env, int32_t number)
+{
+	jclass cls = env->FindClass("java/lang/Integer");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(I)V");
+	if (NULL == midInit) return NULL;
+	jobject newObj = env->NewObject(cls, midInit, number);
+    return newObj;
+}
+
+jobject NewLong(JNIEnv* env, int64_t number)
+{
+	jclass cls = env->FindClass("java/lang/Long");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(J)V");
+	if (NULL == midInit) return NULL;
+	jobject newObj = env->NewObject(cls, midInit, number);
+	return newObj;
+}
+
 jobject toJavaObject(JNIEnv* env, BYTE* buffer, DWORD type, DWORD size)
 {
 	switch (type)
 	{
-	case REG_SZ:	//	0-terminated unicode string		
+    case REG_DWORD:
+      	return NewInteger(env, *(int32_t*)buffer);
+    case REG_QWORD:
+		return NewLong(env, *(int64_t*)buffer);
+	case REG_SZ:	//	0-terminated unicode string
 		return env->NewString((jchar*)buffer, wstrlen((WCHAR*)buffer));
 	default:
 		//	other data types not yet supported
+		//return NewLong(env,type);
 		return env->NewStringUTF("not yet implemented");
 	}
 }

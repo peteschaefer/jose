@@ -29,26 +29,6 @@ public class JoSplitPane
 		extends JSplitPane
 		implements JoComponent, CommandListener
 {
-	static class JoSplitPaneUI extends MetalSplitPaneUI
-	{
-		/** overwrites startDragging() and stopDragging() to notify the parent JSplitPane   */
-		protected void startDragging()
-		{
-			/* notify the children that we are starting to resize  !   */
-			((JoSplitPane)getSplitPane()).startContinuousResize();
-
-			super.startDragging();
-		}
-
-		protected void finishDraggingTo(int location)
-		{
-			super.finishDraggingTo(location);
-
-			/* notify the children that resizing is finished  !   */
-			((JoSplitPane)getSplitPane()).finishContinuousResize();
-		}
-	}
-
 	//-------------------------------------------------------------------------------
 	//	Constants
 	//-------------------------------------------------------------------------------
@@ -358,7 +338,9 @@ public class JoSplitPane
 	}
 
 	private void setDividerEnabled(boolean movable) {
-		setDividerSize(movable ? DIVIDER_SIZE:2);
+		Object value = UIManager.get("SplitPane.dividerSize");
+		int dividerSize = (int)Util.nvl(value,Integer.valueOf(DIVIDER_SIZE));
+		setDividerSize(movable ? dividerSize:2);
 		//	following has no effect, sadly...
 		putClientProperty("SplitPaneDivider.style", movable ? "grip":"plain");
 		putClientProperty("SplitPaneDivider.gripDotCount", movable ? 3:0);

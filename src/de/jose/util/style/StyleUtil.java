@@ -12,6 +12,8 @@
 
 package de.jose.util.style;
 
+import de.jose.Version;
+import de.jose.util.WinRegistry;
 import de.jose.view.style.JoFontConstants;
 import de.jose.Util;
 
@@ -118,6 +120,19 @@ public class StyleUtil
     public static boolean differsFamily(AttributeSet style, AttributeSet base)
     {
         return !Util.equals(StyleConstants.getFontFamily(style), StyleConstants.getFontFamily(base));
+    }
+
+    public static Color getSystemAccentColor()
+    {
+        if (Version.windows) {
+            Object value = WinRegistry.getValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
+            if (value!=null) {
+                int i = ((Number) value).intValue();
+                return new Color(i);
+            }
+        }
+        //  else {
+        return SystemColor.activeCaption;
     }
 
     /**

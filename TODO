@@ -42,9 +42,9 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     - tab titles with close button
     - file chooser
     [x] pick up theme files  (config/themes)
-    [ ] remove tab close button
+    [x] remove tab close button
     [x] configure move highlight color
-    [ ] pick up accent color ?
+    [x] pick up accent color
     [ ] fix F4 layout
     [ ] remove l&f selection
     [ ] in-component folder button

@@ -54,6 +54,7 @@ import de.jose.util.*;
 import de.jose.util.file.FileUtil;
 import de.jose.util.file.ResourceClassLoader;
 import de.jose.util.print.PrintableDocument;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.*;
 import de.jose.view.input.LookAndFeelList;
 import de.jose.view.input.WriteModeDialog;
@@ -63,6 +64,7 @@ import de.jose.window.*;
 import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
@@ -588,7 +590,13 @@ public class Application
 			JoDialog.showErrorDialog("error.lnf.not.supported");
 		else
 			try {
-				//UIManager.setLookAndFeel(className);
+                //UIManager.setLookAndFeel(className);
+				FlatLaf.setSystemColorGetter(name -> {
+					if (name.equals("accent"))
+						return StyleUtil.getSystemAccentColor();
+					return null;
+				});
+
 				FlatLaf.registerCustomDefaultsSource(
 						"themes",
 						new ResourceClassLoader("config"));
