@@ -1803,10 +1803,20 @@ public class Application
                 return /*theGame.isNew() ||*/ theGame.isDirty();
             }
 			public void Do(Command cmd) throws Exception {
-				saveGame(theGame);
+				saveGame(theGame,cmd.code.equals("menu.file.save.copy"));
 			}
 		};
 		map.put("menu.file.save", action);
+		map.put("menu.file.save.copy", action);
+
+		action = new CommandAction() {
+			public boolean isEnabled(String code) {
+				return /*theGame.isNew() ||*/ theGame.isDirty();
+			}
+			public void Do(Command cmd) throws Exception {
+				saveGame(theGame,true);
+			}
+		};
 
 		action = new CommandAction() {
 			public boolean isEnabled(String code) {
@@ -2020,7 +2030,7 @@ public class Application
 
 				if (theGame.isDirty())
 					switch (confirmSaveOne()) {
-					case JOptionPane.YES_OPTION:	saveGame(g); break;
+					case JOptionPane.YES_OPTION:	saveGame(g,false); break;
 					case JOptionPane.NO_OPTION:		g.clearDirty();
                                                     //  important to adjust dirty indicators
                                                     break;
@@ -2587,10 +2597,10 @@ public class Application
 		broadcast(cmd);
 	}
 
-	protected void saveGame(Game g)	throws Exception
+	protected void saveGame(Game g, boolean copy)	throws Exception
 	{
 		if (g != null)
-			if (g.isNew()) {
+			if (g.isNew() || copy) {
 				if (!g.isEmpty() && (g.getTagValue(PgnConstants.TAG_DATE)==null))
 				{
 					//  when saving a new, non-empty game, fill in default date

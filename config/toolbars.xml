@@ -12,6 +12,7 @@
 		<separator/>
 		<item id="menu.file.save"/>
 		<item id="menu.file.save.all"/>
+		<item id="menu.file.save.copy"/>
 		<item id="menu.file.save.as"/>
 		<iten id="menu.file.print"/>
 		<separator/>
@@ -69,7 +70,7 @@
 	<toolbar id="window.toolbar.2">
 		<item id="menu.edit.collection.new"/>
 		<item id="menu.file.open"/>
-		<item id="menu.file.save.as"/>
+		<item id="menu.file.save.copy"/>
 		<item id="menu.file.print"/>
 		<separator/>
 		<item id="menu.edit.cut"/>

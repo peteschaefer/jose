@@ -16,8 +16,9 @@
 		<separator/>
 		<item id="menu.file.close"	key="control W"/>
 		<item id="menu.file.save"	key="control S"/>
-		<item id="menu.file.save.as" key="control shift S"/>
 		<item id="menu.file.save.all"	key="F2"/>
+		<item id="menu.file.save.copy"/>
+		<item id="menu.file.save.as" key="control shift S"/>
 		<item id="menu.file.revert"/>
 		<separator/>
 		<item id="menu.file.print"	key="control P"/>
