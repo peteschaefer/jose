@@ -14,7 +14,6 @@
 package de.jose.util;
 
 import de.jose.Application;
-import de.jose.Util;
 import de.jose.view.dnd.ImageSelection;
 import de.jose.view.dnd.DatabaseGameSelection;
 import de.jose.view.dnd.StyledTextSelection;
@@ -27,7 +26,7 @@ import java.awt.datatransfer.*;
 import java.awt.*;
 import java.io.*;
 
-import sun.awt.datatransfer.SunClipboard;
+import java.awt.datatransfer.Clipboard;
 
 import javax.swing.text.rtf.RTFEditorKit;
 import javax.swing.text.*;
@@ -196,7 +195,7 @@ public class ClipboardUtil
 	{
 		Clipboard sysclip = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-		StyledTextSelection contents = new StyledTextSelection((SunClipboard)sysclip, text,fontFamily,size);
+		StyledTextSelection contents = new StyledTextSelection(text,fontFamily,size);
 		sysclip.setContents(contents,owner);
 	}
 
@@ -204,7 +203,7 @@ public class ClipboardUtil
     {
         Clipboard sysclip = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-        StyledTextSelection contents = new StyledTextSelection((SunClipboard)sysclip, plainText,htmlText,rtfText);
+        StyledTextSelection contents = new StyledTextSelection(plainText,htmlText,rtfText);
         sysclip.setContents(contents,owner);
     }
 

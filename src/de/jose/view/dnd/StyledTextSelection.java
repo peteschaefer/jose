@@ -12,7 +12,7 @@
 
 package de.jose.view.dnd;
 
-import sun.awt.datatransfer.SunClipboard;
+import java.awt.datatransfer.Clipboard;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
@@ -31,7 +31,6 @@ import de.jose.util.ListUtil;
  */
 // This class is used to hold an image while on the clipboard.
 public class StyledTextSelection
-        extends sun.awt.datatransfer.ClipboardTransferable
         implements Transferable
 {
 	// ---------------------------------------------------
@@ -66,9 +65,9 @@ public class StyledTextSelection
 	// ---------------------------------------------------
 
 
-	public StyledTextSelection(SunClipboard cb, String plainText, String htmlText, String rtfText)
+	public StyledTextSelection(String plainText, String htmlText, String rtfText)
     {
-        super(cb);
+        super();
         this.plainText = plainText;
         this.htmlText = htmlText;
         this.rtfText = rtfText;
@@ -76,9 +75,9 @@ public class StyledTextSelection
     }
 
 
-    public StyledTextSelection(SunClipboard cb, String plainText, String fontFamily, int size)
+    public StyledTextSelection(String plainText, String fontFamily, int size)
     {
-        this(cb, plainText, "","");
+        this(plainText, "","");
 
         this.htmlText = "<font face=\""+fontFamily+"\">" // size=\""+size+"\">"
                         + StringUtil.replace(plainText,"\n","<br>") +
