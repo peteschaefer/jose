@@ -3,7 +3,7 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="151"/>
+	<property name="version" value="152"/>
 
 	<!-- target directory -->
 
