@@ -92,7 +92,7 @@
 	<!-- Game Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.game">
-		<item id="menu.game.details"	icon="\uf073:#ffffff:#000000"		key="F4"/>
+		<item id="menu.game.details"	icon="\uf073:#ffffff:#000000:%90"		key="F4"/>
 
 		<!-- #009900 = green -->
 		<!-- #b30000 = red -->
@@ -124,7 +124,7 @@
 		<separator/>
 		<item id="menu.game.analysis" icon="\uf013:#cccc00"/>
 <!--		<item id="menu.game.hint"/> -->
-		<item id="menu.game.draw" icon="\uf2b5:#ddcc00"/>
+		<item id="menu.game.draw" 	icon="\uf2b5:#ddcc00"/>
 		<item id="menu.game.resign" icon="\uf28d:#aa0000"/> <!-- todo have a nicer stop symbol -->
 		<separator/>
 <!--		<item id="menu.game.previous"/>
@@ -153,7 +153,7 @@
 		<separator/>
 		<item id="window.collectionlist"	check="true"	key="control 5"/>
 		<item id="window.query"				check="true"	key="control 6"/>
-		<item id="window.gamelist"			check="true"	icon="\uf00b:#0000aa" key="control 7"/>
+		<item id="window.gamelist"			check="true"	icon="\uf00b:#0000aa:%110" key="control 7"/>
 		<!--item id="window.help"				check="false"/-->
 		<!--item id="window.sqlquery"	check="true"/-->
 		<!--item id="window.sqllist"	check="true"/-->
