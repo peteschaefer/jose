@@ -25,6 +25,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -229,12 +230,15 @@ public class BoardView2D
 		if (drawEval!=null) {
 //			g.setClip(drawEval);
 			Graphics2D g2 = (Graphics2D)g;
+			Border b = new SoftBevelBorder(BevelBorder.RAISED);
+			Util.grow(drawEval,b.getBorderInsets(this));
 			g2.setClip(drawEval);
+
 			AffineTransform save_tf = null;
 			try {
 				save_tf = ImgUtil.setIdentityTransform(g2,true);
 				//g2.setClip(evalRect(false));
-				drawEvalbar((Graphics2D)g,null,false);
+				drawEvalbar((Graphics2D)g,b,false);
 			}
 			finally {
 				if (save_tf != null) g2.setTransform(save_tf);

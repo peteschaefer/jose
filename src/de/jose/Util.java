@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ import de.jose.util.ListUtil;
 import de.jose.util.file.FileUtil;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -323,6 +324,15 @@ public class Util
 		//  else:
 		String text = obj.toString();
 		return Double.parseDouble(text);
+	}
+
+	public static void grow(Rectangle2D r, Insets insets)
+	{
+		r.setRect(
+		r.getX()-insets.left,
+		r.getY()-insets.top,
+		r.getWidth()+insets.left+insets.right,
+		r.getHeight()+insets.top+insets.bottom );
 	}
 
 	public static Color toColor(Object obj) throws NumberFormatException

@@ -22,7 +22,6 @@ import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
 import de.jose.pgn.ECOClassificator;
-import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
 import de.jose.image.ImgUtil;
 import de.jose.pgn.Game;
@@ -54,8 +53,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.io.IOException;
-
-import static de.jose.Application.*;
 
 public class EnginePanel
 		extends JoPanel
@@ -120,7 +117,7 @@ public class EnginePanel
 	/** status info    */
 	protected JLabel    lStatus;
 
-    protected static ImageIcon[] iGoDisabled, iGoGreen, iGoYellow, iGoRed;
+    protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed;
 	protected static ImageIcon[] iPause, iHint, iAnalyze;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
@@ -212,7 +209,7 @@ public class EnginePanel
 		iGoGreen = new ImageIcon[4];
 		iGoYellow = new ImageIcon[4];
 		iGoRed = new ImageIcon[4];
-		iGoDisabled = new ImageIcon[4];
+		iGoBlue = new ImageIcon[4];
 		iPause = new ImageIcon[4];
 		iHint = new ImageIcon[4];
 		iAnalyze = new ImageIcon[4];
@@ -220,7 +217,7 @@ public class EnginePanel
 		iGoGreen[0] =
 		iGoYellow[0] =
 		iGoRed[0] =
-		iGoDisabled[0] = ImgUtil.getIcon("nav","move.forward.off");
+		iGoBlue[0] = ImgUtil.getIcon("nav","move.forward.off");
 
 		iGoGreen[1] =// ImgUtil.getIcon("nav","move.forward.cold");
 		iGoGreen[2] = ImgUtil.getIcon("nav","move.forward.hot");
@@ -234,9 +231,9 @@ public class EnginePanel
 		iGoRed[2] = ImgUtil.getIcon("nav","move.start.hot");
 		iGoRed[3] = ImgUtil.getIcon("nav","move.start.pressed");
 
-		iGoDisabled[1] = ImgUtil.getIcon("nav","arrow.blue.cold");
-		iGoDisabled[2] = ImgUtil.getIcon("nav","arrow.blue.hot");
-		iGoDisabled[3] = ImgUtil.getIcon("nav","arrow.blue.pressed");
+		iGoBlue[1] = ImgUtil.getIcon("nav","arrow.blue.cold");
+		iGoBlue[2] = ImgUtil.getIcon("nav","arrow.blue.hot");
+		iGoBlue[3] = ImgUtil.getIcon("nav","arrow.blue.pressed");
 
 		iPause[0] = ImgUtil.getIcon("nav","engine.stop.off");
 		iPause[1] = ImgUtil.getIcon("nav","engine.stop.cold");
@@ -266,7 +263,7 @@ public class EnginePanel
 		bHint           = newButton("menu.game.hint");
 		bAnalyze        = newButton("menu.game.analysis");
 
-		setIcon(bGo,iGoDisabled);
+		setIcon(bGo, iGoBlue);
 		setIcon(bPause,iPause);
 		setIcon(bHint,iHint);
 		setIcon(bAnalyze,iAnalyze);
@@ -751,6 +748,21 @@ public class EnginePanel
 		Application.theCommandDispatcher.broadcast(cmd, Application.theApplication);
 	}
 
+	protected void updateButtonState()
+	{
+		updateButtonState((plugin==null) ? UciPlugin.PAUSED : plugin.getMode());
+	}
+
+	protected void updateButtonState(int engineState)
+	{
+		setIcon(bGo,getGoIcon(engineState));
+		bGo.setEnabled(true);
+		bPause.setEnabled(engineState > EnginePlugin.PAUSED);
+		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
+		bHint.setEnabled(true);
+		//if (!enabled) hideHint();
+	}
+
 	/**
 	 * @param state
 	 * @param rec
@@ -758,16 +770,7 @@ public class EnginePanel
 	 */
 	protected void display(int state, AnalysisRecord rec, boolean bookMode)
 	{
-		if (state >= 0) {
-			boolean enabled = (state > EnginePlugin.PAUSED);
-
-			setIcon(bGo,getGoIcon(state));
-			bPause.setEnabled(enabled);
-	//			bHint.setEnabled(true);
-			bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
-
-			if (!enabled) hideHint();
-		}
+		updateButtonState(state);
 
 		//  book mode/ engine mode layout
 		infoPanel.setVisible(! bookMode);
@@ -1156,7 +1159,7 @@ public class EnginePanel
 	{
 		switch (state) {
 		default:
-		case EnginePlugin.PAUSED:		return iGoDisabled;
+		case EnginePlugin.PAUSED:		return iGoBlue;
 		case EnginePlugin.THINKING:	    return iGoRed;
 		case EnginePlugin.PONDERING:	return iGoGreen;
 		case EnginePlugin.ANALYZING:	return iGoYellow;
@@ -1303,6 +1306,8 @@ public class EnginePanel
 			showInfo(data.toString());
 			break;
 		}
+
+		//updateButtonState();
 	}
 
 	public Move getHintMove()
@@ -1513,21 +1518,19 @@ public class EnginePanel
 		/**	default action that is performed upon each broadcast	*/
 		action = new CommandAction() {
 			public void Do(Command cmd) {
-				/**	adjust buttons (why ?)	*/
-				bGo.setEnabled(true);
-				bPause.setEnabled(plugin!=null);
+				updateButtonState();
 			}
 		};
-		map.put("on.broadcast",action);
+		//map.put("on.broadcast",action);
+		map.put("app.state.changed",action);
+		map.put("move.notify",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd)
 					throws IOException
 			{
 				/**	adjust buttons (why ?)	*/
-				bGo.setEnabled(true);
-				bPause.setEnabled(plugin!=null);
-
+				updateButtonState();
 				Application.theApplication.updateBook(false,false);
 			}
 		};

@@ -1379,7 +1379,7 @@ public class Application
 
 				theGame.gotoMove(mv);
 				theClock.halt();
-				theMode = AppMode.USER_INPUT;	//	right?
+				setMode(AppMode.USER_INPUT);	//	right?
 
                 getAnimation().pause();
                 pausePlugin();
@@ -1490,7 +1490,7 @@ public class Application
 
 			public void Do(Command cmd) {
 				getAnimation().pause();
-				theMode = AppMode.USER_INPUT;
+				setMode(AppMode.USER_INPUT);
 				pausePlugin(false);
 			}
 		};
@@ -1503,7 +1503,7 @@ public class Application
 
 			public void Do(Command cmd) throws Exception {
 				openDialog("dialog.animate");
-				theMode = AppMode.USER_INPUT;
+				setMode(AppMode.USER_INPUT);
 				pausePlugin(false);
 				getAnimation().start();
 			}
@@ -2241,7 +2241,7 @@ public class Application
 					switch (theMode) {
 						case USER_ENGINE:
 						case ENGINE_ENGINE:
-							theMode = AppMode.USER_INPUT;
+							setMode(AppMode.USER_INPUT);
 							break;
 					}
 					pausePlugin();
@@ -2381,6 +2381,7 @@ public class Application
 					enginePlay(query.lastMove);
 				else
 					enginePlay();
+				setMode(AppMode.USER_ENGINE);
 				break;
 
 			case BOOK_HINT:
@@ -2409,7 +2410,7 @@ public class Application
 				public void run() {	//  (2) enter engine analysis mode
 					//pausePlugin(true);
 					engine.analyze(theGame.getPosition());	//	right?
-					theMode = AppMode.ANALYSIS;
+					setMode(AppMode.ANALYSIS);
 				}
 			});
 //		}
@@ -2523,7 +2524,7 @@ public class Application
 					//	adjust time ? or rely on engine's time keeping ?
 					setGameDefaultInfo();
 					engine.go();
-					theMode = AppMode.USER_ENGINE;
+					setMode(AppMode.USER_ENGINE);
 				}
 			}
 		});
@@ -2547,6 +2548,7 @@ public class Application
 						showFRCWarning(false);
 					//  but keep on playing (you have been warned ;-)
 					// LET ENGINE PLAY
+					setMode(AppMode.USER_ENGINE);
 					engine.userMove(userMove, true);
 				}
 			};
@@ -3347,7 +3349,7 @@ public class Application
 		case EnginePlugin.PLUGIN_ERROR:
 			dialogText = Language.get("error.engine");
 			//  recoverable error, stop calculating
-			theMode = AppMode.USER_INPUT;
+			setMode(AppMode.USER_INPUT);
 			pausePlugin();
 			break;
 		default:
@@ -3692,7 +3694,7 @@ public class Application
 			default:
 			case OpeningLibrary.GUI_BOOK_ONLY:
 			case OpeningLibrary.PREFER_GUI_BOOK:
-				theMode = AppMode.USER_ENGINE;
+				setMode(AppMode.USER_ENGINE);
 				submitBookQuery(BOOK_PLAY,lastMove);
 				return true;
 
@@ -3791,7 +3793,7 @@ public class Application
 			if (defaultPlugin == null) {
 				//	no plugin available !
 				JoDialog.showErrorDialog(null, "error.engine.not.found", "plugin.1", name);
-				theMode = AppMode.USER_INPUT;   //  no use bothering the user with more errors
+				setMode(AppMode.USER_INPUT);   //  no use bothering the user with more errors
 				return null;
 			} else {
 				//	use default plugin instead
@@ -3814,6 +3816,15 @@ public class Application
 			throw ioex;
 		}
 		return engine;
+	}
+
+	public void setMode(AppMode mode)
+	{
+		if (mode!=theMode) {
+			theMode = mode;
+			Command cmd = new Command("app.state.changed", null, theMode);
+			broadcast(cmd);
+		}
 	}
 
 	public boolean openEnginePlugin() throws IOException

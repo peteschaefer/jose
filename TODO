@@ -4,22 +4,30 @@
 
 ? Charter buggy
 
-* navigating quickly with Lichess on
-    -> slow response (b/cause Lichess queries are synch :( )
-    -> we need:
-[ ] asynch book lookups (branch async-book)
+[x] asynch book lookups (branch async-book)
 [ ] Eval Bar drawing glitches (paintImmediately?)
-[x] extra chars in pgn import (comments with umlauts?)
+[?] paint eval bar frame
+
 [ ] game vs. opening explorer:
     - user moves have no value (and it shows)
         -> get one from current AnalysisRecord
-[-] Application.selectBookMove needs to be asynchronized.
+[x] Application.selectBookMove needs to be asynchronized.
     [?] update/don't update book when navigating
     [x] pause button should pause engine;
         book is shown in both, USER_INPUT and ANALYSIS
-    [ ] duplicate Book Queries
-[ ] paint eval bar frame
-[ ] fix pause button
+    [?] duplicate Book Queries
+[x] fix pause button activation
+[?] fix play button activation
+    - should play button reflect App Mode?
+        e.g. when playing againt Lichess OE
+        the play button remains yellow. Misleading?
+[ ] fix hint button activation
+    [ ] fix hint button behavior
+    switch(engine mode)
+    case THINKING:  hint disabled
+    case PONDERTING: hint = ponder move
+    case ANAYLSIS: hint = current analysis (with arrows)
+    case PAUSED: start ANALYSIS temporarily (as long as the button is pushed?)
 
 === Database Bugs
 
@@ -94,6 +102,10 @@ Alternative JREs:
 * double buffering still needed ? (probably)
 
 ==== Interesting New Features
+
+* threat arrows
+    -> like hint, but with reversed color
+    - take care to never play a threat move, actually !
 
 * LiChess Opening Explorer
     [x] download top games for a variation
