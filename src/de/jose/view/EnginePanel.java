@@ -118,6 +118,7 @@ public class EnginePanel
 
     protected static ImageIcon[] iGoBlue, iGoGreen, iGoYellow, iGoRed, iGoOrange;
 	protected static ImageIcon[] iPause, iHint, iAnalyze;
+	protected static ImageIcon[] iBook, iEngine;
 
     protected static final Color BACKGROUND_COLOR  = new Color(0xff,0xff,0xee);
 
@@ -213,6 +214,8 @@ public class EnginePanel
 		iPause = new ImageIcon[4];
 		iHint = new ImageIcon[4];
 		iAnalyze = new ImageIcon[4];
+		iBook = new ImageIcon[4];
+		iEngine = new ImageIcon[4];
 
 		iGoGreen[0] =
 		iGoYellow[0] =
@@ -254,6 +257,12 @@ public class EnginePanel
 		iAnalyze[1] = ImgUtil.getIcon("nav","analyze.cold");
 		iAnalyze[2] = ImgUtil.getIcon("nav","analyze.hot");
 		iAnalyze[3] = ImgUtil.getIcon("nav","analyze.pressed");
+
+		iBook[0] = iBook[1] = iBook[2] =
+		iBook[3] = ImgUtil.getIcon("svg","?");
+
+		iEngine[0] = iEngine[1] = iEngine[2] =
+		iEngine[3] = ImgUtil.getIcon("svg","?");
 	}
 
 	private void createComponents()
@@ -769,7 +778,7 @@ public class EnginePanel
 
 		setIcon(bGo,getGoIcon(appState,playState,engineState));
 		bGo.setEnabled(true);
-		bPause.setEnabled(engineState != PAUSED);
+		bPause.setEnabled(engineState!=null && engineState != PAUSED);
 		bAnalyze.setEnabled((plugin==null) || plugin.canAnalyze());
 		bHint.setEnabled(true);
 		//if (!enabled) hideHint();
@@ -855,12 +864,12 @@ public class EnginePanel
 		}
 
 		if (bookMode) {
-			lStatus.setText(getStatusText(null));
+			updateStatus(null);
 			//  always scroll to the *top* of the list
 			AWTUtil.scrollUp(pvScroller,pvPanel);
 		}
 		else if (!infoModified)
-			lStatus.setText(getStatusText(state));
+			updateStatus(state);
 	}
 
 	public void exitBook()
@@ -1203,7 +1212,7 @@ public class EnginePanel
 		return result;
 	}
 
-	protected String getStatusText(EngineState state)
+	protected void updateStatus(EngineState state)
 	{
 		String result = null;
 		if (state==null)
@@ -1220,7 +1229,9 @@ public class EnginePanel
 		result = Language.get(result);
 		result = StringUtil.replace(result,"%engine%", (pluginName==null) ? "":pluginName);
 		result = StringUtil.replace(result,"%book%", Application.theApplication.theOpeningLibrary.getTitle());
-		return result;
+		lStatus.setText(result);
+		//	todo
+		//lStatus.setIcon();
 	}
 
 	public void init()
@@ -1570,7 +1581,7 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
-				boolean isPaused =  (plugin!=null && plugin.isPaused());
+				//boolean isPaused =  (plugin!=null && plugin.isPaused());
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
 				switch(Application.theApplication.theMode)
 				{	//	todo move this stuff to Application
@@ -1583,7 +1594,7 @@ public class EnginePanel
 //						Application.theApplication.pausePlugin(false); // right?
 						break;
 					case ANALYSIS:
-						Application.theApplication.updateBook(wasEngineMove,!isPaused);
+						Application.theApplication.updateBook(wasEngineMove,true);
 						break;
 				}
 			}

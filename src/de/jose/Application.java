@@ -3507,7 +3507,7 @@ public class Application
 
 		if (Version.mac) new MacAdapter();      //  listens to application menu
 
-		theMode = AppMode.valueOf(theUserProfile.get("game.mode", AppMode.USER_ENGINE));
+		AppMode firstMode = AppMode.valueOf(theUserProfile.get("game.mode", AppMode.USER_ENGINE));
 
 		//	create DB adapter
 		JoConnection.getAdapter(true);
@@ -3552,6 +3552,8 @@ public class Application
 				theUserProfile.set("jos.associate.old",assoc);
 			}
 		}
+
+		setMode(firstMode);	//	set now so that it can be broadcast
 
 		SwingUtilities.invokeLater(new Startup());
 	}
@@ -3836,7 +3838,7 @@ public class Application
 		if (mode!=theMode) {
 			theMode = mode;
 			Command cmd = new Command("app.state.changed", null,
-							theMode, null);
+							theMode, PlayState.NEUTRAL);
 			broadcast(cmd);
 		}
 	}

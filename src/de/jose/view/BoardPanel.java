@@ -85,8 +85,8 @@ public class BoardPanel
 	public void init()
 		throws Exception
 	{
-		if (AbstractApplication.theAbstractApplication != null && AbstractApplication.theAbstractApplication.getEnginePlugin() != null)
-			connectTo(Application.theApplication.getEnginePlugin());
+	//	if (AbstractApplication.theAbstractApplication != null && AbstractApplication.theAbstractApplication.getEnginePlugin() != null)
+	//		connectTo(Application.theApplication.getEnginePlugin());
 		
 		boolean use3d = AbstractApplication.theUserProfile.getBoolean("board.3d")
 						&& Version.hasJava3d(false,false);
@@ -122,10 +122,10 @@ public class BoardPanel
 	}
 
 	//@deprecated listen to "app.state.changed" instead
-	protected void connectTo(Plugin plugin)
-	{
-		plugin.addMessageListener(this);
-	}
+//	protected void connectTo(Plugin plugin)
+//	{
+//		plugin.addMessageListener(this);
+//	}
 	
 	public void set2d()
 	{
@@ -550,12 +550,12 @@ public class BoardPanel
 		};
 		map.put("menu.file.quit", action);
 
-		action = new CommandAction() {
-			public void Do(Command cmd) {
-				connectTo((Plugin)cmd.data);
-			}
-		};
-		map.put("new.plugin", action);
+//		action = new CommandAction() {
+//			public void Do(Command cmd) {
+//				connectTo((Plugin)cmd.data);
+//			}
+//		};
+//		map.put("new.plugin", action);
 
 
 		action = new CommandAction() {
