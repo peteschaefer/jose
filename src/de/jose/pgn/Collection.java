@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -192,9 +192,8 @@ public class Collection
 
 	public static int makeDownloads(JoConnection conn) throws SQLException {
 		String sql =
-			"INSERT INTO Collection "+
-			" VALUES (?,null,null, ?, ?, 16, '-', {fn now()}, 0) "+
-			" ON DUPLICATE IGNORE";
+			"INSERT IGNORE INTO Collection "+
+			" VALUES (?,null,null, ?, ?, 16, '-', {fn now()}, 0) ";
 
 		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
 		pstm.setInt(1,DOWNLOADS_ID);

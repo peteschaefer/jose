@@ -5,11 +5,13 @@ import de.jose.book.BookEntry;
 import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.db.JoConnection;
 import de.jose.pgn.Collection;
 import de.jose.pgn.PgnConstants;
 import de.jose.pgn.PgnUtil;
 import de.jose.pgn.ResultNode;
 import de.jose.task.io.PGNImport;
+import de.jose.util.HttpsUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.window.JoDialog;
 import org.json.JSONArray;
@@ -199,22 +201,40 @@ public class LiChessOpeningExplorer extends OpeningBook
         return null;
     }
 
-    public static void startDownload(String lichessId) throws Exception
-    {
-        int CId = Collection.DOWNLOADS_ID;
+    public static void startDownload(String lichessId)     {
+        Runnable job = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int CId = Collection.DOWNLOADS_ID;
+                    JoConnection conn = null;
+                    try {
+                        conn = JoConnection.get();
+                        Collection.makeDownloads(conn);
+                    } finally {
+                        if (conn!=null) conn.release();
+                    }
 
-        String urlStr = downloadUrl+"/"+lichessId+"?evals=false&literate=true";
-        URL url = new URL(urlStr);
+                    //  DEBug
+                    HttpsUtil.acceptAll();
+                    String urlStr = downloadUrl+"/"+lichessId+"?evals=false&literate=true";
+                    URL url = new URL(urlStr);
 
-        PGNImport reader = PGNImport.newPgnImporter(CId,url);
-        Collection.makeDownloads(reader.getConnection());
+                    PGNImport reader = PGNImport.newPgnImporter(CId,url);
+                    //  todo choose Idx
+                    reader.start();
+                    reader.join();
 
-        reader.start();
-        reader.wait();
+                    //  todo wait for reader to finish
+                    //  fetch inserted Game.Id
+                    int GId = reader.getLastGameId();
+                    //  open in Tab
+                } catch (Exception e) {
+                    Application.error(e);
+                }
+            }
+        };
 
-        //  todo wait for reader to finish
-        //  fetch inserted Game.Id
-        int GId = reader.getLastGameId();
-        //  open in Tab
+        Application.theExecutorService.submit(job);
     }
 }

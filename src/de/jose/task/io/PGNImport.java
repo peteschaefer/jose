@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  *
  * If the database server is embbeded (in the very same JVM) there won't be much perfomance improvement.
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class PGNImport
 		extends DBTask
@@ -246,7 +246,10 @@ public class PGNImport
 		instance = gGameImporterInstance++;
 		CId = CollectionId;
 		de.jose.pgn.Collection collection = de.jose.pgn.Collection.readCollection(CId);
-		initReader(input,length,null);
+
+		int newIdx = Collection.getMaxIndex(connection,CId);
+		GameBuffer gmb = new GameBuffer(connection, CId, newIdx+1, GAME_BUFFER_SIZE);
+		initReader(input,length,gmb);
 
 		connection.setAutoCommit(false);
 
@@ -533,6 +536,7 @@ public class PGNImport
 		 * 	No, but PGN parser accepts utf-8 by heuristics.
 		 */
 		reader = new PGNImport("PGNImport", CollectionId, fr,size);
+
 		if (reader==null) throw new IllegalArgumentException("unknown file type ");
 		return reader;
 	}

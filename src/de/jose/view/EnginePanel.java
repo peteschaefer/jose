@@ -427,14 +427,7 @@ public class EnginePanel
 			 Object source = e.getSource();
 			 if (source instanceof GameRef) {
 				 LiChessGameRef ref = (LiChessGameRef) source;
-                 try {
-                     LiChessOpeningExplorer.startDownload(ref.id);
-                 } catch (Exception ex) {
-                     Application.error(ex);
-                 }
-                 //	todo wait for download to finish
-				 //	fetch Game.Id
-				 //	open in tabs
+                 LiChessOpeningExplorer.startDownload(ref.id);
 			 }
 		 }
 		 else {
