@@ -41,9 +41,15 @@ Q: is the db already running in standalone mode?
 [ ] compile easylink
 [ ] libquaqua 64 bit --> try: https://violetlib.org/vaqua
 
+[ ] Application Bundle vs. Java
+   - neither Apple's nor Oracle's launcher work :(
+   - we need a new launcher stub
+     see: https://github.com/tofi86/universalJavaApplicationStub
+   - good news: jre can be bundled
 
 ==== Deprecated Stuff
 
+* ghost installer
 * version check at startup
 * Version.java15orLater
 * BootError
