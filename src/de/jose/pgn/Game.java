@@ -1453,7 +1453,7 @@ public class Game
         }
     }
 
-	public BinWriter getBinaryData()
+	public BinWriter getBinaryData(String fen)
 	{
 		BinWriter writer = null;
 		MoveNode oldMove = currentMove;
@@ -1461,6 +1461,7 @@ public class Game
 			gotoMove((MoveNode)null);
 			//  make sure that the position is replayed from the start
 			//  otherwise move encoding could go wrong
+			position.setup(fen);
 			writer = new BinWriter(position);
 			mainLine.writeBinaryContents(writer);	//	don't write start and end of line; just write contents
 			writer.endOfData();
@@ -1476,7 +1477,8 @@ public class Game
         if (isNew()) throw new IllegalArgumentException("can't save new game");
 
 		BinWriter writer = null;
-		if (withData) writer = getBinaryData();
+		String fen = (String)getTagValue(TAG_FEN);
+		if (withData) writer = getBinaryData(fen);
 
 		String white = (String)getTagValue(TAG_WHITE);
 		String black = (String)getTagValue(TAG_BLACK);
@@ -1548,7 +1550,7 @@ public class Game
         if (gameIndex <= 0)
             gameIndex = Collection.getMaxIndex(conn,collId)+1;
 
-		BinWriter writer = getBinaryData();
+		BinWriter writer = getBinaryData((String)getTagValue(TAG_FEN));
 
 		String white = (String)getTagValue(TAG_WHITE);
 		String black = (String)getTagValue(TAG_BLACK);

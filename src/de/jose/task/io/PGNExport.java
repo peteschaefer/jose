@@ -616,7 +616,7 @@ public class PGNExport
 
 	    out.println();
 	    //  <LINE>
-		BinWriter writer = gm.getBinaryData();
+		BinWriter writer = gm.getBinaryData(fen);
 	    byte[] bin = writer.getText();
 	    byte[] comments = writer.getComments();
 
