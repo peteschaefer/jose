@@ -715,43 +715,48 @@ abstract public class EnginePlugin
 
 	public int getMaxPVLines()              { return 1; }
 
-
-	public static String[] SEARCH_ELEMENTS = { "TIME_CONTROL", "TIME", "DEPTH", "NODES" };
+	public enum SearchType {
+		TIME_CONTROL, TIME, DEPTH, NODES
+	}
 
 	public static Element getSearchControls(Element root)
 	{
 		Element controls = XMLUtil.getChild(root,"SEARCH");
-		if (controls==null) {
+		if (controls==null)
 			controls = XMLUtil.appendChild(root, "SEARCH");
-		}
 		return controls;
 	}
 
-	public static String getSelectedSearchControl(Element search)
+	public static SearchType getSelectedSearchControl(Element search)
 	{
-		for(String selm : SEARCH_ELEMENTS) {
-			boolean selected = XMLUtil.getChildBooleanAttributeValue(search,selm,"selected");
-			if (selected)
-				return selm;
-		}
-		return SEARCH_ELEMENTS[0];
+		for(SearchType type : SearchType.values())
+			if (isSelectedSearchControl(search,type))
+				return type;
+		return SearchType.TIME_CONTROL;
 	}
 
-	public static int getFixedTime(Element search) {
-		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[1]),10);
-	}
-	public static int getFixedDepth(Element search) {
-		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[2]),10);
-	}
-	public static int getFixedNodes(Element search) {
-		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[2]),10000);
-	}
-
-	public static void setTimeControl(Element search, boolean selected)
+	public static boolean isSelectedSearchControl(Element search, SearchType type)
 	{
-		XMLUtil.setChildAttribute(search,SEARCH_ELEMENTS[0], "selected",Boolean.toString(selected));
+		return XMLUtil.getChildBooleanAttributeValue(search,type.name(),"selected");
 	}
 
+
+	public static int getSearchControlArgument(Element search, SearchType type)
+	{
+		Element child = XMLUtil.getChild(search,type.name());
+		return XMLUtil.getIntValue(child);
+	}
+
+	public static void setSearchControlArgument(Element search, SearchType type, boolean selected, Integer value)
+	{
+		Element child = XMLUtil.getChild(search,type.name());
+		if (selected)
+			child.setAttribute("selected", Boolean.toString(selected));
+		else
+			child.removeAttribute("selected");
+		if (value!=null)
+			child.setNodeValue(Integer.toString(value));
+	}
 
 
 	public void parseAnalysis(String input, AnalysisRecord rec)

@@ -351,21 +351,21 @@ public class OptionDialog
 
 		JoStyledLabel button = new JoStyledLabel(buf.toString());
 		button.addActionListener(this);
-		p2.add(button, ELEMENT_THREE);
+		p2.add(button, ELEMENT_THREE_SMALL);
 
 
 		addWithLabel(p2, 0,1,2, null, newRadioButton("plugin.search.time.fixed"));
-		p2.add(newTimeField("plugin.search.time.fixed.value"), ELEMENT_THREE);
+		p2.add(newTimeField("plugin.search.time.fixed.value"), ELEMENT_THREE_SMALL);
 
 		GridBagConstraints suffix = (GridBagConstraints) ELEMENT_FOUR_SMALL.clone();
 
 		addWithLabel(p2, 0,2,2, null, newRadioButton("plugin.search.depth"));
-		p2.add(newIntegerField("plugin.search.depth.value"), ELEMENT_THREE);
+		p2.add(newIntegerField("plugin.search.depth.value"), ELEMENT_THREE_SMALL);
 		suffix.gridy=2;
 		p2.add(newLabel("plugin.search.plies.suffix"), suffix);
 
 		addWithLabel(p2, 0,3,2, null, newRadioButton("plugin.search.nodes"));
-		p2.add(newIntegerField("plugin.search.nodes.value"), ELEMENT_THREE);
+		p2.add(newIntegerField("plugin.search.nodes.value"), ELEMENT_THREE_SMALL);
 		suffix.gridy=3;
 		p2.add(newLabel("plugin.search.nodes.suffix"), suffix);
 
@@ -1434,11 +1434,17 @@ public class OptionDialog
 
 		//	Search Control
 		Element search = EnginePlugin.getSearchControls(cfg);
-		String selected = EnginePlugin.getSelectedSearchControl(search);
-		setValueByName("plugin.search", selected);	//	radio
-		setValueByName("plugin.search.time.fixed", EnginePlugin.getSearchTimeFixed(search));
-		setValueByName("plugin.search.depth", EnginePlugin.getSearchDepth(search));
-		setValueByName("plugin.search.nodes", EnginePlugin.getSearchNodes(search));
+		EnginePlugin.SearchType selected = EnginePlugin.getSelectedSearchControl(search);
+
+		//	radio button
+		setValueByName("plugin.search.time.control", selected==EnginePlugin.SearchType.TIME_CONTROL);	//	radio
+		setValueByName("plugin.search.time.fixed", selected==EnginePlugin.SearchType.TIME);	//	radio
+		setValueByName("plugin.search.depth", selected==EnginePlugin.SearchType.DEPTH);	//	radio
+		setValueByName("plugin.search.nodes", selected==EnginePlugin.SearchType.NODES);	//	radio
+
+		setValueByName("plugin.search.time.fixed", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.TIME));
+		setValueByName("plugin.search.depth", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.DEPTH));
+		setValueByName("plugin.search.nodes", EnginePlugin.getSearchControlArgument(search, EnginePlugin.SearchType.NODES));
 
 
 		setPluginOptions(cfg);

@@ -33,7 +33,7 @@ public class XPathUtil
 		if (Version.java15orLater)
 			impl = new XPathImpl15();
 		else
-			impl = new XPathImpl14();
+			throw new UnsupportedOperationException("java 1.4 is not supported anymore");
 	}
 
 	/**
