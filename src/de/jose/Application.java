@@ -12,6 +12,7 @@
 
 package de.jose;
 
+import de.jose.book.BookQuery;
 import de.jose.chess.*;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
@@ -71,6 +72,7 @@ import java.net.*;
 import java.sql.DriverManager;
 import java.text.ParseException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -1928,10 +1930,7 @@ public class Application
 					startEngineAnalysis(true);
 				}
 				else try {
-					//  (1) fetch book moves
-					boolean hasbook = eng_panel.updateBook(false);
-					//	if there are not books moves, switch to engine analysis instead:
-					startEngineAnalysis(!hasbook);
+					updateBook(true);
 					//	todo call asynch, switch to engine analysis on completion
 				} catch (IOException e) {
 					error(e);
@@ -2347,6 +2346,16 @@ public class Application
 		};
 		map.put("eboard.disconnect",action);
 		map.put("eboard.connect",action);
+	}
+
+	public void updateBook(boolean onEngineMove)
+			throws IOException
+	{
+		//  show opening book moves
+		Position pos = Application.theApplication.theGame.getPosition();
+		BookQuery query = new BookQuery(pos,onEngineMove);
+		theExecutorService.submit(query);
+		//	will call back with message BOOK_RESPONSE
 	}
 
 	private void startEngineAnalysis(boolean engine_analysis)
@@ -3046,7 +3055,7 @@ public class Application
 	public void handleMessage(Object who, int what, Object data)
 	{
 		try {
-			if (who==getEnginePlugin() || who==theOpeningLibrary)
+			if (who==getEnginePlugin() || who==theOpeningLibrary || (who instanceof BookQuery))
 				handlePluginMessage(what, data);
 			if (who==theClock)
 				handleClockMessage(what);
@@ -3157,6 +3166,21 @@ public class Application
 		case Plugin.PLUGIN_REQUESTED_HINT:
 			if (boardPanel() != null)
 				boardPanel().showHint(data);
+			break;
+
+		case Plugin.BOOK_RESPONSE:
+			BookQuery query = (BookQuery)data;
+			if (!query.isValid())
+				break;
+
+			EnginePanel eng = enginePanel();
+			if (!query.result.isEmpty())
+				eng.showBook(query.result,pos);
+			else
+				eng.exitBook();
+
+			if (query.switchEngineAnalysis)
+				startEngineAnalysis(true);
 			break;
 		}
 	}

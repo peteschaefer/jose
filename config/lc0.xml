@@ -102,7 +102,7 @@
 	<SEARCH>
 		<TIME> 0 </TIME>
 		<DEPTH> 10 </DEPTH>
-		<NODES selected="true"> 400 </NODES>
+		<NODES selected="true"> 100 </NODES>
 		<TIME_CONTROL/>
 	</SEARCH>
 </PLUGIN>

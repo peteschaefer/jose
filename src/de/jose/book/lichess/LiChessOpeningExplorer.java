@@ -2,7 +2,6 @@ package de.jose.book.lichess;
 
 import de.jose.AbstractApplication;
 import de.jose.Application;
-import de.jose.book.BookQueryArguments;
 import de.jose.comm.Command;
 import de.jose.Language;
 import de.jose.book.BookEntry;
@@ -99,13 +98,14 @@ public class LiChessOpeningExplorer extends OpeningBook
     }
 
     @Override
-    public boolean getBookMoves(BookQueryArguments args, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
+    public boolean getBookMoves(Position pos, boolean ignoreColors, boolean deep, List<BookEntry> result) throws IOException
     {
         //  run asynchroneously
+        String fen = pos.toString();
         Callable<Boolean> task = new Callable() {
             @Override
             public Boolean call() throws Exception {
-                return getBookMoves1(args.fen, ignoreColors, deep, TOP_GAMES, result);
+                return getBookMoves1(fen, ignoreColors, deep, TOP_GAMES, result);
             }
         };
 

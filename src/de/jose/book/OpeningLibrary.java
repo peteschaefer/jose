@@ -86,6 +86,7 @@ public class OpeningLibrary
 	public int collectMode = COLLECT_ALL;
 	public int selectMode = SELECT_IMPLEMENTATION;
 
+	protected Position pos = new Position();
 	protected Random random = new Random();
 
 	protected BookEntry.BookEntryComparator sort = new BookEntry.BookEntryComparator(selectMode,true);
@@ -183,8 +184,14 @@ public class OpeningLibrary
 		return -1;
 	}
 
+	public List<BookEntry> collectMoves(String fen, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
+			throws IOException
+	{
+		pos.setup(fen);
+		return collectMoves(pos,go_deep,ignoreColors,allowOutOfBook);
+	}
 
-	public List<BookEntry> collectMoves(BookQueryArguments args, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
+	public List<BookEntry> collectMoves(Position pos, boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
 			throws IOException
 	{
 		ArrayList<BookEntry> result = new ArrayList();
@@ -194,7 +201,7 @@ public class OpeningLibrary
 			if (fentry.book==null) continue;
 
 			ArrayList one_result = new ArrayList();
-			boolean containsPosition = fentry.book.getBookMoves(args, ignoreColors, go_deep, one_result);
+			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, go_deep, one_result);
 			if (!containsPosition && !allowOutOfBook)
 				continue;   //  transpose from out-of-book into the book. Ignore !
 
@@ -226,7 +233,8 @@ public class OpeningLibrary
 				if (entry!=null) return entry;
 			}
 
-		List moves = collectMoves(pos,gameMode,ignoreColors, false);
+		boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
+		List moves = collectMoves(pos,go_deep,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}
 

@@ -856,7 +856,7 @@ public class EnginePanel
 		inBook = false;
 	}
 
-	protected void showBook(List bookEntries, Position pos)
+	public void showBook(List bookEntries, Position pos)
 	{
 		if (!inBook) {
 
@@ -1205,7 +1205,7 @@ public class EnginePanel
 			connectTo(Application.theApplication.getEnginePlugin());
 
 		try {
-			updateBook(false);   //  is this the right place ?
+			Application.theApplication.updateBook(false);   //  is this the right place ?
 		} catch (IOException e) {
 			Application.error(e);
 	}
@@ -1530,7 +1530,7 @@ public class EnginePanel
 				bGo.setEnabled(true);
 				bPause.setEnabled(plugin!=null);
 
-				updateBook(false);
+				Application.theApplication.updateBook(false);
 			}
 		};
 		map.put("switch.game", action);
@@ -1542,7 +1542,7 @@ public class EnginePanel
 					/* stay in engine mode */;
 				else {
 					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					updateBook(wasEngineMove);
+					Application.theApplication.updateBook(wasEngineMove);
 				}
 			}
 		};
@@ -1673,6 +1673,7 @@ public class EnginePanel
 	}
 
 	//	todo move to Application. Submit BookQuery to executor services.
+/*
 	public boolean updateBook(boolean onEngineMove)
 			throws IOException
 	{
@@ -1702,7 +1703,7 @@ public class EnginePanel
 
 		return inBook;
 	}
-
+*/
 	public void lostOwnership(Clipboard clipboard, Transferable contents)
 	{
 		//  implements ClipboardOwner

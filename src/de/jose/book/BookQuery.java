@@ -32,35 +32,29 @@ public class BookQuery
     MoveNode appMove;
     int appMode;
 
-    // Query arguments
-    BookQueryArguments args;
+    // Query argument
+    public String fen;
 
     //  Query results
-    List<BookEntry> result;
+    public List<BookEntry> result;
 
     //  upon completion, send message to Application
-    boolean switchEngineAnalysis;
+    public boolean switchEngineAnalysis;
 
-    BookQuery(Position pos, boolean switchEngineAnalysis)
+    public BookQuery(Position pos, boolean switchEngineAnalysis)
     {
         seqNo = ++theSeqNo;
         appGame = Application.theApplication.theGame;
         appMove = appGame.getCurrentMove();
         appMode = Application.theApplication.theMode;
 
-        args = new BookQueryArguments(pos);
+        fen = pos.toString();
 
         this.switchEngineAnalysis = switchEngineAnalysis;
         addMessageListener(Application.theApplication);
     }
 
-    public static void submit(Position pos, boolean switchEngineAnalysis)
-    {
-        BookQuery bq = new BookQuery(pos, switchEngineAnalysis);
-        Application.theExecutorService.submit(bq);
-    }
-
-    boolean isValid()
+    public boolean isValid()
     {
         return seqNo==theSeqNo
                 && appGame==Application.theApplication.theGame
@@ -80,13 +74,13 @@ public class BookQuery
 
             OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
             boolean go_deep = (appMode==USER_INPUT || appMode==ANALYSIS);
-            result = lib.collectMoves(args, go_deep,true,false);
+            result = lib.collectMoves(fen, go_deep,true,false);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        if ((result!=null) && !result.isEmpty() && isValid())
+        if (isValid())
             sendMessage(BOOK_RESPONSE,this);
     }
 }

@@ -12,7 +12,6 @@
 
 package de.jose.book.crafty;
 
-import de.jose.book.BookQueryArguments;
 import de.jose.chess.*;
 import de.jose.book.OpeningBook;
 import de.jose.book.BookEntry;
@@ -73,25 +72,24 @@ public class CraftyBook extends OpeningBook
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean getBookMoves(BookQueryArguments args, boolean withTransposedColors, boolean deep, List result) throws IOException
+	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result) throws IOException
 	{
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
-		boolean res1 = getBookMovesColored(args.craftyHashKeys[0],false,result);
+		boolean res1 = getBookMovesColored(pos,false,result);
 		boolean res2 = false;
-		if (withTransposedColors) res2 = getBookMovesColored(args.craftyHashKeys[1],true,result);
+		if (withTransposedColors) res2 = getBookMovesColored(pos,true,result);
 		return res1||res2;
 	}
 
-	private boolean getBookMovesColored(CraftyHashKey key, boolean reverse, List result)
+	private boolean getBookMovesColored(Position pos, boolean reverse, List result)
 			throws IOException
 	{
-//		CraftyHashKey key = reverse ? reversed_hashkey:hashkey;
-
+		CraftyHashKey key = reverse ? reversed_hashkey:hashkey;
 		//  this hash key is WITHOUT turn color. Used for looking up a cluster.
-//		int turn = pos. movesNext();
-//		pos.setMovesNext(0);
-//		pos.computeHashKey(key);
-//		pos.setMovesNext(turn);
+		int turn = pos. movesNext();
+		pos.setMovesNext(0);
+		pos.computeHashKey(key);
+		pos.setMovesNext(turn);
 
 		int posCount = seekCluster(key.value());
 
