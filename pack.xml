@@ -10,6 +10,18 @@
 	<property name="target-dir" location="C:/dev/jose/Release/${version}"/>
 	<property name="jre-dir" location="C:/jose/Release/extras"/>
 
+<!--
+	For uploading artifacts to Bitbucket we need an 'app password'
+	username = hrimfaxi
+	app password = ATBBQtWswwu36kVC7q9fWNbMSPEECE206FDA
+
+	REST call for uploading a file:
+
+	curl -s -u hrimfaxi -X POST https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads
+			-F files=@database-1700k.jose
+
+-->
+
 
 <!--
 	<property name="target-dir" location="/windows/F/jose archive/release/${version}"/>
@@ -303,7 +315,7 @@
 				<include name="lc0.xml"/>
 			</zipfileset>
 			<zipfileset dir="engines/lc0" prefix="${appldir}/engines/lc0">
-				<exclude name="more nets"/>
+				<exclude name="more nets/**"/>
 			</zipfileset>
 		</zip>
 	</target>

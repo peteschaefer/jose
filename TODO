@@ -44,6 +44,7 @@ Leela
 * LogLiveStats = true
 
 BUG: first launch, w/out preferences takes very long. Context menus missing.
+BUG: lc0/more_nets must be excluded from packing
 
 ==== New Features
 
