@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -356,7 +356,9 @@ public class AWTUtil
     public static Color parseColor(String string)
     {
         int p0=0;
-        if (string.charAt(0)=='#') p0++;    //  # is optional
+        if (string.charAt(p0)=='\\') p0++;    //  \ is optional
+        if (string.charAt(p0)=='"') p0++;    //  " is optional
+        if (string.charAt(p0)=='#') p0++;    //  # is optional
         int red = parseHex(string,p0,2);
         int green = parseHex(string,p0+2,2);
         int blue = parseHex(string,p0+4,2);

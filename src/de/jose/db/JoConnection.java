@@ -300,6 +300,18 @@ public class JoConnection
 			return new JoPreparedStatement(this, sql, resultSetType, resultSetConcurrency);
 	}
 
+	public int selectMaxIntValue(String table, String column) throws SQLException {
+		String sql;
+		if (getAdapter().preferMaxAggregate())
+			sql = "SELECT MAX("+column+") FROM "+table;
+			/*	this statement is faster on QED	('cause is doesn't support setMaxRows) */
+		else
+			sql = "SELECT "+column+" FROM "+table+" ORDER BY "+column+" DESC";
+		/*	this statement is usually faster than the first one	*/
+
+		return selectInt(sql);
+	}
+
 
 	/**
 	 * @return a unique sequence (key candidate) for a given database column
@@ -313,25 +325,33 @@ public class JoConnection
     public final int getSequence(String table, String column, int count)
         throws SQLException
     {
+		return getSequence(table,column, null,null, count);
+	}
+
+	public final int getSequence(String table, String column,
+								 String altTable, String altColumn,
+								 int count)
+			throws SQLException
+	{
 		synchronized (theSequences) {
 			String key = table+"."+column;
 			Util.IntHandle h = (Util.IntHandle)theSequences.get(key);
 			if (h==null) {
 				h = new Util.IntHandle();
 				theSequences.put(key,h);
-				String sql;
-				if (getAdapter().preferMaxAggregate())
-					sql = "SELECT MAX("+column+") FROM "+table;
-					/*	this statement is faster on QED	('cause is doesn't support setMaxRows) */
-				else
-					sql = "SELECT "+column+" FROM "+table+" ORDER BY "+column+" DESC";
-					/*	this statement is usually faster than the first one	*/
-				
-				h.i = Math.max(selectInt(sql),1000);
+				int mx = selectMaxIntValue(table, column);
+				if (altTable!=null) {
+					int mxalt  = selectMaxIntValue(altTable, altColumn);
+					//if (mx != mxalt)
+					//	showWarning(table,column,mx,
+					//				altTable,altColumn,mxalt);
+					mx = Math.max(mx,mxalt);
+				}
+				h.i = Math.max(mx,1000);
 			}
 
-            int result = h.i+1;
-            h.i += count;
+			int result = h.i+1;
+			h.i += count;
 			return result;
 		}
 	}

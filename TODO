@@ -7,11 +7,11 @@
 === Database Bugs
 
 [x] database cut/copy/paste (-> --tmpdir)
-[ ] db copy: NoSuchElementException (harmless but annoying)
-[ ] db: duplicate key on insert (GameBuffer.Id?)
+[?] db copy: NoSuchElementException (harmless but annoying)
+[?] db: duplicate key on insert (GameBuffer.Id?)
 [ ] db import: error in sql syntax ?
 [ ] db: expected data on row ?
-    MoreGame missing? can we it (outer join?)
+[ ] MoreGame missing? detect on start; use robust sequence, at least
 
 ==== Project
 

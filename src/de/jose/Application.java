@@ -872,8 +872,9 @@ public class Application
                 else if (getFocusPanel() instanceof ClipboardOwner)
                     src = null;   //  focused panel can handle clipboard
                 else
-                    src = getGameSource(cmd,false);
+                    src = getGameSource(cmd,false,true);
                 //  collectionOnly==false: all sources can act as copy sources
+				//	selectionOnly==true don't cut the whole list panel
 
 				if (src!=null) {
 					//	game/collection (DB) operation
@@ -904,7 +905,7 @@ public class Application
                 else if (getFocusPanel() instanceof ClipboardOwner)
                     src = null;   //  focused panel can handle clipboard
                 else
-                    src = getGameSource(cmd,target==null);
+                    src = getGameSource(cmd,target==null,false);
                 //  collectionOnly==true: only collection can act as paste targets
 
                 if (src!=null) {
@@ -987,7 +988,7 @@ public class Application
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception
             {
-                GameSource src = getGameSource(cmd,false);
+                GameSource src = getGameSource(cmd,false,false);
                 CreatePositionIndex2 task = new CreatePositionIndex2();
                 task.setSource(src);
                 task.start();
@@ -998,7 +999,7 @@ public class Application
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception
             {
-                GameSource src = getGameSource(cmd,false);
+                GameSource src = getGameSource(cmd,false,false);
                 if (src!=null) {
 					EcofyTask task = new EcofyTask();
 					task.setSource(src);
@@ -1805,7 +1806,7 @@ public class Application
 				//  export selected files
 
 				ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
-				dlg.forExport(getGameSource(cmd,false));
+				dlg.forExport(getGameSource(cmd,false,false));
 				openDialog(dlg,0);
 			}
 		};
@@ -1829,7 +1830,7 @@ public class Application
 			public void Do(Command cmd) throws Exception
 			{
 				ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
-				dlg.forPrint(getGameSource(cmd,false));
+				dlg.forPrint(getGameSource(cmd,false,false));
 				openDialog(dlg,0);
 			}
 		};
@@ -1882,7 +1883,7 @@ public class Application
 				else {
 					//  called from menu
 					ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
-					dlg.forPrint(getGameSource(cmd,false));
+					dlg.forPrint(getGameSource(cmd,false,false));
 					openDialog(dlg,0);
 				}
 			}
@@ -1897,7 +1898,7 @@ public class Application
 			public void Do(Command cmd) throws Exception
 			{
 				ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
-				dlg.forPrint(getGameSource(cmd,false));
+				dlg.forPrint(getGameSource(cmd,false,false));
 				openDialog(dlg,1);
 			}
 		};
@@ -2255,7 +2256,7 @@ public class Application
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-				GameSource src = getGameSource(cmd,false);
+				GameSource src = getGameSource(cmd,false,false);
 				PositionFilter posFilter = null;
 				if (listPanel()!=null)
 					posFilter = listPanel().getSearchRecord().makePositionFilter();
@@ -2304,6 +2305,13 @@ public class Application
         map.put("edit.all", action);
 		map.put("menu.edit.paste.pgn", action);
 
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws SQLException {
+				GameRepair.checkOnStart();
+			}
+		};
+		map.put("db.check",action);
 
 		action = new CommandAction() {
             public boolean isEnabled(String code) {
@@ -2823,7 +2831,9 @@ public class Application
             return null;
     }
 
-	protected GameSource getGameSource(Command cmd, boolean collectionOnly)
+	protected GameSource getGameSource(Command cmd,
+									   boolean collectionOnly,
+									   boolean selectionOnly)
 	{
 		if (cmd!=null && cmd.data instanceof GameSource)
 			return ((GameSource)cmd.data);
@@ -2838,13 +2848,17 @@ public class Application
 
         if (collPanel!=null && collPanel.isFocusInside() && collPanel.hasSelection())
             preferredPanel = collPanel;
-        else if (listPanel!=null && listPanel.isFocusInside() && !collectionOnly)
+        else if (listPanel!=null && listPanel.isFocusInside()
+				&& !collectionOnly
+				&& (!selectionOnly || listPanel.hasSelection()))
             preferredPanel = listPanel;
         else if (docPanel!=null && docPanel.isFocusInside() && !collectionOnly)
             preferredPanel = docPanel;
         else if (collPanel!=null && collPanel.isInFront() && collPanel.hasSelection())
             preferredPanel = collPanel;
-        else if (listPanel!=null && listPanel.isInFront() && !collectionOnly)
+        else if (listPanel!=null && listPanel.isInFront()
+				&& !collectionOnly
+				&& (!selectionOnly || listPanel.hasSelection()))
             preferredPanel = listPanel;
         else if (docPanel!=null && docPanel.isInFront() && !collectionOnly)
             preferredPanel = docPanel;
@@ -2857,7 +2871,7 @@ public class Application
         {
             if (listPanel.getCurrentSelection().hasSelection())
                 return GameSource.gameSelection(listPanel.getCurrentSelection());
-            else
+            else if (!selectionOnly)
                 return GameSource.gameSelection(listPanel.getCompleteResult());
             //  note that this may not be the most efficient implementation,
             //  since we have to iterate over the complete list
@@ -2899,7 +2913,7 @@ public class Application
         try {
             DBTask.broadcastOnUpdate("collection.new");
 
-            GameSource src = getGameSource(cmd,true);
+            GameSource src = getGameSource(cmd,true,false);
             if (src!=null)
                 parentId = src.firstId();
             else
@@ -3369,6 +3383,9 @@ public class Application
 
 		//	create DB adapter
 		JoConnection.getAdapter(true);
+
+		//	check Game-MoreGame consistency
+		JoConnection.postWithConnection(new Command("db.check"));
 
 		if (theUserProfile.getBoolean("doc.load.history"))
 			openHistory();

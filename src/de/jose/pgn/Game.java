@@ -1456,17 +1456,17 @@ public class Game
 		 *
 		 * 	as a workaround, we choose the sequene from MoreGame, rather than Game
 		 */
-		return conn.getSequence("MoreGame","GId");
+		return Game.getSequence(conn,1);
 	}
 
 	public static int getSequence(JoConnection conn, int count) throws SQLException
 	{
-		return conn.getSequence("MoreGame","GId",count);
+		return conn.getSequence("Game","Id", "MoreGame","GId", count);
 	}
 
 	public static void resetSequence(JoConnection conn) throws SQLException
 	{
-		conn.resetSequence("MoreGame","GId");
+		conn.resetSequence("Game","Id");
 	}
 
     public final void saveAs(JoConnection conn, int collId, int gameIdx)      throws Exception

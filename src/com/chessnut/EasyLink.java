@@ -133,14 +133,14 @@ public class EasyLink
                 if (Version.linux)
                     System.loadLibrary("hidapi-hidraw");
             } catch (UnsatisfiedLinkError e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
 
             System.loadLibrary("easylink");
             AVAILABLE = true;
 
         } catch (UnsatisfiedLinkError e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             AVAILABLE = false;
         }
     }

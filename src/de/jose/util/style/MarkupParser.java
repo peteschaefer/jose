@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * HtmlParser
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class MarkupParser
@@ -321,9 +321,14 @@ public class MarkupParser
                 {
                     String colorStr = (String)a.getAttribute(HTML.Attribute.COLOR);
                     //  parse into a usable color (example "#ff0000")
-                    Color color = AWTUtil.parseColor(colorStr);
-                    StyleConstants.setForeground(characterStyle,color);
-                    hasMarkup = true;
+                    try {
+                        Color color = AWTUtil.parseColor(colorStr);
+                        StyleConstants.setForeground(characterStyle,color);
+                        hasMarkup = true;
+                    } catch(IllegalArgumentException e) {
+                        //  error in color string. Should that stop us? No.
+                        System.err.println("Invalid color specified for "+colorStr);
+                    }
                 }
                 if (a.isDefined(HTML.Attribute.FACE))
                 {
