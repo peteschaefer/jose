@@ -19,8 +19,6 @@ import de.jose.pgn.*;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
 import de.jose.task.GameSource;
-import de.jose.task.Task;
-import de.jose.task.NalimovOnlineQuery;
 import de.jose.task.db.GameUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ListUtil;
@@ -635,21 +633,6 @@ public class DocumentPanel
 			}
 		};
 		map.put("styles.modified",action);
-
-        action = new CommandAction() {
-            public boolean isEnabled(String cmd) {
-                return theGame!=null;
-            }
-
-            public void Do(Command cmd) throws Exception
-            {
-                Task task = new NalimovOnlineQuery(theGame,
-                                theGame.getCurrentMove(),
-                                theGame.getPosition());
-                task.start();
-            }
-        };
-        map.put("menu.game.nalimov.online",action);
 	}
 
 	protected void removeAnnotation(AnnotationNode ann) throws BadLocationException

@@ -832,9 +832,7 @@ abstract public class EnginePlugin
 	public static class EvaluatedMove extends Move
 	{
 		public int ply;
-		public Score score = new Score();	//	todo still needed ? Yes.
-		//	@deprecated use score instead
-		public float[] mappedScore = new float[2];	// todo use Score instead
+		public Score score = new Score();
 
 		public EvaluatedMove(Move move, int ply, Score ascore, EnginePlugin plugin)
 		{
@@ -843,10 +841,6 @@ abstract public class EnginePlugin
 			this.score.copy(ascore);
 			if (plugin!=null)
 				plugin.mapUnit(score);
-			if (score.hasWDL())
-				score.mapWDL(mappedScore);
-			else
-				mappedScore[0] = mappedScore[1] = Float.MAX_VALUE;
 		}
 
 		protected EvaluatedMove(Move move, AnalysisRecord a, EnginePlugin plugin)
@@ -855,12 +849,6 @@ abstract public class EnginePlugin
 		}
 
 		public int getPly()             { return ply; }
-//		public int centipawnValue()		{ return score.cp;}
-		public float[] mappedValue()    { return mappedScore; }
-		public boolean isValid()        { return mappedScore!=null && (mappedScore[0]!=Float.MAX_VALUE) && (mappedScore[1]!=Float.MAX_VALUE); }
-//		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
-//		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
-//		public boolean isUpperBound()   { return score.flags == Score.EVAL_UPPER_BOUND; }
 	}
 
 
