@@ -36,21 +36,17 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
 [ ] db: expected data on row ?
 
-[ ] bug: figurine offset when selected. Could be bug in FlatLaf TextUI
 [ ] https://www.formdev.com/flatlaf is a must-have!
     - modern l&f
     - embedded(!!) menu bar
     - tab titles with close button
     - file chooser
-    [x] pick up theme files  (config/themes)
-    [x] remove tab close button
-    [x] configure move highlight color. lighter? use theme editor!
 
     [x] Fork flatlaf
     	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
     	[x] SplitPaneUI: individual style=plain
 
-    [ ] flatlaf bugs
+    [ ] flatlaf related bugs
     	[x] TextPaneUI: fix jumping characters. custom hiliter bug, actually.
     	[x] TextPaneUI: nicer selection
         [x] initial selection color in StyleChooser
@@ -64,7 +60,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [x] move Lnf combo to Colors Tab
         [x] use 1 Apply button
         [ ] more boxes in F9
-    [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
+    [-] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [x] fix F4 layout. LABEL_ONE.ipadx=90 is too large for many places.
     [-] remove l&f selection
     [x] in-component folder button

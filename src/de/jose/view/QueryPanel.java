@@ -220,6 +220,7 @@ public class QueryPanel
 
 		//	set up layout
 		cardPanel = new JTabbedPane();
+		cardPanel.setOpaque(true);
 
 		initInfoPanel();
 		initCommentPanel();
@@ -236,18 +237,6 @@ public class QueryPanel
 
 		JoDialog.rescaleFonts(this);
 	}
-
-/*
-	public void startContinuousResize()
-	{
-		if (posEditor!=null) posEditor.startContinuousResize();
-	}
-
-	public void finishContinuousResize()
-	{
-		if (posEditor!=null) posEditor.finishContinuousResize();
-	}
-*/
 
 	protected void setInitialValues()
 	{

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ import java.awt.image.BufferedImage;
 import static de.jose.pgn.PgnConstants.NAG_MAX;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class HtmlUtil
@@ -345,13 +345,9 @@ public class HtmlUtil
 					if (!targetFile.exists())
 						FileUtil.copyFile(new File(homeDir, jsFiles[i]), context.collateral);
 				}
-
-			//  copy navigation images
-			if (ExportConfig.getBooleanParam(context.config,"nav-icons",false)) {
-
-		}
 		}
 
+		//  copy navigation images
 		if (ExportConfig.getBooleanParam(context.config,"nav-icons",false)) {
 			//  images/nav --> collateral/nav
 			File srcdir = new File(Application.theWorkingDirectory,"images/nav");

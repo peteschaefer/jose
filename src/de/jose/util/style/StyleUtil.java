@@ -127,16 +127,21 @@ public class StyleUtil
     public static Color getSystemAccentColor()
     {
         if (Version.windows) {
+            //  get system accent color from registry
             int value = WinRegistry.getIntValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM","AccentColor");
             if (value != Integer.MIN_VALUE)
                 return new Color(value);
         }
         if (Version.linux) {
+            //  getting a usable accent color from Linux is hopeless
+            //  there *are* accent colors in Gnome and KDE, but there is no useful
+            //  API to retrieve them. Linux Desktop is fucked, believe me.
+            //  Use profile accent color instead.
             Surface sf = (Surface)Application.theUserProfile.get("lnf.accent.color");
             if (sf!=null) return sf.color;
         }
         if (Version.mac) {
-            //   ?
+            //  todo does this work ?
             return SystemColor.activeCaption;
         }
 
@@ -229,13 +234,17 @@ public class StyleUtil
             //  we want high contrast:
             //  - bright, but not too bright
             //  - close to white = low saturation
-            //  this creates pastel-like colors; which is fine for dark mode?
-            float[] hsb = new float[4];
-            Color.RGBtoHSB(acol.getRed(), acol.getGreen(), acol.getBlue(), hsb);
-            hsb[1] = 0.2f*hsb[1];   //  low saturation
-            hsb[2] = 1.0f - (1.0f-hsb[2])*0.2f; //  bright ?
-            return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
+            return pastelize(acol,0.3f);
         }
+    }
+
+    public static Color pastelize(Color col, float f) {
+        //  this creates pastel-like colors; which suit dark-mode nicely
+        float[] hsb = new float[4];
+        Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
+        hsb[1] = f*hsb[1];   //  low saturation
+        hsb[2] = 1.0f - (1.0f-hsb[2])*f; //  bright ?
+        return Color.getHSBColor(hsb[0],hsb[1],hsb[2]);
     }
 
     public static Color mapDarkIconColor(Color acol)
