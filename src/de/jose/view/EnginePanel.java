@@ -13,6 +13,8 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.book.lichess.LiChessBookEntry;
+import de.jose.book.lichess.LiChessGameRef;
 import de.jose.chess.*;
 import de.jose.chess.Position;
 import de.jose.pgn.ECOClassificator;
@@ -108,7 +110,7 @@ public class EnginePanel
 	protected boolean showInfoLabel;
 
 	protected StyledMoveFormatter formatter;
-	protected Style textStyle, boldStyle, figStyle, infoStyle;
+	protected JoStyleContext styles;
 
 	/** status info    */
 	protected JLabel    lStatus;
@@ -155,21 +157,30 @@ public class EnginePanel
 	{
 		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
 
-		JoStyleContext styles = Application.theUserProfile.getStyleContext();
+		JoStyleContext userStyles = Application.theUserProfile.getStyleContext();
 		//textStyle = styles.getStyle("body.line");
-		textStyle = styles.addStyle("engine.pv",null);
+		styles = new JoStyleContext(userStyles);
+		styles.setScreenResolution(72);
+		//	not sure what that means, or why it is necessary
+		//	but it scales correctly :\
+
+		Style textStyle = styles.addStyle("engine.pv",null);
 		StyleConstants.setFontFamily(textStyle, "sans-serif");
 		StyleConstants.setFontSize(textStyle, 12);
+		//StyleConstants.setLineSpacing(textStyle, -12.f);
 
-		boldStyle = styles.addStyle("engine.pv.bold",textStyle);
+		Style boldStyle = styles.addStyle("bold",null);
 		StyleConstants.setBold(boldStyle, true);
 
-		infoStyle = styles.addStyle("engine.pv.info",textStyle);
+		Style infoStyle = styles.addStyle("engine.pv.info",textStyle);
 		StyleConstants.setFontSize(infoStyle, 10);
 		StyleConstants.setForeground(infoStyle, Color.DARK_GRAY);
 
-		figStyle = styles.getStyle("body.figurine");
-		// todo what about figStyle bold? Let StyledMoveFormatter handle it?
+		Style userFigStyle = userStyles.getStyle("body.figurine");
+		String figFontName = StyleConstants.getFontFamily(userFigStyle);
+
+		Style figStyle = styles.addStyle("engine.pv.figurine",textStyle);
+		StyleConstants.setFontFamily(figStyle,figFontName);
 
 		formatter = new StyledMoveFormatter();
 		formatter.setTextStyle(textStyle);
@@ -179,7 +190,7 @@ public class EnginePanel
 		int moveFormat = Application.theUserProfile.getInt("doc.move.format", MoveFormatter.SHORT);
 		formatter.setFormat(moveFormat);
 
-		boolean useFigurines = styles.useFigurineFont();
+		boolean useFigurines = userStyles.useFigurineFont();
 		formatter.setFigStyle(useFigurines ? figStyle : null);
 	}
 
@@ -311,7 +322,11 @@ public class EnginePanel
 	private JoStyledLabel createPvLineComponent(String name)
 	{
 		Font normalFont = new Font("SansSerif",Font.PLAIN,12);
-		JoStyledLabel label = new JoStyledLabel(""/*Language.get(name)*/);
+
+		//JoStyleContext styles = Application.theUserProfile.getStyleContext();
+		StyledDocument sdoc = new DefaultStyledDocument(this.styles);
+		JoStyledLabel label = new JoStyledLabel(""/*Language.get(name)*/, sdoc);
+
 		makeLabel(label, name,normalFont,JLabel.LEFT,
                                     JoLineBorder.ALL, 3,3,3,3);
 		return label;
@@ -735,19 +750,20 @@ public class EnginePanel
             boolean scrollhist = false;
 			for (int idx=0; idx < rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
-					assert(rec.eval[idx]!=null);
-					assert(rec.line[idx]!=null);
-					setEvaluation(idx, rec.eval[idx]);
-					setVariation(idx, rec.line[idx], rec.line_info[idx]);
+					AnalysisRecord.LineData data = rec.data[idx];
+					assert(data.eval!=null);
+					assert(data.line!=null);
+					setEvaluation(idx, data.eval);
+					setVariation(idx, data.line, data.info);
 
 					if (idx==0)
-						broadcastMoveValue(rec.ply, rec.eval[idx]);
+						broadcastMoveValue(rec.ply, data.eval);
 
 					if (! inBook) {
                     if (countPvLines() > 1)
-						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist("["+(idx+1)+"] "+getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
                     else
-						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+rec.line[idx].toString());
+						scrollhist = appendHist(getEvalLabel(idx,false,false).getText()+" "+ data.line.toString());
 				}
 			}
 
@@ -812,6 +828,7 @@ public class EnginePanel
 		{
 			BookEntry entry = (BookEntry)bookEntries.get(i);
 			bookmoves.setPvModified(i);
+			bookmoves.data[i].book = entry;
 
 			StringBuffer line = bookmoves.getLine(i);
 			line.append(StringMoveFormatter.formatMove(pos,entry.move,true));
@@ -828,13 +845,29 @@ public class EnginePanel
 				line.append("}");
 			}
 
-			if (bookmoves.moves[i]==null)
-				bookmoves.moves[i] = new ArrayList();
-			bookmoves.moves[i].clear();
-			bookmoves.moves[i].add(entry.move);	//	useful for tooltips
+			AnalysisRecord.LineData data = bookmoves.data[i];
+			if (data.moves==null)
+				data.moves = new ArrayList();
+			data.moves.clear();
+			data.moves.add(entry.move);	//	useful for tooltips
 
-			Score score = bookmoves.eval[i];
+			Score score = data.eval;
 			entry.toScore(score,1000);
+
+			StringBuffer info = bookmoves.getLineInfo(i);
+			if ((entry!=null) && (entry instanceof LiChessBookEntry))
+			{
+				ArrayList<LiChessGameRef> refs = ((LiChessBookEntry)entry).gameRef;
+				if ((refs!=null && !refs.isEmpty()))
+				{
+					info.append("{");
+					for (int j=0; j < refs.size(); ++j) {
+						if (j>0) info.append(",");
+						info.append(refs.get(j).toString());
+					}
+					info.append("}");
+				}
+			}
 		}
 
 		//  always show hint that these are book moves
@@ -1032,12 +1065,16 @@ public class EnginePanel
 					formatter.reformatFrom(text);
 				}
 				else {
-					doc.insertString(0, text.toString(), textStyle);
+					doc.insertString(0, text.toString(), styles.getStyle("engine.pv"));
 				}
+				int i1 = text.indexOf(" ");
+				if (i1 < 0) i1 = text.length();
+				//	first word is bold
+				doc.setCharacterAttributes(0,i1, styles.getStyle("bold"), false);
 			}
 			if (info!=null && info.length()>0) {
-				doc.insertString(doc.getLength(), "\n", null);
-				doc.insertString(doc.getLength(), info.toString(), infoStyle);
+				doc.insertString(doc.getLength(), "\n", styles.getStyle("engine.pv"));
+				doc.insertString(doc.getLength(), info.toString(), styles.getStyle("engine.pv.info"));
 			}
         } catch (BadLocationException e) {
             Application.error(e);

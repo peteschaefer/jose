@@ -892,8 +892,8 @@ public class UciPlugin
 			else if (t.equals("pv")) {
 				StringBuffer line = rec.getLine(pvidx);
 				line.setLength(0);
-				if (rec.moves[pvidx]!=null)
-					rec.moves[pvidx].clear();
+				if (rec.data[pvidx].moves!=null)
+					rec.data[pvidx].moves.clear();
 				ispv = tokispv = true;                
 /*              //  don't print ponder move !
 				if (ponderMove!=null) {
@@ -1007,7 +1007,7 @@ public class UciPlugin
 
 		if (score_modified) {
 			adjustPointOfView(score,rec.white_next);
-			rec.eval[pvidx] = score;
+			rec.data[pvidx].eval = score;
 			rec.setPvModified(pvidx);
 		}
 

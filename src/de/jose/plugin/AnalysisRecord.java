@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.plugin;
 
 import de.jose.Util;
+import de.jose.book.BookEntry;
 import de.jose.chess.Move;
 import de.jose.util.StringUtil;
 
@@ -75,11 +76,23 @@ public class AnalysisRecord
 	public long 	nodesPerSecond;
 
 	/**	position evaluation in centipawns etc.	*/
-	public Score[]	eval;
-	/**	the primary variations	*/
-	public StringBuffer[] line;
-	public StringBuffer[] line_info;
-	public ArrayList<Move>[] moves;
+    public static class LineData {
+		public Score eval = new Score();	// score
+		public ArrayList<Move> moves; // parsed moves
+		public StringBuffer line;	// line text
+		public StringBuffer info;	// additional info
+		public BookEntry book;
+		// .. todo more to come (reference links)
+
+		void clear() {
+			eval.clear();
+			if (line!=null) line.setLength(0);
+			if (info!=null) info.setLength(0);
+			if (moves!=null) moves.clear();
+			book = null;
+		}
+	}
+	public LineData[] data;
 	//	todo move struct-of-arrays to an array of structs
 
 	/** general info    */
@@ -96,12 +109,9 @@ public class AnalysisRecord
 
 	public AnalysisRecord()
 	{
-		eval = new Score[256];
-		for(int i=0; i < eval.length; ++i)
-			eval[i] = new Score();
-		line = new StringBuffer[256];
-		line_info = new StringBuffer[256];
-		moves = new ArrayList[256];
+		data = new LineData[256];
+		for(int i=0; i<256; i++)
+			data[i] = new LineData();
 		pvmodified = new long[4];   // = 256 bits; one for each pv
 		maxpv = 0;
 	}
@@ -109,22 +119,22 @@ public class AnalysisRecord
 	public StringBuffer getLine(int pv)
 	{
 		if (pv >= maxpv) maxpv = pv+1;
-		if (line[pv]==null) line[pv] = new StringBuffer();
-		return line[pv];
+		if (data[pv].line==null) data[pv].line = new StringBuffer();
+		return data[pv].line;
 	}
 
 	public StringBuffer getLineInfo(int pv)
 	{
 		if (pv >= maxpv) maxpv = pv+1;
-		if (line_info[pv]==null) line_info[pv] = new StringBuffer();
-		return line_info[pv];
+		if (data[pv].info==null) data[pv].info = new StringBuffer();
+		return data[pv].info;
 	}
 
 	public ArrayList<Move> getMoves(int pv)
 	{
 		if (pv >= maxpv) maxpv = pv+1;
-		if (moves[pv]==null) moves[pv] = new ArrayList<Move>();
-		return moves[pv];
+		if (data[pv].moves==null) data[pv].moves = new ArrayList<Move>();
+		return data[pv].moves;
 	}
 
 	public boolean wasModified(int set)
@@ -159,7 +169,7 @@ public class AnalysisRecord
 	{
 		for(int i=0; i < maxpv; ++i)
 		{
-			if (moves[i]!=null && !moves[i].isEmpty() && mv.equals(moves[i].get(0)))
+			if (data[i].moves!=null && !data[i].moves.isEmpty() && mv.equals(data[i].moves.get(0)))
 				return i;
 		}
 		return -1;
@@ -167,7 +177,7 @@ public class AnalysisRecord
 
 	public void addMoveInfo(int i, String info)
 	{
-		Score sc = eval[i];
+		Score sc = data[i].eval;
 		StringBuffer liinfo = getLineInfo(i);
 		liinfo.setLength(0);
 		liinfo.append("  {");
@@ -191,12 +201,8 @@ public class AnalysisRecord
 		elapsedTime = UNKNOWN;
 		nodes = UNKNOWN;
 		nodesPerSecond = UNKNOWN;
-		for (int i=0; i<maxpv; i++) {
-			eval[i].clear();
-			if (line[i]!=null) line[i].setLength(0);
-			if (line_info[i]!=null) line_info[i].setLength(0);
-			if (moves[i]!=null) moves[i].clear();
-		}
+		for (int i=0; i<maxpv; i++)
+			data[i].clear();
 		info = null;
 		modified = -1;  //  all fields modified
 	}

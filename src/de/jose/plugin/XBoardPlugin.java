@@ -339,7 +339,7 @@ ply
 			rec.modified |= AnalysisRecord.DEPTH;
 		}
 		rec.selectiveDepth = Score.UNKNOWN;
-		Score score = rec.eval[0];
+		Score score = rec.data[0].eval;
 
 		if (k2 > k1 && k1 >= 0) {
 			int eval = AnalysisRecord.parseInt(chars,k1,k2-k1);

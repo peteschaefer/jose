@@ -10,8 +10,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
-import static de.jose.util.ListUtil.indexOf;
-
 public class StyledMoveFormatter extends StringMoveFormatter
 {
     private StyledDocument doc;
@@ -63,9 +61,8 @@ public class StyledMoveFormatter extends StringMoveFormatter
             flush();
 
             String ptxt = enc.getFigurine(pc);
-            String family = JoFontConstants.getFontFamily(figStyle);
-            ptxt = FontCapture.checkPrintable(ptxt, family);
-
+            //ptxt = FontCapture.checkPrintable(ptxt, family);
+            //ptxt +="p\u0087o";
             doc.insertString(at, ptxt, figStyle);
             at += ptxt.length();
 
@@ -73,6 +70,14 @@ public class StyledMoveFormatter extends StringMoveFormatter
             Application.error(blex);
             throw new RuntimeException(blex.getMessage());
         }
+    }
+
+    private static int pieceFromChar(String[] pcs, char c)
+    {
+        for(int i=0; i < pcs.length; i++)
+            if (pcs[i]!=null && pcs[i].charAt(0)==c)
+                return (i-1+PAWN);
+        return -1;
     }
 
     public void reformatFrom(CharSequence str)
@@ -84,9 +89,9 @@ public class StyledMoveFormatter extends StringMoveFormatter
             if (c=='{') comment=true;
 
             if (!comment && Character.isUpperCase(c)) {
-                int pc = indexOf(pieceChars,c); //  todo
-                if (pc >= 0) {
-                    figurine(PAWN + pc, false);
+                int pc = pieceFromChar(pieceChars,c); //  todo
+                if (pc >= PAWN) {
+                    figurine(pc, false);
                     continue;
                 }
             }

@@ -70,7 +70,7 @@ tab  depth score*100
 		rec.ply = enginePosition.gamePly();
 		rec.white_next = enginePosition.whiteMovesNext();
 		char[] chars = input.toCharArray();
-		Score score = rec.eval[0];
+		Score score = rec.data[0].eval;
 
 		if (chars[0]=='\t') {
 			rec.depth = AnalysisRecord.parseInt(chars,1,2);

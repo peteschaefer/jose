@@ -863,7 +863,7 @@ abstract public class EnginePlugin
 
 		protected EvaluatedMove(Move move, AnalysisRecord a, EnginePlugin plugin)
 		{
-			this(move,a.ply, a.eval[0], plugin);
+			this(move,a.ply, a.data[0].eval, plugin);
 		}
 
 		public int getPly()             { return ply; }
