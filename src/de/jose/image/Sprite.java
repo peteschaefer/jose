@@ -38,7 +38,7 @@ public class Sprite
 	protected Graphics2D	bufferg;
 
 	protected Graphics2D	screeng;
-	protected Rectangle		screenBounds;
+	//protected Rectangle		screenBounds;
 
 	protected Point			current;
 	protected Point			offset;
@@ -46,7 +46,7 @@ public class Sprite
 
 	protected Sprite()
 	{ }
-
+/*
 	public Sprite(Graphics2D screen, Rectangle bounds,
 				  BufferedImage sprite, Point start,
 				  int offx, int offy)
@@ -61,7 +61,7 @@ public class Sprite
 	{
 		init(background, screen,bounds,sprite,start, offx,offy);
 	}
-
+*/
 	public void init(BufferedImage background,
 				  Graphics2D screen, Rectangle bounds,
 				  BufferedImage sprite, Point start,
@@ -69,7 +69,18 @@ public class Sprite
 	{
 		/*	screen	*/
 		screeng = screen;
-		screenBounds = bounds;
+		/* note: bounds in user-space coordinates.
+			but all painting happens in device-space coodinates
+		 */
+		// screenBounds = bounds;
+/*		AffineTransform tf = screen.getTransform();
+		tf.transform(bounds.getLocation(), screenBounds.getLocation());
+		Point2D screenSize = new Point2D.Double(bounds.getWidth(), bounds.getHeight());
+		tf.transform(screenSize,screenSize);
+		screenBounds.setSize((int)screenSize.getX(),(int)screenSize.getY());
+		//	s.t. screenBounds == background-bounds in device-space coordinates
+		//	todo user theBackground.getWidth() instead
+*/
 		/*	sprite	*/
 		theSprite = sprite;
 		spriteg = (Graphics2D)sprite.getGraphics();
@@ -197,10 +208,14 @@ public class Sprite
 		try {
 			screeng.setTransform(IDENTITY);
 
+			int screenWidth = theBackground.getWidth();
+			int screenHeight = theBackground.getHeight();
+			//	screen size in device-space coardinates
+
 			r1.x += offset.x;
 			r1.y += offset.y;
-			r1.width = Math.min(r1.width, screenBounds.width - r1.x);
-			r1.height = Math.min(r1.height, screenBounds.height - r1.y);
+			r1.width = Math.min(r1.width, screenWidth - r1.x);
+			r1.height = Math.min(r1.height, screenHeight - r1.y);
 			if (r1.width > 0 && r1.height > 0)
 				ImgUtil.copy(theBackground, r1.x, r1.y,
 						screeng, r1.x, r1.y,
@@ -210,8 +225,8 @@ public class Sprite
 
 			r2.x += offset.x;
 			r2.y += offset.y;
-			r2.width = Math.min(r2.width, screenBounds.width - r2.x);
-			r2.height = Math.min(r2.height, screenBounds.height - r2.y);
+			r2.width = Math.min(r2.width, screenWidth - r2.x);
+			r2.height = Math.min(r2.height, screenHeight - r2.y);
 			if (r2.width > 0 && r2.height > 0)
 				ImgUtil.copy(theBackground, r2.x, r2.y,
 						screeng, r2.x, r2.y,

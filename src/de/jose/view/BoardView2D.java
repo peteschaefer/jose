@@ -1320,13 +1320,10 @@ public class BoardView2D
 			Rectangle imgBounds = new Rectangle();
 			BufferedImage img = getPieceImage(pc,imgBounds);
 
-			Point2D orig2d = origin(src,true);
-			Point orig = new Point(
-					(int)(orig2d.getX()+0.5),
-					(int)(orig2d.getY()+0.5));
+			Point2D orig2d = origin(src,false);
+			Point orig = new Point((int)orig2d.getX(),(int)orig2d.getY());
 			init(buffer,getGraphics2D(), BoardView2D.this.getBounds(),
 					img, orig, imgBounds.x, imgBounds.y);
-			//	todo offset in user-space (screen), or dev-space (buffer) ?? !! ??
 		}
 
 		public void dropTo(Move mv, int destPiece, long duration, int frameRate, boolean clear)
@@ -1381,14 +1378,19 @@ public class BoardView2D
 	{
 		/*	drag along	*/
 		if ((mouseStartSquare!=0) && sprite1.isMoving()) {
-			Point2D orig = origin(mouseStartSquare,true);
 			Point pt = e.getPoint();
-			int dx = pt.x - mouseStartPoint.x;
-			int dy = pt.y - mouseStartPoint.y;
+			Point2D.Double diff = new Point2D.Double(
+					pt.x - mouseStartPoint.x,
+					pt.y - mouseStartPoint.y);
+			//	(dx,dy) in user-space coordinates.
+
+			//	Sprite lives in device-scpace coordinates
+			Point2D orig = origin(mouseStartSquare,false);
+			getGraphics2D().getTransform().transform(diff,diff);
 
 			sprite1.moveTo(
-					(int)(orig.getX()+0.5+dx),
-					(int)(orig.getY()+0.5+dy));
+					(int)(orig.getX()+diff.getX()),
+					(int)(orig.getY()+diff.getY()));
 		}
 	}
 
