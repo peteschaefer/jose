@@ -38,6 +38,7 @@ public class JoSurfaceButton
 	protected Surface surface;
 	protected static JoSurfaceChooser chooserPane;
 	protected JDialog chooser;
+	protected boolean gradientsEnabled=true, texturesEnabled=true;
 
 	public JoSurfaceButton()
 	{
@@ -112,7 +113,10 @@ public class JoSurfaceButton
 
     protected JoSurfaceChooser createChooser()
     {
-        return new JoSurfaceChooser();
+		JoSurfaceChooser result = new JoSurfaceChooser();
+		result.setTexturesEnabled(texturesEnabled);
+		result.setGradientsEnabled(gradientsEnabled);
+		return result;
     }
 
 	public void paintComponent(Graphics g)
@@ -150,4 +154,14 @@ public class JoSurfaceButton
 		return (col.getRed()+col.getGreen()+col.getBlue()) <= (3*256/2);
 	}
 
+	public void setTexturesEnabled(boolean b) {
+		texturesEnabled=b;
+		if (chooserPane!=null)
+			chooserPane.setTexturesEnabled(b);
+	}
+	public void setGradientsEnabled(boolean b) {
+		gradientsEnabled=b;
+		if (chooserPane!=null)
+			chooserPane.setGradientsEnabled(b);
+	}
 }

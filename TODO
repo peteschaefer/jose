@@ -39,9 +39,10 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 [x] FlatLaf
     [x] "TextPane.selectionBackground", moveHiliteColor: use smarter formula. Don't rely on theme.
     [ ] System/Custom option
+    [x] apply Selection Color on Linux
     [?] bug TextPaneUI: jagged selection
     [x] layout in F9
-    [ ] layout F11
+    [x] layout F11
     [x] bug: Board coordinates in F9
     [x] scroll engine panel to top
     [?] wdl label height; adjust to font

@@ -73,7 +73,7 @@ public class EvalView
 	public EvalView()
 	{
 		setDoubleBuffered(true);
-		setBackground(BACKGROUND_COLOR);
+		setBgColor(Application.theApplication.isDarkLookAndFeel());
 		setOpaque(true);
 		setFocusable(false);    //  don't request keyboard focus (or should we ?)
 
@@ -82,6 +82,15 @@ public class EvalView
 
 		clear();
 	}
+
+	public void setBgColor(boolean dark)
+	{
+		if (dark)
+			setBackground( UIManager.getColor("background") );
+		else
+			setBackground( BACKGROUND_COLOR );
+	}
+
 
 	public void clear()
 	{
@@ -216,7 +225,7 @@ public class EvalView
 		int height = getHeight();
 
 		ImgUtil.setTextAntialiasing((Graphics2D)g, true);
-		g.setColor(BACKGROUND_COLOR);
+		g.setColor(getBackground());
 		g.fillRect(0,0,width,height);
 
 		//paintBackground(g);

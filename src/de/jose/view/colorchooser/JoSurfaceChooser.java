@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import java.awt.*;
  * an extended Color Chooser that can select
  * either a color or a texture or a gradient
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class JoSurfaceChooser
@@ -187,4 +187,12 @@ public class JoSurfaceChooser
     {
         tabPane.setSelectedIndex(tabIndex);
     }
+
+	public void setTexturesEnabled(boolean b) {
+		tabPane.setEnabledAt(textChooserIdx,b);
+	}
+
+	public void setGradientsEnabled(boolean b) {
+		tabPane.setEnabledAt(gradChooserIdx,b);
+	}
 }

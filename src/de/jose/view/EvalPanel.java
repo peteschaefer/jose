@@ -52,7 +52,6 @@ public class EvalPanel
 		view.setGame(Application.theHistory.getCurrent());
 	}
 
-
 	public void setupActionMap(Map<String, CommandAction> map)
 	{
 		super.setupActionMap(map);
@@ -86,6 +85,15 @@ public class EvalPanel
 			}
 		};
 		map.put("move.value", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd)
+			{
+				boolean dark = (Boolean)cmd.moreData;
+				view.setBgColor(dark);
+			}
+		};
+		map.put("update.ui", action);
 	}
 
 	@Override

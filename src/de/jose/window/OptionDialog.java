@@ -330,8 +330,16 @@ public class OptionDialog
 		JLabel label = (JLabel)addWithLabel(sbox,0,0,4, "ui.look.and.feel2", lookAndFeelList);
 		label.setText(Language.get("dialog.option.ui.look.and.feel"));
 
-		addWithLabel(sbox, 1, "lnf.select.color", newChessSurfaceButton("lnf.select.color",null));
-		addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
+		JoSurfaceButton sbutton1 = newChessSurfaceButton("lnf.select.color", null);
+		sbutton1.setTexturesEnabled(false);
+		sbutton1.setGradientsEnabled(false);
+
+		JoSurfaceButton sbutton2 = newChessSurfaceButton("lnf.accent.color",null);
+		sbutton2.setTexturesEnabled(false);
+		sbutton2.setGradientsEnabled(false);
+
+		addWithLabel(sbox, 1, "lnf.select.color", sbutton1);
+		addWithLabel(sbox, 1, "lnf.accent.color", sbutton2);
 		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
 		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
@@ -1242,8 +1250,9 @@ public class OptionDialog
 				Application.theApplication.setLanguage(profile.getString("user.language"));
 			if (profile.changed("ui.look.and.feel2", oldValues))
 				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel2"));
-			if (profile.changed("lnf.accent.color", oldValues)
-					|| (lnfTouched!=null) && FileUtil.wasFileTouched(new File("config/themes"),lnfTouched))
+			if (profile.changed("lnf.accent.color", oldValues) ||
+				profile.changed("lnf.select.color", oldValues) ||
+				(lnfTouched!=null) && FileUtil.wasFileTouched(new File("config/themes"),lnfTouched))
 				Application.theApplication.resetLookAndFeel();
 			if (profile.changed("font.diagram",oldValues) ||
 			    profile.changed("board.surface.light",oldValues) ||

@@ -139,24 +139,27 @@ public class DocumentEditor
 	{
 		try {
             Highlighter.HighlightPainter painter =
-					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor) {
+					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor); /*{
+					// @deprecated only needed to fix jagged painting in paintLayer()
+					//	but the better(?) choice is to disable layered painting at all
 					//new Highlighter.HighlightPainter() {
 
 						@Override
 						public Shape paintLayer(Graphics g, int offs0, int offs1,
 												Shape bounds, JTextComponent c, View view) {
 							//return super.paintLayer(g, offs0, offs1, bounds, c, view);
-							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
+							//return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
+							throw new IllegalStateException("layered highlight not supposed to be called");
 						}
 						@Override
 						public void paint(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c) {
 							DocumentEditor.this.paintHighlight(g,offs0,offs1,bounds,c,moveHiliteColor);
 						}
-					};
+					};*/
 
 			getHighlighter().removeAllHighlights();
-            hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
 			((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
+            hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
         } catch (BadLocationException e) {
             Application.error(e);
         }
@@ -177,6 +180,8 @@ public class DocumentEditor
 	//	((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
 		//	will effectively disable our move hiliter. why?
 		installMoveHighlight();
+		adjustHighlight(getSelectionStart(), getSelectionEnd());
+		//((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
 	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException
