@@ -252,7 +252,7 @@ public class SymbolBar
 
     private void makeComboPane()
     {
-        comboPane.add(makeActionButton("\uf060","switch.symbols"));
+        comboPane.add(makeActionButton('\uf060',"switch.symbols"));
         comboPane.add(comboButton = makeSymbolButton(1,symbolFont,"?","?"));
         comboButton.setMinimumSize(new Dimension(32,32));
         comboButton.setPreferredSize(new Dimension(32,32));
@@ -346,7 +346,7 @@ public class SymbolBar
             boxPane.add(button);
         }
 
-        boxPane.add(makeActionButton("\uf061","switch.symbols"));
+        boxPane.add(makeActionButton('\uf061',"switch.symbols"));
     }
 
     public void updateLanguage()
@@ -506,13 +506,10 @@ public class SymbolBar
         return button;
     }
 
-    public JButton makeActionButton(String icon, String command)
+    public JButton makeActionButton(char icon, String command)
     {
         JButton button = new JButton();
-        Font awefont = FontUtil.fontAwesome().deriveFont(Font.PLAIN, 12);
-        //button.setFont(awefont);
-        //button.setText("\uf061");
-        button.setIcon(new TextIcon(icon,awefont,Color.black));
+        button.setIcon(FontUtil.awesomeIcon(icon,12,Color.black));
         button.addActionListener(this);
         button.setActionCommand(command);
         return button;

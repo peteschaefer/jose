@@ -155,8 +155,7 @@ public class OptionDialog
 		Icon board = FontUtil.awesomeIcon('\uf43c',iconSize,iconColor);
 		Icon palette = FontUtil.awesomeIcon('\uf5c3',iconSize,iconColor); // swatchbook :)
 		Icon clock = FontUtil.awesomeIcon('\uf2f2',iconSize,iconColor);
-				//ImgUtil.getIcon("nav","chess.clock");
-				// the chess clock icon is nicer, but unfortunately, not in font-awesome
+		//	todo alternative: FigurineSymbol \u201e
 		Icon book = FontUtil.awesomeIcon(BoardView2D.cBook,iconSize,iconColor);
 		Icon gears = FontUtil.awesomeIcon(BoardView2D.cGears,iconSize,iconColor);
 		Icon cubes = FontUtil.awesomeIcon('\uf1b3',iconSize,iconColor);

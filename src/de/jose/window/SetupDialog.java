@@ -198,8 +198,8 @@ public class SetupDialog
 		newButtonGroup("dialog.setup.next");
 
 		JSpinner spinner = newSpinner("dialog.setup.move.no");
-		((SpinnerNumberModel) spinner.getModel()).setMinimum(new Integer(1));
-		((SpinnerNumberModel) spinner.getModel()).setMaximum(new Integer(999));
+		((SpinnerNumberModel) spinner.getModel()).setMinimum(1);
+		((SpinnerNumberModel) spinner.getModel()).setMaximum(999);
 
 		spinner.setMinimumSize(new Dimension(48, 18));
 		add(controls, 0, 2, 1, newLabel("dialog.setup.move.no"), LABEL_ONE_LEFT);
@@ -223,9 +223,9 @@ public class SetupDialog
 
 		//  frc spinner
 		spinner = newSpinner("dialog.setup.frc.index");
-		((SpinnerNumberModel) spinner.getModel()).setMinimum(new Integer(1));
-		((SpinnerNumberModel) spinner.getModel()).setMaximum(new Integer(2880));
-		spinner.getModel().setValue(new Integer(518));
+		((SpinnerNumberModel) spinner.getModel()).setMinimum(1);
+		((SpinnerNumberModel) spinner.getModel()).setMaximum(2880);
+		spinner.getModel().setValue(518);
 		spinner.addChangeListener(this);
 
 		Box frc = Box.createHorizontalBox();
