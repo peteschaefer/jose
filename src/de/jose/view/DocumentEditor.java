@@ -150,8 +150,8 @@ public class DocumentEditor
 							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
 						}
 					};
-            hiliteCurrentMove = getHighlighter().addHighlight(0,0, painter);
-
+            hiliteCurrentMove = getHighlighter().addHighlight(0,0,painter);
+			((DefaultHighlighter)getHighlighter()).setDrawsLayeredHighlights(false);
         } catch (BadLocationException e) {
             Application.error(e);
         }
