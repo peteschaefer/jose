@@ -12,12 +12,11 @@
 
 package de.jose.image;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import de.jose.Application;
 import de.jose.util.SoftCache;
 import de.jose.util.FontUtil;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
@@ -596,11 +595,8 @@ public class FontCapture
 		proof.dispose();
 
 		//	store
-		FileOutputStream out = new FileOutputStream(output);
-        JPEGImageEncoder enc = JPEGCodec.createJPEGEncoder(out);
-        enc.encode(img);
+		ImageIO.write(img,"jpeg",output);
 //		new Acme.JPM.Encoders.GifEncoder(img,out,false).encode();
-		out.close();
 	}
 
 

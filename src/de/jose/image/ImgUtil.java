@@ -12,13 +12,7 @@
 
 package de.jose.image;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageDecoder;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
 import de.jose.Application;
-import de.jose.Version;
 import de.jose.util.ReflectionUtil;
 import de.jose.util.SoftCache;
 import de.jose.util.ClassPathUtil;
@@ -277,174 +271,22 @@ public class ImgUtil
 	public static BufferedImage readJpeg(InputStream src)
 		throws Exception
 	{
-		JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(src);
-		return decoder.decodeAsBufferedImage();
-	}
-
-	public static void writeJpeg(BufferedImage img, File f)
-		throws IOException
-	{
-		writeJpeg(img,f, 0.9f);
+		return ImageIO.read(src);
 	}
 
 	public static void writeJpeg(BufferedImage img, File f, float quality)
 		throws IOException
 	{
-		FileOutputStream out = new FileOutputStream(f);
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-		param.setQuality(quality,false); // 90% quality JPEG
-		encoder.setJPEGEncodeParam(param);
-		encoder.encode(img);
-		out.close();
-
+		ImageIO.write(img, "jpeg", f);
 		setImageSize(f, img.getWidth(),img.getHeight());
-	}
-
-	public static byte[] createJpeg(BufferedImage img, float quality)
-		throws IOException
-	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-		param.setQuality(quality,false); // 90% quality JPEG
-		encoder.setJPEGEncodeParam(param);
-		encoder.encode(img);
-		out.close();
-		return out.toByteArray();
 	}
 
 	public static void writePng(BufferedImage img, File f) throws Exception
 	{
-		assertJAICodec();
-
-		de.jose.util.PngUtil.writePng(img,f);
+		ImageIO.write(img, "png", f);
 		setImageSize(f, img.getWidth(),img.getHeight());
 	}
 
-
-	public static byte[] createPng(BufferedImage img) throws Exception
-	{
-		assertJAICodec();
-		return de.jose.util.PngUtil.createPng(img);
-	}
-
-/*
-	public static int[] getPixels(BufferedImage img)
-	{
-		WritableRaster r = img.getRaster();
-		return r.getPixels(0,0,img.getWidth(),img.getHeight(), (int[])null);
-	}
-	
-	public static void setPixels(BufferedImage img, int[] pixels)
-	{
-		WritableRaster r = img.getRaster();
-		r.setPixels(0,0,img.getWidth(),img.getHeight(), pixels);
-	}
-	
-	protected static final int sq = 255*255;
-	/**	
-	 * set the RGB components to white; retain the Alpha component
-	 *
-	public static final void dropShadow(int[] px, int width, int height, int dropx, int dropy, int shadowAlpha)
-	{
-		int off;
-		int dropoff;
-		
-		for (int y = 0; y < (height-dropy); y++) {
-			off = width*y*4;
-			dropoff = (width*(y+dropy)+dropx)*4;
-			
-			for (int x = 0; x < (width-dropx); x++)
-			{
-				int f = px[off+3] * (255-px[dropoff+3]);
-				if (f > 0)
-					px[dropoff+3] += shadowAlpha*f/sq;
-				
-				off += 4;
-				dropoff += 4;
-			}
-		}
-	}
-	
-	/**	
-	 * make all white pixels transparent
-	 *
-	public static final void translucentBackground(int[] px, int width, int height, 
-											 int startX, int startY)
-	{
-		int pxwidth = width*4;
-		int pxsize = pxwidth*height;
-		
-		int[] todo = new int[width*height];
-		int top = 0;
-		int off0, w;
-		int limit = Math.max(255-(int)Math.sqrt(width*height)/10,1);
-		int off = startY*pxwidth + startX*4;
-		px[off+3]	= (255-px[off+3]);		//	alpha
-		px[off]		= 0;					//	red
-		px[off+1]	= 0;					//	green
-		px[off+2]	= 0;					//	blue
-		todo[top++] = off;
-		
-		while (top > 0) {
-			off0 = todo[--top];
-			
-			off = off0+4;
-			if (off < pxsize && px[off+3]==255) {
-				w = px[off];
-				if (w > 0) {
-					if (w >= limit)
-						todo[top++] = off;
-					px[off+3]	= (255-w);		//	alpha
-					px[off]		= 0;			//	red
-					px[off+1]	= 0;			//	green
-					px[off+2]	= 0;			//	blue
-				}
-			}
-					
-			off = off0-4;
-			if (off >= 0 && px[off+3]==255) {
-				w = px[off];
-				if (w > 0) {
-					if (w >= limit)
-						todo[top++] = off;
-					px[off+3]	= (255-w);		//	alpha
-					px[off]		= 0;			//	red
-					px[off+1]	= 0;			//	green
-					px[off+2]	= 0;			//	blue
-				}
-			}
-				
-			off = off0+pxwidth;
-			if (off < pxsize && px[off+3]==255) {
-				w = px[off];
-				if (w > 0) {
-					if (w >= limit)
-						todo[top++] = off;
-					px[off+3]	= (255-w);		//	alpha
-					px[off]		= 0;			//	red
-					px[off+1]	= 0;			//	green
-					px[off+2]	= 0;			//	blue
-				}
-			}
-				
-			off = off0-pxwidth;
-			if (off >= 0 && px[off+3]==255) {
-				w = px[off];
-				if (w > 0) {
-					if (w >= limit)
-						todo[top++] = off;
-					px[off+3]	= (255-w);		//	alpha
-					px[off]		= 0;			//	red
-					px[off+1]	= 0;			//	green
-					px[off+2]	= 0;			//	blue
-				}
-			}
-		}
-	}
-*/	
-	
 	//-------------------------------------------------------------------------------
 	//	private
 	//-------------------------------------------------------------------------------
@@ -584,8 +426,7 @@ public class ImgUtil
 		try {
 			String fileName = file.getName();
 			if (FileUtil.hasExtension(fileName,"png")) {
-				assertJAICodec();
-				RenderedImage img = de.jose.util.PngUtil.readPng(file);
+				RenderedImage img = ImageIO.read(file);
 				return setImageSize(file, img.getWidth(), img.getHeight());
 			}
 			if (FileUtil.hasExtension(fileName,"gif")) {
@@ -765,33 +606,11 @@ public class ImgUtil
 		return dest;
 	}
 
-    public static BufferedImage createScaledImage(Image src, int width, int height)
-    {
-        BufferedImage result = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
-        result.getGraphics().drawImage(src,0,0,width,height,null);
-        return result;
-    }
-
 	public static ImageIcon createDisabledIcon(ImageIcon icon)
 	{
 		Image image = icon.getImage();
 		image = createDisabledImage(toBufferedImage(image));
 		return new ImageIcon(image);
-	}
-
-    public static ImageIcon createScaledIcon(ImageIcon icon, double scale)
-    {
-        Image image = icon.getImage();
-        image = createScaledImage(image,
-                (int)Math.round(icon.getIconWidth()*scale),
-                (int)Math.round(icon.getIconHeight()*scale));
-        return new ImageIcon(image);
-    }
-
-	public static void assertJAICodec() throws Exception
-	{
-		if (!ClassPathUtil.existsClass("com.sun.media.jai.codec.ImageCodec"))
-			ClassPathUtil.addToClassPath(new File(Application.theWorkingDirectory,"lib/jai_codec.jar"));
 	}
 
 	public static Dimension scaledAspectRatio(Image img, Dimension r)
