@@ -51,16 +51,19 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[x] SplitPaneUI: individual style=plain
 
     [ ] flatlaf bugs
-    	[ ] TextPaneUI: fix jumping characters
+    	[x] TextPaneUI: fix jumping characters. custom hiliter bug, actually.
     	[ ] TextPaneUI: nicer selection
         [ ] initial selection color in StyleChooser
-        [ ] wdl label height; adjust to font
+        [?] wdl label height; adjust to font
 
     [x] add to F9 Color Tab
         [-] background color
         [x] accent color
         [x] Pickup from system (only Windows?)
         [x] open theme editor
+        [ ] move Lnf combo to Colors Tab
+        [ ] use 1 Apply button
+        [ ] more boxes in F9
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [ ] fix F4 layout
     [-] remove l&f selection
@@ -72,7 +75,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [x] export dialog
         [-] gnome/kde accent color?
         [x] EnginePanel background
-        [ ] board auto, or manually?
+        [-] board auto, or manually?
 
 
 [ ] Undo

@@ -138,7 +138,7 @@ public class DocumentEditor
 		else
 			moveHiliteColor = MOVE_HILITE_COLOR;
 
-        try {
+		try {
             Highlighter.HighlightPainter painter =
 					new DefaultHighlighter.DefaultHighlightPainter(moveHiliteColor) {
 					//new Highlighter.HighlightPainter() {
@@ -146,10 +146,12 @@ public class DocumentEditor
 						@Override
 						public Shape paintLayer(Graphics g, int offs0, int offs1,
 												Shape bounds, JTextComponent c, View view) {
-							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view);
+							//return super.paintLayer(g, offs0, offs1, bounds, c, view);
+							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view,moveHiliteColor);
 						}
 					};
             hiliteCurrentMove = getHighlighter().addHighlight(0,0, painter);
+
         } catch (BadLocationException e) {
             Application.error(e);
         }
@@ -190,11 +192,11 @@ public class DocumentEditor
 		}
 	}
 
-	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view)
+	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view, Color color)
 	{
-		g.setColor(moveHiliteColor);
+		g.setColor(color);
 
-        Rectangle r;
+        Rectangle r,ret;
         try {
             // --- determine locations ---
             r = viewRect(view,offs0,offs1,bounds);
@@ -202,6 +204,9 @@ public class DocumentEditor
             // can't render
             return null;
         }
+		r = (Rectangle)r.clone();	//	important: don't modify reference to Shape
+		r.width = Math.max(r.width, 1);
+		ret = (Rectangle)r.clone();
 
         //	check ascent/descent of adjacent regions
         if (offs0 > 0)
@@ -219,7 +224,7 @@ public class DocumentEditor
         }
 
         g.fillRect(r.x,r.y,r.width,r.height);
-        return r;
+        return ret;	//	important: return uncorrected value
     }
 
 	public void setDocument(Game doc)

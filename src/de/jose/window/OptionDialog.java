@@ -308,29 +308,26 @@ public class OptionDialog
 	{
 		JPanel tab2 = (JPanel)comp2;
 
-		addWithLabel(tab2,1, "board.surface.light", newChessSurfaceButton("board.surface.light",null));
-		addWithLabel(tab2,1, "board.surface.dark", newChessSurfaceButton("board.surface.dark",null));
+		JPanel sbox = newGridBox("dialog.option.board.title");
 
-		addWithLabel(tab2,1, "board.surface.white", newChessSurfaceButton("board.surface.white",null));
-		addWithLabel(tab2,1, "board.surface.black", newChessSurfaceButton("board.surface.black",null));
+		addWithLabel(sbox,1, "board.surface.light", newChessSurfaceButton("board.surface.light",null));
+		addWithLabel(sbox,1, "board.surface.dark", newChessSurfaceButton("board.surface.dark",null));
+		addWithLabel(sbox,1, "board.surface.white", newChessSurfaceButton("board.surface.white",null));
+		addWithLabel(sbox,1, "board.surface.black", newChessSurfaceButton("board.surface.black",null));
+		addWithLabel(sbox,1, "board.surface.background", newChessSurfaceButton("board.surface.background",null));
+		addWithLabel(sbox,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
 
-		addWithLabel(tab2,1, "board.surface.background", newChessSurfaceButton("board.surface.background",null));
+		addBox(tab2, 0,0,4, sbox);
 
-		addWithLabel(tab2,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
+		sbox = newGridBox("dialog.option.lnf.title");
+		if (Version.linux)
+			addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
+		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
+		sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
-		tab2.add(new JLabel(""), ELEMENT_ONE_ROW);
-
-		if (Version.linux) {
-			addWithLabel(tab2, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
-
-		}
-
-		addWithLabel(tab2, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
-
-		tab2.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
+		addBox(tab2, 0,1,4, sbox);
 
 		tab2.add(new JLabel(""), ELEMENT_REMAINDER);
-
 	}
 
 	protected void initTab3(Component comp3)
