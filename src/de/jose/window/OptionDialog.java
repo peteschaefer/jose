@@ -18,6 +18,7 @@ import de.jose.chess.TimeControl;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
+import de.jose.image.ImgUtil;
 import de.jose.jo3d.Util3D;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
@@ -142,14 +143,22 @@ public class OptionDialog
 		center(Math.min(screensize.width,720), Math.min(screensize.height,540));
         profile = AbstractApplication.theUserProfile;
 
-		addTab(newGridPane());   // tab0
-		addTab(newGridPane());   // tab1
-		addTab(newGridPane());   // tab2
-		addTab(newGridPane());   // tab3
-        addTab(newGridPane());   // tab4
-        addTab(newGridPane());   // tab5
+		ImageIcon user = ImgUtil.getIcon("nav","user.regular");
+		ImageIcon board = ImgUtil.getIcon("nav","chess.board");
+		ImageIcon palette = ImgUtil.getIcon("nav","palette.solid");
+		ImageIcon clock = ImgUtil.getIcon("nav","chess.clock");
+		ImageIcon book = ImgUtil.getIcon("nav","book.solid");
+		ImageIcon gears = ImgUtil.getIcon("nav","gears.solid");
+		ImageIcon font = ImgUtil.getIcon("nav","font.solid");
+
+		addTab(newGridPane(),user);   // tab0
+		addTab(newGridPane(),board);   // tab1
+		addTab(newGridPane(), palette);   // tab2
+		addTab(newGridPane(),clock);   // tab3
+        addTab(newGridPane(),gears);   // tab4
+        addTab(newGridPane(),book);   // tab5
 		addTab(newGridPane());   // tab6
-		addTab(newGridPane());  //  tab7
+		addTab(newGridPane(),font);  //  tab7
 
 		addButtons(OK_CANCEL);
 		addSpacer(10);
