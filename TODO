@@ -27,6 +27,12 @@ libraries needed:
 * which JDK is running on recent macOS ?
 * do we need a 64bit version of mysql-je? Do we already have one?
 
+==== Chessnut
+
+* checkout https://github.com/libusb/hidapi
+    - get an up-to-date version of hidapi to build easylink.dll
+    - test BLE on Windows
+    - Linux ?!
 
 === Factory Settings
 
@@ -103,9 +109,6 @@ Leela
 
 ==== Misc Errors
 
-java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
-	at java.util.ArrayList.get(ArrayList.java:433)
 
  ---- Fri Jan 03 10:47:22 CET 2025 ----
 java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\mysql\jose\Event.MYI'; try to repair it
