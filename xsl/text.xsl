@@ -84,5 +84,5 @@
 		<xsl:value-of select="$fig/string[key=$f]/value"/>
 	</xsl:template>
 
-	<!--<xsl:template match="fen"><xsl:text></xsl:text></xsl:template>-->
+	<xsl:template match="fen"><xsl:text></xsl:text></xsl:template>
 </xsl:stylesheet>

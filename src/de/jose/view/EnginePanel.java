@@ -1294,8 +1294,10 @@ public class EnginePanel
 			{
 				if (plugin!=null && ! plugin.isPaused())
 					/* stay in engine mode */;
-				else
-				updateBook(cmd.moreData!=null && cmd.moreData instanceof EnginePlugin.EvaluatedMove);
+				else {
+					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
+					updateBook(wasEngineMove);
+				}
 			}
 		};
 		map.put("move.notify",action);

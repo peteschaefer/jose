@@ -1771,6 +1771,7 @@ public class Application
 
 				case ExportConfig.OUTPUT_XML:
 				case ExportConfig.OUTPUT_TEX:
+				case ExportConfig.OUTPUT_TEXT:
 					HtmlUtil.exportFile(context,true);
 					break;
 				case ExportConfig.OUTPUT_XSL_FO:
@@ -1788,7 +1789,7 @@ public class Application
 					ArchiveExport arctask = new ArchiveExport((File)context.target);
 					arctask.setSource(context.source);
 					arctask.start();
-				    break;
+					break;
 				default:
 					throw new IllegalArgumentException();   //  TODO
 				}

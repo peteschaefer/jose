@@ -97,6 +97,7 @@ public class ExportContext implements Cloneable
 			return prdoc;
 
 		case ExportConfig.OUTPUT_HTML:
+		case ExportConfig.OUTPUT_TEXT:
 			return new HTMLPrintableDocument(this);
 
 		case ExportConfig.OUTPUT_XSL_FO:

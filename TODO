@@ -6,7 +6,6 @@
 
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
-? Text File export not implemented?
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
 
 ==== Project
