@@ -251,8 +251,8 @@ public class BoardView2D
 			}
 			else {
 				//	todo hi-dpi
-				double sx = (double)this.getWidth()/buffer.getHeight();
-				double sy = (double)this.getHeight()/buffer.getWidth();
+				double sx = (double)this.getWidth()/buffer.getWidth();
+				double sy = (double)this.getHeight()/buffer.getHeight();
 				AffineTransform scale = AffineTransform.getScaleInstance(sx,sy);
 				AffineTransform save_tf = g2.getTransform();
 				g2.setTransform(scale);

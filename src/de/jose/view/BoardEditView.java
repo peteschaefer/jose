@@ -44,9 +44,9 @@ public class BoardEditView
 {
 	protected Surface BACKGROUND;
 
-	protected double WIDTH_RATIO       = 10.4;
-	protected double HEIGHT_RATIO      = 8.4;
-	protected double PREFERRED_RATIO   = WIDTH_RATIO/HEIGHT_RATIO;
+	protected static double WIDTH_RATIO       = 10.4;
+	protected static double HEIGHT_RATIO      = 8.4;
+	protected static double PREFERRED_RATIO   = WIDTH_RATIO/HEIGHT_RATIO;
 
 	/**
 	 * TODO clipboard: copy  & paste FEN strings
