@@ -676,7 +676,9 @@ abstract public class DBAdapter
 			// dispatch Command to Application event handler
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					Application.theCommandDispatcher.handle(cmd,Application.theApplication);
+					CommandListener target = cmd.target;
+					if (target==null) target = Application.theApplication;
+					Application.theCommandDispatcher.handle(cmd,target);
 				}
 			});
 			return true;
