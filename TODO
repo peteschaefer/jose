@@ -15,7 +15,9 @@
 [x] hint button activation
 [ ] hint button behavior
     [ ] ponderMove reset, when?
+        -> store ponderMove ply?
     [ ] updateBook on "move.notify" necessary?
+        it shouldn't because there will be BOOK_PLAY
 
 [x] Application.selectBookMove needs to be asynchronized.
     [?] update/don't update book when navigating
