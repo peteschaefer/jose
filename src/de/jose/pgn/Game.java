@@ -215,9 +215,9 @@ public class Game
 	 */
 	public boolean ignoreCaretUpdate = false;
 	/**
-	 * true if the usr adjudictaed the result; only set once per session
+	 * ply when the engine last offered a draw
 	 */
-	public boolean askedAdjudicated = false;
+	public int engineDrawOffer = -1;
 
 	//-------------------------------------------------------------------------------
 	//	Constructor
@@ -327,7 +327,7 @@ public class Game
 		reformat();
 
 		clearId();
-		askedAdjudicated = false;
+		engineDrawOffer = -1;
 		dirty = false;
 	}
 
@@ -1700,7 +1700,7 @@ public class Game
 	{
 		fireEvents = false;
 		ignoreCaretUpdate = true;
-		askedAdjudicated = false;
+		engineDrawOffer = -1;
 
 		String fen = (String)getTagValue(TAG_FEN);
 		clear(fen);

@@ -925,6 +925,7 @@ public class EnginePanel
 	 */
 	protected void display(EngineState state, AnalysisRecord rec, boolean bookMode)
 	{
+		//	todo synchronized(rec) ? probably yes, because the engine might write into it
 		updateButtonState(Application.theApplication.theMode,null,state);
 
 		//  book mode/ engine mode layout

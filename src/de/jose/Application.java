@@ -1336,7 +1336,7 @@ public class Application
 			public boolean isEnabled(String cmd) {
 				EnginePlugin engine = getEnginePlugin();
 				return 	(theGame.getResult()==Game.RESULT_UNKNOWN) &&
-						!theGame.askedAdjudicated &&
+				//		!theGame.askedAdjudicated &&
 						(engine!=null);
 			}
 
@@ -1364,8 +1364,7 @@ public class Application
 
 		action = new CommandAction() {
 			public boolean isEnabled(String cmd) {
-				return (theGame.getResult()==Game.RESULT_UNKNOWN)
-						&& !theGame.askedAdjudicated;
+				return (theGame.getResult()==Game.RESULT_UNKNOWN);
 			}
 
 			public void Do(Command cmd)  throws Exception
@@ -3365,7 +3364,7 @@ public class Application
 			EnginePlugin xplug = getEnginePlugin();
 			if (xplug.wasOfferedDraw()) {
 				//	engine accepts draw request from user
-				gameDraw();
+				gameDraw();	//	todo not used; should be gameFinished(...)
 			}
 			break;
 
@@ -3540,33 +3539,38 @@ public class Application
 	{
 //		System.err.println(move.toString()+"="+move.getValue());
 		if (game==null || engine==null
-		        || (game.getResult()!=PgnConstants.RESULT_UNKNOWN) || game.askedAdjudicated
+		        || (game.getResult()!=PgnConstants.RESULT_UNKNOWN)
 		        || !game.isMainLine(node)) return false;
 
 		if (!engine.canResign()
 		        && engine.shouldResign(game,engineColor,gamePly,node))
 		{
 			//  if last 5 moves are below resignation threshold, resign
-			theGame.askedAdjudicated = true;   //  ask only once per session and game
 			gameFinished(Plugin.PLUGIN_RESIGNS,engineColor,true);
 			return true;
 		}
 
-		if (!engine.canAcceptDraw() && engine.wasOfferedDraw()
-		        && engine.shouldDraw(game,gamePly,node))
+		if (!engine.canAcceptDraw()
+				&& engine.wasOfferedDraw())
 		{
 			//  engine was offered draw, but can't decide
 			//  if last 5 moves are within draw threshold, accept draw without asking
-			theGame.askedAdjudicated = true;   //  ask only once per session and game
-			gameDraw();
+			if (engine.shouldDraw(game,gamePly,node)) {
+				gameFinished(PLUGIN_ACCEPT_DRAW, engineColor, true);
+			}
+			else {
+				//	engine declines draw offer
+				drawDeclined(engineColor);
+			}
 			return true;
 		}
 
 		if (!engine.canOfferDraw()
+				&& (theGame.engineDrawOffer < 0 || theGame.engineDrawOffer+20 <= gamePly)
 		        && engine.shouldDraw(game,gamePly,node))
 		{
 			//  if last 5 moves are within draw threshold, ask to adjudicate
-			theGame.askedAdjudicated = true;   //  ask only once per session and game
+			theGame.engineDrawOffer = gamePly;   //  ask only once per session and game
 			String message = Language.get("dialog.engine.offers.draw");
 			message = StringUtil.replace(message,"%engine%",getEnginePlugin().getDisplayName());
 
@@ -4168,6 +4172,15 @@ public class Application
 		return getPlayerName(theGame.getPosition().movedLast());
 	}
 
+	protected void drawDeclined(int color) {
+		String message = Language.get("message.draw.declined");
+		message = StringUtil.replace(message,"%player%",getPlayerName(color));
+		SplashScreen.close();
+		JOptionPane.showMessageDialog(JoFrame.getActiveFrame(),
+				message, Language.get("message.result"),
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
 	protected void gameFinished(int flags, int color, boolean mainLine)
 			throws BadLocationException, ParseException
 	{
@@ -4182,6 +4195,11 @@ public class Application
 				else
 					resultDirty = theGame.setResult(Game.WHITE_WINS);
 			}
+		}
+		else if (flags==Plugin.PLUGIN_ACCEPT_DRAW) {
+			message = Language.get("message.draw.accepted");
+			message = StringUtil.replace(message,"%player%",engine.getDisplayName());
+			resultDirty = theGame.setResult(Game.DRAW);
 		}
 		else if (flags==Clock.TIME_ELAPSED) {
 			boolean whiteLose = (theClock.getWhiteTime() < 0) || !theGame.getPosition().canMate(WHITE);
