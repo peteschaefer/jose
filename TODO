@@ -110,7 +110,7 @@ BUG: Print Preview does not work
       https://github.com/JetBrains/JetBrainsRuntime
       [x] fixes hidpi on Linux :)
       [ ] deprecate ClassPathUtil, but that's ok
-      [ ] fix sprite rendering
+      [x] fix sprite rendering
       [ ] maybe some reflection bugs, but they can be fixed
 
 * launch mysqld earlier (?)
