@@ -238,7 +238,8 @@ public class OpeningLibrary
 		for (int i=0; i < scores.length; i++)
 			totalScore += scores[i];
 
-		totalScore = Math.abs(random.nextDouble()) % totalScore;
+		totalScore = random.nextDouble() * totalScore;
+		// note: random.nextDouble() in [0..1]
 
 		for (int i=0; i < scores.length; i++)
 		{
