@@ -25,6 +25,7 @@ import de.jose.util.ClipboardUtil;
 import de.jose.util.style.StyleUtil;
 import de.jose.util.style.MarkupWriter;
 
+import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -522,16 +523,15 @@ public class DocumentEditor
 
         public void actionPerformed(ActionEvent e)
         {
-            int p1 = getSelectionStart();
-            int p2 = getSelectionEnd();
-			if (p1==p2) {
+			DocUpdate d = new DocUpdate("");
+			if (d.pos1==d.pos2) {
 				if (direction > 0)
-					p2 = Math.max(p2 + direction, 0);
+					d.pos2 = Math.max(d.pos2 + direction, 0);
 				else
-					p1 = Math.min(p1 + direction, theGame.getLength());
+					d.pos1 = Math.min(d.pos1 + direction, theGame.getLength());
 			}
 			
-            doReplace(p1,p2, "");
+            doReplace(d);
         }
     }
 
@@ -553,25 +553,52 @@ public class DocumentEditor
         }
     }
 
+	class DocUpdate
+	{
+		public DocUpdate(int p1, int p2, String text, int anag) {
+			pos1 = p1;
+			pos2 = p2;
+			newText = text;
+			nag = anag;
+		}
+		public DocUpdate(int p1, int p2, String text) {
+			this(p1,p2,text,-1);
+		}
+		public DocUpdate(String text) {
+			this(text,-1);
+		}
+		public DocUpdate(String text, int anag) {
+			this(	DocumentEditor.this.getSelectionStart(),
+					DocumentEditor.this.getSelectionEnd(),
+					text, anag);
+		}
 
-    public void replaceSelection(String newText)
-    {
-        int pos1 = getSelectionStart();
-        int pos2 = getSelectionEnd();
+		int pos1,pos2;
+		String newText="";
+		int nag=-1;	// optional
+	}
 
-        doReplace(pos1,pos2, newText);
+	@Override
+    public void replaceSelection(String newText) {
+		replaceSelection(newText,-1);
+	}
+
+	public void replaceSelection(String newText, int nag)
+	{
+		DocUpdate d = new DocUpdate(newText,nag);
+        doReplace(d);
     }
 
-    protected void doReplace(int pos1, int pos2, String newText)
+    protected void doReplace(DocUpdate d)
     {
-        Node node1 = getNode(pos1);
+        Node node1 = getNode(d.pos1);
         Node node2;
 		updateCaretAfterEdit = true;
 
-        if ((pos1 != pos2) && (node1!=null) && (pos2!=node1.getEndOffset())) {
-           	node2 = getNode(pos2);
-			if ((node2==node1.next()) && (node2!=null) && (pos1==(node2.getStartOffset()-1))) {
-				pos1++;
+        if ((d.pos1 != d.pos2) && (node1!=null) && (d.pos2!=node1.getEndOffset())) {
+           	node2 = getNode(d.pos2);
+			if ((node2==node1.next()) && (node2!=null) && (d.pos1==(node2.getStartOffset()-1))) {
+				d.pos1++;
 				node1 = node2;
 			}
 		}
@@ -580,24 +607,24 @@ public class DocumentEditor
 
 	    try {
 			if (node1==null) {
-				if (pos1==0) {
+				if (d.pos1==0) {
 					//  very first input into an empty document
-					insertCommentAfter(theGame.getMainLine().first(),newText,PADDING_NONE);
+					insertCommentAfter(theGame.getMainLine().first(),d,PADDING_NONE);
                     return;
 				}
-				else if (pos1>=theGame.getLength()) {
+				else if (d.pos1>=theGame.getLength()) {
 					//  insert text at end of document, but in front of invisible(!) result node
                     //  (which must always be the last node)
                     Node result = theGame.getMainLine().last(RESULT_NODE);
                     if (result.getLength()==0) {
                         Node prev = result.prevEditable(false);
                         if (prev!=null){
-                            pos1 = pos2 = prev.getEndOffset();
-                            doReplaceNode(prev,pos1,pos2,newText, PADDING_NONE);  //  does this make sense ?
+                            d.pos1 = d.pos2 = prev.getEndOffset();
+                            doReplaceNode(prev,d, PADDING_NONE);  //  does this make sense ?
                         }
                         else {
-                            pos1 = pos2 = result.getStartOffset();
-                            doReplaceNode(result,pos1,pos2,newText, PADDING_NONE);
+                            d.pos1 = d.pos2 = result.getStartOffset();
+                            doReplaceNode(result,d, PADDING_NONE);
                         }
                         return;
                     }
@@ -608,7 +635,7 @@ public class DocumentEditor
 			}
 			else {
                 //  the normal case
-				doReplaceNode(node1,pos1,pos2,newText, PADDING_NONE);
+				doReplaceNode(node1,d, PADDING_NONE);
                 return;
 			}
 
@@ -624,35 +651,35 @@ public class DocumentEditor
         }
     }
 
-	protected void doReplaceNode(Node node1, int pos1, int pos2, String newText, int padding)
+	protected void doReplaceNode(Node node1, DocUpdate d, int padding)
 	        throws BadLocationException
 	{
 		/** selection within 1 node */
 		caretListen = false;
 		switch (node1.type())
 		{
-		case TAG_NODE:			doReplaceTag((TagNode)node1, pos1,pos2, newText, padding); return;
-		case MOVE_NODE:			doReplaceMove((MoveNode)node1, pos1,pos2, newText, padding); return;
-		case COMMENT_NODE:		doReplaceComment((CommentNode)node1, pos1,pos2, newText, padding); return;
-		case ANNOTATION_NODE:	doReplaceAnnotation((AnnotationNode)node1, pos1,pos2, newText, padding); return;
+		case TAG_NODE:			doReplaceTag((TagNode)node1, d, padding); return;
+		case MOVE_NODE:			doReplaceMove((MoveNode)node1, d, padding); return;
+		case COMMENT_NODE:		doReplaceComment((CommentNode)node1, d, padding); return;
+		case ANNOTATION_NODE:	doReplaceAnnotation((AnnotationNode)node1, d, padding); return;
 
-        case STATIC_TEXT_NODE:  if (!doReplaceStaticText(node1, pos1,pos2, newText, padding) &&
+        case STATIC_TEXT_NODE:  if (!doReplaceStaticText(node1, d, padding) &&
                                     node1.isDescendantOf(theGame.getMainLine()))
                                 {
                                     if (node1.next()==null)
-                                        insertCommentBefore(node1,newText,padding);
+                                        insertCommentBefore(node1,d,padding);
                                     else
-                                        insertCommentAfter(node1,newText,padding);  //  OK?
+                                        insertCommentAfter(node1,d,padding);  //  OK?
                                     return;
                                 }
                                 break;
 
-        case RESULT_NODE:       if (!doReplaceStaticText(node1, pos1,pos2, newText, padding)) {
+        case RESULT_NODE:       if (!doReplaceStaticText(node1, d, padding)) {
                                     //  insert comment (before)
-                                    insertCommentBefore(node1,newText,padding);
+                                    insertCommentBefore(node1,d,padding);
                                 }
                                 return;
-		case DIAGRAM_NODE:		doReplaceDiagram((DiagramNode)node1, pos1,pos2, newText, padding); return;
+		case DIAGRAM_NODE:		doReplaceDiagram((DiagramNode)node1, d, padding); return;
 
 		}
         //   else
@@ -663,29 +690,28 @@ public class DocumentEditor
 	 *	text edit in Move Node
 	 * 	(append/insert comment)
 	 */
-	protected void doReplaceMove(MoveNode node, int pos1, int pos2,
-	                             String newText, int padding)
+	protected void doReplaceMove(MoveNode node, DocUpdate d, int padding)
 	        throws BadLocationException
 	{
-		if (newText.length()==0) {
+		if (d.newText.length()==0) {
 			//	can't delete move (TODO ?)
 			AWTUtil.beep(this);
 		}
-		if (newText.length() > 0) {
-			boolean inFront = pos2 < (node.getEndOffset()-1);
-
+		if (d.newText.length() > 0) {
+			boolean inFront = d.pos2 < (node.getEndOffset()-1);
+			//	todo choose from NAG, e.g. "!!" always goes after move. "with the idea" always goes before move, ?!
 			if (inFront)
-				doReplaceBeforeMove(node,newText,padding);
+				doReplaceBeforeMove(node,d,padding);
 			else
-				doReplaceAfterMove(node,newText,padding);
+				doReplaceAfterMove(node,d,padding);
 		}
 	}
 
-	protected void doReplaceBeforeMove(MoveNode node, String newText, int padding) throws BadLocationException
+	protected void doReplaceBeforeMove(MoveNode node, DocUpdate d, int padding) throws BadLocationException
 	{
 		Node prev = node.previousLeaf(true);
-		int nagCode = getAnnotationCode(newText);
-		if ((nagCode==PgnConstants.NAG_DIAGRAM) || (nagCode==PgnConstants.NAG_DIAGRAM_DEPRECATED)) {
+		//int nagCode = getAnnotationCode(newText);
+		if ((d.nag==PgnConstants.NAG_DIAGRAM) || (d.nag==PgnConstants.NAG_DIAGRAM_DEPRECATED)) {
 			//	insert diagram
 //			MoveNode currentMove = theGame.getCurrentMove();
 			theGame.gotoMove(node);
@@ -701,12 +727,12 @@ public class DocumentEditor
 			int p = diagram.getEndOffset();
 			select(p,p);
 		}
-		else if (nagCode >= 0)
-			insertAnnotationBefore(node,nagCode,padding);
+		else if (d.nag >= 0)
+			insertAnnotationBefore(node,d.nag,padding);
 		else if (prev!=null && prev.type()==COMMENT_NODE)
-			insertAtEndOfComment((CommentNode)prev,newText,padding);
+			insertAtEndOfComment((CommentNode)prev,d,padding);
 		else
-			insertCommentBefore(node,newText,padding);
+			insertCommentBefore(node,d,padding);
 		theGame.setDirty();
 	}
 
@@ -736,20 +762,20 @@ public class DocumentEditor
         return true;
     }
 
-	protected void doReplaceAfterMove(MoveNode node, String newText, int padding) throws BadLocationException
+	protected void doReplaceAfterMove(MoveNode node, DocUpdate d, int padding) throws BadLocationException
 	{
 		Node next = node.nextLeaf(true);
-		int nagCode = getAnnotationCode(newText);
-		if ((nagCode==PgnConstants.NAG_DIAGRAM) || (nagCode==PgnConstants.NAG_DIAGRAM_DEPRECATED)) {
+		//int nagCode = getAnnotationCode(newText);
+		if ((d.nag==PgnConstants.NAG_DIAGRAM) || (d.nag==PgnConstants.NAG_DIAGRAM_DEPRECATED)) {
 			//	append Diagram
             insertDiagram(node);
 		}
-		else if (nagCode >= 0) //	append Annotation
-			insertAnnotationAfter(node,nagCode,padding);
+		else if (d.nag >= 0) //	append Annotation
+			insertAnnotationAfter(node,d.nag,padding);
 		else if (next!=null && next.type()==COMMENT_NODE)	//	insert in front of existing comment
-			insertAtStartOfComment((CommentNode)next, newText, padding);
+			insertAtStartOfComment((CommentNode)next, d, padding);
 		else	//	append new comment
-			insertCommentAfter(node,newText,padding);
+			insertCommentAfter(node,d,padding);
 		theGame.setDirty();
 	}
 
@@ -774,39 +800,39 @@ public class DocumentEditor
 			return after;
 	}
 
-	protected void insertAtStartOfComment(CommentNode node, String newText, int padding) throws BadLocationException
+	protected void insertAtStartOfComment(CommentNode node, DocUpdate d, int padding) throws BadLocationException
 	{
-		node.replace(theGame, 0,0, pad(newText,padding));
-		int p = node.getStartOffset()+leadingPadding(newText,padding)+newText.length();
+		node.replace(theGame, 0,0, pad(d.newText,padding));
+		int p = node.getStartOffset()+leadingPadding(d.newText,padding)+d.newText.length();
 		select(p,p);
 	}
 
-	protected void insertAtEndOfComment(CommentNode node, String newText, int padding) throws BadLocationException
+	protected void insertAtEndOfComment(CommentNode node, DocUpdate d, int padding) throws BadLocationException
 	{
 		int offset = node.getLength()-1;
-		node.replace(theGame, offset,offset, pad(newText,padding));
-		int p = node.getStartOffset()+offset+leadingPadding(newText,padding)+newText.length();
+		node.replace(theGame, offset,offset, pad(d.newText,padding));
+		int p = node.getStartOffset()+offset+leadingPadding(d.newText,padding)+d.newText.length();
 		select(p,p);
 	}
 
-	protected void insertCommentAfter(Node after, String newText, int padding) throws BadLocationException
+	protected void insertCommentAfter(Node after, DocUpdate d, int padding) throws BadLocationException
 	{
 		padding = 0;    //  no need for padding
-		CommentNode comment = new CommentNode(pad(newText,padding));
+		CommentNode comment = new CommentNode(pad(d.newText,padding));
 		comment.insertAfter(after);	//	insert into Node hierarchy
 		comment.insert(theGame,after.getEndOffset());	//	insert into text document
-		int p = comment.getEndOffset()-trailingPadding(newText,padding)-1;
+		int p = comment.getEndOffset()-trailingPadding(d.newText,padding)-1;
 		theGame.updateMoveCount(comment);
 		select(p,p);
 	}
 
-	protected void insertCommentBefore(Node before, String newText, int padding) throws BadLocationException
+	protected void insertCommentBefore(Node before, DocUpdate d, int padding) throws BadLocationException
 	{
 		padding = 0;    //  no need for padding
-		CommentNode comment = new CommentNode(pad(newText,padding));
+		CommentNode comment = new CommentNode(pad(d.newText,padding));
 		comment.insertBefore(before);	//	insert into Node hierarchy
 		comment.insert(theGame,comment.getStartOffset());	//	insert into text document
-		int p = comment.getEndOffset()-trailingPadding(newText,padding)-1;
+		int p = comment.getEndOffset()-trailingPadding(d.newText,padding)-1;
 		theGame.updateMoveCount(comment);
 		select(p,p);
 	}
@@ -878,60 +904,57 @@ public class DocumentEditor
 	/**
 	 * text edit in Comment Node
 	 */
-	protected void doReplaceComment(CommentNode node, int pos1, int pos2,
-	                                String newText, int padding)
+	protected void doReplaceComment(CommentNode node, DocUpdate d, int padding)
 	        throws BadLocationException
 	{
 		int offset = node.getStartOffset();
-		int nagCode;
-		if ((newText.length()==0) && node.isCoveredBy(pos1-offset,pos2-offset))
+		if ((d.newText.length()==0) && node.isCoveredBy(d.pos1-offset,d.pos2-offset))
 		{
 			//	delete comment
 			node.remove(theGame);	//	remove from Text Document
 			node.remove();	//	remove from Node hierarchy
-			select(pos1,pos1);
+			select(d.pos1,d.pos1);
 		}
-		else if (pos1==offset && (nagCode=getAnnotationCode(newText)) > 0)
+		else if (d.pos1==offset && (d.nag > 0))
 		{
 			//	annotation at the beginning of a comment; make an annotation out of it
-			insertAnnotationBefore(node, nagCode, padding);
+			insertAnnotationBefore(node, d.nag, padding);
 		}
-		else if (newText.equals("\n") /*&& (node.next(MOVE_NODE)==null)*/) {
+		else if (d.newText.equals("\n") /*&& (node.next(MOVE_NODE)==null)*/) {
 			//  keyboard move input ?
 			MoveNode previous = node.previousMove();
-			String moveText = theGame.getText(offset,pos1-offset);
+			String moveText = theGame.getText(offset,d.pos1-offset);
 
 			if (!StringUtil.isWhitespace(moveText) &&
-			    keyboardMove(node,previous,offset,moveText,pos2,padding))
+			    keyboardMove(node,previous,offset,moveText,d.pos2,padding))
 				return;
 			else {
 				//  invalid move, or just inserting a newline ... ?
 				//AWTUtil.beep(this);
-				editComment(node,offset,pos1,pos2,newText,padding);
+				editComment(node,offset,d,padding);
 			}
 		}
 		else {
 			//  edit comment
-			editComment(node,offset,pos1,pos2,newText,padding);
+			editComment(node,offset,d,padding);
 		}
 		theGame.updateMoveCount(node);
 		theGame.setDirty();
 	}
 
-	private void editComment(CommentNode node, int offset, int pos1, int pos2,
-	                         String newText, int padding)
+	private void editComment(CommentNode node, int offset, DocUpdate d, int padding)
 		throws BadLocationException
 	{
 		//
 		int oldLength = node.getLength();
-		node.replace(theGame, pos1-offset,pos2-offset, pad(newText,padding));
+		node.replace(theGame, d.pos1-offset,d.pos2-offset, pad(d.newText,padding));
 		int textLength = node.getLength()-oldLength;        //  need not be identical to newText.length() !!!!
 
 		int p;
 		if (textLength >= 0)
-			p = pos1+leadingPadding(newText,padding)+textLength;
+			p = d.pos1+leadingPadding(d.newText,padding)+textLength;
 		else
-			p = pos1;   //  deletion. stay at selection
+			p = d.pos1;   //  deletion. stay at selection
 		//  account for trailing space (in EVERY comment) (TODO think about using padding instead)
 		if (p >= node.getEndOffset()) p--;
 		select(p,p);
@@ -966,7 +989,8 @@ public class DocumentEditor
 			if (mv!=null) {
 				//  legal move !
 				//  delete text
-				doReplaceComment(node,offset,pos2,"",padding);
+				DocUpdate d = new DocUpdate(offset,pos2,"");
+				doReplaceComment(node,d,padding);
 				/** when deleting the text, avoid selecting another move ! */
 				updateCaretAfterEdit = false;
 
@@ -1015,23 +1039,22 @@ public class DocumentEditor
 	/**
 	 * text edit in Comment Node
 	 */
-	protected void doReplaceTag(TagNode node, int pos1, int pos2,
-	                            String newText, int padding)
+	protected void doReplaceTag(TagNode node, DocUpdate d, int padding)
 	        throws BadLocationException
 	{
 		int offset = node.getStartOffset();
-		if ((newText.length()==0) && node.isCoveredBy(pos1-offset,pos2-offset))
+		if ((d.newText.length()==0) && node.isCoveredBy(d.pos1-offset,d.pos2-offset))
 		{
 			//	delete tag (DON'T remove from hierarchy, just set an empty value)
 			node.setEmpty(theGame);
-			select(pos1,pos1);
+			select(d.pos1,d.pos1);
 			theGame.updateTagLabels(theGame);
 			theGame.setDirty(node);
 		}
 		else if (node.isEditable()) {
 			//  edit tag
-			node.replace(theGame, pos1-offset,pos2-offset, pad(newText,padding));
-			int p = pos1+leadingPadding(newText,padding)+newText.length();
+			node.replace(theGame, d.pos1-offset,d.pos2-offset, pad(d.newText,padding));
+			int p = d.pos1+leadingPadding(d.newText,padding)+d.newText.length();
 			select(p,p);
 			theGame.setDirty(node);
 //			theGame.updateTagLabels(theGame);
@@ -1043,11 +1066,10 @@ public class DocumentEditor
 	/**
 	 * text edit in Annotation Node
 	 */
-	protected void doReplaceAnnotation(AnnotationNode node, int pos1, int pos2,
-	                                   String newText, int padding) throws BadLocationException
+	protected void doReplaceAnnotation(AnnotationNode node, DocUpdate d, int padding) throws BadLocationException
 	{
 		int offset = node.getStartOffset();
-		if ((newText.length()==0) && node.isCoveredBy(pos1-offset,pos2-offset))
+		if ((d.newText.length()==0) && node.isCoveredBy(d.pos1-offset,d.pos2-offset))
 		{
 			//	delete annotation
 			node.remove(theGame);	//	remove from Text Document
@@ -1058,7 +1080,7 @@ public class DocumentEditor
 		else {
 			//  edit annotation
 			//	TODO
-			int newCode = node.canReplace(pos1-offset,pos2-offset,newText);
+			int newCode = node.canReplace(d.pos1-offset,d.pos2-offset,d.newText);
 			Node next = node.next();
 			if (newCode > 0) {
 				node.replace(theGame,newCode);
@@ -1067,19 +1089,18 @@ public class DocumentEditor
 				theGame.setDirty();
 			}
 			else if (next!=null && next.type()==COMMENT_NODE)	//	insert in front of existing comment
-				insertAtStartOfComment((CommentNode)next, newText, padding);
+				insertAtStartOfComment((CommentNode)next, d, padding);
 			else	//	append new comment
-				insertCommentAfter(node,newText, padding);
+				insertCommentAfter(node,d, padding);
 		}
 	}
 
 	/**
 	 * text edit in Annotation Node
 	 */
-	protected void doReplaceDiagram(DiagramNode node, int pos1, int pos2,
-	                                String newText, int padding) throws BadLocationException
+	protected void doReplaceDiagram(DiagramNode node, DocUpdate d, int padding) throws BadLocationException
 	{
-		if (newText.length()==0) {
+		if (d.newText.length()==0) {
 			//	delete
 			int offset = node.getStartOffset();
 			node.remove(theGame);
@@ -1092,12 +1113,12 @@ public class DocumentEditor
 		int start = node.getStartOffset();
         int end = node.getEndOffset();
 
-		if (pos2 <= (start+1) && doReplaceStaticText(node, start, start, newText, padding)) 
+		if (d.pos2 <= (start+1) && doReplaceStaticText(node, new DocUpdate(start, start, d.newText), padding))
 			return; //  delegate to previous
-        if (doReplaceStaticText(node, end, end, newText, padding))
+        if (doReplaceStaticText(node, new DocUpdate(end, end, d.newText), padding))
             return;   //  delegate to next
         //  else:
-        insertCommentAfter(node,newText,padding);
+        insertCommentAfter(node,d,padding);
 
 	}
 
@@ -1115,47 +1136,46 @@ public class DocumentEditor
 		return false;
 	}
 
-	protected boolean doReplaceStaticText(Node node, int pos1, int pos2,
-	                                   String newText, int padding)
+	protected boolean doReplaceStaticText(Node node, DocUpdate d, int padding)
 		throws BadLocationException
 	{
-		if (newText.length() > 0) {
+		if (d.newText.length() > 0) {
 			//	delegate to previous or next node
-			if (pos1 <= node.getStartOffset()) {
+			if (d.pos1 <= node.getStartOffset()) {
 				Node prev = node.prevEditable(false);
 				if (prev != null) {
-					pos2 = prev.getEndOffset();   //  trim off trailing space
-					pos1 = Math.min(pos1,pos2);
-					doReplaceNode(prev, pos1,pos2,newText,padding);
+					d.pos2 = prev.getEndOffset();   //  trim off trailing space
+					d.pos1 = Math.min(d.pos1,d.pos2);
+					doReplaceNode(prev, d,padding);
 					return true;
 				}
 			}
-			if (isWhiteSpace(node.getStartOffset(),pos1)) {
+			if (isWhiteSpace(node.getStartOffset(),d.pos1)) {
 				Node prev = node.prevEditable(false);
 				if (prev != null) {
-					pos2 = prev.getEndOffset();   //  trim off trailing space
-					pos1 = Math.min(pos1,pos2);
-					doReplaceNode(prev, pos1,pos2,newText, Util.plus(padding,PADDING_LEADING));
+					d.pos2 = prev.getEndOffset();   //  trim off trailing space
+					d.pos1 = Math.min(d.pos1,d.pos2);
+					doReplaceNode(prev, d, Util.plus(padding,PADDING_LEADING));
 					return true;
 				}
 			}
 
-			if (pos2 >= node.getEndOffset()) {
+			if (d.pos2 >= node.getEndOffset()) {
 				Node next = node.nextEditable(false);
 				if (next != null) {
-					pos1 = next.getStartOffset();
-					pos2 = Math.max(pos1,pos2);
-					doReplaceNode(next, pos1,pos2,newText, padding);
+					d.pos1 = next.getStartOffset();
+					d.pos2 = Math.max(d.pos1,d.pos2);
+					doReplaceNode(next, d, padding);
 					return true;
 				}
 			}
 
-			if (isWhiteSpace(pos2,node.getEndOffset())) {
+			if (isWhiteSpace(d.pos2,node.getEndOffset())) {
 				Node next = node.nextEditable(false);
 				if (next != null) {
-					pos1 = next.getStartOffset();
-					pos2 = Math.max(pos1,pos2); 
-					doReplaceNode(next, pos1,pos2,newText, Util.plus(padding,PADDING_TRAILING));
+					d.pos1 = next.getStartOffset();
+					d.pos2 = Math.max(d.pos1,d.pos2);
+					doReplaceNode(next, d, Util.plus(padding,PADDING_TRAILING));
 					return true;
 				}
 			}

@@ -517,7 +517,7 @@ public class DocumentPanel
                 else {
                     theTextPane.select(nd.getStartOffset(),nd.getEndOffset());
                     String text = PgnUtil.annotationString(nag);
-                    replaceSelection(text);
+                    replaceSelection(text,nag);
                 }
 /*
                 theTextPane.caretListen = false;
@@ -670,9 +670,9 @@ public class DocumentPanel
 		theTextPane.repaint();
 	}
 
-	public void replaceSelection(String text)
+	public void replaceSelection(String text, int nag)
 	{
-		theTextPane.replaceSelection(text);
+		theTextPane.replaceSelection(text, nag);
 	}
 
 	public void adjustTabs()

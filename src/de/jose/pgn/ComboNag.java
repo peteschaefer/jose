@@ -110,13 +110,20 @@ public class ComboNag
         this.selector = aselector;
     }
 
-    public void select(int col, int adj, int subst) {
+    private static int clamp(int i, String[] values) {
+        if (i < 0) i=0;
+        if (values==null || values.length==0) i = 0;
+        if (values!=null && values.length > 0 && i >= values.length) i = values.length-1;
+        return i;
+    }
+
+    public void select(int col, int adj, int asubst) {
         assert (col < color.length);
         assert (adj < adjective.length);
-        assert (subst < this.subst.length);
-        selcol = col;
-        seladj = adj;
-        selsubst = subst;
+        assert (asubst < this.subst.length);
+        selcol = clamp(col,color);
+        seladj = clamp(adj,adjective);
+        selsubst = clamp(asubst,this.subst);
     }
 
     public int code() {
