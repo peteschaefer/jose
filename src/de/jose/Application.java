@@ -3518,31 +3518,7 @@ public class Application
 			frame.setVisible(true);
 			frame.revalidate();
         }
-			/**	ATTENTION don't call JFrame.setVisible() from the constructor
-			 * 	leads to strange lock-ups
-			 *
-			 * 	TODO think about invokeLater() or something
-			 */
-
 	}
-
-
-/*
-	private JoFrame openOneFrame(FrameProfile frameProfile)
-	{
-		if (frameProfile.state == FrameProfile.HELP_FRAME) {
-			helpBounds = frameProfile.bounds;
-			return null;
-		}
-		else {
-			JoFrame frame = new JoFrame(frameProfile);
-			frame.setComponentsVisible(true);
-			frame.setVisible(true);
-			frame.toFront();
-			return frame;
-		}
-	}
-*/
 
 	/*
 		todo
@@ -3747,10 +3723,13 @@ public class Application
 	private void pausePlugin(boolean analyze)
 	{
 		EnginePlugin engine = getEnginePlugin();
-		if ( analyze && engine!=null && !theGame.getPosition().isGameFinished(true))
-			engine.analyze(theGame.getPosition());
-		if (!analyze && engine!=null && !engine.isPaused())
-			engine.pause();
+		Position position = theGame.getPosition();
+		if (engine!=null) {
+			if ( analyze && !position.isGameFinished(true))
+				engine.analyze(position);
+			if (!analyze && !engine.isPaused())
+				engine.pause();
+		}
 	}
 
     public void closePlugin()

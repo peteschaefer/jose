@@ -23,4 +23,5 @@ list(APPEND sources
         jlaunch-win.cpp
         winreg.cpp)
 
-add_executable(JavaLauncher ${sources} resources.rc)
+# WIN32 hides the console window, uses WinMain entry point
+add_executable(JavaLauncher WIN32 ${sources} resources.rc jose.manifest)
