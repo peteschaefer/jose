@@ -257,25 +257,35 @@ public class BoardView2D
 	 */
 	protected void paintUgly(Graphics2D g)
 	{
+		Rectangle bounds = getBounds();
+		AffineTransform tf = g.getTransform();
+		//	TODO tf might have a displacment. why? do we need to take account of it?
+		/*	Note: all computations done in device-space	 */
+		//Point2D screenSize = getScreenSize(false);
 		Rectangle src = new Rectangle(0,0,buffer.getWidth(),buffer.getHeight());
-		Rectangle screen = new Rectangle(0,0,getWidth(),getHeight());
-		Rectangle dst = new Rectangle(0,0,getWidth(),getHeight());
+	//	Rectangle screen = new Rectangle(0,0, (int)screenSize.getX(), (int)screenSize.getY());
+		Rectangle2D screen = getScreenBounds(g,false);
+		Rectangle dst = new Rectangle();
+
+		double uglyScale = calcSquareSize(screen.getBounds().getSize()) / (double) devSquareSize;
 
 		AffineTransform save_tf = g.getTransform();
 		try {
-			g.setTransform(ImgUtil.IDENTITY);
+			AffineTransform ident = new AffineTransform();
+			ident.translate(screen.getX(), screen.getY());
+			//	undo scaling, but keep dislocation
 
-			double scale = (double) calcSquareSize(screen.getSize()) / (double) userSquareSize;
+			g.setTransform(ident);
 
-			dst.width = (int) Math.round(src.width * scale);
-			dst.height = (int) Math.round(src.height * scale);
+			dst.width = (int) Math.round(src.width * uglyScale);
+			dst.height = (int) Math.round(src.height * uglyScale);
 
 			//  center on screen
-			dst.x = (screen.width - dst.width) / 2;
-			dst.y = (screen.height - dst.height) / 2;
+			dst.x = (int)((screen.getWidth() - dst.width) / 2);
+			dst.y = (int)((screen.getHeight() - dst.height) / 2);
 
 			//  fill empty area with background pattern
-			Area clip = new Area(screen);
+			Area clip = new Area(new Rectangle(0,0,(int)screen.getWidth(),(int)screen.getHeight()));
 			clip.subtract(new Area(dst));
 
 			if (!clip.isEmpty()) {
@@ -283,16 +293,16 @@ public class BoardView2D
 				g.setClip(clip);
 				if (currentBackground.useTexture()) {
 					Image txtr = TextureCache.getTexture(currentBackground.texture, TextureCache.LEVEL_MAX);
-					TextureCache.paintTexture(g, screen.x, screen.y, screen.width, screen.height, txtr);
+					TextureCache.paintTexture(g, 0,0, (int)screen.getWidth(), (int)screen.getHeight(), txtr);
 				} else {
-					Graphics2D g2 = (Graphics2D) g;
-					g2.setPaint(currentBackground.getPaint(getWidth(), getHeight()));
-					g2.fillRect(screen.x, screen.y, screen.width, screen.height);
+					g.setPaint(currentBackground.getPaint(getWidth(), getHeight()));
+					g.fillRect(0,0, (int)screen.getWidth(), (int)screen.getHeight());
 				}
 				g.setClip(oldClip);
 			}
 
-			ImgUtil.copy(buffer, src.x, src.y, src.width, src.height,
+			ImgUtil.copy(
+					buffer, src.x, src.y, src.width, src.height,
 					g, dst.x, dst.y, dst.width, dst.height);
 			/** ImgUtil.copy adjusts negative coords and avoids painting outside the graphics port
 			 *  (because Java2D don't like it)
@@ -356,6 +366,24 @@ public class BoardView2D
 		size.x = (int)((size.x*scaleFactor.getX())+0.5);
 		size.y = (int)((size.y*scaleFactor.getY())+0.5);
 		return size;
+	}
+
+	protected Rectangle2D getScreenBounds(Graphics2D g, boolean userSpace)
+	{
+		Rectangle r = getBounds();
+		Point2D p1 = new Point2D.Double(r.getX(),r.getY());
+		Point2D p2 = new Point2D.Double(r.getX()+r.getWidth(),r.getY()+r.getHeight());
+
+		if (!userSpace) {
+			//	else: transform to device space
+			AffineTransform tf = g.getTransform();
+			tf.transform(p1,p1);
+			tf.transform(p2,p2);
+		}
+
+		return new Rectangle2D.Double(
+				p1.getX(), p1.getY(),
+				p2.getX()-p1.getX(), p2.getY()-p1.getY());
 	}
 
 	protected double calcSquareSize(Point2D viewportSize)
