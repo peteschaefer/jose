@@ -8,35 +8,28 @@ public class RowLayout
 {
     private int rowWidth,rowHeight;
 
-    @Override
-    public void addLayoutComponent(Component comp, Object constraints) {
-
+    public void setRowSize(int rowWidth,int rowHeight) {
+        this.rowWidth = rowWidth;
+        this.rowHeight = rowHeight;
     }
 
     @Override
-    public float getLayoutAlignmentX(Container target) {
-        return 0;
-    }
+    public void addLayoutComponent(Component comp, Object constraints) {}
 
     @Override
-    public float getLayoutAlignmentY(Container target) {
-        return 0;
-    }
+    public float getLayoutAlignmentX(Container target) { return 0; }
 
     @Override
-    public void invalidateLayout(Container target) {
-
-    }
+    public float getLayoutAlignmentY(Container target) { return 0; }
 
     @Override
-    public void addLayoutComponent(String name, Component comp) {
-
-    }
+    public void invalidateLayout(Container target) {}
 
     @Override
-    public void removeLayoutComponent(Component comp) {
+    public void addLayoutComponent(String name, Component comp) {}
 
-    }
+    @Override
+    public void removeLayoutComponent(Component comp) {}
 
     interface ComponentVisitor {
         Dimension visit(Component c);

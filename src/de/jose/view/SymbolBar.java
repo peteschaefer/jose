@@ -119,7 +119,7 @@ public class SymbolBar
     protected ComboNag comboNag;
     protected JButton comboButton;
     protected JPanel comboPane;
-    protected LayoutManager2 comboLayout;
+    protected RowLayout comboLayout;
     protected JComboBox<String> comboColor,comboAdjective,comboSubst,comboSelector;
     protected JLabel comboVerb;
 
@@ -238,9 +238,11 @@ public class SymbolBar
     {
         //comboButton.setVisible(i>=0);
         comboPane.setVisible(i>=0);
+        relayoutButton(comboButton,i++);
+        comboLayout.setRowSize((gridCols-(i%gridCols))*BUTTON_SIZE,BUTTON_SIZE);
+
         //comboPane.setLayout(new BoxLayout(comboPane,preferredAxis));
-        if (preferredAxis==BoxLayout.X_AXIS) {
-            comboLayout = new BoxLayout(comboPane, BoxLayout.X_AXIS);
+        /*if (preferredAxis==BoxLayout.X_AXIS) {
             comboVerb.setBorder(new EmptyBorder(2,4,2,4));
             comboSelector.setBorder(new EmptyBorder(4,0,2,0));
             comboSubst.setBorder(new EmptyBorder(4,0,2,0));
@@ -248,16 +250,14 @@ public class SymbolBar
             comboAdjective.setBorder(new EmptyBorder(4,0,2,0));
         }
         else {
-            comboLayout = new BoxLayout(comboPane, BoxLayout.Y_AXIS);
             comboVerb.setBorder(null);
             comboSelector.setBorder(null);
             comboSubst.setBorder(null);
             comboColor.setBorder(null);
             comboAdjective.setBorder(null);
+        }*/
 
-        }
-
-        comboPane.setLayout(comboLayout);
+        //comboPane.setLayout(comboLayout);
 
         if (i >= 0) {
             //relayoutButton(comboButton, i++);
@@ -317,13 +317,14 @@ public class SymbolBar
     private void makeComboPane()
     {
         comboPane = new JPanel();
+        comboLayout = new RowLayout();
 
         //comboPane.add(makeActionButton("\uf060","switch.symbols"));
         //comboPane.add();
         comboButton = makeSymbolButton(1,symbolFont,"?","?");
 
 //        comboPane.add(Box.createHorizontalStrut(10));
-        comboPane.add(comboButton);
+//        comboPane.add(comboButton);
 
         //comboPane.add(comboVerb = new JLabel("="));
         comboPane.add(comboColor = new JComboBox<>());
@@ -344,7 +345,7 @@ public class SymbolBar
 
         //comboPane.setBorder(new LineBorder(Color.lightGray,2,true));
 
-       // this.add(comboButton);
+        this.add(comboButton);
         this.add(comboPane);    //  grid constraints are added later
         setComboNag(ComboNag.ALL[0]);
     }
