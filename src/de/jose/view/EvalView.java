@@ -144,6 +144,9 @@ public class EvalView
 		//  TODO think of something more efficient
 		Graphics g = getGraphics();
 		int x0 = (int)mv.getMoveNo()*BAR_WIDTH;
+		int p = mv.getPly();
+		if (p%2==1) x0 += BAR_WIDTH/2;
+
 		paint1Value(g, x0, BAR_WIDTH/2, mv.engineValue);
 		drawVerticalGrid(g, x0, x0+BAR_WIDTH/2);
 	}
@@ -293,14 +296,16 @@ public class EvalView
 			Score sc = mv.engineValue;
 			if (sc!=null && sc.hasWDL()) {
 				int mno = mv.getMoveNo();
+				int x0 = mno*BAR_WIDTH;
+
 				if (nxt!=null && nxt.getMoveNo()==mno) {
 					//	paint both
-					paint1Value(g, (int)mno*BAR_WIDTH, BAR_WIDTH/2, mv.engineValue);
-					paint1Value(g, (int)((mno+0.5f)*BAR_WIDTH), BAR_WIDTH/2, nxt.engineValue);
+					paint1Value(g, x0, BAR_WIDTH/2, mv.engineValue);
+					paint1Value(g, x0+BAR_WIDTH/2, BAR_WIDTH/2, nxt.engineValue);
 				}
 				else {
 					//	paint one
-					paint1Value(g, mno*BAR_WIDTH, BAR_WIDTH, mv.engineValue);
+					paint1Value(g, x0, BAR_WIDTH, mv.engineValue);
 				}
 				nxt = mv;
 			}

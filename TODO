@@ -4,8 +4,6 @@
 
 ? Charter buggy
 
-[x] caution: engine IDs must be unique. take care when copy/pasting .xml files.
-
 === Database Bugs
 
 [x] database cut/copy/paste (-> --tmpdir)
@@ -72,15 +70,7 @@ Alternative JREs:
 
 ==== Interesting New Features
 
-* Refactor Scoring !!
-    - no more float[]. Use Score.wdl instead.
-        Normalisation (and validity) can be based on wdl (plus engine knowledge).
-    - only one ground truth: MoveNode.engineValue (if present, otherwise broadcasted Score)
-    - drop EvalArray (read data from Game tree directly).  ???
-    - drop BoardView.eval (read from Game.currentMove()) ???
-    - use similar updating mechanism for Engine and Book evals
-        [x] broadcast("score.changed", MoveNode)
-        [x] from EnginePanel to BoardPanel,EvalPanel
+* show wdl scores with bars (instead of plain text)
 
 * LiChess Opening Explorer
     - download top games for a variation
@@ -89,8 +79,6 @@ Alternative JREs:
     3. open in tabs?
     4. copy to local db?
 * replace Nalimov query with Lichess tablebase query
-
-* show wdl scores with bars (instead of plain text)
 
 * Graph View interactive
     - mark current move
