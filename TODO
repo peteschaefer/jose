@@ -7,7 +7,8 @@
 ? Charter buggy
 ? Windows file chooser; worked-around by using LnF. Windows original is desirable.
 ? antialiasing when running jose.exe vs. java.exe vs. debugger ?
-
+* BUG: promote line kills the entire Game :(
+* "new main line" loses on move
 
 ==== Project
 compile sources against 1.8 [x]

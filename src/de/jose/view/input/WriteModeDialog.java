@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,13 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class WriteModeDialog
@@ -48,10 +50,16 @@ public class WriteModeDialog
 		else {
 */
         if (Version.mac)
-            frame.setSize(160,160);   //  optimized for Aqua L&F
+            frame.setSize(200,200);   //  optimized for Aqua L&F
         else
-		    frame.setSize(160,140);   //  optimized for Metouia L&F
+		    frame.setSize(200,200);   //  optimized for Metouia L&F
 		frame.setUndecorated(true);
+
+		Font font = frame.getFont();
+		Font bfont = font.deriveFont(Font.BOLD,16);
+		frame.setFont(font);
+
+		Dimension butSize = new Dimension(160,36);
 
 		JPanel pane = getButtonPane();
 		pane.setLayout(new GridLayout(5,1));
@@ -62,19 +70,35 @@ public class WriteModeDialog
 		JButton button;
 		button = addButton("write.mode.new.line");
 		button.putClientProperty("value",new Integer(Game.NEW_LINE));
+		button.setFont(bfont);
+		button.setPreferredSize(butSize);
+		button.setMnemonic('N');
 		frame.getRootPane().setDefaultButton(button);
 
 		button = addButton("write.mode.new.main.line");
 		button.putClientProperty("value",new Integer(Game.NEW_MAIN_LINE));
+		button.setFont(bfont);
+		button.setPreferredSize(butSize);
+		button.setMnemonic('M');
+		button.setSize(butSize);
 
 		button = addButton("write.mode.overwrite");
 		button.putClientProperty("value",new Integer(Game.OVERWRITE));
+		button.setFont(bfont);
+		button.setPreferredSize(butSize);
+		button.setMnemonic('O');
+		button.setSize(butSize);
 
 		button = addButton("write.mode.cancel");
 		button.putClientProperty("value",new Integer(Game.CANCEL));
+		button.setFont(bfont);
+		button.setMnemonic('C');
+		//button.setMnemonic(KeyEvent.VK_ESCAPE);
+		button.setPreferredSize(butSize);
 
 		dontAsk		= newCheckBox("write.mode.dont.ask");
 		pane.add(dontAsk);
+		dontAsk.setFont(font);
 
 		frame.getContentPane().remove(elementPane);
 	}
