@@ -33,6 +33,7 @@ libraries needed:
 * board tooltips = true
 * wdl = true
 * move stats = true
+* moves-left = true
 * open last game = true
 
 Leela
@@ -49,33 +50,33 @@ Leela
   - if possible, redraw only modified arrows
 
 * "New Game from here"
+  - eco update ??
+  - player names update
+  - turn board on engine start
+  - turn board in toolbar
+  - BUG: Lc0 resigns too early ???
+  - BUG: opening book, "plugin.eval.1"
 
-* Contempt Slider ?
+* Chessnut
+  >> https://github.com/chessnutech/EasyLinkSDK
+   + jni interface
+
+
+
+==== Postponed
+
+* Resign, Offer draw. Offering draws is not that trivial.
+    WDL, DrawScore and Contempt need to be considered.
+    Draws must not be offered too frequently.
+    With DrawScore ~= +-1 one side will *always* offer draw, the opponent will *always* decline; which is rather pointless.
+
+* Contempt Slider
 
         White seeks a draw - neutral - Black seeks a draw - Armageddon
     -1   ...............        0         ............         +1
         Black avoids a draw            White avoids a draw
 
     Armageddon = Black seeks a draw at any cost; white avoids a draw at any cost.
-
-WDLDrawRateReference = 0.58
-        draw rate in initial position. Depends on trained net and should not change much
-WDLCalibrationELO = 2700
-        should be transparent, but is not quite. Contempt has stronger effect on smaller elos
-WDLEvalObjectivity = 0.0, or  1 ?
-
-Contempt = 400
-        elo difference. this is the main control variable !!
-        +100 for Armageddon (is this sufficient? why not more?)
-
-ContemptMode = play, white_side_analysis, black_side_analysis.
-        switch to 'play' when actually playing against Leela
-
-WDLContemptAtenuation = 1.0
-        should be left at 1.0. Scales Contempt, but why should we?
-
-ScoreType = WDL_mu
-        (for compatibilty with Stockfish)
 
 ? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
  there is some confusion about the effective parameters. Online docu is not up-to-date :(

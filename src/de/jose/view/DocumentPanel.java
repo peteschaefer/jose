@@ -279,6 +279,7 @@ public class DocumentPanel
 			}
 		};
 		map.put("menu.file.new", action);
+		map.put("menu.file.new.from.here", action);
 */
 		CommandAction action = new CommandAction() {
 			public void Do(Command cmd) {

@@ -68,6 +68,8 @@ import java.sql.DriverManager;
 import java.text.ParseException;
 import java.util.*;
 
+import static de.jose.chess.Board.XFEN;
+
 /**
  *	the main application class
  *
@@ -1580,7 +1582,7 @@ public class Application
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-				prepareNewGame(null);
+				prepareNewGame();
 				switchGame(theHistory.currentIndex());
 
 				cmd.code = "move.notify";
@@ -1589,6 +1591,30 @@ public class Application
 			}
 		};
 		map.put("menu.file.new", action);
+
+		action = new CommandAction() {
+			@Override
+			public boolean isEnabled(String cmd) {
+				return theGame!=null;
+			}
+
+			public void Do(Command cmd) throws Exception {
+				ArrayList<Move> setupMoves = null;
+				String setupFen = null;
+				if (theGame!=null) {
+					setupFen = theGame.getPosition().getStartFEN(XFEN);
+					setupMoves = theGame.getPosition().snapshot();
+				}
+
+				prepareNewGame(setupFen,setupMoves);	//	todo
+				switchGame(theHistory.currentIndex());
+
+				cmd.code = "move.notify";
+				cmd.moreData = null;
+				broadcast(cmd);
+			}
+		};
+		map.put("menu.file.new.from.here", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
@@ -1622,7 +1648,7 @@ public class Application
 			{
 				String fen = cmd.data.toString();
 				if (! theGame.isEmpty()) {
-					prepareNewGame(fen);
+					prepareNewGame(fen,null);
 					switchGame(theHistory.currentIndex());
 				}
 				else
@@ -1994,7 +2020,7 @@ public class Application
 
 				theHistory.remove(g);
 				if (theHistory.size()== 0)
-					prepareNewGame(null);
+					prepareNewGame();
 				switchGame(theHistory.currentIndex());
 			}
 		};
@@ -2016,7 +2042,7 @@ public class Application
 				theHistory.removeAll();
 //				theGame = new Game(theUserProfile.getStyleContext(),
 //								   null,null, PgnUtil.currentDate(), null, null);
-				prepareNewGame(null);
+				prepareNewGame();
 				switchGame(0);
 			}
 		};
@@ -2544,7 +2570,7 @@ public class Application
 		else if (!Game.exists(GId))
 			return false;
         else {
-            prepareNewGame(null);
+            prepareNewGame();
 			try {
 				theGame.read(GId);
 			} catch (IllegalArgumentException ise) {
@@ -2568,7 +2594,7 @@ public class Application
 	{
 		broadcast("prepare.game");
 
-		prepareNewGame(null);
+		prepareNewGame();
 
 		//  note that this need not be a valid PGN text
 		try {
@@ -2623,7 +2649,12 @@ public class Application
         return (count > 0);
     }
 
-    protected void prepareNewGame(String setup) throws Exception
+	protected void prepareNewGame() throws Exception
+	{
+		prepareNewGame(null,null);
+	}
+
+    protected void prepareNewGame(String setupFen, ArrayList<Move> setupMoves) throws Exception
     {
 	    boolean createNew=true;
 		/*	save new game into autosave ?	*/
@@ -2638,7 +2669,7 @@ public class Application
 	    {
 		    //  create new Game object
 			theGame = new Game(theUserProfile.getStyleContext(),
-							   null,null, null/*PgnUtil.currentDate()*/, setup,
+							   null,null, null/*PgnUtil.currentDate()*/, setupFen,
 							   (theGame!=null) ? theGame.getPosition() : null);
 
 			theHistory.add(theGame);
@@ -2646,10 +2677,20 @@ public class Application
 	    else
 	    {
 		    //  recycle existing
-		    theGame.clear(setup);
+		    theGame.clear(setupFen);
 		    if (!theHistory.contains(theGame))
 			    theHistory.add(theGame);
 	    }
+
+		if (setupMoves!=null) {
+			//	replay initial moves
+			theGame.fireEvents=false; // why, exactly?
+			theGame.setDirty();
+			for(Move mv : setupMoves)
+				theGame.insertMove(-1,mv,Game.OVERWRITE);
+			theGame.clearDirty();
+			theGame.fireEvents=true;
+		}
 
 		TimeControl tc = theUserProfile.getTimeControl();
 		tc.reset(theClock);
@@ -2967,7 +3008,7 @@ public class Application
 			return;
 
 		boolean modified = false;
-		if (theGame.getPosition().gameMove()<=1) {
+		if (/*theGame.getPosition().gameMove()<=1*/true) {
 			if (theGame.getTagValue(PgnConstants.TAG_WHITE)==null &&
 				theGame.getTagValue(PgnConstants.TAG_BLACK)==null)
 			try {

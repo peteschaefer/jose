@@ -553,6 +553,14 @@ public class Position
 		startFEN[FEN_CLASSIC] = startFEN[XFEN] = startFEN[SHREDDER_FEN] = EMPTY_POSITION;
 	}
 
+	public ArrayList<Move> snapshot()
+	{
+		ArrayList<Move> moves = new ArrayList<>();
+		for(int i=0; i<thePly; i++)
+			moves.add(new Move(theMoveStack[i]));
+		return moves;
+	}
+
 	protected void setupFEN(String fenString)
 	{
 		if (START_POSITION.equals(fenString))

@@ -111,10 +111,12 @@ format.megabyte		= ###0.# 'MB'
 ##############################################################################
 
 menu.file			= Datei
-menu.file.new		= Neu
+menu.file.new		= Neue Partie
 menu.file.new.tip   = Beginnt eine neue Partie
-menu.file.new.frc   = Neu, FRC
-menu.file.new.shuffle = Neu, Shuffle Chess
+menu.file.new.from.here		= Neue Partie ab hier
+menu.file.new.from.here.tip		= Neue Partie ab der aktuellen Stellung
+menu.file.new.frc   = Neue FRC-Partie
+menu.file.new.shuffle = Neue Shuffle-Chess-Partie
 menu.file.open		= Öffnen...
 menu.file.open.tip  = Öffnet eine PGN-Datei
 menu.file.open.url	= URL Öffnen...

@@ -288,6 +288,32 @@
 		</zip>
 	</target>
 
+	<target name="leela-windows">
+		<description> Leela (Lc0) engine for Windows </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="lc0.xml"/>
+			</zipfileset>
+			<zipfileset dir="engines/lc0" prefix="${appldir}/engines/lc0">
+				<exclude name="more nets"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="stockfish-windows">
+		<description> Leela (Lc0) engine for Windows </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="stockfish.xml"/>
+			</zipfileset>
+			<zipfileset dir="engines/stockfish" prefix="${appldir}/engines/stockfish">
+				<exclude name="stockfish-windows-x86-64-avx2.exe"/>
+				<exclude name="src"/>
+				<exclude name="wiki"/>
+			</zipfileset>
+		</zip>
+	</target>
+
 	<!-- Windows w/out JRE -->
 	<target name="windows" depends="init">
 		<description> installation package for windows (not including JRE) </description>
@@ -338,6 +364,7 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+<!--
 		<antcall target="spike-windows">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
@@ -346,16 +373,24 @@
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
+-->
 <!--
 		<antcall target="crafty-windows">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
 -->
+		<antcall target="leela-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="stockfish-windows">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
 		<!-- add JRE -->
 		<zip destfile="${zip-file}" update="true">
-<!--			<zipfileset src="${jre-dir}/jre-1.4.2-windows.zip" prefix="${appldir}/jre-windows"/>-->
-			<zipfileset src="${jre-dir}/jre-1.5.0_05-windows.zip" prefix="${appldir}/jre-windows"/>
+			<zipfileset src="C:/dev/jose/jre1.8.0_202.zip" prefix="${appldir}/jre-windows"/>
 		</zip>
 		<delete dir="${appldir}"/>
 	</target>

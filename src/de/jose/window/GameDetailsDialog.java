@@ -189,7 +189,11 @@ public class GameDetailsDialog
 	}
 
 	public void readTab0()  { read(0,values); }
-	public void readTab1()  { read(1,values); }
+	public void readTab1()  {
+		read(1,values);
+		if (values.get(TAG_RESULT)==null)
+			setValueByName(TAG_RESULT,"*");
+	}
 
 	private JTextField getMoreKey(int j)
 	{

@@ -427,6 +427,7 @@ public class BoardPanel
 			}
 		};
 		map.put("menu.file.new", action);
+		map.put("menu.file.new.from.here", action);
 		map.put("menu.edit.undo", action);
 		map.put("broadcast.edit.game", action);
 

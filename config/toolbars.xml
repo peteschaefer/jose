@@ -8,6 +8,8 @@
 	<toolbar id="window.toolbar.1">
 		<!-- file control -->
 		<item id="menu.file.new"/>
+		<item id="menu.file.new.from.here"/>
+		<separator/>
 		<item id="menu.file.save"/>
 		<item id="menu.file.save.all"/>
 		<item id="menu.file.save.as"/>

@@ -5,8 +5,8 @@
 	<EXEC os="Windows">
 		<COMMAND> %dir%\lc0.exe </COMMAND>
 	</EXEC>
-	<DIR> C:\Users\nightrider\Desktop\lc0 </DIR>
-	<LOGO> %dir%\Leela_Chess_Zero_logo.svg.png </LOGO>
+	<DIR> %local%\engines\lc0 </DIR>
+	<LOGO> %dir%\Leela_Chess_Zero_logo.png </LOGO>
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
@@ -67,10 +67,10 @@
 		<OPTION name="SearchSpinBackoff"> false </OPTION>
 		<OPTION name="ConfigFile"> lc0.config </OPTION>
 		<OPTION name="SyzygyPath"/>
-		<OPTION name="Ponder"> true </OPTION>
+		<OPTION name="Ponder"> false </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_ShowWDL"> true </OPTION>
-		<OPTION dirty="true" name="UCI_ShowMovesLeft"> true </OPTION>
+		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
 		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
 		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>
 		<OPTION name="RamLimitMb"> 0 </OPTION>

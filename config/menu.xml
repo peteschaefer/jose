@@ -7,9 +7,10 @@
 	<!-- - - - - - - - - - -->
 	<menu id="menu.file">
 		<item id="menu.file.new"	key="control N"/>
-		<item id="menu.file.new.frc" key="control shift N"/>
-		<item id="menu.file.new.shuffle" key="control alt N"/>
-
+		<item id="menu.file.new.from.here"	key="control shift N"/>
+		<item id="menu.file.new.frc" key="control alt N"/>
+		<item id="menu.file.new.shuffle"/>
+		<separator/>
 		<item id="menu.file.open"	key="control O"/>
 		<item id="menu.file.open.url"/>
 		<separator/>
