@@ -28,11 +28,11 @@ import java.io.Reader;
 public class EPDImport
         extends PGNImport
 {
-	protected EPDImport(String taskName, String fileName, String url,
-	                    Reader input, long length)
+	protected EPDImport(int ParentCId, String taskName, String fileName, String url,
+						Reader input, long length)
 		throws Exception
 	{
-		super(taskName,fileName,url,input,length);
+		super(ParentCId, taskName,fileName,url,input,length);
 	}
 
 	protected int[] fen = new int[2];

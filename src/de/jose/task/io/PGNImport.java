@@ -204,8 +204,8 @@ public class PGNImport
 		}
 	}
 
-	protected PGNImport(String taskName, String fileName, String url,
-	                    Reader input, long length)
+	protected PGNImport(int ParentCId, String taskName, String fileName, String url,
+						Reader input, long length)
 		throws Exception
 	{
 		super(taskName+"."+gGameImporterInstance,true);
@@ -215,9 +215,8 @@ public class PGNImport
 		/*	database will be updated; close open results to avoid deadlocks !	*/
 
 		instance = gGameImporterInstance++;
-		fileName = de.jose.pgn.Collection.makeUniqueName(0,fileName,getConnection());
-		de.jose.pgn.Collection collection = de.jose.pgn.Collection.newFileCollection(0, fileName,url, connection);
-		collection.setParent(null);	//	create on root level
+		fileName = de.jose.pgn.Collection.makeUniqueName(ParentCId,fileName,getConnection());
+		de.jose.pgn.Collection collection = de.jose.pgn.Collection.newFileCollection(ParentCId, fileName,url, connection);
 
 		CId = collection.Id;
 		collection.insert(connection);
@@ -290,18 +289,29 @@ public class PGNImport
 
 	public GameBuffer getGameBuffer()   { return gm; }
 
-	public static PGNImport newImporter(String fileName, String url, Reader input, long length) throws Exception
+	public static PGNImport newImporter(int ParentCId, String fileName, String url, Reader input, long length) throws Exception
 	{
 		if (pgnFilter.accept(null,fileName))
-			return new PGNImport("PGNImport", FileUtil.trimExtension(fileName) ,url, input,length);
+			return new PGNImport(ParentCId, "PGNImport", FileUtil.trimExtension(fileName) ,url, input,length);
 		else if (epdFilter.accept(null,fileName))
-			return new EPDImport("EPDImport", FileUtil.trimExtension(fileName), url, input,length);
+			return new EPDImport(ParentCId, "EPDImport", FileUtil.trimExtension(fileName), url, input,length);
 		else {
             //  throw new IllegalArgumentException("unknown file type "+fileName);
             return null;
         }
 	}
 
+
+	private static int makeInTray() throws SQLException {
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			Collection.makeInTray(conn);
+		} finally {
+			if (conn!=null) conn.release();
+		}
+		return Collection.INTRAY_ID;
+	}
 
 	public static PGNImport openFile(File file)
 		throws Exception
@@ -316,6 +326,8 @@ public class PGNImport
 		String trimmedName = FileUtil.trimExtension(name);
 		PGNImport reader = null;
 
+		int ParentCId = makeInTray();
+
 		//  TODO streamline this !
 		if (pgnFilter.accept(null,name) || epdFilter.accept(null,name))
         {
@@ -327,7 +339,7 @@ public class PGNImport
 			/**	PGN uses ISO-8859-1 by definition
 			 *	can we rely on that ?
 			 */
-			reader = newImporter(file.getName(),
+			reader = newImporter(ParentCId, file.getName(),
 			                "file://"+file.getCanonicalPath(),
 			                fr, file.length());
             if (reader==null) throw new IOException("Unknown File Type "+file.getName());
@@ -346,7 +358,7 @@ public class PGNImport
                 InputStream zin = en.getInputStream(file,entry.getName());
 
 				Reader fr = new InputStreamReader(zin);
-				reader = newImporter(entry.getName(),
+				reader = newImporter(ParentCId, entry.getName(),
 				                    "file://"+file.getCanonicalPath()+"!"+entry.getName() ,
 				                    fr, size);
                 if (reader==null) continue; //  unknown file type
@@ -372,7 +384,7 @@ public class PGNImport
                 InputStream zin = en.getInputStream(file,entry.getName());
 
 				Reader fr = new InputStreamReader(zin);
-				reader = newImporter(entry.getName(),
+				reader = newImporter(ParentCId, entry.getName(),
 				                    "file://"+file.getCanonicalPath()+"!"+entry.getName() ,
 				                    fr, size);
                 if (reader==null) continue; //  unknown file type
@@ -390,7 +402,7 @@ public class PGNImport
 			GZIPInputStream gin = new GZIPInputStream(in,4096);
 
 			Reader fr = new InputStreamReader(gin);
-			reader = newImporter(trimmedName,
+			reader = newImporter(ParentCId, trimmedName,
 								"file://"+file.getCanonicalPath(), fr, -1/* deflated size ? */);
 			if (reader==null) throw new IOException("Unknown File Type "+file.getName());
 
@@ -406,7 +418,7 @@ public class PGNImport
 	        CBZip2InputStream bzin = FileUtil.createBZipInputStream(in);
 
 	        Reader fr = new InputStreamReader(bzin);
-	        reader = newImporter(trimmedName,
+	        reader = newImporter(ParentCId, trimmedName,
 						        "file://"+file.getCanonicalPath(), fr, -1/* deflated size ? */);
 	        if (reader==null) throw new IOException("Unknown File Type "+file.getName());
 
@@ -430,9 +442,11 @@ public class PGNImport
         int size = conn.getContentLength();
         PGNImport reader = null;
 
+		int ParentCId = makeInTray();
+
 		if (pgnFilter.accept(null,name) || epdFilter.accept(null,name))
         {
-			reader = newPgnImporter(name, url, conn, size);
+			reader = newPgnImporter(ParentCId, name, url, conn, size);
 			reader.start();
 		}
 		else if (FileUtil.hasExtension(name,"zip"))
@@ -443,7 +457,7 @@ public class PGNImport
             for (ZipEntry ety = zin.getNextEntry(); ety != null; ety = zin.getNextEntry())
             {
 				Reader fr = new InputStreamReader(zin);
-				reader = newImporter(ety.getName(), url+"!"+ety.getName(), fr, ety.getSize());
+				reader = newImporter(ParentCId, ety.getName(), url+"!"+ety.getName(), fr, ety.getSize());
                 if (reader==null) continue; //   "unknown file type "+file.getName()
 
 				reader.start();
@@ -465,7 +479,7 @@ public class PGNImport
 			for (TarEntry ety = tin.getNextEntry(); ety != null; ety = tin.getNextEntry())
 			{
 				Reader fr = new InputStreamReader(tin);
-				reader = newImporter(ety.getName(), url+"!"+ety.getName(), fr, ety.getSize());
+				reader = newImporter(ParentCId, ety.getName(), url+"!"+ety.getName(), fr, ety.getSize());
 			    if (reader==null) continue; //   "unknown file type "+file.getName()
 
 				reader.start();
@@ -477,7 +491,7 @@ public class PGNImport
             GZIPInputStream gin = new GZIPInputStream(in,4096);
 
             Reader fr = new InputStreamReader(gin);
-	        reader = newImporter(trimmedName, url.toExternalForm(), fr, -1/*deflated size ?? */);
+	        reader = newImporter(ParentCId, trimmedName, url.toExternalForm(), fr, -1/*deflated size ?? */);
             if (reader==null) throw new IllegalArgumentException("unknown file type "+trimmedName);
 
             reader.start();
@@ -490,7 +504,7 @@ public class PGNImport
 			CBZip2InputStream bzin = FileUtil.createBZipInputStream(in);
 
 		    Reader fr = new InputStreamReader(bzin);
-			reader = newImporter(trimmedName, url.toExternalForm(), fr, -1/*deflated size ?? */);
+			reader = newImporter(ParentCId, trimmedName, url.toExternalForm(), fr, -1/*deflated size ?? */);
 		    if (reader==null) throw new IllegalArgumentException("unknown file type "+trimmedName);
 
 		    reader.start();
@@ -499,8 +513,8 @@ public class PGNImport
             throw new IllegalArgumentException("unknown file type "+name);
 	}
 
-	public static PGNImport newPgnImporter(String name, URL url,
-									   URLConnection conn, int size) throws Exception
+	public static PGNImport newPgnImporter(int ParentCId, String name, URL url,
+										   URLConnection conn, int size) throws Exception
 	{
 		if (conn==null) {
 			conn = url.openConnection();
@@ -516,12 +530,12 @@ public class PGNImport
 		 *	can we rely on that ?
 		 * 	No, but PGN parser accepts utf-8 by heuristics.
 		 */
-		reader = new PGNImport("PGNImport", FileUtil.trimExtension(name) ,url.toExternalForm(), fr,size);
+		reader = new PGNImport(ParentCId, "PGNImport", FileUtil.trimExtension(name) ,url.toExternalForm(), fr,size);
 		if (reader==null) throw new IllegalArgumentException("unknown file type "+ name);
 		return reader;
 	}
 
-	public static PGNImport newPgnImporter(int CollectionId, URL url) throws Exception
+	public static PGNImport newPgnImporter(int ParentCId, URL url) throws Exception
 	{
 		URLConnection conn = url.openConnection();
 		int size = conn.getContentLength();
@@ -535,7 +549,7 @@ public class PGNImport
 		 *	can we rely on that ?
 		 * 	No, but PGN parser accepts utf-8 by heuristics.
 		 */
-		reader = new PGNImport("PGNImport", CollectionId, fr,size);
+		reader = new PGNImport("PGNImport", ParentCId, fr,size);
 
 		if (reader==null) throw new IllegalArgumentException("unknown file type ");
 		return reader;

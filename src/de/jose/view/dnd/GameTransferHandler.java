@@ -180,7 +180,9 @@ public class GameTransferHandler
 				//	move to currently selected folder !
 				JTree tree = (JTree)comp;
 				TreePath targetPath = tree.getSelectionPath();
-				Collection target = CollectionPanel.getCollection(targetPath);
+				Collection target=null;
+				if (targetPath!=null)
+					target = CollectionPanel.getCollection(targetPath);
 
 				/**	be aware that "proxy" is usually not the original object created
 				 * 	by ourselves; it is a "proxy" from which we have to reconstruct

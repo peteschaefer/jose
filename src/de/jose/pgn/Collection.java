@@ -72,11 +72,13 @@ public class Collection
     public static final int     TRASH_ID        = 3;
 	/** Id of the Download collection */
 	public static final int		DOWNLOADS_ID	= 4;
+	public static final int		INTRAY_ID		= 5;
 
 	public static final String TRASH_PATH		= ":/"+TRASH_ID+"/";
 	public static final String CLIPBOARD_PATH	= ":/"+CLIPBOARD_ID+"/";
 	public static final String AUTOSAVE_PATH	= ":/"+AUTOSAVE_ID+"/";
 	public static final String DOWNLOADS_PATH	= ":/"+DOWNLOADS_ID+"/";
+	public static final String INTRAY_PATH		= ":/"+INTRAY_ID+"/";
 
     /** Attribute bits  */
     /** marked for deletion */
@@ -203,7 +205,21 @@ public class Collection
 		boolean ok = pstm.execute();
 		return DOWNLOADS_ID;
 	}
-	
+
+	public static int makeInTray(JoConnection conn) throws SQLException {
+		String sql =
+				"INSERT IGNORE INTO Collection "+
+						" VALUES (?,null,null, ?, ?, ?, '-', {fn now()}, 0) ";
+
+		JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+		pstm.setInt(1,INTRAY_ID);
+		pstm.setString(2,"collection.intray");
+		pstm.setString(3,INTRAY_PATH);
+		pstm.setInt(4, SYSTEM);
+		boolean ok = pstm.execute();
+		return INTRAY_ID;
+	}
+
 	public static boolean exists(int parentId, String name, JoConnection conn) throws SQLException
 	{
 		String sql =
@@ -354,7 +370,7 @@ public class Collection
 	
 	public final boolean isTopLevel()
 	{
-		return PId == 0;
+		return PId <= 0;
 	}
 
 	public final boolean hasGames()
@@ -590,8 +606,8 @@ public class Collection
 	{
 		int i=1;
 		Id 				= pstm.getInt(i++);
-		PId 			= pstm.getInt(i++);
-		OPId            = pstm.getInt(i++);
+		PId 			= pstm.getInt(i++,0);
+		OPId            = pstm.getInt(i++,0);
 		Name			= pstm.getString(i++);
 		Path			= pstm.getString(i++);
 		Attributes		= pstm.getShort(i++);

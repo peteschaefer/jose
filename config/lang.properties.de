@@ -99,6 +99,8 @@ collection.trash = Mülleimer
 collection.autosave = Auto Speichern
 collection.clipboard = Zwischenablage
 collection.downloads = Downloads
+collection.intray = Eingang
+
 # default name for new folders
 collection.new = Neuer Ordner
 # name of starter database

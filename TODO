@@ -18,6 +18,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 	at de.jose.view.list.IntervalCacheModel.getRowAt(IntervalCacheModel.java:601)
 	at de.jose.view.list.IntervalCacheModel.getValueAt(IntervalCacheModel.java:567)
 
+[ ] db: expected data on row ?
 java.sql.SQLException: data expected at row 17, Id=1018
 	at de.jose.view.list.IntervalCacheModel.readData(IntervalCacheModel.java:713)
 	at de.jose.view.list.IntervalCacheModel.readRow(IntervalCacheModel.java:642)
@@ -47,9 +48,6 @@ java.util.EmptyStackException
 
 [ ] Context Help
 
-[ ] Import new folder into current folder (not root)
-[ ] collapse several folders (like after zip import)
-
 ? Charter buggy
 
 [ ] BUG? "go infinite" with only one legal move
@@ -64,7 +62,6 @@ java.util.EmptyStackException
 [?] game vs. opening explorer:
     - user moves have no value (and it shows)
 
-[ ] db: expected data on row ?
 
 [ ] Annotation: layout in small panels
     [x] ScrollPane without bars; use mouse wheel scrolling

@@ -3236,10 +3236,16 @@ public class Application
 			//  Crunch collection = update index column
             task = new CrunchTask(src,getSearchRecord());
 		}
-		else if (cmd.code.equalsIgnoreCase("dnd.move.games")) {
-			boolean setOId = target.isInTrash() || target.isInClipboard();
-			boolean calcIdx = !target.isInTrash() && !target.isInClipboard();
-			task = new MoveTask(src, target.Id, setOId,calcIdx);
+		else if (cmd.code.equalsIgnoreCase("dnd.move.games"))
+		{
+			int targetId = 0;	//	 default==root
+			boolean setOId=false, calcIdx=true;
+			if (target!=null) {
+				targetId = target.Id; // default=root
+				setOId = target.isInTrash() || target.isInClipboard();
+				calcIdx = !target.isInTrash() && !target.isInClipboard();
+			}
+			task = new MoveTask(src, targetId, setOId,calcIdx);
 		}
 		else if (cmd.code.equalsIgnoreCase("dnd.move.top.level")) {
 			task = new MoveTask(src, 0, false,true);

@@ -62,9 +62,9 @@ public class CollectionPanel
 	/**	set of expanded Id's	*/
 	protected IntHashSet expandedIds;
 	/**	the Clipboard collection	*/
-	protected Collection theClipboard;
+	//protected Collection theClipboard;
 	/**	the Trash collection */
-	protected Collection theTrash;
+	//protected Collection theTrash;
 	/** auto import manager */
 	protected AutoImport autoImport;
 
@@ -172,10 +172,10 @@ public class CollectionPanel
 				CollectionTreeNode node = new CollectionTreeNode(conn, children[i]);
 				add(node);
 
-				switch (children[i].Id) {
+				/*switch (children[i].Id) {
 				case Collection.CLIPBOARD_ID:	theClipboard = children [i]; break;
 				case Collection.TRASH_ID:		theTrash = children [i]; break;
-				}
+				}*/
 			}
 		}
 
@@ -206,7 +206,7 @@ public class CollectionPanel
 			createIcons(Application.theApplication.isDarkLookAndFeel());
 		}
 
-		Icon CLOSED_ICON,OPEN_ICON,EMPTY_ICON,CLIPBOARD_ICON,AUTOSAVE_ICON,TRASH_ICON;
+		Icon CLOSED_ICON,OPEN_ICON,EMPTY_ICON,CLIPBOARD_ICON,AUTOSAVE_ICON,TRASH_ICON,INTRAY_ICON;
 
 		protected void createIcons(boolean dark)
 		{
@@ -217,9 +217,10 @@ public class CollectionPanel
 			CLIPBOARD_ICON	= JoToolBar.create1AwesomeIcon("\uf328:#808000:%120", iconSize);
 			AUTOSAVE_ICON	= JoToolBar.create1AwesomeIcon("\uf0c7:#800000:%120", iconSize);
 			TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf2ed:#666666:#eeeeee", iconSize);
+			INTRAY_ICON 	= JoToolBar.create1AwesomeIcon("\uf01c:#000080", iconSize);;
 
 			if (dark) {
-				Icon[] allIcons = new Icon[] {CLOSED_ICON, OPEN_ICON, EMPTY_ICON, CLIPBOARD_ICON, AUTOSAVE_ICON, TRASH_ICON};
+				Icon[] allIcons = new Icon[] {CLOSED_ICON, OPEN_ICON, EMPTY_ICON, CLIPBOARD_ICON, AUTOSAVE_ICON, TRASH_ICON, INTRAY_ICON};
 				//	todo on demand ?
 				JoToolBar.makeDarkIcons(allIcons);
 			}
@@ -245,6 +246,7 @@ public class CollectionPanel
 			case Collection.TRASH_ID:			setIcon(TRASH_ICON,leaf,expanded); break;
 			case Collection.AUTOSAVE_ID:		setIcon(AUTOSAVE_ICON,leaf,expanded); break;
 			case Collection.CLIPBOARD_ID:		setIcon(CLIPBOARD_ICON,leaf,expanded); break;
+			case Collection.INTRAY_ID:			setIcon(INTRAY_ICON,leaf,expanded); break;
 			default:
 					if (coll!=null && !coll.hasGames())
 						setIcon(EMPTY_ICON,leaf,expanded);
