@@ -128,7 +128,7 @@ public class DocumentPanel
 		titlePriority = 9;
 	}
 
-    public Component getFocusComponent() {
+	public Component getFocusComponent() {
         return theTextPane;
     }
 

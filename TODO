@@ -7,10 +7,12 @@
 * BUG? Leela keeps analyzing while playing from book
 * BUG? Leela diagnostics not always associated correctly
 
+
 ==== Project
 
-[x] bug: hang on start
+[ ] bug: hang on start
 [x] bug: diacritics lost on save
+[x] eval splitpane size (getMaximumSize())
 [x] suggestion arrow updates
 [x] utf-8 for pgn
     (x) import = heuristics
@@ -83,6 +85,10 @@ Alternative: JBR 21 x64, or x86
 ==== Postponed
 
 (first fix platforms)
+
+* Comment search
+    * regex
+    * replace
 
 * Graph View interactive
     - mark current move

@@ -412,6 +412,11 @@ public class JoPanel
 		 */
 	}
 
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE);
+	}
+
 	public Dimension getMaximumSize(int orientation) {
 		Dimension dim = getMaximumSize();
         if (dim.width<=0) dim.width = Integer.MAX_VALUE;

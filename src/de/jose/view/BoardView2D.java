@@ -1228,8 +1228,9 @@ public class BoardView2D
 		if (square==0 || mouseClickSquare==square)
 			return 0;
 		if (mouseClickSquare==0) {
-			if (guessMove1(square,board.getPosition()))
-				return 0;
+			//	one-click moves may be confusing
+			//if (guessMove1(square,board.getPosition()))
+			//	return 0;
 		}
 		else {
 			if (guessMove2(new int[]{mouseClickSquare,square}))
