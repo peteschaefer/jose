@@ -588,31 +588,45 @@ public class Application
 			try {
 				Class<?> lnfClass = Class.forName(className);
 				LookAndFeel lnf = (LookAndFeel) (lnfClass.newInstance());
-
-				if (lnf instanceof FlatLaf) {
-					FlatLaf.setSystemColorGetter(name -> {
-						if (name.equals("accent"))
-							return StyleUtil.getSystemAccentColor();
-						return null;
-					});
-
-					FlatLaf.registerCustomDefaultsSource(
-							"themes",
-							new ResourceClassLoader("config"));
-					//	uses a set of custom themes
-
-					FlatLaf.setup(lnf);
-
-					boolean isdark = ((FlatLaf) lnf).isDark();
-				}
-
-				UIManager.setLookAndFeel(lnf);
-
-				broadcast(new Command("update.ui", null, lookAndFeel, isDarkLookAndFeel()));
+				useLookAndFeel(lnf);
 			} catch (UnsupportedLookAndFeelException usex) {
 				JoDialog.showErrorDialog("error.lnf.not.supported");
 			}
 	}
+
+	private void useLookAndFeel(LookAndFeel lnf) throws UnsupportedLookAndFeelException
+	{
+		if (lnf instanceof FlatLaf) {
+			FlatLaf.setSystemColorGetter(name -> {
+				if (name.equals("accent"))
+					return StyleUtil.getSystemAccentColor();
+				return null;
+			});
+
+			FlatLaf.registerCustomDefaultsSource(
+					"themes",
+					new ResourceClassLoader("config"));
+			//	uses a set of custom themes
+
+			FlatLaf.setup(lnf);
+
+			boolean isdark = ((FlatLaf) lnf).isDark();
+		}
+
+		UIManager.setLookAndFeel(lnf);
+
+		broadcast(new Command("update.ui", null, /*lnfName*/null, isDarkLookAndFeel()));
+	}
+
+	public final void resetLookAndFeel()
+	{
+		LookAndFeel lnf = UIManager.getLookAndFeel();
+        try {
+            useLookAndFeel(lnf);
+        } catch (UnsupportedLookAndFeelException e) {
+			JoDialog.showErrorDialog("error.lnf.not.supported");
+        }
+    }
 
 	public boolean isDarkLookAndFeel()
 	{

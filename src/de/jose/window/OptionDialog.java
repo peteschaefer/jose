@@ -18,6 +18,7 @@ import de.jose.chess.TimeControl;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.comm.msg.DeferredMessageListener;
+import de.jose.image.Surface;
 import de.jose.jo3d.Util3D;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
@@ -321,11 +322,12 @@ public class OptionDialog
 
 		if (Version.linux) {
 			addWithLabel(tab2, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
-			//	todo adjust on demand, when?
+
 		}
 
 		addWithLabel(tab2, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
-		//	todo adjust on demand, when?
+
+		tab2.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
 		tab2.add(new JLabel(""), ELEMENT_REMAINDER);
 
@@ -898,12 +900,19 @@ public class OptionDialog
 		map.put("dialog.option.plugin.default",action);
 
 		action = new CommandAction() {
-			public void Do(Command cmd) throws Exception
-			{
+			public void Do(Command cmd) throws Exception {
 				openThemeEditor();
 			}
 		};
 		map.put("lnf.theme.editor",action);
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				Surface accentColor = (Surface)getValueByName("lnf.accent.color");
+				Application.theUserProfile.set("lnf.accent.color", accentColor);
+				Application.theApplication.resetLookAndFeel();
+			}
+		};
+		map.put("lnf.theme.reload",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
