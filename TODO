@@ -31,16 +31,9 @@ libraries needed:
 [x] jdk1.8 (64 bit)
 [x] 64 bit binaries for stockfish
 [x] and lc0. via brew
-[x] mysqld standalone
-    5.0.67 for MacOS 64, (remember to copy share too)
-    [ ] launch in Application.Startup
+[x] mysqld standalone 5.0.67 for MacOS 64, (remember to copy share too)
 [x] upgrade mysql.jar
 [-] Java3D
-
-jose 1.4.4 setup on my MacPro
-MacOS 10.7.5 i386
-JRE 1.6.0_65 (Apple) "mixed mode"
-mysqld 5.0.24a i686 from 11-07-2005
 
 
 [-] compile easylink
@@ -49,24 +42,38 @@ mysqld 5.0.24a i686 from 11-07-2005
 [x] upgrade libquaqua
 [?] https://violetlib.org/vaqua. Problems! More modern but not overwhelmingly beautiful :(
 
-[ ] Application Bundle vs. Java
-     see: https://github.com/tofi86/universalJavaApplicationStub
+[x] Application Bundle vs. Java
+   [x] .sh + shc. see: https://github.com/tofi86/universalJavaApplicationStub
    [x] bundle leela
    [x] bundle stockfish
    [-] Quaqua
    [-] VAqua
    [x] default lnf
    [-] Print Preview
-   [x] make jose.sh executable: shc
-   [-] port JavaLauncher -> use shc instead
+   [-] port JavaLauncher :(
    [x] upgrade mrjadapter 1.3
 
-[ ] "Apple Silicon"
-    [ ] jdk1.8, 11 (not 9?) is available from Oracle :)
-    [ ] MySQL >= 8.0.30
-    [ ] JavaLauncher
+[ ] "Apple Silicon" = arm64
+    [ ] jdk1.8_431, 11 (not 9?) is available from Oracle :)
+    [-] MySQL >= 8.0.30. difficult to get running (at least on Linux) :(
+    [ ] MySQL 5.0.67 compile from source
+        [x] Ubuntu x86_64
+        [ ] macOS x86_64 standalone
+        [ ] macOS x86_64 embedded. if unstable, try
+            [ ] 5.0.15 instead
+        [ ] macOS arm64
+    [ ] MySQL 5.7 from brew (disabled but maybe works anyway ?)
+    [ ] MySQL <= 5.0.x  difficult to find for macOS arm64
+    [ ] shc
+        brew cask install gcc-arm-embedded ?
+        clang hello.c -target arm64-apple-darwin20.1.0
     [ ] stockfish
     [ ] Lc0
+
+-> if we have a stable MySQL build (5.0.15, or 5.0.67)
+-> and, if mysql-je is stable
+-> we can move on to 64bit-land for all platforms :)
+-> jdk upgrades are not an obstacle anymore
 
 ==== Deprecated Stuff
 
@@ -105,22 +112,8 @@ mysqld 5.0.24a i686 from 11-07-2005
 
 ==== Postponed
 
-* SQLite backend. Now, that's a bit of work but it would
- - relieve us from libmysqld (old, poorly supported)
- - pave the way to the land of 64bit computing
-  -> have more flexibility with jdks
-
-[ ] create an adpater class for sqlite
-[ ] how much sql statements contain mysql specificities ?
-       - Maybe fewer than one thinks?
-         LOCK, FLUSH TABLE can be replaced by transaction
-         LIMIT is supported
-       - e.g. full-text stuff is not used at all
-[ ] for legacy dbs and .jose archives, we still need to read myisam.
-       - Maybe that is not so difficult. See sources for myisamchk.
-       - We can ignore indices.
-       - We don't need to write myisam
-       - we didn't use compression (lucky me)
+* Print Preview on macOS
+* launch mysqld earlier
 
 * Graph View interactive
     - mark current move
