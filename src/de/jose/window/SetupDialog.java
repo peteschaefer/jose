@@ -246,7 +246,7 @@ public class SetupDialog
 		JComponent buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.add(Box.createVerticalStrut(20));
-		QueryPanel.createEditButtons(buttons,this);
+		QueryPanel.createEditButtons(buttons,this, Application.theApplication.isDarkLookAndFeel());
 
 		getElementPane().add(buttons, gridConstraint(ELEMENT_TWO,1,3,1));
 

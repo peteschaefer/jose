@@ -22,6 +22,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.WinUtils;
 import de.jose.util.icon.TextIcon;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.JoToolBar;
 import de.jose.view.colorchooser.JoColorButton;
 import de.jose.view.colorchooser.JoSurfaceButton;
@@ -1701,6 +1702,7 @@ public class JoDialog
 
         JButton button = newButton(name, icon, listener);
 		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
 		button.setBorder(new EmptyBorder(2,8,2,8));
 		button.setPreferredSize(new Dimension(92,22));
 
@@ -1709,7 +1711,7 @@ public class JoDialog
 		attrs.put(TextAttribute.UNDERLINE,TextAttribute.UNDERLINE_ON);
 		font = font.deriveFont(attrs);
 		button.setFont(font);
-		button.setForeground(Color.BLUE);
+		button.setForeground(StyleUtil.getLinkColor());
 		return button;
     }
 

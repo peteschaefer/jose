@@ -62,4 +62,12 @@ public class TextShapeIcon extends TextIcon
         g2.drawString(text,0,0);
         restore(g2);
     }
+
+    public Color getBackgroundColor() {
+        return bgColor;
+    }
+
+    public void setBackgroundColor(Color bgColor) {
+        this.bgColor = bgColor;
+    }
 }

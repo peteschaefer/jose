@@ -294,7 +294,14 @@ public class StyleUtil
             return new Color(red,red,red);
         }
         else {
-           return mapDarkTextColor(acol);
+           return pastelize(acol,0.5f);
         }
+    }
+
+    public static Color getLinkColor() {
+        Color col = Color.blue;
+        if (Application.theApplication.isDarkLookAndFeel())
+            return col = mapDarkTextColor(col);
+        return col;
     }
 }

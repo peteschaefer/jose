@@ -11,6 +11,7 @@ public class TextIcon implements Icon, Cloneable
 {
     protected String text;
     protected Font font;
+
     protected Color color;
     protected float width;
     protected  float height;
@@ -30,6 +31,14 @@ public class TextIcon implements Icon, Cloneable
 
     public TextIcon(String text, Font font, float size, Color color) {
         this(text,font.deriveFont(size),color);
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public static TextIcon clone(TextIcon icon) {

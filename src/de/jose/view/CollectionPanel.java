@@ -203,6 +203,26 @@ public class CollectionPanel
 		{
 			super();
 			super.setBorder(new EmptyBorder(2,2,2,2));
+			createIcons(Application.theApplication.isDarkLookAndFeel());
+		}
+
+		Icon CLOSED_ICON,OPEN_ICON,EMPTY_ICON,CLIPBOARD_ICON,AUTOSAVE_ICON,TRASH_ICON;
+
+		protected void createIcons(boolean dark)
+		{
+			float iconSize = 20.f;
+			CLOSED_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#dede63:#000000",iconSize);
+			OPEN_ICON		= JoToolBar.create1AwesomeIcon("\uf07c:#eeee63:#000000", iconSize);
+			EMPTY_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#a0a0a0:#000000", iconSize);
+			CLIPBOARD_ICON	= JoToolBar.create1AwesomeIcon("\uf328:#808000:%120", iconSize);
+			AUTOSAVE_ICON	= JoToolBar.create1AwesomeIcon("\uf0c7:#800000:%120", iconSize);
+			TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf2ed:#666666:#eeeeee", iconSize);
+
+			if (dark) {
+				Icon[] allIcons = new Icon[] {CLOSED_ICON, OPEN_ICON, EMPTY_ICON, CLIPBOARD_ICON, AUTOSAVE_ICON, TRASH_ICON};
+				//	todo on demand ?
+				JoToolBar.makeDarkIcons(allIcons);
+			}
 		}
 
 		public Component getTreeCellRendererComponent(JTree tree, Object value,
@@ -211,23 +231,15 @@ public class CollectionPanel
 		                                              boolean leaf, int row,
 		                                              boolean hasFocus)
 		{
-			setIcons(value,sel,expanded,leaf);
-
+			setIcon(value,sel,expanded,leaf);
 			return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		}
 
-		protected void setIcons(Object value, boolean sel, boolean expanded, boolean leaf)
+		protected void setIcon(Object value, boolean sel, boolean expanded, boolean leaf)
 		{
 			Collection coll = ((CollectionTreeNode)value).getCollection();
 			int cid = (coll!=null) ? coll.Id : 0;
 
-			float iconSize = 20.f;
-			final Icon	CLOSED_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#dede63:#000000",iconSize);
-			final Icon	OPEN_ICON		= JoToolBar.create1AwesomeIcon("\uf07c:#eeee63:#000000", iconSize);
-			final Icon	EMPTY_ICON		= JoToolBar.create1AwesomeIcon("\uf07b:#a0a0a0:#000000", iconSize);
-			final Icon	CLIPBOARD_ICON	= JoToolBar.create1AwesomeIcon("\uf328:#808000:%120", iconSize);
-			final Icon	AUTOSAVE_ICON	= JoToolBar.create1AwesomeIcon("\uf0c7:#800000:%120", iconSize);
-			final Icon	TRASH_ICON		= JoToolBar.create1AwesomeIcon("\uf2ed:#666666:#eeeeee", iconSize);
 
 			switch (cid) {
 			case Collection.TRASH_ID:			setIcon(TRASH_ICON,leaf,expanded); break;
@@ -275,7 +287,7 @@ public class CollectionPanel
 		{
 			/**	reset the renderer's icons	*/
 			CollectionCellRenderer rend = (CollectionCellRenderer)renderer;
-			rend.setIcons(value,isSelected,expanded,leaf);
+			rend.setIcon(value,isSelected,expanded,leaf);
 
 			return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
 		}
@@ -687,6 +699,14 @@ public class CollectionPanel
 			}
 		};
 		map.put("dnd.drag.stop", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				boolean dark = (Boolean)cmd.moreData;
+				((CollectionCellRenderer)tree.getCellRenderer()).createIcons(dark);
+			}
+		};
+		map.put("update.ui", action);
 	}
 
     public void updateLanguage()

@@ -357,6 +357,51 @@ public class JoToolBar
 		}
 	}
 
+	public static void makeDarkIcons(Icon[] icons) {
+		for(Icon icon : icons)
+			if (icon!=null)
+				makeDarkIcon(icon);
+	}
+
+
+	public static void makeDarkIcons(Container container) {
+		for(int i=0; i < container.getComponentCount(); ++i) {
+			Component comp = container.getComponent(i);
+			if (comp instanceof JButton) {
+				makeDarkIcons((JButton)comp);
+			}
+			if (comp instanceof Container) {
+				makeDarkIcons((Container)comp);
+			}
+		}
+	}
+
+	public static void makeDarkIcons(JButton button) {
+		Icon[] icons = new Icon[] {
+				button.getIcon(),
+				button.getDisabledIcon(),
+				button.getPressedIcon(),
+				button.getRolloverIcon(),
+				button.getDisabledSelectedIcon(),
+				button.getSelectedIcon(),
+				button.getRolloverSelectedIcon(),
+		};
+		makeDarkIcons(icons);
+	}
+
+	public static void makeDarkIcon(Icon icon) {
+		if (icon instanceof TextIcon) {
+			TextIcon textIcon = (TextIcon)icon;
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor()) );
+		}
+		if (icon instanceof TextShapeIcon) {
+			TextShapeIcon textIcon = (TextShapeIcon)icon;
+			textIcon.setColor( StyleUtil.mapDarkIconColor(textIcon.getColor()) );
+			textIcon.setBackgroundColor( StyleUtil.mapDarkIconColor(textIcon.getBackgroundColor()) );
+		}
+	}
+
+
 	public static Icon[] createAwesomeIcons(String sp, float size, boolean dark)
 	{
 		IconSpec spec = new IconSpec(sp, size);
