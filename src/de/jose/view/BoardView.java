@@ -12,11 +12,9 @@
 
 package de.jose.view;
 
-import de.jose.AbstractApplication;
-import de.jose.Language;
-import de.jose.Command;
-import de.jose.MessageListener;
+import de.jose.*;
 import de.jose.chess.*;
+import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
 import de.jose.profile.UserProfile;
 import de.jose.view.input.StyledToolTip;
@@ -89,7 +87,7 @@ abstract public class BoardView
 	protected boolean showAnimationHints;
 
 	//	score for eval bard
-	protected Score score = null;
+	protected double[] eval = null;
 
 	public BoardView(IBoardAdapter theBoard)
 	{
@@ -297,13 +295,16 @@ abstract public class BoardView
 	public void setScore(Score sc)
 	{
 		if (sc!=null && sc.cp==Score.UNKNOWN && !sc.hasWDL() )
-			sc = null;	//	Score object contains no useful info. Ignore.
-		if (sc==null) {
-			this.score = null;
+			this.eval = null;	//	Score object contains no useful info. Ignore.
+		else if (sc==null)
+			this.eval = null;
+		else {
+			EnginePlugin plugin = Application.theApplication.getEnginePlugin();
+			if (plugin==null)
+				this.eval = null;
+			else
+				this.eval = plugin.mapUnitWDL(sc);
 		}
-		else
-			this.score = new Score(sc);
-		//	todo find the score range, depending on Leela ScoreType (centipawn, win%, etc.)
 	}
 
 	/**

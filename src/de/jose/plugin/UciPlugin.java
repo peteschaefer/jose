@@ -21,6 +21,7 @@ import de.jose.util.StringUtil;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.List;
@@ -1122,5 +1123,57 @@ public class UciPlugin
 			if (option.name.equalsIgnoreCase(key)) return option;
 		}
 		return null;
+	}
+
+
+	@Override
+	protected String prepareCentipawnScore(Score score, HashMap pmap)
+	{
+		String scoreType = getOptionValue(config,"ScoreType");
+		double perc = (double)score.cp/100.0;
+
+		if (scoreType!=null && scoreType.equals("win_percentage"))
+		{
+			if (perc < 0.0) perc = 100.0+perc;
+			//	note that negative percentages do not come from the engine.
+			//	they are an artifact of EnginePlugin.adjustPointOfView()
+			if (perc < 0.0) perc = 0.0;
+			if (perc > 100.0) perc = 100.0;
+
+			pmap.put("eval",PERCENTAGE_FORMAT.format(perc));
+			return "plugin.percentage";
+		}
+		if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
+		{
+			pmap.put("eval",PERCENTAGE_FORMAT.format(perc));
+			return "plugin.percentage";
+		}
+		//	else
+		return super.prepareCentipawnScore(score, pmap);
+	}
+
+	@Override
+	public double mapUnit(Score score)
+	{
+		String scoreType = getOptionValue(config,"ScoreType");
+		double perc = (double)score.cp/100.0;
+
+		if (scoreType!=null && scoreType.equals("win_percentage"))
+		{
+			if (perc < 0.0) perc = 100.0+perc;
+			//	note that negative percentages do not come from the engine.
+			//	they are an artifact of EnginePlugin.adjustPointOfView()
+			if (perc < 0.0) perc = 0.0;
+			if (perc > 100.0) perc = 100.0;
+
+			return perc/100.0;
+		}
+		if (scoreType!=null && (scoreType.equals("Q") || scoreType.equals("W-L")))
+		{
+			return mapUnit(score.cp,-100,+100);
+		}
+		//	else
+
+		return super.mapUnit(score);
 	}
 }

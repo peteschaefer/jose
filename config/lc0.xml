@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?>
+<APPLICATION_SETTINGS>
 <PLUGIN ID="lc0" type="uci">
 	<NAME> Lc0 </NAME>
 	<EXEC os="Windows">
@@ -67,7 +68,7 @@
 		<OPTION name="SyzygyPath"/>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
-		<OPTION name="UCI_ShowWDL"> true </OPTION>
+		<OPTION dirty="true" name="UCI_ShowWDL"> false </OPTION>
 		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
 		<OPTION name="SmartPruningFactor"> 1.330000 </OPTION>
 		<OPTION name="SmartPruningMinimumBatches"> 0 </OPTION>

@@ -137,6 +137,7 @@ abstract public class EnginePlugin
 
 	//	numeric format for centipawn scores
 	protected static final DecimalFormat CENTIPAWN_FORMAT = new DecimalFormat("+###0.00;-###0.00" );
+	protected static final DecimalFormat PERCENTAGE_FORMAT = new DecimalFormat("##0 '%';-##0 '%'" );
 
 	/**	used to parse input moves	 */
 	protected Parser moveParser;
@@ -903,6 +904,10 @@ abstract public class EnginePlugin
 
 	private String printScoreText(Score score, boolean tooltip, boolean with_wdl)
 	{
+		if (score.cp <=  Score.UNKNOWN) {
+			return "?";
+		}
+
 		HashMap pmap = new HashMap();
 		String key;
 		if (score.flags==Score.EVAL_GAME_COUNT)
@@ -914,8 +919,6 @@ abstract public class EnginePlugin
 				pmap.put("count", Integer.toString(score.cp));
 			key = "plugin.gamecount";
 		}
-		else if (score.cp <=  Score.UNKNOWN)
-			key = null;
 		else if (score.cp > Score.WHITE_MATES)
 		{
 			int plies = score.cp-Score.WHITE_MATES;
@@ -960,12 +963,46 @@ abstract public class EnginePlugin
 		return printScoreText(score, true, with_wdl);
 	}
 
+	/**
+	 * map centipawn/win percentage to interval [0..1]
+	 * @param sc
+	 * @return value in [0..1]
+	 */
 	public double mapUnit(Score sc) {
-		return Double.NaN;
+		assert(sc.cp >= Score.UNKNOWN);
+		//	we assume arbitrary, but practicable, upper limits for centipawns
+		//	fitting the eval bar (4 squares = 4 pawn units = 400 centipawns
+		return mapUnit(sc.cp,-400,+400);
 	}
 
-	public double[] mapUnitWDL(Score sc) {
-		return new double[3];
+	protected double mapUnit(int cp, int cpmin, int cpmax) {
+		if (cp >= cpmax) return 1.0;
+		if (cp <= cpmin) return 0.0;
+		//	derived classes may implement different mappings, e.g. for percentage scores, etc.
+		return (double) (cp - cpmin) / (cpmax - cpmin);
 	}
 
+	/**
+	 * map WDL scores to intervals [0..1]
+	 * @param sc
+	 * @return double[3] for white wins, draw, black wins
+	 */
+	public double[] mapUnitWDL(Score sc)
+	{
+		double[] result = new double[3];
+		if (!sc.hasWDL()) {
+			//	use linear score
+			result[0] = mapUnit(sc);
+			result[1] = 0.0;
+			result[2] = 1.0-result[0];
+			return result;
+		}
+		else {
+			int sum = sc.sumWDL();
+			result[0] = (double)sc.win / sum;
+			result[1] = (double)sc.draw / sum;
+			result[2] = (double)sc.lose / sum;
+		}
+		return result;
+	}
 }

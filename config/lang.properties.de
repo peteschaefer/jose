@@ -280,7 +280,7 @@ plugin.black.mates = -#%eval%
 plugin.black.mates.tip = Schwarz setzt in %eval% Zügen matt
 
 plugin.evaluation = %eval%
-plugin.evaluation.tip = Stellungsbewertung: %eval%
+plugin.evaluation.tip = Stellungsbewertung: %eval% Bauerneinheiten
 
 plugin.gamecount = %count%
 plugin.gamecount.tip = %count% Partien

@@ -31,19 +31,7 @@ libraries needed:
 
 * mouse hover PV: display position (on main board? no. in tooltip is better)
 
-? eval bar
-  * fix score perspective:
-  - cp is always from whites perspective. range differs with ScoreType
-
-        Stockfish       Leela
-cp      white           white       [-2000..+2000]
-win%                    white       [ -100.. +100]  toggles with each move (why?)
-Q, W-L                  white       [ -100.. +100]
-wdl_mu                  white       [-2000..+2000]  ~= Stockfish centipawns
-
-wdl     current         current     sum=1000      toggles with each move :(
-
-* score POV adjustable? (white/current)
+* score POV adjustable? (uci provides current poc; adjusted for white)
 ? score graph??
 * eval bar 3D
 ? commentary arrows and highlights

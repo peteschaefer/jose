@@ -790,32 +790,15 @@ public class BoardView2D
 	public void drawEvalbar(Graphics2D g, Border b)
 	{
 		if (!showEvalbar) return;	//	that was easy
-		if (this.score==null) return;	//	no useful score
+		if (this.eval==null) return;	//	no useful score
 
 		int boardSize = 8*squareSize;
-		int hwhite,hgrey;
 
-		if (score.hasWDL()) {
-			//	prefer WDL if present
-			int sum = score.sumWDL();
-			hwhite = score.win * boardSize / sum;
-			hgrey = score.draw * boardSize / sum;
-		}
-		else if (score.cp != Score.UNKNOWN) {
-			//	todo get score range from Engine (centipawn = [-400..+400] but can differ for modern Engines)
-			int minScore = -400;
-			int maxScore = +400;
-			int cp = score.cp;
-			cp = Math.min(maxScore,cp);
-			cp = Math.max(minScore,cp);
-			hwhite = (cp-minScore) * boardSize / (maxScore-minScore);
-			hgrey = 0;
-		}
-		else {
-			return;
-		}
+		assert(eval.length==3);
+		int hwhite = (int)(boardSize * eval[0]+0.5);
+		int hgrey =  (int)(boardSize * eval[1]+0.5);
+		int hblack = boardSize - hwhite-hgrey;
 
-		int hblack = boardSize - hwhite - hgrey;
 		int x2 = inset.x+boardSize;
 		int y2 = inset.y+boardSize;
 		int gap = (int)(squareSize*0.1f);
