@@ -18,7 +18,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 	at de.jose.view.list.IntervalCacheModel.getRowAt(IntervalCacheModel.java:601)
 	at de.jose.view.list.IntervalCacheModel.getValueAt(IntervalCacheModel.java:567)
 
-[ ] db: expected data on row ?
+[ ] db: expected data on row 
 java.sql.SQLException: data expected at row 17, Id=1018
 	at de.jose.view.list.IntervalCacheModel.readData(IntervalCacheModel.java:713)
 	at de.jose.view.list.IntervalCacheModel.readRow(IntervalCacheModel.java:642)
