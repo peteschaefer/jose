@@ -13,6 +13,17 @@
 [ ] db: expected data on row ?
 [.] MoreGame missing? detect on start; use more robust sequence, at least
 
+=== Database Repair Tool
+1. close db window
+2. shutdown server
+3. myisamchk -c
+4. myisamchk -r
+5. restart server, or quit
+6. GameRepair (also: Player, Event, Collection references)
+7. open db window
+
+[ ] repair button in error dialog (for SQLExceptions)
+
 ==== Project
 
 [x] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)

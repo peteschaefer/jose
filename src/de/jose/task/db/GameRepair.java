@@ -3,12 +3,14 @@ package de.jose.task.db;
 import de.jose.Application;
 import de.jose.Main;
 import de.jose.db.JoConnection;
+import de.jose.db.MySQLAdapter;
 import de.jose.pgn.Collection;
 import de.jose.task.DBTask;
 import de.jose.task.MaintenanceTask;
 import de.jose.window.JoDialog;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.sql.SQLException;
 
 
@@ -39,28 +41,40 @@ public class GameRepair
     public static boolean checkOnStart() throws SQLException
     {
         JoConnection conn = null;
-        try {
-            conn = JoConnection.get();
-            int maxId = conn.selectMaxIntValue("Game","Id");
-            int maxGId = conn.selectMaxIntValue("MoreGame","GId");
-            if (maxId != maxGId) {
-                String message= "Database: Game.Id "
-                        +" and MoreGame.GId "
-                        +" are out of synch ("+maxId+" != "+maxGId+")."
-                        +"\n\n"
-                        +"Repairing Game Table. ";
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        JoDialog.showErrorDialog(message);
+        for(;;)
+            try {
+                conn = JoConnection.get();
+                int maxId = conn.selectMaxIntValue("Game", "Id");
+                int maxGId = conn.selectMaxIntValue("MoreGame", "GId");
+                if (maxId != maxGId) {
+                    String message = "Database: Game.Id "
+                            + " and MoreGame.GId "
+                            + " are out of synch (" + maxId + " != " + maxGId + ")."
+                            + "\n\n"
+                            + "Repairing Game Table. ";
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            JoDialog.showErrorDialog(message);
+                        }
+                    });
+                    return false;
+                }
+                return true;
+            } catch (SQLException e) {
+                if (e.getErrorCode()==144) {
+                    //  table is crashed and needs to be fixed by myisamchk
+                    try {
+                        MySQLAdapter.fixCrashedTable("Game");
+                        MySQLAdapter.fixCrashedTable("MoreGame");
+                    } catch (Exception ex) {
+
                     }
-                });
-                return false;
+                }
+            } finally {
+                conn.release();
             }
-        } finally {
-            conn.release();
-        }
-        return true;
+        //return true;
     }
 
     private static final String MISSING_MOREGAME =

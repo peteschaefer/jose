@@ -425,6 +425,31 @@ public class MySQLAdapter
 		return result.toString();
 	}
 
+	public static void fixCrashedTable(String table) throws IOException, InterruptedException {
+		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
+		File lockFile = new File(Application.theDatabaseDirectory, "db.lock");
+
+		Vector command = new Vector();
+		Vector env = new Vector();
+		String binPath = Application.theWorkingDirectory.getAbsolutePath()+File.separator+"bin";
+		String execPath = binPath+File.separator+Version.osDir+File.separator+"myisamchk";
+
+		command.add(execPath);
+		command.add("-r");
+		command.add(table);
+
+		String[] args = (String[])new String[command.size()];
+		command.toArray(args);
+
+		ProcessBuilder pb = new ProcessBuilder(args);
+		pb.directory(new File(mysqldir,"jose"));
+		pb.redirectErrorStream(true);
+		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+		Process check = pb.start();
+		int result = check.waitFor();
+	}
+
 	public Process startStandaloneServer(boolean printCommandLine)
 		throws IOException
 	{
