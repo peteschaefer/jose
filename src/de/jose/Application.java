@@ -2361,7 +2361,7 @@ public class Application
 		Command cmd = new Command("move.notify",null,mv);
 		broadcast(cmd);
 
-		if (mv.isGameFinished()) {
+		if (mv.isGameFinished(false)) {
 			gameFinished(mv.flags, theGame.getPosition().movedLast(), theGame.isMainLine());
 			theClock.halt();
 		}
@@ -3097,7 +3097,7 @@ public class Application
 
 			theCommandDispatcher.broadcast(new Command("move.notify", null, mv), this);
 
-			if (mv.isGameFinished())
+			if (mv.isGameFinished(false))
 				gameFinished(mv.flags,pos.movedLast(), theGame.isMainLine());
 
 			classifyOpening();
@@ -3551,7 +3551,7 @@ public class Application
 
 		theCommandDispatcher.broadcast(new Command("move.notify", null, entry.move), this);
 
-		if (entry.move.isGameFinished())
+		if (entry.move.isGameFinished(false))
 			gameFinished(entry.move.flags,pos.movedLast(), theGame.isMainLine());
 
 		classifyOpening();
@@ -3659,7 +3659,7 @@ public class Application
 	private void pausePlugin(boolean analyze)
 	{
 		if (getEnginePlugin() != null) {
-			if (analyze && !theGame.getPosition().isGameFinished())
+			if (analyze && !theGame.getPosition().isGameFinished(true))
 				getEnginePlugin().analyze(theGame.getPosition());
 			else if (!getEnginePlugin().isPaused())
 				getEnginePlugin().pause();

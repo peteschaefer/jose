@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -502,7 +502,7 @@ public class Board
 	public final boolean isDraw50()					{ return EngUtil.isDraw50(theFlags); }
 	public final boolean isDrawMat()			    { return EngUtil.isDrawMat(theFlags); }
 
-	public final boolean isGameFinished()			{ return EngUtil.isGameFinished(theFlags); }
+	public final boolean isGameFinished(boolean strict)			{ return EngUtil.isGameFinished(theFlags,strict); }
 
 
 	//-------------------------------------------------------------------------------

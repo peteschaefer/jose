@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -150,7 +150,7 @@ public class Move
 	public final boolean isCheck()				{ return EngUtil.isCheck(flags); }
 	public final boolean isCapture()			{ return captured != null; }
 
-	public final boolean isGameFinished()		{ return EngUtil.isGameFinished(flags); }
+	public final boolean isGameFinished(boolean strict)		{ return EngUtil.isGameFinished(flags,strict); }
 
 	public final boolean isMate()				{ return EngUtil.isMate(flags); }
 	public final boolean isStalemate()			{ return EngUtil.isStalemate(flags); }

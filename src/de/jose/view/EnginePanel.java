@@ -584,7 +584,7 @@ public class EnginePanel
 	                                 int paddingTop, int paddingLeft, int paddingBottom, int paddingRight)
 	{
 //		JTextComponent label = new JoStyledLabel(Language.get(name));
-		JoBigLabel label = new JoBigLabel(Language.get(name),1,4);
+		JoBigLabel label = new JoBigLabel(""/*Language.get(name)*/,1,4);
 		label.setName(name);
 //		label.setText(Language.get(name));
 		label.setToolTipText(Language.getTip(name));

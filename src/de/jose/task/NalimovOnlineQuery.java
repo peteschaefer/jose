@@ -90,7 +90,7 @@ public class NalimovOnlineQuery
     public int init()
             throws Exception
     {
-		if (pos.isGameFinished())
+		if (pos.isGameFinished(true))
 			return FAILURE;
 		else
 			return RUNNING;
@@ -126,7 +126,7 @@ public class NalimovOnlineQuery
 				if (!pos.tryMove(move)) break;
 				moveList.add(move);
 				//	System.err.println(move);
-				if (pos.isGameFinished()) break;
+				if (pos.isGameFinished(true)) break;
 				//  retrieve next
 				move = getBestMove(pos.toString());
 			}

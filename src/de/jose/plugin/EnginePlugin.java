@@ -881,7 +881,7 @@ abstract public class EnginePlugin
 
 	public boolean canAnalyze(Position pos)
 	{
-		return !pos.isGameFinished();
+		return !pos.isGameFinished(true);
 	}
 
 
@@ -997,7 +997,7 @@ abstract public class EnginePlugin
 	private String printScoreText(Score score, boolean tooltip, boolean with_wdl, boolean white_pov)
 	{
 		if (score.cp <=  Score.UNKNOWN) {
-			return "?";
+			return "";
 		}
 
 		HashMap pmap = new HashMap();

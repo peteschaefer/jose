@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -310,7 +310,14 @@ public class EngUtil
 	public static int setEnPassant(int flags, boolean on)		{ return Util.set(flags,EN_PASSANT_MOVE,on); }
 	public static int setPawnDouble(int flags, boolean on)		{ return Util.set(flags,PAWN_DOUBLE_MOVE,on); }
 
-	public static final boolean isGameFinished(int flags)		{ return Util.anyOf(flags,STALEMATE+DRAW_3+DRAW_50+DRAW_MAT); }
+	public static final boolean isGameFinished(int flags,boolean strict)
+	{
+		if (strict)
+			return Util.anyOf(flags,STALEMATE+DRAW_MAT);
+		else
+			return Util.anyOf(flags,STALEMATE+DRAW_3+DRAW_50+DRAW_MAT);
+		//	Draw-3 and Draw-50 are optional, game can continue
+	}
 
 	/**
 	 * @param flags position flags

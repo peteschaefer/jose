@@ -671,7 +671,7 @@ public class UciPlugin
 
 			    /** check for mate and stalemate here
 			     */
-			    if (enginePosition.isGameFinished()) {
+			    if (enginePosition.isGameFinished(true)) {
 				    /**  do not start pondering in an illegal position
 				     *  (because the engine will not respond an ignoreMoves gets out of synch !!)
 				     */
