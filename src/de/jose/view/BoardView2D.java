@@ -924,9 +924,7 @@ public class BoardView2D
 		if (c==null) c = "?";
 
 		try {
-			return FontCapture.getImage(font, size, c, white, black,
-					bounds, FontCapture.SYNCH, lock);
-
+			return FontCapture.getImage(font, size, c, white, black, bounds, lock);
 		} catch (FileNotFoundException e) {
 			Application.error(e);
 			return null;

@@ -555,8 +555,8 @@ public class ImgUtil
 	
 	public static void fill(Graphics2D g, Shape[] shapes)
 	{
-		for (int i=0; i<shapes.length; i++)
-			g.fill(shapes[i]);
+		for (Shape shp : shapes)
+			g.fill(shp);
 	}
 
 	public static BufferedImage toBufferedImage(Image src)

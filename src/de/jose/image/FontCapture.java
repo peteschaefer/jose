@@ -29,9 +29,6 @@ import java.util.*;
 
 public class FontCapture
 {
-	public static final boolean ASYNCH = true;
-	public static final boolean SYNCH = false;
-	
 	public static final boolean LOCK = true;
 	public static final boolean TRANSIENT = false;
 	
@@ -52,14 +49,13 @@ public class FontCapture
 	public static BufferedImage getImage(String font, int size, String c,
 										 Surface white, Surface black,
 										 Rectangle bounds,
-										 boolean asynch,
 										 boolean locked)
 		throws FileNotFoundException
 	{
 		String hashkey = hashKey(font,size,c, white,black);
 		MapEntry ety = (MapEntry)cache.get(hashkey,locked);
 		if (ety==null) {
-            ety = capture(font,size,c,white,black, true, true, asynch);
+            ety = capture(font,size,c,white,black, true, true);
 			cache.put(hashkey, ety, locked);
 		}
 
@@ -136,7 +132,7 @@ public class FontCapture
 	                                     boolean transparent, boolean shadow)
 	        throws FileNotFoundException
 	{
-		MapEntry ety = capture(fontName,fontSize,c,white,black, transparent, shadow, false);
+		MapEntry ety = capture(fontName,fontSize,c,white,black, transparent, shadow);
 
 		if (bounds!=null)
 			bounds.setBounds(ety.bounds);
@@ -146,21 +142,14 @@ public class FontCapture
 
 	private static MapEntry capture(String fontName, int fontSize, String c,
 	                                Surface white, Surface black,
-	                                boolean transparent, boolean shadow, boolean asynch)
+	                                boolean transparent, boolean shadow)
 		throws FileNotFoundException
 	{
 		MapEntry ety = new MapEntry();
 		
 		Font font = FontUtil.newFont(fontName, Font.PLAIN, fontSize);
 		c = checkPrintable(c,font);
-		
-		if (asynch) {
-			CaptureThread thr = new CaptureThread(ety,font,c,white,black, transparent, shadow);
-			thr.start();
-		}
-		else {
-			draw(ety,font,c,white,black, transparent, shadow);
-		}
+		draw(ety,font,c,white,black, transparent, shadow);
 		return ety;
 	}
 	
@@ -437,38 +426,6 @@ public class FontCapture
 	//-------------------------------------------------------------------------------
 	//	Rendering Thread
 	//-------------------------------------------------------------------------------
-
-
-	static class CaptureThread extends Thread
-	{
-		MapEntry ety;
-		Font font;
-		String c;
-		Surface white, black;
-		boolean transparent;
-		boolean shadow;
-
-		CaptureThread(MapEntry anEntry, Font fnt, String text, Surface wh, Surface bl, boolean transp, boolean sh)
-		{
-			ety = anEntry;
-			font = fnt;
-			c = text;
-			white = wh;
-			black = bl;
-			transparent = transp;
-			shadow = sh;
-		}
-
-		public void run()
-		{
-			try {
-				draw(ety,font,c,white,black, transparent, shadow);
-			} catch (FileNotFoundException ex) {
-				Application.error(ex);
-			}
-		}
-
-	}
 
 	//-------------------------------------------------------------------------------
 	//	Font Sampling
