@@ -59,7 +59,7 @@ public class History
 
 		ArrayList<Game> collect = new ArrayList<>();
         for (Game gm : games) {
-            if (gm != null && (!gm.isEmpty() || includeEmpty))
+            if (gm != null && (gm.hasContents() || includeEmpty))
                 collect.add(gm);
         }
 		if (collect.isEmpty())
