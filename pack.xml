@@ -306,8 +306,15 @@
 				<exclude name="more nets/**"/>
 			</zipfileset-->
 		</zip>
+		<!--
+		note: choose minimal hardware requirements
+		- openblas = no gpu
+		- onnx-dml = old gpu
+		more recent versions hav cuda and cudnn. users have to install themselves
+		-->
 		<zip destfile="${zip-file}" update="true">
-			<zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/>
+			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
+			<zipfileset src="lc0-onnx-dml.zip" prefix="${appldir}/engines/lc0"/>
 		</zip>
 	</target>
 
