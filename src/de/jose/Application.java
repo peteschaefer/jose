@@ -3506,6 +3506,7 @@ public class Application
 					 @Override
 					 public void run() {
 						 frame.setComponentsVisible(true);
+						 frame.revalidate();
 					 }
 				 });
 			}

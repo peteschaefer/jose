@@ -137,8 +137,9 @@ public class Pawn
 					i1.i++;
 		case 1:		//  capture right
 					result.to = result.from+vector[2];
-					if (pos.checkMove(result) && checkMove(result)
-					        && nextPromo(i1,i2,result))
+					if (pos.checkMove(result)
+							&& nextPromo(i1,i2,result)
+							&& checkMove(result))
 						return true;
 					//	fall-through íntended
 					i1.i++;
@@ -151,10 +152,12 @@ public class Pawn
 					//	fall-through íntended
 					i1.i++;
 		case 3:		//  two-step
-					result.to = result.from+vector[4];
-					if (pos.isEmpty(result.to) && pos.isEmpty(result.from+vector[1])) {
-						i1.i++;
-						return true;
+					if (EngUtil.rowOf(result.from)==EngUtil.pawnRow(this.color())) {
+						result.to = result.from + vector[4];
+						if (pos.isEmpty(result.to) && pos.isEmpty(result.from + vector[1])) {
+							i1.i++;
+							return true;
+						}
 					}
 		}
 		return false;

@@ -10,6 +10,9 @@ import de.jose.view.MoveGesture;
 import javax.swing.*;
 import java.util.Stack;
 
+import static de.jose.Application.ANALYSIS;
+import static de.jose.Application.USER_INPUT;
+
 public abstract class EBoardConnector
 {
 
@@ -192,22 +195,30 @@ public abstract class EBoardConnector
     private void findUserMove(BoardState st)
     {
         //  look for (a) legal move,
-        Move mv = guessMove(st,appXFen,app.board.getPosition());
+        Position pos = app.board.getPosition();
+        Move mv = guessMove(st,pos);
         if (mv!=null) {
-            if (!app.board.isLegal(mv))
-                doBeep(200,300);
-            else
-                userMove(mv);
+            userMove(mv);
             return;
         }
-        /*  todo is there a feasible way to look ahead TWO moves
-            to detect exchange sequences ?
-         */
+
+        if (Application.theApplication.theMode==USER_INPUT || Application.theApplication.theMode==ANALYSIS)
+        {
+            //  todo
+            //  guess take-take combination with diff_cnt = 2 or 3
+            //  two origin squares empty, one occupied square
+            Move[] mv2 = guessDoubleTake(st,appXFen,pos);
+            if (mv2!=null) {
+                if (userMove(mv2[0]))
+                    userMove(mv2[1]);
+                return;
+            }
+        }
+
         //  (b) retract last _human_ move
         if (st.diff_cnt < 2) return;
         if (!canUndoMove()) return;
 
-        Position pos = app.board.getPosition();
         Move m1 = pos.getLastMove(1);
         if (wasAcked && guessUndone(st,m1)) {
             //  last engine move was replicated on board
@@ -225,10 +236,17 @@ public abstract class EBoardConnector
         }
     }
 
-    private void userMove(Move mv)
+    private boolean userMove(Move mv)
     {
-        Command cmd = new Command("move.user", null, mv);
-        AbstractApplication.theCommandDispatcher.handle(cmd,app.listener);
+        if (!app.board.isLegal(mv)) {
+            doBeep(200, 300);
+            return false;
+        }
+        else {
+            Command cmd = new Command("move.user", null, mv);
+            AbstractApplication.theCommandDispatcher.handle(cmd, app.listener);
+            return true;
+        }
     }
 
 
@@ -263,7 +281,7 @@ public abstract class EBoardConnector
         return row*9+file;
     }
 
-    private Move guessMove(BoardState st, StringBuilder appXfen, Position pos)
+    private Move guessMove(BoardState st, Position pos)
     {
         if (st.diff_cnt < 2 || st.diff_cnt > 4) return null;
 
@@ -278,6 +296,48 @@ public abstract class EBoardConnector
             if (!pos.checkMove(mv)) continue;
             if (!st.changed(MoveGesture.destSquare(mv),MoveGesture.destPiece(mv))) continue;
             return mv;
+        }
+        return null;
+    }
+
+    private Move[] guessDoubleTake(BoardState st, StringBuilder appXfen, Position pos)
+    {
+        //  todo
+        //  guess take-take combination with diff_cnt = 2 or 3
+        //  two origin squares empty, one occupied square
+        if (st.diff_cnt < 2 || st.diff_cnt > 3) return null;
+
+        MoveIterator moves = new MoveIterator(pos);
+        while(moves.next())
+        {
+            Move mv = moves.getMove();
+            if (!st.changed(MoveGesture.origSquare(mv),Constants.EMPTY)) continue;
+            if (!pos.checkMove(mv)) continue;
+            //  if the intermediate move is a promotion, prefer a queen
+            //  (it will be captured, anyway)
+            if (mv.isPromotion() && mv.getPromotionPiece()!=Constants.QUEEN) continue;
+
+            if (pos.tryMove(mv))
+            try {
+                MoveIterator moves2 = new MoveIterator(pos);
+                while(moves2.next()) {
+                    Move mv2 = moves2.getMove();
+                    int p2 = MoveGesture.destPiece(mv2);
+
+                    if (mv.to!=mv2.to) continue;
+                    if (!st.changed(MoveGesture.origSquare(mv2),Constants.EMPTY)) continue;
+                    if (!pos.checkMove(mv2)) continue;
+
+                    switch(st.diff_cnt) {
+                        case 2:  if (st.equals(mv2.to,p2)) break; else continue;
+                        case 3:  if (st.changed(mv2.to,p2)) break; else continue;
+                        default: continue;
+                    }
+                    return new Move[] { mv,mv2 };
+                }
+            } finally {
+                pos.undoMove();
+            }
         }
         return null;
     }
@@ -322,12 +382,7 @@ public abstract class EBoardConnector
         boolean changed(int square, int piece)
         {
             int idx = xfenIndex(square);
-            char pc;
-            if (piece==Constants.EMPTY)
-                pc = '1';
-            else
-                pc = EngUtil.coloredPieceCharacter(piece);
-            return diff.charAt(idx)=='1' && fen.charAt(idx)==pc;
+            return diff.charAt(idx)=='1' && equals(square,piece);
         }
         boolean equals(int square, int piece)
         {

@@ -398,6 +398,14 @@ public class EngUtil
 			return BLACK_BASE_ROW;
 	}
 
+	public static final int pawnRow(int color)
+	{
+		if (isWhite(color))
+			return WHITE_PAWN_ROW;
+		else
+			return BLACK_PAWN_ROW;
+	}
+
 	/**
 	 * @return the square of the geometric distance between two squares
 	 */
