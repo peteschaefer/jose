@@ -1221,6 +1221,7 @@ public class BoardView2D
 
 	static final Surface light = new Surface(COLOR,Color.lightGray,null);
 	static final Surface dark = new Surface(COLOR,Color.darkGray,null);
+	static final Surface transparent = new Surface(COLOR,new Color(255,255,255,0),null);
 
 	protected void drawCentered(Graphics2D g2, char c, boolean whiteOnBlack, int xc, int yc, int fontSize)
 	{
@@ -1246,7 +1247,15 @@ public class BoardView2D
 	//	todo move to FontUtil or something
 	public static ImageIcon getFontAwesomeIcon(char c, float size, Color color)
 	{
-		BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
+        try {
+            BufferedImage img = FontCapture.getImage(fontAwesome.getFontName(), (int)size, Character.toString(c),
+                    dark,light, null, false);
+			return new ImageIcon(img);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+/*
+        BufferedImage buffer = new BufferedImage((int)size, (int)size, TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) buffer.getGraphics();
 
 		Font font = fontAwesome.deriveFont(Font.PLAIN,size);
@@ -1262,6 +1271,7 @@ public class BoardView2D
 		g.setColor(color);
 		g.drawString(s,0, buffer.getHeight()-fm.getDescent());
 		return new ImageIcon(buffer);
+ */
 	}
 
 	protected char evalChar(int color)
