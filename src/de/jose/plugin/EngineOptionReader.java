@@ -21,6 +21,7 @@ import de.jose.util.ProcessUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import org.w3c.dom.Element;
@@ -141,13 +142,9 @@ public class EngineOptionReader
 			EnginePlugin.setNameVersion(new_cfg,uciplug.getEngineName());
 			EnginePlugin.setAuthor(new_cfg,uciplug.getEngineAuthor());
 
-			Vector ucioptions = uciplug.getUciOptions();
-			for (int i=0; i<ucioptions.size(); i++)
-			{
-				UciPlugin.Option option = (UciPlugin.Option)ucioptions.get(i);
+			for (UciPlugin.Option option : uciplug.getUciOptions())
 				if (option.type!=UciPlugin.BUTTON)
 					EnginePlugin.setOptionValue(new_cfg, option.name, option.defaultValue);
-			}
 
 			EnginePlugin.setOptionValue(new_cfg,"Ponder","true");
 			if (uciplug.supportsOption("OwnBook"))
@@ -196,10 +193,7 @@ public class EngineOptionReader
 	private void setDefaultUciValues(Element cfg) throws IOException
 	{
 		UciPlugin plug = readUciOptions(cfg);
-		Vector options = plug.getUciOptions();
-		for (int i=0; i<options.size(); i++)
-		{
-			UciPlugin.Option option = (UciPlugin.Option)options.get(i);
+		for (UciPlugin.Option option : plug.getUciOptions())
 			switch (option.type)
 			{
 			case UciPlugin.CHECKBOX:
@@ -211,6 +205,5 @@ public class EngineOptionReader
 
 			case UciPlugin.BUTTON:    /* ignore */ break;
 			}
-		}
 	}
 }

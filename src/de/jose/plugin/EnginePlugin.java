@@ -674,6 +674,13 @@ abstract public class EnginePlugin
 	public final boolean isAnalyzing()		{ return mode == ANALYZING; }
 
 
+	public final void restartAnalysis() {
+		if (isAnalyzing()) {
+			pause();
+			analyze(applPosition);
+		}
+	}
+
     abstract public boolean canPonder();
 
     abstract public boolean isActivelyPondering();

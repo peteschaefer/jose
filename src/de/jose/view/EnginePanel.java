@@ -82,6 +82,7 @@ public class EnginePanel
     protected JTextArea tPVHistory;
     protected String pvHistLastLine;
     protected boolean showHistory;
+	protected boolean showTooltips;
 
 	protected JPanel infoPanel, pvPanel;
     protected JScrollPane pvScroller;
@@ -369,6 +370,14 @@ public class EnginePanel
 		return plugin;
 	}
 
+	public UciPlugin getUciPlugin() {
+		EnginePlugin plugin = getPlugin();
+		if (plugin!=null && plugin instanceof UciPlugin)
+			return (UciPlugin)plugin;
+		else
+			return null;
+	}
+
 	protected JoBigLabel getInfoLabel(boolean create)
 	{
 		JoBigLabel info = getDynamicLabel(lPrimaryVariation,0, create, true, "plugin.info");
@@ -388,7 +397,7 @@ public class EnginePanel
 		synchronized (this) {
 			JoBigLabel eval = getDynamicLabel(lEval, idx+1, true, show, "plugin.eval."+(idx+1));
 			pv.setVisible(true);
-			pv.tooltip = new PopupBoardWindow(this,idx);
+			showTooltip(idx);
 			pv.setToolTipText("?");
 			eval.setVisible(true);
 			pvPanel.add(pv);
@@ -413,7 +422,7 @@ public class EnginePanel
 		synchronized (this) {
 			JoBigLabel pv = getDynamicLabel(lPrimaryVariation, idx+1, true, show, "plugin.pv."+(idx+1));
 			pv.setVisible(true);
-			pv.tooltip = new PopupBoardWindow(this,idx);
+			showTooltip(idx);
 			pv.setToolTipText("?");
 			eval.setVisible(true);
 			pvPanel.add(pv);
@@ -971,6 +980,7 @@ public class EnginePanel
 	public void init()
 	{
         showHistory = Application.theUserProfile.getBoolean("plugin.pv.history");
+		showTooltips = Application.theUserProfile.getBoolean("plugin.pv.tooltips");
 
 		StringMoveFormatter.setDefaultLanguage(Application.theUserProfile.getFigurineLanguage());
 
@@ -1100,6 +1110,27 @@ public class EnginePanel
         AWTUtil.scrollDown(pvScroller,pvPanel);
     }
 
+	public void showTooltips(boolean on)
+	{
+		if (on==showTooltips) return;
+
+		showTooltips = on;
+		for(int i=0; i < pvCount; ++i)
+			showTooltip(i);
+
+		Application.theUserProfile.set("plugin.pv.tooltips",showTooltips);
+	}
+
+	public void showTooltip(int idx)
+	{
+		JoBigLabel pv = getPvLabel(idx,false,false);
+		if (pv==null) return;
+		if (showTooltips)
+			pv.tooltip = new PopupBoardWindow(this,idx);
+		else
+			pv.tooltip = null;
+	}
+
 	private void showLines(int from, boolean visible)
 	{
 		JoBigLabel label;
@@ -1132,10 +1163,35 @@ public class EnginePanel
 		list.add("menu.game.draw");
 		list.add("menu.game.resign");
 
+		list.add(ContextMenu.SEPARATOR);
+
+		list.add(showTooltips);
+		list.add("plugin.pv.tooltips");		// 	-> user profile
+
+		if (plugin!=null && plugin instanceof UciPlugin)
+		{
+			UciPlugin uciplug = (UciPlugin)plugin;
+
+			String opt_wdl = uciplug.getOptionValue("UCI_ShowWDL");
+			String opt_verb = uciplug.getOptionValue("VerboseMoveStats");
+
+			if (opt_wdl!=null)
+			{
+				list.add(opt_wdl.equals("true"));
+				list.add("plugin.score.wdl");        //	-> engine setting
+			}
+			if (opt_verb!=null)
+			{
+				list.add(opt_verb.equals("true"));
+				list.add("plugin.verbose.stats");    //	-> engine setting
+			}
+			//	todo Leela ScoreTypes ?
+		}
+
         list.add(ContextMenu.SEPARATOR);
 
-        list.add(Util.toBoolean(showHistory));
-        list.add("plugin.pv.history");
+        //list.add(Util.toBoolean(showHistory));
+        //list.add("plugin.pv.history"); expert mode is deprecated
 
 		/** line specific commands  */
 		for (int i=0; i < pvCount; i++)
@@ -1156,16 +1212,17 @@ public class EnginePanel
 			}
 		}
 
+		list.add(ContextMenu.SEPARATOR);
+
 		list.add("restart.plugin");
 
 		/** show UCI options    */
 		if (plugin != null && (plugin instanceof UciPlugin))
 		{
-			Vector buttons = ((UciPlugin)plugin).getUciButtons();
+			ArrayList<UciPlugin.Option> buttons = ((UciPlugin)plugin).getUciButtons();
 			if (buttons!=null) {
-				for (int i=0; i < buttons.size(); i++)
+				for (UciPlugin.Option option : buttons)
 				{
-					UciPlugin.Option option = (UciPlugin.Option)buttons.get(i);
                     String title = StringUtil.trim("plugin.option."+option.name, StringUtil.TRIM_ALL);
 					title = Language.get(title, option.name);
 
@@ -1307,6 +1364,65 @@ public class EnginePanel
             }
         };
         map.put("plugin.pv.history",action);
+
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws IOException {
+				boolean tooltips = Application.theUserProfile.getBoolean("plugin.pv.tooltips");
+				tooltips = !tooltips;
+				Application.theUserProfile.set("plugin.pv.tooltips", tooltips);
+				showTooltips(tooltips);
+			}
+		};
+		map.put("plugin.pv.tooltips",action);
+
+		action = new CommandAction() {
+			public boolean isEnabled(String code) {
+				UciPlugin plugin = getUciPlugin();
+				return plugin != null && plugin.supportsOption("UCI_ShowWDL");
+			}
+			public void Do(Command cmd) throws IOException {
+				UciPlugin plugin = getUciPlugin();
+				if (plugin!=null && plugin.supportsOption("UCI_ShowWDL"))
+				{
+					String opt_wdl = plugin.getOptionValue("UCI_ShowWDL");
+					if (opt_wdl!=null)
+					{
+						boolean use_wdl = opt_wdl.equals("true");
+						use_wdl = !use_wdl;
+						EnginePlugin.setOptionValue(plugin.config,"UCI_ShowWDL",Boolean.toString(use_wdl));
+						plugin.setOptions(true);
+						plugin.restartAnalysis();
+					}
+				}
+			}
+		};
+		map.put("plugin.score.wdl",action);
+
+
+		action = new CommandAction() {
+			public boolean isEnabled(String code) {
+				UciPlugin plugin = getUciPlugin();
+				return plugin != null && plugin.supportsOption("VerboseMoveStats");
+			}
+			public void Do(Command cmd) throws IOException {
+				UciPlugin plugin = getUciPlugin();
+				if (plugin!=null && plugin.supportsOption("VerboseMoveStats"))
+				{
+					String opt_stats = plugin.getOptionValue("VerboseMoveStats");
+					if (opt_stats!=null)
+					{
+						boolean use_stats = opt_stats.equals("true");
+						use_stats = !use_stats;
+						EnginePlugin.setOptionValue(plugin.config,"VerboseMoveStats",Boolean.toString(use_stats));
+						plugin.setOptions(true);
+						plugin.restartAnalysis();
+					}
+				}
+			}
+		};
+		map.put("plugin.verbose.stats",action);
+
 	}
 
 	public boolean updateBook()

@@ -25,6 +25,7 @@ import de.jose.pgn.*;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.InputListener;
 import de.jose.plugin.Plugin;
+import de.jose.plugin.UciPlugin;
 import de.jose.profile.FrameProfile;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;

@@ -21,10 +21,7 @@ import de.jose.util.StringUtil;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.List;
+import java.util.*;
 
 /**
  *  implements the UCI engine protocol
@@ -69,7 +66,8 @@ public class UciPlugin
 	protected boolean frcMode = false;
 	protected boolean leelaMoveStats = false;
 
-	protected Vector<Option> options = new Vector<Option>();
+	//	might be accessed across threads. Better make it a thread-safe Vector (?)
+	protected ArrayList<Option> options = new ArrayList<Option>();
 
 	/** option types (= input elements) */
 
@@ -154,7 +152,7 @@ public class UciPlugin
 	/** FRC TODO */
 	public boolean supportsFRC()
 	{
-		return getOption(options,"UCI_Chess960")!=null;
+		return getOption("UCI_Chess960")!=null;
 	}
 
 	/** FRC TODO */
@@ -179,14 +177,14 @@ public class UciPlugin
 		return engineName;
 	}
 
-	public Vector getUciOptions()
+	public ArrayList<Option> getUciOptions()
 	{
 		return options;
 	}
 
 	public boolean supportsOption(String optionName)
 	{
-		Option option = getOption(options,optionName);
+		Option option = getOption(optionName);
 		return option!=null;
 		/*if (option==null)
 			return false;
@@ -195,15 +193,12 @@ public class UciPlugin
 	}
 
 
-	public Vector getUciButtons()
+	public ArrayList<Option> getUciButtons()
 	{
-		Vector collect = new Vector();
-		for (int i=0; i < options.size(); i++)
-		{
-			Option option = (Option)options.get(i);
+		ArrayList<Option> collect = new ArrayList<Option>();
+		for (Option option : options)
 			if (option.type==BUTTON)
 				collect.add(option);
-		}
 		return collect;
 	}
 
@@ -262,7 +257,7 @@ public class UciPlugin
 		//	"hidden" Leela option
 		leelaMoveStats = supportsOption("VerboseMoveStats");
 		if (leelaMoveStats && !supportsOption("LogLiveStats"))
-			parseOption("name LogLiveStats type check default true");
+			parseOption("option name LogLiveStats type check default true");
 
         //  set options
 		setOptions(false);
@@ -1136,7 +1131,8 @@ public class UciPlugin
 			if (option.values==null) option.values = new Vector<String>();
 			option.values.add(value.toString());
 		}
-		
+
+		assert(option.name!=null);
 		options.add(option);
 	}
 
@@ -1154,12 +1150,14 @@ public class UciPlugin
 
 	public static Option getOption(List<Option> optionList, String key)
 	{
-		for (int i=0; i < optionList.size(); i++)
-		{
-			Option option = optionList.get(i);
+		for (Option option : optionList)
 			if (option.name.equalsIgnoreCase(key)) return option;
-		}
 		return null;
+	}
+
+	public Option getOption(String key)
+	{
+		return UciPlugin.getOption(options,key);
 	}
 
 
