@@ -143,7 +143,9 @@ public class StyleChooser
 
 		//  notation
 		moveFormat = new MoveFormatList();
-		notationPanel.add(JoDialog.newLabel("move.format"), JoDialog.gridConstraint(JoDialog.LABEL_ONE,0,0,1));
+		GridBagConstraints labelOne = (GridBagConstraints) JoDialog.LABEL_ONE.clone();
+		labelOne.ipadx=60;
+		notationPanel.add(JoDialog.newLabel("move.format"), JoDialog.gridConstraint(labelOne,0,0,1));
 		notationPanel.add(moveFormat, JoDialog.gridConstraint(JoDialog.ELEMENT_TWO,1,0,3));
 
 		//  figurine font
@@ -234,7 +236,7 @@ public class StyleChooser
 		((SpinnerNumberModel)fontSize.getModel()).setMinimum(1);
 		fontSize.setPreferredSize(new Dimension(64,24));
 
-        editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE);
+        editPanel.add(JoDialog.newLabel("font.name"), JoDialog.LABEL_ONE_NOPAD);
 		GridBagConstraints constr = JoDialog.gridConstraint(JoDialog.ELEMENT_TWO, 1, 0, 1, GridBagConstraints.BOTH);
 		constr.weighty = 20.0;
 		editPanel.add(new JScrollPane(fontList,
@@ -242,7 +244,7 @@ public class StyleChooser
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
 				constr);
 
-        editPanel.add(JoDialog.newLabel("font.size"), JoDialog.LABEL_ONE);
+        editPanel.add(JoDialog.newLabel("font.size"), JoDialog.LABEL_ONE_NOPAD);
         editPanel.add(fontSize, JoDialog.gridConstraint(JoDialog.ELEMENT_TWO_SMALL,1,1,1));
 
 		Box box1 = Box.createHorizontalBox();

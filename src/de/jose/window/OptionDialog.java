@@ -27,6 +27,7 @@ import de.jose.plugin.EngineOptionReader;
 import de.jose.profile.UserProfile;
 import de.jose.util.*;
 import de.jose.util.file.ExecutableFileFilter;
+import de.jose.util.file.FileUtil;
 import de.jose.util.file.ImageFileFilter;
 import de.jose.util.map.IntHashSet;
 import de.jose.view.BoardPanel;
@@ -78,6 +79,7 @@ public class OptionDialog
 	private OpeningBookList bookList;
 	private EngineOptionReader engOptionReader;
 	private de.jose.eboard.DialogComponent eboardCtrl;
+	private Date lnfTouched;
 
 	protected static String yellowIcon = ":#dddd00:#444444";
 	protected static String greenIcon = ":#22cc00:#444444";
@@ -198,28 +200,27 @@ public class OptionDialog
 	protected void initTab0(Component comp0)
 	{
 		JPanel tab0 = (JPanel)comp0;
+		JPanel sbox = newGridBox("dialog.option.user.title");
 
-		addWithLabel(tab0,0,0,4, "user.name", new JTextField(24));
-		addWithLabel(tab0,0,1,4, "user.language", new LanguageList(
+		addWithLabel(sbox,0,0,4, "user.name", new JTextField(24));
+		addWithLabel(sbox,0,1,4, "user.language", new LanguageList(
 						Language.getAvailableLanguages(Application.theApplication.theLanguageDirectory)));
-		LookAndFeelList lookAndFeelList = new LookAndFeelList();
-		JLabel label = (JLabel)addWithLabel(tab0,0,2,4, "ui.look.and.feel2", lookAndFeelList);
-		label.setText(Language.get("dialog.option.ui.look.and.feel"));
 
 		//  load recent games
-		addWithLabel(tab0, 0,3,4, null, newCheckBox("doc.load.history"));
+		addWithLabel(sbox, 0,2,4, null, newCheckBox("doc.load.history"));
 		//  classify by ECO
-		addWithLabel(tab0, 0,4,4, null, newCheckBox("doc.classify.eco"));
+		addWithLabel(sbox, 0,3,4, null, newCheckBox("doc.classify.eco"));
 		//  associate PGN files with jose
         if (Version.windows)
-		    addWithLabel(tab0, 0,5,4, null, newCheckBox("doc.associate.pgn"));
+		    addWithLabel(sbox, 0,4,4, null, newCheckBox("doc.associate.pgn"));
         /**
          * hardcoded on Mac OS X (in Contents/Info.plist)
          * don't know how to do on Linux ?! 
          */
+		addBox(tab0, 0,0,4, sbox);
 
 		//  sound
-		JPanel sbox = newGridBox("dialog.option.sound");
+		sbox = newGridBox("dialog.option.sound");
 
 		FileInput sinput = newFileInputField("sound.moves.dir");
 		sinput.setBaseDirectory(new File(Application.theWorkingDirectory,"sounds"));
@@ -232,7 +233,7 @@ public class OptionDialog
 		addWithLabel(sbox, 0,2,4, null, newCheckBox("sound.moves.ack.user"));   //  acknowledge user moves
 		addWithLabel(sbox, 0,3,4, null, newCheckBox("sound.moves.user"));   //  speak user moves
 
-		addBox(tab0, 0,6,4, sbox);
+		addBox(tab0, 0,1,4, sbox);
 
 		tab0.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
@@ -240,18 +241,21 @@ public class OptionDialog
 	protected void initTab1(Component comp1)
 	{
 		JPanel tab1 = (JPanel)comp1;
+		JPanel abox = newGridBox("dialog.option.notation");
 
 		FontList fontList = FontList.createDiagramFontList(20,true);
 		fontList.setVisibleRowCount(5);
 		fontList.setMinimumSize(new Dimension(80,320)); //  has no effect on fucking GridBagLayout ;-((
 		//  diagram font
-		addWithLabel(tab1, 0,0,4, 0.0, 0.0,
+		addWithLabel(abox, 0,0,4, 0.0, 0.0,
 				"font.diagram", fontList,
 		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		//  write mode
-		addWithLabel(tab1, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode
+		addWithLabel(abox, 0,1,4, "doc.write.mode", new WriteModeList());    //  insert move mode
+
+		addBox(tab1, 0, 0, 4, abox);
 
 		//  Animation
 		JSlider aslider = AnimationDialog.createSlider("animation.speed");
@@ -264,17 +268,17 @@ public class OptionDialog
 		JPanel sbox = newGridBox("dialog.option.animation");
 
 		addWithLabel(sbox, 0,0,4, null, aslider);
-		addWithLabel(sbox, 1,1,3, null, newCheckBox("board.animation.hints"));    //  show hints
+		addWithLabel(sbox, 1,1,3, "", newCheckBox("board.animation.hints"));    //  show hints
 
 		addBox(tab1, 0,2,4, sbox);
 
 		// 	Board options
 		JPanel bbox = newGridBox("dialog.option.board");
 
-		addWithLabel(bbox, 0,0,2, null, newCheckBox("board.flip", "menu.game.flip", null));
+		addWithLabel(bbox, 0,0,2, "", newCheckBox("board.flip", "menu.game.flip", null));
 		addWithLabel(bbox, 2,0, 2, null, newCheckBox("board.evalbar", "menu.game.evalbar", null));
 
-		addWithLabel(bbox, 0,1,2, null, newCheckBox("board.coords", "menu.game.coords", null));
+		addWithLabel(bbox, 0,1,2, "", newCheckBox("board.coords", "menu.game.coords", null));
 		addWithLabel(bbox, 2,1,2, null, newCheckBox("board.suggestions", "menu.game.suggestions", null));
 
 		addBox(tab1, 0,3,4,bbox);
@@ -320,10 +324,15 @@ public class OptionDialog
 		addBox(tab2, 0,0,4, sbox);
 
 		sbox = newGridBox("dialog.option.lnf.title");
+
+		LookAndFeelList lookAndFeelList = new LookAndFeelList();
+		JLabel label = (JLabel)addWithLabel(sbox,0,0,4, "ui.look.and.feel2", lookAndFeelList);
+		label.setText(Language.get("dialog.option.ui.look.and.feel"));
+
 		if (Version.linux)
 			addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
 		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
-		sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
+		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
 		addBox(tab2, 0,1,4, sbox);
 
@@ -905,14 +914,6 @@ public class OptionDialog
 			}
 		};
 		map.put("lnf.theme.editor",action);
-		action = new CommandAction() {
-			public void Do(Command cmd) throws Exception {
-				Surface accentColor = (Surface)getValueByName("lnf.accent.color");
-				Application.theUserProfile.set("lnf.accent.color", accentColor);
-				Application.theApplication.resetLookAndFeel();
-			}
-		};
-		map.put("lnf.theme.reload",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception
@@ -953,6 +954,7 @@ public class OptionDialog
 
 	private void openThemeEditor()
 	{
+		lnfTouched = new Date();
 		String[] args = new String[] {
 				"jre/bin/java",
 				"-jar", "lib/plaf/flatlaf-theme-editor-3.5.4.jar",
@@ -1217,6 +1219,9 @@ public class OptionDialog
 				Application.theApplication.setLanguage(profile.getString("user.language"));
 			if (profile.changed("ui.look.and.feel2", oldValues))
 				Application.theApplication.setLookAndFeel(profile.getString("ui.look.and.feel2"));
+			if (profile.changed("lnf.accent.color", oldValues)
+					|| (lnfTouched!=null) && FileUtil.wasFileTouched(new File("config/themes"),lnfTouched))
+				Application.theApplication.resetLookAndFeel();
 			if (profile.changed("font.diagram",oldValues) ||
 			    profile.changed("board.surface.light",oldValues) ||
 				profile.changed("board.surface.dark",oldValues) ||

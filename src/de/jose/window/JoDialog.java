@@ -76,6 +76,11 @@ public class JoDialog
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
 							   GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
 							   INSETS_NORMAL, 90,0);
+	//	todo why such a large padding? who needs it?
+	public static final GridBagConstraints LABEL_ONE_NOPAD =
+			new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
+					GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
+					INSETS_NORMAL, 0,0);
 
 	public static final GridBagConstraints LABEL_INDENTED =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
@@ -891,7 +896,11 @@ public class JoDialog
 		if (labelName!=null)
 		{
 			if (labelName instanceof String) {
-				JLabel label = newLabel(getName()+"."+labelName);
+				JLabel label;
+				if (((String) labelName).isEmpty())
+					label = newLabel("");
+				else
+					label = newLabel(getName()+"."+labelName);
 				if (component!=null) {
 					label.setLabelFor(component);
 					component.setName((String)labelName);

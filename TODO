@@ -61,11 +61,11 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [x] accent color
         [x] Pickup from system (only Windows?)
         [x] open theme editor
-        [ ] move Lnf combo to Colors Tab
-        [ ] use 1 Apply button
+        [x] move Lnf combo to Colors Tab
+        [x] use 1 Apply button
         [ ] more boxes in F9
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
-    [ ] fix F4 layout
+    [x] fix F4 layout. LABEL_ONE.ipadx=90 is too large for many places.
     [-] remove l&f selection
     [x] in-component folder button
     [ ] add flatlaf to jar classpath; + theme-editor

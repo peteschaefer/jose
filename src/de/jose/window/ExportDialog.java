@@ -415,10 +415,12 @@ public class ExportDialog
 
 		unit = new Units.UnitPopup();
 
-		add(pp,newLabel("dialog.export.paper.format"), LABEL_ONE);
+		GridBagConstraints labelOne = (GridBagConstraints) LABEL_ONE.clone();
+		labelOne.ipadx = 60;
+		add(pp,newLabel("dialog.export.paper.format"), labelOne);
 		add(pp,paperList, ELEMENT_ROW);
 
-		add(pp,newLabel("dialog.export.paper.size"), LABEL_ONE);
+		add(pp,newLabel("dialog.export.paper.size"), labelOne);
 
 		Box box = Box.createHorizontalBox();
 		box.add(tWidth);
@@ -438,13 +440,13 @@ public class ExportDialog
 		tLeft = new JTextField("dialog.export.margin.left");
 		tRight = new JTextField("dialog.export.margin.right");
 
-		add(pm,newLabel("dialog.export.margin.top"), LABEL_ONE);
+		add(pm,newLabel("dialog.export.margin.top"), labelOne);
 		add(pm,tTop, ELEMENT_TWO);
 
 		add(pm,newLabel("dialog.export.margin.left"), LABEL_THREE);
 		add(pm,tLeft, ELEMENT_FOUR);
 
-		add(pm,newLabel("dialog.export.margin.bottom"), LABEL_ONE);
+		add(pm,newLabel("dialog.export.margin.bottom"), labelOne);
 		add(pm,tBottom, ELEMENT_TWO);
 
 		add(pm,newLabel("dialog.export.margin.right"), LABEL_THREE);

@@ -88,13 +88,14 @@ public class GameDetailsDialog
 		JPanel tab0 = (JPanel)comp0;
 		JTextField field;
 
-		tab0.add(newLabel("dialog.details.event"),LABEL_ONE);
+		GridBagConstraints labelOne = LABEL_ONE_NOPAD;
+		tab0.add(newLabel("dialog.details.event"), labelOne);
 		add(tab0, field=newTextField(TAG_EVENT), ELEMENT_ROW);
 
-		tab0.add(newLabel("dialog.details.site"),LABEL_ONE);
+		tab0.add(newLabel("dialog.details.site"), labelOne);
 		add(tab0, newTextField(TAG_SITE), ELEMENT_ROW);
 
-		tab0.add(newLabel("dialog.details.date"),LABEL_ONE);
+		tab0.add(newLabel("dialog.details.date"), labelOne);
 		add(tab0, field=newPgnDateField(TAG_DATE), ELEMENT_TWO);
 		setColumns(field,10);
 
@@ -102,7 +103,7 @@ public class GameDetailsDialog
 		add(tab0, field=newTextField(TAG_ROUND), ELEMENT_FOUR);
 		setColumns(field,8);
 
-		tab0.add(newLabel("dialog.details.eventdate"), LABEL_ONE);
+		tab0.add(newLabel("dialog.details.eventdate"), labelOne);
 		add(tab0, field=newPgnDateField(TAG_EVENT_DATE), ELEMENT_TWO);
 		setColumns(field,10);
 
@@ -118,27 +119,28 @@ public class GameDetailsDialog
 		JPanel tab1 = (JPanel)comp1;
 		JTextField field;
 
-		tab1.add(newLabel(""), LABEL_ONE);
+		GridBagConstraints labelOne = LABEL_ONE_NOPAD;
+		tab1.add(newLabel(""), labelOne);
 		tab1.add(newLabel("dialog.details.white"), ELEMENT_TWO_SMALL);
 		tab1.add(newLabel("dialog.details.black"), ELEMENT_ROW_SMALL);
 
-		tab1.add(newLabel("dialog.details.name"), LABEL_ONE);
+		tab1.add(newLabel("dialog.details.name"), labelOne);
 		add(tab1, newTextField(TAG_WHITE), ELEMENT_TWO);
 		add(tab1, newTextField(TAG_BLACK), ELEMENT_ROW);
 
-		tab1.add(newLabel("dialog.details.elo"), LABEL_ONE);
+		tab1.add(newLabel("dialog.details.elo"), labelOne);
 		add(tab1, field=newIntegerField(TAG_WHITE_ELO), ELEMENT_TWO_SMALL);
 		setColumns(field,4);
 		add(tab1, field=newIntegerField(TAG_BLACK_ELO), ELEMENT_ROW_SMALL);
 		setColumns(field,4);
 
-		tab1.add(newLabel("dialog.details.title"), LABEL_ONE);
+		tab1.add(newLabel("dialog.details.title"), labelOne);
 		add(tab1, field=newTextField(TAG_WHITE_TITLE), ELEMENT_TWO_SMALL);
 		setColumns(field,12);
 		add(tab1, field=newTextField(TAG_BLACK_TITLE), ELEMENT_ROW_SMALL);
 		setColumns(field,12);
 
-		tab1.add(newLabel("dialog.details.result"), LABEL_ONE);
+		tab1.add(newLabel("dialog.details.result"), labelOne);
 		Box box = Box.createHorizontalBox();
 		add(box,newToggleButton(TAG_RESULT+".1-0"),null);
 		add(box,newToggleButton(TAG_RESULT+".0-1"),null);
@@ -158,7 +160,8 @@ public class GameDetailsDialog
 		moreTags = newGridPane();
 //		moreTags.setBorder(new EmptyBorder(0,0,0,0));
 
-		moreTags.add(newLabel("dialog.details.eco"),LABEL_ONE);
+		GridBagConstraints labelOne = LABEL_ONE_NOPAD;
+		moreTags.add(newLabel("dialog.details.eco"), labelOne);
 		add(moreTags, field=newTextField(TAG_ECO), ELEMENT_TWO);
 		field.setColumns(4);
 
@@ -167,10 +170,10 @@ public class GameDetailsDialog
 		add(moreTags, add_button=newButton("dialog.details.add",addIcon,(String)null), ELEMENT_ROW_SMALL);
 		add_button.setBorder(new EmptyBorder(0,0,0,0));
 
-		moreTags.add(newLabel("dialog.details.opening"),LABEL_ONE);
+		moreTags.add(newLabel("dialog.details.opening"), labelOne);
 		add(moreTags, field=newTextField(TAG_OPENING), ELEMENT_ROW);
 
-		moreTags.add(newLabel("dialog.details.annotator"),LABEL_ONE);
+		moreTags.add(newLabel("dialog.details.annotator"), labelOne);
 		add(moreTags, newTextField(TAG_ANNOTATOR), ELEMENT_ROW);
 
 		JScrollPane scroller = new JScrollPane(moreTags);
