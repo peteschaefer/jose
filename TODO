@@ -13,8 +13,8 @@
     * trigger dependent actions by ActionEvent
     * listen for startup on std i/o
 
-[ ] bug: diacritics lost on save
-[ ] suggestion arrow updates
+tod[?] bug: diacritics lost on save
+[?] suggestion arrow updates
 
 1.5.1: move on to 64-bit land
 
@@ -22,8 +22,9 @@
 [ ] run with Oracle 21 x64
     [x] hidpi
     [x] touch & drag
-    [x] Java3D 1.5
-    [ ] JavaLauncher (todo fix nOptions=0)
+    [x] Java3D 1.5  (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
+    [x] JavaLauncher
+    [ ] easylink
 
 [ ] run with JBR 21 x64
     [x] Windows
@@ -37,7 +38,7 @@
 [x] fixes hi-dpi issues
     [x] dialogs
     [x] 2d board
-    [x] 3d board (todo: fix mouse arithmetics)
+    [x] 3d board
 [ ] Java3D 1.5 x64 (--add-exports java.desktop/sun.awt=ALL-UNNAMED)
     [x] Windows
     [x] Linux
@@ -102,7 +103,9 @@ Alternative: JBR 21 x86
 
 ==== Postponed
 
-* launch mysqld earlier (?)
+* accept utf-8 on PGN import / export
+    loosens the PGN standard (iso-8859-1) but is quite plausible
+    ignore chess.com comment trash {[%...]}
 
 * Graph View interactive
     - mark current move
