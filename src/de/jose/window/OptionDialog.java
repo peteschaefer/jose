@@ -189,6 +189,11 @@ public class OptionDialog
 
 		addBox(tab1, 0,2,4, sbox);
 
+		addWithLabel(tab1, 0,3,2, null, newCheckBox("board.flip", "menu.game.flip", null));
+		addWithLabel(tab1, 0,4,2, null, newCheckBox("board.coords", "menu.game.coords", null));
+		addWithLabel(tab1, 0,5,2, null, newCheckBox("board.evalbar", "menu.game.evalbar", null));
+		addWithLabel(tab1, 0,6,2, null, newCheckBox("board.suggestions", "menu.game.suggestions", null));
+
 		tab1.add(new JLabel(""), ELEMENT_REMAINDER);
 	}
 
@@ -205,7 +210,6 @@ public class OptionDialog
 		addWithLabel(tab2,1, "board.surface.background", newChessSurfaceButton("board.surface.background",null));
 
 		addWithLabel(tab2,1, "board.surface.coords", newChessSurfaceButton("board.surface.coords",null));
-
 
 		tab2.add(new JLabel(""), ELEMENT_REMAINDER);
 
@@ -936,7 +940,10 @@ public class OptionDialog
 				profile.changed("board.surface.white",oldValues) ||
 				profile.changed("board.surface.black",oldValues) ||
 				profile.changed("board.surface.background",oldValues) ||
-				profile.changed("board.surface.coords",oldValues) ||
+				profile.changed("board.flip",oldValues) ||
+				profile.changed("board.coords",oldValues) ||
+				profile.changed("board.evalbar",oldValues) ||
+				profile.changed("board.suggestions",oldValues) ||
                 profile.changed("board.3d.clock",oldValues) ||
 				profile.changed("board.3d.surface.frame",oldValues) ||
 				profile.changed("board.3d.shadow",oldValues) ||

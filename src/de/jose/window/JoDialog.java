@@ -627,13 +627,19 @@ public class JoDialog
 		return newLabel(name,null, JLabel.RIGHT);
 	}
 
+
 	public static final JCheckBox newCheckBox(String name, Icon icon)
+	{
+		return newCheckBox(name,name,icon);
+	}
+
+	public static final JCheckBox newCheckBox(String name, String label, Icon icon)
 	{
 		JCheckBox box = new JCheckBox();
 		box.setName(name);
 		box.setActionCommand(name);
-		box.setText(Language.get(name));
-		box.setToolTipText(Language.getTip(name));
+		box.setText(Language.get(label));
+		box.setToolTipText(Language.getTip(label));
 		box.setIcon(icon);
 		return box;
 	}
@@ -740,7 +746,7 @@ public class JoDialog
 
 	public static final JCheckBox newCheckBox(String name)
 	{
-		return newCheckBox(name,null,null);
+		return newCheckBox(name,name,null);
 	}
 
 

@@ -902,6 +902,7 @@ public class BoardView3D
 		//	flip board ?
 		flip(prf.getBoolean("board.flip"));
 		showEvalbar(prf.getBoolean("board.evalbar"));
+		showSuggestions(prf.getBoolean("board.suggestions"));
         //  hilite squares ?
         hiliteSquares = prf.getBoolean("board.hilite.squares");
 
@@ -914,6 +915,11 @@ public class BoardView3D
 		boardClip.updateAll();
 
 		showAnimationHints = prf.getBoolean("board.animation.hints");
+
+		flip(prf.getBoolean("board.flip"));
+		showCoords(prf.getBoolean("board.coords"));
+		showEvalbar(prf.getBoolean("board.evalbar"));
+		showSuggestions(prf.getBoolean("board.suggestions"));
 	}
 
 	public void doFlip(boolean on)

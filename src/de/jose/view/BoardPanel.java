@@ -144,6 +144,7 @@ public class BoardPanel
 			view2d.flip(theView.flipped);
 			view2d.showCoords(theView.showCoords);
 			view2d.showEvalbar(theView.showEvalbar);
+			view2d.showSuggestions(theView.showSuggestions);
 		}
 		
 		theView=view2d;
@@ -209,6 +210,7 @@ public class BoardPanel
                 view3d.flip(theView.flipped);
                 view3d.showCoords(theView.showCoords);
 				view3d.showEvalbar(theView.showEvalbar);
+				view3d.showSuggestions(theView.showSuggestions);
             }
 
             theView = view3d;
@@ -293,6 +295,9 @@ public class BoardPanel
 
 		list.add(AbstractApplication.theUserProfile.get("board.evalbar"));
 		list.add("menu.game.evalbar");
+
+		list.add(AbstractApplication.theUserProfile.get("board.suggestions"));
+		list.add("menu.game.suggestions");
 
 		if (is3d()) {
             list.add(AbstractApplication.theUserProfile.get("board.3d.clock"));
@@ -399,6 +404,21 @@ public class BoardPanel
 			}
 		};
 		map.put("broadcast.board.evalbar", action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) {
+				if (theView!=null) {
+					boolean show;
+					if (cmd.data != null)
+						show = ((Boolean)cmd.data).booleanValue();
+					else
+						show = !theView.showSuggestions; //	toggle
+					AbstractApplication.theUserProfile.set("board.suggestions",show);
+					theView.showSuggestions(show);
+				}
+			}
+		};
+		map.put("broadcast.board.suggestions", action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {
@@ -551,13 +571,14 @@ public class BoardPanel
 		//	update suggestions (only in ANALYZTE mode, not during thinking and pondering)
 		switch(what) {
 			case EnginePlugin.ANALYZING:
-				AnalysisRecord a = (AnalysisRecord)data;
-				EnginePlugin plugin = (EnginePlugin)who;
-				if (a==null) break;
-				if (!a.wasPvModified()) break;
-
 				//theView.hideAllHints(false);
-				showAnalysisHints(a,plugin);
+				if (theView.showSuggestions) {
+					AnalysisRecord a = (AnalysisRecord)data;
+					EnginePlugin plugin = (EnginePlugin)who;
+					if (a==null) break;
+					if (!a.wasPvModified()) break;
+					showAnalysisHints(a, plugin);
+				}
 				break;
 			case EnginePlugin.PAUSED:
 				//	hide all suggestions

@@ -2138,6 +2138,19 @@ public class Application
 		map.put("menu.game.evalbar", action);
 
 		action = new CommandAction() {
+			public boolean isSelected(String code) {
+				return AbstractApplication.theUserProfile.getBoolean("board.suggestions");
+			}
+			public void Do(Command cmd) {
+				boolean showSuggestions = theUserProfile.getBoolean("board.suggestions");
+				showSuggestions = !showSuggestions;
+				theUserProfile.set("board.suggestions", showSuggestions);
+				broadcast(new Command("broadcast.board.suggestions", Util.toBoolean(showSuggestions)));
+			}
+		};
+		map.put("menu.game.suggestions", action);
+
+		action = new CommandAction() {
 			public CommandListener forward(CommandListener current)
 			{
 				return JoFrame.getActiveFrame();

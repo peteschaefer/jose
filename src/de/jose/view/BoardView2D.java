@@ -138,6 +138,7 @@ public class BoardView2D
 		showCoords(prf.getBoolean("board.coords"));
 		flip(prf.getBoolean("board.flip"));
 		showEvalbar(prf.getBoolean("board.evalbar"));
+		showSuggestions(prf.getBoolean("board.suggestions"));
 	}
 
 	public void refresh(boolean stopAnimation)	{
@@ -679,6 +680,11 @@ public class BoardView2D
 		}
 
 		showAnimationHints = prf.getBoolean("board.animation.hints");
+
+		flip(prf.getBoolean("board.flip"));
+		showCoords(prf.getBoolean("board.coords"));
+		showEvalbar(prf.getBoolean("board.evalbar"));
+		showSuggestions(prf.getBoolean("board.suggestions"));
 	}
 
 	private boolean sizeChanged() {

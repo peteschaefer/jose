@@ -57,9 +57,13 @@ abstract public class BoardView
 
 	protected IBoardAdapter board;
 
+	//
+ 	//	User settings
+ 	//
 	protected boolean flipped;
 	protected boolean showCoords;
 	protected boolean showEvalbar;
+	protected boolean showSuggestions;
     protected boolean hiliteSquares;
 	/** current hints
 	 *  Vector<Hint>
@@ -147,6 +151,13 @@ abstract public class BoardView
 		if (on==showEvalbar) return;
 		doShowEvalbar(showEvalbar = on);
 		refresh(true);
+	}
+
+	public void showSuggestions(boolean on)
+	{
+		showSuggestions = on;
+		//	refreshes on next move
+		if (!showSuggestions) hideAllHints(true);
 	}
 
 	abstract public Point getScreenLocation(int square);
