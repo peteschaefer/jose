@@ -34,6 +34,8 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static java.awt.GridBagConstraints.REMAINDER;
+
 /**
  * todo
  *  reorganize list! a plain vertical list is not user-friendly
@@ -105,20 +107,26 @@ public class SymbolBar
     private static final Insets margin = new Insets(0,2,0,2);
 
     //protected JPanel cardPanel;
-    protected CardLayout cardLayout;
+    //protected CardLayout cardLayout;
 
-    protected JPanel boxPane;
-    protected GridLayout boxGrid;
-    protected ArrayList<JButton> boxButtons;
+    //protected JPanel boxPane;
+    //protected GridLayout boxGrid;
+    protected GridBagLayout gridLayout;
+    protected int gridRows,gridCols;
+
+    protected ArrayList<JButton> easyButtons;
+    protected ArrayList<JButton> normalButtons;
 
     protected ComboNag comboNag;
-    protected BoxLayout comboLayout;
     protected JButton comboButton;
     protected JPanel comboPane;
     protected JComboBox<String> comboColor,comboAdjective,comboSubst,comboSelector;
     protected JLabel comboVerb;
 
-    protected JScrollPane boxScroller,comboScroller;
+    private static final int BUTTON_SIZE = 20;
+
+    //protected BoxLayout comboLayout;
+//    protected JScrollPane boxScroller,comboScroller;
 
     protected Font symbolFont, textFont, labelFont;
     protected FontEncoding fontEncoding = null;
@@ -146,11 +154,13 @@ public class SymbolBar
  *  [201] Diagram
  *  [250] deprecated Diagram (but maybe upside-down Diagram !?)
  */
-    protected static final int[] CODES = new int[] {
-            // 1,2,3,4,5,6, ! ? can be typed more easily
+    protected static final int[] EASY_CODES = new int[] {
+            1,2,3,4,5,6, // ! ?
+            14,15,16,17,18,19 // +/-
+    };
+    protected static final int[] NORMAL_CODES = new int[] {
             7,8,9,
             10,11,12,13,
-            // 14,15,16,17,18,19,  +/- can be typed more easily
             140,141,142,143,144,145,146,147,
             148,149,150,
             151,152,153,154,
@@ -162,6 +172,8 @@ public class SymbolBar
     public SymbolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)
     {
         super(profile,withContextMenu,withBorder);
+        setLayout(gridLayout=new GridBagLayout());
+        gridRows=gridCols=0;
     }
 
     @Override
@@ -171,54 +183,95 @@ public class SymbolBar
         super.setBounds(x, y, width, height);
     }
 
-    private void onResize(int width, int height)
+    private void onResize(int width, int height) {
+        int rows = height / BUTTON_SIZE;
+        int cols = width / BUTTON_SIZE;
+
+        if (rows != gridRows || cols != gridCols) {
+            gridRows = rows;
+            gridCols = cols;
+            relayout();
+        }
+    }
+
+    private void relayout()
     {
-        if (boxGrid==null) return;
-
-        int n = CODES.length+1;
-        int rows,cols;
-        if (width > height) {
-            //  prefer horizontal
-            rows = height / 20;
-            cols = (n+rows-1) / rows;
-
-            boxScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            comboScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-            boxScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            comboScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        int cells = gridRows * gridCols;
+        int n=0;
+        if (cells >= (normalButtons.size()+easyButtons.size())) {
+            n = relayoutButtons(easyButtons,n);
+            n = relayoutButtons(normalButtons,n);
         }
         else {
-            //  prefer vertical
-            cols = width / 20;
-            rows = (n+cols-1) / cols;
-
-            boxScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            comboScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-            boxScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-            comboScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            relayoutButtons(easyButtons,-1);
+            n = relayoutButtons(normalButtons,n);
         }
 
-        if (rows!= boxGrid.getRows() || cols!= boxGrid.getColumns()) {
-            boxGrid.setRows(rows);
-            boxGrid.setColumns(cols);
-            boxPane.invalidate();
+        int bottomcols = n % gridCols;
+        if (bottomcols>0 && bottomcols+8 <= gridCols) {
+            //  put combo boxes into the bottom row
+            relayoutComboPane(n);
+        }
+        else {
+            int nextRow = (n / gridCols)+1;
+            if (nextRow < gridRows) {
+                relayoutComboPane(nextRow*gridCols);
+            }
+            else if (gridRows > 1 || gridCols >= 8) {
+                gridRows++;
+                relayoutComboPane(nextRow*gridCols);
+            }
+            else {
+                relayoutComboPane(-1);
+            }
+        }
+
+        gridLayout.invalidateLayout(this);
+    }
+
+    private void relayoutComboPane(int i)
+    {
+        comboButton.setVisible(i>=0);
+        comboPane.setVisible(i>=0);
+
+        if (i >= 0) {
+            relayoutButton(comboButton, i++);
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = i % gridCols;
+            c.gridy = i / gridCols;
+            c.gridwidth = REMAINDER;
+            c.gridheight = 1;
+            c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            gridLayout.setConstraints(comboPane, c);
+        }
+    }
+
+    private int relayoutButtons(ArrayList<JButton> buttons, int i)
+    {
+        for(JButton button : buttons)
+            relayoutButton(button,i++);
+        return i;
+    }
+
+    private void relayoutButton(JButton button, int i) {
+        button.setVisible(i >= 0);
+        if (i >= 0) {
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = i %gridCols;
+            c.gridy = i /gridCols;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.NONE;
+            gridLayout.setConstraints(button,c);
         }
     }
 
     public void init()
     {
-        cardLayout = new CardLayout();
-        setLayout(cardLayout);
-        //cardPanel = new JPanel(cardLayout);
-
-        boxPane = new JPanel();
-        boxPane.setLayout(boxGrid=new GridLayout());
-        boxPane.setBackground(Color.white);
-
         comboPane = new JPanel();
-        comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
+        LayoutManager comboLayout = new BoxLayout(comboPane,BoxLayout.X_AXIS);
 
         Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
         textFont = new Font("Dialog", Font.PLAIN, 14);
@@ -231,22 +284,10 @@ public class SymbolBar
             symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
         }
 
-        makeBoxPane();
+        makeSymbolButtons();
         makeComboPane();
 
-        boxScroller = new JScrollPane(boxPane);
-        boxScroller.getVerticalScrollBar().setUnitIncrement(20);
-        add(boxScroller);
-
-        comboScroller = new JScrollPane(comboPane);
-        //boxScroller.getVerticalScrollBar().setUnitIncrement(20);
-        add(comboScroller);
-
-        cardLayout.addLayoutComponent(boxScroller,"box");
-        cardLayout.addLayoutComponent(comboScroller,"combo");
-
-        //cardLayout.show(this,"box");
-        //cardLayout.show(comboPane,"combo");
+        relayout();
     }
 
 
@@ -316,55 +357,61 @@ public class SymbolBar
         }
     }
 
-    private void makeBoxPane()
+    private JButton makeSymbolButton(int nag)
     {
-        boxButtons = new ArrayList<>();
-//		labels = new JoBigLabel[256];
+        String tip = Language.getTip("pgn.nag."+nag);
+        tip += " ($"+nag+")";
+        //if (tip==null) continue;    //  not a valid annotation
 
-        for (int i=0; i < CODES.length; ++i)
-        {
-            int nag = CODES[i];
-	        //if (nag==NAG_DIAGRAM_DEPRECATED) continue;
-            String tip = Language.getTip("pgn.nag."+nag);
-            tip += " ($"+nag+")";
-            //if (tip==null) continue;    //  not a valid annotation
+        String text = null;
+        if (fontEncoding != null)
+            text = fontEncoding.getSymbol(nag);
 
-            String text = null;
-            if (fontEncoding != null)
-                text = fontEncoding.getSymbol(nag);
-
-            JButton button;
-            if (text != null)
-                button = makeSymbolButton(nag, symbolFont,text, tip);
-            else {
-                text = Language.get("pgn.nag."+nag);
-                if (text.length() > 4)
-                    text = "$"+nag;
-                button = makeSymbolButton(nag, textFont, text, tip);
-            }
-            boxButtons.add(button);
-            boxPane.add(button);
+        if (text != null)
+            return makeSymbolButton(nag, symbolFont,text, tip);
+        else {
+            text = Language.get("pgn.nag."+nag);
+            if (text.length() > 4)
+                text = "$"+nag;
+            return makeSymbolButton(nag, textFont, text, tip);
         }
+    }
 
-        boxPane.add(makeActionButton("\uf061","switch.symbols"));
+    private void makeSymbolButtons()
+    {
+        easyButtons = new ArrayList<>();
+        normalButtons = new ArrayList<>();
+
+        for (int i=0; i < EASY_CODES.length; ++i) {
+            JButton button = makeSymbolButton(EASY_CODES[i]);
+            easyButtons.add(button);
+            this.add(button);   // constraints are attached later
+        }
+        for (int i=0; i < NORMAL_CODES.length; ++i) {
+            JButton button = makeSymbolButton(NORMAL_CODES[i]);
+            normalButtons.add(button);
+            this.add(button);  // constraints are attached later
+        }
+    }
+
+    private void updateLanguage(JButton button)
+    {
+        int nag = (Integer)button.getClientProperty("nag");
+        String tip = Language.getTip("pgn.nag." + nag);
+        button.setToolTipText(tip);
     }
 
     public void updateLanguage()
 	{
-		for (int i=0; i < CODES.length; ++i) {
-            int nag = CODES[i];
-            String tip = Language.getTip("pgn.nag." + nag);
-            boxButtons.get(i).setToolTipText(tip);
-            //labels[nag].setText(tip);
-        }
+		for (JButton button : easyButtons) updateLanguage(button);
+        for (JButton button : normalButtons) updateLanguage(button);
 	}
 
-	public void reformat()
+	public void updateFormat()
 	{
 		Style symbolStyle = Application.theUserProfile.getStyleContext().getStyle("body.symbol");
 		textFont = new Font("Dialog", Font.PLAIN, 14);
 		labelFont = new Font("Dialog", Font.PLAIN, 10);
-		FontEncoding fontEncoding = null;
 
 		if (symbolStyle != null) {
 			String fontFamily = JoFontConstants.getFontFamily(symbolStyle);
@@ -372,31 +419,30 @@ public class SymbolBar
 			symbolFont = FontUtil.newFont(fontFamily, Font.PLAIN, 14);
 		}
 
-		for (int i=0; i < CODES.length; ++i)
-		{
-            JButton button = boxButtons.get(i);
-			if (button==null) continue;
-
-            int nag = CODES[i];
-			String text = null;
-			if (fontEncoding != null)
-				text = fontEncoding.getSymbol(nag);
-
-			if (text != null) {
-				button.setFont(symbolFont);
-				button.setText(text);
-			}
-			else {
-				text = Language.get("pgn.nag."+nag);
-				if (text.length() > 4)
-					text = "$"+nag;
-
-				button.setFont(textFont);
-				button.setText(text);
-			}
-		}
-
+		for(JButton button : easyButtons) updateFormat(button);
+        for(JButton button : normalButtons) updateFormat(button);
 	}
+
+    private void updateFormat(JButton button)
+    {
+        int nag = (Integer)button.getClientProperty("nag");
+        String text = null;
+        if (fontEncoding != null)
+            text = fontEncoding.getSymbol(nag);
+
+        if (text != null) {
+            button.setFont(symbolFont);
+            button.setText(text);
+        }
+        else {
+            text = Language.get("pgn.nag."+nag);
+            if (text.length() > 4)
+                text = "$"+nag;
+
+            button.setFont(textFont);
+            button.setText(text);
+        }
+    }
 
     public void setupActionMap(Map map)
     {
@@ -435,19 +481,12 @@ public class SymbolBar
 			    Object source = cmd.data;
 			    boolean allModified = Util.toboolean(cmd.moreData);
 			    if (allModified)
-				    reformat();
+				    updateFormat();
 			    else
 				    /* only size modified; don't mind */ ;
 		    }
 	    };
 	    map.put("styles.modified",action);
-
-        action = new CommandAction() {
-            public void Do(Command cmd) {
-                cardLayout.next(SymbolBar.this);
-            }
-        };
-        map.put("switch.symbols",action);
     }
 
     public void setSymbol(JButton button, int nag)
@@ -488,10 +527,12 @@ public class SymbolBar
         button.setBackground(Color.white);
         button.setBorder(new LineBorder(Color.lightGray,2,true));
         button.setMargin(margin);
+        button.putClientProperty("nag",nag);
 
-        button.setMinimumSize(new Dimension(20,20));
-        button.setPreferredSize(new Dimension(20,20));
-        button.setMaximumSize(new Dimension(20,20));
+        Dimension size = new Dimension(BUTTON_SIZE, BUTTON_SIZE);
+        button.setMinimumSize(size);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
 
         //JoBigLabel label = new JoBigLabel(tip,1,40);
         //label.setFont(labelFont);
