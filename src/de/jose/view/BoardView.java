@@ -181,7 +181,7 @@ abstract public class BoardView
 		return old_value;
 	}
 
-	abstract public Point getScreenLocation(int square);
+	abstract public Point getLocationOnScreen(int square);
 
 	abstract public void doFlip(boolean on);
 

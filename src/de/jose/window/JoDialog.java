@@ -369,6 +369,7 @@ public class JoDialog
 
     public int getHeight()                          { return frame.getHeight(); }
 
+	public Rectangle getBounds()					{ return frame.getBounds(); }
     public void setLocation(Point p)                { frame.setLocation(p); }
 
     public String getTitle()

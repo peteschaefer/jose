@@ -483,12 +483,18 @@ public class BoardView2D
 		}
 	}
 
-	public Point getScreenLocation (int square)
+	public Point getLocation (int square)
 	{
 		Point2D pt2d = origin(square,true);
-		Point pt = new Point(
+		return new Point(
 				(int)(pt2d.getX()+0.5),
 				(int)(pt2d.getY()+0.5) );
+	}
+
+	@Override
+	public Point getLocationOnScreen (int square)
+	{
+		Point pt = getLocation(square);
 		SwingUtilities.convertPointToScreen(pt,this);
 		return pt;
 	}

@@ -158,6 +158,26 @@ public class ViewUtil
 		if (rpm!=null)
 			rpm.removeInvalidComponent(comp);
 	}
+
+	public static Rectangle boundsOnScreen(Component comp)
+	{
+		Rectangle b = comp.getBounds();
+		Point b0 = new Point(b.x,b.y);
+		SwingUtilities.convertPointToScreen(b0,comp);
+		b.x = b0.x;
+		b.y = b0.y;
+		return b;
+	}
+
+	public static void fitInto(Rectangle a, Rectangle b)
+	{
+		//	move a, so that it fits into b
+		if (a.x+a.width > b.x+b.width) a.x = b.x+b.width-a.width;
+		if (a.x < b.x) a.x = b.x;
+
+		if (a.y+a.height > b.y+b.height) a.y = b.y+b.height-a.height;
+		if (a.y < b.y) a.y = b.y;
+	}
 }
 
 

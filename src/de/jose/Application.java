@@ -4094,10 +4094,13 @@ public class Application
 
 //		Point location;
 		WriteModeDialog dialog = (WriteModeDialog)getDialog("dialog.write.mode");
-		if (boardPanel() != null)
-			dialog.setLocation(boardPanel().getView().getScreenLocation(mv.to));
-		else
-			dialog.stagger(JoFrame.getActiveFrame(),10,10);
+		if (boardPanel() != null) {
+			Point locationOnScreen = boardPanel().getView().getLocationOnScreen(mv.to);
+			dialog.fitInto(locationOnScreen,boardPanel());
+		}
+		else {
+			dialog.stagger(JoFrame.getActiveFrame(), 10, 10);
+		}
 
 		dialog.show(writeMode);
 		writeMode = dialog.getWriteMode();
