@@ -126,9 +126,8 @@ public class EngineOptionReader
 		File xmlfile = FileUtil.uniqueFile(configDir, name,"xml");
 		Config.setFile(doc, xmlfile.getAbsolutePath());
 
-		EnginePlugin.setPaths(new_cfg, Version.osDir, dir, executable,
-				EnginePlugin.findLogo(dir,name),
-		        Application.theWorkingDirectory);
+		EnginePlugin.setPaths(new_cfg, Version.osDir, dir, executable, Application.theWorkingDirectory);
+		EnginePlugin.setLogoPath(new_cfg, Version.osDir, dir, EnginePlugin.findLogo(dir,name));
 
 		//  launch exe and retrieve UCI info (if available)
 		try {

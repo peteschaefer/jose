@@ -1694,6 +1694,13 @@ public class OptionDialog
                 }
 			}
 		}
+		//pluginScroller.getVerticalScrollBar().setValue(0);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				pluginScroller.getViewport().setViewPosition(new Point(0,0));
+			}
+		});
+		//System.out.println("engine options read");
 	}
 
 	protected void readPluginInfo(Element cfg, boolean strictErrors) throws FileNotFoundException
@@ -1718,7 +1725,9 @@ public class OptionDialog
 		File logo =(File)getValueByName("plugin.logo");
 
 		try {
-			if (EnginePlugin.setPaths(cfg, Version.osDir, dir,exe,logo, Application.theWorkingDirectory))
+			if (EnginePlugin.setPaths(cfg, Version.osDir, dir,exe, Application.theWorkingDirectory))
+				dirty = true;
+			if (EnginePlugin.setLogoPath(cfg, Version.osDir, dir,logo))
 				dirty = true;
 
 		} catch (FileNotFoundException e) {
