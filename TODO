@@ -25,7 +25,7 @@
     [x] Windows
     [x] Linux
     [ ] Mac Intel
-[x] mysql 5.0.67 x64
+[x] mysql 5.0.67 x64 + myisamchk
     [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     [ ] Mac intel
@@ -41,8 +41,6 @@ Alternative JREs:
 * Oracle 23: seems to work, but don't hurry
 
 ==== Deprecated Stuff
-
-* NalimovOnlineQuery -> replace with LichessTablebaseQuery
 
 * Positional Index !!
   - db fields are NOT USED at all
@@ -117,17 +115,6 @@ Alternative JREs:
 
 
  ---- Fri Jan 03 10:47:22 CET 2025 ----
-java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\mysql\jose\Event.MYI'; try to repair it
-	at com.mysql.embedded.api.stmt.mysql_stmt_execute(Native Method)
-	at com.mysql.embedded.jdbc.MyPreparedStatement.execute(MyPreparedStatement.java:101)
-	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:74)
-	at de.jose.db.JoPreparedStatement.selectInt(JoPreparedStatement.java:326)
-	at de.jose.task.db.GameUtil.resolveString(GameUtil.java:936)
-	at de.jose.task.db.GameUtil.resolveEvent(GameUtil.java:912)
-	at de.jose.pgn.Game.setGameParameters(Game.java:1255)
-	at de.jose.pgn.Game.save(Game.java:1372)
-	at de.jose.pgn.Game.save(Game.java:1329)
-	at de.jose.pgn.Game.save(Game.java:1312)
 
 java.lang.RuntimeException: Invalid insert
 	at de.jose.pgn.MoveNode$MoveNodeFormatter.flush(MoveNode.java:229)

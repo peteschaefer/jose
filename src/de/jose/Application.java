@@ -34,6 +34,7 @@ import de.jose.pgn.*;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.InputListener;
 import de.jose.plugin.Plugin;
+import de.jose.plugin.Score;
 import de.jose.profile.FrameProfile;
 import de.jose.profile.LayoutProfile;
 import de.jose.profile.UserProfile;
@@ -3673,6 +3674,7 @@ public class Application
 
 		if (node!=null && entry.move!=null) {
 			//  update move evaluation history
+			if (node.engineValue==null) node.engineValue = new Score();
 			entry.toScore(node.engineValue,1000);
 			theGame.setDirty(true);
 		}

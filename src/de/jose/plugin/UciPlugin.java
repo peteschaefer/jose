@@ -835,10 +835,6 @@ public class UciPlugin
 //			return;
 //		}
 
-		rec.engineMode = mode;
-		rec.ply = enginePosition.gamePly();
-		rec.white_next = enginePosition.whiteMovesNext();
-
 		if (Util.allOf(AnalysisRecord.NEW_MOVE,rec.modified)) {
 			rec.reset();
 			rec.modified = AnalysisRecord.CURRENT_MOVE +
@@ -853,6 +849,9 @@ public class UciPlugin
 		//else
 		//	rec.modified = 0;
 		//	don't. modification flags accumulate until the reader acknowledges
+		rec.engineMode = mode;
+		rec.ply = enginePosition.gamePly();
+		rec.white_next = enginePosition.whiteMovesNext();
 
 		int pvidx = 0;  // 0 = main line, might differ for multi-pv
 		Score score = new Score();

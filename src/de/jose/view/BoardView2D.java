@@ -108,6 +108,10 @@ public class BoardView2D
 	/**	background surface	*/
 	protected Surface currentBackground;
 
+	/*	todo use more fine-grained redraw flags
+		let's say a bitset for each square, + background + eval bar
+		when updating hints, set only flag for affected squares ...
+	* */
 	protected boolean forceRedraw = false;
 	protected Rectangle2D drawEval = null;
 	/**	lock cached images (i.e. prevent them from Garbage collection)	*/

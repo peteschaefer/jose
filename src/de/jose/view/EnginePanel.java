@@ -804,6 +804,8 @@ public class EnginePanel
 					}
 				}
 
+			setVariationCount(rec.maxpv);
+
 			if (rec.wasModified(AnalysisRecord.INFO)) {
 				//  show info
 				scrollhist = showInfo(rec.info);
@@ -1001,6 +1003,18 @@ public class EnginePanel
 		value.setToolTipText(tip);
 	}
 
+
+	void setVariationCount(int max)
+	{
+		while(pvCount > max)
+		{
+			--pvCount;
+			WdlLabel l1 = getEvalLabel(pvCount,false,false);
+			JoStyledLabel l2 = getPvLabel(pvCount,false,false);
+			if (l1!=null) l1.setVisible(false);
+			if (l2!=null) l2.setVisible(false);
+		}
+	}
 
 	/**
 	 * @param idx
