@@ -45,12 +45,18 @@ public class JoToolBar
 	public void actionPerformed(ActionEvent e)
 	{
 		/*	forward menu events to CommandDispatcher	*/
-		CommandListener target = getCommandListener();
-
-		/** forward all event to the target
-		 *  JoToolBar handles only "on.broadcast" commands by itself
-		 */
-		AbstractApplication.theCommandDispatcher.handle(e, target);
+		if (e.getSource() instanceof JButton) {
+			//	tppl buttons clicked
+			CommandListener target = getCommandListener();
+			/** forward all event to the target
+			 *  JoToolBar handles only "on.broadcast" commands by itself
+			 */
+			AbstractApplication.theCommandDispatcher.handle(e, target);
+		}
+		if (e.getSource() instanceof JMenuItem) {
+			//	from context menu
+			AbstractApplication.theCommandDispatcher.handle(e, this);
+		}
 	}
 
 	public JoToolBar(LayoutProfile profile, boolean withContextMenu, boolean withBorder)

@@ -288,6 +288,9 @@
 				<include name="flatlaf.jar"/>
 				<include name="flatlaf-theme-editor.jar"/>
 			</zipfileset>
+			<zipfileset dir="lib/Windows" prefix="lib/Windows">
+				<include name="winUtils.dll"/>
+			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
 			</zipfileset>
@@ -302,7 +305,7 @@
 				<include name="menu.xml"/>
 				<include name="toolbars.xml"/>
 				<include name="lang.properties*"/>
-				<include name="themes"/>
+				<include name="themes/*"/>
 			</zipfileset>
 			<zipfileset dir="doc" prefix="doc">
 				<include name="annotations.pgn"/>

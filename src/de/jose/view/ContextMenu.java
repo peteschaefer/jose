@@ -203,7 +203,8 @@ public class ContextMenu
 	{
 //System.err.println("create "+frame.getTitle());
 		JPanel glassPane = new JPanel(null);
-		glassPane.setSize(frame.getRootPane().getSize());
+		Rectangle bounds = frame.getContentPane().getBounds();
+		glassPane.setBounds(bounds);
 		glassPane.setOpaque(false);
 		frame.setGlassPane(glassPane);
 		glassPane.setVisible(true);

@@ -36,18 +36,14 @@ public class ViewUtil
 	
 	public static final Point globalPoint(Point p, Component c)
 	{
-		Point result = c.getLocationOnScreen();
-		result.x += p.x;
-		result.y += p.y;
-		return result;
+		Point root = c.getLocationOnScreen();
+		return new Point(p.x+root.x,p.y+root.y);
 	}
 	
 	public static final Point localPoint(Point p, Component c)
 	{
-		Point result = c.getLocationOnScreen();
-		result.x = p.x-result.x;
-		result.y = p.y-result.y;
-		return result;
+		Point root = c.getLocationOnScreen();
+		return new Point(p.x-root.x,p.y-root.y);
 	}
 	
 	public static final Point localPoint(Point p, Component source, Component target)
