@@ -1432,7 +1432,16 @@ public class OptionDialog
 	    setValueByName("plugin.args", args);
         setValueByName("plugin.protocol", EnginePlugin.isXBoard(cfg) ? "xboard":"uci");
 
-	    setPluginOptions(cfg);
+		//	Search Control
+		Element search = EnginePlugin.getSearchControls(cfg);
+		String selected = EnginePlugin.getSelectedSearchControl(search);
+		setValueByName("plugin.search", selected);	//	radio
+		setValueByName("plugin.search.time.fixed", EnginePlugin.getSearchTimeFixed(search));
+		setValueByName("plugin.search.depth", EnginePlugin.getSearchDepth(search));
+		setValueByName("plugin.search.nodes", EnginePlugin.getSearchNodes(search));
+
+
+		setPluginOptions(cfg);
 
 	    String[] startup = StringUtil.separateLines(EnginePlugin.getStartup(cfg,os));
         StringBuffer buf = new StringBuffer();

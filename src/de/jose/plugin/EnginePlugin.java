@@ -26,8 +26,10 @@ import de.jose.util.file.ImageFileFilter;
 import de.jose.view.input.PluginListModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import sun.awt.AWTAccessor;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -691,7 +693,7 @@ abstract public class EnginePlugin
 			ProcessUtil.setPriority(getNativeProcess(),PROCESS_PRIORITY[newMode]);
 
 		mode = newMode;
-		
+
 		modeTime = System.currentTimeMillis();
 		if (mode==PAUSED) {
 			if (modeTimer!=null) modeTimer.stop();
@@ -712,6 +714,45 @@ abstract public class EnginePlugin
 	public AnalysisRecord getAnalysis()     { return analysis; }
 
 	public int getMaxPVLines()              { return 1; }
+
+
+	public static String[] SEARCH_ELEMENTS = { "TIME_CONTROL", "TIME", "DEPTH", "NODES" };
+
+	public static Element getSearchControls(Element root)
+	{
+		Element controls = XMLUtil.getChild(root,"SEARCH");
+		if (controls==null) {
+			controls = XMLUtil.appendChild(root, "SEARCH");
+		}
+		return controls;
+	}
+
+	public static String getSelectedSearchControl(Element search)
+	{
+		for(String selm : SEARCH_ELEMENTS) {
+			boolean selected = XMLUtil.getChildBooleanAttributeValue(search,selm,"selected");
+			if (selected)
+				return selm;
+		}
+		return SEARCH_ELEMENTS[0];
+	}
+
+	public static int getFixedTime(Element search) {
+		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[1]),10);
+	}
+	public static int getFixedDepth(Element search) {
+		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[2]),10);
+	}
+	public static int getFixedNodes(Element search) {
+		return XMLUtil.intValue(XMLUtil.getChildValue(search,SEARCH_ELEMENTS[2]),10000);
+	}
+
+	public static void setTimeControl(Element search, boolean selected)
+	{
+		XMLUtil.setChildAttribute(search,SEARCH_ELEMENTS[0], "selected",Boolean.toString(selected));
+	}
+
+
 
 	public void parseAnalysis(String input, AnalysisRecord rec)
 	{

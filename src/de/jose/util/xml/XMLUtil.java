@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,6 +162,11 @@ public class XMLUtil
 	public static final int getChildIntValue(Element el, String childName, int n)
 	{
 		return intValue(getChildValue(el,childName,n), Integer.MIN_VALUE);
+	}
+
+	public static final boolean getChildBooleanAttributeValue(Element el, String childName, String attributeName)
+	{
+		return booleanValue(getChildAttributeValue(el,childName,attributeName),Boolean.FALSE);
 	}
 
 	public static final int getIntAttribute(Element el, String attrName, int nullValue)

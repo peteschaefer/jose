@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 package de.jose.plugin;
 
 import de.jose.*;
+import de.jose.util.EnumerationIterator;
 import de.jose.view.ConsolePanel;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
@@ -37,7 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Since this is  a lengthy operation, it is moved to a separate thread.
  * Communicates with OptionDialog via messages.
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class EngineOptionReader
 		extends MessageProducer
@@ -141,6 +142,12 @@ public class EngineOptionReader
 			EnginePlugin.setUci(new_cfg);
 			EnginePlugin.setNameVersion(new_cfg,uciplug.getEngineName());
 			EnginePlugin.setAuthor(new_cfg,uciplug.getEngineAuthor());
+
+			Element search = EnginePlugin.getSearchControls(new_cfg);
+			EnginePlugin.setTimeControl(search,true);
+			EnginePlugin.setFixedTime(search,10, false);
+			EnginePlugin.setFixedDepth(search,10, false);
+			EnginePlugin.setFixedNodes(search, 10000,false);
 
 			for (UciPlugin.Option option : uciplug.getUciOptions())
 				if (option.type!=UciPlugin.BUTTON)
