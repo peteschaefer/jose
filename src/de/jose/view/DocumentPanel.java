@@ -464,9 +464,9 @@ public class DocumentPanel
 			public void Do(Command cmd) throws Exception {
 				LineNode line = (LineNode)cmd.data;
 				//	promote line
-				theGame.printDocStructure("tree-before.txt");
+				//theGame.printDocStructure("tree-before.txt");
 				theGame.promoteLine(line);
-				theGame.printDocStructure("tree-after.txt");
+				//theGame.printDocStructure("tree-after.txt");
 				reformat();
 
 				cmd = new Command("move.notify",null,null,Boolean.TRUE);

@@ -958,12 +958,14 @@ public class Game
 		if (C!=null) C.trim(STATIC_TEXT_NODE);
 		if (D!=null) D.trim(STATIC_TEXT_NODE,RESULT_NODE);
 
-		//	swap A with B
+		//	swap A with B (A and B must not be empty)
 		A.swap(B);
+		setDirty();
 
-		//	swap C with D
-		if (C!=null && D!=null)
+		//	swap C with D (border cases if C or D are empty)
+		if (C!=null && D!=null) {
 			C.swap(D);
+		}
 		else if (D!=null) {
 			D.remove();
 			A.append(D);
@@ -971,56 +973,15 @@ public class Game
 		else if (C!=null) {
 			//	put C in place of (empty) D
 			C.remove();
+			//	put C at the end of P. but before static text and result
+			//	todo can we model and *empty* NodeSection better ?
 			D = new NodeSection(V.next(),P.last());
-			if (D.first().is(STATIC_TEXT_NODE) || D.first().is(RESULT_NODE)) {
-				C.insertBefore(D.first());
-			}
-			else {
-				D.trim(STATIC_TEXT_NODE,RESULT_NODE);
-				C.insertAfter(D.last());
-			}
-			//	todo can we write that more comprehensively? how can we model an "empty" NodeSection ?
+			Node d1 = D.trimRight(STATIC_TEXT_NODE,RESULT_NODE).last();
+			if (d1.is(STATIC_TEXT_NODE) || d1.is(RESULT_NODE))
+				C.insertBefore(d1);
+			else
+				C.insertAfter(d1);
 		}
-
-		/*	todo necessary ?
-		updateLabels(P);
-		updateLabels(V);
-		updateMoveCount(B.first);
-		updateMoveCount(A.first);
-		maybe even update style of STATIC_TEXT_NODES
-		*/
-
-		setDirty();
-/*
-		/**	is there a sibling line ?	* /
-		LineNode sibling = line.previousSibling();
-		if (sibling!=null) {
-			/**	if so, change order	* /
-			line.remove();
-			line.insertBefore(sibling);
-		}
-		else {
-			LineNode parent = line.parent();
-			/**	replace parent with this line (more complicated)	* /
-			MoveNode pmv = (MoveNode)line.previous(MOVE_NODE);
-			//	this move node must exist
-			Node cut = pmv.previous();
-			if (cut==null) throw new NullPointerException();    //  must not happen
-			/**	extract all siblings	* /
-			Node[] siblings = parent.extractSubLines(line.next());
-			line.remove();
-			LineNode oldMainLine = parent.extractLine(pmv);
-			/**	insert new main line (line) * /
-			Node after = line.first(MOVE_NODE);
-			while (after.next()!=null && after.next().is(ANNOTATION_NODE)) after = after.next();
-			//  keep annotation with move
-			parent.moveLine(cut,line);
-			for (int i=siblings.length-1; i >= 0; i--)
-				siblings[i].insertAfter(after);
-			oldMainLine.insertAfter(after);
-		}
-		setDirty();
-*/
 	}
 
 

@@ -63,9 +63,21 @@ public class NodeSection
         while(last()!=first() && last().is(type)) setLast(last().previous());
     }
 
-    public void trim(int type1, int type2) {
+    public NodeSection trim(int type1, int type2) {
+        trimLeft(type1,type2);
+        trimRight(type1,type2);
+        return this;
+    }
+
+    public NodeSection trimLeft(int type1, int type2) {
         while(first()!=last() && (first().is(type1) || first().is(type2))) setFirst(first().next());
         while(last()!=first() && (last().is(type1) || last().is(type2))) setLast(last().previous());
+        return this;
+    }
+
+    public NodeSection trimRight(int type1, int type2) {
+        while(last()!=first() && (last().is(type1) || last().is(type2))) setLast(last().previous());
+        return this;
     }
 
     public void swap(NodeSection that) {
