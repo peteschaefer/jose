@@ -8,15 +8,12 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import java.util.LinkedList;
 
-public class NodeEditGroup implements UndoableEdit
+public class CompoundEdit extends NodeEdit
 {
-    protected Game game;
-    protected String name;
-    protected LinkedList<UndoableEdit> ops;
+    protected LinkedList<NodeEdit> ops;
 
-    public NodeEditGroup(Game game, String name) {
-        this.game = game;
-        this.name = name;
+    public CompoundEdit(String name) {
+        super(name,null);
         ops = new LinkedList<>();
     }
 
@@ -24,9 +21,8 @@ public class NodeEditGroup implements UndoableEdit
         return name;
     }
 
-    @Override
-    public boolean addEdit(UndoableEdit undoableEdit) {
-        ops.add(undoableEdit);
+    public boolean addEdit(UndoableEdit edit) {
+        ops.add((NodeEdit)edit);
         return true;
     }
 
@@ -59,21 +55,4 @@ public class NodeEditGroup implements UndoableEdit
         return false;
     }
 
-    @Override
-    public boolean isSignificant() { return true; }
-
-    @Override
-    public String getPresentationName() {
-        return Language.get(name);
-    }
-
-    @Override
-    public String getUndoPresentationName() {
-        return Language.get("undo.undo")+" "+getPresentationName();
-    }
-
-    @Override
-    public String getRedoPresentationName() {
-        return Language.get("undo.redo")+" "+getPresentationName();
-    }
 }

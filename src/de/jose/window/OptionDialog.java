@@ -1695,13 +1695,14 @@ public class OptionDialog
 		SearchType selected = SearchType.values() [ListUtil.indexOf(searchRadioValues, radioString)];
 
 		Date timeValue = (Date)getValueByName("plugin.search.time.fixed.value");
+		long ltime = (timeValue==null) ? 0:timeValue.getTime();
 		long pliesValue = getIntValue("plugin.search.depth.value");
 		long nodesValue = getIntValue("plugin.search.nodes.value");
 
 		Element searchConfig = EnginePlugin.getSearchControls(pluginConfig);
 
 		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.TIME_CONTROL, selected, null);
-		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.TIME, selected, timeValue.getTime());
+		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.TIME, selected, ltime);
 		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.DEPTH, selected, pliesValue);
 		dirty |= EnginePlugin.setSearchControlArgument(searchConfig, SearchType.NODES, selected, nodesValue);
 

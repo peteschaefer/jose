@@ -7,8 +7,8 @@ public class SwapLines extends NodeEdit {
 
     private LineNode line2;
 
-    public SwapLines(Game game, LineNode line1, LineNode line2) {
-        super(game,line1);
+    public SwapLines(LineNode line1, LineNode line2) {
+        super("promote",line1);
         this.line2 = line2;
     }
 }
