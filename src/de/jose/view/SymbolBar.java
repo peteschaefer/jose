@@ -457,6 +457,7 @@ public class SymbolBar
 	{
 		for (JButton button : easyButtons) updateLanguage(button);
         for (JButton button : normalButtons) updateLanguage(button);
+        updateLanguage(comboButton);
 	}
 
 	public void updateFormat()
@@ -470,6 +471,7 @@ public class SymbolBar
 
 		for(JButton button : easyButtons) updateFormat(button);
         for(JButton button : normalButtons) updateFormat(button);
+        updateFormat(comboButton);
 	}
 
     private void updateFormat(JButton button)
@@ -496,6 +498,7 @@ public class SymbolBar
                 if (docPanel != null) {
 					int nag = Integer.parseInt(cmd.code);
 					String text = PgnUtil.annotationString(nag);
+                    text = (String)Util.nvl(text,"$"+nag);
                     docPanel.replaceSelection(text,nag);
                 }
             }
