@@ -85,7 +85,7 @@ public class NodeSection
 
         LineNode p = parent();
         if (p!=null) {
-            p.setLength(p.getLength()-this.getLength());
+            p.subLength(this.getLength());
             if (p.first()==this.first())
                 p.setFirst(b);
             if (p.last()==this.last())
@@ -113,7 +113,7 @@ public class NodeSection
         LineNode p = that.parent();
         setParent(p);
         if (p!=null)
-            p.setLength(p.getLength() + this.getLength());
+            p.addLength(this.getLength());
         if (a==null)
             p.setFirst(first());
     }
@@ -131,7 +131,7 @@ public class NodeSection
         LineNode p = that.parent();
         setParent(p);
         if (p!=null)
-            p.setLength(p.getLength() + this.getLength());
+            p.addLength(this.getLength());
         if (b==null)
             p.setLast(last());
     }

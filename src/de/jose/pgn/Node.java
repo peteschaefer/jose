@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -183,7 +183,7 @@ abstract public class Node
 				parentLine.setFirst(next());
 			if (this==parentLine.last())
 				parentLine.setLast(previous());
-			parentLine.setLength(parentLine.getLength()-this.getLength());
+			parentLine.subLength(this.getLength());
 			parentLine = null;
 		}
 		
@@ -343,7 +343,7 @@ abstract public class Node
 		node.setNext(this);
 		
 		if (parentLine!=null) {
-			parentLine.setLength(parentLine.getLength()+this.getLength());
+			parentLine.addLength(this.getLength());
 			if (parentLine.last()==node)
 				parentLine.setLast(this);
 		}
@@ -361,7 +361,7 @@ abstract public class Node
 		node.setPrevious(this);
 		
 		if (parentLine!=null) {
-			parentLine.setLength(parentLine.getLength()+this.getLength());
+			parentLine.addLength(this.getLength());
 			if (parentLine.first()==node)
 				parentLine.setFirst(this);
 		}
@@ -436,6 +436,16 @@ abstract public class Node
             parentLine.setLength(parentLine.getLength() + newLen-length);            
         length = newLen;
     }
+
+	public final void addLength(int add)
+	{
+		setLength(getLength()+add);
+	}
+
+	public final void subLength(int sub)
+	{
+		setLength(getLength()-sub);
+	}
 	
 	public int getElementIndex(int offset)	{
 		return -1;

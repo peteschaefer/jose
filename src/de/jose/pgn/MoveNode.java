@@ -167,12 +167,12 @@ public class MoveNode
 			//	insert move count
 			String moveCount = (ply/2+1)+"...";
 			moveCountLen = moveCount.length();
-			setLength(getLength()+moveCountLen);
+			addLength(moveCountLen);
 			doc.insertString(getStartOffset(),moveCount, getDefaultStyle(doc));
 		}
 		else if ((moveCountLen>0) && !showNumber()) {
 			//	remove move count
-			setLength(getLength()-moveCountLen);
+			subLength(moveCountLen);
 			doc.remove(getStartOffset(), moveCountLen);
 			moveCountLen = 0;
 		}
