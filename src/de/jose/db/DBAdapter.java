@@ -23,7 +23,6 @@ import de.jose.task.io.PGNImport;
 import de.jose.task.db.CheckDBTask;
 import de.jose.task.Task;
 import de.jose.util.ClassPathUtil;
-import de.jose.util.ProcessUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.xml.XMLUtil;
@@ -60,17 +59,6 @@ abstract public class DBAdapter
 	public static final int RECOVER			= 0x0080;
 	public static final int CREATE			= 0x0100;
 
-	/**	process priority during queries
-	 *
-	 * 	it turns out that MySQL is a well behaved application
-	 * 	with normal priority there are good response time and enough CPU time for the GUI
-	 * 	(otherwise we could tweak the process priorities a bit)
-	 * */
-	public static final int IMPORTANT_QUERY		= ProcessUtil.NORM_PRIORITY;
-	/*	NORM_PRIORITY+1 could improve response times but also slow down the GUI !?	*/
-	public static final int NORMAL_QUERY		= ProcessUtil.NORM_PRIORITY;
-	public static final int LONG_RUNNING_QUERY	= ProcessUtil.NORM_PRIORITY;
-	public static final int LONG_RUNNING_INSERT	= ProcessUtil.NORM_PRIORITY+1;
 
 	/** server is running as an external process (possible on a remote machine)    */
 	public static final int MODE_EXTERNAL   = 1;
@@ -90,9 +78,6 @@ abstract public class DBAdapter
 	protected Properties abilities;
 
 	protected static Hashtable adapterMap = new Hashtable();
-
-	/**	current process priority	*/
-	protected int processPriority = ProcessUtil.NORM_PRIORITY;
 
 	//-------------------------------------------------------------------------------
 	//	Constructor
@@ -169,12 +154,6 @@ abstract public class DBAdapter
 			throw new RuntimeException("data source "+databaseId+" not found");
 	}
 
-	public void setProcessPriority(int prio)
-	{
-		prio = processPriority;
-		/**	overwritten by MySQLAdapter	*/
-	}
-
 	protected static DBAdapter createAdapter(Element dataSource,
 											 File workingDirectory, File dataDirectory)
 		throws SQLException
@@ -235,7 +214,6 @@ abstract public class DBAdapter
 			/**	embedded instances are shut down when the appplication exits	*/
 
 			Class clazz = Class.forName(driverClassName);
-			adapter.setProcessPriority(NORMAL_QUERY);
 
 		} catch (Exception e) {
 			throw new SQLException(e.getClass().getName()+": "+e.getMessage());

@@ -491,8 +491,6 @@ public class PGNImport
 
 			writer.setPriority(Thread.MAX_PRIORITY);
 			this.setPriority(Thread.MIN_PRIORITY);
-			//	usually the writer thread needs more time
-			JoConnection.getAdapter().setProcessPriority(DBAdapter.LONG_RUNNING_INSERT);
 
 			writer.start();
 		}
@@ -756,7 +754,6 @@ public class PGNImport
             //  reset process priority
             try {
                 if (connection != null) {
-                    JoConnection.getAdapter().setProcessPriority(DBAdapter.NORMAL_QUERY);
                     connection.setAutoCommit(true);
                 }
                 in.close();

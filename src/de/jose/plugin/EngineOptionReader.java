@@ -17,7 +17,6 @@ import de.jose.util.EnumerationIterator;
 import de.jose.view.ConsolePanel;
 import de.jose.util.xml.XMLUtil;
 import de.jose.util.file.FileUtil;
-import de.jose.util.ProcessUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,8 +181,6 @@ public class EngineOptionReader
 			plug.hasAnalyseOption = plug.supportsOption("UCI_AnalyseMode");
 
 			plug.init(null, Version.osDir); //  launch executable
-			ProcessUtil.setPriority(plug.nativeProcess, ProcessUtil.NORM_PRIORITY);
-			//  don't let this process starve; it's supposed to run quick, anyway
 
 			//  debug output goes to console panel
 //			ConsolePanel console = Application.theApplication.consolePanel();

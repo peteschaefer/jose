@@ -38,39 +38,8 @@ public class WinUtils
 	//	Thread utils
 	//------------------------------------------------------------------
 
-	public static final int IDLE_PRIORITY_CLASS                 = 0x00000040;
-	public static final int BELOW_NORMAL_PRIORITY_CLASS         = 0x00004000;   //  not supported for Win98
-	public static final int NORMAL_PRIORITY_CLASS               = 0x00000020;
-	public static final int ABOVE_NORMAL_PRIORITY_CLASS         = 0x00008000;   //  not supported for Win98
-	public static final int HIGH_PRIORITY_CLASS                 = 0x00000080;
-
-	public static final int REALTIME_PRIORITY_CLASS             = 0x00000100;
-	/** don't ever use realtime priority - it would lock up the whole system ;-) */
-
 	public static final int CSIDL_WINDOWS   =   0x0024;
 	public static final int CSIDL_FONTS     =   0x0014;
-
-	/**
-	 * @param proc
-	 * @return the priority of a native process
-	 */
-	public static int getPriorityClass(Process proc)
-	{
-		loadLib();
-		return getPriorityClass(getProcessHandle(proc));
-	}
-
-	/**
-	 * sets the priority of a native process
-	 * @param proc
-	 * @param priority
-	 * @return
-	 */
-	public static boolean setPriorityClass(Process proc, int priority)
-	{
-		loadLib();
-		return setPriorityClass(getProcessHandle(proc),priority);
-	}
 
 	//------------------------------------------------------------------
 	//	Window utils
@@ -82,38 +51,14 @@ public class WinUtils
 	 */
 	public static boolean setTopMost(Frame win)
 	{
-//		if (Version.java15orLater) {
-			win.setAlwaysOnTop(true);
-			return true;    //  no way to detect success !?
-/*		}
-		else if (Version.windows) {
-			loadLib();
-			long hwnd = getWindowHandle(win);
-			return (hwnd!=0L) && setTopMost(hwnd);
-		}
-		else {
-			//  can't do it
-			return false;
-		}
- */
+		win.setAlwaysOnTop(true);
+		return true;    //  no way to detect success !?
 	}
 
 	public static boolean setTopMost(Dialog dlg)
 	{
-//        if (Version.java15orLater) {
             dlg.setAlwaysOnTop(true);
             return true;
-  /*      }
-        else if (Version.windows) {
-			loadLib();
-			long hwnd = getWindowHandle(dlg);
-			return (hwnd!=0L) && setTopMost(hwnd);
-        }
-        else {
-            //  can't do it
-            return false;
-        }
-   */
 	}
 
 	//------------------------------------------------------------------
@@ -200,7 +145,6 @@ public class WinUtils
 
 	/**
 	 * register a file type (extension) with jose
-	 * TODO how can we do this on Linux
 	 *
 	 * @param extension
 	 * @param progId
@@ -298,8 +242,23 @@ public class WinUtils
 	protected static void loadLib()
 	{
 		if (!libLoaded) {
-			System.loadLibrary("winUtils");
-			libLoaded = true;
+			/*	TODO loading several dlls is prelimnary. Make a proper switch to 64bit.
+			 */
+			try {
+				System.loadLibrary("winUtils");
+				libLoaded = true;
+				return;
+			} catch (UnsatisfiedLinkError e) { }
+			try {
+				System.loadLibrary("winUtils32");
+				libLoaded = true;
+				return;
+			} catch (UnsatisfiedLinkError e) { }
+			try {
+				System.loadLibrary("winUtils64");
+				libLoaded = true;
+				return;
+			} catch (UnsatisfiedLinkError e) { }
 		}
 	}
 
@@ -317,6 +276,7 @@ public class WinUtils
 
 	private static long getProcessHandle(Process proc)
 	{
+// jdk 9 has:		return proc.pid();
 		Number handle = null;
 		try {
 			Class clazz = Class.forName("java.lang.ProcessImpl");

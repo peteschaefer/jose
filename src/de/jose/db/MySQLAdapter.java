@@ -17,7 +17,6 @@ import com.mysql.embedded.jdbc.MyConnection;
 import de.jose.*;
 import de.jose.plugin.InputListener;
 import de.jose.util.KillProcess;
-import de.jose.util.ProcessUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.window.JoDialog;
@@ -329,14 +328,6 @@ public class MySQLAdapter
 		/** noop    */
 		return sql;
 	}
-
-	public void setProcessPriority(int prio)
-	{
-		if ((prio != processPriority) && (serverProcess != null))
-			ProcessUtil.setPriority(serverProcess,prio);
-		super.setProcessPriority(prio);
-	}
-
 
 	/**	retrieve the character encoding that is used by this database
 	 * @return a character set identifier

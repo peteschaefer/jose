@@ -81,7 +81,6 @@ abstract public class CachedPKModel
                 state = THREAD_READ;
                 fireRowEvent(true);
 
-			 	JoConnection.getAdapter().setProcessPriority(DBAdapter.IMPORTANT_QUERY);
 				pstm = makeStatement(conn,sql,rangeStart,rangeLength);
 
                 if (! pstm.execute())
@@ -98,7 +97,6 @@ abstract public class CachedPKModel
 					if (!res.next()) {
 						if ((rangeLength < 0) || (maxRow < (rangeStart+rangeLength)))  {
 							state = THREAD_FINISHED;
-							JoConnection.getAdapter().setProcessPriority(DBAdapter.NORMAL_QUERY);
 							break;
 						}
 						else {
@@ -113,10 +111,6 @@ abstract public class CachedPKModel
 							/*	if this is gonna be a longrunning query
 								reduce process priority (give the GUI more CPU time)
 							*/
-							if (rangeLength==MAX_RANGE)
-								JoConnection.getAdapter().setProcessPriority(DBAdapter.LONG_RUNNING_QUERY);
-							else
-								JoConnection.getAdapter().setProcessPriority(DBAdapter.NORMAL_QUERY);
 
 							pstm = makeStatement(conn,sql,rangeStart,rangeLength);
 
@@ -160,7 +154,6 @@ abstract public class CachedPKModel
 			} finally {
 				fireRowEvent(true);
 				AWTUtil.setDefaultCursor(getDisplayComponent());
-				JoConnection.getAdapter().setProcessPriority(DBAdapter.NORMAL_QUERY);
 				try {
                 	if (pstm!=null) {
 		                if (false/*(state==THREAD_ABORT) && conn.getAdapter().useResultLimit()*/) {

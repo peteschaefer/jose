@@ -111,15 +111,6 @@ abstract public class EnginePlugin
 	public static final int PONDERING	= 2;
 	/**	mode: anylizing (i.e. thinking but not moving automatically)	 */
 	public static final int ANALYZING	= 3;
-	/**	process priorities
-	 * 	setting the process priority can control "CPU hogs"
-	 * */
-	public static final int[] PROCESS_PRIORITY = {
-		ProcessUtil.MIN_PRIORITY,		//	when PAUSED
-		ProcessUtil.NORM_PRIORITY-1,	//	when THINKKING
-		ProcessUtil.NORM_PRIORITY-1,	//	when PONDERING
-		ProcessUtil.NORM_PRIORITY-1,	//	when ANALYZING
-	};
 
 	/** return value from updateDirtyElements()
 	 *  no options have been modified
@@ -329,7 +320,6 @@ abstract public class EnginePlugin
 		enginePosition = new Position();
 		moveParser = new Parser(enginePosition,0, true);
 
-		ProcessUtil.setPriority(nativeProcess, PROCESS_PRIORITY[mode]);
 		Runtime.getRuntime().addShutdownHook(new KillProcess(nativeProcess));
 
 		modeTimer = new javax.swing.Timer(1000,this);
@@ -694,9 +684,6 @@ abstract public class EnginePlugin
 
 	protected void setMode(int newMode)
 	{
-		if (PROCESS_PRIORITY[newMode] != PROCESS_PRIORITY[mode])
-			ProcessUtil.setPriority(getNativeProcess(),PROCESS_PRIORITY[newMode]);
-
 		mode = newMode;
 
 		modeTime = System.currentTimeMillis();
