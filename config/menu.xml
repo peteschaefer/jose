@@ -6,8 +6,8 @@
 	<!-- File Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.file">
-		<item id="menu.file.new"			icon="\uf15b:#cccc80" 	key="control N"/>
-		<item id="menu.file.new.from.here"	icon="\uf56d:#cccc80" 	key="control shift N"/>
+		<item id="menu.file.new"			icon="\uf15b:#ffffff:#000000" 	key="control N"/>
+		<item id="menu.file.new.from.here"	icon="\uf56d:#ffffff:#000000" 	key="control shift N"/>
 		<item id="menu.file.new.frc" key="control alt N"/>
 		<item id="menu.file.new.shuffle"/>
 		<separator/>
@@ -21,7 +21,7 @@
 		<item id="menu.file.save.as" 		icon="\uf0ba:#0000dd"	key="control shift S"/>
 		<item id="menu.file.revert"/>
 		<separator/>
-		<item id="menu.file.print"	key="control P"/>
+		<item id="menu.file.print"			icon="\uf02f:#ddddff" key="control P"/>
 		<item id="menu.file.print.setup" key="control shift P"/>
 		<item id="menu.file.print.preview"/>
 		<separator hide="mac"/>
@@ -85,14 +85,14 @@
             <item id="figurine.usefont.false" check="false"/>
         </menu>
         <separator/>
-        <item id="menu.edit.option" int="6"/>
+        <item id="menu.edit.option" icon="\uf0ad:#808080" int="6"/>
     </menu>
 
 	<!-- - - - - - - - - - -->
 	<!-- Game Menu         -->
 	<!-- - - - - - - - - - -->
 	<menu id="menu.game">
-		<item id="menu.game.details"		key="F4"/>
+		<item id="menu.game.details"	icon="\uf073:#ffffff:#000000"		key="F4"/>
 
 		<!-- #009900 = green -->
 		<!-- #b30000 = red -->
@@ -122,10 +122,10 @@
 		<item id="menu.game.evalbar"	check="true"/>
 		<item id="menu.game.suggestions"	check="true"/>
 		<separator/>
-		<item id="menu.game.analysis"/>
+		<item id="menu.game.analysis" icon="\uf013:#cccc00"/>
 <!--		<item id="menu.game.hint"/> -->
-		<item id="menu.game.draw"/>
-		<item id="menu.game.resign"/>
+		<item id="menu.game.draw" icon="\uf2b5:#ddcc00"/>
+		<item id="menu.game.resign" icon="\uf28d:#aa0000"/> <!-- todo have a nicer stop symbol -->
 		<separator/>
 <!--		<item id="menu.game.previous"/>
 		<item id="menu.game.next"/>
@@ -153,7 +153,7 @@
 		<separator/>
 		<item id="window.collectionlist"	check="true"	key="control 5"/>
 		<item id="window.query"				check="true"	key="control 6"/>
-		<item id="window.gamelist"			check="true"	key="control 7"/>
+		<item id="window.gamelist"			check="true"	icon="\uf00b:#0000aa" key="control 7"/>
 		<!--item id="window.help"				check="false"/-->
 		<!--item id="window.sqlquery"	check="true"/-->
 		<!--item id="window.sqllist"	check="true"/-->

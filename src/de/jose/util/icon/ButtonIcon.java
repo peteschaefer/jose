@@ -1,4 +1,4 @@
-package de.jose.util;
+package de.jose.util.icon;
 
 import de.jose.Util;
 

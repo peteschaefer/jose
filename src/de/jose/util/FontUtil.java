@@ -16,6 +16,7 @@ import de.jose.Application;
 import de.jose.Util;
 import de.jose.Version;
 import de.jose.util.file.FileUtil;
+import de.jose.util.icon.TextIcon;
 import de.jose.util.print.Triplet;
 //import sun.awt.Win32FontManager;
 

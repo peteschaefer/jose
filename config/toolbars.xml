@@ -14,7 +14,7 @@
 		<item id="menu.file.save.all"/>
 		<item id="menu.file.save.copy"/>
 		<item id="menu.file.save.as"/>
-		<iten id="menu.file.print"/>
+		<item id="menu.file.print"/>
 		<separator/>
 		<!-- edit
 		<item id="menu.edit.cut"/>

@@ -222,6 +222,7 @@ public class EnginePanel
 		String blue 	= "#0000d9";
 		String orange 	= "#cc9900";
 
+		//	todo think about frameless icons
 		iGoGreen 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+green,iconSize);
 		iGoYellow 	= JoToolBar.createAwesomeIcons("\uf04b:button:"+yellow,iconSize);
 		iGoRed 		= JoToolBar.createAwesomeIcons("\uf04b:button:"+red,iconSize);

@@ -18,10 +18,11 @@ import de.jose.comm.CommandAction;
 import de.jose.comm.CommandListener;
 import de.jose.image.ImgUtil;
 import de.jose.profile.LayoutProfile;
-import de.jose.util.ButtonIcon;
+import de.jose.util.icon.ButtonIcon;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
-import de.jose.util.TextIcon;
+import de.jose.util.icon.TextIcon;
+import de.jose.util.icon.TextShapeIcon;
 import de.jose.window.JoMenuBar;
 
 import javax.swing.*;
@@ -29,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -280,8 +282,7 @@ public class JoToolBar
 	{
 		//	spec looks like "<text>:<#color1>[:#color2][:bold][:italic]"
 		String text;
-		Color color1=null;
-		Color color2=null;
+		ArrayList<Color> colors = new ArrayList<>();
 		int style = Font.PLAIN;
 
 		String[] specs = spec.split(":");
@@ -293,25 +294,24 @@ public class JoToolBar
 				style |= Font.ITALIC;
 			if (specs[i].equalsIgnoreCase("button"))
 				style |= BUTTON;
-			if (specs[i].startsWith("#") || specs[i].startsWith("0x")) {
-				if (color1==null)
-					color1 = Color.decode(specs[i]);
-				else if (color2==null)
-					color2 = Color.decode(specs[i]);
-			}
+			if (specs[i].startsWith("#") || specs[i].startsWith("0x"))
+				colors.add(Color.decode(specs[i]));
 		}
 
-		if (color1==null) color1 = Color.darkGray;
-		return createAwesomeIcons(text,size,style,color1,color2);
+		if (colors.isEmpty()) colors.add(Color.darkGray);
+		return createAwesomeIcons(text,size,style,colors);
 	}
 
 	public static final int BUTTON = 4;
 
-	public static Icon[] createAwesomeIcons(String s, int size, int style, Color color1, Color color2)
+	public static Icon[] createAwesomeIcons(String s, int size, int style, List<Color> colors)
 	{
 		Font font = FontUtil.fontAwesome();
 		font = font.deriveFont(style & ~BUTTON);
 		TextIcon[] result = new TextIcon[7];
+
+		Color color1 = colors.get(0);
+		Color color2 = (colors.size() > 1) ? colors.get(1) : null;
 
 		if ((style&BUTTON) != 0) {
 			result[0] = new ButtonIcon(s,font,size).fixedColor(Color.lightGray);
@@ -326,7 +326,18 @@ public class JoToolBar
 		}
 		else {
 			size*=0.7f;
-			result[0] = new TextIcon(s,font,size,Color.lightGray);
+			if (color2==null) color2 = Color.white;
+
+			result[0] = new TextShapeIcon(s,font,size,Color.lightGray,color2);
+			result[1] = new TextShapeIcon(s,font,size,color1,color2);
+			result[2] = new TextShapeIcon(s,font,size,color1,color2);
+			result[3] = new TextShapeIcon(s,font,size,color1,color2);
+			/*if (color2!=null) {
+				result[4] = new TextShapeIcon(s,font,size,color2,Color.white);
+				result[5] = new TextShapeIcon(s,font,size,color2,Color.white);
+				result[6] = new TextShapeIcon(s,font,size,color2,Color.white);
+			}*/
+/*			result[0] = new TextIcon(s,font,size,Color.lightGray);
 			result[1] = new TextIcon(s,font,size,color1);
 			result[2] = new TextIcon(s,font,size,color1);
 			result[3] = new TextIcon(s,font,size,color1);
@@ -335,7 +346,7 @@ public class JoToolBar
 				result[5] = new TextIcon(s,font,size,color2);
 				result[6] = new TextIcon(s,font,size,color2);
 			}
-		}
+*/		}
 
 		Insets insets = new Insets(2,2,2,2); // right ?
 		for(TextIcon icon : result)

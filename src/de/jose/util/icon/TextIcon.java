@@ -1,9 +1,10 @@
-package de.jose.util;
+package de.jose.util.icon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 public class TextIcon implements Icon
@@ -18,6 +19,7 @@ public class TextIcon implements Icon
 
     protected Paint savePaint;
     protected Font saveFont;
+    protected AffineTransform saveTransform;
 
     public TextIcon(String text, Font font, Color color) {
         this.text = text;
@@ -90,16 +92,18 @@ public class TextIcon implements Icon
     protected void save(Graphics2D g2) {
         savePaint = g2.getPaint();
         saveFont = g2.getFont();
+        saveTransform = g2.getTransform();
     }
 
     protected void restore(Graphics2D g2) {
         g2.setPaint(savePaint);
         g2.setFont(saveFont);
+        g2.setTransform(saveTransform);
     }
 
     private static FontRenderContext frc = null;
 
-    private void init()
+    protected void init()
     {
         if (frc==null)
             frc = new FontRenderContext(null,false,true);

@@ -154,7 +154,7 @@ public class OptionDialog
 		Icon user = FontUtil.awesomeIcon(BoardView2D.cUser,iconSize,iconColor);
 		Icon board = FontUtil.awesomeIcon('\uf43c',iconSize,iconColor);
 		Icon palette = FontUtil.awesomeIcon('\uf5c3',iconSize,iconColor); // swatchbook :)
-		Icon clock = FontUtil.awesomeIcon('\uf2f2',iconSize,iconColor);
+		Icon clock = FontUtil.awesomeIcon(/*'\uf2f2'*/'\ue47e',iconSize,iconColor);
 		//	todo alternative: FigurineSymbol \u201e
 		Icon book = FontUtil.awesomeIcon(BoardView2D.cBook,iconSize,iconColor);
 		Icon gears = FontUtil.awesomeIcon(BoardView2D.cGears,iconSize,iconColor);
@@ -1206,7 +1206,7 @@ public class OptionDialog
 				Application.theApplication.askRestartPlugin();
 
 			if (currentTimeControl!=profile.getTimeControlIdx()) {
-				Command cmd = new Command("menu.game.time.control",null,new Integer(currentTimeControl));
+				Command cmd = new Command("menu.game.time.control",null,currentTimeControl);
 				Application.theCommandDispatcher.forward(cmd,Application.theApplication);
 			}
 			if (profile.changed("sound.moves.dir",oldValues))
