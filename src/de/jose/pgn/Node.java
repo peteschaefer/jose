@@ -198,10 +198,14 @@ abstract public class Node
 		if(this.nextNode==that) {
 			Node a = this.previousNode;
 			Node b = that.nextNode;
+
 			this.previousNode = that;
 			this.nextNode = b;
 			that.previousNode = a;
 			that.nextNode = this;
+
+			a.nextNode = that;
+			b.previousNode = this;
 		}
 		else if (that.nextNode==this) {
 			that.swap(this);
@@ -214,6 +218,12 @@ abstract public class Node
 			aux = this.nextNode;
 			this.nextNode = that.nextNode;
 			that.nextNode = aux;
+
+			this.previousNode.nextNode = that;
+			this.nextNode.previousNode = that;
+
+			that.nextNode.previousNode = this;
+			that.previousNode.nextNode = this;
 		}
 	}
 

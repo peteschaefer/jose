@@ -915,10 +915,13 @@ public class Game
 			//	swap with sibling
 			V.swap(a);
 
+			/* todo necessary ?
 			updateLabels(V);
 			updateLabels((LineNode)a);
+
 			//updateMoveCount(V.first());
 			//updateMoveCount(a);
+			*/
 			return;
 		}
 
@@ -963,10 +966,12 @@ public class Game
 		else if (D!=null)
 			A.append(D);
 
+		/*	todo necessary ?
 		updateLabels(P);
 		updateLabels(V);
 		updateMoveCount(B.first);
 		updateMoveCount(A.first);
+		*/
 
 		setDirty();
 /*
