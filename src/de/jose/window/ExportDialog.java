@@ -29,6 +29,7 @@ import de.jose.util.file.FileUtil;
 import de.jose.util.print.NamedPaper;
 import de.jose.util.print.PrintPreview;
 import de.jose.util.print.PrintableDocument;
+import de.jose.view.JoToolBar;
 import de.jose.view.input.FileInput;
 import de.jose.view.input.ValueHolder;
 import de.jose.view.style.JoStyleContext;
@@ -155,12 +156,19 @@ public class ExportDialog
 		addButton(HELP);
 
         if (!Version.mac) {
-            getButton(PRINT).setIcon(ImgUtil.getMenuIcon("menu.file.print"));
-            getButton(CANCEL).setIcon(ImgUtil.getMenuIcon("menu.edit.clear"));
-            getButton(SAVE).setIcon(ImgUtil.getMenuIcon("menu.file.save"));
-            getButton(SAVEAS).setIcon(ImgUtil.getMenuIcon("menu.file.save.as"));
-            getButton(PREVIEW).setIcon(ImgUtil.getMenuIcon("menu.file.print.preview"));
-            getButton(BROWSER).setIcon(ImgUtil.getMenuIcon("menu.help.web"));
+			int iconSize = 26;
+			Icon printIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.print"),iconSize);
+			Icon saveIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.save"),iconSize);
+			Icon saveAsIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.file.save.as"),iconSize);
+			Icon clearIcon = JoToolBar.create1AwesomeIcon(JoMenuBar.ICON_SPECS.get("menu.edit.clear"),iconSize);
+			Icon browserIcon = JoToolBar.create1AwesomeIcon("\uf0ac:#000080",iconSize);
+			Icon printPreviewIcon = ImgUtil.getMenuIcon("menu.file.print.preview");	//	todo find, or make a better one
+            getButton(PRINT).setIcon(printIcon);
+            getButton(CANCEL).setIcon(clearIcon);
+            getButton(SAVE).setIcon(saveIcon);
+            getButton(SAVEAS).setIcon(saveAsIcon);
+            getButton(PREVIEW).setIcon(printPreviewIcon);
+            getButton(BROWSER).setIcon(browserIcon);
         }
 
 		JoDialog.rescaleFonts(getElementPane());

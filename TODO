@@ -108,8 +108,12 @@ Alternative JREs:
      [x]fall back 2: <menu><item icon>  (reference needs to be found)
      [x]fall back 3: images/menu (already existing)
     [x] <menu> <item icon="unicode;color"> optional
-    [ ] animation dialog
-    [ ] buttons
+    [x] animation dialog
+    [ ] print preview icon (awesome print = \uf02f)
+    search for ImgUtil.getMenuIcon:
+    [ ] PrintPreview
+    [ ] ExportDialog
+    [ ] FileInput
 
 * Undo. It's complicated...
     * CommandAction has tentative support for undo. But, CommandAction is used as a general communication mechanism

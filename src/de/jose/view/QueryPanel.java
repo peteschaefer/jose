@@ -49,8 +49,6 @@ public class QueryPanel
     //	Constants
     //-------------------------------------------------------------------------------
 
-    protected ImageIcon ON_ICON  = ImgUtil.getMenuIcon("menu.game.resign"); //  a STOP sign
-
 	protected static Dimension DATE_FIELD_SIZE	= new Dimension(80,24);
 	protected static Dimension ECO_FIELD_SIZE	= new Dimension(32,24);
 
@@ -283,7 +281,8 @@ public class QueryPanel
 
 		p1.add(p2,BorderLayout.CENTER);
 
-		JButton swap = JoDialog.newButton("dialog.query.swap.colors",ImgUtil.getMenuIcon("swap.colors"),this);
+		Icon swapIcon = JoToolBar.create1AwesomeIcon("\uf2f1:#808080",26);
+		JButton swap = JoDialog.newButton("dialog.query.swap.colors",swapIcon,this);
         swap.setBorderPainted(true);
         swap.setContentAreaFilled(false);
 		swap.setBorder(new EmptyBorder(4,4,4,4));
