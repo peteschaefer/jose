@@ -15,9 +15,9 @@
 
 === Database Repair Tool
 [ ] what's the best setting for myisamchk? -r -f, -o -f ?
-[ ] repair table Game extended use_frm
+[-] repair table Game extended use_frm
     -> no need for myisamchk, process contortions, ...
-    -> restart required
+    -> results are not as good as myisamchk !
 
 ==== Project
 
@@ -74,18 +74,19 @@ Alternative JREs:
 ==== Interesting New Features
 
 * LiChess Opening Explorer
-    - download top games for a variation
-    1. show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)
-    2. insert as sub-lines (most convenient, but a lot of text)
-    3. open in tabs?
-    4. copy to local db?
+    [x] download top games for a variation
+    [x] show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)
+    [ ] insert as sub-lines (most convenient, but a lot of text)
+    [x] open in tab
+    [x] copy to local db
+
 * replace Nalimov query with Lichess tablebase query
 
 * Graph View interactive
     [x] mark current move.
     [ ] tooltips
     [ ] click navigate
-    [ ] use paintImmediately for BoardView2D score?  (instead of repaint!)
+    [x] use paintImmediately for BoardView2D score?  (instead of repaint!)
 
 * Comment search
     * regex

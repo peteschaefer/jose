@@ -857,7 +857,6 @@ public class Game
 
 			promoteLine(variation);
 			*/
-			//	todo this should be effectively NEW_LINE, followed by promotoLine()
 			LineNode variation = createNewLine(move,next);
 			promoteLine(variation);
 

@@ -296,7 +296,9 @@ public class LiChessOpeningExplorer extends OpeningBook
         comment.insertFirst(subline);
 
         //  insert into original Game
-        subline.insertAfter(mvnd);  //  todo find the exact place to insert a new line
+        subline.insertBefore(mvnd.nextMove());  //  todo find the exact place to insert a new line
+        //  todo  @see Game.createNewLine
+
         //  trigger update, etc.
         Command cmd = new Command("edit.game.paste",null, mvnd, subline);
         AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
