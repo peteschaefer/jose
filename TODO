@@ -105,10 +105,13 @@ BUG: Print Preview does not work
 ==== Postponed
 
 * upgrade JDK
-    - https://github.com/JetBrains/JetBrainsRuntime
-      Jetbrains JDK (21) looks promising, because they can fix HiDPI
-      and are probably well maintained
-      and support all out platforms, even 32bit
+    - compile with jdk 8
+    - run with jbr 21 (32 or 64 bit?)
+      https://github.com/JetBrains/JetBrainsRuntime
+      [x] fixes hidpi on Linux :)
+      [ ] deprecate ClassPathUtil, but that's ok
+      [ ] fix sprite rendering
+      [ ] maybe some reflection bugs, but they can be fixed
 
 * launch mysqld earlier (?)
 
