@@ -6,7 +6,7 @@
 		<COMMAND> %dir%\stockfish-windows-x86-64-sse41-popcnt.exe </COMMAND>
 	</EXEC>
 	<EXEC os="Linux_i386">
-		<COMMAND> %dir%\stockfish-ubuntu-x86-64-sse41-popcnt </COMMAND>
+		<COMMAND> %dir%/stockfish-ubuntu-x86-64-sse41-popcnt </COMMAND>
 	</EXEC>
 	<DIR> %local%\engines\stockfish </DIR>
 	<LOGO> %dir%\Stockfish-large.bmp </LOGO>

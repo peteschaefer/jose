@@ -142,6 +142,10 @@ abstract public class EnginePlugin
 	protected static final DecimalFormat CENTIPAWN_FORMAT = new DecimalFormat("+###0.00;-###0.00" );
 	protected static final DecimalFormat PERCENTAGE_FORMAT = new DecimalFormat("##0 '%';-##0 '%'" );
 
+	//	number format for Game counts
+	private static DecimalFormat NUM_GAME = new DecimalFormat("###");
+
+
 	/**	used to parse input moves	 */
 	protected Parser moveParser;
 	protected Position enginePosition;
@@ -994,8 +998,6 @@ abstract public class EnginePlugin
 		return "plugin.evaluation";
 	}
 
-	private static DecimalFormat NUM1 = new DecimalFormat("###.#;-###.#");
-
 	private static String printScoreText(Score score, EnginePlugin plug, boolean tooltip, boolean with_wdl, boolean white_pov)
 	{
 		if (score.cp <=  Score.UNKNOWN) {
@@ -1010,7 +1012,7 @@ abstract public class EnginePlugin
 			if (score.cp<=0)
 				pmap.put("count","-");
 			else
-				pmap.put("count", StringUtil.formatLargeInt(score.cp,NUM1));
+				pmap.put("count", StringUtil.formatLargeInt(score.cp,NUM_GAME));
 			key = "plugin.gamecount";
 		}
 		else if (score.cp > Score.WHITE_MATES)

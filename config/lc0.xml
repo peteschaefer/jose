@@ -11,7 +11,7 @@
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
 		<OPTION name="WeightsFile"> &lt;autodiscover&gt; </OPTION>
-		<OPTION name="Backend"> cudnn-auto </OPTION>
+		<OPTION name="Backend" dirty="true"> trivial </OPTION>
 		<OPTION name="BackendOptions"/>
 		<OPTION name="Threads"> 7 </OPTION>
 		<OPTION name="NNCacheSize"> 2000000 </OPTION>

@@ -263,13 +263,13 @@ public class Game
 
 		newTagNode(null,	TAG_WHITE_TITLE," ");
 		TagNode whiteName = newTagNode(null,	TAG_WHITE,null);
-		newTagNode(" (",	TAG_WHITE_ELO,") ");
+		newTagNode(" (",	TAG_WHITE_ELO,") ",true);
 
 		TagLabelNode dash = newTagLabel(" - ",	TagLabelNode.BETWEEN);
 
 		newTagNode(null,	TAG_BLACK_TITLE," ");
 		TagNode blackName = newTagNode(null,	TAG_BLACK,null);
-		newTagNode(" (",	TAG_BLACK_ELO,") ");
+		newTagNode(" (",	TAG_BLACK_ELO,") ",true);
 		newTagNode("  ",	TAG_RESULT,null);
 		newTagLabel("\n", 	TagLabelNode.LINEEND);
 
@@ -444,7 +444,11 @@ public class Game
 			values.put(t.getKey(), t.getValue());
 	}
 
-	public TagNode newTagNode(String prefix, String key, String suffix)
+	public TagNode newTagNode(String prefix, String key, String suffix) {
+		return newTagNode(prefix,key,suffix,false);
+	}
+
+	public TagNode newTagNode(String prefix, String key, String suffix, boolean obligatory)
 	{
 		TagNode tag = new TagNode(key,null);
 		tag.insertBefore(tags.last());	//	skip suffix
@@ -454,7 +458,7 @@ public class Game
 			labelNode.insertBefore(tag);
 		}
 		if (suffix!=null) {
-			TagLabelNode labelNode = new TagLabelNode(suffix, TagLabelNode.SUFFIX);
+			TagLabelNode labelNode = new TagLabelNode(suffix, obligatory ? TagLabelNode.SUFFIX : TagLabelNode.SUFFIX_OPTIONAL);
 			labelNode.insertAfter(tag);
 		}
 

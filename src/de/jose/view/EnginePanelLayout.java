@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@ import de.jose.view.input.JoBigLabel;
 import java.awt.*;
 
 /**
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class EnginePanelLayout
         implements LayoutManager2
 {
 	protected static final int MIN_HEIGHT       = 20;
-	protected static final int MIN_EVAL_WIDTH   = 80;
+	protected static final int MIN_EVAL_WIDTH   = 86;
 	protected static final int MIN_LINE_WIDTH   = 48;
 
 	protected EnginePanel engPanel;

@@ -21,6 +21,7 @@ public class TagLabelNode
 	public static final int	SUFFIX	 = 2;
 	public static final int	BETWEEN	 = 3;
 	public static final int	LINEEND	=  4;
+	public static final int	SUFFIX_OPTIONAL	 = 5;
 
 	protected int location;
 	/**	associated Tag Node	*/
@@ -63,7 +64,12 @@ public class TagLabelNode
 			if (tag1==null) tag1 = (TagNode)next(TAG_NODE);
 			return attachTo(tag1);
 
-		case SUFFIX:	//	visible, if associated TagNode ist not empty, and there is contents on this line
+		case SUFFIX:
+			//	suffix alway shown
+			if (tag1==null) tag1 = (TagNode)previous(TAG_NODE);
+			return attachTo(tag1);
+
+		case SUFFIX_OPTIONAL://	visible, if associated TagNode ist not empty, and there is contents on this line
 			if (tag1==null) tag1 = (TagNode)previous(TAG_NODE);
 			if (!attachTo(tag1)) return false;
 

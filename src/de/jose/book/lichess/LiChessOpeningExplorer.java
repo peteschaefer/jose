@@ -5,6 +5,7 @@ import de.jose.book.OpeningBook;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.util.xml.XMLUtil;
+import de.jose.window.JoDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,6 +22,8 @@ public class LiChessOpeningExplorer extends OpeningBook
 
     //  list only moves if there are at least 20 games
     public static final int MIN_GAMES_PLAYED = 20;
+
+    private boolean NETWORK_ERROR_REPORTED = false;
 
     public LiChessOpeningExplorer(org.w3c.dom.Element config)
     {
@@ -108,6 +111,14 @@ public class LiChessOpeningExplorer extends OpeningBook
             }
             return true;
         } catch (IOException e) {
+            /*  network failures are not fatal.
+                inform the user to check their Internet connection.
+                Then proceed without Lichess data.
+             */
+            if (!NETWORK_ERROR_REPORTED) {
+                JoDialog.showErrorDialog("network.error.lichess");
+                NETWORK_ERROR_REPORTED = true;
+            }
             return false;
         }
     }
