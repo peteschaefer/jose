@@ -634,15 +634,19 @@ public class DocumentEditor
 			}
 			else if (node1 != node2) {
 				/*  selection spans several nodes; can't edit, or can we ? */
-				splitReplaceNode(node1,node2,d);
-				return;
+				if (node1.parent()==node2.parent()) {
+					//	split edit on same line
+					splitReplaceNode(node1, node2, d);
+					return;
+				}
 			}
 			else {
                 //  the normal case
 				doReplaceNode(node1,d, PADDING_NONE);
                 return;
 			}
-
+			// todo return boolean from all those doXX() methods.
+			//	propagate up here
             //  if all fails...
             AWTUtil.beep(this);
 
