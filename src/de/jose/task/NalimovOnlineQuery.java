@@ -15,6 +15,7 @@ package de.jose.task;
 import de.jose.chess.Position;
 import de.jose.chess.Move;
 import de.jose.chess.EngUtil;
+import de.jose.plugin.Score;
 import de.jose.util.StringUtil;
 import de.jose.pgn.Game;
 import de.jose.pgn.MoveNode;
@@ -71,10 +72,10 @@ public class NalimovOnlineQuery
 
 		if (value==0)
 			buf.append("{EGTB: Draw} ");
-		else if (value >= AnalysisRecord.WHITE_MATES)
-			buf.append("{EGTB: Win in "+(value-AnalysisRecord.WHITE_MATES)/2+"} ");
-		else if (value <= AnalysisRecord.BLACK_MATES)
-			buf.append("{EGTB: Win in "+(AnalysisRecord.BLACK_MATES-value)/2+"} ");
+		else if (value >= Score.WHITE_MATES)
+			buf.append("{EGTB: Win in "+(value-Score.WHITE_MATES)/2+"} ");
+		else if (value <= Score.BLACK_MATES)
+			buf.append("{EGTB: Win in "+(Score.BLACK_MATES-value)/2+"} ");
 
 		for (Iterator i = moveList.iterator(); i.hasNext(); )
 		{
@@ -99,7 +100,7 @@ public class NalimovOnlineQuery
             throws Exception
     {
 		try {
-			value = AnalysisRecord.UNKNOWN;
+			value = Score.UNKNOWN;
 			moveList = new ArrayList();
 
 			EnginePlugin.EvaluatedMove move = getBestMove(pos.toString());
@@ -108,9 +109,9 @@ public class NalimovOnlineQuery
 			int maxPlies;
 			if (value==0)
 				maxPlies = 12;
-			else if (value >= AnalysisRecord.WHITE_MATES)
+			else if (value >= Score.WHITE_MATES)
 				maxPlies = 100;
-			else if (value <= AnalysisRecord.BLACK_MATES)
+			else if (value <= Score.BLACK_MATES)
 				maxPlies = 100;
 			else
 				maxPlies = 12;
@@ -172,17 +173,17 @@ System.err.println(move);
 		if (line.startsWith("Win in "))
 		{
 			int plies = Integer.parseInt(line.substring(7));
-			return AnalysisRecord.WHITE_MATES+plies;
+			return Score.WHITE_MATES+plies;
 		}
 		if (line.startsWith("Lose in "))
 		{
 			int plies = Integer.parseInt(line.substring(8));
-			return AnalysisRecord.BLACK_MATES-plies;
+			return Score.BLACK_MATES-plies;
 		}
 		if (line.startsWith("Draw"))
 			return 0;
 		//  else
-		return AnalysisRecord.UNKNOWN;
+		return Score.UNKNOWN;
 	}
 
 

@@ -779,28 +779,34 @@ abstract public class EnginePlugin
 	public static class EvaluatedMove extends Move
 	{
 		int ply;
-		int value;
-		int flags;
+		Score score = new Score();
 
 		public EvaluatedMove(Move move, int ply, int value, int flags)
 		{
 			super(move);
 			this.ply = ply;
-			this.value = value;
-			this.flags = flags;
+			this.score.cp = value;
+			this.score.flags = flags;
+		}
+
+		public EvaluatedMove(Move move, int ply, Score ascore)
+		{
+			super(move);
+			this.ply = ply;
+			this.score.copy(ascore);
 		}
 
 		protected EvaluatedMove(Move move, AnalysisRecord a)
 		{
-			this(move,a.ply, a.eval[0],a.evalFlags[0]);
+			this(move,a.ply, a.eval[0]);
 		}
 
 		public int getPly()             { return ply; }
-		public int getValue()           { return value; }
-		public boolean isValid()        { return value > AnalysisRecord.UNKNOWN; }
-		public boolean isExact()        { return flags == AnalysisRecord.EVAL_EXACT; }
-		public boolean isLowerBound()   { return flags == AnalysisRecord.EVAL_LOWER_BOUND; }
-		public boolean isUpperBound()   { return flags == AnalysisRecord.EVAL_UPPER_BOUND; }
+		public int getValue()           { return score.cp; }
+		public boolean isValid()        { return score.cp > Score.UNKNOWN; }
+		public boolean isExact()        { return score.flags == Score.EVAL_EXACT; }
+		public boolean isLowerBound()   { return score.flags == Score.EVAL_LOWER_BOUND; }
+		public boolean isUpperBound()   { return score.flags == Score.EVAL_UPPER_BOUND; }
 	}
 
 
@@ -827,7 +833,7 @@ abstract public class EnginePlugin
 		{
 			int value = node.getEngineValue();
 			//  value is from white's point of view !
-			if (value <= AnalysisRecord.UNKNOWN)
+			if (value <= Score.UNKNOWN)
 				return false; //  unknown value
 			if (EngUtil.isBlack(engineColor)) value = -value;
 			//  now value is from the engine's point of view
@@ -851,7 +857,7 @@ abstract public class EnginePlugin
 		for (int i=0; i < ADJUDICATE_MOVES; i++)
 		{
 			int value = node.getEngineValue();
-			if (value <= AnalysisRecord.UNKNOWN)
+			if (value <= Score.UNKNOWN)
 				return false; //  unknown value
 			if ((value < -EnginePlugin.DRAW_THRESHOLD) || (value > EnginePlugin.DRAW_THRESHOLD))
 				return false;   //  out of interval; no reason for draw

@@ -69,26 +69,27 @@ tab  depth score*100
 		rec.modified = 0;
 		rec.ply = enginePosition.gamePly();
 		char[] chars = input.toCharArray();
+		Score score = rec.eval[0];
 
 		if (chars[0]=='\t') {
 			rec.depth = AnalysisRecord.parseInt(chars,1,2);
 			rec.modified |= AnalysisRecord.DEPTH;
 
-			rec.selectiveDepth = AnalysisRecord.UNKNOWN;
+			rec.selectiveDepth = Score.UNKNOWN;
 			int eval = AnalysisRecord.parseInt(chars,3,7);
 			if (eval > 32000) {
 				//	engine mates in ... plies
 				int plies = 32768-eval;
-				rec.eval[0] = AnalysisRecord.WHITE_MATES+plies;
+				score.cp = Score.WHITE_MATES+plies;
 			}
 			else if (eval < -32000) {
 				int plies = -32768-eval;
-				rec.eval[0] = AnalysisRecord.BLACK_MATES-plies;
+				score.cp = Score.BLACK_MATES-plies;
 			}
 			else
-				rec.eval[0] = eval;
+				score.cp = eval;
 
-			rec.eval[0] = adjustPointOfView(rec.eval[0]);
+			score.cp = adjustPointOfView(score.cp);
 
 			/**
 			 * Crafty reports
@@ -115,10 +116,10 @@ tab  depth score*100
 		else {
 			//	uses endgame table bases
 			rec.depth = AnalysisRecord.ENDGAME_TABLE;
-			rec.selectiveDepth = AnalysisRecord.UNKNOWN;
-			rec.eval[0] = AnalysisRecord.UNKNOWN;
-			rec.elapsedTime = AnalysisRecord.UNKNOWN;
-			rec.nodes = AnalysisRecord.UNKNOWN;
+			rec.selectiveDepth = Score.UNKNOWN;
+			score.cp = Score.UNKNOWN;
+			rec.elapsedTime = Score.UNKNOWN;
+			rec.nodes = Score.UNKNOWN;
 
 			/**	lines are split */
 			if (input.startsWith("1.")) tbLine.setLength(0);

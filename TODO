@@ -1,0 +1,47 @@
+==== Bugs
+
+? Charter buggy
+? Windows file chooser; worked-around by using LnF. Windows original is desirable.
+? put fop metrics to ../fop/*.XML. Seems to have file path problems ?
+? fix Berlin font
+? Text File export not implemented?
+? antialiasing when running jose.exe vs. java.exe vs. debugger ?
+
+==== Project
+compile sources against 1.8 [x]
+libraries needed:
+* jdk 1.8 32 bit [x]
+* com.sun.codec.jpeg [x] copied from 1.5 (probably not needed anyway)
+? TraceConnection probably not needed anyway
+
+==== New Features
+? WDL scoring (for Leela)
+score cp 12 wdl 1 1 998 movesleft 27
+* wdl is most useful. UCI_WDL needs to be set
+
+? eval bar
+? suggestion arrows
+--> put them in Settings dialog and/or context menu
+? commentary arrows and highlights
+? score graph??
+
+? push to Bitbucket (incl. jre 1.8, Stockfish, Leela)
+
+? Linux build: requires mysql-embedded to be re-compiled for 64 bit.
+Don't think I want to do that...
+? clobber Ubuntu on xps 15?
+
+Interesting Leela settings.
+? temperature for more variations in the opening
+? contempt for sharp/dull play
+? UCI_showWDL always on
+* cp can mean several things: win_percentage, Q, WDL_mu, cp_with_drawscore ??
+
+Contempt
+? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
+* there is some confusion about the effective parameters. Online docu is not up-to-date :(
+
+* DrawScore / ContemptMode ?
+* WDLDrawRate ?
+
+? Make 'contempt' / Armageddon slider controls for Black vs. White and Human vs. Leela ?

@@ -337,23 +337,24 @@ ply
 			rec.depth = AnalysisRecord.parseInt(chars,0,k1);
 			rec.modified |= AnalysisRecord.DEPTH;
 		}
-		rec.selectiveDepth = AnalysisRecord.UNKNOWN;
+		rec.selectiveDepth = Score.UNKNOWN;
+		Score score = rec.eval[0];
 
 		if (k2 > k1 && k1 >= 0) {
 			int eval = AnalysisRecord.parseInt(chars,k1,k2-k1);
 			if (eval > 32000) {
 				//	white mates in ... plies
 				int plies = 32768-eval;
-				rec.eval[0] = AnalysisRecord.WHITE_MATES+plies;
+				score.cp = Score.WHITE_MATES+plies;
 			}
 			else if (eval < -32000) {
 				int plies = -32768-eval;
-				rec.eval[0] = AnalysisRecord.BLACK_MATES-plies;
+				score.cp = Score.BLACK_MATES-plies;
 			}
 			else
-				rec.eval[0] = eval;
+				score.cp = eval;
 
-			rec.eval[0] = adjustPointOfView(rec.eval[0]);
+			score.cp = adjustPointOfView(score.cp);
 
 			rec.modified |= AnalysisRecord.EVAL;
 		}

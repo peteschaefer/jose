@@ -12,6 +12,7 @@
 
 package de.jose.pgn;
 
+import de.jose.plugin.Score;
 import de.jose.util.IntArray;
 import de.jose.chess.EngUtil;
 import de.jose.plugin.AnalysisRecord;
@@ -19,6 +20,8 @@ import de.jose.Util;
 
 /**
  * Maintains an array of position evaluations
+ * todo record WDL scores, too
+ * todo can we use this for an eval graph?
  * @author Peter Schäfer
  */
 
@@ -180,9 +183,9 @@ public class EvalArray
 
 	private static boolean isValid(int value)
 	{
-		if (value <= AnalysisRecord.UNKNOWN) return false;
-		if (value >= AnalysisRecord.WHITE_MATES) return false;
-		if (value <= AnalysisRecord.BLACK_MATES) return false;
+		if (value <= Score.UNKNOWN) return false;
+		if (value >= Score.WHITE_MATES) return false;
+		if (value <= Score.BLACK_MATES) return false;
 
 		return true;
 	}

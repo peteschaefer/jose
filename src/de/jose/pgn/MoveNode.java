@@ -15,6 +15,7 @@ package de.jose.pgn;
 import de.jose.Application;
 import de.jose.plugin.AnalysisRecord;
 import de.jose.export.ExportConfig;
+import de.jose.plugin.Score;
 import de.jose.sax.JoContentHandler;
 import de.jose.chess.*;
 import de.jose.image.FontCapture;
@@ -55,7 +56,7 @@ public class MoveNode
         super(MOVE_NODE);
         ply = pl;
 		move = mv;
-		engineValue = AnalysisRecord.UNKNOWN;
+		engineValue = Score.UNKNOWN;
 	}
 
 	public final Move getMove()		{ return move; }

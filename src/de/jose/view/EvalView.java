@@ -15,6 +15,7 @@ package de.jose.view;
 import de.jose.MessageListener;
 import de.jose.Util;
 import de.jose.Application;
+import de.jose.plugin.Score;
 import de.jose.profile.FontEncoding;
 import de.jose.util.FontUtil;
 import de.jose.util.IntArray;
@@ -343,17 +344,17 @@ public class EvalView
 		for (int p = first; p < last; p++)
 		{
 			int value = values.moveValue(p);
-			if (value==AnalysisRecord.UNKNOWN) continue;
+			if (value==Score.UNKNOWN) continue;
 
 			double barheight;
 			String text = null;
 
-			if (value >= AnalysisRecord.WHITE_MATES) {
-				text = "#"+((value-AnalysisRecord.WHITE_MATES+1)/2);
+			if (value >= Score.WHITE_MATES) {
+				text = "#"+((value-Score.WHITE_MATES+1)/2);
 				barheight = middle;
 			}
-			else if (value <= AnalysisRecord.BLACK_MATES) {
-				text = "#"+((AnalysisRecord.BLACK_MATES-value+1)/2);
+			else if (value <= Score.BLACK_MATES) {
+				text = "#"+((Score.BLACK_MATES-value+1)/2);
 				barheight = middle-height;
 			}
 			else
@@ -405,7 +406,7 @@ public class EvalView
 //		case EnginePlugin.PONDERING:
 		case EnginePlugin.ANALYZING:
 			AnalysisRecord a = (AnalysisRecord)data;
-			if (a!=null) setValue(a.ply/2, a.eval[0],false);
+			if (a!=null) setValue(a.ply/2, a.eval[0].cp,false);
 			break;
 
 		case EnginePlugin.PLUGIN_MOVE:

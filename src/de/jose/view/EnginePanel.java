@@ -19,6 +19,7 @@ import de.jose.book.BookEntry;
 import de.jose.chess.Position;
 import de.jose.chess.StringMoveFormatter;
 import de.jose.image.ImgUtil;
+import de.jose.plugin.Score;
 import de.jose.plugin.AnalysisRecord;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.UciPlugin;
@@ -616,7 +617,7 @@ public class EnginePanel
             boolean scrollhist = false;
 			for (int idx=0; idx <= rec.maxpv; idx++)
 				if (rec.wasPvModified(idx)) {
-					setEvaluation(idx,rec.eval[idx],rec.evalFlags[idx], pmap);
+					setEvaluation(idx,rec.eval[idx].cp,rec.eval[idx].flags, pmap);	//	todo pass Score object
 					setVariation(idx,rec.line[idx]);
 
 					if (! inBook) {
@@ -638,15 +639,15 @@ public class EnginePanel
 		}
 		else {
 			//  clear all
-			setCurrentMove(null,AnalysisRecord.UNKNOWN,AnalysisRecord.UNKNOWN,pmap);
-			setDepth(AnalysisRecord.UNKNOWN,AnalysisRecord.UNKNOWN,pmap);
-			setElapsedTime(AnalysisRecord.UNKNOWN,pmap);
-			setNodeCount(AnalysisRecord.UNKNOWN,pmap);
-			setNodesPerSecond(AnalysisRecord.UNKNOWN,pmap);
+			setCurrentMove(null,Score.UNKNOWN,Score.UNKNOWN,pmap);
+			setDepth(Score.UNKNOWN,Score.UNKNOWN,pmap);
+			setElapsedTime(Score.UNKNOWN,pmap);
+			setNodeCount(Score.UNKNOWN,pmap);
+			setNodesPerSecond(Score.UNKNOWN,pmap);
 
 			for (int idx=0; idx < pvCount; idx++)
 			{
-				setEvaluation(idx,AnalysisRecord.UNKNOWN,0,pmap);
+				setEvaluation(idx,Score.UNKNOWN,0,pmap);
 				setVariation(idx,null);
 			}
 
@@ -703,8 +704,8 @@ public class EnginePanel
 				line.append("}");
 			}
 
-			bookmoves.evalFlags[i] = AnalysisRecord.EVAL_GAME_COUNT;
-			bookmoves.eval[i] = BookEntry.nvl(entry.count);
+			bookmoves.eval[i].flags = Score.EVAL_GAME_COUNT;
+			bookmoves.eval[i].cp = BookEntry.nvl(entry.count);
 		}
 
 		//  always show hint that these are book moves
@@ -758,7 +759,7 @@ public class EnginePanel
 
 	public void setDepth(int dep, int selectiveDep, HashMap pmap)
 	{
-        if (dep <= AnalysisRecord.UNKNOWN) {
+        if (dep <= Score.UNKNOWN) {
             lDepth.setText("");
             return;
         }
@@ -844,14 +845,16 @@ public class EnginePanel
 	 * @param eval (from whites point of view)
 	 * @param flags
 	 * @param pmap
+	 *
+	 * todo use Score object with WDL info
 	 */
 	public void setEvaluation(int idx, int eval, int flags, HashMap pmap)
 	{
-		JTextComponent leval = getEvalLabel(idx, (eval > AnalysisRecord.UNKNOWN), true);
+		JTextComponent leval = getEvalLabel(idx, (eval > Score.UNKNOWN), true);
 		if (leval==null) return;
 
 		String key;
-		if (flags==AnalysisRecord.EVAL_GAME_COUNT)
+		if (flags==Score.EVAL_GAME_COUNT)
 		{
 			//  book move, game count
 			if (eval<=0)
@@ -860,17 +863,17 @@ public class EnginePanel
 				pmap.put("count", Integer.toString(eval));
 			key = "plugin.gamecount";
 		}
-		else if (eval <=  AnalysisRecord.UNKNOWN)
+		else if (eval <=  Score.UNKNOWN)
 			key = null;
-		else if (eval > AnalysisRecord.WHITE_MATES)
+		else if (eval > Score.WHITE_MATES)
 		{
-			int plies = eval-AnalysisRecord.WHITE_MATES;
+			int plies = eval-Score.WHITE_MATES;
 			pmap.put("eval",String.valueOf((plies+1)/2));
 			key = "plugin.white.mates";
 		}
-		else if (eval < AnalysisRecord.BLACK_MATES)
+		else if (eval < Score.BLACK_MATES)
 		{
-			int plies = AnalysisRecord.BLACK_MATES-eval;
+			int plies = Score.BLACK_MATES-eval;
 			pmap.put("eval",String.valueOf((plies+1)/2));
 			key = "plugin.black.mates";
 		}
@@ -883,8 +886,8 @@ public class EnginePanel
 
 			switch (flags)
 			{
-			case AnalysisRecord.EVAL_LOWER_BOUND:     text = "\u2265 "+text; break;  //  ?
-			case AnalysisRecord.EVAL_UPPER_BOUND:     text = "\u2264 "+text; break;  //  ?
+			case Score.EVAL_LOWER_BOUND:     text = "\u2265 "+text; break;  //  ?
+			case Score.EVAL_UPPER_BOUND:     text = "\u2264 "+text; break;  //  ?
 			}
 
 			pmap.put("eval",text);

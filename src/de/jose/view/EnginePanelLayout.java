@@ -58,12 +58,14 @@ public class EnginePanelLayout
                 JoBigLabel evalLabel = engPanel.getEvalLabel(i,false, false);
                 JoBigLabel pvLabel = engPanel.getPvLabel(i,false, false);
 
-                int linewidth = width-MIN_EVAL_WIDTH;
-                int lineheight = getPreferredHeight(pvLabel,linewidth);
+                if (evalLabel != null && pvLabel != null) {
+                    int linewidth = width-MIN_EVAL_WIDTH;
+                    int lineheight = getPreferredHeight(pvLabel,linewidth);
 
-                evalLabel.setBounds(0,y, MIN_EVAL_WIDTH,lineheight);
-                pvLabel.setBounds(MIN_EVAL_WIDTH,y, linewidth,lineheight);
-                y += lineheight;
+                    evalLabel.setBounds(0,y, MIN_EVAL_WIDTH,lineheight);
+                    pvLabel.setBounds(MIN_EVAL_WIDTH,y, linewidth,lineheight);
+                    y += lineheight;
+                }
             }
 
             /** measure info line   */
