@@ -902,7 +902,7 @@ public class EnginePanel
 					}
 
 					setEvaluation(idx, data.eval);
-					setVariation(idx, state, data);
+					setVariation(idx, data);
 
 					if (!data.eval.hasWDL() && !bookMode && (plugin!=null))
 						plugin.mapUnit(data.eval);	// todo why has this not been done before?
@@ -944,7 +944,7 @@ public class EnginePanel
 			for (int idx=0; idx < pvCount; idx++)
 			{
 				setEvaluation(idx,new Score());
-				setVariation(idx,null,null);
+				setVariation(idx,null);
 			}
 
             tPVHistory.setText("");
@@ -1199,12 +1199,11 @@ public class EnginePanel
 		setValue(lNodesPerSecond,key,pmap);
 	}
 
-	public void setVariation(int idx, EngineState state,
-							 AnalysisRecord.LineData rec)
+	public void setVariation(int idx, AnalysisRecord.LineData rec)
 	{
 		JoStyledLabel lvar = getPvLabel(idx, (rec!=null), true);
 		if (lvar!=null)
-			setLine(lvar,state,rec);
+			setLine(lvar,rec);
 	}
 
 	public void setInfo(StringBuffer text)
@@ -1216,8 +1215,7 @@ public class EnginePanel
 		}
 	}
 
-	private void setLine(JoStyledLabel label, EngineState state,
-						 AnalysisRecord.LineData rec)
+	private void setLine(JoStyledLabel label, AnalysisRecord.LineData rec)
 	{
 		StringBuffer text = (rec!=null) ? rec.line:null;
 		StringBuffer info = (rec!=null) ? rec.info:null;
