@@ -689,7 +689,7 @@ public class EnginePanel
 		}
 		else if (!infoModified)
 			lStatus.setText(getStatusText(state));
-		}
+	}
 
 	public void exitBook()
 	{
@@ -745,7 +745,6 @@ public class EnginePanel
 //		bookmoves.modified |= AnalysisRecord.INFO;
 
 		showLines(bookEntries.size(), false);
-
 		pvCount = bookEntries.size();
 
 		inBook = true;

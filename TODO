@@ -85,6 +85,8 @@ Alternative JREs:
     - drop EvalArray (read data from Game tree directly)
     - drop BoardView.eval (read from Game.currentMove())
     - use similar updating mechanism for Engine and Book evals
+        broadcast("score.changed", MoveNode)
+        from EnginePanel to BoardPanel,EvalPanel,(DocumentPanel)
 
 * LiChess Opening Explorer
     - download top games for a variation
