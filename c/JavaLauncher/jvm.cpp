@@ -12,6 +12,7 @@
 #include "jvm.h"
 #include "util.h"
 
+#include <sys/types.h>
 
 /**		construct a JVM; the JVM is not launched, yet !		*/
 JVM::JVM()
