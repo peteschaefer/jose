@@ -830,7 +830,7 @@ public class EnginePanel
 	protected void updateButtonState()
 	{
 		updateButtonState(
-				Application.theApplication.theMode,null, null);
+				Application.theApplication.theMode, Application.theApplication.thePlayState, null);
 	}
 
 	protected void updateButtonState(
@@ -1687,6 +1687,7 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
+				updateButtonState();
 				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
 				switch(Application.theApplication.theMode)
 				{	//	todo move this stuff to Application (but it's called in many places..)

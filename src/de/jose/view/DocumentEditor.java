@@ -131,10 +131,11 @@ public class DocumentEditor
             Highlighter.HighlightPainter painter =
 					new DefaultHighlighter.DefaultHighlightPainter(MOVE_HILITE_COLOR) {
 					//new Highlighter.HighlightPainter() {
+
 						@Override
 						public Shape paintLayer(Graphics g, int offs0, int offs1,
 												Shape bounds, JTextComponent c, View view) {
-							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c);
+							return DocumentEditor.this.paintHightlight(g,offs0,offs1,bounds,c,view);
 						}
 					};
             hiliteCurrentMove = getHighlighter().addHighlight(0,0, painter);
@@ -145,40 +146,70 @@ public class DocumentEditor
         setupActions();
 	}
 
-	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c)
+	private Rectangle viewRect(View view, int offs0, int offs1, Shape bounds) throws BadLocationException
+	{
+		Shape shape;
+		if (offs0==view.getStartOffset() && offs1==view.getEndOffset())
+			shape = bounds;
+		else
+			shape = view.modelToView(
+					offs0, Position.Bias.Forward,
+					offs1,Position.Bias.Backward,
+					bounds);
+
+		return (shape instanceof Rectangle) ?
+				(Rectangle)shape : shape.getBounds();
+	}
+
+	private Rectangle viewRect(JTextComponent c, int offs0, Position.Bias b) throws BadLocationException
+	{
+		TextUI mapper = c.getUI();
+		return mapper.modelToView(c,offs0,b);
+	}
+
+	private void extendAscent(Rectangle r, Rectangle p)
+	{
+		//	same row = ascent must overlap
+		if ((p.y < (r.y+r.height)) && ((p.y+p.height) > r.y))
+		{
+			int y1 = Math.max(r.y+r.height,p.y+p.height);
+			r.y = Math.min(r.y,p.y);
+			r.height = y1-r.y;
+		}
+	}
+
+	private Shape paintHightlight(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view)
 	{
 		Color color = MOVE_HILITE_COLOR;
 		g.setColor(color);
 
-		TextUI mapper = c.getUI();
+        Rectangle r;
         try {
-			Rectangle p0 = mapper.modelToView(c, offs0);
-			Rectangle p1 = mapper.modelToView(c, offs1);
-			Rectangle r1 = p0.union(p1);
-			Rectangle r2 = new Rectangle(r1);
-
-			//	check ascent/descent of adjacent regions
-			if (offs0 > 0)
-			try {
-				Rectangle p2 = mapper.modelToView(c, offs0 - 1);
-				r2 = r2.union(p2);
-			} catch (BadLocationException e) {
-			}
-			
-			if ((offs1+1) < theGame.getLength())
-			try {
-				Rectangle p3 = mapper.modelToView(c, offs1 + 1);
-				r2 = r2.union(p3);
-			} catch (BadLocationException e) {
-			}
-
-			Rectangle r = new Rectangle(r1.x, r2.y, r1.width, r2.height);
-			g.fillRect(r.x,r.y,r.width,r.height);
-			return r;
+            // --- determine locations ---
+            r = viewRect(view,offs0,offs1,bounds);
         } catch (BadLocationException e) {
-            throw new RuntimeException(e);
+            // can't render
+            return null;
         }
-	}
+
+        //	check ascent/descent of adjacent regions
+        if (offs0 > 0)
+        try {
+			Rectangle p2 = viewRect(c,offs0-1, Position.Bias.Forward);
+			extendAscent(r,p2);
+        } catch (BadLocationException e) {
+        }
+
+        if ((offs1+1) < theGame.getLength())
+        try {
+            Rectangle p3 = viewRect(c,offs1+1, Position.Bias.Backward);
+			extendAscent(r,p3);
+        } catch (BadLocationException e) {
+        }
+
+        g.fillRect(r.x,r.y,r.width,r.height);
+        return r;
+    }
 
 	public void setDocument(Game doc)
 	{

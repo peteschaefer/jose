@@ -5,8 +5,9 @@
 ? Charter buggy
 
 [ ] BUG? "go infinite" with only one legal move
-    early respose "bestmove", but analysis does not arrive at EnginePanel
+    early response "bestmove", but analysis does not arrive at EnginePanel
     instead, outdated analysis is shown
+    -> there should be no early response. could be side-effect of another error?!
 
 [x] asynch book lookups (branch async-book)
 [ ] Eval Bar, Graph drawing glitches (paintImmediately?)

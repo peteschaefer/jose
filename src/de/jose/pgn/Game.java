@@ -726,6 +726,7 @@ public class Game
 	{
 		if (getCurrentMove()==null) return false;
 		if (getPosition().isGameFinished(true)) return false;
+		if (getCurrentMove().getMove().isNullMove()) return false;
 		if (getPosition().isCheck()) return false;	//	no null move if opponent is already in check!
 		return true;
 	}
