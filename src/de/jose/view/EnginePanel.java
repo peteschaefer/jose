@@ -68,7 +68,7 @@ public class EnginePanel
 	/** contains book info  */
 	protected AnalysisRecord bookmoves = new AnalysisRecord();  //  TODO share with OpeningLirary ?
 	public boolean inBook = false;
-	private long seenMsg;
+	private static long msgSeen=0;
 
 	/** go button   */
 	protected JButton   bGo;
@@ -1210,7 +1210,6 @@ public class EnginePanel
 		int cap = plugin.getParseCapabilities();
 		analysis = plugin.getAnalysis();
 		analysis.reset();
-		seenMsg=0;
 		adjustCapabilities(cap);
 	}
 
@@ -1219,14 +1218,11 @@ public class EnginePanel
 		plugin.removeMessageListener(this);
 		this.plugin = null;
 		pluginName = null;
-		seenMsg=0;
 		display(EnginePlugin.PAUSED, null, inBook);
 	}
 
 	public void handleMessage(Object who, int what, Object data)
 	{
-		String hintText = null;
-		/* ... = (String)data; */
 		AnalysisRecord a=null;
 		switch (what) {
 			case EnginePlugin.THINKING:
@@ -1235,8 +1231,8 @@ public class EnginePanel
 				a = (AnalysisRecord) data;
 				if (a!=null) {
 					analysis = a;
-					if (a.msgCount <= seenMsg) return; // already handled this message
-					seenMsg = a.msgCount;
+					if (EnginePlugin.msgSent <= EnginePanel.msgSeen) return; // already handled this message
+					EnginePanel.msgSeen = EnginePlugin.msgSent;
 				}
 				break;
 		}
@@ -1480,7 +1476,6 @@ public class EnginePanel
 			public void Do(Command cmd) {
 				if (plugin!=null) disconnect();
 				plugin = null;
-				seenMsg=0;
 			}
 		};
 		map.put("close.plugin", action);

@@ -58,6 +58,8 @@ abstract public class EnginePlugin
 	protected int mode;
 	/** calculation analysis */
 	protected AnalysisRecord analysis;
+	/** iterate: count sent messages */
+	public static long msgSent=0;
 
 	/**
 	 * evaluations reported by the engine are from the engine's point of view
