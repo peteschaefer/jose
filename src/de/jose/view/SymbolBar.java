@@ -280,15 +280,17 @@ public class SymbolBar
 
     public void itemStateChanged(ItemEvent e)
     {
-        if (e.getSource()==comboSelector) {
+        if (e.getStateChange()==ItemEvent.SELECTED
+                && e.getSource()==comboSelector) {
             String sel = (String) comboSelector.getSelectedItem();
             if (!sel.equals(comboNag.selector)) {
                 setComboNag(ComboNag.findBySelector(sel));
             }
         }
-        if (e.getSource()==comboColor
+        if (e.getStateChange()==ItemEvent.SELECTED
+                && (e.getSource()==comboColor
                 || e.getSource()==comboAdjective
-                || e.getSource()==comboSubst)
+                || e.getSource()==comboSubst))
         {
             comboNag.select(
                     comboColor.getSelectedIndex(),
