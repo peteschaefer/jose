@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@ package de.jose.book.polyglot;
 
 import de.jose.book.OpeningBook;
 import de.jose.book.BookEntry;
+import de.jose.chess.Board;
 import de.jose.chess.Position;
 
 import java.io.RandomAccessFile;
@@ -26,7 +27,7 @@ import static de.jose.book.BookEntry.IUNKNOWN;
 /**
  * Book
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class PolyglotBook extends OpeningBook
 {
@@ -56,9 +57,12 @@ public class PolyglotBook extends OpeningBook
 		return result;
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
+	public boolean getBookMoves(Position pos, String fen,
+								boolean withTransposedColors, boolean deep, List result)
 			throws IOException
 	{
+		assert(pos!=null);
+		if (fen!=null) pos.setup(fen);
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos,false,result);
 		boolean res2 = false;
@@ -66,10 +70,10 @@ public class PolyglotBook extends OpeningBook
 		return res1||res2;
 	}
 
-	private boolean getBookMovesColored(Position pos, boolean reversed, List result) throws IOException
+	private boolean getBookMovesColored(Board board, boolean reversed, List result) throws IOException
 	{
 		PolyglotHashKey key = reversed ? reversed_hashkey:hashkey;
-		pos.computeHashKey(key);
+		board.computeHashKey(key);
 
 		boolean in_book = false;
 		if (disk != null && BookSize > 0)
@@ -89,10 +93,10 @@ public class PolyglotBook extends OpeningBook
 		return in_book;
 	}
 
-	public BookEntry selectBookMove(Position pos, boolean withTransposedColors, Random random)
-	{
-		return null;    //  let OpeningLibrary select a move
-	}
+//	public BookEntry selectBookMove(Position pos, boolean withTransposedColors, Random random)
+//	{
+//		return null;    //  let OpeningLibrary select a move
+//	}
 
 
 	private int find_pos(long key)

@@ -55,6 +55,8 @@ import java.util.*;
 import java.util.List;
 import java.io.IOException;
 
+import static de.jose.Application.*;
+
 public class EnginePanel
 		extends JoPanel
 		implements ClipboardOwner, MouseListener, DeferredMessageListener
@@ -856,7 +858,7 @@ public class EnginePanel
 		inBook = false;
 	}
 
-	protected void showBook(List bookEntries, Position pos)
+	public void showBook(List bookEntries, Position pos)
 	{
 		if (!inBook) {
 
@@ -1204,11 +1206,7 @@ public class EnginePanel
 		if (Application.theApplication.getEnginePlugin() != null)
 			connectTo(Application.theApplication.getEnginePlugin());
 
-		try {
-			updateBook(false);   //  is this the right place ?
-		} catch (IOException e) {
-			Application.error(e);
-	}
+		//Application.theApplication.updateBook(false,false);   //  well be called by "switch.game", finally
 	}
 
 	protected void connectTo(EnginePlugin plugin)
@@ -1530,7 +1528,7 @@ public class EnginePanel
 				bGo.setEnabled(true);
 				bPause.setEnabled(plugin!=null);
 
-				updateBook(false);
+				Application.theApplication.updateBook(false,false);
 			}
 		};
 		map.put("switch.game", action);
@@ -1538,11 +1536,21 @@ public class EnginePanel
         action = new CommandAction() {
 			public void Do(Command cmd) throws IOException
 			{
-				if (plugin!=null && ! plugin.isPaused())
-					/* stay in engine mode */;
-				else {
-					boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
-					updateBook(wasEngineMove);
+				boolean isPaused =  (plugin!=null && ! plugin.isPaused());
+				boolean wasEngineMove = cmd.moreData != null && cmd.moreData instanceof EnginePlugin.EvaluatedMove;
+				switch(Application.theApplication.theMode)
+				{	//	todo move this stuff to Application
+					case USER_ENGINE:
+					case ENGINE_ENGINE:
+						//	will play a move and hit the Book anyway
+						break;
+					case USER_INPUT:
+						Application.theApplication.updateBook(wasEngineMove,false);
+//						Application.theApplication.pausePlugin(false); // right?
+						break;
+					case ANALYSIS:
+						Application.theApplication.updateBook(wasEngineMove,!isPaused);
+						break;
 				}
 			}
 		};
@@ -1670,32 +1678,6 @@ public class EnginePanel
 		};
 		map.put("plugin.verbose.stats",action);
 
-	}
-
-	public boolean updateBook(boolean onEngineMove)
-			throws IOException
-	{
-		//  show opening book moves
-		Position pos = Application.theApplication.theGame.getPosition();
-		OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
-
-		List bookMoves=null;
-		boolean inBook;
-		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
-		{	//	don't update book after an engine move, if this is not desired
-			inBook = false;
-		}
-		else {
-			bookMoves = lib.collectMoves(pos, Application.theApplication.theMode,true,false);
-			inBook = bookMoves!=null && !bookMoves.isEmpty();
-		}
-
-		if (inBook)
-			showBook(bookMoves,pos);
-		else
-			exitBook();
-
-		return inBook;
 	}
 
 	public void lostOwnership(Clipboard clipboard, Transferable contents)

@@ -41,8 +41,8 @@ import java.util.Map;
 import java.util.Random;
 import java.awt.Graphics2D;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 public class BoardView2D
 		extends BoardView
@@ -1178,9 +1178,11 @@ public class BoardView2D
 
 
 
-	public final BufferedImage getPieceImage(int piece, Rectangle bounds)
+	public final BufferedImage getPieceImage(int piece, Rectangle bounds, boolean userSpace)
 	{
-		return getPieceImage(currentFont, devSquareSize, piece,
+		return getPieceImage(currentFont,
+							userSpace ? (int)userSquareSize : devSquareSize,
+							piece,
 							currentWhite, currentBlack, 
 							bounds,lockImgCache);
 	}
@@ -1202,7 +1204,7 @@ public class BoardView2D
 
 	public ImageIcon getPopupIcon(int piece)
 	{
-		return new ImageIcon(getPieceImage(piece,null));
+		return new ImageIcon(getPieceImage(piece,null,true));
 	}
 
 	/**
@@ -1221,7 +1223,7 @@ public class BoardView2D
 		if (piece != EMPTY) {
 			Point2D p = origin(square,false);
 			Rectangle imgBounds = new Rectangle();
-			Image img = getPieceImage(piece,imgBounds);
+			Image img = getPieceImage(piece,imgBounds,false);
 			g.drawImage(img, (int)(p.getX()+imgBounds.x), (int)(p.getY()+imgBounds.y), null);
 		}
 	}
@@ -1511,9 +1513,11 @@ public class BoardView2D
 			sprite1.dropTo(mouseStartSquare, board.pieceAt(mouseStartSquare), 500,FPS,true);
 		}
 
-		mouseStartSquare = 0;
-		//mouseClickSquare = 0;
-		mouseMove = null;
+		if (!promoPopupShowing) {
+			mouseStartSquare = 0;
+			//mouseClickSquare = 0;
+			mouseMove = null;
+		}
 	}
 
 	protected class Board2DSprite extends Sprite
@@ -1534,7 +1538,7 @@ public class BoardView2D
 		Board2DSprite(BufferedImage background)
 		{
 			Rectangle imgBounds = new Rectangle();
-			BufferedImage img = getPieceImage(WHITE_QUEEN,imgBounds);
+			BufferedImage img = getPieceImage(WHITE_QUEEN,imgBounds,false);
 
 			init(background,getGraphics2D(), BoardView2D.this.getBounds(),
 				img, new Point(0,0), imgBounds.x, imgBounds.y);
@@ -1592,7 +1596,7 @@ public class BoardView2D
 			set(EMPTY,startSquare);
 
 			Rectangle imgBounds = new Rectangle();
-			BufferedImage img = getPieceImage(pc,imgBounds);
+			BufferedImage img = getPieceImage(pc,imgBounds,false);
 
 			Point2D orig2d = origin(src,false);
 			Point orig = new Point((int)orig2d.getX(),(int)orig2d.getY());

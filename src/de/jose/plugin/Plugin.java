@@ -60,6 +60,11 @@ abstract public class Plugin
 	public static final int PLUGIN_FATAL_ERROR                = 90;
 	//  illegal move in opening book
 	public static final int BOOK_ERROR                            = 89;
+	//	completed book query
+	public static final int BOOK_SHOW	                          = 88;
+	public static final int BOOK_ANALYSIS                         = 87;
+	public static final int BOOK_PLAY	                          = 86;
+	public static final int BOOK_HINT	                          = 85;
 
 	//-------------------------------------------------------------------------------
 	//	Fields

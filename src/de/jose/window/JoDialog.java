@@ -1381,16 +1381,29 @@ public class JoDialog
 	 */
 	public static void showErrorDialog(Component parent, String message)
 	{
-		if (message==null) message = "";
-		JOptionPane opane = new JOptionPane(Language.get(message), JOptionPane.ERROR_MESSAGE);
-		JDialog dlg;
-		if (parent==null)
-			dlg = opane.createDialog(JoFrame.getActiveFrame(), Language.get("dialog.error.title"));
+		if (!SwingUtilities.isEventDispatchThread())
+		{
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					showErrorDialog(parent,message);
+				}
+			});
+		}
 		else
-			dlg = opane.createDialog(parent, Language.get("dialog.error.title"));
-        SplashScreen.close();
-		dlg.show();
-		WinUtils.setTopMost(dlg);
+		{
+			JOptionPane opane = new JOptionPane(
+					Language.get(message!=null ? message:""),
+					JOptionPane.ERROR_MESSAGE);
+			JDialog dlg;
+			if (parent==null)
+				dlg = opane.createDialog(JoFrame.getActiveFrame(), Language.get("dialog.error.title"));
+			else
+				dlg = opane.createDialog(parent, Language.get("dialog.error.title"));
+			SplashScreen.close();
+			dlg.show();
+			WinUtils.setTopMost(dlg);
+		}
 	}
 
 	public static void showErrorDialog(String message)

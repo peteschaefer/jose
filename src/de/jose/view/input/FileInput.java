@@ -149,6 +149,12 @@ public class FileInput
 		textInput.setColumns(columns);
 	}
 
+	public Dimension getPreferredSize() {
+		Dimension dim = textInput.getPreferredSize();
+		dim.width += button.getPreferredSize().width;
+		return dim;
+	}
+
 	public void addFilter(javax.swing.filechooser.FileFilter filter)
 	{
 		this.filters.add(filter);

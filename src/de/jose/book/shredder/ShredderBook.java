@@ -6,6 +6,7 @@ package de.jose.book.shredder;
 
 import de.jose.book.*;
 import de.jose.book.BookEntry;
+import de.jose.chess.Board;
 import de.jose.chess.Position;
 
 import java.io.File;
@@ -74,9 +75,11 @@ public class ShredderBook extends OpeningBook
 		return ! moveEntries.isEmpty();
 	}
 
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result)
-			throws IOException
+	public boolean getBookMoves(Position pos, String fen,
+								boolean withTransposedColors, boolean deep, List result)
 	{
+		assert(pos!=null);
+		if (fen!=null) pos.setup(fen);
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos, false, result);
 		boolean res2 = false;
@@ -178,8 +181,8 @@ public class ShredderBook extends OpeningBook
 		return 0;
 	}
 
-	protected Vector readBookEntries(Position board) {
-		synchronized (board) {
+	protected Vector readBookEntries(Board board) {
+		/*synchronized (board)*/ {
 		Vector vector = new Vector();
 		try {
 			BookFile bookFile = new BookFile(disk/*bookFilePath, "r"*/);
@@ -204,7 +207,7 @@ public class ShredderBook extends OpeningBook
 		}
 	}
 
-
+/*
 	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
 	{
 		//  TODO implement reversed color transposition
@@ -226,10 +229,10 @@ public class ShredderBook extends OpeningBook
 		return null;
 		}
 	}
-
+*/
 	public List readMoveEntries(Position board)
 	{
-		synchronized (board) {
+		/*synchronized (board)*/ {
 		List moveEntries = new Vector();
 		Vector bookEntries = readBookEntries(board);
 		int bookScoreSum = 0;

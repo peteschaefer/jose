@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import java.util.Random;
 /**
  * CraftyBook
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class CraftyBook extends OpeningBook
@@ -72,8 +72,11 @@ public class CraftyBook extends OpeningBook
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean getBookMoves(Position pos, boolean withTransposedColors, boolean deep, List result) throws IOException
+	public boolean getBookMoves(Position pos, String fen,
+								boolean withTransposedColors, boolean deep, List result) throws IOException
 	{
+		assert(pos!=null);
+		if (fen!=null) pos.setup(fen);
 		if (!canTransposeColor()) withTransposedColors = false;  //  no use looking for transposed colors
 		boolean res1 = getBookMovesColored(pos,false,result);
 		boolean res2 = false;
@@ -85,7 +88,6 @@ public class CraftyBook extends OpeningBook
 			throws IOException
 	{
 		CraftyHashKey key = reverse ? reversed_hashkey:hashkey;
-
 		//  this hash key is WITHOUT turn color. Used for looking up a cluster.
 		int turn = pos. movesNext();
 		pos.setMovesNext(0);
@@ -134,11 +136,11 @@ public class CraftyBook extends OpeningBook
 		//  NOT canTransposeIntoBook() IMPLIES  ( getBookMoves()==true <--> NOT result.isEmpty() )
 	}
 
-	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
-			throws IOException
-	{
-			return null;  //let OpeningLibrary choose a move
-	}
+//	public BookEntry selectBookMove(Position pos, boolean ignoreColors, Random random)
+//			throws IOException
+//	{
+//			return null;  //let OpeningLibrary choose a move
+//	}
 
 
 	private int seekCluster(long key) throws IOException

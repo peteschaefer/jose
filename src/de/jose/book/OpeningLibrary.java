@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ import de.jose.Config;
 import de.jose.Application;
 import de.jose.chess.Position;
 
+import java.awt.print.Book;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -24,13 +25,13 @@ import java.io.IOException;
 import de.jose.util.ListUtil;
 import org.w3c.dom.Element;
 
-import static de.jose.Application.ANALYSIS;
-import static de.jose.Application.USER_INPUT;
+import static de.jose.Application.AppMode.ANALYSIS;
+import static de.jose.Application.AppMode.USER_INPUT;
 
 /**
  * OpeningLibrary
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class OpeningLibrary
 		extends Vector/*<BookFileEntry>*/
@@ -85,7 +86,8 @@ public class OpeningLibrary
 	public int collectMode = COLLECT_ALL;
 	public int selectMode = SELECT_IMPLEMENTATION;
 
-	protected Random random = new Random();
+	protected Position pos = new Position();
+	public Random random = new Random();
 
 	protected BookEntry.BookEntryComparator sort = new BookEntry.BookEntryComparator(selectMode,true);
 
@@ -182,19 +184,19 @@ public class OpeningLibrary
 		return -1;
 	}
 
-
-	public List collectMoves(Position pos, int gameMode, boolean ignoreColors, boolean allowOutOfBook)
+	public List<BookEntry> collectMoves(Position pos, String fen,
+										boolean go_deep, boolean ignoreColors, boolean allowOutOfBook)
 			throws IOException
 	{
-		ArrayList result = new ArrayList();
+		if (pos==null) pos = this.pos;
+		ArrayList<BookEntry> result = new ArrayList();
 		for (int i=0; i < size(); i++)
 		{
 			BookFile fentry = (BookFile) get(i);
 			if (fentry.book==null) continue;
 
 			ArrayList one_result = new ArrayList();
-			boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
-			boolean containsPosition = fentry.book.getBookMoves(pos, ignoreColors, go_deep, one_result);
+			boolean containsPosition = fentry.book.getBookMoves(pos,fen, ignoreColors, go_deep, one_result);
 			if (!containsPosition && !allowOutOfBook)
 				continue;   //  transpose from out-of-book into the book. Ignore !
 
@@ -211,7 +213,8 @@ public class OpeningLibrary
 		return result;
 	}
 
-
+	//	@deprecated use queryMove instead
+/*
 	public BookEntry selectMove(Position pos, int gameMode, boolean ignoreColors, boolean turnWhite)
 			throws IOException
 	{
@@ -222,20 +225,19 @@ public class OpeningLibrary
 				if (fentry.book==null) continue;
 
 				ArrayList one_result = new ArrayList();
+				//	some engines can play from their own book
 				BookEntry entry = fentry.book.selectBookMove(pos,ignoreColors,random);
 				if (entry!=null) return entry;
 			}
 
-		List moves = collectMoves(pos,gameMode,ignoreColors, false);
+		//	else: play from application books
+		boolean go_deep = (gameMode==USER_INPUT || gameMode==ANALYSIS);
+		//	todo expensive; make asynch
+		List moves = collectMoves(pos,null,go_deep,ignoreColors, false);
 		return selectMove(moves, selectMode,turnWhite,random);
 	}
-
-	public BookEntry selectMove(List moves, boolean turnWhite)
-	{
-		return selectMove(moves, this.selectMode, turnWhite, this.random);
-	}
-
-	public BookEntry selectMove(List moves, int selectMode, boolean turnWhite, Random random)
+*/
+	public BookEntry selectMove(List<BookEntry> moves, int selectMode, boolean turnWhite, Random random)
 	{
 		if (moves.isEmpty()) return null;
 
@@ -247,7 +249,10 @@ public class OpeningLibrary
 			scores[i] = entry.score(selectMode,turnWhite);
 		}
 
-		return selectMove(moves, scores, random);
+		if (random!=null)
+			return selectMove(moves, scores, random);
+		else
+			return moves.get(ListUtil.maxIndex(scores));
 	}
 
 
@@ -274,33 +279,7 @@ public class OpeningLibrary
 
 		return moves.get(Math.min(i,moves.size()-1));
 	}
-/*
-	public boolean addBook(File file)
-	{
-		int i = indexOf(file);
-		if (i >= 0)
-		{
-			BookFileEntry fentry = (BookFileEntry) books.get(i);
-			if (open(fentry))
-				return true;
-		}
 
-		BookFileEntry fentry = new BookFileEntry(file);
-		books.add(fentry);
-		return open(fentry);
-	}
-
-	public BookFileEntry removeBook(int index)
-	{
-		return (BookFileEntry) books.remove(index);
-	}
-
-	public void moveBook(int fromIndex, int toIndex)
-	{
-		BookFileEntry fentry = removeBook(fromIndex);
-		books.add(toIndex,fentry);
-	}
-*/
 
 	public boolean openBook(int index)
 	{

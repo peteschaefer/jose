@@ -195,6 +195,12 @@ public class MoveNode
 			return "missing move?";
 	}
 
+	public static String toString(MoveNode mvnd) {
+		if (mvnd==null)
+			return "null";
+		else
+			return mvnd.toString();
+	}
 
 	static class SAXMoveFormatter extends StringMoveFormatter
     {

@@ -268,6 +268,17 @@ public class ListUtil
 			coll.add(values[i]);
 	}
 
+	public static int maxIndex(double[] values)
+	{
+		if (values==null || values.length==0)
+			return -1;
+		int maxi = 0;
+		for(int i=1; i < values.length; i++)
+			if (values[i] > values[maxi])
+				maxi = i;
+		return maxi;
+	}
+
 	public static boolean contains(Object[] array, Object value)
 	{
 		for(Object item : array)

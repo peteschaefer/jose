@@ -10,6 +10,16 @@
 [ ] asynch book lookups (branch async-book)
 [ ] Eval Bar drawing glitches (paintImmediately?)
 [x] extra chars in pgn import (comments with umlauts?)
+[ ] game vs. opening explorer:
+    - user moves have no value (and it shows)
+        -> get one from current AnalysisRecord
+[-] Application.selectBookMove needs to be asynchronized.
+    [?] update/don't update book when navigating
+    [x] pause button should pause engine;
+        book is shown in both, USER_INPUT and ANALYSIS
+    [ ] duplicate Book Queries
+[ ] paint eval bar frame
+[ ] fix pause button
 
 === Database Bugs
 
@@ -85,9 +95,12 @@ Alternative JREs:
 
 ==== Interesting New Features
 
-* Game Details: Auto completion for Event, Player, Site
-
 * LiChess Opening Explorer
+    [x] download top games for a variation
+    [x] show in EngPanel comments "{ Anand-Carlsen 2014, ... }" (but it should be clickable)
+    [x] insert as sub-lines (most convenient, but a lot of text)
+    [x] open in tab
+    [x] copy to local db
     [ ] MoreGame.ExternalKey (:=Lichess GameId)
 
 * replace Nalimov query with Lichess tablebase query

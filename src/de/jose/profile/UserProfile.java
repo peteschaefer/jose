@@ -42,6 +42,8 @@ import java.util.*;
 import java.util.List;
 import java.util.zip.*;
 
+import static de.jose.Application.AppMode.USER_ENGINE;
+
 /**
  *	stores user specific sessions
  */
@@ -142,7 +144,7 @@ public class UserProfile
 		"doc.classify.eco",				Boolean.TRUE,
 		"plugin.pv.tooltips",			Boolean.TRUE,
 
-		"game.mode",					new Integer(Application.USER_ENGINE),
+		"game.mode",					USER_ENGINE.numval,
 		"doc.write.mode",				new Integer(Game.ASK),
 		"doc.load.history",				Boolean.TRUE,
 		"doc.move.format", 				new Integer(MoveFormatter.SHORT),
@@ -730,7 +732,7 @@ public class UserProfile
 	public final String getStyleAttribute(String styleName, Object key)		{
 		return (String)getStyleAttr(styleName,key);
 	}
-
+/*
 	public final int getInt(String styleName, Object key)	{
 		Integer i = (Integer)getStyleAttr(styleName,key);
 		return (i!=null) ? i.intValue() : Integer.MIN_VALUE;
@@ -740,7 +742,7 @@ public class UserProfile
 	{
 		return Util.toboolean(getStyleAttr(styleName,key));
 	}
-
+*/
 	public final boolean changed(String key, UserProfile old)
 	{
 		Object oldObj = old.get(key);
@@ -911,7 +913,7 @@ public class UserProfile
 			panel.calcLocation();
 		}
 
-		set("game.mode", Application.theApplication.theMode);
+		set("game.mode", Application.theApplication.theMode.numval);
         set("animation.speed", (int)Application.theApplication.getAnimation().getSpeed());
 
 		Command cmd = new Command("update.user.profile", null, this);
