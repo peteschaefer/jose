@@ -698,7 +698,7 @@ public class DocumentEditor
 			AWTUtil.beep(this);
 		}
 		if (d.newText.length() > 0) {
-			boolean inFront = d.pos2 < (node.getEndOffset()-1);
+			boolean inFront = (d.nag<=0) && (d.pos2 < (node.getEndOffset()-1));
 			//	todo choose from NAG, e.g. "!!" always goes after move. "with the idea" always goes before move, ?!
 			if (inFront)
 				doReplaceBeforeMove(node,d,padding);
@@ -817,24 +817,34 @@ public class DocumentEditor
 
 	protected void insertCommentAfter(Node after, DocUpdate d, int padding) throws BadLocationException
 	{
-		padding = 0;    //  no need for padding
-		CommentNode comment = new CommentNode(pad(d.newText,padding));
-		comment.insertAfter(after);	//	insert into Node hierarchy
-		comment.insert(theGame,after.getEndOffset());	//	insert into text document
-		int p = comment.getEndOffset()-trailingPadding(d.newText,padding)-1;
-		theGame.updateMoveCount(comment);
-		select(p,p);
+		if (d.nag > 0) {
+			insertAnnotationAfter(after,d.nag,padding);
+		}
+		else {
+			padding = 0;    //  no need for padding
+			CommentNode comment = new CommentNode(pad(d.newText, padding));
+			comment.insertAfter(after);    //	insert into Node hierarchy
+			comment.insert(theGame, after.getEndOffset());    //	insert into text document
+			int p = comment.getEndOffset() - trailingPadding(d.newText, padding) - 1;
+			theGame.updateMoveCount(comment);
+			select(p, p);
+		}
 	}
 
 	protected void insertCommentBefore(Node before, DocUpdate d, int padding) throws BadLocationException
 	{
-		padding = 0;    //  no need for padding
-		CommentNode comment = new CommentNode(pad(d.newText,padding));
-		comment.insertBefore(before);	//	insert into Node hierarchy
-		comment.insert(theGame,comment.getStartOffset());	//	insert into text document
-		int p = comment.getEndOffset()-trailingPadding(d.newText,padding)-1;
-		theGame.updateMoveCount(comment);
-		select(p,p);
+		if (d.nag > 0) {
+			insertAnnotationBefore(before,d.nag,padding);
+		}
+		else {
+			padding = 0;    //  no need for padding
+			CommentNode comment = new CommentNode(pad(d.newText, padding));
+			comment.insertBefore(before);    //	insert into Node hierarchy
+			comment.insert(theGame, comment.getStartOffset());    //	insert into text document
+			int p = comment.getEndOffset() - trailingPadding(d.newText, padding) - 1;
+			theGame.updateMoveCount(comment);
+			select(p, p);
+		}
 	}
 
 	protected void insertAnnotationAfter(Node after, int nagCode, int padding_ignored) throws BadLocationException
@@ -907,36 +917,40 @@ public class DocumentEditor
 	protected void doReplaceComment(CommentNode node, DocUpdate d, int padding)
 	        throws BadLocationException
 	{
-		int offset = node.getStartOffset();
-		if ((d.newText.length()==0) && node.isCoveredBy(d.pos1-offset,d.pos2-offset))
+		int startOffset = node.getStartOffset();
+		int endOfText = startOffset+node.getText().length();
+		if ((d.newText.length()==0) && node.isCoveredBy(d.pos1-startOffset,d.pos2-startOffset))
 		{
 			//	delete comment
 			node.remove(theGame);	//	remove from Text Document
 			node.remove();	//	remove from Node hierarchy
 			select(d.pos1,d.pos1);
 		}
-		else if (d.pos1==offset && (d.nag > 0))
+		else if (d.pos1==startOffset && (d.nag > 0))
 		{
 			//	annotation at the beginning of a comment; make an annotation out of it
 			insertAnnotationBefore(node, d.nag, padding);
 		}
+		else if (d.pos1==endOfText && (d.nag > 0)) {
+			insertAnnotationAfter(node, d.nag, padding);
+		}
 		else if (d.newText.equals("\n") /*&& (node.next(MOVE_NODE)==null)*/) {
 			//  keyboard move input ?
 			MoveNode previous = node.previousMove();
-			String moveText = theGame.getText(offset,d.pos1-offset);
+			String moveText = theGame.getText(startOffset,d.pos1-startOffset);
 
 			if (!StringUtil.isWhitespace(moveText) &&
-			    keyboardMove(node,previous,offset,moveText,d.pos2,padding))
+			    keyboardMove(node,previous,startOffset,moveText,d.pos2,padding))
 				return;
 			else {
 				//  invalid move, or just inserting a newline ... ?
 				//AWTUtil.beep(this);
-				editComment(node,offset,d,padding);
+				editComment(node,startOffset,d,padding);
 			}
 		}
 		else {
 			//  edit comment
-			editComment(node,offset,d,padding);
+			editComment(node,startOffset,d,padding);
 		}
 		theGame.updateMoveCount(node);
 		theGame.setDirty();
