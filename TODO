@@ -2,6 +2,10 @@
 
 * double click insert variant; trying to delete it
 
+[x] print to temporary pdf.
+[ ] ...then there is awt (wysiwig) printing. But that has too little layout control, anyway.
+    might become deprecated?
+
 ? Charter buggy
 
 [ ] BUG? "go infinite" with only one legal move

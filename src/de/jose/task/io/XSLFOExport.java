@@ -23,6 +23,7 @@ import de.jose.view.style.JoStyleContext;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.io.*;
 
 import org.apache.fop.apps.Driver;
@@ -38,6 +39,9 @@ import org.apache.fop.render.awt.AWTRenderer;
 public class XSLFOExport
         extends XMLExport
 {
+	//	if true, print result immediately
+	public boolean printOnCompletion = false;
+
     public XSLFOExport(ExportContext context)
         throws Exception
     {
@@ -77,6 +81,11 @@ public class XSLFOExport
 			result = process(source, xslFile, outputStream,
 			        fileName,
 			        context.styles, embed_fonts);
+
+			if (printOnCompletion && context.target instanceof File) {
+				Desktop desktop = Desktop.getDesktop();
+				desktop.open((File)context.target);
+			}
 
 		    return SUCCESS;
 

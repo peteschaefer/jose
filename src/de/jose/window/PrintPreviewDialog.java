@@ -208,7 +208,7 @@ public class PrintPreviewDialog
 		if (twoPage.isSelected()) max--;
 		if (max < 1) max = 1;
 
-		((SpinnerNumberModel)currentPage.getModel()).setMaximum(new Integer(max));
+		((SpinnerNumberModel)currentPage.getModel()).setMaximum(max);
 		if (getCurrentPage() > max) setCurrentPage(max);
 		//  adjust buttons
 		prevPage.setEnabled(getCurrentPage() > 1);
@@ -263,7 +263,7 @@ public class PrintPreviewDialog
 	public void setCurrentPage(int page)
 	{
 		printView.setCurrentPage(page);
-		currentPage.setValue(new Integer(page));
+		currentPage.setValue(page);
 		adjustPages();
 	}
 
@@ -321,11 +321,11 @@ public class PrintPreviewDialog
 
 		if (e.getSource()==portrait && portrait.isSelected()) {
 			setOrientation(PageFormat.PORTRAIT);
-			Application.theApplication.broadcast(new Command("print.orientation.modified",null,new Integer(PageFormat.PORTRAIT)));
+			Application.theApplication.broadcast(new Command("print.orientation.modified",null,PageFormat.PORTRAIT));
 		}
 		if (e.getSource()==landscape && landscape.isSelected()) {
 			setOrientation(PageFormat.LANDSCAPE);
-			Application.theApplication.broadcast(new Command("print.orientation.modified",null,new Integer(PageFormat.LANDSCAPE)));
+			Application.theApplication.broadcast(new Command("print.orientation.modified",null,PageFormat.LANDSCAPE));
 		}
 	}
 

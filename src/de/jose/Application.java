@@ -102,7 +102,6 @@ public class Application
 	public static final String DEFAULT_DATABASE = "MySQL";
 
 	/**	Game Mode	*/
-	//	todo enum
 	public enum AppMode {
 		unused(0),
 		/**	User input, no engine analysis (default)	*/
@@ -1711,16 +1710,32 @@ public class Application
 				PrintableDocument prdoc = null;
 
 				if (cmd.data instanceof PrintableDocument)
-					prdoc = (PrintableDocument)cmd.data;
+					prdoc = (PrintableDocument)cmd.data;	//	from PrintPreviewDialog. this is a StyledDocument (don't use it)
 				else if (cmd.data instanceof ExportContext) {
-					ExportContext context = (ExportContext)cmd.data;
+					/*
+						avoid use of XSLFOExport.Preview
+						it's based on fop AWTRenderer and has generally poor word spacing.
 
+						Use PDF renderer instead. Print to temporary file.
+					 */
+					ExportContext context = (ExportContext)cmd.data;
 					if (context.preview!=null)
 						prdoc = context.preview;   // called from preview; print this document
 					else {
 						ExportDialog dlg = (ExportDialog)getDialog("dialog.export");
 						if (dlg.confirmPrint(context.source,25)) {
-							prdoc = context.createPrintableDocument();   // create document then print
+							if (context.getOutput()==ExportConfig.OUTPUT_XSL_FO)
+							{
+								context.target = File.createTempFile("jose",".pdf");
+								Version.loadFop();
+								XSLFOExport fotask = new XSLFOExport(context);
+								fotask.printOnCompletion = true;
+								fotask.start();
+								prdoc=null;
+							}
+							else {
+								prdoc = context.createPrintableDocument();   // create awt document then print
+							}
                             dlg.hide();
                         }
 					}
