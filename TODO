@@ -47,31 +47,22 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[x] SplitPaneUI: individual style=plain
 
     [ ] flatlaf related bugs
-    	[x] TextPaneUI: fix jumping characters. custom hiliter bug, actually.
-    	[x] TextPaneUI: nicer selection
-        [x] initial selection color in StyleChooser
+    	[ ] Text Selection Color: configurable. Accent color is too arbitrary.
+    	    [ ] dark mode
+    	[ ] bug TextPaneUI: jagged selection
+        [ ] layout in F9, F11
+        [ ] bug: Board coordinates in F9
+        [ ] scroll engine panel to top
+        [ ] 3D?
+    [ ] add flatlaf to jar classpath; + theme-editor
+        [ ] add class SplitPaneUI
+
+      [x] initial selection color in StyleChooser
         [?] wdl label height; adjust to font
 
-    [x] add to F9 Color Tab
-        [-] background color
-        [x] accent color
-        [x] Pickup from system (only Windows?)
-        [x] open theme editor
-        [x] move Lnf combo to Colors Tab
-        [x] use 1 Apply button
-        [ ] more boxes in F9
     [-] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
-    [x] fix F4 layout. LABEL_ONE.ipadx=90 is too large for many places.
     [-] remove l&f selection
-    [x] in-component folder button
-    [ ] add flatlaf to jar classpath; + theme-editor
-    [x] from command line
-
-    [x] dark mode
-        [x] export dialog
-        [-] gnome/kde accent color?
-        [x] EnginePanel background
-        [-] board auto, or manually?
+    [ ] from command line
 
 
 [ ] Undo

@@ -30,6 +30,7 @@ import de.jose.util.file.ExecutableFileFilter;
 import de.jose.util.file.FileUtil;
 import de.jose.util.file.ImageFileFilter;
 import de.jose.util.map.IntHashSet;
+import de.jose.util.style.StyleUtil;
 import de.jose.view.BoardPanel;
 import de.jose.view.BoardView2D;
 import de.jose.view.BoardView3D;
@@ -329,8 +330,7 @@ public class OptionDialog
 		JLabel label = (JLabel)addWithLabel(sbox,0,0,4, "ui.look.and.feel2", lookAndFeelList);
 		label.setText(Language.get("dialog.option.ui.look.and.feel"));
 
-		if (Version.linux)
-			addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
+		addWithLabel(sbox, 1, "lnf.accent.color", newChessSurfaceButton("lnf.accent.color",null));
 		addWithLabel(sbox, 1, "lnf.theme.editor", newButton("lnf.theme.editor",null,null,this));
 		//sbox.add(newButton("lnf.theme.reload",null,null,this), ELEMENT_TWO);
 
@@ -1015,7 +1015,16 @@ public class OptionDialog
 		//eboardCtrl.eboard.readProfile(profile);
 	}
 
-	public void readTab2()  { read(2,profile.settings); }
+	public void readTab2()  {
+		read(2,profile.settings);
+
+		if (Version.windows || Version.mac) {
+			Color systemAccentColor = StyleUtil.getSystemAccentColor();
+			JoSurfaceButton button = (JoSurfaceButton) getElement("lnf.accent.color");
+			button.setColor(systemAccentColor);
+			button.setEnabled(false);
+		}
+	}
 
 	public void readTab3()  {
 		read(3,profile.settings);

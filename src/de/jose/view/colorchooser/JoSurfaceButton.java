@@ -66,6 +66,10 @@ public class JoSurfaceButton
 			surface = null;
 	}
 
+	public void setColor(Color col) {
+		setSurface(Surface.newColor(col));
+	}
+
 	//  implements ValueHolder
 	public Object getValue()                { return getSurface(); }
 
