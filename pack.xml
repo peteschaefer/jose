@@ -318,6 +318,27 @@
 		</zip>
 	</target>
 
+	<target name="leela-linux">
+		<description> Leela (Lc0) engine for Linux </description>
+		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
+			<zipfileset dir="config" prefix="${appldir}/config">
+				<include name="lc0.xml"/>
+			</zipfileset>
+			<!--zipfileset dir="engines/lc0-openblas" prefix="${appldir}/engines/lc0">
+				<exclude name="more nets/**"/>
+			</zipfileset-->
+		</zip>
+		<!--
+		note: choose minimal hardware requirements
+		- eigen
+		more recent versions hav cuda and cudnn. users have to install themselves
+		-->
+		<zip destfile="${zip-file}" update="true">
+			<!--zipfileset src="lc0-openblas.zip" prefix="${appldir}/engines/lc0"/-->
+			<zipfileset src="lc0-eigen.zip" prefix="${appldir}/engines/lc0"/>
+		</zip>
+	</target>
+
 	<target name="stockfish-windows">
 		<description> Stockfish engine for Windows </description>
 		<zip destfile="${zip-file}" excludes="**/Thumbs.db" update="true">
@@ -516,6 +537,10 @@
 			<param name="appldir" value="${appldir}"/>
 		</antcall>
 		<antcall target="stockfish-linux">
+			<param name="zip-file" value="${zip-file}"/>
+			<param name="appldir" value="${appldir}"/>
+		</antcall>
+		<antcall target="leela-linux">
 			<param name="zip-file" value="${zip-file}"/>
 			<param name="appldir" value="${appldir}"/>
 		</antcall>

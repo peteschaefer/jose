@@ -1,17 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<APPLICATION_SETTINGS>
+<?xml version="1.0" encoding="UTF-8"?><APPLICATION_SETTINGS>
 <PLUGIN ID="lc0" type="uci">
 	<NAME> Lc0 </NAME>
 	<EXEC os="Windows">
 		<COMMAND> %dir%\lc0.exe </COMMAND>
 	</EXEC>
-	<DIR> %local%\engines\lc0 </DIR>
-	<LOGO> %dir%\Leela_Chess_Zero_logo.png </LOGO>
+	<EXEC os="Linux_i386">
+		<!--note: the os is designated as 'i386' which simply means that the jre
+		is runninig in 32 bit mode. the engine executable can, and should,
+		*akshually* run in 64 bit mode -->
+		<COMMAND> %dir%/lc0 </COMMAND>
+	</EXEC>
+	<DIR> %local%/engines/lc0 </DIR>
+	<LOGO/>
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
 		<OPTION name="WeightsFile"> &lt;autodiscover&gt; </OPTION>
-		<OPTION name="Backend" dirty="true"> trivial </OPTION>
+		<!--OPTION name="Backend"> eigen </OPTION-->
+		<!--note: the best Backend setting depends on OS, GPU and software version.
+		Don't even try to determine it from factory settings.
+		Just use the default and let the user change it.-->
 		<OPTION name="BackendOptions"/>
 		<OPTION name="Threads"> 7 </OPTION>
 		<OPTION name="NNCacheSize"> 2000000 </OPTION>
@@ -78,6 +86,7 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
+		<OPTION dirty="true" name="Backend"> eigen </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>
