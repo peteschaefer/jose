@@ -54,7 +54,8 @@ import java.io.IOException;
 
 public class EnginePanel
 		extends JoPanel
-		implements MessageListener, ClipboardOwner, MouseListener {
+		implements ClipboardOwner, MouseListener, DeferredMessageListener
+{
 	/**	the plugin engine	*/
 	protected EnginePlugin    plugin;
 	/**	engine display name */
@@ -745,16 +746,6 @@ public class EnginePanel
 	 */
 	protected void display(int state, AnalysisRecord rec, boolean bookMode)
 	{
-		if (!SwingUtilities.isEventDispatchThread()) {
-			//	GUI operations need to be deferred to the Main Event Thread. Can't help it.
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					display(state, rec, bookMode);
-				}
-			});
-			return;
-		}
-
 		if (state >= 0) {
 			boolean enabled = (state > EnginePlugin.PAUSED);
 

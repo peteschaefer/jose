@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,8 @@ public class MessageProducer
 		for (int i=0; i<countMessageListeners(); i++)
 		{
 			MessageListener listener = getMessageListener(i);
-			if (listener instanceof DeferredMessageListener)
+			if ((listener instanceof DeferredMessageListener)
+					&& !SwingUtilities.isEventDispatchThread())
 			{
 				//  invoke later (in AWT thread)
 				DeferredMessage msg = new DeferredMessage(listener,what,data);
@@ -107,6 +108,6 @@ public class MessageProducer
 		 public void run()
 		 {
 			 receiver.handleMessage(MessageProducer.this.source, what, data);
+		 }
 	}
-}
 }
