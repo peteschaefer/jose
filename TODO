@@ -57,11 +57,11 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     	[ ] TextPaneUI: nicer selection
     	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
         
-    [ ] add to F9 Color Tab
+    [x] add to F9 Color Tab
         [-] background color
-        [-] accent color
-        [ ] Pickup from system (only Windows?)
-        [ ] open theme editor
+        [x] accent color
+        [x] Pickup from system (only Windows?)
+        [x] open theme editor
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [ ] fix F4 layout
     [-] remove l&f selection
@@ -71,7 +71,7 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
 
     [x] dark mode
         [x] toolbar icons
-        [ ] other buttons
+        [x] other buttons
         [ ] export dialog
         [ ] gnome/kde accent color?
         [x] EnginePanel background
