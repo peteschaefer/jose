@@ -47,10 +47,9 @@ Leela
   - font size?
   - if possible, redraw only modified arrows
 
-* sort uci controls by _importance_
-  - fix order
+* moves-left ?
 
-* Contempt Slider
+* Contempt Slider ?
 
         White seeks a draw - neutral - Black seeks a draw - Armageddon
     -1   ...............        0         ............         +1

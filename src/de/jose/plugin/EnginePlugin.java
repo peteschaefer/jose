@@ -896,14 +896,12 @@ abstract public class EnginePlugin
 	protected String prepareCentipawnScore(Score score, HashMap pmap, boolean white_pov)
 	{
 		String cptext;
-		double cpd = (double)(white_pov ? score.cp:score.cp_current)/100.0;
 		if (score.cp==0)
 			cptext = "0";
-		else if (white_pov)
+		else {
+			double cpd = (double)(white_pov ? score.cp:score.cp_current)/100.0;
 			cptext = CENTIPAWN_FORMAT.format(cpd);
-		else
-			cptext = CENTIPAWN_FORMAT.format(cpd);
-
+		}
 		switch (score.flags)
 		{
 			case Score.EVAL_LOWER_BOUND:     cptext = "\u2265 "+cptext; break;  //  >=

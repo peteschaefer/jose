@@ -76,74 +76,54 @@ public class OptionDialog
 	//
  	//	Sort options by *Importance*
  	//
-	private static String[][] IMPORTANCE = {
+	private static String[] IMPORTANCE = {
 				//	hidden options
-				{ "",
-					"UCI_ShowCurrLine", //  always disabled (TODO)
-					"UCI_ShowRefutations",  //  always disabled (TODO)
-					"UCI_AnalyseMode",   //  is automatically set when entering analysis mode
-					"UCI_Opponent", //  not in use (TODO)
-					"UCI_Chess960", //  FRC
-				},
+				"UCI_ShowCurrLine", //  always disabled (TODO)
+				"UCI_ShowRefutations",  //  always disabled (TODO)
+				"UCI_AnalyseMode",   //  is automatically set when entering analysis mode
+				"UCI_Opponent", //  not in use (TODO)
+				"UCI_Chess960", //  FRC
 				//	topmost options
-				{
-					"",
-					"UCI_EngineAbout",
-					"Ponder", "OwnBook",
-					"Random", "MultiPV",
-					//"UCI_LimitStrength", "UCI_Elo",
-				},
+				null,
+				"UCI_EngineAbout",
+				"Ponder", "OwnBook",
+				"Random", "MultiPV",
+				//"UCI_LimitStrength", "UCI_Elo",
 				//	Scores and Info
-				{
-					"",
-					"ScoreType", "UCI_ShowWDL", "UCO_ShowMovesLeft",
-					"VerboseMoveStats", "LogLiveStats"
-				},
+				null,
+				"ScoreType", "UCI_ShowWDL", "UCO_ShowMovesLeft",
+				"VerboseMoveStats", "LogLiveStats",
 				//	Leela settings
-				{
-					"",
-					"WeightsFile", "Threads", "Backend", "BackendOptions", "Hash", "ConfigFile"
-				},
+				null,
+				"WeightsFile", "Threads", "Backend", "BackendOptions", "Hash", "ConfigFile",
 				//	Contempt Settings
-				{
-					"Contempt",
-					"ContemptMode", "Contempt",
-					"WDLCalibrationElo", "WDLEvalObjectivity", "WDLDrawRateReference",
-					"DrawScore",
-				},
+				null,
+				"ContemptMode", "Contempt",
+				"WDLCalibrationElo", "WDLEvalObjectivity", "WDLDrawRateReference",
+				"DrawScore",
 				//	Endgame Bases
-				{
-					"Endgame Database",
-					"SyzygyPath", "SyzygyProbeDepth", "Syzygy50MoveRule", "SyzygyProbeLimit"
-				}
+				null,
+				"SyzygyPath", "SyzygyProbeDepth", "Syzygy50MoveRule", "SyzygyProbeLimit",
+				null,
 	};
-
-	private static HashMap<String,Integer> MAP_IMPORTANCE = new HashMap<String,Integer>();
-	static {
-		for(int i = 0; i < IMPORTANCE.length; i++)
-		{
-			String[] group = IMPORTANCE[i];
-			for(int j=1; j < group.length; j++)
-				MAP_IMPORTANCE.put(group[j], i<<16 + j);
-		}
-	}
 
 	private static int importance(String option, int inputOrder)
 	{
-		Integer result = MAP_IMPORTANCE.get(option);
-		if (result != null)
-			return result;
-		else
-			return (100<<16) + inputOrder;
+		for(int i = 0; i < IMPORTANCE.length; i++)
+			if (option.equals(IMPORTANCE[i]))
+				return i;
+		return 1000 + inputOrder;
 	}
 
 	private static int importanceGroup(String option)
 	{
-		Integer result = MAP_IMPORTANCE.get(option);
-		if (result != null)
-			return result>>16;
-		else
-			return 100;
+		int group = 0;
+		for(int i = 0; i < IMPORTANCE.length; i++)
+			if (IMPORTANCE[i]==null)
+				group++;
+			else if (option.equals(IMPORTANCE[i]))
+				break;
+		return group;
 	}
 
 
