@@ -212,7 +212,7 @@ public class LiChessOpeningExplorer extends OpeningBook
         Runnable job = new Runnable() {
             @Override
             public void run() {
-                PGNImport reader = null;
+                int[] GIds=null;
                 try {
                     int CId = Collection.DOWNLOADS_ID;
                     JoConnection conn = null;
@@ -220,14 +220,17 @@ public class LiChessOpeningExplorer extends OpeningBook
                         conn = JoConnection.get();
                         Collection.makeDownloads(conn);
 
-                        if (findDownload(conn, CId, gameRef))
-                            return;
+                        GIds = findDownload(conn, CId, gameRef);
 
                     } finally {
                         if (conn!=null) conn.release();
                     }
 
-                    download1Game(CId, gameRef);
+                    if (GIds==null)
+                        GIds = download1Game(CId, gameRef);
+
+                    if (GIds!=null)
+                        editLater(gameRef,GIds[0],GIds[1]);
 
                     //  open in Tab
                 } catch(FileNotFoundException e) {
@@ -248,21 +251,25 @@ public class LiChessOpeningExplorer extends OpeningBook
             " from Game"+
             " left outer join MoreGame on GId=Game.Id "+
             " where CId=? "+
-            " and Info like '%GameId={lichessid}' ";
+            " and Info like '%GameId={lichessid}%' ";
+    /*  todo like '%' is expensive
+        have an indexed column MoreGame.ExternalKey
+        (but we need to fill it during import, etc.)
+     */
 
-    private static boolean findDownload(JoConnection conn, int CId, LiChessGameRef gameRef) throws SQLException
+    private static int[] findDownload(JoConnection conn, int CId, LiChessGameRef gameRef) throws SQLException
     {
         String sql = SQL_FIND.replace("{lichessid}", gameRef.id);
         JoPreparedStatement pstm = conn.getPreparedStatement(sql);
         pstm.setInt(1, CId);
         int GId = pstm.selectInt();
-        if (GId<=0) return false;
-
-        editLater(gameRef,GId,GId);
-        return true;
+        if (GId<=0)
+            return null;
+        else
+            return new int[]{GId,GId};
     }
 
-    private static void download1Game(int CId, LiChessGameRef gameRef) throws Exception
+    private static int[] download1Game(int CId, LiChessGameRef gameRef) throws Exception
     {
         PGNImport reader;
         String urlStr = downloadUrl+"/"+ gameRef.id+"?evals=false&literate=true";
@@ -278,8 +285,10 @@ public class LiChessOpeningExplorer extends OpeningBook
         int GId1 = reader.getFirstGameId();
         int GId2 = reader.getLastGameId();
 
-        //  open downloaded game for editing:
-        if (GId2 > 0) editLater(gameRef,GId1,GId2);
+        if (GId2 <= 0)
+            return null;
+        else
+            return new int[]{GId1,GId2};
     }
 
     protected static void excuseLater(String game)
@@ -352,15 +361,13 @@ public class LiChessOpeningExplorer extends OpeningBook
 
         //  insert into original Game
 //        orig.insertNewLine(subline,mvnd);
-    //todo manfacturing LineNodes is complicated
-    //  think about alternative: print line (5 moves) to plain text, then paste
+
+    //  manufacturing LineNodes is complicated
+    //  alternative: print snippet (5 moves) to plain text, then paste
     //  (-> no need for cloning and node subleties)
-    //  BUT GameUtil.UtilParser is limited, but ok for short snippets
+    //  GameUtil.UtilParser is limited, but ok for short snippets
 
         String snippet = printSnippet(cut1,8,label);
-        //  trigger update, etc.
-//        Command cmd = new Command("edit.game.paste",null, mvnd, snippet);
-//        AbstractApplication.theCommandDispatcher.handle(cmd,Application.theApplication);
         Command cmd = new Command("menu.game.paste.line",null,snippet,Boolean.TRUE);
         Application.theCommandDispatcher.forward(cmd, Application.theApplication.enginePanel(), true);
     }
