@@ -344,8 +344,6 @@ public class JoSplitPane
 		Object value = UIManager.get("SplitPane.dividerSize");
 		int dividerSize = (int)Util.nvl(value,Integer.valueOf(DIVIDER_SIZE));
 		setDividerSize(movable ? dividerSize:2);
-		//	following has no effect, sadly...
-		//putClientProperty("style", movable ? "grip":"plain");
 	}
 
 	public void startContinuousResize()

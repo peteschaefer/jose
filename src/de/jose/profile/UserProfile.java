@@ -78,9 +78,9 @@ public class UserProfile
 		}
 		else {
 			if (StyleUtil.getSystemDarkMode())
-				return "com.formdev.flatlaf.FlatLightLaf";
-			else
 				return "com.formdev.flatlaf.FlatDarkLaf";
+			else
+				return "com.formdev.flatlaf.FlatLightLaf";
 		}
 		/**
 		 * Metouia on Windows & Linux

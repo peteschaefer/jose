@@ -51,14 +51,18 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
         [ ] old plaf co-exist! I.e. flatlaf needed for compilation but not at runtime.
         
     [ ] Fork flatlaf
-    	[ ] compile from source
+    	[x] compile from source (get rid of gradle, tests, module-info: requires java.logging;)
     	[ ] SplitPaneUI: individual style=plain
     	[ ] TextPaneUI: map dark text colors (**not** in StyleContext)    
     	[ ] TextPaneUI: fix jumping characters
     	[ ] TextPaneUI: nicer selection
     	[ ] port to flatlaf: get Windows accent color, dark mode from Registry
         
-        
+    [ ] add to F9 Color Tab
+        [ ] background color
+        [ ] accent color
+        [ ] Pickup from system (only Windows?)
+        [ ] open theme editor
     [ ] placeholder text for empty text fields?  putClientProperty("JTextField.placeholderText"
     [ ] fix F4 layout
     [ ] remove l&f selection
@@ -67,10 +71,11 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [ ] from command line
     [ ] themes, dark modes: postpone
     [x] dark mode
-        [ ] buttons
+        [ ] buttons + icons
         [ ] EnginePanel background
         [?] invert style sheet color; but not for printing
-
+        [ ] board auto, or manually?
+    [ ] BUG: empty windows on Linux. with fresh UserProfile.
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?
