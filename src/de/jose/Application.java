@@ -105,6 +105,7 @@ public class Application
 	/**	Game Mode	*/
 	//	todo enum
 	public enum AppMode {
+		unused(0),
 		/**	User input, no engine analysis (default)	*/
 		USER_INPUT (1),
 		/**	User input with background analysis	*/
