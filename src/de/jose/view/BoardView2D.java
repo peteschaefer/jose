@@ -155,8 +155,7 @@ public class BoardView2D
 	public void activate(boolean active)
 	{
 		/*	nothing to do - position will be synched in paint()	*/
-		if (super.eboard!=null)
-			eboard.connect(); // right place?
+		eboard.connect(); // right place?
 	}
 
 	public void storeProfile(UserProfile prf)
@@ -494,8 +493,7 @@ public class BoardView2D
 			sprite2.updateBuffer();
 		}
 
-		if (eboard!=null)
-			eboard.synchFromApp();
+		eboard.synchFromApp();
 	}
 
 

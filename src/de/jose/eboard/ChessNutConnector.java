@@ -7,13 +7,18 @@ import javax.swing.*;
 
 public class ChessNutConnector extends EBoardConnector implements EasyLink.IRealTimeCallback
 {
-    public ChessNutConnector(IBoardAdapter anAppBoard) {
-        super(anAppBoard);
+    public ChessNutConnector() {
+        super();
+    }
+
+    public boolean doAvailable()
+    {
+        return EasyLink.AVAILABLE;
     }
 
     public boolean doConnect()
     {
-        if (!EasyLink.AVAILABLE)
+        if (!doAvailable())
             return false;
         if (EasyLink.connect()==0)
             return false;

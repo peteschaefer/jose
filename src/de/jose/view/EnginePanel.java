@@ -689,7 +689,7 @@ public class EnginePanel
 			lStatus.setText(getStatusText(state));
 		}
 
-	protected void exitBook()
+	public void exitBook()
 	{
 		if (inBook) {
 			display(-1,null, inBook);    //  TODO which state ?
@@ -989,7 +989,7 @@ public class EnginePanel
 			connectTo(Application.theApplication.getEnginePlugin());
 
 		try {
-			updateBook();   //  is this the right place ?
+			updateBook(false);   //  is this the right place ?
 		} catch (IOException e) {
 			Application.error(e);
 	}
@@ -1284,7 +1284,7 @@ public class EnginePanel
 				bGo.setEnabled(true);
 				bPause.setEnabled(plugin!=null);
 
-				updateBook();
+				updateBook(false);
 			}
 		};
 		map.put("switch.game", action);
@@ -1295,7 +1295,7 @@ public class EnginePanel
 				if (plugin!=null && ! plugin.isPaused())
 					/* stay in engine mode */;
 				else
-				updateBook();
+				updateBook(cmd.moreData!=null && cmd.moreData instanceof EnginePlugin.EvaluatedMove);
 			}
 		};
 		map.put("move.notify",action);
@@ -1426,14 +1426,23 @@ public class EnginePanel
 
 	}
 
-	public boolean updateBook()
+	public boolean updateBook(boolean onEngineMove)
 			throws IOException
 	{
 		//  show opening book moves
 		Position pos = Application.theApplication.theGame.getPosition();
 		OpeningLibrary lib = Application.theApplication.theOpeningLibrary;
-		List bookMoves = lib.collectMoves(pos,true,false);
-		boolean inBook = bookMoves!=null && !bookMoves.isEmpty();
+
+		List bookMoves=null;
+		boolean inBook;
+		if (onEngineMove && Application.theApplication.theOpeningLibrary.engineMode==OpeningLibrary.NO_BOOK)
+		{	//	don't update book after an engine move, if this is not desired
+			inBook = false;
+		}
+		else {
+			bookMoves = lib.collectMoves(pos,true,false);
+			inBook = bookMoves!=null && !bookMoves.isEmpty();
+		}
 
 		if (inBook)
 			showBook(bookMoves,pos);

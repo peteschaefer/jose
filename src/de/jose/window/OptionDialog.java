@@ -252,7 +252,7 @@ public class OptionDialog
 		//ebox.add( new JLabel("         "), 												gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
 //		ebox.add( newLabel("eboard.connected"), 											gridConstraint(LABEL_INDENTED,1,1,1));
 //		ebox.add( newButton("eboard.connect","eboard.connect"), 				gridConstraint(LABEL_ONE_LEFT,2,1,1));
-		ebox.add( new de.jose.eboard.DialogComponent(), gridConstraint(ELEMENT_ROW_SMALL,0,1,1) );
+		ebox.add( new de.jose.eboard.DialogComponent(false), gridConstraint(ELEMENT_ROW_SMALL,0,1,1) );
 
 
 //		ebox.add( newLabel("eboard.orientation"), 										gridConstraint(LABEL_INDENTED,1,2,1));

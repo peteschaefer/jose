@@ -126,7 +126,7 @@ public class SetupDialog
 
 	public SetupDialog(String name) {
 		super(name, false);
-		super.frame.setSize(640,480);
+		frame.setMinimumSize(new Dimension(720,640));
 
 		readOnFailedSave = false;    //	keep data when save fails
 
@@ -150,8 +150,8 @@ public class SetupDialog
 		view.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
 		GridBagConstraints constr = new GridBagConstraints(0, 0,
-				1, /*GridBagConstraints.REMAINDER*/6,
-				100.0, 1.0,
+				1, /*GridBagConstraints.REMAINDER*/3,
+				20.0, 2.0,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				INSETS_NORMAL, 0, 0);
 		getElementPane().add(view, constr);
@@ -167,7 +167,7 @@ public class SetupDialog
 		((SpinnerNumberModel) spinner.getModel()).setMaximum(new Integer(999));
 
 		spinner.setMinimumSize(new Dimension(48, 18));
-		add(controls, 0, 2, 1, newLabel("dialog.setup.move.no"), LABEL_ONE);
+		add(controls, 0, 2, 1, newLabel("dialog.setup.move.no"), LABEL_ONE_LEFT);
 		add(controls, 1, 2, 1, reg(spinner), ELEMENT_TWO);
 		getElementPane().add(controls, ELEMENT_TWO_SMALL);
 
@@ -215,15 +215,12 @@ public class SetupDialog
 
 		JPanel ebox = newGridBox("dialog.option.eboard");
 
-		ebox.add(newRadioButton("eboard.leads"), 		gridConstraint(LABEL_ONE_LEFT, 0,0,1));
-		ebox.add(newRadioButton("eboard.follows"), 	gridConstraint(LABEL_ONE_LEFT, 1,0,1));
+		ebox.add( new de.jose.eboard.DialogComponent(true), 		gridConstraint(LABEL_ONE_LEFT,1,1,1));
 
-		//ebox.add( new JLabel("         "), 												gridConstraint(ELEMENT_ROW_SMALL,0,1,1));
-		//ebox.add( newLabel("eboard.connected"), 											gridConstraint(LABEL_INDENTED,0,1,1));
-		//ebox.add( newButton("eboard.connect","eboard.connect"), 				gridConstraint(LABEL_ONE_LEFT,1,1,1));
-		ebox.add( new de.jose.eboard.DialogComponent(), 				gridConstraint(LABEL_ONE_LEFT,1,1,1));
-
-		getElementPane().add(ebox, ELEMENT_ONE_ROW);
+		GridBagConstraints econst = new GridBagConstraints(0,3, 1,1, 1.0,0.0,
+				GridBagConstraints.SOUTHWEST, GridBagConstraints.NONE,
+				INSETS_NORMAL, 0,0);
+		getElementPane().add(ebox, econst);
 
 		addButtons(OK_CANCEL);
 		addSpacer(20);

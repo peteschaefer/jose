@@ -58,8 +58,6 @@ abstract public class BoardView
 	protected boolean promoPopupShowing;
 
 	protected IBoardAdapter board;
-	/** attached electronic chess board; optional */
-	protected EBoardConnector eboard;
 
 	//
  	//	User settings
@@ -79,6 +77,9 @@ abstract public class BoardView
 	/** show hint arrows during animation ? */
 	protected boolean showAnimationHints;
 
+	/** attached electronic chess board; optional */
+	protected EBoardConnector eboard;
+
 	//	score for eval bar
 	protected float[] eval = null;
 
@@ -91,8 +92,8 @@ abstract public class BoardView
 		setOpaque(true);
 		hints = new ArrayList<Hint>();
 
-		// todo experimental:
-		eboard = new ChessNutConnector(theBoard); // todo from UserProfile
+		eboard = Application.theApplication.getEBoardConnector();
+		eboard.useBoard(theBoard);
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }

@@ -10,6 +10,7 @@ import de.jose.view.IBoardAdapter;
 import de.jose.view.MoveGesture;
 
 import javax.swing.*;
+import java.util.Stack;
 
 public abstract class EBoardConnector
 {
@@ -26,13 +27,14 @@ public abstract class EBoardConnector
 
     public Mode mode;
 
-    private Orientation inputOri;
+    Orientation inputOri;
     private Orientation currentOri;
 
+    private Stack<IBoardAdapter> oldBoards = new Stack<>();
     private IBoardAdapter appBoard;
     private boolean wasAcked = false;
 
-    public EBoardConnector(IBoardAdapter anAppBoard)
+    public EBoardConnector()
     {
         mode = Mode.DISCONNECTED;
         inputOri = Orientation.AUTO_DETECT;  // todo read from UserProfile
@@ -41,12 +43,35 @@ public abstract class EBoardConnector
         board = new BoardState[2];
         board[0] = new BoardState();
         board[1] = new BoardState();
+    }
 
+    public void useBoard(IBoardAdapter anAppBoard) {
+        if (appBoard != null) oldBoards.push(appBoard);
         appBoard = anAppBoard;
+    }
+
+    public void reuseBoard() {
+        if (oldBoards.isEmpty())
+            appBoard = null;
+        else
+            appBoard = oldBoards.pop();
+    }
+
+    public boolean isAvailable()
+    {
+        return doAvailable();
+    }
+
+    public boolean isConnected()
+    {
+        return mode != Mode.DISCONNECTED;
     }
 
     public boolean connect()
     {
+        if(!doAvailable())
+            return false;
+
         if (doConnect()) {
             mode = Mode.PLAY;
             synchFromApp();
@@ -56,6 +81,7 @@ public abstract class EBoardConnector
         return (mode!=Mode.DISCONNECTED);
     }
 
+    protected abstract boolean doAvailable();
     protected abstract boolean doConnect();
     protected abstract void doDisconnect();
     protected abstract void doShowLeds(String leds);
@@ -69,7 +95,7 @@ public abstract class EBoardConnector
 
     public synchronized void synchFromBoard()
     {
-        if (mode == Mode.DISCONNECTED) {
+        if (!isConnected()) {
             //  now connected
             mode = Mode.PLAY;
             //EasyLink.beep(800,500);
@@ -211,7 +237,7 @@ public abstract class EBoardConnector
         if (setExplodedFen(appBoard,appXFen)==0)
             return;
 
-        if (mode == Mode.DISCONNECTED)
+        if (!isConnected())
             return;
 
         computeDiff();

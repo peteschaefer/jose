@@ -26,6 +26,7 @@
 		<separator/>
 -->
 		<item id="menu.game.flip"/>
+		<item id="eboard.connect"/>
 		<separator/>
 		<!-- game control -->
 		<item id="move.first"/>

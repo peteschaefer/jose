@@ -15,6 +15,8 @@ package de.jose;
 import de.jose.chess.*;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
+import de.jose.eboard.ChessNutConnector;
+import de.jose.eboard.EBoardConnector;
 import de.jose.export.ExportConfig;
 import de.jose.export.ExportContext;
 import de.jose.export.HtmlUtil;
@@ -186,7 +188,10 @@ public class Application
 	protected HelpSystem        helpSystem;
 	protected Rectangle			helpBounds;
 
+	protected EBoardConnector	eboard;
+
 	protected boolean shownFRCWarning=false;
+
 
 	//-------------------------------------------------------------------------------
 	//	Constructor
@@ -1958,7 +1963,7 @@ public class Application
 							engine_analysis = true; //  already in book, switch to engine mode
 						else try {
 							//  (1) fetch book moves
-							engine_analysis = ! eng_panel.updateBook();
+							engine_analysis = ! eng_panel.updateBook(false);
 						} catch (IOException e) {
 							error(e);
 					}
@@ -2332,6 +2337,26 @@ public class Application
             }
         };
         map.put("debug.layout.dump",action);
+
+		action = new CommandAction() {
+			@Override
+			public void Do(Command cmd) throws Exception {
+				if (cmd.equals("eboard.connect"))
+					getEBoardConnector().connect();
+				if (cmd.equals("eboard.connect"))
+					getEBoardConnector().disconnect();
+			}
+			@Override
+			public boolean isEnabled(String cmd) {
+				return getEBoardConnector().isAvailable();
+			}
+			@Override
+			public boolean isSelected(String cmd) {
+				return getEBoardConnector().isConnected();
+			}
+		};
+		map.put("eboard.disconnect",action);
+		map.put("eboard.connect",action);
 	}
 
 	public void handleUserMove(Move move, boolean animate)
@@ -2378,22 +2403,25 @@ public class Application
 				wasBook = false;
 			}
 
-			if (!wasBook)
+			if (!wasBook) {
+				enginePanel().exitBook();
 				invokeWithPlugin(new Runnable() {
 					public void run() {
 						if (mv.isFRCCastling() && !getEnginePlugin().supportsFRC()) {
 							showFRCWarning(true);
 							pausePlugin(false);
-						}
-						else {
+						} else {
 							if (!theGame.getPosition().isClassic() && !getEnginePlugin().supportsFRC())
 								showFRCWarning(false);
-								//  but keep on playing (you have been warned ;-)
-							getEnginePlugin().userMove(mv,true);
-    					}
-	                };
+							//  but keep on playing (you have been warned ;-)
+							getEnginePlugin().userMove(mv, true);
+						}
+					}
+
+					;
 				});
-				break;
+			}
+			break;
 
 		case ANALYSIS:
 				invokeWithPlugin(new Runnable() {
@@ -3049,70 +3077,7 @@ public class Application
 		Position pos = theGame.getPosition();
 		switch (what) {
 		case Plugin.PLUGIN_MOVE:
-			if (pos.isMate() || pos.isStalemate()) {
-				handleEngineError(EnginePlugin.PLUGIN_ERROR, "game is already finished");
-				return;    //  protocol error !?
-			}
-
-			EnginePlugin.EvaluatedMove emv = (EnginePlugin.EvaluatedMove)data;
-			if (emv==null) {
-				handleEngineError(EnginePlugin.PLUGIN_ERROR,"");
-				return;    //  protocol error !?
-			}
-			Move mv = new Move(emv,pos);  //  assert correct owner
-			MoveNode node = null;
-
-			synchronized (theGame) {
-				int oldOptions = pos.getOptions();
-				pos.setOption(Position.CHECK+Position.STALEMATE, true);
-//                System.err.println("engine move "+mv.toString());
-				try {
-					if (!pos.tryMove(mv)) {
-						/*  throw new IllegalArgumentException("illegal move from engine");
-							plugin got out of synch
-						*/
-						handleEngineError(EnginePlugin.PLUGIN_ERROR,mv.toString());
-						return;
-					}
-					else
-						pos.undoMove();
-				} finally {
-					pos.setOptions(oldOptions);
-				}
-
-				setGameDefaultInfo();
-
-				if (theUserProfile.getBoolean("sound.moves.engine")) {
-					int format = theUserProfile.getInt("doc.move.format",MoveFormatter.SHORT);
-					speakMove(format, mv, pos);
-				}
-
-				theGame.insertMove(-1, mv, Game.NEW_LINE);
-				node = theGame.getCurrentMove();
-			}
-			theClock.setCurrent(pos.movesNext());
-
-			if (boardPanel() != null)
-				boardPanel().move(mv, (float)(mv.distance()*0.2));
-
-			theCommandDispatcher.broadcast(new Command("move.notify", null, mv), this);
-
-			if (mv.isGameFinished(false))
-				gameFinished(mv.flags,pos.movedLast(), theGame.isMainLine());
-
-			classifyOpening();
-
-			if (node!=null && emv!=null) {
-				//  update move evaluation history
-				if (/*theGame.isMainLine(node) &&*/ EvalArray.isValid(emv.mappedScore)) {
-					node.engineValue = emv.mappedScore;
-					theGame.setDirty(true);
-				}
-				/** UCI engines can't resign or offer draws (stupid gits)
-				 *  we got to track the evaluation of recent moves and allow the user to adjudicate the game
-				 */
-				adjudicate(theGame,pos.movedLast(),pos.gamePly(), node,emv,getEnginePlugin());
-			}
+			handlePluginMove((EnginePlugin.EvaluatedMove) data, pos);
 			break;
 
 		case Plugin.PLUGIN_ACCEPT_DRAW:
@@ -3154,6 +3119,74 @@ public class Application
 			if (boardPanel() != null)
 				boardPanel().showHint(data);
 			break;
+		}
+	}
+
+	private void handlePluginMove(EnginePlugin.EvaluatedMove data, Position pos) throws BadLocationException, ParseException {
+		if (pos.isGameFinished(true)) {
+			handleEngineError(EnginePlugin.PLUGIN_ERROR, "game is already finished");
+			return;
+		}
+
+		EnginePlugin.EvaluatedMove emv = data;
+		if (emv==null) {
+			handleEngineError(EnginePlugin.PLUGIN_ERROR,"");
+			return;
+		}
+		Move mv = new Move(emv, pos);  //  assert correct owner
+		MoveNode node = null;
+
+		synchronized (theGame) {
+			int oldOptions = pos.getOptions();
+			pos.setOption(Position.CHECK+Position.STALEMATE, true);
+//                System.err.println("engine move "+mv.toString());
+			try {
+				if (!pos.tryMove(mv)) {
+					/*  throw new IllegalArgumentException("illegal move from engine");
+						plugin got out of synch
+					*/
+					handleEngineError(EnginePlugin.PLUGIN_ERROR,mv.toString());
+					return;
+				}
+				else
+					pos.undoMove();
+			} finally {
+				pos.setOptions(oldOptions);
+			}
+
+			setGameDefaultInfo();
+
+			if (theUserProfile.getBoolean("sound.moves.engine")) {
+				int format = theUserProfile.getInt("doc.move.format",MoveFormatter.SHORT);
+				speakMove(format, mv, pos);
+			}
+
+			theGame.insertMove(-1, mv, Game.NEW_LINE);
+			node = theGame.getCurrentMove();
+		}
+		theClock.setCurrent(pos.movesNext());
+
+		if (boardPanel() != null)
+			boardPanel().move(mv, (float)(mv.distance()*0.2));
+
+		Command cmd = new Command("move.notify", null, mv, data);
+		theCommandDispatcher.broadcast(cmd, this);
+
+		if (mv.isGameFinished(false))
+			gameFinished(mv.flags, pos.movedLast(), theGame.isMainLine());
+
+		classifyOpening();
+
+		if (node!=null && emv!=null) {
+			//  update move evaluation history
+			if (/*theGame.isMainLine(node) &&*/ EvalArray.isValid(emv.mappedScore)) {
+				node.engineValue = emv.mappedScore;
+				theGame.setDirty(true);
+			}
+			/** UCI engines can't resign or offer draws (stupid gits)
+			 *  we got to track the evaluation of recent moves and allow the user to adjudicate the game
+			 */
+			adjudicate(theGame, pos.movedLast(), pos.gamePly(), node,emv,getEnginePlugin());
 		}
 	}
 
@@ -3708,6 +3741,12 @@ public class Application
 			if (answer == JOptionPane.YES_OPTION)
 				switchPlugin();
 		}
+	}
+
+	public EBoardConnector getEBoardConnector() {
+		if (eboard==null)
+			eboard = new ChessNutConnector();
+		return eboard;
 	}
 
 	public int getInsertMoveWriteMode(Move mv)
