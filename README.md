@@ -1,4 +1,4 @@
-##### jos&eacute; is a graphical chess tool.
+##### jos&eacute;is a graphical chess tool.
 
 You can store chess games in a database (backed by
 MySQL).
@@ -12,8 +12,6 @@ analysis.
 <a href="https://peteschaefer.github.io/jose/images/shots/shot05.png"><img src="https://peteschaefer.github.io/jose/images/shots/shot05t.jpg"></a>
 
 <a href="https://peteschaefer.github.io/jose/images/shots/index.html">more screen shots...</a>
-
-<br>
 
 ---
 
@@ -33,11 +31,11 @@ Features:
 
 ---
 
-**<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.5.</a>**
+###### **<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.5.</a>**
 
 <br>
-<a href="https://github.com/peteschaefer/jose/wiki/Installation-Notes">Installation Notes</a>
-<a href="https://github.com/peteschaefer/jose/wiki/What's-New-in-version-1.5">What's new ?</a>
+<a href="https://github.com/peteschaefer/jose/wiki/Installation-Notes">Installation Notes</a><br>
+<a href="https://github.com/peteschaefer/jose/wiki/What's-New-in-version-1.5">What's new ?</a><br>
 <br>
 <a href="https://peteschaefer.github.io/jose/links.html">Related Links</a>
 
