@@ -507,10 +507,16 @@ public class Position
 
 	public Move getLastMove()
 	{
-		if (thePly < 1 || thePly >= theMoveStack.length)
+		return getLastMove(1);
+	}
+
+	public Move getLastMove(int offset)
+	{
+		int p = thePly-offset;
+		if (p < 0 || p >= theMoveStack.length)
 			return null;
 		else
-			return theMoveStack[thePly-1];
+			return theMoveStack[p];
 	}
 
 	/**	return to ply 0

@@ -112,6 +112,19 @@ public class Move
 		return false;
 	}
 
+	public final boolean isStationaryFRCCastling()
+	{
+		switch (castlingMask())
+		{
+			case WHITE_KINGS_CASTLING:  	return from==G1;
+			case WHITE_QUEENS_CASTLING:  	return from==C1;
+			case BLACK_KINGS_CASTLING:  	return from==G8;
+			case BLACK_QUEENS_CASTLING:  	return from==C8;
+		}
+		return false;
+	}
+
+
 	public final boolean isPromotion()			{ return EngUtil.isPromotion(flags); }
 
 	public final int getPromotionPiece()		{
@@ -123,26 +136,11 @@ public class Move
 		int co = moving.color();
 		return pc+co;
 	}
-
-	public final int getDestinationSquare() {
-		//  kingside castling FRC
-		//  king ALWAYS moves to G1, rook ALWAYS moves to F1
-		switch (castlingMask())
-		{
-			case WHITE_KINGS_CASTLING:	return G1;
-			case BLACK_KINGS_CASTLING:  return G8;
-			case WHITE_QUEENS_CASTLING:	return C1;
-			case BLACK_QUEENS_CASTLING: return C8;
-		}
-		//else
-		return to;
-	}
-
-	public final int getDestinationPiece() {
-		if (isPromotion())
-			return getColoredPromotionPiece();
+	public final int getCapturedPiece() {
+		if (captured==null)
+			return EMPTY;
 		else
-			return moving.piece;
+			return captured.piece;
 	}
 
 	public final void setPromotionPiece(int p) 	{ flags = EngUtil.setPromotionPiece(flags,p); }
@@ -213,14 +211,4 @@ public class Move
 			return moving.encodeMove(this);
 	}
 
-	/**
-	 *
-	 * @return number of squares that are affected by this move
-	 */
-	public int diffCount()
-	{
-		if (isCastling()) return 4;
-		if (isEnPassant()) return 3;
-		return 2;
-	}
 }

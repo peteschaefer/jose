@@ -72,6 +72,20 @@ java.sql.SQLException: Incorrect key file for table 'C:\dev\jose\work\database\m
 	at de.jose.pgn.Game.save(Game.java:1329)
 	at de.jose.pgn.Game.save(Game.java:1312)
 
+ ---- Fri Jan 03 12:30:01 CET 2025 ---- "move.delete"
+java.lang.RuntimeException: tree position not found
+	at de.jose.pgn.Game.gotoMove(Game.java:1154)
+	at de.jose.pgn.Game.cutBefore(Game.java:766)
+	at de.jose.Application.cutLine(Application.java:2421)
+	at de.jose.Application.access$200(Application.java:79)
+	at de.jose.Application$34.Do(Application.java:1425)
+	at de.jose.CommandAction.execute(CommandAction.java:96)
+	at de.jose.CommandDispatcher.DoIt(CommandDispatcher.java:266)
+	at de.jose.CommandDispatcher.DoIt(CommandDispatcher.java:254)
+	at de.jose.CommandDispatcher.forward(CommandDispatcher.java:127)
+	at de.jose.CommandDispatcher.handle(CommandDispatcher.java:64)
+	at de.jose.eboard.EBoardConnector.undoMove(EBoardConnector.java:157)
+
 * keep playing after flagging ?
 
 java.lang.IndexOutOfBoundsException: Index: 0, Size: 0

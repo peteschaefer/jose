@@ -14,6 +14,7 @@ package de.jose.view;
 
 import de.jose.*;
 import de.jose.chess.*;
+import de.jose.eboard.ChessNutConnector;
 import de.jose.eboard.EBoardConnector;
 import de.jose.plugin.EnginePlugin;
 import de.jose.plugin.Score;
@@ -91,7 +92,7 @@ abstract public class BoardView
 		hints = new ArrayList<Hint>();
 
 		// todo experimental:
-		eboard = new EBoardConnector(theBoard); // todo from UserProfile
+		eboard = new ChessNutConnector(theBoard); // todo from UserProfile
 	}
 
 	public final Graphics2D getGraphics2D()		{ return (Graphics2D)getGraphics(); }
