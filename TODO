@@ -41,12 +41,12 @@ java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4c
     [ ] System/Custom option, Theme Editor button
     [ ] F9 layout, Chessnut
     [ ] F9 Board / Notation -> Appearance
-    [ ] tool button Annotations
+    [x] tool button Annotations
     [ ] pack WinUtils.dll
     [ ] more flexible pastellizing
-    [ ] re-dock toolbar
+    [x] re-dock toolbar
         [x] wire menu events
-        [ ] docking targets shifted?
+        [x] docking targets shifted? contentPane()!
     [ ] popup window out of screen (Windows only?)
         [ ] write mode
         [ ] promotion
