@@ -88,7 +88,7 @@ abstract public class Plugin
 	/**	the application position
 	 *	(which is not always in synch with the engine position)
 	 */
-	protected Position applPosition;
+	public Position applPosition;
 
 	protected static boolean configured = false;
 

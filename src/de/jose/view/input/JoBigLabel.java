@@ -13,8 +13,14 @@
 package de.jose.view.input;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.LinkedList;
 
 /**
  * a read only text area
@@ -44,7 +50,32 @@ public class JoBigLabel
 		setName(text);
 		updateUI();
 	}
-	
+
+	@Override
+	public JToolTip createToolTip() {
+		if (tooltip!=null)
+			return tooltip;
+		else
+			return super.createToolTip();
+	}
+
+	public JToolTip tooltip;
+	public Point mouseLocation;
+
+	@Override
+	public Point getToolTipLocation(MouseEvent event) {
+		if (tooltip==null)
+			return super.getToolTipLocation(event);
+		else {
+			mouseLocation = event.getPoint();
+			Point tooltipLocation = (Point) mouseLocation.clone();
+			tooltipLocation.x = de.jose.Util.roundUp(tooltipLocation.x,20);
+			tooltipLocation.y = de.jose.Util.roundUp(tooltipLocation.y,20);
+			tooltipLocation.y += 30;
+			return tooltipLocation;
+		}
+	}
+
 	public void updateUI() {
 		super.updateUI();
 		

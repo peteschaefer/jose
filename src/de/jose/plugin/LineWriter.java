@@ -127,12 +127,15 @@ public class LineWriter extends Thread
 				isSleeping = false;
 			}
 
-				while (! outputQueue.isEmpty())
+			while (! outputQueue.isEmpty())
 			{
 				try {
-					String line = (String)outputQueue.removeFirst();
+					String line;
+					synchronized (lock) {
+						line = (String) outputQueue.removeFirst();
+					}
 
-						if (line==EOF) return;
+					if (line==EOF) return;
 
 					out.write(line);
 			        out.write(lineSeparator);

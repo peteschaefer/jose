@@ -13,6 +13,7 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.chess.Move;
 import de.jose.pgn.ECOClassificator;
 import de.jose.book.OpeningLibrary;
 import de.jose.book.BookEntry;
@@ -28,6 +29,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.AWTUtil;
 import de.jose.util.ClipboardUtil;
 import de.jose.view.input.JoBigLabel;
+import javafx.stage.PopupWindow;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -35,6 +37,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
@@ -385,12 +388,22 @@ public class EnginePanel
 		synchronized (this) {
 			JoBigLabel eval = getDynamicLabel(lEval, idx+1, true, show, "plugin.eval."+(idx+1));
 			pv.setVisible(true);
+			pv.tooltip = new PopupBoardWindow(this,idx);
+			pv.setToolTipText("?");
 			eval.setVisible(true);
 			pvPanel.add(pv);
 			pvPanel.add(eval);  //  TODO think about using constraints to help EnginePanelLayout
 			pvPanel.revalidate();
 		}
 		return pv;
+	}
+
+	public int findPly(JTextArea label, Point at)
+	{
+		//	todo map to text position; count spaces and line breaks
+		int i = label.viewToModel(at);
+		int spaces = StringUtil.countWhitespace(label.getText(),0,i);
+		return spaces+1;
 	}
 
 	protected JoBigLabel getEvalLabel(int idx, boolean create, boolean show)
@@ -400,6 +413,8 @@ public class EnginePanel
 		synchronized (this) {
 			JoBigLabel pv = getDynamicLabel(lPrimaryVariation, idx+1, true, show, "plugin.pv."+(idx+1));
 			pv.setVisible(true);
+			pv.tooltip = new PopupBoardWindow(this,idx);
+			pv.setToolTipText("?");
 			eval.setVisible(true);
 			pvPanel.add(pv);
 			pvPanel.add(eval);  //  TODO think about using constraints to help EnginePanelLayout

@@ -130,6 +130,21 @@ public class Util
 	public static final int max(int x, int y, int z)	{ return (x>y) ? max(x,z):max(y,z); }
 	public static final int min(int x, int y, int z)	{ return (x<y) ? min(x,z):min(y,z); }
 
+	public static final int round(int x, int mod) {
+		//	to next multiple of ...
+		int rest = x % mod;
+		return x-rest;
+	}
+
+	public static final int roundUp(int x, int mod) {
+		//	to next multiple of ...
+		int rest = x % mod;
+		if (rest==0)
+			return x;
+		else
+			return x-rest+mod;
+	}
+
  	//-------------------------------------------------------------------------------
 	//	This & That
 	//-------------------------------------------------------------------------------

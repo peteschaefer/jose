@@ -1377,4 +1377,13 @@ public class
 	    else
 	        return 0;
 	}
+
+	public static int countWhitespace(String s, int i, int j)
+	{
+		int count=0;
+		for( ; i < j; ++i)
+			if (Character.isWhitespace(s.charAt(i)))
+				++count;
+		return count;
+	}
 }

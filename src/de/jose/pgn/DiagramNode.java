@@ -25,6 +25,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
+import de.jose.view.style.JoStyleContext;
 import org.xml.sax.SAXException;
 
 public class DiagramNode
@@ -62,6 +63,11 @@ public class DiagramNode
 	public Style getDefaultStyle(StyledDocument doc)
 	{
 		return parent().getStyle(doc,"body.inline");
+	}
+
+	public Style getDefaultStyle(JoStyleContext styles)
+	{
+		return styles.getStyle("body.inline");
 	}
 
 	public static String toString(String fen, FontEncoding enc)
@@ -139,6 +145,20 @@ public class DiagramNode
 		throws BadLocationException
 	{
 		Style style = getDefaultStyle(doc);
+		String diaFont = JoFontConstants.getFontFamily(style);
+		FontEncoding enc = FontEncoding.getEncoding(diaFont);
+
+		String text = toString(fen, enc);
+		doc.insertString(at,text,style);
+		setLength(text.length());
+	}
+
+	public void insert(StyledDocument doc, int at, JoStyleContext styles)
+			throws BadLocationException
+	{
+		Style style = getDefaultStyle(styles);
+		doc.addStyle("body.inline",style);
+
 		String diaFont = JoFontConstants.getFontFamily(style);
 		FontEncoding enc = FontEncoding.getEncoding(diaFont);
 

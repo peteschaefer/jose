@@ -118,6 +118,13 @@ public class FontEncoding
 
 	public final boolean hasText()					{ return textLetters; }
 
+	public final String[] setBorder(String[] new_border)
+	{
+		String[] old_border = chars[BORDER];
+		chars[BORDER] = new_border;
+		return old_border;
+	}
+
 	public final String get(int piece, int background)
 	{
 		int color = EngUtil.colorOf(piece);

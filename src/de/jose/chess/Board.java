@@ -76,6 +76,7 @@ public class Board
 	public static final int XFEN                    = 2;
 	//  ShredderFEN: FRC castlings are always identifier by file
 	public static final int SHREDDER_FEN    = 3;
+	public static final int SIMPLE_FEN    = 4;
 
 	//-------------------------------------------------------------------------------
 	//	Constructors
@@ -1292,6 +1293,9 @@ public class Board
 					buf.append('/');
 			}
 		}
+
+		if (fenVariant==SIMPLE_FEN)
+			return buf.toString();
 
 		/*	who moves next ?	*/
 		buf.append(' ');

@@ -163,8 +163,9 @@ public class AnalysisRecord
 			{
 				StringBuffer liinfo = getLineInfo(i);
 				liinfo.setLength(0);
-				liinfo.append("  ");
+				liinfo.append("  {");
 				liinfo.append(info);
+				liinfo.append("}");
 				setPvModified(i);
 				return;
 			}
