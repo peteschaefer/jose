@@ -1,4 +1,4 @@
-file.encoding=ISO-8859-2
+
 
 ##############################################################################
 #  Hungarian Translation for jose
@@ -8,36 +8,36 @@ file.encoding=ISO-8859-2
 application.name = jose
 
 #  Frame Titles
-window.board = Tábla
+window.board = TÃ¡bla
 window.console = Motor konzol
-window.database = Adatbázis
-window.filter = Szûrõ
-window.list = Játszma lista
-window.clock = Óra
-window.game = Játszma
+window.database = AdatbÃ¡zis
+window.filter = SzÅ±rÅ‘
+window.list = JÃ¡tszma lista
+window.clock = Ã“ra
+window.game = JÃ¡tszma
 window.engine = Motor
 
-window.collectionlist = Adatbázis
-window.query = Keresés
-window.gamelist = Adatbázis
+window.collectionlist = AdatbÃ¡zis
+window.query = KeresÃ©s
+window.gamelist = AdatbÃ¡zis
 
-window.sqlquery = SQL lekérdezés
-window.sqllist = Eredmény
+window.sqlquery = SQL lekÃ©rdezÃ©s
+window.sqllist = EredmÃ©ny
 
-window.toolbar.1 = 1. eszköztár
-window.toolbar.2 = 2. eszköztár
-window.toolbar.3 = 3. eszköztár
-window.toolbar.symbols = Megjegyzés
-window.help = Súgó
-window.print.preview = Nyomtatási kép
+window.toolbar.1 = 1. eszkÃ¶ztÃ¡r
+window.toolbar.2 = 2. eszkÃ¶ztÃ¡r
+window.toolbar.3 = 3. eszkÃ¶ztÃ¡r
+window.toolbar.symbols = MegjegyzÃ©s
+window.help = SÃºgÃ³
+window.print.preview = NyomtatÃ¡si kÃ©p
 
 # dialog titles
 
-dialog.option = Beállítások
-dialog.about = jose névjegy
-dialog.animate = Animáció
-dialog.setup = Beállítás
-dialog.message.title = Üzenet
+dialog.option = BeÃ¡llÃ­tÃ¡sok
+dialog.about = jose nÃ©vjegy
+dialog.animate = AnimÃ¡ciÃ³
+dialog.setup = BeÃ¡llÃ­tÃ¡s
+dialog.message.title = Ãœzenet
 
 # number formats:
 format.byte = ###0.# 'B'
@@ -51,152 +51,152 @@ format.megabyte = ###0.# 'MB'
 
 # File Menu
 
-menu.file = Fájl
-menu.file.new = Új
-menu.file.new.tip = Új játszma kezdése
-menu.file.new.frc = Új FRC
-menu.file.open = Megnyitás...
-menu.file.open.tip = PGN fájl megnyitása
-menu.file.open.url = URL megnyitása...
-menu.file.close = Bezárás
-menu.file.close.tip = A jelenlegi ablak bezárása
-menu.file.save = Mentés
-menu.file.save.tip = A jelenlegi játszma mentése az adatbázisba
-menu.file.save.as = Mentés másként...
-menu.file.save.as.tip = A jelenlegi játszma másolatának mentése az adatbázisba
-menu.file.save.all = Minden mentése
-menu.file.save.all.tip = Mindegyik nyitott játszma mentése az adatbázisba
-menu.file.revert = Játszma visszaállítása
-menu.file.print = Nyomtatás...
-menu.file.print.tip = A jelenlegi játszma nyomtatása
-menu.file.print.setup = Oldalbeállítás...
-menu.file.print.setup.tip = A nyomtató és a papírméret beállítása
-menu.file.print.preview = Nyomtatási kép...
-menu.file.quit = Kilépés
-menu.file.quit.tip = Kilépés a joseból
+menu.file = FÃ¡jl
+menu.file.new = Ãšj
+menu.file.new.tip = Ãšj jÃ¡tszma kezdÃ©se
+menu.file.new.frc = Ãšj FRC
+menu.file.open = MegnyitÃ¡s...
+menu.file.open.tip = PGN fÃ¡jl megnyitÃ¡sa
+menu.file.open.url = URL megnyitÃ¡sa...
+menu.file.close = BezÃ¡rÃ¡s
+menu.file.close.tip = A jelenlegi ablak bezÃ¡rÃ¡sa
+menu.file.save = MentÃ©s
+menu.file.save.tip = A jelenlegi jÃ¡tszma mentÃ©se az adatbÃ¡zisba
+menu.file.save.as = MentÃ©s mÃ¡skÃ©nt...
+menu.file.save.as.tip = A jelenlegi jÃ¡tszma mÃ¡solatÃ¡nak mentÃ©se az adatbÃ¡zisba
+menu.file.save.all = Minden mentÃ©se
+menu.file.save.all.tip = Mindegyik nyitott jÃ¡tszma mentÃ©se az adatbÃ¡zisba
+menu.file.revert = JÃ¡tszma visszaÃ¡llÃ­tÃ¡sa
+menu.file.print = NyomtatÃ¡s...
+menu.file.print.tip = A jelenlegi jÃ¡tszma nyomtatÃ¡sa
+menu.file.print.setup = OldalbeÃ¡llÃ­tÃ¡s...
+menu.file.print.setup.tip = A nyomtatÃ³ Ã©s a papÃ­rmÃ©ret beÃ¡llÃ­tÃ¡sa
+menu.file.print.preview = NyomtatÃ¡si kÃ©p...
+menu.file.quit = KilÃ©pÃ©s
+menu.file.quit.tip = KilÃ©pÃ©s a josebÃ³l
 
 # Edit Menu
 
-menu.edit = Szerkesztés
-menu.edit.undo = Visszavonás (%action%)
-menu.edit.cant.undo = Visszavonás
-menu.edit.redo = Újra (%action%)
-menu.edit.cant.redo = Újra
-menu.edit.select.all = Minden kijelölése
-menu.edit.select.none = Kijelölés törlése
-menu.edit.cut = Vágás
-menu.edit.copy = Másolás
-menu.edit.copy.fen = FEN karakterlánc
-menu.edit.copy.fen.tip = A jelenlegi állás vágólapra másolása (FEN karakterláncként)
-menu.edit.copy.img = Kép+háttér
-menu.edit.copy.img.tip = A jelenlegi állás vágólapra másolása (képként)
-menu.edit.copy.imgt = Kép
-menu.edit.copy.imgt.tip = A jelenlegi állás vágólapra másolása (képként)
-menu.edit.copy.text = Szöveg diagram
-menu.edit.copy.text.tip = A jelenlegi állás vágólapra másolása (stilizált szövegként)
+menu.edit = SzerkesztÃ©s
+menu.edit.undo = VisszavonÃ¡s (%action%)
+menu.edit.cant.undo = VisszavonÃ¡s
+menu.edit.redo = Ãšjra (%action%)
+menu.edit.cant.redo = Ãšjra
+menu.edit.select.all = Minden kijelÃ¶lÃ©se
+menu.edit.select.none = KijelÃ¶lÃ©s tÃ¶rlÃ©se
+menu.edit.cut = VÃ¡gÃ¡s
+menu.edit.copy = MÃ¡solÃ¡s
+menu.edit.copy.fen = FEN karakterlÃ¡nc
+menu.edit.copy.fen.tip = A jelenlegi Ã¡llÃ¡s vÃ¡gÃ³lapra mÃ¡solÃ¡sa (FEN karakterlÃ¡nckÃ©nt)
+menu.edit.copy.img = KÃ©p+hÃ¡ttÃ©r
+menu.edit.copy.img.tip = A jelenlegi Ã¡llÃ¡s vÃ¡gÃ³lapra mÃ¡solÃ¡sa (kÃ©pkÃ©nt)
+menu.edit.copy.imgt = KÃ©p
+menu.edit.copy.imgt.tip = A jelenlegi Ã¡llÃ¡s vÃ¡gÃ³lapra mÃ¡solÃ¡sa (kÃ©pkÃ©nt)
+menu.edit.copy.text = SzÃ¶veg diagram
+menu.edit.copy.text.tip = A jelenlegi Ã¡llÃ¡s vÃ¡gÃ³lapra mÃ¡solÃ¡sa (stilizÃ¡lt szÃ¶vegkÃ©nt)
 
-menu.edit.copy.pgn = PGN másolás
-menu.edit.copy.pgn.tip = A jelenlegi állás vágólapra másolása (PGN szövegként)
-menu.edit.paste = Beillesztés
-menu.edit.paste.tip = Beillesztés a vágólapról
-menu.edit.paste.copy = Beillesztés másolással
-menu.edit.paste.copy.tip = Játszmák másolása a vágólapról
-menu.edit.paste.same = Játszmák beillesztése
-menu.edit.paste.same.tip = Játszmák mozgatása a vágólapról
-menu.edit.paste.pgn = PGN beillesztése
-menu.edit.paste.pgn.tip = Játszmák beillesztése a vágólapról (PGN szövegként)
-menu.edit.clear = Törlés
-menu.edit.option = Beállítások...
-menu.edit.option.tip = A Beállítások párbeszédablak megnyitása
+menu.edit.copy.pgn = PGN mÃ¡solÃ¡s
+menu.edit.copy.pgn.tip = A jelenlegi Ã¡llÃ¡s vÃ¡gÃ³lapra mÃ¡solÃ¡sa (PGN szÃ¶vegkÃ©nt)
+menu.edit.paste = BeillesztÃ©s
+menu.edit.paste.tip = BeillesztÃ©s a vÃ¡gÃ³laprÃ³l
+menu.edit.paste.copy = BeillesztÃ©s mÃ¡solÃ¡ssal
+menu.edit.paste.copy.tip = JÃ¡tszmÃ¡k mÃ¡solÃ¡sa a vÃ¡gÃ³laprÃ³l
+menu.edit.paste.same = JÃ¡tszmÃ¡k beillesztÃ©se
+menu.edit.paste.same.tip = JÃ¡tszmÃ¡k mozgatÃ¡sa a vÃ¡gÃ³laprÃ³l
+menu.edit.paste.pgn = PGN beillesztÃ©se
+menu.edit.paste.pgn.tip = JÃ¡tszmÃ¡k beillesztÃ©se a vÃ¡gÃ³laprÃ³l (PGN szÃ¶vegkÃ©nt)
+menu.edit.clear = TÃ¶rlÃ©s
+menu.edit.option = BeÃ¡llÃ­tÃ¡sok...
+menu.edit.option.tip = A BeÃ¡llÃ­tÃ¡sok pÃ¡rbeszÃ©dablak megnyitÃ¡sa
 
-menu.edit.games = Adatbázis
-menu.edit.collection.new = Új mappa
-menu.edit.collection.rename = Átnevezés
-menu.edit.empty.trash = Lomtár ürítése
-menu.edit.restore = Helyreállítás
+menu.edit.games = AdatbÃ¡zis
+menu.edit.collection.new = Ãšj mappa
+menu.edit.collection.rename = ÃtnevezÃ©s
+menu.edit.empty.trash = LomtÃ¡r Ã¼rÃ­tÃ©se
+menu.edit.restore = HelyreÃ¡llÃ­tÃ¡s
 
-#menu.edit.position.index = Állásindex frissítése
-menu.edit.search.current = Jelen állás keresése
-menu.edit.ecofy = ECO osztályozás
+#menu.edit.position.index = ÃllÃ¡sindex frissÃ­tÃ©se
+menu.edit.search.current = Jelen Ã¡llÃ¡s keresÃ©se
+menu.edit.ecofy = ECO osztÃ¡lyozÃ¡s
 
 # Game Menu
 
-menu.game = Játszma
-menu.game.details = Részletek...
-menu.game.analysis = Elemzõ mód
-menu.game.navigate = Ugrás...
-menu.game.time.controls = Idõvezérlés
-menu.game.time.control = Idõvezérlés
-menu.game.details.tip = Játszma részleteinek szerkesztése (játékosok stb.)
+menu.game = JÃ¡tszma
+menu.game.details = RÃ©szletek...
+menu.game.analysis = ElemzÅ‘ mÃ³d
+menu.game.navigate = UgrÃ¡s...
+menu.game.time.controls = IdÅ‘vezÃ©rlÃ©s
+menu.game.time.control = IdÅ‘vezÃ©rlÃ©s
+menu.game.details.tip = JÃ¡tszma rÃ©szleteinek szerkesztÃ©se (jÃ¡tÃ©kosok stb.)
 menu.game.hint = Tipp
-menu.game.hint.tip = Tipp mutatása
-menu.game.draw = Döntetlen ajánlása
-menu.game.resign = Feladás
-menu.game.2d = 2D nézet
-menu.game.3d = 3D nézet
-menu.game.flip = Tábla megfordítása
-menu.game.coords = Koordináták
-menu.game.coords.tip = A mezõkoordináták mutatása
-menu.game.animate = Animáció...
-menu.game.previous = Elõzõ Tab
-menu.game.next = Következõ Tab
-menu.game.close = Bezárás
-menu.game.close.tip = A jelenlegi játszma bezárása
-menu.game.close.all = Mindent bezár
-menu.game.close.all.tip = Minden nyitott játszma bezárása
-menu.game.close.all.but = Többi bezárása
-menu.game.close.all.but.tip = Minden nyitott játszma bezárása a jelenlegi kivételével
-menu.game.setup = Állás megadása
-menu.game.text.incr = Szövegméret növelése
-menu.game.text.decr = Szövegméret csökkentése
+menu.game.hint.tip = Tipp mutatÃ¡sa
+menu.game.draw = DÃ¶ntetlen ajÃ¡nlÃ¡sa
+menu.game.resign = FeladÃ¡s
+menu.game.2d = 2D nÃ©zet
+menu.game.3d = 3D nÃ©zet
+menu.game.flip = TÃ¡bla megfordÃ­tÃ¡sa
+menu.game.coords = KoordinÃ¡tÃ¡k
+menu.game.coords.tip = A mezÅ‘koordinÃ¡tÃ¡k mutatÃ¡sa
+menu.game.animate = AnimÃ¡ciÃ³...
+menu.game.previous = ElÅ‘zÅ‘ Tab
+menu.game.next = KÃ¶vetkezÅ‘ Tab
+menu.game.close = BezÃ¡rÃ¡s
+menu.game.close.tip = A jelenlegi jÃ¡tszma bezÃ¡rÃ¡sa
+menu.game.close.all = Mindent bezÃ¡r
+menu.game.close.all.tip = Minden nyitott jÃ¡tszma bezÃ¡rÃ¡sa
+menu.game.close.all.but = TÃ¶bbi bezÃ¡rÃ¡sa
+menu.game.close.all.but.tip = Minden nyitott jÃ¡tszma bezÃ¡rÃ¡sa a jelenlegi kivÃ©telÃ©vel
+menu.game.setup = ÃllÃ¡s megadÃ¡sa
+menu.game.text.incr = SzÃ¶vegmÃ©ret nÃ¶velÃ©se
+menu.game.text.decr = SzÃ¶vegmÃ©ret csÃ¶kkentÃ©se
 
-menu.game.copy.line = Sor másolása
-menu.game.copy.line.tip = A sor vágólapra másolása
-menu.game.paste.line = Sor beillesztése
-menu.game.paste.line.tip = A sor beillesztése a jelenlegi játszmába
+menu.game.copy.line = Sor mÃ¡solÃ¡sa
+menu.game.copy.line.tip = A sor vÃ¡gÃ³lapra mÃ¡solÃ¡sa
+menu.game.paste.line = Sor beillesztÃ©se
+menu.game.paste.line.tip = A sor beillesztÃ©se a jelenlegi jÃ¡tszmÃ¡ba
 
 # Window Menu
 
 menu.window = Ablak
-menu.window.fullscreen = Teljes képernyõ nézet
+menu.window.fullscreen = Teljes kÃ©pernyÅ‘ nÃ©zet
 menu.window.reset = Alaphelyzetbe
 
 # Help Menu
 
-menu.help = Súgó
-menu.help.splash = Névjegy...
+menu.help = SÃºgÃ³
+menu.help.splash = NÃ©vjegy...
 menu.help.about = Adatok...
 menu.help.license = Licensz...
-menu.help.context = Súgó
-menu.help.manual = Kézikönyv
+menu.help.context = SÃºgÃ³
+menu.help.manual = KÃ©zikÃ¶nyv
 menu.help.web = jose az interneten
 
 menu.web.home = Honlap
-menu.web.update = Frissítés
-menu.web.download = Letöltés
-menu.web.report = Hibajelentés
-menu.web.support = Támogatás igénylése
+menu.web.update = FrissÃ­tÃ©s
+menu.web.download = LetÃ¶ltÃ©s
+menu.web.report = HibajelentÃ©s
+menu.web.support = TÃ¡mogatÃ¡s igÃ©nylÃ©se
 menu.web.feature = Feature Requests
-menu.web.forum = Fórum
-menu.web.browser = Böngészõ kiválasztása...
+menu.web.forum = FÃ³rum
+menu.web.browser = BÃ¶ngÃ©szÅ‘ kivÃ¡lasztÃ¡sa...
 
 
 ##############################################################################
 #   Context Menu
 ##############################################################################
 
-panel.hide = Rejtés
-panel.hide.tip = E panel elrejtése
-panel.undock = Új ablak
-panel.undock.tip = Megnyitja ezt a panelt új ablakban
-panel.move = Áthelyezés
-panel.move.tip = Áthelyezi ezt a panelt
-panel.dock = Rögzít
-panel.dock.tip = Az ablak helyzetét rögzíti
+panel.hide = RejtÃ©s
+panel.hide.tip = E panel elrejtÃ©se
+panel.undock = Ãšj ablak
+panel.undock.tip = Megnyitja ezt a panelt Ãºj ablakban
+panel.move = ÃthelyezÃ©s
+panel.move.tip = Ãthelyezi ezt a panelt
+panel.dock = RÃ¶gzÃ­t
+panel.dock.tip = Az ablak helyzetÃ©t rÃ¶gzÃ­ti
 
 panel.orig.pos = Eredeti helyzet
-panel.dock.here = Rögzítés itt
-panel.undock.here = Rögzítés feloldása
+panel.dock.here = RÃ¶gzÃ­tÃ©s itt
+panel.undock.here = RÃ¶gzÃ­tÃ©s feloldÃ¡sa
 
 #################
 # Document Panel
@@ -204,80 +204,80 @@ panel.undock.here = Rögzítés feloldása
 
 # deprecated:
 tab.place = Tab helyzete
-tab.place.top = Felülre
+tab.place.top = FelÃ¼lre
 tab.place.left = Balra
 tab.place.bottom = Alulra
 tab.place.right = Jobbra
 #
 
 tab.layout = Tab helyzete
-tab.layout.wrap = Törés
-tab.layout.scroll = Görgetés
+tab.layout.wrap = TÃ¶rÃ©s
+tab.layout.scroll = GÃ¶rgetÃ©s
 
-doc.menu.annotate = Értékelés
-doc.menu.delete.comment = Megjegyzés törlése
-doc.menu.line.promote = Átváltoztatás sor
-doc.menu.line.delete = Sor törlése
-doc.menu.line.cut = Sor kivágása
-doc.menu.line.uncomment = Minden megjegyzés törlése
+doc.menu.annotate = Ã‰rtÃ©kelÃ©s
+doc.menu.delete.comment = MegjegyzÃ©s tÃ¶rlÃ©se
+doc.menu.line.promote = ÃtvÃ¡ltoztatÃ¡s sor
+doc.menu.line.delete = Sor tÃ¶rlÃ©se
+doc.menu.line.cut = Sor kivÃ¡gÃ¡sa
+doc.menu.line.uncomment = Minden megjegyzÃ©s tÃ¶rlÃ©se
 doc.menu.remove.annotation = -nincs-
-doc.menu.more.annotations = több...
+doc.menu.more.annotations = tÃ¶bb...
 
-tab.untitled = Névtelen
+tab.untitled = NÃ©vtelen
 confirm = Elfogad
-confirm.save.one = Mentsük a jelenlegi állást?
-confirm.save.all = Mentsük a módosított állást?
+confirm.save.one = MentsÃ¼k a jelenlegi Ã¡llÃ¡st?
+confirm.save.all = MentsÃ¼k a mÃ³dosÃ­tott Ã¡llÃ¡st?
 
-dialog.confirm.save = Mentés
-dialog.confirm.dont.save = Mentés nélkül
+dialog.confirm.save = MentÃ©s
+dialog.confirm.dont.save = MentÃ©s nÃ©lkÃ¼l
 
-dialog.engine.offers.draw = %engine% döntetlent ajánl.
+dialog.engine.offers.draw = %engine% dÃ¶ntetlent ajÃ¡nl.
 
 dialog.accept.draw = Elfogad
-dialog.decline.draw = Visszautasít
+dialog.decline.draw = VisszautasÃ­t
 
 ###################
 # Game Navigation
 ###################
 
-move.first = A játszma elejére
+move.first = A jÃ¡tszma elejÃ©re
 move.backward = Vissza
-move.delete = Utolsó lépés visszavonása
-engine.stop = Szünet
-move.start = Lépés most
-move.forward = Elõre
-move.last = A játszma végére
-move.animate = Animáció
+move.delete = UtolsÃ³ lÃ©pÃ©s visszavonÃ¡sa
+engine.stop = SzÃ¼net
+move.start = LÃ©pÃ©s most
+move.forward = ElÅ‘re
+move.last = A jÃ¡tszma vÃ©gÃ©re
+move.animate = AnimÃ¡ciÃ³
 
 
 ##################################
 # Engine Panel
 ##################################
 
-<.paused.tip = %engine% leállt
-engine.thinking.tip = %engine% a következõ lépésen gondolkodik
-engine.pondering.tip = %engine% a következõ lépésen tûnõdik
+<.paused.tip = %engine% leÃ¡llt
+engine.thinking.tip = %engine% a kÃ¶vetkezÅ‘ lÃ©pÃ©sen gondolkodik
+engine.pondering.tip = %engine% a kÃ¶vetkezÅ‘ lÃ©pÃ©sen tÅ±nÅ‘dik
 engine.analyzing.tip = %engine% elemez
 engine.hint.tip = Tipp: %move%
 
 engine.paused.title = %engine%
 engine.thinking.title = %engine% gondolkodik
-engine.pondering.title = %engine% tûnõdik
+engine.pondering.title = %engine% tÅ±nÅ‘dik
 engine.analyzing.title = %engine% elemez
 
 plugin.name = %name% %version%
-plugin.name.author = %name% %version%, szerzõ: %author%
+plugin.name.author = %name% %version%, szerzÅ‘: %author%
 
 plugin.book.move = BK
-plugin.book.move.tip = Book lépés
+plugin.book.move.tip = Book lÃ©pÃ©s
 plugin.hash.move = HT
-plugin.hash.move.tip = Hash táblából kapott
+plugin.hash.move.tip = Hash tÃ¡blÃ¡bÃ³l kapott
 plugin.tb.move = TB
-plugin.tb.move.tip = Végjáték táblából kapott
+plugin.tb.move.tip = VÃ©gjÃ¡tÃ©k tÃ¡blÃ¡bÃ³l kapott
 
-plugin.currentmove.title = Lépés
-plugin.depth.title = Mélység
-plugin.elapsed.time.title = Idõ
+plugin.currentmove.title = LÃ©pÃ©s
+plugin.depth.title = MÃ©lysÃ©g
+plugin.elapsed.time.title = IdÅ‘
 plugin.nodecount.title = Nodes
 plugin.nps.title = N/mp
 
@@ -288,61 +288,61 @@ plugin.currentmove.tip = The currently evaluated move is %move%.
 plugin.currentmove.max.tip = The currently evaluated move is %move%. (no. %moveno% of %maxmove%)
 
 plugin.depth = %depth%
-plugin.depth.tip = Keresés mélysége: %depth%
+plugin.depth.tip = KeresÃ©s mÃ©lysÃ©ge: %depth%
 
 plugin.depth.sel = %depth% (%seldepth%)
-plugin.depth.sel.tip = Keresés mélysége: %depth%, választó mélység: %seldepth%
+plugin.depth.sel.tip = KeresÃ©s mÃ©lysÃ©ge: %depth%, vÃ¡lasztÃ³ mÃ©lysÃ©g: %seldepth%
 
 plugin.white.mates = +#%eval%
-plugin.white.mates.tip = Világos %eval% lépésben mattot ad
+plugin.white.mates.tip = VilÃ¡gos %eval% lÃ©pÃ©sben mattot ad
 plugin.black.mates = -#%eval%
-plugin.black.mates.tip = Sötét %eval% lépésben mattot ad
+plugin.black.mates.tip = SÃ¶tÃ©t %eval% lÃ©pÃ©sben mattot ad
 
 plugin.evaluation = %eval%
-plugin.evaluation.tip = Az állás értéke %eval%
+plugin.evaluation.tip = Az Ã¡llÃ¡s Ã©rtÃ©ke %eval%
 
-plugin.line.tip = Számított sor
+plugin.line.tip = SzÃ¡mÃ­tott sor
 
 plugin.elapsed.time = %time%
-plugin.elapsed.time.tip = A számítás becsült ideje.
+plugin.elapsed.time.tip = A szÃ¡mÃ­tÃ¡s becsÃ¼lt ideje.
 
 plugin.nodecount = %nodecount%
-plugin.nodecount.tip = %nodecount% állást értékeltünk
+plugin.nodecount.tip = %nodecount% Ã¡llÃ¡st Ã©rtÃ©keltÃ¼nk
 
 plugin.nps = %nps%
-plugin.nps.tip = másodpercenként %nps% csomópontot értékeltünk
+plugin.nps.tip = mÃ¡sodpercenkÃ©nt %nps% csomÃ³pontot Ã©rtÃ©keltÃ¼nk
 
-plugin.pv.history = Szakértõ mód
+plugin.pv.history = SzakÃ©rtÅ‘ mÃ³d
 
-restart.plugin = Motor újraindítása
+restart.plugin = Motor ÃºjraindÃ­tÃ¡sa
 
 
 ######################
 # Board Panel
 ######################
 
-wait.3d = 3D betöltése. Kis türelmet...
+wait.3d = 3D betÃ¶ltÃ©se. Kis tÃ¼relmet...
 
-message.result = Eredmény
-message.white = Világos
-message.black = Sötét
-message.mate = Matt. \n %player% gyõzött.
-message.stalemate = Patt. \n A játszma döntetlen.
-message.draw3 = Három ismétlõdõ lépés. \n A játszma döntetlen.
-message.draw50 = 50 lépés során sincs ütés. \n A játszma döntetlen.
-message.resign = %player% feladta. \n Ön gyõzött.
-message.time.draw = Az idõ lejárt. \n A játszma döntetlen.
-message.time.lose = Az idõ lejárt. \n %player% gyõzött.
+message.result = EredmÃ©ny
+message.white = VilÃ¡gos
+message.black = SÃ¶tÃ©t
+message.mate = Matt. \n %player% gyÅ‘zÃ¶tt.
+message.stalemate = Patt. \n A jÃ¡tszma dÃ¶ntetlen.
+message.draw3 = HÃ¡rom ismÃ©tlÅ‘dÅ‘ lÃ©pÃ©s. \n A jÃ¡tszma dÃ¶ntetlen.
+message.draw50 = 50 lÃ©pÃ©s sorÃ¡n sincs Ã¼tÃ©s. \n A jÃ¡tszma dÃ¶ntetlen.
+message.resign = %player% feladta. \n Ã–n gyÅ‘zÃ¶tt.
+message.time.draw = Az idÅ‘ lejÃ¡rt. \n A jÃ¡tszma dÃ¶ntetlen.
+message.time.lose = Az idÅ‘ lejÃ¡rt. \n %player% gyÅ‘zÃ¶tt.
 
 
 ################
 # Clock Panel
 ################
 
-clock.mode.analog = Analóg
-clock.mode.analog.tip = Analóg óra mutatása
-clock.mode.digital = Digitális
-clock.mode.digital.tip = Digitális óra mutatása
+clock.mode.analog = AnalÃ³g
+clock.mode.analog.tip = AnalÃ³g Ã³ra mutatÃ¡sa
+clock.mode.digital = DigitÃ¡lis
+clock.mode.digital.tip = DigitÃ¡lis Ã³ra mutatÃ¡sa
 
 
 ##############################################################################
@@ -350,27 +350,27 @@ clock.mode.digital.tip = Digitális óra mutatása
 ##############################################################################
 
 dialog.button.ok = OK
-dialog.button.ok.tip = A változtatások elfogadása
-dialog.button.cancel = Mégsem
-dialog.button.cancel.tip = A változtatások elvetése
+dialog.button.ok.tip = A vÃ¡ltoztatÃ¡sok elfogadÃ¡sa
+dialog.button.cancel = MÃ©gsem
+dialog.button.cancel.tip = A vÃ¡ltoztatÃ¡sok elvetÃ©se
 dialog.button.apply = Alkalmaz
-dialog.button.apply.tip = A változtatások azonnali alkalmazása
-dialog.button.revert = Visszaállít
-dialog.button.revert.tip = A változtatások törlése
-dialog.button.clear = Törlés
-dialog.button.delete = Törlés
+dialog.button.apply.tip = A vÃ¡ltoztatÃ¡sok azonnali alkalmazÃ¡sa
+dialog.button.revert = VisszaÃ¡llÃ­t
+dialog.button.revert.tip = A vÃ¡ltoztatÃ¡sok tÃ¶rlÃ©se
+dialog.button.clear = TÃ¶rlÃ©s
+dialog.button.delete = TÃ¶rlÃ©s
 dialog.button.yes = Igen
 dialog.button.no = Nem
-dialog.button.next = Következõ
-dialog.button.back = Elõzõ
-dialog.button.close = Bezár
-dialog.button.help = Súgó
-dialog.button.help.tip = A súgó mutatása
+dialog.button.next = KÃ¶vetkezÅ‘
+dialog.button.back = ElÅ‘zÅ‘
+dialog.button.close = BezÃ¡r
+dialog.button.help = SÃºgÃ³
+dialog.button.help.tip = A sÃºgÃ³ mutatÃ¡sa
 
 dialog.button.commit = Elfogad
-dialog.button.commit.tip = A változtatások elfogadása
+dialog.button.commit.tip = A vÃ¡ltoztatÃ¡sok elfogadÃ¡sa
 dialog.button.rollback = Visszavon
-dialog.button.rollback.tip = A változtatások elvetése
+dialog.button.rollback.tip = A vÃ¡ltoztatÃ¡sok elvetÃ©se
 
 dialog.error.title = Error
 
@@ -380,28 +380,28 @@ dialog.error.title = Error
 
 filechooser.pgn = Portable Game Notation (*.pgn,*.zip)
 filechooser.epd = EPD vagy FEN (*.epd,*.fen)
-filechooser.db = jose arhívum (*.jose)
-filechooser.db.Games = jose játszma arhívum (*.jose)
-filechooser.db.Games.MySQL = jose játszma arhívum (gyorsmentés) (*.jose)
-filechooser.txt = Szövegfájl (*.txt)
-filechooser.html = Web fájlok (*.html)
+filechooser.db = jose arhÃ­vum (*.jose)
+filechooser.db.Games = jose jÃ¡tszma arhÃ­vum (*.jose)
+filechooser.db.Games.MySQL = jose jÃ¡tszma arhÃ­vum (gyorsmentÃ©s) (*.jose)
+filechooser.txt = SzÃ¶vegfÃ¡jl (*.txt)
+filechooser.html = Web fÃ¡jlok (*.html)
 filechooser.pdf = Acrobat Reader (*.pdf)
-filechooser.exe = Futtatható fájlok
-filechooser.img = Képfájlok (*.gif,*.jpg,*.png,*.bmp)
+filechooser.exe = FuttathatÃ³ fÃ¡jlok
+filechooser.img = KÃ©pfÃ¡jlok (*.gif,*.jpg,*.png,*.bmp)
 
-filechooser.overwrite = Felülírjuk a létezõ "%file.name%" fájlt?
-filechooser.do.overwrite = Felülírás
+filechooser.overwrite = FelÃ¼lÃ­rjuk a lÃ©tezÅ‘ "%file.name%" fÃ¡jlt?
+filechooser.do.overwrite = FelÃ¼lÃ­rÃ¡s
 
 #################
 # Color Chooser
 #################
 
-colorchooser.texture = Mintázat
-colorchooser.preview = Elõnézet
-colorchooser.gradient = Átmenet
-colorchooser.gradient.color1 = Elsõ szín
-colorchooser.gradient.color2 = Második szín
-colorchooser.gradient.cyclic = Ismétlõdõ
+colorchooser.texture = MintÃ¡zat
+colorchooser.preview = ElÅ‘nÃ©zet
+colorchooser.gradient = Ãtmenet
+colorchooser.gradient.color1 = ElsÅ‘ szÃ­n
+colorchooser.gradient.color2 = MÃ¡sodik szÃ­n
+colorchooser.gradient.cyclic = IsmÃ©tlÅ‘dÅ‘
 
 colorchooser.texture.mnemonic = T
 colorchooser.gradient.mnemonic = G
@@ -415,110 +415,110 @@ animation.slider.slow = lassabb
 
 # Tab Titles
 
-dialog.option.tab.1 = Felhasználó
-dialog.option.tab.2 = Tábla
-dialog.option.tab.3 = Színek
-dialog.option.tab.4 = Idõ
+dialog.option.tab.1 = FelhasznÃ¡lÃ³
+dialog.option.tab.2 = TÃ¡bla
+dialog.option.tab.3 = SzÃ­nek
+dialog.option.tab.4 = IdÅ‘
 dialog.option.tab.5 = Motor
 dialog.option.tab.6 = Opening Book
 # TODO
 dialog.option.tab.7 = 3D
-dialog.option.tab.8 = Betûkészletek
+dialog.option.tab.8 = BetÅ±kÃ©szletek
 
 # User settings
 
-dialog.option.user.name = Név
+dialog.option.user.name = NÃ©v
 dialog.option.user.language = Nyelv
-dialog.option.ui.look.and.feel = Téma
+dialog.option.ui.look.and.feel = TÃ©ma
 
-doc.load.history = Korábbi játszmák betöltése
-doc.classify.eco = A megnyitás ECO osztályozása
+doc.load.history = KorÃ¡bbi jÃ¡tszmÃ¡k betÃ¶ltÃ©se
+doc.classify.eco = A megnyitÃ¡s ECO osztÃ¡lyozÃ¡sa
 
-dialog.option.animation = Animáció
-dialog.option.animation.speed = Sebesség
+dialog.option.animation = AnimÃ¡ciÃ³
+dialog.option.animation.speed = SebessÃ©g
 
-dialog.option.doc.write.mode = Új lépés beillesztése
-write.mode.new.line = Új sor
-write.mode.new.main.line = Új fõsor
-write.mode.overwrite = Felülírás
-write.mode.ask = Kérdezzen
-write.mode.dont.ask = Ne kérdezzen többet
-write.mode.cancel = Mégsem
+dialog.option.doc.write.mode = Ãšj lÃ©pÃ©s beillesztÃ©se
+write.mode.new.line = Ãšj sor
+write.mode.new.main.line = Ãšj fÅ‘sor
+write.mode.overwrite = FelÃ¼lÃ­rÃ¡s
+write.mode.ask = KÃ©rdezzen
+write.mode.dont.ask = Ne kÃ©rdezzen tÃ¶bbet
+write.mode.cancel = MÃ©gsem
 
-board.animation.hints = Tippek mutatása animáció közben
+board.animation.hints = Tippek mutatÃ¡sa animÃ¡ciÃ³ kÃ¶zben
 
 dialog.option.sound = Hang
-dialog.option.sound.moves.dir = Lépések bejelentése:
-sound.moves.engine = Motor lépéseinek bejelentése
-sound.moves.ack.user = Felhasználó lépéseinek nyugtázása
-sound.moves.user = Felhasználó lépéseinek bejelentése
+dialog.option.sound.moves.dir = LÃ©pÃ©sek bejelentÃ©se:
+sound.moves.engine = Motor lÃ©pÃ©seinek bejelentÃ©se
+sound.moves.ack.user = FelhasznÃ¡lÃ³ lÃ©pÃ©seinek nyugtÃ¡zÃ¡sa
+sound.moves.user = FelhasznÃ¡lÃ³ lÃ©pÃ©seinek bejelentÃ©se
 
 # Fonts
 
 dialog.option.font.diagram = Diagram
-dialog.option.font.text = Szöveg
-dialog.option.font.inline = Szöveg Diagram
-dialog.option.font.figurine = Bábuk
-dialog.option.font.symbol = Szimbólum
-dialog.option.font.size = Méret
-figurine.usefont.true = Ábrás bábuk
-figurine.usefont.false = Szöveges bábuk
+dialog.option.font.text = SzÃ¶veg
+dialog.option.font.inline = SzÃ¶veg Diagram
+dialog.option.font.figurine = BÃ¡buk
+dialog.option.font.symbol = SzimbÃ³lum
+dialog.option.font.size = MÃ©ret
+figurine.usefont.true = ÃbrÃ¡s bÃ¡buk
+figurine.usefont.false = SzÃ¶veges bÃ¡buk
 
-doc.panel.antialias = Élsimított betûkészletek
+doc.panel.antialias = Ã‰lsimÃ­tott betÅ±kÃ©szletek
 
 # Notation
 
-dialog.option.doc.move.format = Jelölés:
-move.format = Jelölés
-move.format.short = Rövid
-move.format.long = Hosszú
+dialog.option.doc.move.format = JelÃ¶lÃ©s:
+move.format = JelÃ¶lÃ©s
+move.format.short = RÃ¶vid
+move.format.long = HosszÃº
 move.format.algebraic = Algebrai
-move.format.correspondence = Levelezéses
+move.format.correspondence = LevelezÃ©ses
 move.format.english = Angol
-move.format.telegraphic = Távirati
+move.format.telegraphic = TÃ¡virati
 
 # Colors
 
-dialog.option.board.surface.light = Világos mezõk
-dialog.option.board.surface.dark = Sötét mezõk
-dialog.option.board.surface.white = Világos bábok
-dialog.option.board.surface.black = Sötét bábok
+dialog.option.board.surface.light = VilÃ¡gos mezÅ‘k
+dialog.option.board.surface.dark = SÃ¶tÃ©t mezÅ‘k
+dialog.option.board.surface.white = VilÃ¡gos bÃ¡bok
+dialog.option.board.surface.black = SÃ¶tÃ©t bÃ¡bok
 
-dialog.option.board.surface.background = Háttér
+dialog.option.board.surface.background = HÃ¡ttÃ©r
 dialog.option.board.surface.frame = Keret
-dialog.option.board.surface.coords = Koordináták
+dialog.option.board.surface.coords = KoordinÃ¡tÃ¡k
 
 dialog.option.board.3d.model = Modell:
-dialog.option.board.3d.clock = Óra
+dialog.option.board.3d.clock = Ã“ra
 dialog.option.board.3d.surface.frame = Keret:
-dialog.option.board.3d.light.ambient = Irányítatlan fény:
-dialog.option.board.3d.light.directional = Irányítatott fény:
-dialog.option.board.3d.knight.angle = Huszárok:
+dialog.option.board.3d.light.ambient = IrÃ¡nyÃ­tatlan fÃ©ny:
+dialog.option.board.3d.light.directional = IrÃ¡nyÃ­tatott fÃ©ny:
+dialog.option.board.3d.knight.angle = HuszÃ¡rok:
 
-board.surface.light = Világos mezõk
-board.surface.dark = Sötét mezõk
-board.surface.white = Világos bábok
-board.surface.black = Sötét bábok
-board.hilite.squares = Mezõk fényesítése
+board.surface.light = VilÃ¡gos mezÅ‘k
+board.surface.dark = SÃ¶tÃ©t mezÅ‘k
+board.surface.white = VilÃ¡gos bÃ¡bok
+board.surface.black = SÃ¶tÃ©t bÃ¡bok
+board.hilite.squares = MezÅ‘k fÃ©nyesÃ­tÃ©se
 
 # Time Controls
 
-dialog.option.time.control = Idõvezérlés
-dialog.option.phase.1 = 1. fázis
-dialog.option.phase.2 = 2. fázis
-dialog.option.phase.3 = 3. fázis
-dialog.option.all.moves = összes
-dialog.option.moves.in = lépésre
-dialog.option.increment = és
-dialog.option.increment.label = lépésenként
+dialog.option.time.control = IdÅ‘vezÃ©rlÃ©s
+dialog.option.phase.1 = 1. fÃ¡zis
+dialog.option.phase.2 = 2. fÃ¡zis
+dialog.option.phase.3 = 3. fÃ¡zis
+dialog.option.all.moves = Ã¶sszes
+dialog.option.moves.in = lÃ©pÃ©sre
+dialog.option.increment = Ã©s
+dialog.option.increment.label = lÃ©pÃ©senkÃ©nt
 
 time.control.blitz = Blitz
 time.control.rapid = Rapid
 time.control.fischer = Fischer
 time.control.tournament = Torna
 # default name for new time control
-time.control.new = Új
-time.control.delete = Törlés
+time.control.new = Ãšj
+time.control.delete = TÃ¶rlÃ©s
 
 # Engine Settings
 
@@ -528,71 +528,71 @@ dialog.option.plugin.2 = 2. motor
 plugin.add =
 plugin.delete =
 plugin.duplicate =
-plugin.add.tip = új motor hozzáadása
-plugin.delete.tip = beállítások törlése
-plugin.duplicate.tip = beállítások másolása
+plugin.add.tip = Ãºj motor hozzÃ¡adÃ¡sa
+plugin.delete.tip = beÃ¡llÃ­tÃ¡sok tÃ¶rlÃ©se
+plugin.duplicate.tip = beÃ¡llÃ­tÃ¡sok mÃ¡solÃ¡sa
 
-dialog.option.plugin.file = Beállítások fájl:
-dialog.option.plugin.name = Név:
-dialog.option.plugin.version = Változat:
-dialog.option.plugin.author = Szerzõ:
+dialog.option.plugin.file = BeÃ¡llÃ­tÃ¡sok fÃ¡jl:
+dialog.option.plugin.name = NÃ©v:
+dialog.option.plugin.version = VÃ¡ltozat:
+dialog.option.plugin.author = SzerzÅ‘:
 dialog.option.plugin.dir = Mappa:
-dialog.option.plugin.logo = Embléma:
-dialog.option.plugin.startup = Indítás:
+dialog.option.plugin.logo = EmblÃ©ma:
+dialog.option.plugin.startup = IndÃ­tÃ¡s:
 
-dialog.option.plugin.exe = Futtatható:
-dialog.option.plugin.args = Paraméterek:
-dialog.option.plugin.default = Alapbeállítások
+dialog.option.plugin.exe = FuttathatÃ³:
+dialog.option.plugin.args = ParamÃ©terek:
+dialog.option.plugin.default = AlapbeÃ¡llÃ­tÃ¡sok
 
-plugin.info = Általános adatok
+plugin.info = ÃltalÃ¡nos adatok
 plugin.protocol.xboard = XBoard protokoll
 plugin.protocol.uci = UCI protokoll
-plugin.options = Motor beállításai
-plugin.startup = Egyéb beállítások
-plugin.show.logos = Embléma mutatása
-plugin.show.text = Szöveg mutatása
+plugin.options = Motor beÃ¡llÃ­tÃ¡sai
+plugin.startup = EgyÃ©b beÃ¡llÃ­tÃ¡sok
+plugin.show.logos = EmblÃ©ma mutatÃ¡sa
+plugin.show.text = SzÃ¶veg mutatÃ¡sa
 
-plugin.switch.ask = Másik motort adott meg.\n Indítsuk most?
-plugin.restart.ask = Módosított néhány motor beállítást.\n Indítsuk újra a motort most?
-plugin.show.info = "Adatok" mutatása
-plugin.log.file = Naplózás fájlba
+plugin.switch.ask = MÃ¡sik motort adott meg.\n IndÃ­tsuk most?
+plugin.restart.ask = MÃ³dosÃ­tott nÃ©hÃ¡ny motor beÃ¡llÃ­tÃ¡st.\n IndÃ­tsuk Ãºjra a motort most?
+plugin.show.info = "Adatok" mutatÃ¡sa
+plugin.log.file = NaplÃ³zÃ¡s fÃ¡jlba
 
 # UCI option name
-plugin.option.Ponder = Tûnõdés
-plugin.option.Random = Véletlenszerû
-plugin.option.Hash = Hash tábla méret (MB)
+plugin.option.Ponder = TÅ±nÅ‘dÃ©s
+plugin.option.Random = VÃ©letlenszerÅ±
+plugin.option.Hash = Hash tÃ¡bla mÃ©ret (MB)
 plugin.option.NalimovPath = Path to Nalimov Table Bases
 plugin.option.NalimovCache = Cache for Nalimov Bases (MB)
-plugin.option.OwnBook = Megnyitáskönyvtár használata
-plugin.option.BookFile = Megnyitáskönyvtár
+plugin.option.OwnBook = MegnyitÃ¡skÃ¶nyvtÃ¡r hasznÃ¡lata
+plugin.option.BookFile = MegnyitÃ¡skÃ¶nyvtÃ¡r
 plugin.option.BookLearning = Book Learning
-plugin.option.MultiPV = Elsõdleges variációk
-plugin.option.ClearHash = Hash táblák törlése
+plugin.option.MultiPV = ElsÅ‘dleges variÃ¡ciÃ³k
+plugin.option.ClearHash = Hash tÃ¡blÃ¡k tÃ¶rlÃ©se
 
 # 3D Settings
 
-board.surface.background = Hátterek
-board.surface.coords = Koordináták
-board.3d.clock = Óra
-board.3d.shadow = Árnyék
-board.3d.reflection = Tükrözõdések
-board.3d.anisotropic = Anizotropikus szûrés
-board.3d.fsaa = Teljes képernyõs élsimítás
+board.surface.background = HÃ¡tterek
+board.surface.coords = KoordinÃ¡tÃ¡k
+board.3d.clock = Ã“ra
+board.3d.shadow = ÃrnyÃ©k
+board.3d.reflection = TÃ¼krÃ¶zÅ‘dÃ©sek
+board.3d.anisotropic = Anizotropikus szÅ±rÃ©s
+board.3d.fsaa = Teljes kÃ©pernyÅ‘s Ã©lsimÃ­tÃ¡s
 
 board.3d.surface.frame = Keret
-board.3d.light.ambient = Irányítatlan fény
-board.3d.light.directional = Irányított fény
-board.3d.screenshot = Képernyõkép
-board.3d.defaultview = Alapnézet
+board.3d.light.ambient = IrÃ¡nyÃ­tatlan fÃ©ny
+board.3d.light.directional = IrÃ¡nyÃ­tott fÃ©ny
+board.3d.screenshot = KÃ©pernyÅ‘kÃ©p
+board.3d.defaultview = AlapnÃ©zet
 
 # Text Styles
 
-font.color = Szín
-font.name = Család
-font.size = Méret
-font.bold = Kövér
-font.italic = Dõlt
-font.sample = Mintaszöveg (õÕûÛíÍ)
+font.color = SzÃ­n
+font.name = CsalÃ¡d
+font.size = MÃ©ret
+font.bold = KÃ¶vÃ©r
+font.italic = DÅ‘lt
+font.sample = MintaszÃ¶veg (Å‘ÅÅ±Å°Ã­Ã)
 
 
 ##############################################################################
@@ -601,56 +601,56 @@ font.sample = Mintaszöveg (õÕûÛíÍ)
 
 # default collection folders
 
-collection.trash = Lomtár
-collection.autosave = Önmûködõ mentés
-collection.clipboard = Vágólap
+collection.trash = LomtÃ¡r
+collection.autosave = Ã–nmÅ±kÃ¶dÅ‘ mentÃ©s
+collection.clipboard = VÃ¡gÃ³lap
 
 # default name for new folders
-collection.new = Új mappa
+collection.new = Ãšj mappa
 
 # name of starter database
 collection.starter = Capablanca's Games
 
 # column titles
 
-column.collection.name = Név
-column.collection.gamecount = Játszmák
-column.collection.lastmodified = Módosított
+column.collection.name = NÃ©v
+column.collection.gamecount = JÃ¡tszmÃ¡k
+column.collection.lastmodified = MÃ³dosÃ­tott
 
 column.game.index = Ssz.
-column.game.white.name = Világos
-column.game.black.name = Sötét
-column.game.event = Játszma
-column.game.site = Helyszín
-column.game.date = Dátum
-column.game.result = Eredmény
-column.game.round = Forduló
-column.game.board = Tábla
+column.game.white.name = VilÃ¡gos
+column.game.black.name = SÃ¶tÃ©t
+column.game.event = JÃ¡tszma
+column.game.site = HelyszÃ­n
+column.game.date = DÃ¡tum
+column.game.result = EredmÃ©ny
+column.game.round = FordulÃ³
+column.game.board = TÃ¡bla
 column.game.eco = ECO
-column.game.opening = Megnyitás
-column.game.movecount = Lépések
-column.game.annotator = Értékelõ
+column.game.opening = MegnyitÃ¡s
+column.game.movecount = LÃ©pÃ©sek
+column.game.annotator = Ã‰rtÃ©kelÅ‘
 
 #deprecated
-column.problem.author = Szerzõ
-column.problem.source = Forrás
+column.problem.author = SzerzÅ‘
+column.problem.source = ForrÃ¡s
 column.problem.number = Sz.
-column.problem.date = Dátum
-column.problem.stipulation = Kikötés
-column.problem.dedication = Ajánlás
-column.problem.award = Díj
-column.problem.solution = Megoldás
+column.problem.date = DÃ¡tum
+column.problem.stipulation = KikÃ¶tÃ©s
+column.problem.dedication = AjÃ¡nlÃ¡s
+column.problem.award = DÃ­j
+column.problem.solution = MegoldÃ¡s
 column.problem.cplus = C+
 column.problem.genre = Genre
 column.problem.keyword = Kulcsszavak
 #deprecated
 
-bootstrap.confirm = Ez az adatmappa nem létezik: '%datadir%'.\n Hozzunk létre újat?
-bootstrap.create = Adatmappa létrehozása
+bootstrap.confirm = Ez az adatmappa nem lÃ©tezik: '%datadir%'.\n Hozzunk lÃ©tre Ãºjat?
+bootstrap.create = Adatmappa lÃ©trehozÃ¡sa
 
-edit.game = Megnyitás
-edit.all = Megnyitás
-dnd.move.top.level = Legfelülre
+edit.game = MegnyitÃ¡s
+edit.all = MegnyitÃ¡s
+dnd.move.top.level = LegfelÃ¼lre
 
 
 ##############################################################################
@@ -659,66 +659,66 @@ dnd.move.top.level = Legfelülre
 
 # Tab Titles
 dialog.query.info = Adatok
-dialog.query.comments = Megjegyzések
-dialog.query.position = Állás
+dialog.query.comments = MegjegyzÃ©sek
+dialog.query.position = ÃllÃ¡s
 
-dialog.query.search = Keresés
-dialog.query.clear = Törlés
-dialog.query.search.in.progress = Keresés...
+dialog.query.search = KeresÃ©s
+dialog.query.clear = TÃ¶rlÃ©s
+dialog.query.search.in.progress = KeresÃ©s...
 
-dialog.query.0.results = Eredménytelen
-dialog.query.1.result = Egy eredmény
-dialog.query.n.results = %count% eredmény
+dialog.query.0.results = EredmÃ©nytelen
+dialog.query.1.result = Egy eredmÃ©ny
+dialog.query.n.results = %count% eredmÃ©ny
 
-dialog.query.white = Világos:
-dialog.query.black = Sötét:
+dialog.query.white = VilÃ¡gos:
+dialog.query.black = SÃ¶tÃ©t:
 
-dialog.query.flags = Beállítások
-dialog.query.color.sensitive = Színérzékeny
-dialog.query.swap.colors = Színcsere
-dialog.query.swap.colors.tip = Színek megfordítása
-dialog.query.case.sensitive = Kis-, nagybetûk
-dialog.query.soundex = Hasonló
-dialog.query.result = Eredmény
+dialog.query.flags = BeÃ¡llÃ­tÃ¡sok
+dialog.query.color.sensitive = SzÃ­nÃ©rzÃ©keny
+dialog.query.swap.colors = SzÃ­ncsere
+dialog.query.swap.colors.tip = SzÃ­nek megfordÃ­tÃ¡sa
+dialog.query.case.sensitive = Kis-, nagybetÅ±k
+dialog.query.soundex = HasonlÃ³
+dialog.query.result = EredmÃ©ny
 dialog.query.stop.results =
 
-dialog.query.event = Játszma:
-dialog.query.site = Helyszín:
+dialog.query.event = JÃ¡tszma:
+dialog.query.site = HelyszÃ­n:
 dialog.query.eco = ECO:
-dialog.query.annotator = Értékelõ:
+dialog.query.annotator = Ã‰rtÃ©kelÅ‘:
 dialog.query.to = -
-dialog.query.opening = Megnyitás:
-dialog.query.date = Dátum:
-dialog.query.movecount = Lépések:
+dialog.query.opening = MegnyitÃ¡s:
+dialog.query.date = DÃ¡tum:
+dialog.query.movecount = LÃ©pÃ©sek:
 
-dialog.query.commenttext = Megjegyzés:
-dialog.query.com.flag = Megjegyzések
-dialog.query.com.flag.tip = Megjegyzéssel bíró játszmák keresése
+dialog.query.commenttext = MegjegyzÃ©s:
+dialog.query.com.flag = MegjegyzÃ©sek
+dialog.query.com.flag.tip = MegjegyzÃ©ssel bÃ­rÃ³ jÃ¡tszmÃ¡k keresÃ©se
 
-dialog.query.var.flag = Változatok
-dialog.query.var.flag.tip = Változatokkal bíró játszmák keresése
+dialog.query.var.flag = VÃ¡ltozatok
+dialog.query.var.flag.tip = VÃ¡ltozatokkal bÃ­rÃ³ jÃ¡tszmÃ¡k keresÃ©se
 
-dialog.query.errors = Hiba a keresõkifejezésben:
-query.error.date.too.small = Érvénytelen dátum
-query.error.movecount.too.small = Érvénytelen szám
-query.error.eco.too.long = Adjon meg három karakteres ECO kódot
-query.error.eco.character.expected = Az ECO kódok A, B, C, D, vagy E betûvel kezdõdnek
-query.error.eco.number.expected = Az ECO kódok egy karakterbõl és egy 0-99 közötti számból állnak
-query.error.number.format = Hibás számformátum
-query.error.date.format = Hibás dátumformátum
+dialog.query.errors = Hiba a keresÅ‘kifejezÃ©sben:
+query.error.date.too.small = Ã‰rvÃ©nytelen dÃ¡tum
+query.error.movecount.too.small = Ã‰rvÃ©nytelen szÃ¡m
+query.error.eco.too.long = Adjon meg hÃ¡rom karakteres ECO kÃ³dot
+query.error.eco.character.expected = Az ECO kÃ³dok A, B, C, D, vagy E betÅ±vel kezdÅ‘dnek
+query.error.eco.number.expected = Az ECO kÃ³dok egy karakterbÅ‘l Ã©s egy 0-99 kÃ¶zÃ¶tti szÃ¡mbÃ³l Ã¡llnak
+query.error.number.format = HibÃ¡s szÃ¡mformÃ¡tum
+query.error.date.format = HibÃ¡s dÃ¡tumformÃ¡tum
 
-query.setup.enable = Állás keresése
-query.setup.next = Következõ lépés:
-query.setup.next.white = Világos
-query.setup.next.white.tip = Azokat az állásokat találja meg, ahol világos következik
-query.setup.next.black = Sötét
-query.setup.next.black.tip = Azokat az állásokat találja meg, ahol sötét következik
-query.setup.next.any = Világos vagy sötét
-query.setup.next.any.tip = Akár világos, akár sötét következhet
-query.setup.reversed = Fordított színû keresés
-query.setup.reversed.tip = Az fordított színû állásokat is megtalálja
-query.setup.var = Változatok keresés
-query.setup.var.tip = Keresés a változatokban
+query.setup.enable = ÃllÃ¡s keresÃ©se
+query.setup.next = KÃ¶vetkezÅ‘ lÃ©pÃ©s:
+query.setup.next.white = VilÃ¡gos
+query.setup.next.white.tip = Azokat az Ã¡llÃ¡sokat talÃ¡lja meg, ahol vilÃ¡gos kÃ¶vetkezik
+query.setup.next.black = SÃ¶tÃ©t
+query.setup.next.black.tip = Azokat az Ã¡llÃ¡sokat talÃ¡lja meg, ahol sÃ¶tÃ©t kÃ¶vetkezik
+query.setup.next.any = VilÃ¡gos vagy sÃ¶tÃ©t
+query.setup.next.any.tip = AkÃ¡r vilÃ¡gos, akÃ¡r sÃ¶tÃ©t kÃ¶vetkezhet
+query.setup.reversed = FordÃ­tott szÃ­nÅ± keresÃ©s
+query.setup.reversed.tip = Az fordÃ­tott szÃ­nÅ± Ã¡llÃ¡sokat is megtalÃ¡lja
+query.setup.var = VÃ¡ltozatok keresÃ©s
+query.setup.var.tip = KeresÃ©s a vÃ¡ltozatokban
 
 
 
@@ -726,28 +726,28 @@ query.setup.var.tip = Keresés a változatokban
 #  Game Details dialog
 ##############################################################################
 
-dialog.game = Játszma részletei
-dialog.game.tab.1 = Játszma
-dialog.game.tab.2 = Játékosok
-dialog.game.tab.3 = Egyéb
+dialog.game = JÃ¡tszma rÃ©szletei
+dialog.game.tab.1 = JÃ¡tszma
+dialog.game.tab.2 = JÃ¡tÃ©kosok
+dialog.game.tab.3 = EgyÃ©b
 
-dialog.details.event = Játszma:
-dialog.details.site = Helyszín:
-dialog.details.date = Dátum:
-dialog.details.eventdate = Játszma dátuma:
-dialog.details.round = Forduló:
-dialog.details.board = Tábla:
+dialog.details.event = JÃ¡tszma:
+dialog.details.site = HelyszÃ­n:
+dialog.details.date = DÃ¡tum:
+dialog.details.eventdate = JÃ¡tszma dÃ¡tuma:
+dialog.details.round = FordulÃ³:
+dialog.details.board = TÃ¡bla:
 
-dialog.details.white = Világos
-dialog.details.black = Sötét
-dialog.details.name = Név:
+dialog.details.white = VilÃ¡gos
+dialog.details.black = SÃ¶tÃ©t
+dialog.details.name = NÃ©v:
 dialog.details.elo = ELO:
-dialog.details.title = Cím:
-dialog.details.result = Eredmény:
+dialog.details.title = CÃ­m:
+dialog.details.result = EredmÃ©ny:
 
 dialog.details.eco = ECO:
-dialog.details.opening = Megnyitás:
-dialog.details.annotator = Értékelõ:
+dialog.details.opening = MegnyitÃ¡s:
+dialog.details.annotator = Ã‰rtÃ©kelÅ‘:
 
 Result.0-1 = 0-1
 Result.1-0 = 1-0
@@ -759,43 +759,43 @@ Result.* = *
 #  Setup dialog
 ##############################################################################
 
-dialog.setup.clear = Törlés
-dialog.setup.initial = Kezdeti állás
-dialog.setup.copy = Másolás a fõ ablakból
+dialog.setup.clear = TÃ¶rlÃ©s
+dialog.setup.initial = Kezdeti Ã¡llÃ¡s
+dialog.setup.copy = MÃ¡solÃ¡s a fÅ‘ ablakbÃ³l
 
-dialog.setup.next.white = Világos lépései
-dialog.setup.next.black = Sötét lépései
-dialog.setup.move.no = Lépésszám
+dialog.setup.next.white = VilÃ¡gos lÃ©pÃ©sei
+dialog.setup.next.black = SÃ¶tÃ©t lÃ©pÃ©sei
+dialog.setup.move.no = LÃ©pÃ©sszÃ¡m
 
-dialog.setup.castling = Sáncolás
-dialog.setup.castling.wk = Világos 0-0
-dialog.setup.castling.wk.tip = Világos király oldali sáncolás
-dialog.setup.castling.wq = Világos 0-0-0
-dialog.setup.castling.wq.tip = Világos vezér oldali sáncolás
-dialog.setup.castling.bk = Sötét 0-0
-dialog.setup.castling.bk.tip = Sötét király oldali sáncolás
-dialog.setup.castling.bq = Sötét 0-0-0
-dialog.setup.castling.bq.tip = Sötét vezér's oldali sáncolás
-dialog.setup.invalid.fen = Érvénytelen FEN karakterlánc.
+dialog.setup.castling = SÃ¡ncolÃ¡s
+dialog.setup.castling.wk = VilÃ¡gos 0-0
+dialog.setup.castling.wk.tip = VilÃ¡gos kirÃ¡ly oldali sÃ¡ncolÃ¡s
+dialog.setup.castling.wq = VilÃ¡gos 0-0-0
+dialog.setup.castling.wq.tip = VilÃ¡gos vezÃ©r oldali sÃ¡ncolÃ¡s
+dialog.setup.castling.bk = SÃ¶tÃ©t 0-0
+dialog.setup.castling.bk.tip = SÃ¶tÃ©t kirÃ¡ly oldali sÃ¡ncolÃ¡s
+dialog.setup.castling.bq = SÃ¶tÃ©t 0-0-0
+dialog.setup.castling.bq.tip = SÃ¶tÃ©t vezÃ©r's oldali sÃ¡ncolÃ¡s
+dialog.setup.invalid.fen = Ã‰rvÃ©nytelen FEN karakterlÃ¡nc.
 
 ##############################################################################
 #  About dialog
 ##############################################################################
 
 dialog.about.tab.1 = jose
-dialog.about.tab.2 = Adatbázis
-dialog.about.tab.3 = Közremûködõk
+dialog.about.tab.2 = AdatbÃ¡zis
+dialog.about.tab.3 = KÃ¶zremÅ±kÃ¶dÅ‘k
 dialog.about.tab.4 = Rendszer
 dialog.about.tab.5 = 3D
 dialog.about.tab.6 = Licensz
 
-dialog.about.1a =   Változat %version%
+dialog.about.1a =   VÃ¡ltozat %version%
 
-dialog.about.gpl =   ezt a programot a GNU licensszel terjesztjük (www.gnu.hu, www.gnu.org)
+dialog.about.gpl =   ezt a programot a GNU licensszel terjesztjÃ¼k (www.gnu.hu, www.gnu.org)
 
 
 dialog.about.2 =  <b>%dbname%</b> <br> %dbversion% <br><br> \
-          Kiszolgáló URL: %dburl%
+          KiszolgÃ¡lÃ³ URL: %dburl%
 
 dialog.about.QED =  Quadcap Embedded Database \n \
           www.quadcap.com
@@ -808,45 +808,45 @@ dialog.about.Oracle = www.oracle.com
 dialog.about.MySQL = www.mysql.com
 
 
-dialog.about.3 =  <b>Fordítók:</b><br>\
-      Frederic Raimbault, José de Paula, \
-      Agustín Gomila, Alex Coronado, \
+dialog.about.3 =  <b>FordÃ­tÃ³k:</b><br>\
+      Frederic Raimbault, JosÃ© de Paula, \
+      AgustÃ­n Gomila, Alex Coronado, \
       Harold Roig, Hans Eriksson, \
-      Guido Grazioli, Tomasz Sokól, \
+      Guido Grazioli, Tomasz SokÃ³l, \
       "DirektX" \
       <br>\
-      <b>TrueType betûkészlet tervezõk:</b> <br>\
+      <b>TrueType betÅ±kÃ©szlet tervezÅ‘k:</b> <br>\
       Armando Hernandez Marroquin, \
       Eric Bentzen, \
       Alan Cowderoy, <br> \
       Hans Bodlaender \
       (www.chessvariants.com/d.font/fonts.html) <br>\
       <br>\
-      <b>FlatLaf téma:</b> <br>\
+      <b>FlatLaf tÃ©ma:</b> <br>\
 	FormDev Software (www.formdev.com/flatlaf)<br>\
       <br>\
-      <b>3D modellezés:</b> <br>\
+      <b>3D modellezÃ©s:</b> <br>\
       Renzo Del Fabbro, \
       Francisco Barala Faura <br>\
 		<br>\
 		<b>Apple Mac support:</b> <br>\
-		Andreas Güttinger, Randy Countryman
+		Andreas GÃ¼ttinger, Randy Countryman
 
 
-dialog.about.4 =  Java változat: %java.version% (%java.vendor%) <br>\
+dialog.about.4 =  Java vÃ¡ltozat: %java.version% (%java.vendor%) <br>\
           Java VM: %java.vm.version% %java.vm.info% (%java.vm.vendor%) <br>\
-          Futtatórendszer: %java.runtime.name% %java.runtime.version% <br>\
-          Grafikus környezet: %java.awt.graphicsenv% <br>\
+          FuttatÃ³rendszer: %java.runtime.name% %java.runtime.version% <br>\
+          Grafikus kÃ¶rnyezet: %java.awt.graphicsenv% <br>\
           AWT Toolkit: %awt.toolkit%<br>\
           Alapmappa: %java.home%<br>\
           <br>\
-          Összes memória: %maxmem%<br>\
-          Szabad memória: %freemem%<br>\
+          Ã–sszes memÃ³ria: %maxmem%<br>\
+          Szabad memÃ³ria: %freemem%<br>\
           <br>\
-          Operációs rendszer: %os.name%  %os.version% <br>\
+          OperÃ¡ciÃ³s rendszer: %os.name%  %os.version% <br>\
           Rendszer: %os.arch%
 
-dialog.about.5.no3d = A Java3D jelenleg nem elérhetõ
+dialog.about.5.no3d = A Java3D jelenleg nem elÃ©rhetÅ‘
 dialog.about.5.model =
 
 dialog.about.5.native = Native platform: &nbsp;
@@ -856,81 +856,81 @@ dialog.about.5.native.unknown = jelenleg ismeretlen
 #  Export/Print Dialog
 ##############################################################################
 
-dialog.export = Export & nyomtatás
+dialog.export = Export & nyomtatÃ¡s
 dialog.export.tab.1 = Kimenet
-dialog.export.tab.2 = Oldalbeállítás
-dialog.export.tab.3 = Stílusok
+dialog.export.tab.2 = OldalbeÃ¡llÃ­tÃ¡s
+dialog.export.tab.3 = StÃ­lusok
 
-dialog.export.print = Nyomtatás...
-dialog.export.save = Mentés
-dialog.export.saveas = Mentés másként...
-dialog.export.preview = Nyomtatási kép
-dialog.export.browser = Böngészõ nézet
+dialog.export.print = NyomtatÃ¡s...
+dialog.export.save = MentÃ©s
+dialog.export.saveas = MentÃ©s mÃ¡skÃ©nt...
+dialog.export.preview = NyomtatÃ¡si kÃ©p
+dialog.export.browser = BÃ¶ngÃ©szÅ‘ nÃ©zet
 
-dialog.export.paper = Papír
-dialog.export.orientation = Tájolás
-dialog.export.margins = Margók
+dialog.export.paper = PapÃ­r
+dialog.export.orientation = TÃ¡jolÃ¡s
+dialog.export.margins = MargÃ³k
 
-dialog.export.paper.format = Papír:
-dialog.export.paper.size = Nagyítás:
+dialog.export.paper.format = PapÃ­r:
+dialog.export.paper.size = NagyÃ­tÃ¡s:
 
 dialog.print.custom.paper = Egyedi
 
-dialog.export.margin.top = Felsõ:
-dialog.export.margin.bottom = Alsó:
+dialog.export.margin.top = FelsÅ‘:
+dialog.export.margin.bottom = AlsÃ³:
 dialog.export.margin.left = Bal:
 dialog.export.margin.right = Jobb:
 
-dialog.export.ori.port = Álló
-dialog.export.ori.land = Fekvõ
+dialog.export.ori.port = ÃllÃ³
+dialog.export.ori.land = FekvÅ‘
 
-dialog.export.games.0 = Nem adott meg egy játszmát sem nyomtatáshoz.
-dialog.export.games.1 = <b>Egy játszmát</b> adott meg nyomtatáshoz.
-dialog.export.games.n = <b>%n% játszmát</b> adott meg nyomtatáshoz.
-dialog.export.games.? = <b>Ismeretlen</b> számú játszmát adott meg nyomtatáshoz.
+dialog.export.games.0 = Nem adott meg egy jÃ¡tszmÃ¡t sem nyomtatÃ¡shoz.
+dialog.export.games.1 = <b>Egy jÃ¡tszmÃ¡t</b> adott meg nyomtatÃ¡shoz.
+dialog.export.games.n = <b>%n% jÃ¡tszmÃ¡t</b> adott meg nyomtatÃ¡shoz.
+dialog.export.games.? = <b>Ismeretlen</b> szÃ¡mÃº jÃ¡tszmÃ¡t adott meg nyomtatÃ¡shoz.
 
 dialog.export.confirm = Biztos benne?
 dialog.export.yes = Mindent nyomtat
 
 # xsl stylesheet options
 
-export.pgn = PGN fájl
-export.pgn.tip = A játszma exportálása Portable Game Notation fájlformátumba.
+export.pgn = PGN fÃ¡jl
+export.pgn.tip = A jÃ¡tszma exportÃ¡lÃ¡sa Portable Game Notation fÃ¡jlformÃ¡tumba.
 
-print.awt = Nyomtatás
-print.awt.tip = A képernyõn lévõ játszma kinyomtatása.<br> \
-            <li>Kattintson a <b>Nyomtatás...</b> gombra a kijelölt nyomtatóra nyomtatáshoz \
-            <li>Kattintson a <b>Nyomtatási kép</b> gombra a dokumentum megtekintéséhez
+print.awt = NyomtatÃ¡s
+print.awt.tip = A kÃ©pernyÅ‘n lÃ©vÅ‘ jÃ¡tszma kinyomtatÃ¡sa.<br> \
+            <li>Kattintson a <b>NyomtatÃ¡s...</b> gombra a kijelÃ¶lt nyomtatÃ³ra nyomtatÃ¡shoz \
+            <li>Kattintson a <b>NyomtatÃ¡si kÃ©p</b> gombra a dokumentum megtekintÃ©sÃ©hez
 
 xsl.html = HTML<br>Weblap
-xsl.html.tip = Weblap (HTML fájl) létrehozása.<br> \
-           <li>Kattintson a <b>Mentés másként...</b> gombra a fájlba mentéshez \
-           <li>Kattintson a <b>Böngészõ nézet</b> gombra a lap böngészõben való megtekintéséhez
+xsl.html.tip = Weblap (HTML fÃ¡jl) lÃ©trehozÃ¡sa.<br> \
+           <li>Kattintson a <b>MentÃ©s mÃ¡skÃ©nt...</b> gombra a fÃ¡jlba mentÃ©shez \
+           <li>Kattintson a <b>BÃ¶ngÃ©szÅ‘ nÃ©zet</b> gombra a lap bÃ¶ngÃ©szÅ‘ben valÃ³ megtekintÃ©sÃ©hez
 
 xsl.dhtml = Dinamikus<br>Web lap
-xsl.dhtml.tip = Weblap létrehozása <i>dinamikus</i> tartalommal.<br> \
-           <li>Kattintson a <b>Mentés másként...</b> gombra a fájlba mentéshez \
-           <li>Kattinston a <b>Böngészõ nézet</b> gombra a lap böngészõben való megtekintéséhez <br> \
-          A böngészõben engedélyezett kell legyen a JavaScript.
+xsl.dhtml.tip = Weblap lÃ©trehozÃ¡sa <i>dinamikus</i> tartalommal.<br> \
+           <li>Kattintson a <b>MentÃ©s mÃ¡skÃ©nt...</b> gombra a fÃ¡jlba mentÃ©shez \
+           <li>Kattinston a <b>BÃ¶ngÃ©szÅ‘ nÃ©zet</b> gombra a lap bÃ¶ngÃ©szÅ‘ben valÃ³ megtekintÃ©sÃ©hez <br> \
+          A bÃ¶ngÃ©szÅ‘ben engedÃ©lyezett kell legyen a JavaScript.
 
-xsl.debug = XML fájl<br>(hibakeresés)
-export.xml.tip = XML fájl létrhezoása hibakeresési célból.
+xsl.debug = XML fÃ¡jl<br>(hibakeresÃ©s)
+export.xml.tip = XML fÃ¡jl lÃ©trhezoÃ¡sa hibakeresÃ©si cÃ©lbÃ³l.
 
 xsl.pdf = PDF Print
-xsl.pdf.tip = PDF fájl létrehozása, vagy nyomtatása.<br> \
-        <li>Kattinston a <b>Mentés másként...</b> gombra a fájlba mentéshez \
-        <li>Kattinston a <b>Nyomtatás...</b> gombra a dokumentum kinyomtatásához \
-        <li>Kattinston a <b>Nyomtatási kép</b> gombra a dokumentum megtekintéséhez
+xsl.pdf.tip = PDF fÃ¡jl lÃ©trehozÃ¡sa, vagy nyomtatÃ¡sa.<br> \
+        <li>Kattinston a <b>MentÃ©s mÃ¡skÃ©nt...</b> gombra a fÃ¡jlba mentÃ©shez \
+        <li>Kattinston a <b>NyomtatÃ¡s...</b> gombra a dokumentum kinyomtatÃ¡sÃ¡hoz \
+        <li>Kattinston a <b>NyomtatÃ¡si kÃ©p</b> gombra a dokumentum megtekintÃ©sÃ©hez
 
-xsl.html.figs.tt = TrueType bábuk
-xsl.html.figs.img = Kép bábuk
-xsl.css.standalone = CSS stíluslap külön fájlban
+xsl.html.figs.tt = TrueType bÃ¡buk
+xsl.html.figs.img = KÃ©p bÃ¡buk
+xsl.css.standalone = CSS stÃ­luslap kÃ¼lÃ¶n fÃ¡jlban
 
-xsl.html.img.dir = Útvonal
-xsl.create.images = Képek létrehozása
+xsl.html.img.dir = Ãštvonal
+xsl.create.images = KÃ©pek lÃ©trehozÃ¡sa
 
-xsl.pdf.embed = TrueType betûkészletek beágyazása
-xsl.pdf.font.dir = További betûkészletek:
+xsl.pdf.embed = TrueType betÅ±kÃ©szletek beÃ¡gyazÃ¡sa
+xsl.pdf.font.dir = TovÃ¡bbi betÅ±kÃ©szletek:
 
 
 ##############################################################################
@@ -939,75 +939,75 @@ xsl.pdf.font.dir = További betûkészletek:
 
 print.preview.page.one =
 print.preview.page.two =
-print.preview.page.one.tip = Egy oldal mutatása
-print.preview.page.two.tip = Két oldal mutatása
+print.preview.page.one.tip = Egy oldal mutatÃ¡sa
+print.preview.page.two.tip = KÃ©t oldal mutatÃ¡sa
 
 print.preview.ori.land =
 print.preview.ori.port =
-print.preview.ori.land.tip = Fekvõ papír használata
-print.preview.ori.port.tip = Álló papír használata
+print.preview.ori.land.tip = FekvÅ‘ papÃ­r hasznÃ¡lata
+print.preview.ori.port.tip = ÃllÃ³ papÃ­r hasznÃ¡lata
 
 print.preview.fit.page = Teljes oldal
-print.preview.fit.width = Oldalszélesség
-print.preview.fit.textwidth = Szövegszélesség
+print.preview.fit.width = OldalszÃ©lessÃ©g
+print.preview.fit.textwidth = SzÃ¶vegszÃ©lessÃ©g
 
-print.preview.next.page = Következõ oldal
-print.preview.previous.page = Elõzõ oldal
+print.preview.next.page = KÃ¶vetkezÅ‘ oldal
+print.preview.previous.page = ElÅ‘zÅ‘ oldal
 
-preview.wait = Kis türelmet...
+preview.wait = Kis tÃ¼relmet...
 
 ##############################################################################
 #  Online Update Dialog
 ##############################################################################
 
-online.update.title = Online frissítés
-online.update.tab.1 = Új változat
-online.update.tab.2 = Újdonságok
-online.update.tab.3 = Fontos megjegyzések
+online.update.title = Online frissÃ­tÃ©s
+online.update.tab.1 = Ãšj vÃ¡ltozat
+online.update.tab.2 = ÃšjdonsÃ¡gok
+online.update.tab.3 = Fontos megjegyzÃ©sek
 
-update.install = Letöltés és telepítés most
-update.download = Letöltés most, telepítés késõbb
-update.mirror = Letöltés másik forrásból
+update.install = LetÃ¶ltÃ©s Ã©s telepÃ­tÃ©s most
+update.download = LetÃ¶ltÃ©s most, telepÃ­tÃ©s kÃ©sÅ‘bb
+update.mirror = LetÃ¶ltÃ©s mÃ¡sik forrÃ¡sbÃ³l
 
-download.file.progress = %file% letöltése
-download.file.title = Letöltés
-download.error.invalid.url = Érvénytelen URL: %p%.
-download.error.connect.fail = A kapcsolódás (%p%) nem sikerült.
-download.error.parse.xml = Feldolgozási hiba: %p%.
-download.error.version.missing = A változat nem megállapítható (%p%).
-download.error.os.missing = Az operációs rendszer nem támogatott.
-download.error.browser.fail = %p% nem megjeleníthetõ.
-download.error.update = Hiba történt a jose frissítése közben.\n Kérjük, frissítse saját kezûleg.
+download.file.progress = %file% letÃ¶ltÃ©se
+download.file.title = LetÃ¶ltÃ©s
+download.error.invalid.url = Ã‰rvÃ©nytelen URL: %p%.
+download.error.connect.fail = A kapcsolÃ³dÃ¡s (%p%) nem sikerÃ¼lt.
+download.error.parse.xml = FeldolgozÃ¡si hiba: %p%.
+download.error.version.missing = A vÃ¡ltozat nem megÃ¡llapÃ­thatÃ³ (%p%).
+download.error.os.missing = Az operÃ¡ciÃ³s rendszer nem tÃ¡mogatott.
+download.error.browser.fail = %p% nem megjelenÃ­thetÅ‘.
+download.error.update = Hiba tÃ¶rtÃ©nt a jose frissÃ­tÃ©se kÃ¶zben.\n KÃ©rjÃ¼k, frissÃ­tse sajÃ¡t kezÅ±leg.
 
-download.message.up.to.date = A telepített változat naprakész.
-download.message.success = A jose frissítése sikerült, %p% változatra\n. Kérjük, indítsa újra.
+download.message.up.to.date = A telepÃ­tett vÃ¡ltozat naprakÃ©sz.
+download.message.success = A jose frissÃ­tÃ©se sikerÃ¼lt, %p% vÃ¡ltozatra\n. KÃ©rjÃ¼k, indÃ­tsa Ãºjra.
 
 download.message = \
-  <b>%version%</b> változat elérhetõ: <br>\
+  <b>%version%</b> vÃ¡ltozat elÃ©rhetÅ‘: <br>\
   <font color =blue>%url%</font><br>\
-  Méret: %size%
+  MÃ©ret: %size%
 
-dialog.browser = Kérem, segítsen nekem a HTML böngészõ elindításában.\n Adja meg a böngészõt indító parancsot.
-dialog.browser.title = Böngészõ megadása
+dialog.browser = KÃ©rem, segÃ­tsen nekem a HTML bÃ¶ngÃ©szÅ‘ elindÃ­tÃ¡sÃ¡ban.\n Adja meg a bÃ¶ngÃ©szÅ‘t indÃ­tÃ³ parancsot.
+dialog.browser.title = BÃ¶ngÃ©szÅ‘ megadÃ¡sa
 
 # deprecated
-#online.report.title = Jelentés
-#online.report.bug = Hibajelentés
+#online.report.title = JelentÃ©s
+#online.report.bug = HibajelentÃ©s
 #online.report.feature = Feature Request
-#online.report.support = Támogatás igénylés
+#online.report.support = TÃ¡mogatÃ¡s igÃ©nylÃ©s
 
-#online.report.type = Típus:
-#online.report.subject = Tárgy:
-#online.report.description = Leírás:
+#online.report.type = TÃ­pus:
+#online.report.subject = TÃ¡rgy:
+#online.report.description = LeÃ­rÃ¡s:
 #online.report.email = Email:
 
-#online.report.default.subject = <tárgy>
-#online.report.default.description = <próbálja meg leírni a hibát okozó lépéseket>
-#online.report.default.email = <email cím - nem kötelezõ>
-#online.report.info = A jelentés címzettje http://jose-chess.sourceforge.net
+#online.report.default.subject = <tÃ¡rgy>
+#online.report.default.description = <prÃ³bÃ¡lja meg leÃ­rni a hibÃ¡t okozÃ³ lÃ©pÃ©seket>
+#online.report.default.email = <email cÃ­m - nem kÃ¶telezÅ‘>
+#online.report.info = A jelentÃ©s cÃ­mzettje http://jose-chess.sourceforge.net
 
-#online.report.success = A jelentés elküldése sikerült.
-#online.report.failed = A jelentés nem küldhetõ el.
+#online.report.success = A jelentÃ©s elkÃ¼ldÃ©se sikerÃ¼lt.
+#online.report.failed = A jelentÃ©s nem kÃ¼ldhetÅ‘ el.
 # deprecated
 
 
@@ -1015,47 +1015,47 @@ dialog.browser.title = Böngészõ megadása
 #   Error Messages
 ##########################################
 
-error.not.selected = Válasszon mentendõ játszmát.
-error.duplicate.database.access = Kérjük, ne futtassa a jose több példányát egyszerre \n\
-  és ugyanazon az adatbázison.\n\n\
-  Ez adatvesztéssel járhat. \n\
-  Lépjen ki a jose valamelyik példányából.
-error.lnf.not.supported = Ez a téma a jelenlegi rendszeren \n nem elérhetõ.
+error.not.selected = VÃ¡lasszon mentendÅ‘ jÃ¡tszmÃ¡t.
+error.duplicate.database.access = KÃ©rjÃ¼k, ne futtassa a jose tÃ¶bb pÃ©ldÃ¡nyÃ¡t egyszerre \n\
+  Ã©s ugyanazon az adatbÃ¡zison.\n\n\
+  Ez adatvesztÃ©ssel jÃ¡rhat. \n\
+  LÃ©pjen ki a jose valamelyik pÃ©ldÃ¡nyÃ¡bÃ³l.
+error.lnf.not.supported = Ez a tÃ©ma a jelenlegi rendszeren \n nem elÃ©rhetÅ‘.
 
-error.bad.uci = Úgy tûnik, ez nem UCI motor.\n Biztos benne?
+error.bad.uci = Ãšgy tÅ±nik, ez nem UCI motor.\n Biztos benne?
 
-error.bug = <center><b>Váratlan hiba történt.</b></center><br><br> \
- Hasznos lenne, ha hibajelentést küldene.<br>\
- Próbálja meg leírni a hibához vezetõ lépéseket <br>\
- és csatolja ezt a fájlt a jelentéshez: <br>\
+error.bug = <center><b>VÃ¡ratlan hiba tÃ¶rtÃ©nt.</b></center><br><br> \
+ Hasznos lenne, ha hibajelentÃ©st kÃ¼ldene.<br>\
+ PrÃ³bÃ¡lja meg leÃ­rni a hibÃ¡hoz vezetÅ‘ lÃ©pÃ©seket <br>\
+ Ã©s csatolja ezt a fÃ¡jlt a jelentÃ©shez: <br>\
   <center><b> %error.log% </b></center>
 
 # errors in setup dialog
 
-pos.error.white.king.missing = A világos király hiányzik.
-pos.error.black.king.missing = A sötét király hiányzik.
-pos.error.too.many.white.kings = Túl sok világos király.
-pos.error.too.many.black.kings = Túl sok sötét király.
-pos.error.white.king.checked = A világos király nem állhat sakkban.
-pos.error.black.king.checked = A sötét király nem állhat sakkban.
-pos.error.white.pawn.base = Világos gyalog nem helyezhetõ az elsõ sorba.
-pos.error.white.pawn.promo = Világos gyalog nem helyezhetõ a nyolcadik sorba.
-pos.error.black.pawn.base = Sötét gyalog nem helyezhetõ a nyolcadik sorba.
-pos.error.black.pawn.promo = Sötét gyalog nem helyezhetõ az elsõ sorba.
-pos.warning.too.many.white.pieces = Túl sok világos báb.
-pos.warning.too.many.black.pieces = Túl sok sötét báb.
-pos.warning.too.many.white.pawns = Túl sok világos gyalog.
-pos.warning.too.many.black.pawns = Túl sok sötét gyalog.
-pos.warning.too.many.white.knights = Túl sok világos huszár.
-pos.warning.too.many.black.knights = Túl sok sötét huszár.
-pos.warning.too.many.white.bishops = Túl sok világos futó.
-pos.warning.too.many.black.bishops = Túl sok sötét futó.
-pos.warning.too.many.white.rooks = Túl sok világos bástya.
-pos.warning.too.many.black.rooks = Túl sok sötét bástya.
-pos.warning.too.many.white.queens = Túl sok világos vezér.
-pos.warning.too.many.black.queens = Túl sok sötét vezér.
-pos.warning.strange.white.bishops = Világos futók azonos színû mezõn?
-pos.warning.strange.black.bishops = Sötét futók azonos színû mezõn?
+pos.error.white.king.missing = A vilÃ¡gos kirÃ¡ly hiÃ¡nyzik.
+pos.error.black.king.missing = A sÃ¶tÃ©t kirÃ¡ly hiÃ¡nyzik.
+pos.error.too.many.white.kings = TÃºl sok vilÃ¡gos kirÃ¡ly.
+pos.error.too.many.black.kings = TÃºl sok sÃ¶tÃ©t kirÃ¡ly.
+pos.error.white.king.checked = A vilÃ¡gos kirÃ¡ly nem Ã¡llhat sakkban.
+pos.error.black.king.checked = A sÃ¶tÃ©t kirÃ¡ly nem Ã¡llhat sakkban.
+pos.error.white.pawn.base = VilÃ¡gos gyalog nem helyezhetÅ‘ az elsÅ‘ sorba.
+pos.error.white.pawn.promo = VilÃ¡gos gyalog nem helyezhetÅ‘ a nyolcadik sorba.
+pos.error.black.pawn.base = SÃ¶tÃ©t gyalog nem helyezhetÅ‘ a nyolcadik sorba.
+pos.error.black.pawn.promo = SÃ¶tÃ©t gyalog nem helyezhetÅ‘ az elsÅ‘ sorba.
+pos.warning.too.many.white.pieces = TÃºl sok vilÃ¡gos bÃ¡b.
+pos.warning.too.many.black.pieces = TÃºl sok sÃ¶tÃ©t bÃ¡b.
+pos.warning.too.many.white.pawns = TÃºl sok vilÃ¡gos gyalog.
+pos.warning.too.many.black.pawns = TÃºl sok sÃ¶tÃ©t gyalog.
+pos.warning.too.many.white.knights = TÃºl sok vilÃ¡gos huszÃ¡r.
+pos.warning.too.many.black.knights = TÃºl sok sÃ¶tÃ©t huszÃ¡r.
+pos.warning.too.many.white.bishops = TÃºl sok vilÃ¡gos futÃ³.
+pos.warning.too.many.black.bishops = TÃºl sok sÃ¶tÃ©t futÃ³.
+pos.warning.too.many.white.rooks = TÃºl sok vilÃ¡gos bÃ¡stya.
+pos.warning.too.many.black.rooks = TÃºl sok sÃ¶tÃ©t bÃ¡stya.
+pos.warning.too.many.white.queens = TÃºl sok vilÃ¡gos vezÃ©r.
+pos.warning.too.many.black.queens = TÃºl sok sÃ¶tÃ©t vezÃ©r.
+pos.warning.strange.white.bishops = VilÃ¡gos futÃ³k azonos szÃ­nÅ± mezÅ‘n?
+pos.warning.strange.black.bishops = SÃ¶tÃ©t futÃ³k azonos szÃ­nÅ± mezÅ‘n?
 
 
 ##############################################################################
@@ -1063,37 +1063,37 @@ pos.warning.strange.black.bishops = Sötét futók azonos színû mezõn?
 ##############################################################################
 
 
-base = Alap stílus
-header = Játszma adatok
-header.event = Játszmák
-header.site = Helyszín
-header.date = Dátum
-header.round = Forduló
-header.white = Világos játékos
-header.black = Sötét játékos
-header.result = Játszma eredménye
-body = Játszma szöveg
-body.line = Lépések
-body.line.0 = Fõ sor
-body.line.1 = Variáció
-body.line.2 = Alvariáció
-body.line.3 = 2. alvariáció
-body.line.4 = 3. alvariáció
+base = Alap stÃ­lus
+header = JÃ¡tszma adatok
+header.event = JÃ¡tszmÃ¡k
+header.site = HelyszÃ­n
+header.date = DÃ¡tum
+header.round = FordulÃ³
+header.white = VilÃ¡gos jÃ¡tÃ©kos
+header.black = SÃ¶tÃ©t jÃ¡tÃ©kos
+header.result = JÃ¡tszma eredmÃ©nye
+body = JÃ¡tszma szÃ¶veg
+body.line = LÃ©pÃ©sek
+body.line.0 = FÅ‘ sor
+body.line.1 = VariÃ¡ciÃ³
+body.line.2 = AlvariÃ¡ciÃ³
+body.line.3 = 2. alvariÃ¡ciÃ³
+body.line.4 = 3. alvariÃ¡ciÃ³
 body.symbol = Jelek
-body.inline = Szöveges diagram
-body.figurine = Bábuk
-body.figurine.0 = Fõ sor
-body.figurine.1 = Variáció
-body.figurine.2 = Alvariáció
-body.figurine.3 = 2. alvariáció
-body.figurine.4 = 3. alvariáció
-body.comment = Megjegyzések
-body.comment.0 = Fõ sor
-body.comment.1 = Variáció
-body.comment.2 = Alvariáció
-body.comment.3 = 2. alvariáció
-body.comment.4 = 3. alvariáció
-body.result = Eredmény
+body.inline = SzÃ¶veges diagram
+body.figurine = BÃ¡buk
+body.figurine.0 = FÅ‘ sor
+body.figurine.1 = VariÃ¡ciÃ³
+body.figurine.2 = AlvariÃ¡ciÃ³
+body.figurine.3 = 2. alvariÃ¡ciÃ³
+body.figurine.4 = 3. alvariÃ¡ciÃ³
+body.comment = MegjegyzÃ©sek
+body.comment.0 = FÅ‘ sor
+body.comment.1 = VariÃ¡ciÃ³
+body.comment.2 = AlvariÃ¡ciÃ³
+body.comment.3 = 2. alvariÃ¡ciÃ³
+body.comment.4 = 3. alvariÃ¡ciÃ³
+body.result = EredmÃ©ny
 html.large = Diagram weblapon
 
 
@@ -1101,14 +1101,14 @@ html.large = Diagram weblapon
 #  Task Dialogs (progress)
 ##############################################################################
 
-dialog.progress.time = hátravan: %time%
+dialog.progress.time = hÃ¡travan: %time%
 
-dialog.read-progress.title = jose - fájl beolvasása
-dialog.read-progress.text = %fileName% olvasása
+dialog.read-progress.title = jose - fÃ¡jl beolvasÃ¡sa
+dialog.read-progress.text = %fileName% olvasÃ¡sa
 
-dialog.eco = ECO osztályozás
-dialog.eco.clobber.eco = ECO kódok felülírása
-dialog.eco.clobber.name = Megnyitás nevek felülírása
+dialog.eco = ECO osztÃ¡lyozÃ¡s
+dialog.eco.clobber.eco = ECO kÃ³dok felÃ¼lÃ­rÃ¡sa
+dialog.eco.clobber.name = MegnyitÃ¡s nevek felÃ¼lÃ­rÃ¡sa
 dialog.eco.language = Nyelv:
 
 
@@ -1137,7 +1137,7 @@ fig.es = PCATDR
 fig.ca = PCATDR
 fig.sv = BSLTDK
 # Windows-1251 encoding (russian)
-fig.ru = ÏÑÊËÔ"Êğ"
+fig.ru = ÄÅƒÄ˜Ã‹Ã”"Ä˜Ä‘"
 # please note that Russians use the latin alphabet for files (a,b,c,d,e,f,g,h)
 # (so we don't have to care about that ;-)
 
@@ -1146,218 +1146,218 @@ fig.ru = ÏÑÊËÔ"Êğ"
 ##############################################################################
 
 lang.cs = cseh
-lang.da = dán
+lang.da = dÃ¡n
 lang.nl = holland
 lang.en = angol
-lang.et = észt
+lang.et = Ã©szt
 lang.fi = finn
 lang.fr = francia
-lang.de = német
+lang.de = nÃ©met
 lang.hu = magyar
 lang.is = izlandi
 lang.it = olasz
-lang.no = norvég
+lang.no = norvÃ©g
 lang.pl = lengyel
-lang.pt = portugál
-lang.ro = román
+lang.pt = portugÃ¡l
+lang.ro = romÃ¡n
 lang.es = spanyol
-lang.ca = katalán
-lang.sv = svéd
+lang.ca = katalÃ¡n
+lang.sv = svÃ©d
 lang.ru = orosz
-lang.he = héber
+lang.he = hÃ©ber
 
 
 ##############################################################################
 #  PGN Annotations
 ##############################################################################
 
-pgn.nag.0 = nincs megjegyzés
+pgn.nag.0 = nincs megjegyzÃ©s
 pgn.nag.1 = !
-pgn.nag.1.tip = jó lépés
+pgn.nag.1.tip = jÃ³ lÃ©pÃ©s
 pgn.nag.2 =?
-pgn.nag.2.tip = gyenge lépés
+pgn.nag.2.tip = gyenge lÃ©pÃ©s
 pgn.nag.3 = !!
-pgn.nag.3.tip = nagyon jó lépés
+pgn.nag.3.tip = nagyon jÃ³ lÃ©pÃ©s
 pgn.nag.4 =??
-pgn.nag.4.tip = nagyon gyenge lépés
+pgn.nag.4.tip = nagyon gyenge lÃ©pÃ©s
 pgn.nag.5 = !?
-pgn.nag.5.tip = érdekes lépés
+pgn.nag.5.tip = Ã©rdekes lÃ©pÃ©s
 pgn.nag.6 =?!
-pgn.nag.6.tip = megkérdõjelezhetõ lépés
-pgn.nag.7 = kényszerlépés
-pgn.nag.7.tip = kényszerlépés (minden más lépés rontana a helyzeten)
-pgn.nag.8 = egy lehetõség
-pgn.nag.8.tip = egy lehetõség (nincs más értelmes lépés)
-pgn.nag.9 = a legrosszabb lépés
-pgn.nag.10.tip = döntetlen állás
-pgn.nag.11.tip = egyenlõ esélyek, nyugodt állás
-pgn.nag.12.tip = egyenlõ esélyek, élénk állás
+pgn.nag.6.tip = megkÃ©rdÅ‘jelezhetÅ‘ lÃ©pÃ©s
+pgn.nag.7 = kÃ©nyszerlÃ©pÃ©s
+pgn.nag.7.tip = kÃ©nyszerlÃ©pÃ©s (minden mÃ¡s lÃ©pÃ©s rontana a helyzeten)
+pgn.nag.8 = egy lehetÅ‘sÃ©g
+pgn.nag.8.tip = egy lehetÅ‘sÃ©g (nincs mÃ¡s Ã©rtelmes lÃ©pÃ©s)
+pgn.nag.9 = a legrosszabb lÃ©pÃ©s
+pgn.nag.10.tip = dÃ¶ntetlen Ã¡llÃ¡s
+pgn.nag.11.tip = egyenlÅ‘ esÃ©lyek, nyugodt Ã¡llÃ¡s
+pgn.nag.12.tip = egyenlÅ‘ esÃ©lyek, Ã©lÃ©nk Ã¡llÃ¡s
 pgn.nag.13 = bizonytalan
-pgn.nag.13.tip = bizonytalan állás
+pgn.nag.13.tip = bizonytalan Ã¡llÃ¡s
 pgn.nag.14 = + =
-pgn.nag.14.tip = Világosnak enyhe fölénye van
+pgn.nag.14.tip = VilÃ¡gosnak enyhe fÃ¶lÃ©nye van
 pgn.nag.15 = =+
-pgn.nag.15.tip = Sötétnek enyhe fölénye van
+pgn.nag.15.tip = SÃ¶tÃ©tnek enyhe fÃ¶lÃ©nye van
 pgn.nag.16 = +/-
-pgn.nag.16.tip = Világosnak mérsékelt fölénye van
+pgn.nag.16.tip = VilÃ¡gosnak mÃ©rsÃ©kelt fÃ¶lÃ©nye van
 pgn.nag.17 = -/+
-pgn.nag.17.tip = Sötétnek mérsékelt fölénye van
+pgn.nag.17.tip = SÃ¶tÃ©tnek mÃ©rsÃ©kelt fÃ¶lÃ©nye van
 pgn.nag.18 = +-
-pgn.nag.18.tip = Világosnak döntõ fölénye van
+pgn.nag.18.tip = VilÃ¡gosnak dÃ¶ntÅ‘ fÃ¶lÃ©nye van
 pgn.nag.19 = -+
-pgn.nag.19.tip = Sötétnek döntõ fölénye van
-pgn.nag.20 = Világosnak lehengerlõ fölénye van (sötétnek fel kellene adnia)
-pgn.nag.21 = Sötétnek lehengerlõ fölénye van (világosnak fel kellene adnia)
-pgn.nag.22 = Világos lépéskényszerben van
-pgn.nag.23 = Sötét lépéskényszerben van
-pgn.nag.24 = Világosnak enyhe terület fölénye van
-pgn.nag.25 = Sötétnek enyhe terület fölénye van
-pgn.nag.26 = Világosnak mérsékelt terület fölénye van
-pgn.nag.27 = Sötétnek mérsékelt terület fölénye van
-pgn.nag.28 = Világosnak döntõ terület fölénye van
-pgn.nag.29 = Sötétnek döntõ terület fölénye van
-pgn.nag.30 = Világosnak enyhe idõ (fejlõdés) fölénye van
-pgn.nag.31 = Sötétnek enyhe idõ (fejlõdés) fölénye van
-pgn.nag.32 = Világosnak mérsékelt idõ (fejlõdés) fölénye van
-pgn.nag.33 = Sötétnek mérsékelt idõ (fejlõdés) fölénye van
-pgn.nag.34 = Világosnak döntõ idõ (fejlõdés) fölénye van
-pgn.nag.35 = Sötétnek döntõ idõ (fejlõdés) fölénye van
-pgn.nag.36 = Világos a kezdeményezõ
-pgn.nag.37 = Sötét a kezdeményezõ
-pgn.nag.38 = Világos tartós kezdeményezõ
-pgn.nag.39 = Sötét tartós kezdeményezõ
-pgn.nag.40 = Világosnak támad
-pgn.nag.41 = Sötétnek támad
-pgn.nag.42 = Világos nem képes ellensúlyozni anyagi hátrányát
-pgn.nag.43 = Sötét nem képes ellensúlyozni anyagi hátrányát
-pgn.nag.44 = Világos képes ellensúlyozni anyagi hátrányát
-pgn.nag.45 = Sötétképes ellensúlyozni anyagi hátrányát
-pgn.nag.46 = Világos bõven képes ellensúlyozni anyagi hátrányát
-pgn.nag.47 = Sötét bõven képes ellensúlyozni anyagi hátrányát
-pgn.nag.48 = Világosnak enyhe közép fölénye van
-pgn.nag.49 = Sötétnek enyhe közép fölénye van
-pgn.nag.50 = Világosnak mérsékelt közép fölénye van
-pgn.nag.51 = Sötétnek mérsékelt közép fölénye van
-pgn.nag.52 = Világosnak döntõ közép fölénye van
-pgn.nag.53 = Sötétnek döntõ közép fölénye van
-pgn.nag.54 = Világosnak enyhe királyoldali fölénye van
-pgn.nag.55 = Sötétnek enyhe királyoldali fölénye van
-pgn.nag.56 = Világosnak mérsékelt királyoldali fölénye van
-pgn.nag.57 = Sötétnek mérsékelt királyoldali fölénye van
-pgn.nag.58 = Világosnak döntõ királyoldali fölénye van
-pgn.nag.59 = Sötétnek döntõ királyoldali fölénye van
-pgn.nag.60 = Világosnak enyhe vezéroldali fölénye van
-pgn.nag.61 = Sötétnek enyhe vezéroldali fölénye van
-pgn.nag.62 = Világosnak mérsékelt vezéroldali fölénye van
-pgn.nag.63 = Sötétnek mérsékelt vezéroldali fölénye van
-pgn.nag.64 = Világosnak döntõ vezéroldali fölénye van
-pgn.nag.65 = Sötétnek döntõ vezéroldali fölénye van
-pgn.nag.66 = Világosnak sebezhetõ elsõ sora van
-pgn.nag.67 = Sötétnek sebezhetõ elsõ sora van
-pgn.nag.68 = Világosnak jól védett elsõ sora van
-pgn.nag.69 = Sötétnek jól védett elsõ sora van
-pgn.nag.70 = Világosnak alig védett királya van
-pgn.nag.71 = Sötétnek alig védett királya van
-pgn.nag.72 = Világosnak jól védett királya van
-pgn.nag.73 = Sötétnek jól védett királya van
-pgn.nag.74 = Világosnak gyengén álló királya van
-pgn.nag.75 = Sötétnek gyengén álló királya van
-pgn.nag.76 = Világosnak jól álló királya van
-pgn.nag.77 = Sötétnek jól álló királya van
-pgn.nag.78 = Világosnak nagyon gyenge gyalog szerkezete van
-pgn.nag.79 = Sötétnek nagyon gyenge gyalog szerkezete van
-pgn.nag.80 = Világosnak mérsékelten gyenge gyalog szerkezete van
-pgn.nag.81 = Sötétnek mérsékelten gyenge gyalog szerkezete van
-pgn.nag.82 = Világosnak mérsékelten erõs gyalog szerkezete van
-pgn.nag.83 = Sötétnek mérsékelten erõs gyalog szerkezete van
-pgn.nag.84 = Világosnak nagyon erõs gyalog szerkezete van
-pgn.nag.85 = Sötétnek nagyon erõs gyalog szerkezete van
-pgn.nag.86 = Világos huszára gyengén helyezkedik
-pgn.nag.87 = Sötét huszára gyengén helyezkedik
-pgn.nag.88 = Világos huszára jól helyezkedik
-pgn.nag.89 = Sötét huszára jól helyezkedik
-pgn.nag.90 = Világos futója gyengén helyezkedik
-pgn.nag.91 = Sötét futója gyengén helyezkedik
-pgn.nag.92 = Világos futója jól helyezkedik
-pgn.nag.93 = Sötét  futója jól helyezkedik
-pgn.nag.94 = Világos bástyája gyengén helyezkedik
-pgn.nag.95 = Sötét bástyája gyengén helyezkedik
-pgn.nag.96 = Világos bástyája jól helyezkedik
-pgn.nag.97 = Sötét bástyája jól helyezkedik
-pgn.nag.98 = Világos vezére gyengén helyezkedik
-pgn.nag.99 = Sötét vezére gyengén helyezkedik
-pgn.nag.100 = Világos vezére jól helyezkedik
-pgn.nag.101 = Sötét vezére jól helyezkedik
-pgn.nag.102 = Világos gyenge báb összhang
-pgn.nag.103 = Sötét gyenge báb összhang
-pgn.nag.104 = Világos jó báb összhang
-pgn.nag.105 = Sötét jó báb összhang
-pgn.nag.106 = Világos a megnyitást nagyon gyengén játsza
-pgn.nag.107 = Sötét a megnyitást nagyon gyengén játsza
-pgn.nag.108 = Világos a megnyitást gyengén játsza
-pgn.nag.109 = Sötét a megnyitást gyengén játsza
-pgn.nag.110 = Világos a megnyitást jól játsza
-pgn.nag.111 = Sötét a megnyitást jól játsza
-pgn.nag.112 = Világos a megnyitást nagyon jól játsza
-pgn.nag.113 = Sötét a megnyitást nagyon jól játsza
-pgn.nag.114 = Világos a középjátékot nagyon gyengén játsza
-pgn.nag.115 = Sötét a középjátékot nagyon gyengén játsza
-pgn.nag.116 = Világos a középjátékot gyengén játsza
-pgn.nag.117 = Sötét a középjátékot gyengén játsza
-pgn.nag.118 = Világos a középjátékot jól játsza
-pgn.nag.119 = Sötét a középjátékot jól játsza
-pgn.nag.120 = Világos a középjátékot nagyon jól játsza
-pgn.nag.121 = Sötét a középjátékot nagyon jól játsza
-pgn.nag.122 = Világos a végjátékot nagyon gyengén játsza
-pgn.nag.123 = Sötét a végjátékot nagyon gyengén játsza
-pgn.nag.124 = Világos a végjátékot gyengén játsza
-pgn.nag.125 = Sötét a végjátékot gyengén játsza
-pgn.nag.126 = Világos a végjátékot jól játsza
-pgn.nag.127 = Sötét a végjátékot jól játsza
-pgn.nag.128 = Világos a végjátékot nagyon jól játsza
-pgn.nag.129 = Sötét a végjátékot nagyon jól játsza
-pgn.nag.130 = Világos enyhe ellentámadása
-pgn.nag.131 = Sötét enyhe ellentámadása
-pgn.nag.132 = Világos mérsékelt ellentámadása
-pgn.nag.133 = Sötét mérsékelt ellentámadása
-pgn.nag.134 = Világos döntõ ellentámadása
-pgn.nag.135 = Sötét döntõ ellentámadása
-pgn.nag.136 = Világos mérsékelt idõzavarban van
-pgn.nag.137 = Sötét mérsékelt idõzavarban van
-pgn.nag.138 = Világos komoly idõzavarban van
-pgn.nag.139 = Sötét komoly idõzavarban van
+pgn.nag.19.tip = SÃ¶tÃ©tnek dÃ¶ntÅ‘ fÃ¶lÃ©nye van
+pgn.nag.20 = VilÃ¡gosnak lehengerlÅ‘ fÃ¶lÃ©nye van (sÃ¶tÃ©tnek fel kellene adnia)
+pgn.nag.21 = SÃ¶tÃ©tnek lehengerlÅ‘ fÃ¶lÃ©nye van (vilÃ¡gosnak fel kellene adnia)
+pgn.nag.22 = VilÃ¡gos lÃ©pÃ©skÃ©nyszerben van
+pgn.nag.23 = SÃ¶tÃ©t lÃ©pÃ©skÃ©nyszerben van
+pgn.nag.24 = VilÃ¡gosnak enyhe terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.25 = SÃ¶tÃ©tnek enyhe terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.26 = VilÃ¡gosnak mÃ©rsÃ©kelt terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.27 = SÃ¶tÃ©tnek mÃ©rsÃ©kelt terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.28 = VilÃ¡gosnak dÃ¶ntÅ‘ terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.29 = SÃ¶tÃ©tnek dÃ¶ntÅ‘ terÃ¼let fÃ¶lÃ©nye van
+pgn.nag.30 = VilÃ¡gosnak enyhe idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.31 = SÃ¶tÃ©tnek enyhe idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.32 = VilÃ¡gosnak mÃ©rsÃ©kelt idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.33 = SÃ¶tÃ©tnek mÃ©rsÃ©kelt idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.34 = VilÃ¡gosnak dÃ¶ntÅ‘ idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.35 = SÃ¶tÃ©tnek dÃ¶ntÅ‘ idÅ‘ (fejlÅ‘dÃ©s) fÃ¶lÃ©nye van
+pgn.nag.36 = VilÃ¡gos a kezdemÃ©nyezÅ‘
+pgn.nag.37 = SÃ¶tÃ©t a kezdemÃ©nyezÅ‘
+pgn.nag.38 = VilÃ¡gos tartÃ³s kezdemÃ©nyezÅ‘
+pgn.nag.39 = SÃ¶tÃ©t tartÃ³s kezdemÃ©nyezÅ‘
+pgn.nag.40 = VilÃ¡gosnak tÃ¡mad
+pgn.nag.41 = SÃ¶tÃ©tnek tÃ¡mad
+pgn.nag.42 = VilÃ¡gos nem kÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.43 = SÃ¶tÃ©t nem kÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.44 = VilÃ¡gos kÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.45 = SÃ¶tÃ©tkÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.46 = VilÃ¡gos bÅ‘ven kÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.47 = SÃ¶tÃ©t bÅ‘ven kÃ©pes ellensÃºlyozni anyagi hÃ¡trÃ¡nyÃ¡t
+pgn.nag.48 = VilÃ¡gosnak enyhe kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.49 = SÃ¶tÃ©tnek enyhe kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.50 = VilÃ¡gosnak mÃ©rsÃ©kelt kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.51 = SÃ¶tÃ©tnek mÃ©rsÃ©kelt kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.52 = VilÃ¡gosnak dÃ¶ntÅ‘ kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.53 = SÃ¶tÃ©tnek dÃ¶ntÅ‘ kÃ¶zÃ©p fÃ¶lÃ©nye van
+pgn.nag.54 = VilÃ¡gosnak enyhe kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.55 = SÃ¶tÃ©tnek enyhe kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.56 = VilÃ¡gosnak mÃ©rsÃ©kelt kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.57 = SÃ¶tÃ©tnek mÃ©rsÃ©kelt kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.58 = VilÃ¡gosnak dÃ¶ntÅ‘ kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.59 = SÃ¶tÃ©tnek dÃ¶ntÅ‘ kirÃ¡lyoldali fÃ¶lÃ©nye van
+pgn.nag.60 = VilÃ¡gosnak enyhe vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.61 = SÃ¶tÃ©tnek enyhe vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.62 = VilÃ¡gosnak mÃ©rsÃ©kelt vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.63 = SÃ¶tÃ©tnek mÃ©rsÃ©kelt vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.64 = VilÃ¡gosnak dÃ¶ntÅ‘ vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.65 = SÃ¶tÃ©tnek dÃ¶ntÅ‘ vezÃ©roldali fÃ¶lÃ©nye van
+pgn.nag.66 = VilÃ¡gosnak sebezhetÅ‘ elsÅ‘ sora van
+pgn.nag.67 = SÃ¶tÃ©tnek sebezhetÅ‘ elsÅ‘ sora van
+pgn.nag.68 = VilÃ¡gosnak jÃ³l vÃ©dett elsÅ‘ sora van
+pgn.nag.69 = SÃ¶tÃ©tnek jÃ³l vÃ©dett elsÅ‘ sora van
+pgn.nag.70 = VilÃ¡gosnak alig vÃ©dett kirÃ¡lya van
+pgn.nag.71 = SÃ¶tÃ©tnek alig vÃ©dett kirÃ¡lya van
+pgn.nag.72 = VilÃ¡gosnak jÃ³l vÃ©dett kirÃ¡lya van
+pgn.nag.73 = SÃ¶tÃ©tnek jÃ³l vÃ©dett kirÃ¡lya van
+pgn.nag.74 = VilÃ¡gosnak gyengÃ©n Ã¡llÃ³ kirÃ¡lya van
+pgn.nag.75 = SÃ¶tÃ©tnek gyengÃ©n Ã¡llÃ³ kirÃ¡lya van
+pgn.nag.76 = VilÃ¡gosnak jÃ³l Ã¡llÃ³ kirÃ¡lya van
+pgn.nag.77 = SÃ¶tÃ©tnek jÃ³l Ã¡llÃ³ kirÃ¡lya van
+pgn.nag.78 = VilÃ¡gosnak nagyon gyenge gyalog szerkezete van
+pgn.nag.79 = SÃ¶tÃ©tnek nagyon gyenge gyalog szerkezete van
+pgn.nag.80 = VilÃ¡gosnak mÃ©rsÃ©kelten gyenge gyalog szerkezete van
+pgn.nag.81 = SÃ¶tÃ©tnek mÃ©rsÃ©kelten gyenge gyalog szerkezete van
+pgn.nag.82 = VilÃ¡gosnak mÃ©rsÃ©kelten erÅ‘s gyalog szerkezete van
+pgn.nag.83 = SÃ¶tÃ©tnek mÃ©rsÃ©kelten erÅ‘s gyalog szerkezete van
+pgn.nag.84 = VilÃ¡gosnak nagyon erÅ‘s gyalog szerkezete van
+pgn.nag.85 = SÃ¶tÃ©tnek nagyon erÅ‘s gyalog szerkezete van
+pgn.nag.86 = VilÃ¡gos huszÃ¡ra gyengÃ©n helyezkedik
+pgn.nag.87 = SÃ¶tÃ©t huszÃ¡ra gyengÃ©n helyezkedik
+pgn.nag.88 = VilÃ¡gos huszÃ¡ra jÃ³l helyezkedik
+pgn.nag.89 = SÃ¶tÃ©t huszÃ¡ra jÃ³l helyezkedik
+pgn.nag.90 = VilÃ¡gos futÃ³ja gyengÃ©n helyezkedik
+pgn.nag.91 = SÃ¶tÃ©t futÃ³ja gyengÃ©n helyezkedik
+pgn.nag.92 = VilÃ¡gos futÃ³ja jÃ³l helyezkedik
+pgn.nag.93 = SÃ¶tÃ©t  futÃ³ja jÃ³l helyezkedik
+pgn.nag.94 = VilÃ¡gos bÃ¡styÃ¡ja gyengÃ©n helyezkedik
+pgn.nag.95 = SÃ¶tÃ©t bÃ¡styÃ¡ja gyengÃ©n helyezkedik
+pgn.nag.96 = VilÃ¡gos bÃ¡styÃ¡ja jÃ³l helyezkedik
+pgn.nag.97 = SÃ¶tÃ©t bÃ¡styÃ¡ja jÃ³l helyezkedik
+pgn.nag.98 = VilÃ¡gos vezÃ©re gyengÃ©n helyezkedik
+pgn.nag.99 = SÃ¶tÃ©t vezÃ©re gyengÃ©n helyezkedik
+pgn.nag.100 = VilÃ¡gos vezÃ©re jÃ³l helyezkedik
+pgn.nag.101 = SÃ¶tÃ©t vezÃ©re jÃ³l helyezkedik
+pgn.nag.102 = VilÃ¡gos gyenge bÃ¡b Ã¶sszhang
+pgn.nag.103 = SÃ¶tÃ©t gyenge bÃ¡b Ã¶sszhang
+pgn.nag.104 = VilÃ¡gos jÃ³ bÃ¡b Ã¶sszhang
+pgn.nag.105 = SÃ¶tÃ©t jÃ³ bÃ¡b Ã¶sszhang
+pgn.nag.106 = VilÃ¡gos a megnyitÃ¡st nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.107 = SÃ¶tÃ©t a megnyitÃ¡st nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.108 = VilÃ¡gos a megnyitÃ¡st gyengÃ©n jÃ¡tsza
+pgn.nag.109 = SÃ¶tÃ©t a megnyitÃ¡st gyengÃ©n jÃ¡tsza
+pgn.nag.110 = VilÃ¡gos a megnyitÃ¡st jÃ³l jÃ¡tsza
+pgn.nag.111 = SÃ¶tÃ©t a megnyitÃ¡st jÃ³l jÃ¡tsza
+pgn.nag.112 = VilÃ¡gos a megnyitÃ¡st nagyon jÃ³l jÃ¡tsza
+pgn.nag.113 = SÃ¶tÃ©t a megnyitÃ¡st nagyon jÃ³l jÃ¡tsza
+pgn.nag.114 = VilÃ¡gos a kÃ¶zÃ©pjÃ¡tÃ©kot nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.115 = SÃ¶tÃ©t a kÃ¶zÃ©pjÃ¡tÃ©kot nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.116 = VilÃ¡gos a kÃ¶zÃ©pjÃ¡tÃ©kot gyengÃ©n jÃ¡tsza
+pgn.nag.117 = SÃ¶tÃ©t a kÃ¶zÃ©pjÃ¡tÃ©kot gyengÃ©n jÃ¡tsza
+pgn.nag.118 = VilÃ¡gos a kÃ¶zÃ©pjÃ¡tÃ©kot jÃ³l jÃ¡tsza
+pgn.nag.119 = SÃ¶tÃ©t a kÃ¶zÃ©pjÃ¡tÃ©kot jÃ³l jÃ¡tsza
+pgn.nag.120 = VilÃ¡gos a kÃ¶zÃ©pjÃ¡tÃ©kot nagyon jÃ³l jÃ¡tsza
+pgn.nag.121 = SÃ¶tÃ©t a kÃ¶zÃ©pjÃ¡tÃ©kot nagyon jÃ³l jÃ¡tsza
+pgn.nag.122 = VilÃ¡gos a vÃ©gjÃ¡tÃ©kot nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.123 = SÃ¶tÃ©t a vÃ©gjÃ¡tÃ©kot nagyon gyengÃ©n jÃ¡tsza
+pgn.nag.124 = VilÃ¡gos a vÃ©gjÃ¡tÃ©kot gyengÃ©n jÃ¡tsza
+pgn.nag.125 = SÃ¶tÃ©t a vÃ©gjÃ¡tÃ©kot gyengÃ©n jÃ¡tsza
+pgn.nag.126 = VilÃ¡gos a vÃ©gjÃ¡tÃ©kot jÃ³l jÃ¡tsza
+pgn.nag.127 = SÃ¶tÃ©t a vÃ©gjÃ¡tÃ©kot jÃ³l jÃ¡tsza
+pgn.nag.128 = VilÃ¡gos a vÃ©gjÃ¡tÃ©kot nagyon jÃ³l jÃ¡tsza
+pgn.nag.129 = SÃ¶tÃ©t a vÃ©gjÃ¡tÃ©kot nagyon jÃ³l jÃ¡tsza
+pgn.nag.130 = VilÃ¡gos enyhe ellentÃ¡madÃ¡sa
+pgn.nag.131 = SÃ¶tÃ©t enyhe ellentÃ¡madÃ¡sa
+pgn.nag.132 = VilÃ¡gos mÃ©rsÃ©kelt ellentÃ¡madÃ¡sa
+pgn.nag.133 = SÃ¶tÃ©t mÃ©rsÃ©kelt ellentÃ¡madÃ¡sa
+pgn.nag.134 = VilÃ¡gos dÃ¶ntÅ‘ ellentÃ¡madÃ¡sa
+pgn.nag.135 = SÃ¶tÃ©t dÃ¶ntÅ‘ ellentÃ¡madÃ¡sa
+pgn.nag.136 = VilÃ¡gos mÃ©rsÃ©kelt idÅ‘zavarban van
+pgn.nag.137 = SÃ¶tÃ©t mÃ©rsÃ©kelt idÅ‘zavarban van
+pgn.nag.138 = VilÃ¡gos komoly idÅ‘zavarban van
+pgn.nag.139 = SÃ¶tÃ©t komoly idÅ‘zavarban van
 
 # following codes are defined by Fritz
 
-pgn.nag.140 = ötlettel
+pgn.nag.140 = Ã¶tlettel
 pgn.nag.141 = ellen
 pgn.nag.142 = jobb
 pgn.nag.143 = rosszabb
 pgn.nag.144 = =
-pgn.nag.144.tip = egyenlõ
+pgn.nag.144.tip = egyenlÅ‘
 pgn.nag.145 = RR
-pgn.nag.145.tip = rövidített megjegyzés?
+pgn.nag.145.tip = rÃ¶vidÃ­tett megjegyzÃ©s?
 pgn.nag.146 = N
-pgn.nag.146.tip = Újdonság
+pgn.nag.146.tip = ÃšjdonsÃ¡g
 
 # following codes are defined by us (equivalent to Informator symbols)
 # (is there a standard definition for these symbols?)
 
-pgn.nag.150 = futópár
-pgn.nag.151 = ellenfél futója
-pgn.nag.152 = saját futó
+pgn.nag.150 = futÃ³pÃ¡r
+pgn.nag.151 = ellenfÃ©l futÃ³ja
+pgn.nag.152 = sajÃ¡t futÃ³
 pgn.nag.153 = united gyalog
-pgn.nag.154 = magányos gyalog
-pgn.nag.155 = kettõs gyalog
+pgn.nag.154 = magÃ¡nyos gyalog
+pgn.nag.155 = kettÅ‘s gyalog
 pgn.nag.156 = szabad gyalog
-pgn.nag.157 = több gyalog
+pgn.nag.157 = tÃ¶bb gyalog
 pgn.nag.158 = vele
-pgn.nag.159 = nélkül
+pgn.nag.159 = nÃ©lkÃ¼l
 pgn.nag.160 = stb.
-pgn.nag.161 = lát
-pgn.nag.162 = fájl
+pgn.nag.161 = lÃ¡t
+pgn.nag.162 = fÃ¡jl
 pgn.nag.163 = sor
-pgn.nag.164 = átló
+pgn.nag.164 = Ã¡tlÃ³
 
 # this code is only defined by us
 pgn.nag.250 = Diagram

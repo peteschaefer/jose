@@ -38,7 +38,7 @@ public class Language
     /** default file encoding
      *  note that this is NOT the platform default
      * */
-    public static final String DEFAULT_ENCODING = "ISO-8859-1";
+    public static final String DEFAULT_ENCODING = "utf-8";
 
 	//-------------------------------------------------------------------------------------------
 	//	Fields
@@ -115,24 +115,7 @@ public class Language
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),DEFAULT_ENCODING));
-
-			//  first line may contain file encoding
-			reader.mark(80);
-
-			String firstLine = reader.readLine();
-			if (firstLine.startsWith("file.encoding"))
-			{
-				int k = firstLine.indexOf("=");
-				String encoding = firstLine.substring(k+1).trim();
-				reader.close();
-
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),encoding));
-			}
-			else
-				reader.reset(); //  start again
-
 			load(reader);
-
 		} finally {
 			if (reader!=null) reader.close();
 		}

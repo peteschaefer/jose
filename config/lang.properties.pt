@@ -1,6 +1,6 @@
 
 ##############################################################################
-#	TraduÁ„o do jose para PortuguÍs Brasileiro
+#	Tradu√ß√£o do jose para Portugu√™s Brasileiro
 #	Brazilian Portuguese Translation for jose
 #   (by Jose da Paula Rodrigues Neto Assis <espinafre@gmail.com>
 #	Please put jose-chess somewhere in the subject to contact me.)
@@ -15,10 +15,10 @@ window.console	= Console do motor
 window.database	= Banco de dados
 window.filter	= Filtro
 window.list	= Lista de jogos
-window.clock	= RelÛgio
+window.clock	= Rel√≥gio
 window.game	= Jogo
 window.engine	= Motor
-window.eval	= Perfil de AvaliaÁ„o
+window.eval	= Perfil de Avalia√ß√£o
 
 window.collectionlist	= Banco de dados
 window.query		= Procurar
@@ -30,16 +30,16 @@ window.sqllist		= Resultado
 window.toolbar.1	= Barra de ferramentas 1
 window.toolbar.2	= Barra de ferramentas 2
 window.toolbar.3	= Barra de ferramentas 3
-window.toolbar.symbols	= AnotaÁıes
+window.toolbar.symbols	= Anota√ß√µes
 window.help		= Ajuda
-window.print.preview	= PrÈ-Visualizar Impress„o
+window.print.preview	= Pr√©-Visualizar Impress√£o
 
 # dialog titles
 
-dialog.option	= OpÁıes
+dialog.option	= Op√ß√µes
 dialog.about	= Sobre jose
-dialog.animate  = AnimaÁ„o
-dialog.setup	= Acertar posiÁ„o
+dialog.animate  = Anima√ß√£o
+dialog.setup	= Acertar posi√ß√£o
 
 # number formats:
 format.byte		= ###0.# 'B'
@@ -65,15 +65,15 @@ menu.file.close.tip	= Fecha a janela atual
 menu.file.save		= Salvar
 menu.file.save.tip  	= Salva o jogo atual no banco de dados
 menu.file.save.as    	= Salvar como...
-menu.file.save.as.tip	= Salva uma nova cÛpia do jogo atual no banco de dados
+menu.file.save.as.tip	= Salva uma nova c√≥pia do jogo atual no banco de dados
 menu.file.save.all   	= Salvar tudo
 menu.file.save.all.tip  = Salva todos os jogos abertos no banco de dados
 menu.file.revert	= Reverter jogo
 menu.file.print		= Imprimir...
 menu.file.print.tip	= Imprime jogo atual
-menu.file.print.setup	= Configurar p·gina...
+menu.file.print.setup	= Configurar p√°gina...
 menu.file.print.setup.tip = Configura impressora e tamanho do papel
-menu.file.print.preview	= PrÈ-Visualizar Impress„o
+menu.file.print.preview	= Pr√©-Visualizar Impress√£o
 menu.file.quit		= Sair
 menu.file.quit.tip	= Sai do jose
 
@@ -89,49 +89,49 @@ menu.edit.select.none   = Selecionar nada
 menu.edit.cut		= Recortar
 menu.edit.copy		= Copiar
 menu.edit.copy.fen	= String FEN
-menu.edit.copy.fen.tip	= Copiar a posiÁ„o atual para a ·rea de transferÍncia (como uma string FEN)
+menu.edit.copy.fen.tip	= Copiar a posi√ß√£o atual para a √°rea de transfer√™ncia (como uma string FEN)
 menu.edit.copy.img	= Imagem+Fundo
-menu.edit.copy.img.tip	= Copiar a posiÁ„o atual para a ·rea de transferÍncia (como uma imagem)
+menu.edit.copy.img.tip	= Copiar a posi√ß√£o atual para a √°rea de transfer√™ncia (como uma imagem)
 menu.edit.copy.imgt	= Imagem
-menu.edit.copy.imgt.tip	= Copiar a posiÁ„o atual para a ·rea de transferÍncia (como uma imagem)
+menu.edit.copy.imgt.tip	= Copiar a posi√ß√£o atual para a √°rea de transfer√™ncia (como uma imagem)
 menu.edit.copy.text	= Diagrama em Texto
-menu.edit.copy.text.tip	= Copiar a posiÁ„o atual para a ·rea de transferÍncia (como texto estilizado)
+menu.edit.copy.text.tip	= Copiar a posi√ß√£o atual para a √°rea de transfer√™ncia (como texto estilizado)
 menu.edit.copy.pgn	= Copiar PGN
-menu.edit.copy.pgn.tip	= Copiar o jogo atual para a ·rea de transferÍncia (como texto PGN)
+menu.edit.copy.pgn.tip	= Copiar o jogo atual para a √°rea de transfer√™ncia (como texto PGN)
 
 menu.edit.paste		= Colar
-menu.edit.paste.tip 	= Copiar jogos da ·rea de transferÍncia
+menu.edit.paste.tip 	= Copiar jogos da √°rea de transfer√™ncia
 menu.edit.paste.copy		= Colar
-menu.edit.paste.copy.tip 	= Copiar jogos da ·rea de transferÍncia
+menu.edit.paste.copy.tip 	= Copiar jogos da √°rea de transfer√™ncia
 menu.edit.paste.same 	= Colar jogos
-menu.edit.paste.same.tip = Colar jogos da ·rea de transferÍncia
+menu.edit.paste.same.tip = Colar jogos da √°rea de transfer√™ncia
 menu.edit.paste.pgn	= Colar PGN
-menu.edit.paste.pgn.tip	= Inserir um jogo da ·rea de transferÍncia (como texto PGN)
+menu.edit.paste.pgn.tip	= Inserir um jogo da √°rea de transfer√™ncia (como texto PGN)
 
 menu.edit.clear		= Limpar
-menu.edit.option	= OpÁıes...
-menu.edit.option.tip	= Abre o di·logo "OpÁıes"
+menu.edit.option	= Op√ß√µes...
+menu.edit.option.tip	= Abre o di√°logo "Op√ß√µes"
 
 menu.edit.games			= Banco de dados 
 menu.edit.collection.new 	= Nova pasta
 menu.edit.collection.rename 	= Renomear
 menu.edit.collection.crunch	= Encolher
-menu.edit.collection.crunch.tip	= Reajustar coluna Õnd.
+menu.edit.collection.crunch.tip	= Reajustar coluna √çnd.
 menu.edit.empty.trash		= Esvaziar lixeira
 menu.edit.restore		= Restaurar
 
-#menu.edit.position.index    = Atualizar Ìndice de posiÁıes
-menu.edit.search.current    = Buscar esta posiÁ„o
+#menu.edit.position.index    = Atualizar √≠ndice de posi√ß√µes
+menu.edit.search.current    = Buscar esta posi√ß√£o
 menu.edit.ecofy             = Classificar por ECO
 
 menu.edit.style		= Formatar
 menu.edit.bold		= Negrito
-menu.edit.italic	= It·lico
+menu.edit.italic	= It√°lico
 menu.edit.underline	= Sublinhado
 menu.edit.plain		= Texto simples
-menu.edit.left		= Alinhar ‡ esquerda
+menu.edit.left		= Alinhar √† esquerda
 menu.edit.center	= Centralizado
-menu.edit.right		= Alinhar ‡ direita
+menu.edit.right		= Alinhar √† direita
 menu.edit.larger	= Aumentar tamanho do texto
 menu.edit.smaller	= Diminuir tamanho do texto
 menu.edit.color		= Cor do texto
@@ -140,33 +140,33 @@ menu.edit.color		= Cor do texto
 
 menu.game		= Jogo
 menu.game.details	= Detalhes...
-menu.game.analysis  	= Modo de an·lise
+menu.game.analysis  	= Modo de an√°lise
 menu.game.navigate	= Ir para...
 menu.game.time.controls = Controle de tempo
 menu.game.time.control = Controle de tempo
 menu.game.details.tip 	= Editar detalhes do jogo (jogadores etc.)
-menu.game.hint		= DÍ-me uma pista
+menu.game.hint		= D√™-me uma pista
 menu.game.hint.tip	= Mostrar pista
 menu.game.draw		= Oferecer empate
 menu.game.resign	= Desistir
-menu.game.2d		= Vis„o 2D
-menu.game.3d		= Vis„o 3D
+menu.game.2d		= Vis√£o 2D
+menu.game.3d		= Vis√£o 3D
 menu.game.flip		= Girar tabuleiro
 menu.game.coords	= Coordenadas
-menu.game.coords.tip	= Mudar exibiÁ„o de coordenadas
+menu.game.coords.tip	= Mudar exibi√ß√£o de coordenadas
 menu.game.animate 	= Animar...
 menu.game.previous 	= Orelha anterior
-menu.game.next 		= PrÛxima orelha
+menu.game.next 		= Pr√≥xima orelha
 menu.game.close 	= Fechar
 menu.game.close.tip 	= Fecha jogo atual
 menu.game.close.all 	= Fechar tudo
 menu.game.close.all.tip = Fecha todos os jogos abertos
 menu.game.close.all.but = Fechar todos menos este
 menu.game.close.all.but.tip = Fecha todos os jogos abertos exceto o atual
-menu.game.setup		= Ajustar posiÁ„o
+menu.game.setup		= Ajustar posi√ß√£o
 
 menu.game.copy.line	= Copiar linha
-menu.game.copy.line.tip	= Copiar esta linha para a ·rea de transferÍncia
+menu.game.copy.line.tip	= Copiar esta linha para a √°rea de transfer√™ncia
 menu.game.paste.line	= Colar linha
 menu.game.paste.line.tip = Inserir esta linha no jogo atual
 
@@ -174,25 +174,25 @@ menu.game.paste.line.tip = Inserir esta linha no jogo atual
 
 menu.window		= Janela
 menu.window.fullscreen 	= Tela cheia
-menu.window.reset   	= Layout padr„o
+menu.window.reset   	= Layout padr√£o
 
 # Help Menu
 
 menu.help		= Ajuda
 menu.help.splash	= Sobre...
 menu.help.about		= Info...
-menu.help.license	= LicenÁa...
+menu.help.license	= Licen√ßa...
 menu.help.context   	= Ajuda contextual
 menu.help.manual    	= Manual
 menu.help.web		= jose na Web
 
 menu.web.home		= Home Page
-menu.web.update		= AtualizaÁ„o online
+menu.web.update		= Atualiza√ß√£o online
 menu.web.download	= Download
 menu.web.report		= Reportar bug
-menu.web.support	= RequisiÁıes de suporte
-menu.web.feature	= RequisiÁıes de recursos
-menu.web.forum		= FÛrum
+menu.web.support	= Requisi√ß√µes de suporte
+menu.web.feature	= Requisi√ß√µes de recursos
+menu.web.forum		= F√≥rum
 menu.web.donate		= Doar
 menu.web.browser	= Escolher navegador...
 
@@ -206,11 +206,11 @@ panel.hide.tip		= Esconde este painel
 panel.undock		= Nova janela
 panel.undock.tip	= Abre este painel em uma janela separada
 panel.move		= Mover
-panel.move.tip		= Move este painel para outra posiÁ„o
+panel.move.tip		= Move este painel para outra posi√ß√£o
 panel.dock		= Embutir
 panel.dock.tip		= Embute esta janela
 
-panel.orig.pos		= PosiÁ„o original
+panel.orig.pos		= Posi√ß√£o original
 panel.dock.here		= Ancorar aqui
 panel.undock.here	= Desancorar aqui
 
@@ -219,7 +219,7 @@ panel.undock.here	= Desancorar aqui
 #################
 
 # deprecated:
-tab.place 	= ColocaÁ„o de tab
+tab.place 	= Coloca√ß√£o de tab
 tab.place.top 	= Topo
 tab.place.left 	= Esquerda
 tab.place.bottom = Abaixo
@@ -231,29 +231,29 @@ tab.layout.wrap 	= Quebrar
 tab.layout.scroll 	= Rolar
 
 doc.menu.annotate 	= Anotar
-doc.menu.delete.comment = Apagar coment·rio
+doc.menu.delete.comment = Apagar coment√°rio
 doc.menu.line.promote 	= Promover linha
 doc.menu.line.delete 	= Apagar linha
 doc.menu.line.cut 	= Cancelar linha
-doc.menu.line.uncomment = Apagar todos os coment·rios
+doc.menu.line.uncomment = Apagar todos os coment√°rios
 doc.menu.remove.annotation = -None-
 doc.menu.more.annotations = mais...
 
-tab.untitled 	= Sem tÌtulo
+tab.untitled 	= Sem t√≠tulo
 confirm 	= Confirmar
 confirm.save.one = Salvar jogo atual?
 confirm.save.all = Salvar jogos modificados?
 
 dialog.confirm.save = Salvar
-dialog.confirm.dont.save = N„o Salvar
+dialog.confirm.dont.save = N√£o Salvar
 dialog.engine.offers.draw = %engine% oferece empate.
 dialog.accept.draw = Aceitar empate
 dialog.decline.draw = Recusar empate
 dialog.autoimport.title = Importar
 dialog.autoimport.ask = Arquivo ^0 foi modificado no disco.\n Deseja reabri-lo?
 
-dialog.paste.message = VocÍ est· prestes a inserir dados da ·rea de transferÍncia.\n\
-	VocÍ deseja mover os jogos ou criar uma nova cÛpia?
+dialog.paste.message = Voc√™ est√° prestes a inserir dados da √°rea de transfer√™ncia.\n\
+	Voc√™ deseja mover os jogos ou criar uma nova c√≥pia?
 dialog.paste.title = Colar jogos
 dialog.paste.same = Mover
 dialog.paste.copy = Copiar
@@ -262,30 +262,30 @@ dialog.paste.copy = Copiar
 # Game Navigation
 ###################
 
-move.first	= InÌcio do jogo
+move.first	= In√≠cio do jogo
 move.backward 	= Voltar
-move.delete 	= Desfazer ˙ltima jogada
+move.delete 	= Desfazer √∫ltima jogada
 engine.stop 	= Pausar
 move.start 	= Mover agora
-move.forward 	= AvanÁar
+move.forward 	= Avan√ßar
 move.last 	= Fim do jogo
-move.animate	 = AnimaÁ„o
+move.animate	 = Anima√ß√£o
 
 
 ##################################
 # Engine Panel
 ##################################
 
-engine.paused.tip 	= %engine% est· parado
-engine.thinking.tip 	= %engine% est· pensando na prÛxima jogada
-engine.pondering.tip 	= %engine% est· ponderando sua prÛxima jogada
-engine.analyzing.tip 	= %engine% est· analisando
+engine.paused.tip 	= %engine% est√° parado
+engine.thinking.tip 	= %engine% est√° pensando na pr√≥xima jogada
+engine.pondering.tip 	= %engine% est√° ponderando sua pr√≥xima jogada
+engine.analyzing.tip 	= %engine% est√° analisando
 engine.hint.tip 	= Dica: %move%
 
 engine.paused.title 	= %engine%
-engine.thinking.title 	= %engine% est· pensando
-engine.pondering.title 	= %engine% est· ponderando
-engine.analyzing.title 	= %engine% est· analisando
+engine.thinking.title 	= %engine% est√° pensando
+engine.pondering.title 	= %engine% est√° ponderando
+engine.analyzing.title 	= %engine% est√° analisando
 
 plugin.name 		= %name% %version%
 plugin.name.author 	= %name% %version% por %author%
@@ -300,7 +300,7 @@ plugin.tb.move.tip 	= Avaliado da tabela de finais
 plugin.currentmove.title = Jogada
 plugin.depth.title	= Profundidade
 plugin.elapsed.time.title = Tempo
-plugin.nodecount.title	= NÛs
+plugin.nodecount.title	= N√≥s
 plugin.nps.title	= NPS
 plugin.currentmove	= %move%
 plugin.currentmove.max	= %move% %moveno%/%maxmove%
@@ -312,23 +312,23 @@ plugin.depth.sel 	= %depth% (%seldepth%)
 plugin.depth.sel.tip 	= Profundidade de busca: %depth% plies, Profundidade selecionada: %seldepth% plies
 
 plugin.white.mates 	= +#%eval%
-plugin.white.mates.tip 	= Brancas d„o mate em %eval% jogadas
+plugin.white.mates.tip 	= Brancas d√£o mate em %eval% jogadas
 plugin.black.mates 	= -#%eval%
-plugin.black.mates.tip 	= Negras d„o mate em %eval% jogadas
+plugin.black.mates.tip 	= Negras d√£o mate em %eval% jogadas
 
 plugin.evaluation 	= %eval%
-plugin.evaluation.tip 	= O valor da posiÁ„o È %eval%
+plugin.evaluation.tip 	= O valor da posi√ß√£o √© %eval%
 
 plugin.line.tip		= Linha calculada
 
 plugin.elapsed.time	= %time%
-plugin.elapsed.time.tip	= Tempo gasto para este c·lculo
+plugin.elapsed.time.tip	= Tempo gasto para este c√°lculo
 
 plugin.nodecount 	= %nodecount%
 plugin.nodecount.tip 	= %nodecount% foram avaliadas
 
 plugin.nps		= %nps%
-plugin.nps.tip		= %nps% nÛs est„o sendo avaliados por segundo
+plugin.nps.tip		= %nps% n√≥s est√£o sendo avaliados por segundo
 plugin.pv.history	= Modo Especialista
 
 restart.plugin		= Reiniciar motor
@@ -344,11 +344,11 @@ message.result			= Resultado
 message.white 			= Brancas
 message.black 			= Negras
 message.mate 			= Mate. \n %player% vence.
-message.stalemate		= Afogamento. \n O jogo est· empatado.
-message.draw3			= A posiÁ„o se repetiu 3 vezes. \n O jogo est· empatado.
-message.draw50			= Nenhuma peÁa capturada nem pe„o movido em 50 jogadas. \n O jogo est· empatado.
-message.resign			= %player% desistiu. \n VocÍ venceu.
-message.time.draw		= O tempo acabou. \n O jogo est· empatado.
+message.stalemate		= Afogamento. \n O jogo est√° empatado.
+message.draw3			= A posi√ß√£o se repetiu 3 vezes. \n O jogo est√° empatado.
+message.draw50			= Nenhuma pe√ßa capturada nem pe√£o movido em 50 jogadas. \n O jogo est√° empatado.
+message.resign			= %player% desistiu. \n Voc√™ venceu.
+message.time.draw		= O tempo acabou. \n O jogo est√° empatado.
 message.time.lose		= O tempo acabou. \n %player% venceu.
 
 
@@ -356,10 +356,10 @@ message.time.lose		= O tempo acabou. \n %player% venceu.
 # Clock Panel
 ################
 
-clock.mode.analog	= AnalÛgico
-clock.mode.analog.tip 	= Exibir relÛgio analÛgico
+clock.mode.analog	= Anal√≥gico
+clock.mode.analog.tip 	= Exibir rel√≥gio anal√≥gico
 clock.mode.digital	= Digital
-clock.mode.digital.tip 	= Exibir relÛgio digital
+clock.mode.digital.tip 	= Exibir rel√≥gio digital
 
 
 ##############################################################################
@@ -367,27 +367,27 @@ clock.mode.digital.tip 	= Exibir relÛgio digital
 ##############################################################################
 
 dialog.button.ok		= OK
-dialog.button.ok.tip		= Clique para aplicar mudanÁas e fechar o di·logo.
+dialog.button.ok.tip		= Clique para aplicar mudan√ßas e fechar o di√°logo.
 dialog.button.cancel		= Cancelar
-dialog.button.cancel.tip	= Clique para fechar o di·logo sem aplicar as mudanÁas.
+dialog.button.cancel.tip	= Clique para fechar o di√°logo sem aplicar as mudan√ßas.
 dialog.button.apply		= Aplicar
-dialog.button.apply.tip		= Clique para aplicar as mudanÁas imediatamente.
+dialog.button.apply.tip		= Clique para aplicar as mudan√ßas imediatamente.
 dialog.button.revert		= Reverter
-dialog.button.revert.tip	= Clique para descartar suas mudanÁas
+dialog.button.revert.tip	= Clique para descartar suas mudan√ßas
 dialog.button.clear		= Limpar
 dialog.button.delete		= Apagar
 dialog.button.yes		= Sim
-dialog.button.no		= N„o
-dialog.button.next		= PrÛximo
+dialog.button.no		= N√£o
+dialog.button.next		= Pr√≥ximo
 dialog.button.back		= Voltar
 dialog.button.close		= Fechar
 dialog.button.help		= Ajuda
-dialog.button.help.tip		= Exibe tÛpico da ajuda
+dialog.button.help.tip		= Exibe t√≥pico da ajuda
 
 dialog.button.commit		= Finalizar
-dialog.button.commit.tip	= Clique para finalizar as mudanÁas na base de dados.
+dialog.button.commit.tip	= Clique para finalizar as mudan√ßas na base de dados.
 dialog.button.rollback		= Desfazer
-dialog.button.rollback.tip	= Clique para descartar as mudanÁas na base de dados.
+dialog.button.rollback.tip	= Clique para descartar as mudan√ßas na base de dados.
 
 dialog.error.title		= Erro
 
@@ -399,14 +399,14 @@ filechooser.pgn			= Portable Game Notation (*.pgn,*.zip)
 filechooser.epd			= EPD ou FEN (*.epd,*.fen)
 filechooser.db 			= Arquivo jose (*.jose)
 filechooser.db.Games 		= Arquivo de jogos jose (*.jose)
-filechooser.db.Games.MySQL 	= Arquivo de jogos jose (salvamento r·pido) (*.jose)
+filechooser.db.Games.MySQL 	= Arquivo de jogos jose (salvamento r√°pido) (*.jose)
 filechooser.txt 		= Arquivo de texto (*.txt)
 filechooser.html 		= Arquivos HTML (*.html)
 filechooser.pdf 		= Acrobat Reader (*.pdf)
-filechooser.exe			= Arquivos execut·veis (*.exe)
+filechooser.exe			= Arquivos execut√°veis (*.exe)
 filechooser.img			= Arquivos de imagens (*.gif,*.jpg,*.png,*.bmp)
 
-filechooser.overwrite 	= Sobrescrever "%file.name%" j· existente?
+filechooser.overwrite 	= Sobrescrever "%file.name%" j√° existente?
 filechooser.do.overwrite = Sobrescrever
 
 #################
@@ -414,16 +414,16 @@ filechooser.do.overwrite = Sobrescrever
 #################
 
 colorchooser.texture	= Textura
-colorchooser.preview	= PrÈ-visualizar
+colorchooser.preview	= Pr√©-visualizar
 colorchooser.gradient   = Gradiente
 colorchooser.gradient.color1 = Primeira cor
 colorchooser.gradient.color2 = Segunda cor
-colorchooser.gradient.cyclic = cÌclico
+colorchooser.gradient.cyclic = c√≠clico
 
 colorchooser.texture.mnemonic = T
 colorchooser.gradient.mnemonic = G
 
-animation.slider.fast   = r·pido
+animation.slider.fast   = r√°pido
 animation.slider.slow   = lento
 
 ##############################################################################
@@ -432,7 +432,7 @@ animation.slider.slow   = lento
 
 # Tab Titles
 
-dialog.option.tab.1	= Usu·rio
+dialog.option.tab.1	= Usu√°rio
 dialog.option.tab.2	= Tabuleiro
 dialog.option.tab.3	= Cores
 dialog.option.tab.4	= Tempo
@@ -446,13 +446,13 @@ dialog.option.tab.8	= Fontes
 
 dialog.option.user.name		= Nome
 dialog.option.user.language	= Idioma
-dialog.option.ui.look.and.feel	= AparÍncia e comportamento
+dialog.option.ui.look.and.feel	= Apar√™ncia e comportamento
 
 doc.load.history	= Carregar jogos recentes
 doc.classify.eco	= Classificar abertura por ECO
 doc.associate.pgn	= Abrir arquivos PGN com jose
 
-dialog.option.animation	= AnimaÁ„o
+dialog.option.animation	= Anima√ß√£o
 dialog.option.animation.speed = Velocidade
 
 dialog.option.doc.write.mode	= Inserir nova jogada
@@ -460,16 +460,16 @@ write.mode.new.line		= Nova linha
 write.mode.new.main.line	= Nova linha principal
 write.mode.overwrite		= Sobrescrever
 write.mode.ask			= Perguntar
-write.mode.dont.ask		= N„o pergunte mais
+write.mode.dont.ask		= N√£o pergunte mais
 write.mode.cancel		= Cancelar
 
-board.animation.hints	= Exibir dicas durante animaÁ„o
+board.animation.hints	= Exibir dicas durante anima√ß√£o
 
 dialog.option.sound = Som
-dialog.option.sound.moves.dir	= An˙ncios de jogadas:
+dialog.option.sound.moves.dir	= An√∫ncios de jogadas:
 sound.moves.engine	= Anunciar jogadas do motor
-sound.moves.ack.user	= Avisar de jogadas do usu·rio
-sound.moves.user	= Anunciar jogadas do usu·rio
+sound.moves.ack.user	= Avisar de jogadas do usu√°rio
+sound.moves.user	= Anunciar jogadas do usu√°rio
 
 # Fonts
 
@@ -477,37 +477,37 @@ dialog.option.font.diagram	= Diagrama
 dialog.option.font.text		= Texto
 dialog.option.font.inline	= Diagrama no texto
 dialog.option.font.figurine	= Figurino
-dialog.option.font.symbol	= SÌmbolo
+dialog.option.font.symbol	= S√≠mbolo
 dialog.option.font.size     	= Tamanho
-figurine.usefont.true 		= Figuras gr·ficas
+figurine.usefont.true 		= Figuras gr√°ficas
 figurine.usefont.false 		= Figuras de texto
 
 doc.panel.antialias		= Usar fontes suavizadas (antialias)
 
 # Notation
 
-dialog.option.doc.move.format	= NotaÁ„o:
-move.format			= NotaÁ„o
+dialog.option.doc.move.format	= Nota√ß√£o:
+move.format			= Nota√ß√£o
 move.format.short		= Curta
 move.format.long		= Longa
-move.format.algebraic		= AlgÈbrica
-move.format.correspondence	= CorrespondÍncia
+move.format.algebraic		= Alg√©brica
+move.format.correspondence	= Correspond√™ncia
 move.format.english		= Inglesa
-move.format.telegraphic		= Telegr·fica
+move.format.telegraphic		= Telegr√°fica
 
 # Colors
 
 dialog.option.board.surface.light	= Casas claras
 dialog.option.board.surface.dark	= Casas escuras
-dialog.option.board.surface.white	= PeÁas brancas
-dialog.option.board.surface.black	= PeÁas negras
+dialog.option.board.surface.white	= Pe√ßas brancas
+dialog.option.board.surface.black	= Pe√ßas negras
 
 dialog.option.board.surface.background	= Fundo
 dialog.option.board.surface.frame	= Quadro
 dialog.option.board.surface.coords	= Coordenadas
 
 dialog.option.board.3d.model            = Modelo:
-dialog.option.board.3d.clock            = RelÛgio:
+dialog.option.board.3d.clock            = Rel√≥gio:
 dialog.option.board.3d.surface.frame	= Quadro:
 dialog.option.board.3d.light.ambient	= Luz ambiente:
 dialog.option.board.3d.light.directional = Luz direcional:
@@ -515,9 +515,9 @@ dialog.option.board.3d.knight.angle	= Cavalos:
 
 board.surface.light	= Casas claras
 board.surface.dark	= Casas escuras
-board.surface.white	= PeÁas brancas
-board.surface.black	= PeÁas negras
-board.hilite.squares 	= RealÁar casas
+board.surface.white	= Pe√ßas brancas
+board.surface.black	= Pe√ßas negras
+board.hilite.squares 	= Real√ßar casas
 
 # Time Controls
 
@@ -531,7 +531,7 @@ dialog.option.increment 	= mais
 dialog.option.increment.label 	= por jogada
 
 time.control.blitz		= Blitz
-time.control.rapid		= R·pido
+time.control.rapid		= R√°pido
 time.control.fischer		= Fischer
 time.control.tournament		= Torneio
 # default name for new time control
@@ -547,36 +547,36 @@ plugin.add =
 plugin.delete =
 plugin.duplicate =
 plugin.add.tip = adicionar novo motor
-plugin.delete.tip = apagar configuraÁ„o
-plugin.duplicate.tip = duplicar configuraÁ„o
+plugin.delete.tip = apagar configura√ß√£o
+plugin.duplicate.tip = duplicar configura√ß√£o
 
-dialog.option.plugin.file 	= Arquivo de configuraÁ„o:
+dialog.option.plugin.file 	= Arquivo de configura√ß√£o:
 dialog.option.plugin.name 	= Nome:
-dialog.option.plugin.version 	= Vers„o:
+dialog.option.plugin.version 	= Vers√£o:
 dialog.option.plugin.author 	= Autor:
-dialog.option.plugin.dir 	= DiretÛrio:
+dialog.option.plugin.dir 	= Diret√≥rio:
 dialog.option.plugin.logo 	= Logo:
-dialog.option.plugin.startup 	= InicializaÁ„o:
+dialog.option.plugin.startup 	= Inicializa√ß√£o:
 
-dialog.option.plugin.exe	= Execut·vel:
+dialog.option.plugin.exe	= Execut√°vel:
 dialog.option.plugin.args	= Argumentos:
-dialog.option.plugin.default	= ConfiguraÁıes padr„o
+dialog.option.plugin.default	= Configura√ß√µes padr√£o
 
-plugin.info                 = InformaÁıes Gerais
+plugin.info                 = Informa√ß√µes Gerais
 plugin.protocol.xboard      = Protocolo XBoard
 plugin.protocol.uci         = Protocolo UCI
-plugin.options              = OpÁıes do motor
-plugin.startup              = Mais opÁıes
+plugin.options              = Op√ß√µes do motor
+plugin.startup              = Mais op√ß√µes
 plugin.show.logos           = Exibir logos
 plugin.show.text            = Exibir texto
 
-plugin.switch.ask           = VocÍ escolheu outro motor.\n Inici·-lo agora?
-plugin.restart.ask          = VocÍ modificou algumas configuraÁıes do motor..\n Reiniciar o motor agora?
+plugin.switch.ask           = Voc√™ escolheu outro motor.\n Inici√°-lo agora?
+plugin.restart.ask          = Voc√™ modificou algumas configura√ß√µes do motor..\n Reiniciar o motor agora?
 plugin.show.info            = Mostrar "info"
 plugin.log.file             = Logar para arquivo
 
 # UCI option name
-plugin.option.Ponder        = PonderaÁ„o
+plugin.option.Ponder        = Pondera√ß√£o
 plugin.option.Random        = Aleatorizar
 plugin.option.Hash          = Tamanho da tabela de hash (MB)
 plugin.option.NalimovPath   = Caminho para bases Nalimov
@@ -584,11 +584,11 @@ plugin.option.NalimovCache  = Cache para bases Nalimov (MB)
 plugin.option.OwnBook       = Usar livro de aberturas
 plugin.option.BookFile      = Livro de aberturas
 plugin.option.BookLearning  = Aprendizado pelo livro
-plugin.option.MultiPV       = VariaÁıes prim·rias
+plugin.option.MultiPV       = Varia√ß√µes prim√°rias
 plugin.option.ClearHash     = Limpar tabelas de hash
 plugin.option.UCI_ShowCurrLine  = Mostrar linha atual
-plugin.option.UCI_ShowRefutations = Mostrar refutaÁıes
-plugin.option.UCI_LimitStrength = Limitar forÁa
+plugin.option.UCI_ShowRefutations = Mostrar refuta√ß√µes
+plugin.option.UCI_LimitStrength = Limitar for√ßa
 plugin.option.UCI_Elo       = ELO
 plugin.option.UCI_EngineAbout = 
 
@@ -596,25 +596,25 @@ plugin.option.UCI_EngineAbout =
 
 board.surface.background	= Fundo
 board.surface.coords		= Coordenadas
-board.3d.clock              	= RelÛgio
+board.3d.clock              	= Rel√≥gio
 board.3d.shadow			= Sombra
 board.3d.reflection		= Reflexos
-board.3d.anisotropic        	= Filtro anisotrÛpico
+board.3d.anisotropic        	= Filtro anisotr√≥pico
 board.3d.fsaa               	= Antialias em tela cheia (FSAA)
 
 board.3d.surface.frame		= Quadro
 board.3d.light.ambient		= Luz ambiente
 board.3d.light.directional	= Luz direcional
 board.3d.screenshot		= Screenshot
-board.3d.defaultview		= VisualizaÁ„o padr„o
+board.3d.defaultview		= Visualiza√ß√£o padr√£o
 
 # Text Styles
 
 font.color 	= Cor
-font.name	= FamÌlia
+font.name	= Fam√≠lia
 font.size	= Tamanho
 font.bold	= Negrito
-font.italic	= It·lico
+font.italic	= It√°lico
 font.sample	= Texto de amostra
 
 
@@ -626,7 +626,7 @@ font.sample	= Texto de amostra
 
 collection.trash 	= Lixo
 collection.autosave 	= Auto Salvar
-collection.clipboard 	= ¡rea de TransferÍncia
+collection.clipboard 	= √Årea de Transfer√™ncia
 
 # default name for new folders
 collection.new 		= Nova pasta
@@ -640,7 +640,7 @@ column.collection.name 		= Nome
 column.collection.gamecount 	= Jogos
 column.collection.lastmodified 	= Modificado
 
-column.game.index 	= Õnd
+column.game.index 	= √çnd
 column.game.white.name 	= Brancas
 column.game.black.name 	= Negras
 column.game.event 	= Evento
@@ -653,24 +653,24 @@ column.game.eco 	= ECO
 column.game.opening 	= Abertura
 column.game.movecount 	= Jogadas
 column.game.annotator 	= Anotador
-column.game.fen     = PosiÁ„o Inicial
+column.game.fen     = Posi√ß√£o Inicial
 
 #deprecated
 column.problem.author 	= Autor
 column.problem.source 	= Fonte
-column.problem.number 	= N.∫
+column.problem.number 	= N.¬∫
 column.problem.date 	= Data
 column.problem.stipulation = Estip.
-column.problem.dedication = DedicatÛria
-column.problem.award = PrÍmio
-column.problem.solution = SoluÁ„o
+column.problem.dedication = Dedicat√≥ria
+column.problem.award = Pr√™mio
+column.problem.solution = Solu√ß√£o
 column.problem.cplus = C+
-column.problem.genre = GÍnero
+column.problem.genre = G√™nero
 column.problem.keyword = Palavras-Chave
 #deprecated
 
-bootstrap.confirm 	= O diretÛrio de dados '%datadir%' n„o existe.\n Criar novo diretÛrio de dados? 
-bootstrap.create 	= Criar diretÛrio de dados
+bootstrap.confirm 	= O diret√≥rio de dados '%datadir%' n√£o existe.\n Criar novo diret√≥rio de dados? 
+bootstrap.create 	= Criar diret√≥rio de dados
 
 edit.game = Abrir
 edit.all = Abrir em abas
@@ -683,8 +683,8 @@ dnd.move.top.level	= Mover para o topo
 
 # Tab Titles
 dialog.query.info 		= Info
-dialog.query.comments 		= Coment·rios
-dialog.query.position 		= PosiÁ„o
+dialog.query.comments 		= Coment√°rios
+dialog.query.position 		= Posi√ß√£o
 
 dialog.query.search 	= Procurar
 dialog.query.clear 	= Limpar
@@ -697,10 +697,10 @@ dialog.query.n.results 	= %count% resultados
 dialog.query.white		= Brancas:
 dialog.query.black		= Negras:
 
-dialog.query.flags 		= OpÁıes
+dialog.query.flags 		= Op√ß√µes
 dialog.query.color.sensitive 	= Cor importa?
 dialog.query.swap.colors.tip 	= trocar
-dialog.query.case.sensitive 	= Ignorar Mai˙sculas/Min˙sculas
+dialog.query.case.sensitive 	= Ignorar Mai√∫sculas/Min√∫sculas
 dialog.query.soundex 		= Soa como
 dialog.query.result 		= Resultado
 dialog.query.stop.results   =
@@ -714,34 +714,34 @@ dialog.query.opening 		= Abertura:
 dialog.query.date 		= Data:
 dialog.query.movecount 		= Jogadas:
 
-dialog.query.commenttext 	= Coment·rio:
-dialog.query.com.flag 		= tem coment·rios
-dialog.query.com.flag.tip 	= procurar por jogos com coment·rios
+dialog.query.commenttext 	= Coment√°rio:
+dialog.query.com.flag 		= tem coment√°rios
+dialog.query.com.flag.tip 	= procurar por jogos com coment√°rios
 
-dialog.query.var.flag 		= tem variaÁıes
-dialog.query.var.flag.tip 	= procurar por jogos com variaÁıes
+dialog.query.var.flag 		= tem varia√ß√µes
+dialog.query.var.flag.tip 	= procurar por jogos com varia√ß√µes
 
-dialog.query.errors 		= Erro na express„o de busca:
+dialog.query.errors 		= Erro na express√£o de busca:
 query.error.date.too.small 	= Data fora de alcance
-query.error.movecount.too.small = N˙mero fora de alcance
-query.error.eco.too.long 	= Use trÍs caracteres para cÛdigos ECO.
-query.error.eco.character.expected = CÛdigos ECO precisam iniciar com A, B, C, D ou E.
-query.error.eco.number.expected = CÛdigos ECO consistem em um caracter e um n˙mero de 0 a 99.
-query.error.number.format 	= Formato de n˙mero inv·lido
-query.error.date.format 	= Formato de data inv·lido
+query.error.movecount.too.small = N√∫mero fora de alcance
+query.error.eco.too.long 	= Use tr√™s caracteres para c√≥digos ECO.
+query.error.eco.character.expected = C√≥digos ECO precisam iniciar com A, B, C, D ou E.
+query.error.eco.number.expected = C√≥digos ECO consistem em um caracter e um n√∫mero de 0 a 99.
+query.error.number.format 	= Formato de n√∫mero inv√°lido
+query.error.date.format 	= Formato de data inv√°lido
 
-query.setup.enable 		= Buscar posiÁ„o
-query.setup.next 		= PrÛximo a jogar:
+query.setup.enable 		= Buscar posi√ß√£o
+query.setup.next 		= Pr√≥ximo a jogar:
 query.setup.next.white 		= Brancas
-query.setup.next.white.tip 	= busca posiÁıes em que a jogada È das brancas
+query.setup.next.white.tip 	= busca posi√ß√µes em que a jogada √© das brancas
 query.setup.next.black 		= Negras
-query.setup.next.black.tip 	= busca posiÁıes em que a jogada È das negras
+query.setup.next.black.tip 	= busca posi√ß√µes em que a jogada √© das negras
 query.setup.next.any 		= Brancas ou negras
 query.setup.next.any.tip 	= ignora lado a jogar
 query.setup.reversed 		= Procurar cores invertidas
-query.setup.reversed.tip 	= busca posiÁıes idÍnticas com cores invertidas
-query.setup.var 		= Procurar em variaÁıes
-query.setup.var.tip 		= busca dentro de variaÁıes
+query.setup.reversed.tip 	= busca posi√ß√µes id√™nticas com cores invertidas
+query.setup.var 		= Procurar em varia√ß√µes
+query.setup.var.tip 		= busca dentro de varia√ß√µes
 
 
 
@@ -765,7 +765,7 @@ dialog.details.white 	= Brancas
 dialog.details.black 	= Negras
 dialog.details.name 	= Nome:
 dialog.details.elo 	= ELO:
-dialog.details.title 	= TÌtulo:
+dialog.details.title 	= T√≠tulo:
 dialog.details.result 	= Resultado:
 
 dialog.details.eco 	= ECO:
@@ -783,12 +783,12 @@ Result.* = *
 ##############################################################################
 
 dialog.setup.clear	= Limpar
-dialog.setup.initial	= PosiÁ„o inicial
+dialog.setup.initial	= Posi√ß√£o inicial
 dialog.setup.copy	= Copiar do painel principal
 
 dialog.setup.next.white	= Brancas jogam
 dialog.setup.next.black	= Negras jogam
-dialog.setup.move.no	= N˙mero da jogada
+dialog.setup.move.no	= N√∫mero da jogada
 
 dialog.setup.castling		= Roque
 dialog.setup.castling.wk	= Brancas 0-0
@@ -799,7 +799,7 @@ dialog.setup.castling.bk	= Negras 0-0
 dialog.setup.castling.bk.tip	= Roque menor das negras
 dialog.setup.castling.bq	= Negras 0-0-0
 dialog.setup.castling.bq.tip	= Roque maior das negras
-dialog.setup.invalid.fen	= String FEN inv·lida.
+dialog.setup.invalid.fen	= String FEN inv√°lida.
 
 
 ##############################################################################
@@ -808,14 +808,14 @@ dialog.setup.invalid.fen	= String FEN inv·lida.
 
 dialog.about.tab.1	= jose
 dialog.about.tab.2	= Banco de dados
-dialog.about.tab.3	= ContribuiÁıes
+dialog.about.tab.3	= Contribui√ß√µes
 dialog.about.tab.4	= Sistema
 dialog.about.tab.5	= 3D
-dialog.about.tab.6	= LicenÁa
+dialog.about.tab.6	= Licen√ßa
 
-#dialog.about.1a	=   Vers„o %version%
+#dialog.about.1a	=   Vers√£o %version%
 
-dialog.about.gpl =	este programa È distribuÌdo sob os termos da GNU General Public Licence
+dialog.about.gpl =	este programa √© distribu√≠do sob os termos da GNU General Public Licence
 
 
 dialog.about.2	=	<b>%dbname%</b> <br> %dbversion% <br><br> \
@@ -824,11 +824,11 @@ dialog.about.2	=	<b>%dbname%</b> <br> %dbversion% <br><br> \
 
 dialog.about.MySQL = www.mysql.com
 
-dialog.about.3	=	<b>TraduÁ„o:</b><br>\
-			Frederic Raimbault, JosÈ de Paula,\
-			AgustÌn Gomila, Alex Coronado, \
+dialog.about.3	=	<b>Tradu√ß√£o:</b><br>\
+			Frederic Raimbault, Jos√© de Paula,\
+			Agust√≠n Gomila, Alex Coronado, \
 			Harold Roig, Hans Eriksson (Sueco), \
-			Guido Grazioli, Tomasz SokÛl, \
+			Guido Grazioli, Tomasz Sok√≥l, \
 			"Direktx" <br>\
 			<br>\
 			<b>TrueType Font Designs:</b> <br>\
@@ -845,23 +845,23 @@ dialog.about.3	=	<b>TraduÁ„o:</b><br>\
 			Francisco Barala Faura <br>\
 			<br>\
 			<b>Apple Mac support:</b> <br>\
-			Andreas G¸ttinger, Randy Countryman
+			Andreas G√ºttinger, Randy Countryman
 
 
-dialog.about.4 =	Vers„o Java: %java.version% (%java.vendor%) <br>\
+dialog.about.4 =	Vers√£o Java: %java.version% (%java.vendor%) <br>\
 					Java VM: %java.vm.version% %java.vm.info% (%java.vm.vendor%) <br>\
 					Runtime: %java.runtime.name% %java.runtime.version% <br>\
-					Ambiente gr·fico: %java.awt.graphicsenv% <br>\
+					Ambiente gr√°fico: %java.awt.graphicsenv% <br>\
 					AWT Toolkit: %awt.toolkit%<br>\
-					DiretÛrio inicial: %java.home%<br>\
+					Diret√≥rio inicial: %java.home%<br>\
 					<br>\
-					MemÛria total: %maxmem%<br>\
-					MemÛria livre: %freemem%<br>\
+					Mem√≥ria total: %maxmem%<br>\
+					Mem√≥ria livre: %freemem%<br>\
 					<br>\
 					Sistema operacional: %os.name%  %os.version% <br>\
 					Arquitetura do sistema: %os.arch%
 
-dialog.about.5.no3d = Java3D n„o est· disponÌvel
+dialog.about.5.no3d = Java3D n√£o est√° dispon√≠vel
 dialog.about.5.model =
 
 dialog.about.5.native = Plataforma nativa: &nbsp;
@@ -872,18 +872,18 @@ dialog.about.5.native.unknown = atualmente desconhecido
 ##############################################################################
 
 dialog.export = Exportar e imprimir
-dialog.export.tab.1 = SaÌda
-dialog.export.tab.2 = ConfiguraÁ„o de P·gina
+dialog.export.tab.1 = Sa√≠da
+dialog.export.tab.2 = Configura√ß√£o de P√°gina
 dialog.export.tab.3 = Estilos
 
 dialog.export.print = Imprimir...
 dialog.export.save = Salvar
 dialog.export.saveas = Salvar como...
-dialog.export.preview = PrÈ-visualizar
-dialog.export.browser = PrÈ-visualizar no browser
+dialog.export.preview = Pr√©-visualizar
+dialog.export.browser = Pr√©-visualizar no browser
 
 dialog.export.paper = Papel
-dialog.export.orientation = OrientaÁ„o
+dialog.export.orientation = Orienta√ß√£o
 dialog.export.margins = Margens
 
 dialog.export.paper.format = Papel:
@@ -899,10 +899,10 @@ dialog.export.margin.right = Direita:
 dialog.export.ori.port = Retrato
 dialog.export.ori.land = Paisagem
 
-dialog.export.games.0 = VocÍ n„o selecionou nenhum jogo para imprimir.
-dialog.export.games.1 = VocÍ selecionou <b>um jogo</b> para imprimir.
-dialog.export.games.n = VocÍ selecionou <b>%n% jogos</b> para imprimir.
-dialog.export.games.? = VocÍ selecionou uma quantidade <b>desconhecida</b> de jogos para imprimir.
+dialog.export.games.0 = Voc√™ n√£o selecionou nenhum jogo para imprimir.
+dialog.export.games.1 = Voc√™ selecionou <b>um jogo</b> para imprimir.
+dialog.export.games.n = Voc√™ selecionou <b>%n% jogos</b> para imprimir.
+dialog.export.games.? = Voc√™ selecionou uma quantidade <b>desconhecida</b> de jogos para imprimir.
 
 dialog.export.confirm = Tem certeza?
 dialog.export.yes = Imprimir tudo
@@ -910,32 +910,32 @@ dialog.export.yes = Imprimir tudo
 # xsl stylesheet options
 
 export.pgn = Arquivo PGN
-export.pgn.tip = Exporta jogos como arquivo PGN (NotaÁ„o Port·til de Jogo)
+export.pgn.tip = Exporta jogos como arquivo PGN (Nota√ß√£o Port√°til de Jogo)
 
 print.awt = Imprimir
 print.awt.tip = Imprimir jogos da tela.<br> \
 				    <li>Clique <b>Imprimir...</b> para imprimir em uma impressora conectada \
-				    <li>Clique <b>PrÈ-visualizar</b> para ver o documento
+				    <li>Clique <b>Pr√©-visualizar</b> para ver o documento
 
-xsl.html = P·gina Web<br>HTML
-xsl.html.tip = Criar uma p·gina Web (arquivo HTML).<br>\
+xsl.html = P√°gina Web<br>HTML
+xsl.html.tip = Criar uma p√°gina Web (arquivo HTML).<br>\
 				   <li>Clique <b>Salvar como...</b> para salvar em um arquivo no disco\
-				   <li>Clique <b>PrÈ-visualizar no browser</b> para ver a p·gina em um navegador web
+				   <li>Clique <b>Pr√©-visualizar no browser</b> para ver a p√°gina em um navegador web
 
-xsl.dhtml = P·gina Web<br>din‚mica
-xsl.dhtml.tip = Cria uma p·gina com efeitos <i>din‚micos</i>.<br>\
+xsl.dhtml = P√°gina Web<br>din√¢mica
+xsl.dhtml.tip = Cria uma p√°gina com efeitos <i>din√¢micos</i>.<br>\
 				   <li>Clique <b>Salvar como...</b> para salvar em um arquivo no disco\
-				   <li>Clique <b>PrÈ-visualizar no browser</b> para ver a p·gina em um navegador web
+				   <li>Clique <b>Pr√©-visualizar no browser</b> para ver a p√°gina em um navegador web
 				  JavaScript deve estar habilitado no navegador web. 
 
-xsl.debug = Arquivo XML<br>(depuraÁ„o)
-export.xml.tip = Cria um arquivo XML para depuraÁ„o.
+xsl.debug = Arquivo XML<br>(depura√ß√£o)
+export.xml.tip = Cria um arquivo XML para depura√ß√£o.
 
 xsl.pdf = PDF Print
 xsl.pdf.tip = Criar ou imprimir um arquivo PDF.<br>\
 				<li>Clique <b>Salvar como...</b> para salvar em um arquivo no disco\
 				<li>Clique <b>Imprimir...</b> para imprimir o documento\
-				<li>Clique <b>PrÈ-visualizar</b> para ver o documento
+				<li>Clique <b>Pr√©-visualizar</b> para ver o documento
 
 xsl.tex = Arquivo TeX
 xsl.tex.tip = Cria um arquivo para ser processado pelo TeX.
@@ -944,7 +944,7 @@ xsl.html.figs.tt = Figurinos TrueType
 xsl.html.figs.img = Figurinos em imagem
 xsl.css.standalone = Folha de estilo CSS em arquivo separado
 
-xsl.html.img.dir = LocalizaÁ„o
+xsl.html.img.dir = Localiza√ß√£o
 xsl.create.images = Criar imagens
 
 xsl.pdf.embed = Embutir fontes TrueType
@@ -959,16 +959,16 @@ default.file.name = ChessGame
 
 print.preview.page.one =
 print.preview.page.two =
-print.preview.page.one.tip = mostrar uma p·gina
-print.preview.page.two.tip = mostrar duas p·ginas
+print.preview.page.one.tip = mostrar uma p√°gina
+print.preview.page.two.tip = mostrar duas p√°ginas
 
 print.preview.ori.land =
 print.preview.ori.port =
-print.preview.ori.land.tip = Usar orientaÁ„o de paisagem
-print.preview.ori.port.tip = Usar orientaÁ„o de retrato
+print.preview.ori.land.tip = Usar orienta√ß√£o de paisagem
+print.preview.ori.port.tip = Usar orienta√ß√£o de retrato
 
-print.preview.fit.page = P·gina inteira
-print.preview.fit.width = Largura da p·gina
+print.preview.fit.page = P√°gina inteira
+print.preview.fit.width = Largura da p√°gina
 print.preview.fit.textwidth = Largura do texto
 
 print.preview.next.page =
@@ -982,9 +982,9 @@ preview.wait = Aguarde...
 #	Online Update Dialog
 ##############################################################################
 
-online.update.title	= AtualizaÁ„o online
-online.update.tab.1	= Nova vers„o
-online.update.tab.2	= O que h· de novo?
+online.update.title	= Atualiza√ß√£o online
+online.update.tab.1	= Nova vers√£o
+online.update.tab.2	= O que h√° de novo?
 online.update.tab.3 	= Notas importantes
 
 update.install	= Baixar e instalar agora
@@ -993,19 +993,19 @@ update.mirror	= Baixar de site espelho
 
 download.file.progress 			= Baixando %file%
 download.file.title			= Download
-download.error.invalid.url		= URL inv·lida: %p%.
-download.error.connect.fail		= Conex„o com %p% falhou.
+download.error.invalid.url		= URL inv√°lida: %p%.
+download.error.connect.fail		= Conex√£o com %p% falhou.
 download.error.parse.xml		= Erro de sintaxe: %p%.
-download.error.version.missing	= ImpossÌvel ler vers„o de %p%.
+download.error.version.missing	= Imposs√≠vel ler vers√£o de %p%.
 download.error.os.missing		= Nenhum pacote encotrado para seu S.O.
-download.error.browser.fail		= ImpossÌvel mostrar %p%.
-download.error.update			= Um erro ocorreu na atualizaÁ„o do jose.\n Por favor, atualize a aplicaÁ„o manualmente.
+download.error.browser.fail		= Imposs√≠vel mostrar %p%.
+download.error.update			= Um erro ocorreu na atualiza√ß√£o do jose.\n Por favor, atualize a aplica√ß√£o manualmente.
 
-download.message.up.to.date		= Sua vers„o instalada est· atualizada.
-download.message.success		= jose foi atualizado para a vers„o %p% com sucesso.\n Por favor, reinicie a aplicaÁ„o.
+download.message.up.to.date		= Sua vers√£o instalada est√° atualizada.
+download.message.success		= jose foi atualizado para a vers√£o %p% com sucesso.\n Por favor, reinicie a aplica√ß√£o.
 
 download.message			= \
-  Vers„o <b>%version%</b> est· disponÌvel em <br>\
+  Vers√£o <b>%version%</b> est√° dispon√≠vel em <br>\
   <font color=blue>%url%</font><br>\
   Size: %size%
 
@@ -1018,36 +1018,36 @@ dialog.browser.title 	= Localizar navegador
 ##########################################
 
 error.not.selected 		= Por favor selecione um jogo para salvar.
-error.duplicate.database.access = Por favor, n„o execute duas inst‚ncias do jose ao mesmo tempo \n\
+error.duplicate.database.access = Por favor, n√£o execute duas inst√¢ncias do jose ao mesmo tempo \n\
 	e na mesma base de dados.\n\n\
 	Fazer isso pode ocasionar perda de dados. \n\
-	Por favor termine uma das inst‚ncias do jose.
-error.lnf.not.supported 	= Esta aparÍncia e comportamento n„o est„o disponÌveis\n nesta plataforma.
+	Por favor termine uma das inst√¢ncias do jose.
+error.lnf.not.supported 	= Esta apar√™ncia e comportamento n√£o est√£o dispon√≠veis\n nesta plataforma.
 
-error.bad.uci	= Este n„o parece ser um motor UCI.\n Tem certeza?
+error.bad.uci	= Este n√£o parece ser um motor UCI.\n Tem certeza?
 
 error.bug	= <center><b>Um erro inesperado ocorreu.</b></center><br><br> \
- Seria ˙til se vocÍ enviar um aviso de bug.<br>\
+ Seria √∫til se voc√™ enviar um aviso de bug.<br>\
  Por favor, tente descrever os passos que levaram ao erro<br>\
  e anexe este arquivo ao seu aviso: <br>\
   <center><b> %error.log% </b></center>
 
 # errors in setup dialog
 
-pos.error.white.king.missing	= O rei branco est· faltando.
-pos.error.black.king.missing	= O rei negro est· faltando.
+pos.error.white.king.missing	= O rei branco est√° faltando.
+pos.error.black.king.missing	= O rei negro est√° faltando.
 pos.error.too.many.white.kings	= Excesso de reis brancos.
 pos.error.too.many.black.kings	= Excesso de reis negros.
-pos.error.white.king.checked	= O rei branco n„o pode estar em xeque.
-pos.error.black.king.checked	= O rei negro n„o pode estar em xeque.
-pos.error.white.pawn.base		= Peıes brancos n„o podem ser colocados na primeira linha.
-pos.error.white.pawn.promo		= Peıes brancos n„o podem ser colocados na oitava linha.
-pos.error.black.pawn.base		= Peıes negros n„o podem ser colocados na oitava linha.
-pos.error.black.pawn.promo		= Peıes negros n„o podem ser colocados na primeira linha.
-pos.warning.too.many.white.pieces	= Excesso de peÁas brancas.
-pos.warning.too.many.black.pieces	= Excesso de peÁas negras.
-pos.warning.too.many.white.pawns	= Excesso de peıes brancos.
-pos.warning.too.many.black.pawns	= Excesso de peıes negros.
+pos.error.white.king.checked	= O rei branco n√£o pode estar em xeque.
+pos.error.black.king.checked	= O rei negro n√£o pode estar em xeque.
+pos.error.white.pawn.base		= Pe√µes brancos n√£o podem ser colocados na primeira linha.
+pos.error.white.pawn.promo		= Pe√µes brancos n√£o podem ser colocados na oitava linha.
+pos.error.black.pawn.base		= Pe√µes negros n√£o podem ser colocados na oitava linha.
+pos.error.black.pawn.promo		= Pe√µes negros n√£o podem ser colocados na primeira linha.
+pos.warning.too.many.white.pieces	= Excesso de pe√ßas brancas.
+pos.warning.too.many.black.pieces	= Excesso de pe√ßas negras.
+pos.warning.too.many.white.pawns	= Excesso de pe√µes brancos.
+pos.warning.too.many.black.pawns	= Excesso de pe√µes negros.
 pos.warning.too.many.white.knights	= Excesso de cavalos brancos.
 pos.warning.too.many.black.knights	= Excesso de cavalos negros.
 pos.warning.too.many.white.bishops	= Excesso de bispos brancos.
@@ -1065,7 +1065,7 @@ pos.warning.strange.black.bishops	= Bispos das negras da mesma cor?
 ##############################################################################
 
 
-base			= Estilo B·sico
+base			= Estilo B√°sico
 header			= Info do Jogo
 header.event	= Evento
 header.site		= Local
@@ -1079,24 +1079,24 @@ body.line		= Jogadas
 body.line.0		= Linha principal
 body.line.1		= Variante
 body.line.2		= Subvariante
-body.line.3		= 2™ Subvariante
-body.line.4		= 3™ Subvariante
-body.symbol		= SÌmbolos
+body.line.3		= 2¬™ Subvariante
+body.line.4		= 3¬™ Subvariante
+body.symbol		= S√≠mbolos
 body.inline		= Diagramas textuais
 body.figurine	= Figurinos
 body.figurine.0	= Linha principal
 body.figurine.1	= Variante
 body.figurine.2	= Subvariante
-body.figurine.3	= 2™ Subvariante
-body.figurine.4	= 3™ Subvariante
-body.comment	= Coment·rios
+body.figurine.3	= 2¬™ Subvariante
+body.figurine.4	= 3¬™ Subvariante
+body.comment	= Coment√°rios
 body.comment.0	= Linha principal
 body.comment.1	= Variante
 body.comment.2	= Subvariante
-body.comment.3	= 2™ Subvariante
-body.comment.4	= 3™ Subvariante
+body.comment.3	= 2¬™ Subvariante
+body.comment.4	= 3¬™ Subvariante
 body.result		= Resultado
-html.large	= Diagrama em p·gina da web
+html.large	= Diagrama em p√°gina da web
 
 
 ##############################################################################
@@ -1109,7 +1109,7 @@ dialog.read-progress.title 	= jose - Leitura de arquivo
 dialog.read-progress.text 	= lendo %fileName%
 
 dialog.eco 			= Classificar por ECO
-dialog.eco.clobber.eco 		= Sobrescrever cÛdigos ECO
+dialog.eco.clobber.eco 		= Sobrescrever c√≥digos ECO
 dialog.eco.clobber.name 	= Sobrescrever nomes de aberturas
 dialog.eco.language 		= Idioma:
 
@@ -1140,8 +1140,8 @@ fig.sv = BSLTDK
 fig.tr = ??????
 
 # Windows-1251 encoding (russian)
-fig.ru = œ— À‘" "
-fig.ukr = œ— À‘" "
+fig.ru = √è√ë√ä√ã√î"√ä√∞"
+fig.ukr = √è√ë√ä√ã√î"√ä√∞"
 # please note that Russians use the latin alphabet for files (a,b,c,d,e,f,g,h)
 # (so we don't have to care about that ;-)
 
@@ -1150,22 +1150,22 @@ fig.ukr = œ— À‘" "
 ##############################################################################
 
 lang.cs = Tcheco
-lang.da = DinamarquÍs
-lang.nl = HolandÍs
-lang.en = InglÍs
+lang.da = Dinamarqu√™s
+lang.nl = Holand√™s
+lang.en = Ingl√™s
 lang.et = Estoniano
-lang.fi = FinlandÍs
-lang.fr = FrancÍs
-lang.de = Alem„o
-lang.hu = H˙ngaro
-lang.is = IslandÍs
+lang.fi = Finland√™s
+lang.fr = Franc√™s
+lang.de = Alem√£o
+lang.hu = H√∫ngaro
+lang.is = Island√™s
 lang.it = Italiano
-lang.no = NorueguÍs
-lang.pl = PolonÍs
-lang.pt = PortuguÍs
+lang.no = Noruegu√™s
+lang.pl = Polon√™s
+lang.pt = Portugu√™s
 lang.ro = Romeno
 lang.es = Espanhol
-lang.ca = Catal„o
+lang.ca = Catal√£o
 lang.sv = Sueco
 lang.ru = Russo
 lang.he = Hebraico
@@ -1188,115 +1188,115 @@ pgn.nag.4.tip	= jogada muito ruim
 pgn.nag.5    	= !?
 pgn.nag.5.tip	= jogada interessante
 pgn.nag.6    	= ?!
-pgn.nag.6.tip	= jogada question·vel
-pgn.nag.7    = jogada forÁada
-pgn.nag.7.tip = jogada forÁada (todas as outras perdem rapidamente)
-pgn.nag.8    = jogada ˙nica
-pgn.nag.8.tip    = jogada ˙nica (n„o h· alternativas razo·veis)
+pgn.nag.6.tip	= jogada question√°vel
+pgn.nag.7    = jogada for√ßada
+pgn.nag.7.tip = jogada for√ßada (todas as outras perdem rapidamente)
+pgn.nag.8    = jogada √∫nica
+pgn.nag.8.tip    = jogada √∫nica (n√£o h√° alternativas razo√°veis)
 pgn.nag.9    = pior jogada
-pgn.nag.10.tip   = posiÁ„o em empate
-pgn.nag.11.tip   = chances iguais, posiÁ„o calma
-pgn.nag.12.tip   = chances iguais, posiÁ„o ativa
+pgn.nag.10.tip   = posi√ß√£o em empate
+pgn.nag.11.tip   = chances iguais, posi√ß√£o calma
+pgn.nag.12.tip   = chances iguais, posi√ß√£o ativa
 pgn.nag.13   = obscuro
-pgn.nag.13.tip   = posiÁ„o obscura
+pgn.nag.13.tip   = posi√ß√£o obscura
 pgn.nag.14	= +=
-pgn.nag.14.tip	= Brancas tÍm pequena vantagem
+pgn.nag.14.tip	= Brancas t√™m pequena vantagem
 pgn.nag.15   	= =+
-pgn.nag.15.tip 	= Negras tÍm pequena vantagem
+pgn.nag.15.tip 	= Negras t√™m pequena vantagem
 pgn.nag.16	= +/-
-pgn.nag.16.tip 	= Brancas tÍm vantagem moderada
+pgn.nag.16.tip 	= Brancas t√™m vantagem moderada
 pgn.nag.17	= -/+
-pgn.nag.17.tip 	= Negras tÍm vantagem moderada
+pgn.nag.17.tip 	= Negras t√™m vantagem moderada
 pgn.nag.18	= +-
-pgn.nag.18.tip  = Brancas tÍm vantagem decisiva
+pgn.nag.18.tip  = Brancas t√™m vantagem decisiva
 pgn.nag.19	= -+
-pgn.nag.19.tip 	= Negras tÍm vantagem decisiva
-pgn.nag.20   = Brancas tÍm vantagem esmagadora (as negras podem desistir)
-pgn.nag.21   = Negras tÍm vantagem esmagadora (as brancas podem desistir)
-pgn.nag.22   = Brancas est„o em zugzwang
-pgn.nag.23   = Negras est„o em zugzwang
-pgn.nag.24   = Brancas tÍm leve vantagem espacial
-pgn.nag.25   = Negras tÍm leve vantagem espacial
-pgn.nag.26   = Brancas tÍm vantagem espacial moderada
-pgn.nag.27   = Negras tÍm vantagem espacial moderada
-pgn.nag.28   = Brancas tÍm vantagem espacial decisiva
-pgn.nag.29   = Negras tÍm vantagem espacial decisiva
-pgn.nag.30   = Brancas tÍm uma leve vantagem de tempo (desenvolvimento)
-pgn.nag.31   = Negras tÍm uma leve vantagem de tempo (desenvolvimento)
-pgn.nag.32   = Brancas tÍm uma vantagem de tempo (desenvolvimento) moderada
-pgn.nag.33   = Negras tÍm uma vantagem de tempo (desenvolvimento) moderada
-pgn.nag.34   = Brancas tÍm uma vantagem de tempo (desenvolvimento) decisiva
-pgn.nag.35   = Negras tÍm uma vantagem de tempo (desenvolvimento) decisiva
-pgn.nag.36   = Brancas tÍm a iniciativa
-pgn.nag.37   = Negras tÍm a iniciativa
-pgn.nag.38   = Brancas tÍm uma iniciativa duradoura
-pgn.nag.39   = Negras tÍm uma iniciativa duradoura
-pgn.nag.40   = Brancas tÍm o ataque
-pgn.nag.41   = Negras tÍm o ataqe
-pgn.nag.42   = Brancas tÍm compensaÁ„o insuficiente pelo dÈficit material
-pgn.nag.43   = Negras tÍm compensaÁ„o insuficiente pelo dÈficit material
-pgn.nag.44   = Brancas tÍm compensaÁ„o suficiente pelo dÈficit material
-pgn.nag.45   = Negras tÍm compensaÁ„o suficiente pelo dÈficit material
-pgn.nag.46   = Brancas tÍm compensaÁ„o mais que adequada pelo dÈficit material
-pgn.nag.47   = Negras tÍm compensaÁ„o mais que adequada pelo dÈficit material
-pgn.nag.48   = Brancas tÍm uma leve vantagem de controle do centro
-pgn.nag.49   = Negras tÍm uma leve vantagem de controle do centro
-pgn.nag.50   = Brancas tÍm uma vantagem de controle do centro moderada
-pgn.nag.51   = Negras tÍm uma vantagem de controle do centro moderada
-pgn.nag.52   = Brancas tÍm vantagem de controle do centro decisiva
-pgn.nag.53   = Negras tÍm vantagem de controle do centro decisiva
-pgn.nag.54   = Brancas tÍm leve vantagem no controle da ala do rei
-pgn.nag.55   = Negras tÍm leve vantagem no controle da ala do rei
-pgn.nag.56   = Brancas tÍm vantagem moderada no controle da ala do rei
-pgn.nag.57   = Negras tÍm vantagem moderada no controle da ala do rei
-pgn.nag.58   = Brancas tÍm vantagem decisiva no controle da ala do rei
-pgn.nag.59   = Negras tÍm vantagem decisiva no controle da ala do rei
-pgn.nag.60   = Brancas tÍm leve vantagem no controle da ala da dama
-pgn.nag.61   = Negras tÍm leve vantagem no controle da ala da dama
-pgn.nag.62   = Brancas tÍm vantagem moderada no controle da ala da dama
-pgn.nag.63   = Negras tÍm vantagem moderada no controle da ala da dama
-pgn.nag.64   = Brancas tÍm vantagem decisiva no controle da ala da dama
-pgn.nag.65   = Negras tÍm vantagem decisiva no controle da ala da dama
-pgn.nag.66   = Brancas tÍm vulnerabilidade na primeira linha
-pgn.nag.67   = Negras tÍm vulnerabilidade na primeira linha
-pgn.nag.68   = Brancas tÍm a primeira linha bem protegida
-pgn.nag.69   = Negras tÍm a primeira linha bem protegida
-pgn.nag.70   = Brancas tÍm o rei mal protegido
-pgn.nag.71   = Negras tÍm o rei mal protegido
-pgn.nag.72   = Brancas tÍm o rei bem protegido
-pgn.nag.73   = Negras tÍm o rei bem protegido
-pgn.nag.74   = Brancas tÍm o rei mal colocado
-pgn.nag.75   = Negras tÍm o rei mal colocado
-pgn.nag.76   = Brancas tÍm o rei bem colocado
-pgn.nag.77   = Negras tÍm o rei bem colocado
-pgn.nag.78   = Brancas tÍm uma estrutura de peıes muito fraca
-pgn.nag.79   = Negras tÍm uma estrutura de peıes muito fraca
-pgn.nag.80   = Brancas tÍm estrutura de peıes fraca
-pgn.nag.81   = Negras tÍm estrutura de peıes fraca
-pgn.nag.82   = Brancas tÍm estrutura de peıes moderadamente forte
-pgn.nag.83   = Negras tÍm estrutura de peıes moderadamente forte
-pgn.nag.84   = Brancas tÍm estrutura de peıes muito forte
-pgn.nag.85   = Negras tÍm estrutura de peıes muito forte
-pgn.nag.86   = Brancas tÍm mau posicionamento dos cavalos
-pgn.nag.87   = Negras tÍm mau posicionamento dos cavalos
-pgn.nag.88   = Brancas tÍm bom posicionamento dos cavalos
-pgn.nag.89   = Negras tÍm bom posicionamento dos cavalos
-pgn.nag.90   = Brancas tÍm mau posicionamento dos bispos
-pgn.nag.91   = Negras tÍm mau posicionamento dos bispos
-pgn.nag.92   = Brancas tÍm bom posicionamento dos bispos
-pgn.nag.93   = Negras tÍm bom posicionamento dos bispos
-pgn.nag.94   = Brancas tÍm mau posicionamento das torres
-pgn.nag.95   = Negras tÍm mau posicionamento das torres
-pgn.nag.96   = Brancas tÍm bom posiconamento das torres
-pgn.nag.97   = Negras tÍm bom posiconamento das torres
-pgn.nag.98   = Brancas tÍm m· colocaÁ„o da dama
-pgn.nag.99   = Negras tÍm m· colocaÁ„o da dama
-pgn.nag.100  = Brancas tÍm boa colocaÁ„o da dama
-pgn.nag.101  = Negras tÍm boa colocaÁ„o da dama
-pgn.nag.102  = Brancas tÍm m· coordenaÁ„o das peÁas
-pgn.nag.103  = Negras tÍm m· coordenaÁ„o das peÁas
-pgn.nag.104  = Brancas tÍm boa coordenaÁ„o das peÁas
-pgn.nag.105  = Negras tÍm boa coordenaÁ„o das peÁas
+pgn.nag.19.tip 	= Negras t√™m vantagem decisiva
+pgn.nag.20   = Brancas t√™m vantagem esmagadora (as negras podem desistir)
+pgn.nag.21   = Negras t√™m vantagem esmagadora (as brancas podem desistir)
+pgn.nag.22   = Brancas est√£o em zugzwang
+pgn.nag.23   = Negras est√£o em zugzwang
+pgn.nag.24   = Brancas t√™m leve vantagem espacial
+pgn.nag.25   = Negras t√™m leve vantagem espacial
+pgn.nag.26   = Brancas t√™m vantagem espacial moderada
+pgn.nag.27   = Negras t√™m vantagem espacial moderada
+pgn.nag.28   = Brancas t√™m vantagem espacial decisiva
+pgn.nag.29   = Negras t√™m vantagem espacial decisiva
+pgn.nag.30   = Brancas t√™m uma leve vantagem de tempo (desenvolvimento)
+pgn.nag.31   = Negras t√™m uma leve vantagem de tempo (desenvolvimento)
+pgn.nag.32   = Brancas t√™m uma vantagem de tempo (desenvolvimento) moderada
+pgn.nag.33   = Negras t√™m uma vantagem de tempo (desenvolvimento) moderada
+pgn.nag.34   = Brancas t√™m uma vantagem de tempo (desenvolvimento) decisiva
+pgn.nag.35   = Negras t√™m uma vantagem de tempo (desenvolvimento) decisiva
+pgn.nag.36   = Brancas t√™m a iniciativa
+pgn.nag.37   = Negras t√™m a iniciativa
+pgn.nag.38   = Brancas t√™m uma iniciativa duradoura
+pgn.nag.39   = Negras t√™m uma iniciativa duradoura
+pgn.nag.40   = Brancas t√™m o ataque
+pgn.nag.41   = Negras t√™m o ataqe
+pgn.nag.42   = Brancas t√™m compensa√ß√£o insuficiente pelo d√©ficit material
+pgn.nag.43   = Negras t√™m compensa√ß√£o insuficiente pelo d√©ficit material
+pgn.nag.44   = Brancas t√™m compensa√ß√£o suficiente pelo d√©ficit material
+pgn.nag.45   = Negras t√™m compensa√ß√£o suficiente pelo d√©ficit material
+pgn.nag.46   = Brancas t√™m compensa√ß√£o mais que adequada pelo d√©ficit material
+pgn.nag.47   = Negras t√™m compensa√ß√£o mais que adequada pelo d√©ficit material
+pgn.nag.48   = Brancas t√™m uma leve vantagem de controle do centro
+pgn.nag.49   = Negras t√™m uma leve vantagem de controle do centro
+pgn.nag.50   = Brancas t√™m uma vantagem de controle do centro moderada
+pgn.nag.51   = Negras t√™m uma vantagem de controle do centro moderada
+pgn.nag.52   = Brancas t√™m vantagem de controle do centro decisiva
+pgn.nag.53   = Negras t√™m vantagem de controle do centro decisiva
+pgn.nag.54   = Brancas t√™m leve vantagem no controle da ala do rei
+pgn.nag.55   = Negras t√™m leve vantagem no controle da ala do rei
+pgn.nag.56   = Brancas t√™m vantagem moderada no controle da ala do rei
+pgn.nag.57   = Negras t√™m vantagem moderada no controle da ala do rei
+pgn.nag.58   = Brancas t√™m vantagem decisiva no controle da ala do rei
+pgn.nag.59   = Negras t√™m vantagem decisiva no controle da ala do rei
+pgn.nag.60   = Brancas t√™m leve vantagem no controle da ala da dama
+pgn.nag.61   = Negras t√™m leve vantagem no controle da ala da dama
+pgn.nag.62   = Brancas t√™m vantagem moderada no controle da ala da dama
+pgn.nag.63   = Negras t√™m vantagem moderada no controle da ala da dama
+pgn.nag.64   = Brancas t√™m vantagem decisiva no controle da ala da dama
+pgn.nag.65   = Negras t√™m vantagem decisiva no controle da ala da dama
+pgn.nag.66   = Brancas t√™m vulnerabilidade na primeira linha
+pgn.nag.67   = Negras t√™m vulnerabilidade na primeira linha
+pgn.nag.68   = Brancas t√™m a primeira linha bem protegida
+pgn.nag.69   = Negras t√™m a primeira linha bem protegida
+pgn.nag.70   = Brancas t√™m o rei mal protegido
+pgn.nag.71   = Negras t√™m o rei mal protegido
+pgn.nag.72   = Brancas t√™m o rei bem protegido
+pgn.nag.73   = Negras t√™m o rei bem protegido
+pgn.nag.74   = Brancas t√™m o rei mal colocado
+pgn.nag.75   = Negras t√™m o rei mal colocado
+pgn.nag.76   = Brancas t√™m o rei bem colocado
+pgn.nag.77   = Negras t√™m o rei bem colocado
+pgn.nag.78   = Brancas t√™m uma estrutura de pe√µes muito fraca
+pgn.nag.79   = Negras t√™m uma estrutura de pe√µes muito fraca
+pgn.nag.80   = Brancas t√™m estrutura de pe√µes fraca
+pgn.nag.81   = Negras t√™m estrutura de pe√µes fraca
+pgn.nag.82   = Brancas t√™m estrutura de pe√µes moderadamente forte
+pgn.nag.83   = Negras t√™m estrutura de pe√µes moderadamente forte
+pgn.nag.84   = Brancas t√™m estrutura de pe√µes muito forte
+pgn.nag.85   = Negras t√™m estrutura de pe√µes muito forte
+pgn.nag.86   = Brancas t√™m mau posicionamento dos cavalos
+pgn.nag.87   = Negras t√™m mau posicionamento dos cavalos
+pgn.nag.88   = Brancas t√™m bom posicionamento dos cavalos
+pgn.nag.89   = Negras t√™m bom posicionamento dos cavalos
+pgn.nag.90   = Brancas t√™m mau posicionamento dos bispos
+pgn.nag.91   = Negras t√™m mau posicionamento dos bispos
+pgn.nag.92   = Brancas t√™m bom posicionamento dos bispos
+pgn.nag.93   = Negras t√™m bom posicionamento dos bispos
+pgn.nag.94   = Brancas t√™m mau posicionamento das torres
+pgn.nag.95   = Negras t√™m mau posicionamento das torres
+pgn.nag.96   = Brancas t√™m bom posiconamento das torres
+pgn.nag.97   = Negras t√™m bom posiconamento das torres
+pgn.nag.98   = Brancas t√™m m√° coloca√ß√£o da dama
+pgn.nag.99   = Negras t√™m m√° coloca√ß√£o da dama
+pgn.nag.100  = Brancas t√™m boa coloca√ß√£o da dama
+pgn.nag.101  = Negras t√™m boa coloca√ß√£o da dama
+pgn.nag.102  = Brancas t√™m m√° coordena√ß√£o das pe√ßas
+pgn.nag.103  = Negras t√™m m√° coordena√ß√£o das pe√ßas
+pgn.nag.104  = Brancas t√™m boa coordena√ß√£o das pe√ßas
+pgn.nag.105  = Negras t√™m boa coordena√ß√£o das pe√ßas
 pgn.nag.106  = Brancas jogaram muito mal a abertura
 pgn.nag.107  = Negras jogaram muito mal a abertura
 pgn.nag.108  = Brancas jogaram mal a abertura
@@ -1321,43 +1321,43 @@ pgn.nag.126  = Brancas jogaram bem o final
 pgn.nag.127  = Negras jogaram bem o final
 pgn.nag.128  = Brancas jogaram muito bem o final
 pgn.nag.129  = Negras jogaram muito bem o final
-pgn.nag.130  = Brancas tÍm leve contrajogo
-pgn.nag.131  = Negras tÍm leve contrajogo
-pgn.nag.132  = Brancas tÍm contrajogo moderado
-pgn.nag.133  = Negras tÍm contrajogo moderado
-pgn.nag.134  = Brancas tÍm contrajogo decisivo
-pgn.nag.135  = Negras tÍm contrajogo decisivo
-pgn.nag.136  = Brancas tÍm press„o moderada do relÛgio
-pgn.nag.137  = Negras tÍm press„o moderada do relÛgio
-pgn.nag.138  = Brancas tÍm severa press„o do relÛgio
-pgn.nag.139  = Negras tÍm severa press„o do relÛgio
+pgn.nag.130  = Brancas t√™m leve contrajogo
+pgn.nag.131  = Negras t√™m leve contrajogo
+pgn.nag.132  = Brancas t√™m contrajogo moderado
+pgn.nag.133  = Negras t√™m contrajogo moderado
+pgn.nag.134  = Brancas t√™m contrajogo decisivo
+pgn.nag.135  = Negras t√™m contrajogo decisivo
+pgn.nag.136  = Brancas t√™m press√£o moderada do rel√≥gio
+pgn.nag.137  = Negras t√™m press√£o moderada do rel√≥gio
+pgn.nag.138  = Brancas t√™m severa press√£o do rel√≥gio
+pgn.nag.139  = Negras t√™m severa press√£o do rel√≥gio
 
 # following codes are defined by Fritz or SCID
 
-pgn.nag.140  	= com a idÈia
+pgn.nag.140  	= com a id√©ia
 pgn.nag.141  	= contra
-pgn.nag.142  	= È melhor
-pgn.nag.143  	= È pior
+pgn.nag.142  	= √© melhor
+pgn.nag.143  	= √© pior
 pgn.nag.144  	= =
-pgn.nag.144.tip = È equivalente
+pgn.nag.144.tip = √© equivalente
 pgn.nag.145  	= RR
-pgn.nag.145.tip	= coment·rio do editor
+pgn.nag.145.tip	= coment√°rio do editor
 pgn.nag.146  	= N
 pgn.nag.146.tip = Novidade
 pgn.nag.147	= Ponto fraco
 pgn.nag.148	= Fim de jogo
 pgn.nag.149	= linha
 pgn.nag.150	= Diagonal
-pgn.nag.151	= Brancas tÍm um par de bispos
-pgn.nag.152	= Negras tÍm um par de bispos
+pgn.nag.151	= Brancas t√™m um par de bispos
+pgn.nag.152	= Negras t√™m um par de bispos
 pgn.nag.153	= Bispos de cores opostas
 pgn.nag.154	= Bispos de mesma cor
 
 # following codes are defined by us (equivalent to Informator symbols)
 # (is there a standard definition for these symbols ?)
 
-pgn.nag.156		= pe„o passado
-pgn.nag.157		= mais peıes
+pgn.nag.156		= pe√£o passado
+pgn.nag.157		= mais pe√µes
 pgn.nag.158		= com
 pgn.nag.159		= sem
 pgn.nag.161		= ver
@@ -1365,11 +1365,11 @@ pgn.nag.163		= coluna
 
 # defined by SCID:
 pgn.nag.190		= etc.
-pgn.nag.191		= peıes dobrados
-pgn.nag.192		= peıes separados
-pgn.nag.193		= peıes unidos
-pgn.nag.194		= peıes "dependurados"
-pgn.nag.195		= peıes atrasaddos
+pgn.nag.191		= pe√µes dobrados
+pgn.nag.192		= pe√µes separados
+pgn.nag.193		= pe√µes unidos
+pgn.nag.194		= pe√µes "dependurados"
+pgn.nag.195		= pe√µes atrasaddos
 
 # this code is only defined by us
 pgn.nag.201  = Diagrama

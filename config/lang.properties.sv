@@ -8,36 +8,36 @@
 application.name	= jose
 
 #	Frame Titles
-window.board	= Schackbräde
-window.console	= Schackmotor-inställningar
+window.board	= SchackbrÃ¤de
+window.console	= Schackmotor-instÃ¤llningar
 window.database	= Databas
 window.filter	= Filter
 window.list	= Partilista
 window.clock	= Klocka
 window.game	= Parti
 window.engine	= Schackmotor
-window.eval     = Värdering
+window.eval     = VÃ¤rdering
 
 window.collectionlist	= Databas
-window.query		= Sök
+window.query		= SÃ¶k
 window.gamelist		= Databas
 
-window.sqlquery		= SQL Sökning
+window.sqlquery		= SQL SÃ¶kning
 window.sqllist		= Resultat
 
 window.toolbar.1	= Verktygsrad 1
 window.toolbar.2	= Verktygsrad 2
 window.toolbar.3	= Verktygsrad 3
 window.toolbar.symbols	= Kommentarer
-window.help		        = Hjälp
-window.print.preview    = Förhandsgranskning
+window.help		        = HjÃ¤lp
+window.print.preview    = FÃ¶rhandsgranskning
 
 # dialog titles
 
 dialog.option	= Alternativ
 dialog.about	= Om jose
 dialog.animate  = Spela upp
-dialog.setup	= Inställningar
+dialog.setup	= InstÃ¤llningar
 dialog.message.title = Meddelande
 
 # number formats:
@@ -56,39 +56,39 @@ menu.file		= Arkiv
 menu.file.new		= Nytt
 menu.file.new.tip	= Startar ett nytt parti
 menu.file.new.frc		= Nytt FRC
-menu.file.open		= Öppna...
-menu.file.open.tip  	= Öppnar en PGN-fil
-menu.file.open.url	= Öppna URL...
-menu.file.close		= Stäng
-menu.file.close.tip	= Stänger det aktuella fönstret
+menu.file.open		= Ã–ppna...
+menu.file.open.tip  	= Ã–ppnar en PGN-fil
+menu.file.open.url	= Ã–ppna URL...
+menu.file.close		= StÃ¤ng
+menu.file.close.tip	= StÃ¤nger det aktuella fÃ¶nstret
 menu.file.save		= Spara
 menu.file.save.tip  	= Sparar det aktuella partiet i databasen
 menu.file.save.as    	= Spara som...
 menu.file.save.as.tip	= Sparar en ny kopia av det aktuella partiet i databasen
 menu.file.save.all   	= Spara alla
-menu.file.save.all.tip  = Sparar alla öppna partier i databasen
-menu.file.revert	= Återgå till partiet
+menu.file.save.all.tip  = Sparar alla Ã¶ppna partier i databasen
+menu.file.revert	= Ã…tergÃ¥ till partiet
 menu.file.print		= Skriv ut...
 menu.file.print.tip	= Skriver ut det aktuella partiet
-menu.file.print.setup	= Skrivarinställningar...
-menu.file.print.setup.tip = Ställer in skrivare och pappersstorlek
-menu.file.print.preview = Förhandsgranskning...
+menu.file.print.setup	= SkrivarinstÃ¤llningar...
+menu.file.print.setup.tip = StÃ¤ller in skrivare och pappersstorlek
+menu.file.print.preview = FÃ¶rhandsgranskning...
 menu.file.quit		= Avsluta
 menu.file.quit.tip	= Avslutar Jose
 
 # Edit Menu
 
 menu.edit		= Redigera
-menu.edit.undo		= Ångra (%action%)
-menu.edit.cant.undo 	= Ångra
-menu.edit.redo		= Gör om (%action%)
-menu.edit.cant.redo 	= Gör om
-menu.edit.select.all    = Välj alla
-menu.edit.select.none   = Välj ingen
+menu.edit.undo		= Ã…ngra (%action%)
+menu.edit.cant.undo 	= Ã…ngra
+menu.edit.redo		= GÃ¶r om (%action%)
+menu.edit.cant.redo 	= GÃ¶r om
+menu.edit.select.all    = VÃ¤lj alla
+menu.edit.select.none   = VÃ¤lj ingen
 menu.edit.cut		= Klipp ut
 menu.edit.copy		= Kopiera
-menu.edit.copy.fen  = FEN sträng
-menu.edit.copy.fen.tip = Kopierar den aktuella positionen till klippboken (som en FEN-sträng)
+menu.edit.copy.fen  = FEN strÃ¤ng
+menu.edit.copy.fen.tip = Kopierar den aktuella positionen till klippboken (som en FEN-strÃ¤ng)
 menu.edit.copy.img  = Bild+Bakgrund
 menu.edit.copy.img.tip = Kopierar den aktuella positionen till klippboken (som en bild med bakgrund)
 menu.edit.copy.imgt  = Bild
@@ -99,27 +99,27 @@ menu.edit.copy.text.tip = Kopierar den aktuella positionen till klippboken (som 
 menu.edit.copy.pgn  = Kopiera PGN
 menu.edit.copy.pgn.tip = Kopierar det aktuella partiet till klippboken (som en PGN-text)
 menu.edit.paste		= Klistra in
-menu.edit.paste.tip = Klistrar in från Klippboken
+menu.edit.paste.tip = Klistrar in frÃ¥n Klippboken
 menu.edit.paste.copy		= Klistra in kopierade partier
-menu.edit.paste.copy.tip 	= Klistrar in partier från klippboken
+menu.edit.paste.copy.tip 	= Klistrar in partier frÃ¥n klippboken
 menu.edit.paste.same 	= Klistra in partier
-menu.edit.paste.same.tip = Klistrar in partier från klippboken
+menu.edit.paste.same.tip = Klistrar in partier frÃ¥n klippboken
 menu.edit.paste.pgn = Klistra in PGN
-menu.edit.paste.pgn.tip = Klistrar in ett parti från klippboken (som en PGN-text)
-menu.edit.clear		= Töm
+menu.edit.paste.pgn.tip = Klistrar in ett parti frÃ¥n klippboken (som en PGN-text)
+menu.edit.clear		= TÃ¶m
 menu.edit.option	= Alternativ...
-menu.edit.option.tip	= Öppnar Alternativinställningarna
+menu.edit.option.tip	= Ã–ppnar AlternativinstÃ¤llningarna
 
 menu.edit.games			= Databas
 menu.edit.collection.new 	= Ny katalog
 menu.edit.collection.rename 	= Byt namn
-menu.edit.empty.trash		= Töm skräpkorg
+menu.edit.empty.trash		= TÃ¶m skrÃ¤pkorg
 menu.edit.restore		= Ta tillbaka
 
 #menu.edit.position.index    = Uppdatera Positionsindex
-menu.edit.search.current    = Sök efter denna position
+menu.edit.search.current    = SÃ¶k efter denna position
 menu.edit.ecofy             = Klassificera ECO
-menu.edit.search.current    = Sök efter denna position
+menu.edit.search.current    = SÃ¶k efter denna position
 menu.edit.ecofy             = Klassificera ECO
 
 menu.edit.style = Format
@@ -127,41 +127,41 @@ menu.edit.bold = Fet
 menu.edit.italic = Lutande
 menu.edit.underline = Understruken
 menu.edit.plain = Enkel text
-menu.edit.left = Vänsterjusterad
+menu.edit.left = VÃ¤nsterjusterad
 menu.edit.center = Centrerad
-menu.edit.right = Högerjusterad
-menu.edit.larger = Öka textstorlek
+menu.edit.right = HÃ¶gerjusterad
+menu.edit.larger = Ã–ka textstorlek
 menu.edit.smaller = Minska textstorlek
-menu.edit.color = Textfärg
+menu.edit.color = TextfÃ¤rg
 
 # Game Menu
 
 menu.game		= Parti
 menu.game.details	= Partidata...
 menu.game.analysis  	= Analysmod
-menu.game.navigate	= Gå till...
+menu.game.navigate	= GÃ¥ till...
 menu.game.time.controls = Tidskontroller
 menu.game.time.control = Tidskontroll
-menu.game.details.tip 	= Ändra partidata (Spelare,etc.)
-menu.game.hint		= Be om hjälp
-menu.game.hint.tip  = Visar hjälp
+menu.game.details.tip 	= Ã„ndra partidata (Spelare,etc.)
+menu.game.hint		= Be om hjÃ¤lp
+menu.game.hint.tip  = Visar hjÃ¤lp
 menu.game.draw		= Erbjud remi
 menu.game.resign	= Ge upp
 menu.game.2d		= 2D utseende
 menu.game.3d		= 3D utseende
-menu.game.flip		= Vänd schackbrädet
+menu.game.flip		= VÃ¤nd schackbrÃ¤det
 menu.game.coords	= Koordinater
-menu.game.coords.tip	= Ändrar koordinatvisning
+menu.game.coords.tip	= Ã„ndrar koordinatvisning
 menu.game.animate 	= Spela upp...
-menu.game.previous 	= Förra partiet
-menu.game.next 		= Nästa parti
-menu.game.close 	= Stäng
-menu.game.close.tip 	= Stäng aktuellt parti
-menu.game.close.all 	= Stäng alla
-menu.game.close.all.tip = Stänger alla öppna partier
-menu.game.close.all.but = Stäng alla UTOM detta
-menu.game.close.all.but.tip = Stänger alla öppna partier utom det aktuella partiet
-menu.game.setup		= Sätt up ställning
+menu.game.previous 	= FÃ¶rra partiet
+menu.game.next 		= NÃ¤sta parti
+menu.game.close 	= StÃ¤ng
+menu.game.close.tip 	= StÃ¤ng aktuellt parti
+menu.game.close.all 	= StÃ¤ng alla
+menu.game.close.all.tip = StÃ¤nger alla Ã¶ppna partier
+menu.game.close.all.but = StÃ¤ng alla UTOM detta
+menu.game.close.all.but.tip = StÃ¤nger alla Ã¶ppna partier utom det aktuella partiet
+menu.game.setup		= SÃ¤tt up stÃ¤llning
 
 menu.game.copy.line = Kopiera variant
 menu.game.copy.line.tip = Kopierar denna variant till klippboken
@@ -170,47 +170,47 @@ menu.game.paste.line.tip = Infogar denna variant i det aktuella partiet
 
 # Window Menu
 
-menu.window		= Fönster
-menu.window.fullscreen 	= Helskärmsvisning
-menu.window.reset   	= Återställ layouten
+menu.window		= FÃ¶nster
+menu.window.fullscreen 	= HelskÃ¤rmsvisning
+menu.window.reset   	= Ã…terstÃ¤ll layouten
 
 # Help Menu
 
-menu.help		= Hjälp
+menu.help		= HjÃ¤lp
 menu.help.splash	= Om...
 menu.help.about		= Information...
 menu.help.license	= Licens...
-menu.help.context   	= Hjälp om Jose
+menu.help.context   	= HjÃ¤lp om Jose
 menu.help.manual    	= Manual
-menu.help.web		= jose på internet
+menu.help.web		= jose pÃ¥ internet
 
 menu.web.home		= Hemsida
 menu.web.update		= Uppdatering via internet 
 menu.web.download	= Ladda ner
 menu.web.report		= Felrapporter
-menu.web.support	= Supportförfrågningar
-menu.web.feature	= Funktionsförfrågningar
+menu.web.support	= SupportfÃ¶rfrÃ¥gningar
+menu.web.feature	= FunktionsfÃ¶rfrÃ¥gningar
 menu.web.forum		= Forum
 menu.web.donate     = Donera
-menu.web.browser	= Välj webläsare...
+menu.web.browser	= VÃ¤lj weblÃ¤sare...
 
 
 ##############################################################################
 # 	Context Menu
 ##############################################################################
 
-panel.hide		= Dölj
-panel.hide.tip		= Döljer detta fönster
-panel.undock		= Nytt fönster
-panel.undock.tip	= Öppnar ett nytt fönster
+panel.hide		= DÃ¶lj
+panel.hide.tip		= DÃ¶ljer detta fÃ¶nster
+panel.undock		= Nytt fÃ¶nster
+panel.undock.tip	= Ã–ppnar ett nytt fÃ¶nster
 panel.move		= Flytta
-panel.move.tip		= Flyttar detta fönster till en annan position
-panel.dock		= Stäng
-panel.dock.tip		= Stänger detta fönster
+panel.move.tip		= Flyttar detta fÃ¶nster till en annan position
+panel.dock		= StÃ¤ng
+panel.dock.tip		= StÃ¤nger detta fÃ¶nster
 
 panel.orig.pos = Originalpositionen
-panel.dock.here = Stäng fönstret här
-panel.undock.here = Nytt fönster här
+panel.dock.here = StÃ¤ng fÃ¶nstret hÃ¤r
+panel.undock.here = Nytt fÃ¶nster hÃ¤r
 
 #################
 # Document Panel
@@ -218,29 +218,29 @@ panel.undock.here = Nytt fönster här
 
 # deprecated:
 tab.place 	= Kommentarsplacering
-tab.place.top 	= Över
-tab.place.left 	= Vänster
+tab.place.top 	= Ã–ver
+tab.place.left 	= VÃ¤nster
 tab.place.bottom = Under
-tab.place.right = Höger
+tab.place.right = HÃ¶ger
 #
 
 tab.layout 		= Kommentarslayout
-tab.layout.wrap 	= Vänd
+tab.layout.wrap 	= VÃ¤nd
 tab.layout.scroll 	= Scrolla
 
 doc.menu.annotate 	= Kommentera
 doc.menu.delete.comment = Ta bort kommentar
-doc.menu.line.promote 	= Lägg till variant
+doc.menu.line.promote 	= LÃ¤gg till variant
 doc.menu.line.delete 	= Ta bort variant
 doc.menu.line.cut 	= Avsluta variant
 doc.menu.line.uncomment = Tar bort alla kommentarer
 doc.menu.remove.annotation = -Inga-
 doc.menu.more.annotations = fler...
 
-tab.untitled 	= Namnlös
-confirm 	= Bekräfta
+tab.untitled 	= NamnlÃ¶s
+confirm 	= BekrÃ¤fta
 confirm.save.one = Spara aktuellt parti ?
-confirm.save.all = Spara ändrade partier ?
+confirm.save.all = Spara Ã¤ndrade partier ?
 
 dialog.confirm.save = Spara
 dialog.confirm.dont.save = Spara inte
@@ -248,12 +248,12 @@ dialog.confirm.dont.save = Spara inte
 dialog.engine.offers.draw = %engine% erbjuder remi.
 
 dialog.accept.draw = Acceptera remi
-dialog.decline.draw = Avböj remi
+dialog.decline.draw = AvbÃ¶j remi
 
 dialog.autoimport.title = Importera
-dialog.autoimport.ask = Filen ^0 har ändrats på disken \n Öppna den igen ?
+dialog.autoimport.ask = Filen ^0 har Ã¤ndrats pÃ¥ disken \n Ã–ppna den igen ?
 
-dialog.paste.message = Du är på väg att infoga data från klippboken. \n\
+dialog.paste.message = Du Ã¤r pÃ¥ vÃ¤g att infoga data frÃ¥n klippboken. \n\
      Vill du flytta partierna, eller skapa en ny kopia ?
 dialog.paste.title = Klistra in partier
 dialog.paste.same = Flytta
@@ -263,12 +263,12 @@ dialog.paste.copy = Kopiera
 # Game Navigation
 ###################
 
-move.first	= Början av partiet
+move.first	= BÃ¶rjan av partiet
 move.backward 	= Tillbaka
-move.delete 	= Ta tillbaka förra draget
+move.delete 	= Ta tillbaka fÃ¶rra draget
 engine.stop 	= Stopp
 move.start 	= Dra nu
-move.forward 	= Framåt
+move.forward 	= FramÃ¥t
 move.last 	= Slutet av partiet
 move.animate	 = Spela upp
 
@@ -277,15 +277,15 @@ move.animate	 = Spela upp
 # Engine Panel
 ##################################
 
-engine.paused.tip 	= %engine% är stoppad
-engine.thinking.tip 	= %engine% tänker på sitt nästa drag
-engine.pondering.tip 	= %engine% tänker på ditt nästa drag
+engine.paused.tip 	= %engine% Ã¤r stoppad
+engine.thinking.tip 	= %engine% tÃ¤nker pÃ¥ sitt nÃ¤sta drag
+engine.pondering.tip 	= %engine% tÃ¤nker pÃ¥ ditt nÃ¤sta drag
 engine.analyzing.tip 	= %engine% analyserar
-engine.hint.tip 	= Hjälp: %move%
+engine.hint.tip 	= HjÃ¤lp: %move%
 
 engine.paused.title 	= %engine%
-engine.thinking.title 	= %engine% tänker
-engine.pondering.title 	= %engine% tänker på ditt drag
+engine.thinking.title 	= %engine% tÃ¤nker
+engine.pondering.title 	= %engine% tÃ¤nker pÃ¥ ditt drag
 engine.analyzing.title 	= %engine% analyserar
 
 plugin.name 		= %name% %version%
@@ -294,12 +294,12 @@ plugin.name.author 	= %name% %version% av %author%
 plugin.book.move 	= Bok
 plugin.book.move.tip 	= Bokdrag
 plugin.hash.move 	= Hashtabell
-plugin.hash.move.tip 	= Utvärderat från hashtabellen
+plugin.hash.move.tip 	= UtvÃ¤rderat frÃ¥n hashtabellen
 plugin.tb.move 		= Slutspelstabell
-plugin.tb.move.tip 	= Utvärderat från slutspelstabellen
+plugin.tb.move.tip 	= UtvÃ¤rderat frÃ¥n slutspelstabellen
 
 plugin.currentmove.title       = Drag
-plugin.depth.title      = Sökdjup
+plugin.depth.title      = SÃ¶kdjup
 plugin.elapsed.time.title  = Tid
 plugin.nodecount.title  = Noder
 plugin.nps.title        = Noder/sekund
@@ -307,55 +307,55 @@ plugin.nps.title        = Noder/sekund
 plugin.currentmove = %move%
 plugin.currentmove.max = %move% %moveno%/%maxmove%
 
-plugin.currentmove.tip = Det nu värderade draget är %move%.
-plugin.currentmove.max.tip = Det nu värderade draget är %move%. (nr. %moveno% av %maxmove%)
+plugin.currentmove.tip = Det nu vÃ¤rderade draget Ã¤r %move%.
+plugin.currentmove.max.tip = Det nu vÃ¤rderade draget Ã¤r %move%. (nr. %moveno% av %maxmove%)
 
 plugin.depth 		= %depth%
-plugin.depth.tip 	= Sökdjup: %depth% ply
+plugin.depth.tip 	= SÃ¶kdjup: %depth% ply
 
 plugin.depth.sel 	= %depth% (%seldepth%)
-plugin.depth.sel.tip 	= Sökdjup: %depth% ply, Valt sökdjup: %seldepth% ply
+plugin.depth.sel.tip 	= SÃ¶kdjup: %depth% ply, Valt sÃ¶kdjup: %seldepth% ply
 
 plugin.white.mates 	= +#%eval%
-plugin.white.mates.tip 	= Vit gör matt i %eval% drag
+plugin.white.mates.tip 	= Vit gÃ¶r matt i %eval% drag
 plugin.black.mates 	= -#%eval%
-plugin.black.mates.tip 	= Svart gör matt i %eval% drag
+plugin.black.mates.tip 	= Svart gÃ¶r matt i %eval% drag
 
 plugin.evaluation 	= %eval%
-plugin.evaluation.tip 	= Positionsvärdet är %eval%
+plugin.evaluation.tip 	= PositionsvÃ¤rdet Ã¤r %eval%
 
-plugin.line.tip = Beräknad variant
+plugin.line.tip = BerÃ¤knad variant
 
 plugin.elapsed.time = %time%
-plugin.elapsed.time.tip = Använd tid för denna beräkning.
+plugin.elapsed.time.tip = AnvÃ¤nd tid fÃ¶r denna berÃ¤kning.
 
 plugin.nodecount 	= %antal noder%
-plugin.nodecount.tip 	= %antal noder% positioner har utvärderats
+plugin.nodecount.tip 	= %antal noder% positioner har utvÃ¤rderats
 
 plugin.nps      = %nps%
-plugin.nps.tip  = %nps% noder utvärderas per sekund
+plugin.nps.tip  = %nps% noder utvÃ¤rderas per sekund
 
 plugin.pv.history = Expertmod
 
-restart.plugin		= Återstarta schackmotor
+restart.plugin		= Ã…terstarta schackmotor
 
 
 ######################
 # Board Panel
 ######################
 
-wait.3d = Laddar 3D. Var god vänta...
+wait.3d = Laddar 3D. Var god vÃ¤nta...
 
 message.result			= Resultat 
 message.white 			= Vit
 message.black 			= Svart
 message.mate 			= Matt. \n %player% vinner.
-message.stalemate		= Patt. \n Partiet är remi.
-message.draw3			= Position upprepad 3 gånger. \n Partiet är remi.
-message.draw50			= Ingen pjäs tagen på 50 drag. \n Partiet är remi.
+message.stalemate		= Patt. \n Partiet Ã¤r remi.
+message.draw3			= Position upprepad 3 gÃ¥nger. \n Partiet Ã¤r remi.
+message.draw50			= Ingen pjÃ¤s tagen pÃ¥ 50 drag. \n Partiet Ã¤r remi.
 message.resign			= %player% ger upp. \n Du vinner.
-message.time.draw		= Tiden har gått ut. \n Partiet är remi.
-message.time.lose		= Tiden har gått ut. \n %player% vinner.
+message.time.draw		= Tiden har gÃ¥tt ut. \n Partiet Ã¤r remi.
+message.time.lose		= Tiden har gÃ¥tt ut. \n %player% vinner.
 
 
 ################
@@ -373,27 +373,27 @@ clock.mode.digital.tip 	= Visa digital klocka
 ##############################################################################
 
 dialog.button.ok		= OK
-dialog.button.ok.tip		= Klicka här för att göra ändringarna
+dialog.button.ok.tip		= Klicka hÃ¤r fÃ¶r att gÃ¶ra Ã¤ndringarna
 dialog.button.cancel		= Avbryt
-dialog.button.cancel.tip	= Klicka här för att stänga  dialogen utan att göra ändringar
-dialog.button.apply		= Verkställ
-dialog.button.apply.tip		= Klicka här för att verkställa förändringarna omedelbart
-dialog.button.revert		= Återgå
-dialog.button.revert.tip	= Klicka här för att ångra förändringarna
+dialog.button.cancel.tip	= Klicka hÃ¤r fÃ¶r att stÃ¤nga  dialogen utan att gÃ¶ra Ã¤ndringar
+dialog.button.apply		= VerkstÃ¤ll
+dialog.button.apply.tip		= Klicka hÃ¤r fÃ¶r att verkstÃ¤lla fÃ¶rÃ¤ndringarna omedelbart
+dialog.button.revert		= Ã…tergÃ¥
+dialog.button.revert.tip	= Klicka hÃ¤r fÃ¶r att Ã¥ngra fÃ¶rÃ¤ndringarna
 dialog.button.clear		= Rensa
 dialog.button.delete		= Ta bort
 dialog.button.yes		= Ja
 dialog.button.no		= Nej
-dialog.button.next		= Nästa
+dialog.button.next		= NÃ¤sta
 dialog.button.back		= Backa
-dialog.button.close		= Stäng
-dialog.button.help		= Hjälp
-dialog.button.help.tip		= Visa Hjälp om funktioner
+dialog.button.close		= StÃ¤ng
+dialog.button.help		= HjÃ¤lp
+dialog.button.help.tip		= Visa HjÃ¤lp om funktioner
 
-dialog.button.commit		= Verkställ
-dialog.button.commit.tip	= Klicka här för att verkställa uppdateringar
-dialog.button.rollback		= Ångra
-dialog.button.rollback.tip	= Klicka här för att ångra uppdateringar
+dialog.button.commit		= VerkstÃ¤ll
+dialog.button.commit.tip	= Klicka hÃ¤r fÃ¶r att verkstÃ¤lla uppdateringar
+dialog.button.rollback		= Ã…ngra
+dialog.button.rollback.tip	= Klicka hÃ¤r fÃ¶r att Ã¥ngra uppdateringar
 
 dialog.error.title		= Fel
 
@@ -412,25 +412,25 @@ filechooser.pdf 		= Acrobat Reader (*.pdf)
 filechooser.exe         = Exekuterbara filer
 filechooser.img         = Bildfiler (*.gif,*.jpg,*.png,*.bmp)
 
-filechooser.overwrite 	= Skriva över existerande "%file.name%" ?
-filechooser.do.overwrite = Skriv över
+filechooser.overwrite 	= Skriva Ã¶ver existerande "%file.name%" ?
+filechooser.do.overwrite = Skriv Ã¶ver
 
 #################
 # Color Chooser
 #################
 
 colorchooser.texture	= Bakgrund
-colorchooser.preview	= Förhandsgranska
+colorchooser.preview	= FÃ¶rhandsgranska
 colorchooser.gradient   = Nyans
-colorchooser.gradient.color1 = Första färg
-colorchooser.gradient.color2 = Andra färg
+colorchooser.gradient.color1 = FÃ¶rsta fÃ¤rg
+colorchooser.gradient.color2 = Andra fÃ¤rg
 colorchooser.gradient.cyclic = cyklisk
 
 colorchooser.texture.mnemonic = T
 colorchooser.gradient.mnemonic = G
 
 animation.slider.fast   = snabb
-animation.slider.slow   = långsam
+animation.slider.slow   = lÃ¥ngsam
 
 ##############################################################################
 # Option dialog
@@ -439,8 +439,8 @@ animation.slider.slow   = långsam
 # Tab Titles
 
 dialog.option.tab.1	= Spelare
-dialog.option.tab.2	= Schackbräde
-dialog.option.tab.3	= Färger
+dialog.option.tab.2	= SchackbrÃ¤de
+dialog.option.tab.3	= FÃ¤rger
 dialog.option.tab.4	= Tid
 dialog.option.tab.5     = Schackmotor
 dialog.option.tab.6 = Opening Book
@@ -451,12 +451,12 @@ dialog.option.tab.8	= Fonter
 # User settings
 
 dialog.option.user.name		= Namn
-dialog.option.user.language	= Språk
-dialog.option.ui.look.and.feel	= Se & känn
+dialog.option.user.language	= SprÃ¥k
+dialog.option.ui.look.and.feel	= Se & kÃ¤nn
 
 doc.load.history	= Ladda tidigare partier
-doc.classify.eco	= Klassificera  öppning utifrån ECO
-doc.associate.pgn   = Öppna PGN filer med jose
+doc.classify.eco	= Klassificera  Ã¶ppning utifrÃ¥n ECO
+doc.associate.pgn   = Ã–ppna PGN filer med jose
 
 dialog.option.animation = Spela upp
 dialog.option.animation.speed = Hastighet
@@ -464,18 +464,18 @@ dialog.option.animation.speed = Hastighet
 dialog.option.doc.write.mode	= Infoga nytt drag
 write.mode.new.line		= Ny variant
 write.mode.new.main.line	= Ny huvudvariant
-write.mode.overwrite		= Skriv över
-write.mode.ask			= Fråga
-write.mode.dont.ask		= Fråga inte något mer
+write.mode.overwrite		= Skriv Ã¶ver
+write.mode.ask			= FrÃ¥ga
+write.mode.dont.ask		= FrÃ¥ga inte nÃ¥got mer
 # Don't ask anymore
 write.mode.cancel		= Avbryt
 
-board.animation.hints   = Visa hjälp under uppspelning
+board.animation.hints   = Visa hjÃ¤lp under uppspelning
 
 dialog.option.sound = Ljud
 dialog.option.sound.moves.dir = Dragannonseringar:
 sound.moves.engine  = Annonsera schackmotordrag
-sound.moves.ack.user = Bekräfta spelardrag
+sound.moves.ack.user = BekrÃ¤fta spelardrag
 sound.moves.user = Annonsera spelardrag
 
 # Fonts
@@ -489,14 +489,14 @@ dialog.option.font.size     	= Storlek
 figurine.usefont.true 		= Grafikfonter
 figurine.usefont.false 		= Textfonter
 
-doc.panel.antialias		= Använd antialiasing fonter
+doc.panel.antialias		= AnvÃ¤nd antialiasing fonter
 
 # Notation
 
 dialog.option.doc.move.format	= Notation:
 move.format			= Notation
 move.format.short		= Kort
-move.format.long		= Lång
+move.format.long		= LÃ¥ng
 move.format.algebraic		= Algebraisk
 move.format.correspondence	= Korrespondens
 move.format.english		= Engelsk
@@ -505,12 +505,12 @@ move.format.telegraphic		= Telegrafisk
 # Colors
 
 dialog.option.board.surface.light	= Ljusa rutor
-dialog.option.board.surface.dark	= Mörka rutor
-dialog.option.board.surface.white	= Vita pjäser
-dialog.option.board.surface.black	= Svarta pjäser
+dialog.option.board.surface.dark	= MÃ¶rka rutor
+dialog.option.board.surface.white	= Vita pjÃ¤ser
+dialog.option.board.surface.black	= Svarta pjÃ¤ser
 
 dialog.option.board.surface.background	= Bakgrund
-dialog.option.board.surface.frame	= Brädutseende
+dialog.option.board.surface.frame	= BrÃ¤dutseende
 dialog.option.board.surface.coords	= Koordinater
 
 dialog.option.board.3d.model            = Modell:
@@ -521,10 +521,10 @@ dialog.option.board.3d.light.directional = Rikningsljus:
 dialog.option.board.3d.knight.angle     = Springare:
 
 board.surface.light	= Ljusa rutor
-board.surface.dark	= Mörka rutor
-board.surface.white	= Vita pjäser
-board.surface.black	= Svarta pjäser
-board.hilite.squares 	= Färglägg rutor
+board.surface.dark	= MÃ¶rka rutor
+board.surface.white	= Vita pjÃ¤ser
+board.surface.black	= Svarta pjÃ¤ser
+board.hilite.squares 	= FÃ¤rglÃ¤gg rutor
 
 # Time Controls
 
@@ -533,7 +533,7 @@ dialog.option.phase.1		= Tidskontroll 1
 dialog.option.phase.2		= Tidskontroll 2
 dialog.option.phase.3		= Tidskontroll 3
 dialog.option.all.moves		= alla
-dialog.option.moves.in 		= drag på
+dialog.option.moves.in 		= drag pÃ¥
 dialog.option.increment 	= plus
 dialog.option.increment.label 	= per drag
 
@@ -550,24 +550,24 @@ time.control.delete		= Ta bort
 dialog.option.plugin.1		= Schackmotor 1
 dialog.option.plugin.2		= Schackmotor 2
 
-plugin.add =lägg till
+plugin.add =lÃ¤gg till
 plugin.delete =ta bort
 plugin.duplicate =duplicera
-plugin.add.tip = lägger till en ny schackmotor
+plugin.add.tip = lÃ¤gger till en ny schackmotor
 plugin.delete.tip = tar bort konfigurationen
 plugin.duplicate.tip = duplicerar konfigurationen
 
 dialog.option.plugin.file 	= Konfigurationsfil:
 dialog.option.plugin.name 	= Namn:
 dialog.option.plugin.version 	= Version:
-dialog.option.plugin.author 	= Konstruktör:
+dialog.option.plugin.author 	= KonstruktÃ¶r:
 dialog.option.plugin.dir 	= Katalog:
 dialog.option.plugin.logo 	= Logga:
 dialog.option.plugin.startup 	= Starta:
 
 dialog.option.plugin.exe = Exekuterbar fil:
 dialog.option.plugin.args = Parametrar:
-dialog.option.plugin.default = Standardinställningar
+dialog.option.plugin.default = StandardinstÃ¤llningar
 
 plugin.info                 = Generell Information
 plugin.protocol.xboard      = XBoard-protokoll
@@ -578,24 +578,24 @@ plugin.show.logos           = Visa loggor
 plugin.show.text            = Visa Text
 
 plugin.switch.ask           = Du har valt en annan schackmotor.\n Vill du starta den nu ?
-plugin.restart.ask          = Du har ändrat några schackmotor-inställningar.\n Vill du starta om den nu ?
+plugin.restart.ask          = Du har Ã¤ndrat nÃ¥gra schackmotor-instÃ¤llningar.\n Vill du starta om den nu ?
 plugin.show.info            = Visa "info"
 plugin.log.file             = Logg till fil
 
 # UCI option name
-plugin.option.Ponder        = Tänkande
-plugin.option.Random        = Slumpmässig
+plugin.option.Ponder        = TÃ¤nkande
+plugin.option.Random        = SlumpmÃ¤ssig
 plugin.option.Hash          = Hashtabellstorlek (MB)
-plugin.option.NalimovPath   = Sökväg till Nalimov-slutspelstabeller
-plugin.option.NalimovCache  = Cache för Nalimov-slutspelstabeller (MB)
-plugin.option.OwnBook       = Använd öppningsbok
-plugin.option.BookFile      = Öppningsbok
-plugin.option.BookLearning  = Boklärande
-plugin.option.MultiPV       = Primära variationer
+plugin.option.NalimovPath   = SÃ¶kvÃ¤g till Nalimov-slutspelstabeller
+plugin.option.NalimovCache  = Cache fÃ¶r Nalimov-slutspelstabeller (MB)
+plugin.option.OwnBook       = AnvÃ¤nd Ã¶ppningsbok
+plugin.option.BookFile      = Ã–ppningsbok
+plugin.option.BookLearning  = BoklÃ¤rande
+plugin.option.MultiPV       = PrimÃ¤ra variationer
 plugin.option.ClearHash     = Rensa Hashtabeller
 plugin.option.UCI_ShowCurrLine  = Visa aktuell variant
-plugin.option.UCI_ShowRefutations = Visa vederläggningar
-plugin.option.UCI_LimitStrength = Begränsa spelstyrka
+plugin.option.UCI_ShowRefutations = Visa vederlÃ¤ggningar
+plugin.option.UCI_LimitStrength = BegrÃ¤nsa spelstyrka
 plugin.option.UCI_Elo       = ELO
 plugin.option.UCI_EngineAbout = 
 
@@ -607,17 +607,17 @@ board.3d.clock              	= Klocka
 board.3d.shadow			= Skuggor
 board.3d.reflection		= Reflektioner
 board.3d.anisotropic        	= Anisotropiskt filter
-board.3d.fsaa               	= Helskärms antialiasing (fsaa)
+board.3d.fsaa               	= HelskÃ¤rms antialiasing (fsaa)
 
-board.3d.surface.frame		= Schackbräde
+board.3d.surface.frame		= SchackbrÃ¤de
 board.3d.light.ambient		= Bakgrundsljus
 board.3d.light.directional	= Riktningsljus
-board.3d.screenshot		= Skärmdump
+board.3d.screenshot		= SkÃ¤rmdump
 board.3d.defaultview    = Standardutseende
 
 # Text Styles
 
-font.color 	= Färg
+font.color 	= FÃ¤rg
 font.name	= Fontnamn
 font.size	= Storlek
 font.bold	= Fet
@@ -645,7 +645,7 @@ collection.starter 	= Capablancas partier
 
 column.collection.name 		= Namn
 column.collection.gamecount 	= Partier
-column.collection.lastmodified 	= Ändrad
+column.collection.lastmodified 	= Ã„ndrad
 
 column.game.index 	= Index
 column.game.white.name 	= Vit
@@ -655,22 +655,22 @@ column.game.site 	= Plats
 column.game.date 	= Datum
 column.game.result 	= Resultat
 column.game.round 	= Runda
-column.game.board 	= Schackbräde
+column.game.board 	= SchackbrÃ¤de
 column.game.eco 	= ECO
-column.game.opening 	= Öppning
+column.game.opening 	= Ã–ppning
 column.game.movecount 	= Drag
 column.game.annotator 	= Kommentator
 column.game.fen     = Startposition
 
 #deprecated
-column.problem.author 	= Konstruktör
-column.problem.source 	= Källa
+column.problem.author 	= KonstruktÃ¶r
+column.problem.source 	= KÃ¤lla
 column.problem.number 	= Nr.
 column.problem.date 	= Datum
 column.problem.stipulation = Stipulation.
 column.problem.dedication = Dedikation
 column.problem.award = Pris
-column.problem.solution = Lösning
+column.problem.solution = LÃ¶sning
 column.problem.cplus = C+
 column.problem.genre = Genre
 column.problem.keyword = Nyckelord
@@ -679,9 +679,9 @@ column.problem.keyword = Nyckelord
 bootstrap.confirm 	= Datakatalogen '%datadir%' finns inte.\n Vill du skapa en ny katalog ? 
 bootstrap.create 	= Skapa datakatalog
 
-edit.game = Öppna
-edit.all = Öppna alla
-dnd.move.top.level	= Gå till övre nivå
+edit.game = Ã–ppna
+edit.all = Ã–ppna alla
+dnd.move.top.level	= GÃ¥ till Ã¶vre nivÃ¥
 
 
 ##############################################################################
@@ -693,9 +693,9 @@ dialog.query.info 		= Information
 dialog.query.comments 		= Kommentarer
 dialog.query.position 		= Position
 
-dialog.query.search 	= Sök
+dialog.query.search 	= SÃ¶k
 dialog.query.clear 	= Rensa
-dialog.query.search.in.progress = Söker...
+dialog.query.search.in.progress = SÃ¶ker...
 
 dialog.query.0.results 	= Inga Resultat
 dialog.query.1.result 	= Ett Resultat
@@ -705,11 +705,11 @@ dialog.query.white		= Vit:
 dialog.query.black		= Svart:
 
 dialog.query.flags 		= Alternativ
-dialog.query.color.sensitive 	= Färgkänslig
-dialog.query.swap.colors 	=Byt färg
-dialog.query.swap.colors.tip = Byter färger
-dialog.query.case.sensitive 	= Versalkänslig
-dialog.query.soundex 		= Låter som
+dialog.query.color.sensitive 	= FÃ¤rgkÃ¤nslig
+dialog.query.swap.colors 	=Byt fÃ¤rg
+dialog.query.swap.colors.tip = Byter fÃ¤rger
+dialog.query.case.sensitive 	= VersalkÃ¤nslig
+dialog.query.soundex 		= LÃ¥ter som
 dialog.query.result 		= Resultat
 dialog.query.stop.results   =
 
@@ -718,38 +718,38 @@ dialog.query.site 		= Plats:
 dialog.query.eco 		= ECO:
 dialog.query.annotator 		= Kommentator:
 dialog.query.to 		= till
-dialog.query.opening 		= Öppning:
+dialog.query.opening 		= Ã–ppning:
 dialog.query.date 		= Datum:
 dialog.query.movecount 		= Drag:
 
 dialog.query.commenttext 	= Kommentar:
 dialog.query.com.flag 		= har kommentarer
-dialog.query.com.flag.tip 	= sök efter partier med kommentarer
+dialog.query.com.flag.tip 	= sÃ¶k efter partier med kommentarer
 
 dialog.query.var.flag 		= har variationer
-dialog.query.var.flag.tip 	= sök efter partier med variationer
+dialog.query.var.flag.tip 	= sÃ¶k efter partier med variationer
 
-dialog.query.errors 		= Fel i Sökuttryck:
-query.error.date.too.small 	= Datumet är för litet
-query.error.movecount.too.small = Antalet drag är för litet
-query.error.eco.too.long 	= Avvänd tre tecken för ECO-koder
-query.error.eco.character.expected = ECO-koder måste börja med A,B,C,D,eller E
-query.error.eco.number.expected = ECO-koder består av en bokstav och ett tal från 0 till 99
+dialog.query.errors 		= Fel i SÃ¶kuttryck:
+query.error.date.too.small 	= Datumet Ã¤r fÃ¶r litet
+query.error.movecount.too.small = Antalet drag Ã¤r fÃ¶r litet
+query.error.eco.too.long 	= AvvÃ¤nd tre tecken fÃ¶r ECO-koder
+query.error.eco.character.expected = ECO-koder mÃ¥ste bÃ¶rja med A,B,C,D,eller E
+query.error.eco.number.expected = ECO-koder bestÃ¥r av en bokstav och ett tal frÃ¥n 0 till 99
 query.error.number.format 	= Fel nummerformat
 query.error.date.format 	= Fel datumformat
 
-query.setup.enable 		= Sök position
-query.setup.next 		= Nästa drag:
+query.setup.enable 		= SÃ¶k position
+query.setup.next 		= NÃ¤sta drag:
 query.setup.next.white 		= Vit
-query.setup.next.white.tip 	= hittar positioner där vit drar sedan
+query.setup.next.white.tip 	= hittar positioner dÃ¤r vit drar sedan
 query.setup.next.black 		= Svart
-query.setup.next.black.tip 	= söker positioner där svart drar sedan
+query.setup.next.black.tip 	= sÃ¶ker positioner dÃ¤r svart drar sedan
 query.setup.next.any 		= Vit eller svart
-query.setup.next.any.tip 	= söker positioner där någon färg drar sedan
-query.setup.reversed 		= Sök ombytta färger
-query.setup.reversed.tip 	= söker identiska positioner med ombytta färger
-query.setup.var 		= Sök variationer
-query.setup.var.tip 		= söker inom variationer
+query.setup.next.any.tip 	= sÃ¶ker positioner dÃ¤r nÃ¥gon fÃ¤rg drar sedan
+query.setup.reversed 		= SÃ¶k ombytta fÃ¤rger
+query.setup.reversed.tip 	= sÃ¶ker identiska positioner med ombytta fÃ¤rger
+query.setup.var 		= SÃ¶k variationer
+query.setup.var.tip 		= sÃ¶ker inom variationer
 
 
 
@@ -767,7 +767,7 @@ dialog.details.site 	= Plats:
 dialog.details.date 	= Datum:
 dialog.details.eventdate = Evenemangsdatum:
 dialog.details.round 	= Runda:
-dialog.details.board 	= Bräde:
+dialog.details.board 	= BrÃ¤de:
 
 dialog.details.white 	= Vit
 dialog.details.black 	= Svart
@@ -777,7 +777,7 @@ dialog.details.title 	= Titel:
 dialog.details.result 	= Resultat:
 
 dialog.details.eco 	= ECO:
-dialog.details.opening 	= Öppning:
+dialog.details.opening 	= Ã–ppning:
 dialog.details.annotator = Kommentator:
 
 Result.0-1 = 0-1
@@ -792,7 +792,7 @@ Result.* = *
 
 dialog.setup.clear	= Rensa
 dialog.setup.initial	= Startposition
-dialog.setup.copy	= Kopiera från huvudfönstret
+dialog.setup.copy	= Kopiera frÃ¥n huvudfÃ¶nstret
 
 dialog.setup.next.white	= Vit drar
 dialog.setup.next.black	= Svart drar
@@ -802,12 +802,12 @@ dialog.setup.castling		= Rockad
 dialog.setup.castling.wk	= Vit 0-0
 dialog.setup.castling.wk.tip	= Vit kort rockad
 dialog.setup.castling.wq	= Vit 0-0-0
-dialog.setup.castling.wq.tip	= Vit lång rockad
+dialog.setup.castling.wq.tip	= Vit lÃ¥ng rockad
 dialog.setup.castling.bk	= Svart 0-0
 dialog.setup.castling.bk.tip	= Svart kort rockad
 dialog.setup.castling.bq	= Svart 0-0-0
-dialog.setup.castling.bq.tip	= Svart lång rockad
-dialog.setup.invalid.fen    = Felaktig FEN-sträng.
+dialog.setup.castling.bq.tip	= Svart lÃ¥ng rockad
+dialog.setup.invalid.fen    = Felaktig FEN-strÃ¤ng.
 
 ##############################################################################
 #	About dialog
@@ -815,7 +815,7 @@ dialog.setup.invalid.fen    = Felaktig FEN-sträng.
 
 dialog.about.tab.1	= jose
 dialog.about.tab.2	= Databas
-dialog.about.tab.3	= Medhjälpare
+dialog.about.tab.3	= MedhjÃ¤lpare
 dialog.about.tab.4	= System
 dialog.about.tab.5	= 3D
 dialog.about.tab.6	= Licens
@@ -827,11 +827,11 @@ dialog.about.2	=	<b>%dbname%</b> <br> %dbversion% <br><br> \
 
 dialog.about.MySQL = www.mysql.com
 
-dialog.about.3	=	<b>Översättningar:</b><br>\
-			Frederic Raimbault, José de Paula, \
-			Agustín Gomila, Alex Coronado, \
+dialog.about.3	=	<b>Ã–versÃ¤ttningar:</b><br>\
+			Frederic Raimbault, JosÃ© de Paula, \
+			AgustÃ­n Gomila, Alex Coronado, \
 			Harold Roig, Hans Eriksson, \
-			Guido Grazioli, Tomasz Sokól, "Direktx" <br>\
+			Guido Grazioli, Tomasz SokÃ³l, "Direktx" <br>\
 			<br>\
 			<b>TrueType Fontdesign:</b> <br>\
 			Armando Hernandez Marroquin, \
@@ -848,7 +848,7 @@ dialog.about.3	=	<b>Översättningar:</b><br>\
 			Francisco Barala Faura <br>\
 			<br>\
 			<b>Apple Mac support:</b> <br>\
-			Andreas Güttinger, Randy Countryman
+			Andreas GÃ¼ttinger, Randy Countryman
 
 
 dialog.about.4 =	Java Version: %java.version% (%java.vendor%) <br>\
@@ -864,11 +864,11 @@ dialog.about.4 =	Java Version: %java.version% (%java.vendor%) <br>\
 					Operativsystem: %os.name%  %os.version% <br>\
 					Systemarkitektur: %os.arch%
 
-dialog.about.5.no3d = Java3D är nu inte tillgänglig
+dialog.about.5.no3d = Java3D Ã¤r nu inte tillgÃ¤nglig
 dialog.about.5.model =
 
 dialog.about.5.native = Ursprunglig plattform: &nbsp;
-dialog.about.5.native.unknown = nu okänd
+dialog.about.5.native.unknown = nu okÃ¤nd
 
 ##############################################################################
 #	Export/Print Dialog
@@ -876,14 +876,14 @@ dialog.about.5.native.unknown = nu okänd
 
 dialog.export = Exportera & Skriv ut
 dialog.export.tab.1 = Resultat
-dialog.export.tab.2 = Ställa in för utskrift
+dialog.export.tab.2 = StÃ¤lla in fÃ¶r utskrift
 dialog.export.tab.3 = Stilar
 
 dialog.export.print = Skriv ut...
 dialog.export.save = Spara
 dialog.export.saveas = Spara som...
-dialog.export.preview = Förhandsgranska
-dialog.export.browser = Webbläsarförhandsgranskning
+dialog.export.preview = FÃ¶rhandsgranska
+dialog.export.browser = WebblÃ¤sarfÃ¶rhandsgranskning
 
 dialog.export.paper = Papper
 dialog.export.orientation = Orientering
@@ -892,22 +892,22 @@ dialog.export.margins = Marginaler
 dialog.export.paper.format = Papper:
 dialog.export.paper.size = Storlek:
 
-dialog.print.custom.paper = Ställa in
+dialog.print.custom.paper = StÃ¤lla in
 
 dialog.export.margin.top = Ovan:
 dialog.export.margin.bottom = Under:
-dialog.export.margin.left = Vänster:
-dialog.export.margin.right = Höger:
+dialog.export.margin.left = VÃ¤nster:
+dialog.export.margin.right = HÃ¶ger:
 
-dialog.export.ori.port = Porträtt
+dialog.export.ori.port = PortrÃ¤tt
 dialog.export.ori.land = Landskap
 
-dialog.export.games.0 = Du har inte valt några partier att skriva ut.
-dialog.export.games.1 = Du har valt <b>ett parti</b> för utskrift.
-dialog.export.games.n = Du har valt <b>%n% partier</b> för utskrift.
-dialog.export.games.? = Du har valt ett <b>okänt</b> antal partier att skriva ut.
+dialog.export.games.0 = Du har inte valt nÃ¥gra partier att skriva ut.
+dialog.export.games.1 = Du har valt <b>ett parti</b> fÃ¶r utskrift.
+dialog.export.games.n = Du har valt <b>%n% partier</b> fÃ¶r utskrift.
+dialog.export.games.? = Du har valt ett <b>okÃ¤nt</b> antal partier att skriva ut.
 
-dialog.export.confirm = Är du säker ?
+dialog.export.confirm = Ã„r du sÃ¤ker ?
 dialog.export.yes = Skriv ut allt
 
 # xsl stylesheet options
@@ -916,41 +916,41 @@ export.pgn = PGN-fil
 export.pgn.tip = Exporterar partier som en Portable Game Notation(PGN)-fil.
 
 print.awt = Skriv ut
-print.awt.tip = Skriver ut partier från skärmen.<br> \
-				    <li>Klicka <b>Skriv ut...</b> för att skriva ut till en ansluten skrivare \
-				    <li>Klicka <b>Förhandsgranska</b> för att se dokumentet
+print.awt.tip = Skriver ut partier frÃ¥n skÃ¤rmen.<br> \
+				    <li>Klicka <b>Skriv ut...</b> fÃ¶r att skriva ut till en ansluten skrivare \
+				    <li>Klicka <b>FÃ¶rhandsgranska</b> fÃ¶r att se dokumentet
 
 xsl.html = HTML<br>Webbsida
 xsl.html.tip = Skapar en Webbsida  (HTML-fil).<br> \
-				   <li>Klicka <b>Spara som...</b> för att spara filen till hårddisken \
-				   <li>Klicka <b>Webläsarförhandsgranska</b> för att se sidan med en webläsare
+				   <li>Klicka <b>Spara som...</b> fÃ¶r att spara filen till hÃ¥rddisken \
+				   <li>Klicka <b>WeblÃ¤sarfÃ¶rhandsgranska</b> fÃ¶r att se sidan med en weblÃ¤sare
 
 xsl.dhtml = Dynamisk<br>Webbsida
 xsl.dhtml.tip = Skapar en Webbsida med <i>dynamiska</i> effekter.<br> \
-				   <li>Klicka <b>Spara som...</b> för att spara filen till hårddisken \
-				   <li>Klicka <b>Webbläsarförhandsgranska</b> för att se sidan med en webbläsare <br> \
-				  JavaScript måste vara aktiverad i webbläsaren.
+				   <li>Klicka <b>Spara som...</b> fÃ¶r att spara filen till hÃ¥rddisken \
+				   <li>Klicka <b>WebblÃ¤sarfÃ¶rhandsgranska</b> fÃ¶r att se sidan med en webblÃ¤sare <br> \
+				  JavaScript mÃ¥ste vara aktiverad i webblÃ¤saren.
 
-xsl.debug = XML-Fil<br>(felsökning)
-export.xml.tip = Skapar en XML-fil för felsökning.
+xsl.debug = XML-Fil<br>(felsÃ¶kning)
+export.xml.tip = Skapar en XML-fil fÃ¶r felsÃ¶kning.
 
 xsl.pdf = Skriv ut PDF
 xsl.pdf.tip = Skapar eller skriver ut en PDF-fil.<br> \
-				<li>Klicka <b>Spara som...</b> för att spara filen till hårddisken \
-				<li>Klicka <b>Skriv ut...</b> för att skriva ut dokumentet \
-				<li>Klicka <b>Förhandsgranska</b> för att se dokumentet
+				<li>Klicka <b>Spara som...</b> fÃ¶r att spara filen till hÃ¥rddisken \
+				<li>Klicka <b>Skriv ut...</b> fÃ¶r att skriva ut dokumentet \
+				<li>Klicka <b>FÃ¶rhandsgranska</b> fÃ¶r att se dokumentet
 
 xsl.tex = TeX-fil
 xsl.tex.tip = Skapa en fil att bearbeta med TeX.
 
 xsl.html.figs.tt = TrueType-figurer
 xsl.html.figs.img = Bild-figurer
-xsl.css.standalone = CSS-stilinställningar i en separat fil
+xsl.css.standalone = CSS-stilinstÃ¤llningar i en separat fil
 
 xsl.html.img.dir = Katalog
 xsl.create.images = Skapa bilder
 
-xsl.pdf.embed = Använd TrueType-fonter
+xsl.pdf.embed = AnvÃ¤nd TrueType-fonter
 xsl.pdf.font.dir = Ytterligare Fonter:
 
 default.file.name = Schackparti
@@ -961,14 +961,14 @@ default.file.name = Schackparti
 ##############################################################################
 
 print.preview.page.one =en sida
-print.preview.page.two =två sidor
+print.preview.page.two =tvÃ¥ sidor
 print.preview.page.one.tip = visar en sida
-print.preview.page.two.tip = visar två sidor
+print.preview.page.two.tip = visar tvÃ¥ sidor
 
 print.preview.ori.land =Landskap
-print.preview.ori.port =Porträtt
-print.preview.ori.land.tip = Använd landskapsorienterat papper
-print.preview.ori.port.tip = Använd porträttorienterat papper
+print.preview.ori.port =PortrÃ¤tt
+print.preview.ori.land.tip = AnvÃ¤nd landskapsorienterat papper
+print.preview.ori.port.tip = AnvÃ¤nd portrÃ¤ttorienterat papper
 
 print.preview.fit.page = Hela sidan
 print.preview.fit.width = Sidbredd
@@ -976,7 +976,7 @@ print.preview.fit.textwidth = Textbredd
 print.preview.next.page =
 print.preview.previous.page =
 
-preview.wait = Ett ögonblick...
+preview.wait = Ett Ã¶gonblick...
 
 
 ##############################################################################
@@ -985,47 +985,47 @@ preview.wait = Ett ögonblick...
 
 online.update.title	= Onlineuppdatering
 online.update.tab.1	= Ny version
-online.update.tab.2	= Vad är nytt ?
+online.update.tab.2	= Vad Ã¤r nytt ?
 online.update.tab.3 	= Viktiga anteckningar
 
 update.install	= Ladda ner & Installera nu
 update.download	= Ladda ner, Installera senare
-update.mirror	= Ladda ner från alternativ sida
+update.mirror	= Ladda ner frÃ¥n alternativ sida
 
 download.file.progress 			= Laddar ner %file%
 download.file.title			= Ladda ner
 download.error.invalid.url		= Ogiltig URL: %p%.
 download.error.connect.fail		= Anslutning till %p% misslyckades.
 download.error.parse.xml		= Tolkningsfel: %p%.
-download.error.version.missing	= Kunde inte läsa version från %p%.
+download.error.version.missing	= Kunde inte lÃ¤sa version frÃ¥n %p%.
 download.error.os.missing		= Ingen version av jose hittades till ditt operativsystem.
 download.error.browser.fail		= Kan inte visa %p%.
-download.error.update			= Ett fel uppträdde medan jose uppdaterades.\n Var god och uppdatera jose manuellt.
+download.error.update			= Ett fel upptrÃ¤dde medan jose uppdaterades.\n Var god och uppdatera jose manuellt.
 
-download.message.up.to.date		= Din installerade version är uppdaterad.
-download.message.success		= jose har blivit framgångsrikt uppdaterad till version %p% \n. Var god och starta om jose.
+download.message.up.to.date		= Din installerade version Ã¤r uppdaterad.
+download.message.success		= jose har blivit framgÃ¥ngsrikt uppdaterad till version %p% \n. Var god och starta om jose.
 
 download.message			= \
-  Versionen <b>%version%</b> finns från <br>\
+  Versionen <b>%version%</b> finns frÃ¥n <br>\
   <font color=blue>%url%</font><br>\
   Storlek: %size%
 
-dialog.browser		= Var snäll och hjälp mig starta din HTML-webbläsare.\n Ange kommandot som används för att starta webbläsaren.
-dialog.browser.title 	= Lokalisera webbläsaren
+dialog.browser		= Var snÃ¤ll och hjÃ¤lp mig starta din HTML-webblÃ¤sare.\n Ange kommandot som anvÃ¤nds fÃ¶r att starta webblÃ¤saren.
+dialog.browser.title 	= Lokalisera webblÃ¤saren
 
 # deprecated
 #online.report.title	= Rapport
 #online.report.bug	= Felrapport
-#online.report.feature	= Funktionsförfrågan
-#online.report.support	= Supportförfrågan
+#online.report.feature	= FunktionsfÃ¶rfrÃ¥gan
+#online.report.support	= SupportfÃ¶rfrÃ¥gan
 
 #online.report.type	= Typ:
-#online.report.subject	= Ämne:
+#online.report.subject	= Ã„mne:
 #online.report.description	= Beskrivning:
 #online.report.email		= EMail:
 
-#online.report.default.subject		= <Ämne>
-#online.report.default.description	= <Var god och försök beskriva vad som orsakade felet>
+#online.report.default.subject		= <Ã„mne>
+#online.report.default.description	= <Var god och fÃ¶rsÃ¶k beskriva vad som orsakade felet>
 #online.report.default.email		= <din e-mail address = frivillig uppgift>
 #online.report.info			= Denna rapport kommer att skickas till http://jose-chess.sourceforge.net
 
@@ -1038,18 +1038,18 @@ dialog.browser.title 	= Lokalisera webbläsaren
 # 	Error Messages
 ##########################################
 
-error.not.selected 		= Var god och välj ett parti att spara.
-error.duplicate.database.access = Var god och kör inte två versioner av jose samtidigt \n\
-	och använd dem inte på samma databas.\n\n\
-	Det kan göra att data blir förlorat. \n\
+error.not.selected 		= Var god och vÃ¤lj ett parti att spara.
+error.duplicate.database.access = Var god och kÃ¶r inte tvÃ¥ versioner av jose samtidigt \n\
+	och anvÃ¤nd dem inte pÃ¥ samma databas.\n\n\
+	Det kan gÃ¶ra att data blir fÃ¶rlorat. \n\
 	Var god och avsluta en version av  jose.
-error.lnf.not.supported 	= Denna Se&Känn finns inte \n på den aktuella plattformen.
+error.lnf.not.supported 	= Denna Se&KÃ¤nn finns inte \n pÃ¥ den aktuella plattformen.
 
-error.bad.uci = Detta verkar inte vara en UCI-schackmotor.\n Är du säker att det är en UCI-schackmotor ?
+error.bad.uci = Detta verkar inte vara en UCI-schackmotor.\n Ã„r du sÃ¤ker att det Ã¤r en UCI-schackmotor ?
 
-error.bug	= <center><b>Ett oväntat fel har inträffat.</b></center><br><br> \
- Det skulle vara hjälpsamt om du skickade en felrapport.<br>\
- Var god och försök beskriva de steg som orsakade felet <br>\
+error.bug	= <center><b>Ett ovÃ¤ntat fel har intrÃ¤ffat.</b></center><br><br> \
+ Det skulle vara hjÃ¤lpsamt om du skickade en felrapport.<br>\
+ Var god och fÃ¶rsÃ¶k beskriva de steg som orsakade felet <br>\
  och bifoga denna fil till din rapport: <br>\
   <center><b> %error.log% </b></center>
 
@@ -1057,28 +1057,28 @@ error.bug	= <center><b>Ett oväntat fel har inträffat.</b></center><br><br> \
 
 pos.error.white.king.missing	= Vit kung saknas.
 pos.error.black.king.missing	= Svart kung saknas.
-pos.error.too.many.white.kings	= För många vita kungar.
-pos.error.too.many.black.kings	= För många svarta kungar.
-pos.error.white.king.checked	= Vits kung får inte vara i schack.
-pos.error.black.king.checked	= Svarts kung får inte vara i schack.
-pos.error.white.pawn.base		= Vita bönder får inte placeras på den första raden.
-pos.error.white.pawn.promo		= Vita bönder får inte placeras på den åttonde raden.
-pos.error.black.pawn.base		= Svarta bönder får inte placeras på den åttonde raden.
-pos.error.black.pawn.promo		= Svarta bönder får inte placeras på den första raden.
-pos.warning.too.many.white.pieces	= För många vita pjäser.
-pos.warning.too.many.black.pieces	= För många svarta pjäser.
-pos.warning.too.many.white.pawns	= För många vita bönder.
-pos.warning.too.many.black.pawns	= För många svarta bönder.
-pos.warning.too.many.white.knights	= För många vita springare.
-pos.warning.too.many.black.knights	= För många svarta springare.
-pos.warning.too.many.white.bishops	= För många vita löpare.
-pos.warning.too.many.black.bishops	= För många svarta löpare.
-pos.warning.too.many.white.rooks	= För många vita torn.
-pos.warning.too.many.black.rooks	= För många svarta torn.
-pos.warning.too.many.white.queens	= För många vita damer.
-pos.warning.too.many.black.queens	= För många svarta damer.
-pos.warning.strange.white.bishops	= Vita löpare på samma färg ?
-pos.warning.strange.black.bishops	= Svarta löpare på samma färg ?
+pos.error.too.many.white.kings	= FÃ¶r mÃ¥nga vita kungar.
+pos.error.too.many.black.kings	= FÃ¶r mÃ¥nga svarta kungar.
+pos.error.white.king.checked	= Vits kung fÃ¥r inte vara i schack.
+pos.error.black.king.checked	= Svarts kung fÃ¥r inte vara i schack.
+pos.error.white.pawn.base		= Vita bÃ¶nder fÃ¥r inte placeras pÃ¥ den fÃ¶rsta raden.
+pos.error.white.pawn.promo		= Vita bÃ¶nder fÃ¥r inte placeras pÃ¥ den Ã¥ttonde raden.
+pos.error.black.pawn.base		= Svarta bÃ¶nder fÃ¥r inte placeras pÃ¥ den Ã¥ttonde raden.
+pos.error.black.pawn.promo		= Svarta bÃ¶nder fÃ¥r inte placeras pÃ¥ den fÃ¶rsta raden.
+pos.warning.too.many.white.pieces	= FÃ¶r mÃ¥nga vita pjÃ¤ser.
+pos.warning.too.many.black.pieces	= FÃ¶r mÃ¥nga svarta pjÃ¤ser.
+pos.warning.too.many.white.pawns	= FÃ¶r mÃ¥nga vita bÃ¶nder.
+pos.warning.too.many.black.pawns	= FÃ¶r mÃ¥nga svarta bÃ¶nder.
+pos.warning.too.many.white.knights	= FÃ¶r mÃ¥nga vita springare.
+pos.warning.too.many.black.knights	= FÃ¶r mÃ¥nga svarta springare.
+pos.warning.too.many.white.bishops	= FÃ¶r mÃ¥nga vita lÃ¶pare.
+pos.warning.too.many.black.bishops	= FÃ¶r mÃ¥nga svarta lÃ¶pare.
+pos.warning.too.many.white.rooks	= FÃ¶r mÃ¥nga vita torn.
+pos.warning.too.many.black.rooks	= FÃ¶r mÃ¥nga svarta torn.
+pos.warning.too.many.white.queens	= FÃ¶r mÃ¥nga vita damer.
+pos.warning.too.many.black.queens	= FÃ¶r mÃ¥nga svarta damer.
+pos.warning.strange.white.bishops	= Vita lÃ¶pare pÃ¥ samma fÃ¤rg ?
+pos.warning.strange.black.bishops	= Svarta lÃ¶pare pÃ¥ samma fÃ¤rg ?
 
 
 ##############################################################################
@@ -1086,7 +1086,7 @@ pos.warning.strange.black.bishops	= Svarta löpare på samma färg ?
 ##############################################################################
 
 
-base			= Grundläggande stil
+base			= GrundlÃ¤ggande stil
 header			= Partidata
 header.event	= Evenemang
 header.site		= Plats
@@ -1099,7 +1099,7 @@ body			= Partitext
 body.line		= Drag
 body.line.0		= Huvudvariant
 body.line.1		= Variation
-body.line.2		= första subvariationen
+body.line.2		= fÃ¶rsta subvariationen
 body.line.3		= andra subvariationen
 body.line.4		= tredje subvariationen
 body.symbol		= Symboler
@@ -1107,32 +1107,32 @@ body.inline		= Diagram infogat i text
 body.figurine	= Figurer
 body.figurine.0	= Huvudvariant
 body.figurine.1	= Variation
-body.figurine.2	= första subvariationen
+body.figurine.2	= fÃ¶rsta subvariationen
 body.figurine.3	= andra subvariationen
 body.figurine.4	= tredje subvariationen
 body.comment	= Kommentarer
 body.comment.0	= Huvudvariant
 body.comment.1	= Variation
-body.comment.2	= första subvariationen
+body.comment.2	= fÃ¶rsta subvariationen
 body.comment.3	= andra subvariationen
 body.comment.4	= tredje subvariationen
 body.result		= Resultat
-html.large      = Diagram på Webbsida
+html.large      = Diagram pÃ¥ Webbsida
 
 
 ##############################################################################
 #	Task Dialogs (progress)
 ##############################################################################
 
-dialog.progress.time 		= återstår: %time%
+dialog.progress.time 		= Ã¥terstÃ¥r: %time%
 
-dialog.read-progress.title 	= jose - Läs Fil
-dialog.read-progress.text 	= läser %fileName%
+dialog.read-progress.title 	= jose - LÃ¤s Fil
+dialog.read-progress.text 	= lÃ¤ser %fileName%
 
 dialog.eco 			= Klassificera ECO
-dialog.eco.clobber.eco 		= Skriv över ECO-koder
-dialog.eco.clobber.name 	= Skriv över öppningsnamn
-dialog.eco.language 		= Språk:
+dialog.eco.clobber.eco 		= Skriv Ã¶ver ECO-koder
+dialog.eco.clobber.name 	= Skriv Ã¶ver Ã¶ppningsnamn
+dialog.eco.language 		= SprÃ¥k:
 
 
 ##############################################################################
@@ -1162,8 +1162,8 @@ fig.sv = BSLTDK
 fig.tr = ??????
 
 # Windows-1251 encoding (russian)
-fig.ru = ÏÑÊËÔ"Êğ"
-fig.ukr = ÏÑÊËÔ"Êğ"
+fig.ru = ÃÃ‘ÃŠÃ‹Ã”"ÃŠÃ°"
+fig.ukr = ÃÃ‘ÃŠÃ‹Ã”"ÃŠÃ°"
 # please note that Russians use the latin alphabet for files (a,b,c,d,e,f,g,h)
 # (so we don't have to care about that ;-)
 
@@ -1173,19 +1173,19 @@ fig.ukr = ÏÑÊËÔ"Êğ"
 
 lang.cs = Tjeckiska
 lang.da = Danska
-lang.nl = Nederländska
+lang.nl = NederlÃ¤ndska
 lang.en = Engelska
 lang.et = Estniska
 lang.fi = Finska
 lang.fr = Franska
 lang.de = Tyska
 lang.hu = Ungerska
-lang.is = Isländska
+lang.is = IslÃ¤ndska
 lang.it = Italienska
 lang.no = Norska
 lang.pl = Polska
 lang.pt = Portugisiska
-lang.ro = Rumänska
+lang.ro = RumÃ¤nska
 lang.es = Spanska
 lang.ca = Katalanska
 lang.sv = Svenska
@@ -1203,20 +1203,20 @@ pgn.nag.0    = null-kommentar
 pgn.nag.1    	= !
 pgn.nag.1.tip	= bra drag
 pgn.nag.2	= ?
-pgn.nag.2.tip	= dåligt drag
+pgn.nag.2.tip	= dÃ¥ligt drag
 pgn.nag.3    	= !!
 pgn.nag.3.tip	= mycket bra drag
 pgn.nag.4    	= ??
-pgn.nag.4.tip	= mycket dåligt drag
+pgn.nag.4.tip	= mycket dÃ¥ligt drag
 pgn.nag.5    	= !?
 pgn.nag.5.tip	= intressant drag
 pgn.nag.6    	= ?!
 pgn.nag.6.tip	= tveksamt drag
 pgn.nag.7    = forcerat drag
-pgn.nag.7.tip = forcerat drag (alla andra drag förlorar snabbt) 
+pgn.nag.7.tip = forcerat drag (alla andra drag fÃ¶rlorar snabbt) 
 pgn.nag.8    = enda draget
 pgn.nag.8.tip    = enda draget (inga andra bra alternativ)
-pgn.nag.9    = sämsta draget
+pgn.nag.9    = sÃ¤msta draget
 pgn.nag.10      = =
 pgn.nag.10.tip   = remiartad position
 pgn.nag.11      = =
@@ -1225,123 +1225,123 @@ pgn.nag.12.tip   = lika chancer, aktiv position
 pgn.nag.13   = oklar
 pgn.nag.13.tip   = oklar position
 pgn.nag.14	= +=
-pgn.nag.14.tip	= Vit ha en liten fördel
+pgn.nag.14.tip	= Vit ha en liten fÃ¶rdel
 pgn.nag.15   	= =+
-pgn.nag.15.tip 	= Svart har en liten fördel
+pgn.nag.15.tip 	= Svart har en liten fÃ¶rdel
 pgn.nag.16	= +/-
-pgn.nag.16.tip 	= Vit har en rätt bra fördel
+pgn.nag.16.tip 	= Vit har en rÃ¤tt bra fÃ¶rdel
 pgn.nag.17	= -/+
-pgn.nag.17.tip 	= Svart har en rätt bra fördel
+pgn.nag.17.tip 	= Svart har en rÃ¤tt bra fÃ¶rdel
 pgn.nag.18	= +-
-pgn.nag.18.tip  = Vit har en avgörande fördel
+pgn.nag.18.tip  = Vit har en avgÃ¶rande fÃ¶rdel
 pgn.nag.19	= -+
-pgn.nag.19.tip 	= Svart har en avgörande fördel
-pgn.nag.20   = Vit har en förkrossande fördel (Svart borde ge upp)
-pgn.nag.21   = Svart har en förkrossande fördel (Vit borde ge upp)
-pgn.nag.22   = Vit är i dragtvång (zugzwang)
-pgn.nag.23   = Svart är i dragtvång (zugzwang)
-pgn.nag.24   = Vit har en liten utrymmesfördel
-pgn.nag.25   = Svart har en liten utrymmesfördel
-pgn.nag.26   = Vit har en ganska bra utrymmesfördel
-pgn.nag.27   = Svart har en ganska bra utrymmesfördel
-pgn.nag.28   = Vit har en avgörande utrymmesfördel
-pgn.nag.29   = Svart har en avgörande utrymmesfördel
-pgn.nag.30   = Vit har liten tids (utvecklings) fördel
-pgn.nag.31   = Svart har en liten tids (utvecklings) fördel
-pgn.nag.32   = Vit har en ganska bra tids (utvecklings) fördel
-pgn.nag.33   = Svart har en ganska bra tids (utvecklings) fördel
-pgn.nag.34   = Vit har en avgörande tids (utvecklings) fördel
-pgn.nag.35   = Svart har en avgörande tids (utvecklings) fördel
+pgn.nag.19.tip 	= Svart har en avgÃ¶rande fÃ¶rdel
+pgn.nag.20   = Vit har en fÃ¶rkrossande fÃ¶rdel (Svart borde ge upp)
+pgn.nag.21   = Svart har en fÃ¶rkrossande fÃ¶rdel (Vit borde ge upp)
+pgn.nag.22   = Vit Ã¤r i dragtvÃ¥ng (zugzwang)
+pgn.nag.23   = Svart Ã¤r i dragtvÃ¥ng (zugzwang)
+pgn.nag.24   = Vit har en liten utrymmesfÃ¶rdel
+pgn.nag.25   = Svart har en liten utrymmesfÃ¶rdel
+pgn.nag.26   = Vit har en ganska bra utrymmesfÃ¶rdel
+pgn.nag.27   = Svart har en ganska bra utrymmesfÃ¶rdel
+pgn.nag.28   = Vit har en avgÃ¶rande utrymmesfÃ¶rdel
+pgn.nag.29   = Svart har en avgÃ¶rande utrymmesfÃ¶rdel
+pgn.nag.30   = Vit har liten tids (utvecklings) fÃ¶rdel
+pgn.nag.31   = Svart har en liten tids (utvecklings) fÃ¶rdel
+pgn.nag.32   = Vit har en ganska bra tids (utvecklings) fÃ¶rdel
+pgn.nag.33   = Svart har en ganska bra tids (utvecklings) fÃ¶rdel
+pgn.nag.34   = Vit har en avgÃ¶rande tids (utvecklings) fÃ¶rdel
+pgn.nag.35   = Svart har en avgÃ¶rande tids (utvecklings) fÃ¶rdel
 pgn.nag.36   = Vit har ett initiativ
 pgn.nag.37   = Svart har ett initiativ
-pgn.nag.38   = Vit har ett långvarigt initiativ
-pgn.nag.39   = Svart har en långvarigt initiativ
+pgn.nag.38   = Vit har ett lÃ¥ngvarigt initiativ
+pgn.nag.39   = Svart har en lÃ¥ngvarigt initiativ
 pgn.nag.40   = Vit har en attack
 pgn.nag.41   = Svart har en attack
-pgn.nag.42   = Vit har en otillräcklig  kompensation för materiellt underskott
-pgn.nag.43   = Svart har en otillräcklig kompensation för materiellt underskott
-pgn.nag.44   = Vit har en tillräcklig kompensation för materiellt underskott
-pgn.nag.45   = Svart har en tillräcklig kompensation för materiellt underskott
-pgn.nag.46   = Vit har mer än en tillräcklig kompensation för materiellt underskott
-pgn.nag.47   = Svart har mer än en tillräcklig kompensation för materiellt underskott
-pgn.nag.48   = Vit har en liten centerkontrollfördel
-pgn.nag.49   = Svart har en liten centerkontrollfördel
-pgn.nag.50   = Vit har en ganska bra centerkontrollfördel
-pgn.nag.51   = Svart har en ganska bra centerkontrollfördel
-pgn.nag.52   = Vit har en avgörande centerkontrollfördel
-pgn.nag.53   = Svart har en avgörande centerkontrollfördel
-pgn.nag.54   = Vit har en liten kungssidekontrollfördel
-pgn.nag.55   = Svart har en liten kungssidekontrollfördel
-pgn.nag.56   = Vit har en ganska bra kungssidekontrollfördel
-pgn.nag.57   = Svart har en ganska bra kungssidekontrollfördel
-pgn.nag.58   = Vit har en avgörande kungssidekontrollfördel
-pgn.nag.59   = Svart har en avgörande kungssidekontrollfördel
-pgn.nag.60   = Vit har en liten damsidekontrollfördel
-pgn.nag.61   = Svart har en liten damsidekontrollfördel
-pgn.nag.62   = Vit har en ganska bra damsidekontrollfördel
-pgn.nag.63   = Svart har en ganska bra damsidekontrollfördel
-pgn.nag.64   = Vit har en avgörande damsidekontrollfördel
-pgn.nag.65   = Svart har en avgörande damsidekontrollfördel
-pgn.nag.66   = Vit har en sårbar första rad
-pgn.nag.67   = Svart har en sårbar första rad
-pgn.nag.68   = Vit har en väl skyddad första rad
-pgn.nag.69   = Svart har en väl skyddad första rad
-pgn.nag.70   = Vit har en dåligt skyddad kung
-pgn.nag.71   = Svart har en dåligt skyddad kung
+pgn.nag.42   = Vit har en otillrÃ¤cklig  kompensation fÃ¶r materiellt underskott
+pgn.nag.43   = Svart har en otillrÃ¤cklig kompensation fÃ¶r materiellt underskott
+pgn.nag.44   = Vit har en tillrÃ¤cklig kompensation fÃ¶r materiellt underskott
+pgn.nag.45   = Svart har en tillrÃ¤cklig kompensation fÃ¶r materiellt underskott
+pgn.nag.46   = Vit har mer Ã¤n en tillrÃ¤cklig kompensation fÃ¶r materiellt underskott
+pgn.nag.47   = Svart har mer Ã¤n en tillrÃ¤cklig kompensation fÃ¶r materiellt underskott
+pgn.nag.48   = Vit har en liten centerkontrollfÃ¶rdel
+pgn.nag.49   = Svart har en liten centerkontrollfÃ¶rdel
+pgn.nag.50   = Vit har en ganska bra centerkontrollfÃ¶rdel
+pgn.nag.51   = Svart har en ganska bra centerkontrollfÃ¶rdel
+pgn.nag.52   = Vit har en avgÃ¶rande centerkontrollfÃ¶rdel
+pgn.nag.53   = Svart har en avgÃ¶rande centerkontrollfÃ¶rdel
+pgn.nag.54   = Vit har en liten kungssidekontrollfÃ¶rdel
+pgn.nag.55   = Svart har en liten kungssidekontrollfÃ¶rdel
+pgn.nag.56   = Vit har en ganska bra kungssidekontrollfÃ¶rdel
+pgn.nag.57   = Svart har en ganska bra kungssidekontrollfÃ¶rdel
+pgn.nag.58   = Vit har en avgÃ¶rande kungssidekontrollfÃ¶rdel
+pgn.nag.59   = Svart har en avgÃ¶rande kungssidekontrollfÃ¶rdel
+pgn.nag.60   = Vit har en liten damsidekontrollfÃ¶rdel
+pgn.nag.61   = Svart har en liten damsidekontrollfÃ¶rdel
+pgn.nag.62   = Vit har en ganska bra damsidekontrollfÃ¶rdel
+pgn.nag.63   = Svart har en ganska bra damsidekontrollfÃ¶rdel
+pgn.nag.64   = Vit har en avgÃ¶rande damsidekontrollfÃ¶rdel
+pgn.nag.65   = Svart har en avgÃ¶rande damsidekontrollfÃ¶rdel
+pgn.nag.66   = Vit har en sÃ¥rbar fÃ¶rsta rad
+pgn.nag.67   = Svart har en sÃ¥rbar fÃ¶rsta rad
+pgn.nag.68   = Vit har en vÃ¤l skyddad fÃ¶rsta rad
+pgn.nag.69   = Svart har en vÃ¤l skyddad fÃ¶rsta rad
+pgn.nag.70   = Vit har en dÃ¥ligt skyddad kung
+pgn.nag.71   = Svart har en dÃ¥ligt skyddad kung
 pgn.nag.72   = Vit har en bra skyddad kung
 pgn.nag.73   = Svart har en bra skyddad kung
-pgn.nag.74   = Vit har en dåligt placerad kung
-pgn.nag.75   = Svart har en dåligt placerad kung
-pgn.nag.76   = Vit har en välplacerad kung
-pgn.nag.77   = Svart har en välplacerad kung
+pgn.nag.74   = Vit har en dÃ¥ligt placerad kung
+pgn.nag.75   = Svart har en dÃ¥ligt placerad kung
+pgn.nag.76   = Vit har en vÃ¤lplacerad kung
+pgn.nag.77   = Svart har en vÃ¤lplacerad kung
 pgn.nag.78   = Vit har en mycket svag bondestruktur
 pgn.nag.79   = Svart har en mycket svag bondestruktur
-pgn.nag.80   = Vit har en måttligt bra bondestruktur
-pgn.nag.81   = Svart har en måttligt bra bondestruktur
+pgn.nag.80   = Vit har en mÃ¥ttligt bra bondestruktur
+pgn.nag.81   = Svart har en mÃ¥ttligt bra bondestruktur
 pgn.nag.82   = Vit har en ganska stark bondestruktur
 pgn.nag.83   = Svart har en ganska stark bondestruktur
-pgn.nag.84   = Vit har en väldigt stark bondestruktur
-pgn.nag.85   = Svart har en väldigt stark bondestruktur
-pgn.nag.86   = Vit har en dålig springarplacering
-pgn.nag.87   = Svart har en dålig springarplacering
+pgn.nag.84   = Vit har en vÃ¤ldigt stark bondestruktur
+pgn.nag.85   = Svart har en vÃ¤ldigt stark bondestruktur
+pgn.nag.86   = Vit har en dÃ¥lig springarplacering
+pgn.nag.87   = Svart har en dÃ¥lig springarplacering
 pgn.nag.88   = Vit har en bra springarplacering
 pgn.nag.89   = Svart har en bra springarplacering
-pgn.nag.90   = Vit har en dålig löparplacering
-pgn.nag.91   = Svart har en dålig löparplacering
-pgn.nag.92   = Vit har en bra löparplacering
-pgn.nag.93   = Svart har en bra löparplacering
-pgn.nag.94   = Vit har en dålig tornplacering
-pgn.nag.95   = Svart har en dålig tornplacering
+pgn.nag.90   = Vit har en dÃ¥lig lÃ¶parplacering
+pgn.nag.91   = Svart har en dÃ¥lig lÃ¶parplacering
+pgn.nag.92   = Vit har en bra lÃ¶parplacering
+pgn.nag.93   = Svart har en bra lÃ¶parplacering
+pgn.nag.94   = Vit har en dÃ¥lig tornplacering
+pgn.nag.95   = Svart har en dÃ¥lig tornplacering
 pgn.nag.96   = Vit har en bra tornplacering
 pgn.nag.97   = Svart har en bra tornplacering
-pgn.nag.98   = Vit har en dålig damplacering
-pgn.nag.99   = Svart har en dålig damplacering
+pgn.nag.98   = Vit har en dÃ¥lig damplacering
+pgn.nag.99   = Svart har en dÃ¥lig damplacering
 pgn.nag.100  = Vit har en bra damplacering
 pgn.nag.101  = Svart har en bra damplacering
-pgn.nag.102  = Vit har en dålig pjäskoordination
-pgn.nag.103  = Svart har en dålig pjäskoordination
-pgn.nag.104  = Vit har en bra pjäskoordination
-pgn.nag.105  = Svart har en bra pjäskoordination
-pgn.nag.106  = Vit har spelat öppningen mycket dåligt
-pgn.nag.107  = Svart har spelat öppningen mycket dåligt
-pgn.nag.108  = Vit har spelat öppningen dåligt
-pgn.nag.109  = Svart har spelat öppningen dåligt
-pgn.nag.110  = Vit har spelat öppningen bra
-pgn.nag.111  = Svart har spelat öppningen bra
-pgn.nag.112  = Vit har spelat öppningen mycket bra
-pgn.nag.113  = Svart har spelat öppningen mycket bra
-pgn.nag.114  = Vit har spelat mittspelet mycket dåligt
-pgn.nag.115  = Svart har spelat mittspelet mycket dåligt
-pgn.nag.116  = Vit har spelat mittspelet dåligt
-pgn.nag.117  = Svart har spelat mittspelet dåligt
+pgn.nag.102  = Vit har en dÃ¥lig pjÃ¤skoordination
+pgn.nag.103  = Svart har en dÃ¥lig pjÃ¤skoordination
+pgn.nag.104  = Vit har en bra pjÃ¤skoordination
+pgn.nag.105  = Svart har en bra pjÃ¤skoordination
+pgn.nag.106  = Vit har spelat Ã¶ppningen mycket dÃ¥ligt
+pgn.nag.107  = Svart har spelat Ã¶ppningen mycket dÃ¥ligt
+pgn.nag.108  = Vit har spelat Ã¶ppningen dÃ¥ligt
+pgn.nag.109  = Svart har spelat Ã¶ppningen dÃ¥ligt
+pgn.nag.110  = Vit har spelat Ã¶ppningen bra
+pgn.nag.111  = Svart har spelat Ã¶ppningen bra
+pgn.nag.112  = Vit har spelat Ã¶ppningen mycket bra
+pgn.nag.113  = Svart har spelat Ã¶ppningen mycket bra
+pgn.nag.114  = Vit har spelat mittspelet mycket dÃ¥ligt
+pgn.nag.115  = Svart har spelat mittspelet mycket dÃ¥ligt
+pgn.nag.116  = Vit har spelat mittspelet dÃ¥ligt
+pgn.nag.117  = Svart har spelat mittspelet dÃ¥ligt
 pgn.nag.118  = Vit har spelat mittspelet bra
 pgn.nag.119  = Svart har spelat mittspelet bra
 pgn.nag.120  = Vit har spelat mittspelet mycket bra
 pgn.nag.121  = Svart har spelat mittspelet mycket bra
-pgn.nag.122  = Vit har spelat slutspelet mycket dåligt
-pgn.nag.123  = Svart har spelat slutspelet mycket dåligt
-pgn.nag.124  = Vit har spelat slutspelet dåligt
-pgn.nag.125  = Svart har spelat slutspelet dåligt
+pgn.nag.122  = Vit har spelat slutspelet mycket dÃ¥ligt
+pgn.nag.123  = Svart har spelat slutspelet mycket dÃ¥ligt
+pgn.nag.124  = Vit har spelat slutspelet dÃ¥ligt
+pgn.nag.125  = Svart har spelat slutspelet dÃ¥ligt
 pgn.nag.126  = Vit har spelat slutspelet bra
 pgn.nag.127  = Svart har spelat slutspelet bra
 pgn.nag.128  = Vit har spelat slutspelet mycket bra
@@ -1350,8 +1350,8 @@ pgn.nag.130  = Vit har lite motspel
 pgn.nag.131  = Svart har lite motspel
 pgn.nag.132  = Vit har ganska bra motspel
 pgn.nag.133  = Svart har ganska bra motspel
-pgn.nag.134  = Vit har avgörande motspel
-pgn.nag.135  = Svart har avgörande motspel
+pgn.nag.134  = Vit har avgÃ¶rande motspel
+pgn.nag.135  = Svart har avgÃ¶rande motspel
 pgn.nag.136  = Vit har ganska bra tidskontrolltryck
 pgn.nag.137  = Svart har ganska bra tidskontrolltryck
 pgn.nag.138  = Vit har kraftigt tidskontrolltryck
@@ -1361,10 +1361,10 @@ pgn.nag.139  = Svart har kraftigt tidskontrolltryck
 
 pgn.nag.140  	= med iden
 pgn.nag.141  	= mot
-pgn.nag.142  	= är bättre
-pgn.nag.143  	= är sämre
+pgn.nag.142  	= Ã¤r bÃ¤ttre
+pgn.nag.143  	= Ã¤r sÃ¤mre
 pgn.nag.144  	= =
-pgn.nag.144.tip = är ekvivalent
+pgn.nag.144.tip = Ã¤r ekvivalent
 pgn.nag.145  	= RR
 pgn.nag.145.tip	= redaktionell kommentar?
 pgn.nag.146  	= N
@@ -1373,15 +1373,15 @@ pgn.nag.147     = Svag punkt
 pgn.nag.148     = Slutspel
 pgn.nag.149		= fil
 pgn.nag.150		= Diagonal
-pgn.nag.151		= Vit har ett löparpar
-pgn.nag.152     = Svart har ett löparpar
-pgn.nag.153		= Löpare med olika färger
-pgn.nag.154		= Löpare med samma färg
+pgn.nag.151		= Vit har ett lÃ¶parpar
+pgn.nag.152     = Svart har ett lÃ¶parpar
+pgn.nag.153		= LÃ¶pare med olika fÃ¤rger
+pgn.nag.154		= LÃ¶pare med samma fÃ¤rg
 # following codes are defined by us (equivalent to Informator symbols)
 # (is there a standard definition for these symbols ?)
 
 pgn.nag.156		= fribonde
-pgn.nag.157		= fler bönder
+pgn.nag.157		= fler bÃ¶nder
 pgn.nag.158		= med
 pgn.nag.159		= utan
 pgn.nag.161		= se
@@ -1390,11 +1390,11 @@ pgn.nag.163		= rad
 
 # defined by SCID:
 pgn.nag.190		= etc.
-pgn.nag.191		= dubblerade bönder
-pgn.nag.192		= separade bönder
-pgn.nag.193		= förenade bönder
-pgn.nag.194     = Hängande bönder 
-pgn.nag.195     = Bakvända bönder
+pgn.nag.191		= dubblerade bÃ¶nder
+pgn.nag.192		= separade bÃ¶nder
+pgn.nag.193		= fÃ¶renade bÃ¶nder
+pgn.nag.194     = HÃ¤ngande bÃ¶nder 
+pgn.nag.195     = BakvÃ¤nda bÃ¶nder
 
 # this code is only defined by us
 pgn.nag.201  = Diagram
