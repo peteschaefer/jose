@@ -284,8 +284,10 @@ public class BoardPanel
 		{
 			list.add(Util.toBoolean(is2d()));
 			list.add("menu.game.2d");
-			list.add(Util.toBoolean(is3d()));
-			list.add("menu.game.3d");
+			if (Version.hasJava3d(false,false)) {
+				list.add(Util.toBoolean(is3d()));
+				list.add("menu.game.3d");
+			}
 			list.add(ContextMenu.SEPARATOR);
 		}
 

@@ -257,7 +257,8 @@ public class SetupDialog
 		GridBagConstraints econst = new GridBagConstraints(0,5, 1,1, 1.0,0.0,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 				INSETS_NORMAL, 0,0);
-		getElementPane().add(ebox, econst);
+		if (eboardCtrl.eboard.isAvailable())
+			getElementPane().add(ebox, econst);
 
 		addButtons(OK_CANCEL);
 		addSpacer(20);

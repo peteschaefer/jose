@@ -137,7 +137,7 @@ public class OptionDialog
 	{
 		super(name, false);
 		Dimension screensize = frame.getGraphicsConfiguration().getBounds().getSize();
-		center(Math.min(screensize.width,720), Math.min(screensize.height,660));
+		center(Math.min(screensize.width,720), Math.min(screensize.height,540));
         profile = AbstractApplication.theUserProfile;
 
 		addTab(newGridPane());   // tab0
@@ -206,9 +206,9 @@ public class OptionDialog
 
 		FontList fontList = FontList.createDiagramFontList(20,true);
 		fontList.setVisibleRowCount(5);
-		fontList.setMinimumSize(new Dimension(80,360)); //  has no effect on fucking GridBagLayout ;-((
+		fontList.setMinimumSize(new Dimension(80,320)); //  has no effect on fucking GridBagLayout ;-((
 		//  diagram font
-		addWithLabel(tab1, 0,0,4, 0.0, 10.0,
+		addWithLabel(tab1, 0,0,4, 0.0, 0.0,
 				"font.diagram", fontList,
 		        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -260,8 +260,8 @@ public class OptionDialog
 
 //		ebox.add( newLabel("eboard.orientation"), 										gridConstraint(LABEL_INDENTED,1,2,1));
 //		ebox.add( oriCombo,																		gridConstraint(LABEL_ONE_LEFT, 2,2,2));
-
-		addBox(tab1, 0,4,4, ebox);
+		if (eboardCtrl.eboard.isAvailable())
+			addBox(tab1, 0,4,4, ebox);
 
 		tab1.add(new JLabel(""), ELEMENT_REMAINDER);
 	}

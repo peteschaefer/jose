@@ -27,7 +27,7 @@ libraries needed:
 [x] macOS 15 Sequoia VM
 [x] jdk1.8 (64 bit)
 [x] 64 bit binaries for stockfish
-[ ] and lc0
+[x] and lc0. via brew
 [x] mysqld standalone
     5.0.67 for MacOS 64, (remember to copy share too)
 [x] upgrade mysql.jar
@@ -38,7 +38,8 @@ JRE 1.6.0_65 (Apple) "mixed mode"
 mysqld 5.0.24a i686 from 11-07-2005
 
 
-[ ] compile easylink
+[-] compile easylink
+ ### project compiles, but can't connect to chessboard)
 
 [x] upgrade libquaqua
 [?] https://violetlib.org/vaqua. Problems! More modern but not overwhelmingly beautiful :(
