@@ -728,7 +728,7 @@ public class PGNImport
 		throws SQLException
 	{
 		String sql = "UPDATE Collection " +
-					" SET GameCount = ?, Attributes = (Attributes | ?) "+
+					" SET GameCount = (GameCount + ?), Attributes = (Attributes | ?) "+
 		        	" WHERE Id = ?";
 
 		JoPreparedStatement pstm = connection.getPreparedStatement(sql);

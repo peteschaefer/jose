@@ -68,9 +68,7 @@ java.util.EmptyStackException
         - user declined draw offer
         - can not offer theirselves
 
-[x] DON'T delete system folders (auto-save, clipboard, ...)
-    [x] re-create on demand (like for Download)
-    [x] move to top when used
+[ ] strange: 1 Result in empty Downloads folder
 
 [ ] Annotation: layout in small panels
     [x] ScrollPane without bars; use mouse wheel scrolling
