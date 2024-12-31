@@ -1,6 +1,6 @@
 ==== Bugs
 
-* double click insert variant; trying to delete  it
+* double click insert variant; trying to delete it
 
 [ ] BUG
 java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4cb0 is still active.
@@ -62,8 +62,15 @@ java.util.EmptyStackException
 [?] game vs. opening explorer:
     - user moves have no value (and it shows)
 
-[ ] bug: offer draw, resign
-[ ] linux: fill in jose.desktop from shell script
+[ ] Engine Panel: smaller info labels
+[ ] fix: offer draw, resign
+    [ ] askedAdjudicated == true can not be reset
+        - user declined draw offer
+        - can not offer theirselves
+
+[x] DON'T delete system folders (auto-save, clipboard, ...)
+    [x] re-create on demand (like for Download)
+    [x] move to top when used
 
 [ ] Annotation: layout in small panels
     [x] ScrollPane without bars; use mouse wheel scrolling
@@ -132,6 +139,8 @@ Alternative JREs:
 * Oracle 23: seems to work, but don't hurry
 
 ==== Deprecated Stuff
+
+* AWT Printing?, FOP-to-AWT printing?
 
 * Positional Index !!
   - db fields are NOT USED at all

@@ -70,6 +70,7 @@ public class CommandDispatcher
 	{
 		/*	forward menu events to CommandListener	*/
 		Command cmd = new Command(event.getActionCommand(), event, null);
+		cmd.event = event;
 		if (event.getSource() instanceof JComponent) {
 			JComponent jcmp = (JComponent)event.getSource();
 			cmd.data = jcmp.getClientProperty("action.data");
@@ -268,6 +269,7 @@ public class CommandDispatcher
 			action.execute(cmd);
 
 			if (action.canUndo()) {
+				// @deprecated
 				if (! undoList.isEmpty()) {
 					//	finish remaining items
 					for (int i=currentUndo+1; i < undoList.size(); i++)
@@ -296,6 +298,17 @@ public class CommandDispatcher
 				undoList.add(cmd);
 				currentUndo = undoList.size()-1;
 			}
+
+			if (cmd.event!=null && cmd.event instanceof ActionEvent) {
+				Object source = ((ActionEvent)cmd.event).getSource();
+				if (source instanceof JButton) {
+					((JButton)source).setEnabled(action.isEnabled(cmd.code));
+				}
+				if (source instanceof JMenuItem) {
+					((JMenuItem)source).setEnabled(action.isEnabled(cmd.code));
+				}
+			}
+
 		} catch (ReplayException rpex) {
 			Application.warning(rpex);  //  hack: don't report to GUI
 		} catch (Throwable ex) {

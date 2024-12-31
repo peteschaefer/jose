@@ -128,7 +128,7 @@ public class UciPlugin
     }
 
 	public void offerDrawToEngine() {
-		//    can't with UCI
+		userOfferedDraw = true;
 	}
 
 	public boolean isBookEnabled()
@@ -871,6 +871,7 @@ public class UciPlugin
 					AnalysisRecord.DEPTH +
 					AnalysisRecord.SELECTIVE_DEPTH +
 					AnalysisRecord.EVAL;
+			userOfferedDraw=false;	//	draw offer invalidated
 		}
 		//else
 		//	rec.modified = 0;

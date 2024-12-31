@@ -3,11 +3,11 @@
     <description> release packaging </description>
 
 	<!-- current verision (as used in file names) -->
-	<property name="version" value="155"/>
+	<!--property name="version" value="155"/-->
 
 	<!-- target directory -->
 
-	<property name="dist-dir" location="C:/dev/jose/dist"/>
+	<!--property name="dist-dir" location="C:/dev/jose/dist"/-->
 	<property name="target-dir" location="${dist-dir}/packages"/>
 	<property name="jre-dir" location="C:/dev/jose"/>
 
