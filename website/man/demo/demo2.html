@@ -1,0 +1,399 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>jose Games</title>
+<link type="text/css" rel="StyleSheet" href="./games.css">
+<style>
+			A { text-decoration: none}
+			img { border: 0 }
+			</style>
+</head>
+<body>
+<script language="JavaScript">
+			imgurl = "./Chess Berlin/27";
+		</script><script language="JavaScript" src="./games.js"></script><script language="JavaScript">
+			g = games[games.length] = new Object();
+			var j = pos.length;
+			
+			g.start = j;
+			g.current = j;
+			
+			g.init=null;	pos[j] = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/pp2pppp/2p5/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/pp2pppp/2p5/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR b KQkq - 1 3"; dep[j++] = 0;
+	pos[j] = "rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 2 4"; dep[j++] = 0;
+	pos[j] = "rnbqkb1r/pp2pppp/2p2n2/3P4/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4"; dep[j++] = 0;
+	pos[j] = "rnbqkb1r/pp2pppp/5n2/3p4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5"; dep[j++] = 0;
+	pos[j] = "rnbqkb1r/pp2pppp/5n2/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 5"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/pp2pppp/2n2n2/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 2 6"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/pp2pppp/2n2n2/3p4/3P1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 6"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/pp2pppp/2n2n2/3p4/3P4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 3 6"; dep[j++] = 1;
+	pos[j] = "r1bqkb1r/pp3ppp/2n1pn2/3p4/3P1B2/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 7"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/pp3ppp/2n1pn2/3p4/3P1B2/2N1PN2/PP3PPP/R2QKB1R b KQkq - 0 7"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/pp2bppp/2n1pn2/3p4/3P1B2/2N1PN2/PP3PPP/R2QKB1R w KQkq - 1 8"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/pp2bppp/2n1pn2/3p4/3P1B2/2NBPN2/PP3PPP/R2QK2R b KQkq - 2 8"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2bppp/2n1pn2/3p4/3P1B2/2NBPN2/PP3PPP/R2QK2R w KQ - 3 9"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2bppp/2n1pn2/3p4/3P1B2/2NBPN2/PP3PPP/R2Q1RK1 b - - 4 9"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2bppp/2n1p3/3p3n/3P1B2/2NBPN2/PP3PPP/R2Q1RK1 w - - 5 10"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2bppp/2n1p3/3pB2n/3P4/2NBPN2/PP3PPP/R2Q1RK1 b - - 6 10"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1p3/3pBp1n/3P4/2NBPN2/PP3PPP/R2Q1RK1 w - - 0 11"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1pp2/3pB2n/3P4/2NBPN2/PP3PPP/R2Q1RK1 w - - 0 11"; dep[j++] = 1;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1pp2/3pB1Nn/3P4/2NBP3/PP3PPP/R2Q1RK1 b - - 1 11"; dep[j++] = 1;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1p3/3pBp1n/3P4/2NBPN2/PP3PPP/2RQ1RK1 b - - 1 11"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1pn2/3pBp2/3P4/2NBPN2/PP3PPP/2RQ1RK1 w - - 2 12"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1pB2/3p1p2/3P4/2NBPN2/PP3PPP/2RQ1RK1 b - - 0 12"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp2b1pp/2n1pn2/3pBp2/3PN3/3BPN2/PP3PPP/2RQ1RK1 b - - 3 12"; dep[j++] = 1;
+	pos[j] = "r1bq1rk1/pp2b2p/2n1pp2/3p1p2/3P4/2NBPN2/PP3PPP/2RQ1RK1 w - - 0 13"; dep[j++] = 0;
+	pos[j] = "r1bq1rk1/pp4pp/2n1pb2/3p1p2/3P4/2NBPN2/PP3PPP/2RQ1RK1 w - - 0 13"; dep[j++] = 1;
+	pos[j] = "r1bq1rk1/pp4pp/2n1pb2/3p1p2/N2P4/3BPN2/PP3PPP/2RQ1RK1 b - - 1 13"; dep[j++] = 1;
+	pos[j] = "r1bq1rk1/pp2b2p/2n1pp2/3p1p2/3P3N/2NBP3/PP3PPP/2RQ1RK1 b - - 1 13"; dep[j++] = 0;
+	pos[j] = "r1bq1r1k/pp2b2p/2n1pp2/3p1p2/3P3N/2NBP3/PP3PPP/2RQ1RK1 w - - 2 14"; dep[j++] = 0;
+	pos[j] = "r1bq1r1k/pp2b2p/2n1pp2/3p1p2/3P1P1N/2NBP3/PP4PP/2RQ1RK1 b - - 0 14"; dep[j++] = 0;
+	pos[j] = "r1bq2rk/pp2b2p/2n1pp2/3p1p2/3P1P1N/2NBP3/PP4PP/2RQ1RK1 w - - 1 15"; dep[j++] = 0;
+	pos[j] = "r1bq2rk/pp2b2p/2n1pp2/3p1p2/3P1P1N/2NBPR2/PP4PP/2RQ2K1 b - - 2 15"; dep[j++] = 0;
+	pos[j] = "r2q2rk/pp1bb2p/2n1pp2/3p1p2/3P1P1N/2NBPR2/PP4PP/2RQ2K1 w - - 3 16"; dep[j++] = 0;
+	pos[j] = "r2q2rk/pp1bb2p/2n1pp2/3p1p2/3P1P1N/2NBP2R/PP4PP/2RQ2K1 b - - 4 16"; dep[j++] = 0;
+	pos[j] = "r2qb1rk/pp2b2p/2n1pp2/3p1p2/3P1P1N/2NBP2R/PP4PP/2RQ2K1 w - - 5 17"; dep[j++] = 0;
+	pos[j] = "r2qb1rk/pp2b2p/2n1pp2/3p1p2/3P1P1N/P1NBP2R/1P4PP/2RQ2K1 b - - 0 17"; dep[j++] = 0;
+	pos[j] = "r2qb2k/pp2b1rp/2n1pp2/3p1p2/3P1P1N/P1NBP2R/1P4PP/2RQ2K1 w - - 1 18"; dep[j++] = 0;
+	pos[j] = "r2qb2k/pp2b1rp/2n1pp2/3p1p2/3P1P1N/P1NBP1R1/1P4PP/2RQ2K1 b - - 2 18"; dep[j++] = 0;
+	pos[j] = "r2qb2k/pp2b2p/2n1pp2/3p1p2/3P1P1N/P1NBP1r1/1P4PP/2RQ2K1 w - - 0 19"; dep[j++] = 0;
+	pos[j] = "r2qb2k/pp2b2p/2n1pp2/3p1p2/3P1P1N/P1NBP1P1/1P4P1/2RQ2K1 b - - 0 19"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/2n1pp2/3p1p2/3P1P1N/P1NBP1P1/1P4P1/2RQ2K1 w - - 1 20"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/2n1pp2/3p1p2/3P1P1N/P1NBP1P1/1P3KP1/2RQ4 b - - 2 20"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/n2p1p2/3P1P1N/P1NBP1P1/1P3KP1/2RQ4 w - - 3 21"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/n2p1p2/3P1P1N/P1NBPQP1/1P3KP1/2R5 b - - 4 21"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p1p2/2nP1P1N/P1NBPQP1/1P3KP1/2R5 w - - 5 22"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p1p2/2nP1P1N/P1NBP1P1/1P2QKP1/2R5 b - - 6 22"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/3npp2/3p1p2/3P1P1N/P1NBP1P1/1P2QKP1/2R5 w - - 7 23"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/3npp2/3p1p2/3P1P1N/P1NBP1P1/1P2QKP1/7R b - - 8 23"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p1p2/3PnP1N/P1NBP1P1/1P2QKP1/7R w - - 9 24"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p1p2/3PBP1N/P1N1P1P1/1P2QKP1/7R b - - 0 24"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p4/3PpP1N/P1N1P1P1/1P2QKP1/7R w - - 0 25"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4pp2/3p4/3PpPQN/P1N1P1P1/1P3KP1/7R b - - 1 25"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4p3/3p1p2/3PpPQN/P1N1P1P1/1P3KP1/7R w - - 0 26"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/4p3/3p1N2/3PpPQ1/P1N1P1P1/1P3KP1/7R b - - 0 26"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/8/3p1p2/3PpPQ1/P1N1P1P1/1P3KP1/7R w - - 0 27"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b2p/8/3p1Q2/3PpP2/P1N1P1P1/1P3KP1/7R b - - 0 27"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b3/8/3p1Q1p/3PpP2/P1N1P1P1/1P3KP1/7R w - - 0 28"; dep[j++] = 0;
+	pos[j] = "2rqb2k/pp2b3/8/3p1Q1p/3PpPP1/P1N1P3/1P3KP1/7R b - - 0 28"; dep[j++] = 0;
+	pos[j] = "3qb2k/pp2b3/2r5/3p1Q1p/3PpPP1/P1N1P3/1P3KP1/7R w - - 1 29"; dep[j++] = 0;
+	pos[j] = "3qb2k/pp2b3/2r5/3p1QPp/3PpP2/P1N1P3/1P3KP1/7R b - - 0 29"; dep[j++] = 0;
+	pos[j] = "3qb2k/pp2b3/2r5/3N1Q1p/3PpPP1/P3P3/1P3KP1/7R b - - 0 29"; dep[j++] = 1;
+	pos[j] = "3qb2k/pp6/2r5/3N1Q1p/3PpPPb/P3P3/1P3KP1/7R w - - 1 30"; dep[j++] = 1;
+	pos[j] = "3qb1k1/pp2b3/2r5/3p1QPp/3PpP2/P1N1P3/1P3KP1/7R w - - 1 30"; dep[j++] = 0;
+	pos[j] = "3qb1k1/pp2b3/2r5/3N1QPp/3PpP2/P3P3/1P3KP1/7R b - - 0 30"; dep[j++] = 0;
+	pos[j] = "3q2k1/pp2bb2/2r5/3N1QPp/3PpP2/P3P3/1P3KP1/7R w - - 1 31"; dep[j++] = 0;
+	pos[j] = "3q2k1/pp2Nb2/2r5/5QPp/3PpP2/P3P3/1P3KP1/7R b - - 0 31"; dep[j++] = 0;
+	pos[j] = "6k1/pp2qb2/2r5/5QPp/3PpP2/P3P3/1P3KP1/7R w - - 0 32"; dep[j++] = 0;
+	pos[j] = "6k1/pp2qb2/2r5/5QPp/3PpPP1/P3P3/1P3K2/7R b - - 0 32"; dep[j++] = 0;
+	pos[j] = "6k1/pp2qb2/2r5/5QP1/3PpPp1/P3P3/1P3K2/7R w - - 0 33"; dep[j++] = 0;
+	pos[j] = "6k1/pp2qb2/8/5QPp/3PpPP1/P3P3/1Pr2K2/7R w - - 1 33"; dep[j++] = 1;
+	pos[j] = "6k1/pp2qb2/8/5QPp/3PpPP1/P3P1K1/1Pr5/7R b - - 2 33"; dep[j++] = 1;
+	pos[j] = "6k1/pp2qb2/8/5QPp/3PpPP1/P3P1K1/1P2r3/7R w - - 3 34"; dep[j++] = 1;
+	pos[j] = "6k1/pp2qb2/8/5QPP/3PpP2/P3P1K1/1P2r3/7R b - - 0 34"; dep[j++] = 1;
+	pos[j] = "6k1/pp2qb1Q/2r5/6P1/3PpPp1/P3P3/1P3K2/7R b - - 1 33"; dep[j++] = 0;
+	pos[j] = "5k2/pp2qb1Q/2r5/6P1/3PpPp1/P3P3/1P3K2/7R w - - 2 34"; dep[j++] = 0;
+	pos[j] = "5k2/pp2qb1Q/2r4R/6P1/3PpPp1/P3P3/1P3K2/8 b - - 3 34"; dep[j++] = 0;
+	pos[j] = "5kb1/pp2q2Q/2r4R/6P1/3PpPp1/P3P3/1P3K2/8 w - - 4 35"; dep[j++] = 0;
+	pos[j] = "5kb1/pp2q3/2r4R/5QP1/3PpPp1/P3P3/1P3K2/8 b - - 5 35"; dep[j++] = 0;
+	pos[j] = "6b1/pp2q1k1/2r4R/5QP1/3PpPp1/P3P3/1P3K2/8 w - - 6 36"; dep[j++] = 0;
+	pos[j] = "6b1/pp2q1k1/2R5/5QP1/3PpPp1/P3P3/1P3K2/8 b - - 0 36"; dep[j++] = 0;
+	pos[j] = "6b1/p3q1k1/2p5/5QP1/3PpPp1/P3P3/1P3K2/8 w - - 0 37"; dep[j++] = 0;
+	pos[j] = "6b1/p3q1k1/2p5/5QP1/3PpPp1/P3P1K1/1P6/8 b - - 1 37"; dep[j++] = 0;
+	pos[j] = "6b1/p5k1/2p1q3/5QP1/3PpPp1/P3P1K1/1P6/8 w - - 2 38"; dep[j++] = 0;
+	pos[j] = "8/p3qbk1/2p5/5QP1/3PpPp1/P3P1K1/1P6/8 w - - 2 38"; dep[j++] = 1;
+	pos[j] = "8/p3qbk1/2p5/6P1/3PpPQ1/P3P1K1/1P6/8 b - - 0 38"; dep[j++] = 1;
+	pos[j] = "8/p3qbk1/8/2p3P1/3PpPQ1/P3P1K1/1P6/8 w - - 0 39"; dep[j++] = 1;
+	pos[j] = "6b1/p5k1/2p1q3/5QP1/3PpPK1/P3P3/1P6/8 b - - 0 38"; dep[j++] = 0;
+	pos[j] = "6b1/p5k1/2p5/5qP1/3PpPK1/P3P3/1P6/8 w - - 0 39"; dep[j++] = 0;
+	pos[j] = "6b1/p5k1/2p5/5KP1/3PpP2/P3P3/1P6/8 b - - 0 39"; dep[j++] = 0;
+	pos[j] = "8/p5k1/2p5/3b1KP1/3PpP2/P3P3/1P6/8 w - - 1 40"; dep[j++] = 0;
+	pos[j] = "8/p5k1/2p5/3b1KP1/1P1PpP2/P3P3/8/8 b - - 0 40"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/3b1KP1/1P1PpP2/P3P3/8/8 w - - 0 41"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/3b2P1/1P1PpPK1/P3P3/8/8 b - - 1 41"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/6P1/1PbPpPK1/P3P3/8/8 w - - 2 42"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/5PP1/1PbPp1K1/P3P3/8/8 b - - 0 42"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/5PP1/1P1Pp1K1/Pb2P3/8/8 w - - 1 43"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/5PP1/1P1PpK2/Pb2P3/8/8 b - - 2 43"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/5PP1/1P1PpK2/P3P3/2b5/8 w - - 3 44"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/4KPP1/1P1Pp3/P3P3/2b5/8 b - - 4 44"; dep[j++] = 0;
+	pos[j] = "8/5k2/p1p5/4KPP1/1P1Pp3/P3P3/2b5/8 w - - 5 45"; dep[j++] = 0;
+	pos[j] = "8/5k2/p1p5/4KPP1/PP1Pp3/4P3/2b5/8 b - - 0 45"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/4KPP1/PP1Pp3/4P3/2b5/8 w - - 1 46"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/3PKPP1/PP2p3/4P3/2b5/8 b - - 0 46"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1p5/3PKPP1/bP2p3/4P3/8/8 w - - 0 47"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1pP4/4KPP1/bP2p3/4P3/8/8 b - - 0 47"; dep[j++] = 0;
+	pos[j] = "8/6k1/p2P4/2p1KPP1/bP2p3/4P3/8/8 w - - 0 48"; dep[j++] = 0;
+	pos[j] = "8/6k1/p2P4/2P1KPP1/b3p3/4P3/8/8 b - - 0 48"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1bP4/2P1KPP1/4p3/4P3/8/8 w - - 1 49"; dep[j++] = 0;
+	pos[j] = "8/6k1/p1bPK3/2P2PP1/4p3/4P3/8/8 b - - 2 49"; dep[j++] = 0;
+	pos[j] = "8/6k1/2bPK3/p1P2PP1/4p3/4P3/8/8 w - - 0 50"; dep[j++] = 0;
+	pos[j] = "8/6k1/2bPKP2/p1P3P1/4p3/4P3/8/8 b - - 0 50"; dep[j++] = 0;
+
+			
+			g.end = j;
+		</script>
+<table>
+<tr>
+<td rowspan="2">
+<table cellspacing="0" cellpadding="0" border="1">
+<tr>
+<td><img name="i-0-0" width="27" height="27"><img name="i-0-1" width="27" height="27"><img name="i-0-2" width="27" height="27"><img name="i-0-3" width="27" height="27"><img name="i-0-4" width="27" height="27"><img name="i-0-5" width="27" height="27"><img name="i-0-6" width="27" height="27"><img name="i-0-7" width="27" height="27"><br clear="all">
+<img name="i-0-8" width="27" height="27"><img name="i-0-9" width="27" height="27"><img name="i-0-10" width="27" height="27"><img name="i-0-11" width="27" height="27"><img name="i-0-12" width="27" height="27"><img name="i-0-13" width="27" height="27"><img name="i-0-14" width="27" height="27"><img name="i-0-15" width="27" height="27"><br clear="all">
+<img name="i-0-16" width="27" height="27"><img name="i-0-17" width="27" height="27"><img name="i-0-18" width="27" height="27"><img name="i-0-19" width="27" height="27"><img name="i-0-20" width="27" height="27"><img name="i-0-21" width="27" height="27"><img name="i-0-22" width="27" height="27"><img name="i-0-23" width="27" height="27"><br clear="all">
+<img name="i-0-24" width="27" height="27"><img name="i-0-25" width="27" height="27"><img name="i-0-26" width="27" height="27"><img name="i-0-27" width="27" height="27"><img name="i-0-28" width="27" height="27"><img name="i-0-29" width="27" height="27"><img name="i-0-30" width="27" height="27"><img name="i-0-31" width="27" height="27"><br clear="all">
+<img name="i-0-32" width="27" height="27"><img name="i-0-33" width="27" height="27"><img name="i-0-34" width="27" height="27"><img name="i-0-35" width="27" height="27"><img name="i-0-36" width="27" height="27"><img name="i-0-37" width="27" height="27"><img name="i-0-38" width="27" height="27"><img name="i-0-39" width="27" height="27"><br clear="all">
+<img name="i-0-40" width="27" height="27"><img name="i-0-41" width="27" height="27"><img name="i-0-42" width="27" height="27"><img name="i-0-43" width="27" height="27"><img name="i-0-44" width="27" height="27"><img name="i-0-45" width="27" height="27"><img name="i-0-46" width="27" height="27"><img name="i-0-47" width="27" height="27"><br clear="all">
+<img name="i-0-48" width="27" height="27"><img name="i-0-49" width="27" height="27"><img name="i-0-50" width="27" height="27"><img name="i-0-51" width="27" height="27"><img name="i-0-52" width="27" height="27"><img name="i-0-53" width="27" height="27"><img name="i-0-54" width="27" height="27"><img name="i-0-55" width="27" height="27"><br clear="all">
+<img name="i-0-56" width="27" height="27"><img name="i-0-57" width="27" height="27"><img name="i-0-58" width="27" height="27"><img name="i-0-59" width="27" height="27"><img name="i-0-60" width="27" height="27"><img name="i-0-61" width="27" height="27"><img name="i-0-62" width="27" height="27"><img name="i-0-63" width="27" height="27"><br clear="all">
+</td>
+</tr>
+</table>
+</td><td rowspan="2" width="80"></td><td valign="top"><font class="header"><font class="header_site">New York </font><font class="header_date">1924</font>
+<br>
+<font class="header_white"> Capablanca, Jos&eacute;</font> - <font class="header_black"> Lasker, Emmanuel</font><font class="header_result"> 1-0</font>
+<br>D13 Slawisch: Abtausch, 6.Lf4 e6 7.e3 Le7<br>
+<br>
+</font></td>
+</tr>
+<tr>
+<td>
+<form name="game-0">
+<input value="  |<  " type="button" onclick="first(0)"><input value="  <  " type="button" onclick="previous(0)"><input value="  >  " type="button" onclick="next(0)"><input value="  >|  " type="button" onclick="last(0)"><input value="  >>  " type="button" onclick="animate(0, 0.5, +1)"><input onclick="stop_animation()" value="   | |   " type="button">
+</form>
+</td>
+</tr>
+</table>
+<font class="body"><font class="body_line"><font class="body_line_0"> <a name="0" href="javascript:go(0)" class="body_line_0">1.d4</a>  <a name="1" href="javascript:go(1)" class="body_line_0">d5</a>  <a name="2" href="javascript:go(2)" class="body_line_0">2.c4</a>  <a name="3" href="javascript:go(3)" class="body_line_0">c6</a>  <a name="4" href="javascript:go(4)" class="body_line_0">3.<img alt="n" src="./Chess Berlin/16/n.png">c3</a>  <a name="5" href="javascript:go(5)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">f6</a>  <a name="6" href="javascript:go(6)" class="body_line_0">4.cxd5</a>  <a name="7" href="javascript:go(7)" class="body_line_0">cxd5</a>  <a name="8" href="javascript:go(8)" class="body_line_0">5.<img alt="n" src="./Chess Berlin/16/n.png">f3</a>  <a name="9" href="javascript:go(9)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">c6</a>  <a name="10" href="javascript:go(10)" class="body_line_0">6.<img alt="b" src="./Chess Berlin/16/b.png">f4</a> <font class="body_line_1">
+<p>[ <font class="body_comment_1"> in Betracht kam auch </font> <a name="11" href="javascript:go(11)" class="body_line_1">6.<img alt="q" src="./Chess Berlin/16/q.png">b3</a> <font class="body_comment_1"> , um die aktive L&auml;uferentwicklung nach f5 zu vermeiden. Lasker verzichtet ohnehin darauf, vermutlich aus den psychologischen Erw&auml;gungen, da&szlig; sein Gegner solches erwartete </font>]</p>
+</font> <a name="12" href="javascript:go(12)" class="body_line_0">6...e6</a>  <a name="13" href="javascript:go(13)" class="body_line_0">7.e3</a>  <a name="14" href="javascript:go(14)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">e7</a>  <a name="15" href="javascript:go(15)" class="body_line_0">8.<img alt="b" src="./Chess Berlin/16/b.png">d3</a>  <a name="16" href="javascript:go(16)" class="body_line_0">O-O</a>  <a name="17" href="javascript:go(17)" class="body_line_0">9.O-O</a>  <a name="18" href="javascript:go(18)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">h5</a>  <a name="19" href="javascript:go(19)" class="body_line_0">10.<img alt="b" src="./Chess Berlin/16/b.png">e5</a>  <a name="20" href="javascript:go(20)" class="body_line_0">f5</a> !<font class="body_line_1">
+<p>[ <font class="body_comment_1"> auf </font> <a name="21" href="javascript:go(21)" class="body_line_1">10...f6</a> <font class="body_comment_1"> folgt stark </font> <a name="22" href="javascript:go(22)" class="body_line_1">11.<img alt="n" src="./Chess Berlin/16/n.png">g5</a> <font class="body_comment_1"> , und es h&auml;ngen Sh5 und Bauer h7 </font>]</p>
+</font> <a name="23" href="javascript:go(23)" class="body_line_0">11.<img alt="r" src="./Chess Berlin/16/r.png">c1</a>  <a name="24" href="javascript:go(24)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">f6</a>  <a name="25" href="javascript:go(25)" class="body_line_0">12.<img alt="b" src="./Chess Berlin/16/b.png">xf6</a> <font class="body_line_1">
+<p>[ <font class="body_comment_1"> sonst folgt </font> <a name="26" href="javascript:go(26)" class="body_line_1">12.<img alt="n" src="./Chess Berlin/16/n.png">e4</a> ]</p>
+</font> <a name="27" href="javascript:go(27)" class="body_line_0">12...gxf6</a> !<font class="body_comment_0"> h&auml;lt das wichtige Feld e5 unter Kontrolle </font><font class="body_line_1">
+<p>[ <font class="body_comment_1"> auf </font> <a name="28" href="javascript:go(28)" class="body_line_1">12...<img alt="b" src="./Chess Berlin/16/b.png">xf6</a> <font class="body_comment_1"> k&auml;me </font> <a name="29" href="javascript:go(29)" class="body_line_1">13.<img alt="n" src="./Chess Berlin/16/n.png">a4</a> <font class="body_comment_1"> nebst Sc5. Wei&szlig; mu&szlig; nun vorsorgen, da&szlig; sein Gegner nicht am K&ouml;nigsfl&uuml;gel zum Angriff kommt </font>]</p>
+</font> <a name="30" href="javascript:go(30)" class="body_line_0">13.<img alt="n" src="./Chess Berlin/16/n.png">h4</a>  <a name="31" href="javascript:go(31)" class="body_line_0"><img alt="k" src="./Chess Berlin/16/k.png">h8</a>  <a name="32" href="javascript:go(32)" class="body_line_0">14.f4</a>  <a name="33" href="javascript:go(33)" class="body_line_0"><img alt="r" src="./Chess Berlin/16/r.png">g8</a>  <a name="34" href="javascript:go(34)" class="body_line_0">15.<img alt="r" src="./Chess Berlin/16/r.png">f3</a>  <a name="35" href="javascript:go(35)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">d7</a>  <a name="36" href="javascript:go(36)" class="body_line_0">16.<img alt="r" src="./Chess Berlin/16/r.png">h3</a>  <a name="37" href="javascript:go(37)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">e8</a> <font class="body_comment_0"> verhindert 17.Dh5 </font> <a name="38" href="javascript:go(38)" class="body_line_0">17.a3</a> !<font class="body_comment_0"> plant Dc2 nebst &Uuml;berf&uuml;hrung des Tc1 zum K&ouml;nigsfl&uuml;gel, z.B. droht nach 17...Dd7 18.Dc2 das Opfer Sxf5. Lasker deckt vorsorglich h7 </font> <a name="39" href="javascript:go(39)" class="body_line_0">17...<img alt="r" src="./Chess Berlin/16/r.png">g7</a>  <a name="40" href="javascript:go(40)" class="body_line_0">18.<img alt="r" src="./Chess Berlin/16/r.png">g3</a> <font class="body_comment_0"> eine neue Idee: </font> <a name="41" href="javascript:go(41)" class="body_line_0">18...<img alt="r" src="./Chess Berlin/16/r.png">xg3</a>  <a name="42" href="javascript:go(42)" class="body_line_0">19.hxg3</a>  <a name="43" href="javascript:go(43)" class="body_line_0"><img alt="r" src="./Chess Berlin/16/r.png">c8</a>  <a name="44" href="javascript:go(44)" class="body_line_0">20.<img alt="k" src="./Chess Berlin/16/k.png">f2</a> <font class="body_comment_0"> Spiel auf der h-Linie </font> <a name="45" href="javascript:go(45)" class="body_line_0">20...<img alt="n" src="./Chess Berlin/16/n.png">a5</a>  <a name="46" href="javascript:go(46)" class="body_line_0">21.<img alt="q" src="./Chess Berlin/16/q.png">f3</a>  <a name="47" href="javascript:go(47)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">c4</a>  <a name="48" href="javascript:go(48)" class="body_line_0">22.<img alt="q" src="./Chess Berlin/16/q.png">e2</a>  <a name="49" href="javascript:go(49)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">d6</a>  <a name="50" href="javascript:go(50)" class="body_line_0">23.<img alt="r" src="./Chess Berlin/16/r.png">h1</a>  <a name="51" href="javascript:go(51)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">e4+</a>  <a name="52" href="javascript:go(52)" class="body_line_0">24.<img alt="b" src="./Chess Berlin/16/b.png">xe4</a>  <a name="53" href="javascript:go(53)" class="body_line_0">fxe4</a>  <a name="54" href="javascript:go(54)" class="body_line_0">25.<img alt="q" src="./Chess Berlin/16/q.png">g4</a>  <a name="55" href="javascript:go(55)" class="body_line_0">f5</a> <font class="body_comment_0"> sonst folgt 26.f5 </font><a href="javascript:go(55)">
+<table class="body_inline" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdtl.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdtr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/rbl.png"></td><td><img border="0" src="./Chess Berlin/16/qbd.png"></td><td><img border="0" src="./Chess Berlin/16/bbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/kbd.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/bbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/qwl.png"></td><td><img border="0" src="./Chess Berlin/16/nwd.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/nwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/kwd.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/rwl.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdbr.png"></td>
+</tr>
+</table>
+</a> <a name="56" href="javascript:go(56)" class="body_line_0">26.<img alt="n" src="./Chess Berlin/16/n.png">xf5</a> !<font class="body_comment_0"> gewinnt drei Bauern f&uuml;r den Springer und eine langanhaltende Initiative </font> <a name="57" href="javascript:go(57)" class="body_line_0">26...exf5</a>  <a name="58" href="javascript:go(58)" class="body_line_0">27.<img alt="q" src="./Chess Berlin/16/q.png">xf5</a>  <a name="59" href="javascript:go(59)" class="body_line_0">h5</a> <font class="body_comment_0"> die einzige Verteidigung gegen das Matt auf h7 </font> <a name="60" href="javascript:go(60)" class="body_line_0">28.g4</a>  <a name="61" href="javascript:go(61)" class="body_line_0"><img alt="r" src="./Chess Berlin/16/r.png">c6</a> !<font class="body_comment_0"> soll zur Verteidigung des K&ouml;nigsfl&uuml;gels 
+her&uuml;berschwenken </font> <a name="62" href="javascript:go(62)" class="body_line_0">29.g5</a> <font class="body_line_1">
+<p>[ <font class="body_comment_1"> Aljechin h&auml;lt </font> <a name="63" href="javascript:go(63)" class="body_line_1">29.<img alt="n" src="./Chess Berlin/16/n.png">xd5</a> <font class="body_comment_1"> f&uuml;r aussichtsreicher, doch nach </font> <a name="64" href="javascript:go(64)" class="body_line_1">29...<img alt="b" src="./Chess Berlin/16/b.png">h4+</a> <font class="body_comment_1"> ergeben sich gro&szlig;e Komplikationen </font>]</p>
+</font> <a name="65" href="javascript:go(65)" class="body_line_0">29...<img alt="k" src="./Chess Berlin/16/k.png">g8</a>  <a name="66" href="javascript:go(66)" class="body_line_0">30.<img alt="n" src="./Chess Berlin/16/n.png">xd5</a>  <a name="67" href="javascript:go(67)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">f7</a>  <a name="68" href="javascript:go(68)" class="body_line_0">31.<img alt="n" src="./Chess Berlin/16/n.png">xe7+</a> <font class="body_comment_0"> vernichtet das L&auml;uferpaar </font> <a name="69" href="javascript:go(69)" class="body_line_0">31...<img alt="q" src="./Chess Berlin/16/q.png">xe7</a>  <a name="70" href="javascript:go(70)" class="body_line_0">32.g4</a>  <a name="71" href="javascript:go(71)" class="body_line_0">hxg4</a> <font class="body_line_1">
+<p>[  <a name="72" href="javascript:go(72)" class="body_line_1">32...<img alt="r" src="./Chess Berlin/16/r.png">c2+</a>  <a name="73" href="javascript:go(73)" class="body_line_1">33.<img alt="k" src="./Chess Berlin/16/k.png">g3</a>  <a name="74" href="javascript:go(74)" class="body_line_1"><img alt="r" src="./Chess Berlin/16/r.png">e2</a>  <a name="75" href="javascript:go(75)" class="body_line_1">34.gxh5</a> !<font class="body_comment_1"> ist schw&auml;cher </font>]</p>
+</font> <a name="76" href="javascript:go(76)" class="body_line_0">33.<img alt="q" src="./Chess Berlin/16/q.png">h7+</a>  <a name="77" href="javascript:go(77)" class="body_line_0"><img alt="k" src="./Chess Berlin/16/k.png">f8</a>  <a name="78" href="javascript:go(78)" class="body_line_0">34.<img alt="r" src="./Chess Berlin/16/r.png">h6</a>  <a name="79" href="javascript:go(79)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">g8</a>  <a name="80" href="javascript:go(80)" class="body_line_0">35.<img alt="q" src="./Chess Berlin/16/q.png">f5+</a>  <a name="81" href="javascript:go(81)" class="body_line_0"><img alt="k" src="./Chess Berlin/16/k.png">g7</a>  <a name="82" href="javascript:go(82)" class="body_line_0">36.<img alt="r" src="./Chess Berlin/16/r.png">xc6</a>  <a name="83" href="javascript:go(83)" class="body_line_0">bxc6</a>  <a name="84" href="javascript:go(84)" class="body_line_0">37.<img alt="k" src="./Chess Berlin/16/k.png">g3</a>  <a name="85" href="javascript:go(85)" class="body_line_0"><img alt="q" src="./Chess Berlin/16/q.png">e6</a> ?<font class="body_comment_0"> der Verlustzug. Lasker &uuml;bersah offenbar einfach den n&auml;chsten Zug von Wei&szlig;. Solche Versehen stellen sich h&auml;ufig ein, wenn man so lange Zeit unter Druck steht. </font><font class="body_line_1">
+<p>[ <font class="body_comment_1"> Nach </font> <a name="86" href="javascript:go(86)" class="body_line_1">37...<img alt="b" src="./Chess Berlin/16/b.png">f7</a> ! <a name="87" href="javascript:go(87)" class="body_line_1">38.<img alt="q" src="./Chess Berlin/16/q.png">xg4</a>  <a name="88" href="javascript:go(88)" class="body_line_1">c5</a> !<font class="body_comment_1"> ist die Stellung nach Aljechins Meinung haltbar. </font>]</p>
+</font> <a name="89" href="javascript:go(89)" class="body_line_0">38.<img alt="k" src="./Chess Berlin/16/k.png">xg4</a> ! <a name="90" href="javascript:go(90)" class="body_line_0"><img alt="q" src="./Chess Berlin/16/q.png">xf5+</a>  <a name="91" href="javascript:go(91)" class="body_line_0">39.<img alt="k" src="./Chess Berlin/16/k.png">xf5</a>  <a name="92" href="javascript:go(92)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">d5</a>  <a name="93" href="javascript:go(93)" class="body_line_0">40.b4</a> ! <a name="94" href="javascript:go(94)" class="body_line_0">a6</a>  <a name="95" href="javascript:go(95)" class="body_line_0">41.<img alt="k" src="./Chess Berlin/16/k.png">g4</a> ! <a name="96" href="javascript:go(96)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">c4</a>  <a name="97" href="javascript:go(97)" class="body_line_0">42.f5</a>  <a name="98" href="javascript:go(98)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">b3</a>  <a name="99" href="javascript:go(99)" class="body_line_0">43.<img alt="k" src="./Chess Berlin/16/k.png">f4</a>  <a name="100" href="javascript:go(100)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">c2</a>  <a name="101" href="javascript:go(101)" class="body_line_0">44.<img alt="k" src="./Chess Berlin/16/k.png">e5</a> <font class="body_comment_0"> die Freibauern f5 und g5 verb&uuml;rgen zusammen mit dem aktiven wei&szlig;en K&ouml;nig den Sieg </font> <a name="102" href="javascript:go(102)" class="body_line_0">44...<img alt="k" src="./Chess Berlin/16/k.png">f7</a>  <a name="103" href="javascript:go(103)" class="body_line_0">45.a4</a> ! <a name="104" href="javascript:go(104)" class="body_line_0"><img alt="k" src="./Chess Berlin/16/k.png">g7</a>  <a name="105" href="javascript:go(105)" class="body_line_0">46.d5</a>  <a name="106" href="javascript:go(106)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">xa4</a>  <a name="107" href="javascript:go(107)" class="body_line_0">47.d6</a>  <a name="108" href="javascript:go(108)" class="body_line_0">c5</a>  <a name="109" href="javascript:go(109)" class="body_line_0">48.bxc5</a>  <a name="110" href="javascript:go(110)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">c6</a>  <a name="111" href="javascript:go(111)" class="body_line_0">49.<img alt="k" src="./Chess Berlin/16/k.png">e6</a>  <a name="112" href="javascript:go(112)" class="body_line_0">a5</a>  <a name="113" href="javascript:go(113)" class="body_line_0">50.f6+</a> <font class="body_comment_0"> aufgegeben.
+Die ganze Partie &uuml;ber sp&uuml;rte man, da&szlig; sich hier zwei Giganten gegen&uuml;bersa&szlig;en, die sich nichts zu schenken bereit waren. Die Partie erhielt einen Sch&ouml;nheitspreis. </font>
+<br>
+<font class="body.result">1-0</font></font></font></font><script language="JavaScript">
+			initial(0)
+		</script>
+<br>
+<hr>
+<br>
+<script language="JavaScript">
+			g = games[games.length] = new Object();
+			var j = pos.length;
+			
+			g.start = j;
+			g.current = j;
+			
+			g.init=null;	pos[j] = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"; dep[j++] = 0;
+	pos[j] = "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"; dep[j++] = 0;
+	pos[j] = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3"; dep[j++] = 0;
+	pos[j] = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"; dep[j++] = 0;
+	pos[j] = "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4"; dep[j++] = 0;
+	pos[j] = "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 4"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5"; dep[j++] = 0;
+	pos[j] = "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 5"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 4 6"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQR1K1 b kq - 5 6"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2ppbppp/p1n2n2/1p2p3/B3P3/5N2/PPPP1PPP/RNBQR1K1 w kq - 0 7"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2ppbppp/p1n2n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 b kq - 1 7"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 w kq - 0 8"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 b kq - 0 8"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2p1bppp/p2p1n2/np2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 w kq - 1 9"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/2p1bppp/p2p1n2/np2p3/4P3/2P2N2/PPBP1PPP/RNBQR1K1 b kq - 2 9"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/4bppp/p2p1n2/npp1p3/4P3/2P2N2/PPBP1PPP/RNBQR1K1 w kq - 0 10"; dep[j++] = 0;
+	pos[j] = "r1bqk2r/4bppp/p2p1n2/npp1p3/3PP3/2P2N2/PPB2PPP/RNBQR1K1 b kq - 0 10"; dep[j++] = 0;
+	pos[j] = "r1b1k2r/2q1bppp/p2p1n2/npp1p3/3PP3/2P2N2/PPB2PPP/RNBQR1K1 w kq - 1 11"; dep[j++] = 0;
+	pos[j] = "r1b1k2r/2q1bppp/p2p1n2/npp1p3/3PP3/2P2N2/PPBN1PPP/R1BQR1K1 b kq - 2 11"; dep[j++] = 0;
+	pos[j] = "r1b2rk1/2q1bppp/p2p1n2/npp1p3/3PP3/2P2N2/PPBN1PPP/R1BQR1K1 w - - 3 12"; dep[j++] = 0;
+	pos[j] = "r1b2rk1/2q1bppp/p2p1n2/npp1p3/3PP3/2P2N1P/PPBN1PP1/R1BQR1K1 b - - 0 12"; dep[j++] = 0;
+	pos[j] = "r1b2rk1/2q1bppp/p1np1n2/1pp1p3/3PP3/2P2N1P/PPBN1PP1/R1BQR1K1 w - - 1 13"; dep[j++] = 0;
+	pos[j] = "r1b2rk1/2q1bppp/p1np1n2/1ppPp3/4P3/2P2N1P/PPBN1PP1/R1BQR1K1 b - - 0 13"; dep[j++] = 0;
+	pos[j] = "r1bn1rk1/2q1bppp/p2p1n2/1ppPp3/4P3/2P2N1P/PPBN1PP1/R1BQR1K1 w - - 1 14"; dep[j++] = 0;
+	pos[j] = "r1bn1rk1/2q1bppp/p2p1n2/1ppPp3/P3P3/2P2N1P/1PBN1PP1/R1BQR1K1 b - - 0 14"; dep[j++] = 0;
+	pos[j] = "r1bn1rk1/2q1bppp/p2p1n2/2pPp3/Pp2P3/2P2N1P/1PBN1PP1/R1BQR1K1 w - - 0 15"; dep[j++] = 0;
+	pos[j] = "1rbn1rk1/2q1bppp/p2p1n2/1ppPp3/P3P3/2P2N1P/1PBN1PP1/R1BQR1K1 w - - 1 15"; dep[j++] = 1;
+	pos[j] = "r1bn1rk1/2q1bppp/p2p1n2/2pPp3/PpN1P3/2P2N1P/1PB2PP1/R1BQR1K1 b - - 1 15"; dep[j++] = 0;
+	pos[j] = "r1bn1rk1/2q1bppp/3p1n2/p1pPp3/PpN1P3/2P2N1P/1PB2PP1/R1BQR1K1 w - - 0 16"; dep[j++] = 0;
+	pos[j] = "r1bnnrk1/2q1bppp/p2p4/2pPp3/PpN1P3/2P2N1P/1PB2PP1/R1BQR1K1 w - - 2 16"; dep[j++] = 1;
+	pos[j] = "r1bnnrk1/2q1bppp/p2p4/P1pPp3/1pN1P3/2P2N1P/1PB2PP1/R1BQR1K1 b - - 0 16"; dep[j++] = 1;
+	pos[j] = "r1bn1rk1/2q1bppp/3p1n2/p1pPN3/PpN1P3/2P4P/1PB2PP1/R1BQR1K1 b - - 0 16"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q1bppp/b2p1n2/p1pPN3/PpN1P3/2P4P/1PB2PP1/R1BQR1K1 w - - 1 17"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q1bppp/b2p1n2/p1pPN3/PpN1P3/1BP4P/1P3PP1/R1BQR1K1 b - - 2 17"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q1bppp/b4n2/p1pPp3/PpN1P3/1BP4P/1P3PP1/R1BQR1K1 w - - 0 18"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q1bppp/b2P1n2/p1p1p3/PpN1P3/1BP4P/1P3PP1/R1BQR1K1 b - - 0 18"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q2ppp/b2b1n2/p1p1p3/PpN1P3/1BP4P/1P3PP1/R1BQR1K1 w - - 0 19"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/2q2ppp/b2Q1n2/p1p1p3/PpN1P3/1BP4P/1P3PP1/R1B1R1K1 b - - 0 19"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/5ppp/b2q1n2/p1p1p3/PpN1P3/1BP4P/1P3PP1/R1B1R1K1 w - - 0 20"; dep[j++] = 0;
+	pos[j] = "r2n1rk1/5ppp/b2N1n2/p1p1p3/Pp2P3/1BP4P/1P3PP1/R1B1R1K1 b - - 0 20"; dep[j++] = 0;
+	pos[j] = "r4rk1/1n3ppp/b2N1n2/p1p1p3/Pp2P3/1BP4P/1P3PP1/R1B1R1K1 w - - 1 21"; dep[j++] = 0;
+	pos[j] = "r4rk1/1N3ppp/b4n2/p1p1p3/Pp2P3/1BP4P/1P3PP1/R1B1R1K1 b - - 0 21"; dep[j++] = 0;
+	pos[j] = "r4rk1/1b3ppp/5n2/p1p1p3/Pp2P3/1BP4P/1P3PP1/R1B1R1K1 w - - 0 22"; dep[j++] = 0;
+	pos[j] = "r4rk1/1b3ppp/5n2/p1p1p3/PP2P3/1B5P/1P3PP1/R1B1R1K1 b - - 0 22"; dep[j++] = 0;
+	pos[j] = "r4rk1/1b3ppp/5n2/p3p3/Pp2P3/1B5P/1P3PP1/R1B1R1K1 w - - 0 23"; dep[j++] = 0;
+	pos[j] = "r4rk1/1b3ppp/5n2/p3p3/Pp2P3/1B3P1P/1P4P1/R1B1R1K1 b - - 0 23"; dep[j++] = 0;
+	pos[j] = "r2r2k1/1b3ppp/5n2/p3p3/Pp2P3/1B3P1P/1P4P1/R1B1R1K1 w - - 1 24"; dep[j++] = 0;
+	pos[j] = "r2r2k1/1b3ppp/5n2/p3p3/Pp2P3/1B2BP1P/1P4P1/R3R1K1 b - - 2 24"; dep[j++] = 0;
+	pos[j] = "r2r2k1/1b3pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P4P1/R3R1K1 w - - 0 25"; dep[j++] = 0;
+	pos[j] = "r2r2k1/1b3pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P4P1/R2R2K1 b - - 1 25"; dep[j++] = 0;
+	pos[j] = "r2r2k1/5pp1/2b2n1p/p3p3/Pp2P3/1B2BP1P/1P4P1/R2R2K1 w - - 2 26"; dep[j++] = 0;
+	pos[j] = "r2r2k1/5pp1/2b2n1p/p3p3/Pp2P3/1B2BP1P/1P4P1/2RR2K1 b - - 3 26"; dep[j++] = 0;
+	pos[j] = "r2rb1k1/5pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P4P1/2RR2K1 w - - 4 27"; dep[j++] = 0;
+	pos[j] = "r2rb1k1/5pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P3KP1/2RR4 b - - 5 27"; dep[j++] = 0;
+	pos[j] = "r3b1k1/5pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P3KP1/2Rr4 w - - 0 28"; dep[j++] = 0;
+	pos[j] = "r3b1k1/5pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P3KP1/3R4 b - - 0 28"; dep[j++] = 0;
+	pos[j] = "2r1b1k1/5pp1/5n1p/p3p3/Pp2P3/1B2BP1P/1P3KP1/3R4 w - - 1 29"; dep[j++] = 0;
+	pos[j] = "2r1b1k1/5pp1/5n1p/p3p3/Pp2P1P1/1B2BP1P/1P3K2/3R4 b - - 0 29"; dep[j++] = 0;
+	pos[j] = "2r1b1k1/5pp1/1B3n1p/p3p3/Pp2P3/1B3P1P/1P3KP1/3R4 b - - 2 29"; dep[j++] = 1;
+	pos[j] = "2r1b1k1/3n1pp1/1B5p/p3p3/Pp2P3/1B3P1P/1P3KP1/3R4 w - - 3 30"; dep[j++] = 1;
+	pos[j] = "2r1b1k1/3n1pp1/7p/B3p3/Pp2P3/1B3P1P/1P3KP1/3R4 b - - 0 30"; dep[j++] = 1;
+	pos[j] = "2r1b1k1/5pp1/7p/B1n1p3/Pp2P3/1B3P1P/1P3KP1/3R4 w - - 1 31"; dep[j++] = 1;
+	pos[j] = "2r3k1/3b1pp1/5n1p/p3p3/Pp2P1P1/1B2BP1P/1P3K2/3R4 w - - 1 30"; dep[j++] = 0;
+	pos[j] = "2r3k1/3b1pp1/1B3n1p/p3p3/Pp2P1P1/1B3P1P/1P3K2/3R4 b - - 2 30"; dep[j++] = 0;
+	pos[j] = "2r3k1/5pp1/1B2bn1p/p3p3/Pp2P1P1/1B3P1P/1P3K2/3R4 w - - 3 31"; dep[j++] = 0;
+	pos[j] = "2r3k1/5pp1/1B2Bn1p/p3p3/Pp2P1P1/5P1P/1P3K2/3R4 b - - 0 31"; dep[j++] = 0;
+	pos[j] = "2r3k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/3R4 w - - 0 32"; dep[j++] = 0;
+	pos[j] = "2rR2k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 b - - 1 32"; dep[j++] = 0;
+	pos[j] = "3r2k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 w - - 0 33"; dep[j++] = 0;
+	pos[j] = "3B2k1/6p1/4pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 b - - 0 33"; dep[j++] = 0;
+	pos[j] = "3B2k1/3n2p1/4p2p/p3p3/Pp2P1P1/5P1P/1P3K2/8 w - - 1 34"; dep[j++] = 0;
+	pos[j] = "6k1/3n2p1/4p2p/B3p3/Pp2P1P1/5P1P/1P3K2/8 b - - 0 34"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/B1n1p3/Pp2P1P1/5P1P/1P3K2/8 w - - 1 35"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/B1n1p3/Pp2P1P1/1P3P1P/5K2/8 b - - 0 35"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/B3p3/Pp2P1P1/1n3P1P/5K2/8 w - - 0 36"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/4p3/PB2P1P1/1n3P1P/5K2/8 b - - 0 36"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/4p3/PB1nP1P1/5P1P/5K2/8 w - - 1 37"; dep[j++] = 0;
+	pos[j] = "6k1/6p1/4p2p/P3p3/1B1nP1P1/5P1P/5K2/8 b - - 0 37"; dep[j++] = 0;
+
+			
+			g.end = j;
+		</script>
+<table>
+<tr>
+<td rowspan="2">
+<table cellspacing="0" cellpadding="0" border="1">
+<tr>
+<td><img name="i-1-0" width="27" height="27"><img name="i-1-1" width="27" height="27"><img name="i-1-2" width="27" height="27"><img name="i-1-3" width="27" height="27"><img name="i-1-4" width="27" height="27"><img name="i-1-5" width="27" height="27"><img name="i-1-6" width="27" height="27"><img name="i-1-7" width="27" height="27"><br clear="all">
+<img name="i-1-8" width="27" height="27"><img name="i-1-9" width="27" height="27"><img name="i-1-10" width="27" height="27"><img name="i-1-11" width="27" height="27"><img name="i-1-12" width="27" height="27"><img name="i-1-13" width="27" height="27"><img name="i-1-14" width="27" height="27"><img name="i-1-15" width="27" height="27"><br clear="all">
+<img name="i-1-16" width="27" height="27"><img name="i-1-17" width="27" height="27"><img name="i-1-18" width="27" height="27"><img name="i-1-19" width="27" height="27"><img name="i-1-20" width="27" height="27"><img name="i-1-21" width="27" height="27"><img name="i-1-22" width="27" height="27"><img name="i-1-23" width="27" height="27"><br clear="all">
+<img name="i-1-24" width="27" height="27"><img name="i-1-25" width="27" height="27"><img name="i-1-26" width="27" height="27"><img name="i-1-27" width="27" height="27"><img name="i-1-28" width="27" height="27"><img name="i-1-29" width="27" height="27"><img name="i-1-30" width="27" height="27"><img name="i-1-31" width="27" height="27"><br clear="all">
+<img name="i-1-32" width="27" height="27"><img name="i-1-33" width="27" height="27"><img name="i-1-34" width="27" height="27"><img name="i-1-35" width="27" height="27"><img name="i-1-36" width="27" height="27"><img name="i-1-37" width="27" height="27"><img name="i-1-38" width="27" height="27"><img name="i-1-39" width="27" height="27"><br clear="all">
+<img name="i-1-40" width="27" height="27"><img name="i-1-41" width="27" height="27"><img name="i-1-42" width="27" height="27"><img name="i-1-43" width="27" height="27"><img name="i-1-44" width="27" height="27"><img name="i-1-45" width="27" height="27"><img name="i-1-46" width="27" height="27"><img name="i-1-47" width="27" height="27"><br clear="all">
+<img name="i-1-48" width="27" height="27"><img name="i-1-49" width="27" height="27"><img name="i-1-50" width="27" height="27"><img name="i-1-51" width="27" height="27"><img name="i-1-52" width="27" height="27"><img name="i-1-53" width="27" height="27"><img name="i-1-54" width="27" height="27"><img name="i-1-55" width="27" height="27"><br clear="all">
+<img name="i-1-56" width="27" height="27"><img name="i-1-57" width="27" height="27"><img name="i-1-58" width="27" height="27"><img name="i-1-59" width="27" height="27"><img name="i-1-60" width="27" height="27"><img name="i-1-61" width="27" height="27"><img name="i-1-62" width="27" height="27"><img name="i-1-63" width="27" height="27"><br clear="all">
+</td>
+</tr>
+</table>
+</td><td rowspan="2" width="80"></td><td valign="top"><font class="header"><font class="header_site">New York </font><font class="header_date">1927</font>
+<br>
+<font class="header_white"> Capablanca, Jos&eacute;</font> - <font class="header_black"> Vidmar, Milan</font><font class="header_result"> 1-0</font>
+<br>C98 Spanish: Closed, Chigorin, 12...Nc6 13.d5 Nd8 14.a4<br>
+<br>
+</font></td>
+</tr>
+<tr>
+<td>
+<form name="game-1">
+<input value="  |<  " type="button" onclick="first(1)"><input value="  <  " type="button" onclick="previous(1)"><input value="  >  " type="button" onclick="next(1)"><input value="  >|  " type="button" onclick="last(1)"><input value="  >>  " type="button" onclick="animate(1, 0.5, +1)"><input onclick="stop_animation()" value="   | |   " type="button">
+</form>
+</td>
+</tr>
+</table>
+<font class="body"><font class="body_line"><font class="body_line_0"> <a name="114" href="javascript:go(114)" class="body_line_0">1.e4</a>  <a name="115" href="javascript:go(115)" class="body_line_0">e5</a>  <a name="116" href="javascript:go(116)" class="body_line_0">2.<img alt="n" src="./Chess Berlin/16/n.png">f3</a>  <a name="117" href="javascript:go(117)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">c6</a>  <a name="118" href="javascript:go(118)" class="body_line_0">3.<img alt="b" src="./Chess Berlin/16/b.png">b5</a>  <a name="119" href="javascript:go(119)" class="body_line_0">a6</a>  <a name="120" href="javascript:go(120)" class="body_line_0">4.<img alt="b" src="./Chess Berlin/16/b.png">a4</a>  <a name="121" href="javascript:go(121)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">f6</a>  <a name="122" href="javascript:go(122)" class="body_line_0">5.O-O</a>  <a name="123" href="javascript:go(123)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">e7</a>  <a name="124" href="javascript:go(124)" class="body_line_0">6.<img alt="r" src="./Chess Berlin/16/r.png">e1</a>  <a name="125" href="javascript:go(125)" class="body_line_0">b5</a>  <a name="126" href="javascript:go(126)" class="body_line_0">7.<img alt="b" src="./Chess Berlin/16/b.png">b3</a>  <a name="127" href="javascript:go(127)" class="body_line_0">d6</a>  <a name="128" href="javascript:go(128)" class="body_line_0">8.c3</a>  <a name="129" href="javascript:go(129)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">a5</a>  <a name="130" href="javascript:go(130)" class="body_line_0">9.<img alt="b" src="./Chess Berlin/16/b.png">c2</a>  <a name="131" href="javascript:go(131)" class="body_line_0">c5</a>  <a name="132" href="javascript:go(132)" class="body_line_0">10.d4</a>  <a name="133" href="javascript:go(133)" class="body_line_0"><img alt="q" src="./Chess Berlin/16/q.png">c7</a>  <a name="134" href="javascript:go(134)" class="body_line_0">11.<img alt="n" src="./Chess Berlin/16/n.png">bd2</a>  <a name="135" href="javascript:go(135)" class="body_line_0">O-O</a>  <a name="136" href="javascript:go(136)" class="body_line_0">12.h3</a>  <a name="137" href="javascript:go(137)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">c6</a>  <a name="138" href="javascript:go(138)" class="body_line_0">13.d5</a>  <a name="139" href="javascript:go(139)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">d8</a>  <a name="140" href="javascript:go(140)" class="body_line_0">14.a4</a>  <a name="141" href="javascript:go(141)" class="body_line_0">b4</a> <font class="body_comment_0"> Weakening c4 and allowing the ensuing play. 14...Bb7 is also nice for white since the bishop has nothing to do there. </font><font class="body_line_1">
+<p>[  <a name="142" href="javascript:go(142)" class="body_line_1">14...<img alt="r" src="./Chess Berlin/16/r.png">b8</a> +=ist besser]</p>
+</font> <a name="143" href="javascript:go(143)" class="body_line_0">15.<img alt="n" src="./Chess Berlin/16/n.png">c4</a>  <a name="144" href="javascript:go(144)" class="body_line_0">a5</a> <font class="body_line_1">
+<p>[  <a name="145" href="javascript:go(145)" class="body_line_1">15...<img alt="n" src="./Chess Berlin/16/n.png">e8</a>  <a name="146" href="javascript:go(146)" class="body_line_1">16.a5</a> +=]</p>
+</font> <a name="147" href="javascript:go(147)" class="body_line_0">16.<img alt="n" src="./Chess Berlin/16/n.png">fxe5</a> !<a href="javascript:go(147)">
+<table class="body_inline" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdtl.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdt.png"></td><td><img border="0" src="./Chess Berlin/16/brdtr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/rbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/bbl.png"></td><td><img border="0" src="./Chess Berlin/16/nbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/rbd.png"></td><td><img border="0" src="./Chess Berlin/16/kbl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/qbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/bbd.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/pbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/nbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/nwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/pbd.png"></td><td><img border="0" src="./Chess Berlin/16/nwl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/bwl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/pwd.png"></td><td><img border="0" src="./Chess Berlin/16/pwl.png"></td><td><img border="0" src="./Chess Berlin/16/ed.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdl.png"></td><td><img border="0" src="./Chess Berlin/16/rwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/bwd.png"></td><td><img border="0" src="./Chess Berlin/16/qwl.png"></td><td><img border="0" src="./Chess Berlin/16/rwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/kwd.png"></td><td><img border="0" src="./Chess Berlin/16/el.png"></td><td><img border="0" src="./Chess Berlin/16/brdr.png"></td>
+</tr>
+<tr>
+<td><img border="0" src="./Chess Berlin/16/brdbl.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdb.png"></td><td><img border="0" src="./Chess Berlin/16/brdbr.png"></td>
+</tr>
+</table>
+</a><font class="body_comment_0"> This little combination opens up the center so white can exploit his positional advantages, particularly on the light squares. Otherwise black would be fine after 16...Ne8. </font> <a name="148" href="javascript:go(148)" class="body_line_0">16...<img alt="b" src="./Chess Berlin/16/b.png">a6</a> !? <a name="149" href="javascript:go(149)" class="body_line_0">17.<img alt="b" src="./Chess Berlin/16/b.png">b3</a>  <a name="150" href="javascript:go(150)" class="body_line_0">dxe5</a>  <a name="151" href="javascript:go(151)" class="body_line_0">18.d6</a>  <a name="152" href="javascript:go(152)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">xd6</a>  <a name="153" href="javascript:go(153)" class="body_line_0">19.<img alt="q" src="./Chess Berlin/16/q.png">xd6</a>  <a name="154" href="javascript:go(154)" class="body_line_0"><img alt="q" src="./Chess Berlin/16/q.png">xd6</a>  <a name="155" href="javascript:go(155)" class="body_line_0">20.<img alt="n" src="./Chess Berlin/16/n.png">xd6</a>  <a name="156" href="javascript:go(156)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">b7</a>  <a name="157" href="javascript:go(157)" class="body_line_0">21.<img alt="n" src="./Chess Berlin/16/n.png">xb7</a>  <a name="158" href="javascript:go(158)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">xb7</a>  <a name="159" href="javascript:go(159)" class="body_line_0">22.cxb4</a>  <a name="160" href="javascript:go(160)" class="body_line_0">cxb4</a>  <a name="161" href="javascript:go(161)" class="body_line_0">23.f3</a> <font class="body_comment_0"> Cementing white's advantage. Both of his minor pieces are better than their counterparts, and black's queenside pawns are also weak. </font> <a name="162" href="javascript:go(162)" class="body_line_0">23...<img alt="r" src="./Chess Berlin/16/r.png">fd8</a>  <a name="163" href="javascript:go(163)" class="body_line_0">24.<img alt="b" src="./Chess Berlin/16/b.png">e3</a>  <a name="164" href="javascript:go(164)" class="body_line_0">h6</a>  <a name="165" href="javascript:go(165)" class="body_line_0">25.<img alt="r" src="./Chess Berlin/16/r.png">ed1</a>  <a name="166" href="javascript:go(166)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">c6</a>  <a name="167" href="javascript:go(167)" class="body_line_0">26.<img alt="r" src="./Chess Berlin/16/r.png">ac1</a>  <a name="168" href="javascript:go(168)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">e8</a>  <a name="169" href="javascript:go(169)" class="body_line_0">27.<img alt="k" src="./Chess Berlin/16/k.png">f2</a>  <a name="170" href="javascript:go(170)" class="body_line_0"><img alt="r" src="./Chess Berlin/16/r.png">xd1</a>  <a name="171" href="javascript:go(171)" class="body_line_0">28.<img alt="r" src="./Chess Berlin/16/r.png">xd1</a>  <a name="172" href="javascript:go(172)" class="body_line_0"><img alt="r" src="./Chess Berlin/16/r.png">c8</a>  <a name="173" href="javascript:go(173)" class="body_line_0">29.g4</a> <font class="body_comment_0"> With the idea 30.h4, 31.g5, 32.Rd5, etc. </font><font class="body_line_1">
+<p>[  <a name="174" href="javascript:go(174)" class="body_line_1">29.<img alt="b" src="./Chess Berlin/16/b.png">b6</a> ?! <a name="175" href="javascript:go(175)" class="body_line_1"><img alt="n" src="./Chess Berlin/16/n.png">d7</a>  <a name="176" href="javascript:go(176)" class="body_line_1">30.<img alt="b" src="./Chess Berlin/16/b.png">xa5</a>  <a name="177" href="javascript:go(177)" class="body_line_1"><img alt="n" src="./Chess Berlin/16/n.png">c5</a> +=]</p>
+</font> <a name="178" href="javascript:go(178)" class="body_line_0">29...<img alt="b" src="./Chess Berlin/16/b.png">d7</a> ?! <a name="179" href="javascript:go(179)" class="body_line_0">30.<img alt="b" src="./Chess Berlin/16/b.png">b6</a>  <a name="180" href="javascript:go(180)" class="body_line_0"><img alt="b" src="./Chess Berlin/16/b.png">e6</a>  <a name="181" href="javascript:go(181)" class="body_line_0">31.<img alt="b" src="./Chess Berlin/16/b.png">xe6</a>  <a name="182" href="javascript:go(182)" class="body_line_0">fxe6</a>  <a name="183" href="javascript:go(183)" class="body_line_0">32.<img alt="r" src="./Chess Berlin/16/r.png">d8+</a> <font class="body_comment_0"> Nice. White exchanges off rooks since otherwise black would develop counterplay with ...Rc8-c2 (that was black's idea behind exchanging bishops). </font> <a name="184" href="javascript:go(184)" class="body_line_0">32...<img alt="r" src="./Chess Berlin/16/r.png">xd8</a>  <a name="185" href="javascript:go(185)" class="body_line_0">33.<img alt="b" src="./Chess Berlin/16/b.png">xd8</a>  <a name="186" href="javascript:go(186)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">d7</a>  <a name="187" href="javascript:go(187)" class="body_line_0">34.<img alt="b" src="./Chess Berlin/16/b.png">xa5</a>  <a name="188" href="javascript:go(188)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">c5</a>  <a name="189" href="javascript:go(189)" class="body_line_0">35.b3</a>  <a name="190" href="javascript:go(190)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">xb3</a>  <a name="191" href="javascript:go(191)" class="body_line_0">36.<img alt="b" src="./Chess Berlin/16/b.png">xb4</a>  <a name="192" href="javascript:go(192)" class="body_line_0"><img alt="n" src="./Chess Berlin/16/n.png">d4</a>  <a name="193" href="javascript:go(193)" class="body_line_0">37.a5</a> <font class="body_comment_0"> The extra passed a-pawn wins easily. </font>
+<br>
+<font class="body.result">1-0</font></font></font></font><script language="JavaScript">
+			initial(1)
+		</script>
+<br>
+<hr>
+<br>
+<center class="body_comment_4">created with <a href="http://jose-chess.sourceforge.net">jose-chess.sourceforge.net</a>
+</center>
+</body>
+</html>

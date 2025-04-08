@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>HTML Web Page</title>
+	<meta name="help" content="xsl.html">
+
+	<!--@css--><link rel="StyleSheet" type="text/css" href="../../manual.css"><!--/@css-->
+</head>
+
+<body>
+
+<!--@header--><table width="100%">
+<tr>
+<td align=left>
+<a href="04-html.html"><img src="../../img/previous.gif" width="32" height="32" alt="Previous Page" border="0"></a>
+<a href="04-html.html"><img src="../../img/up.gif" width="32" height="32" alt="Chapter" border="0"></a>
+<a href="10-setup.html"><img src="../../img/next.gif" width="32" height="32" alt="Next Page" border="0"></a>
+</td>
+
+<td align=left class=header> <font class="logo">jose</font> &nbsp; 1.4.1 </td>
+<td align=right>
+<a href="../../index.html"><img src="../../img/book.gif" width="30" height="30" alt="Manual" border="0"></a>
+<a href="../../manindex.html"><img src="../../img/index.gif" width="30" height="30" alt="Index" border="0"></a>
+<a href="mailto:jose-chess@sourceforge.net"><img src="../../img/mail.gif" width="30" height="30" alt="Feedback" border="0"></a>
+</td>
+</tr>
+</table>
+<hr><!--/@header-->
+
+<h1>Export Web Pages</h1>
+
+<img src="shot0104.jpg" width="632" height="431" alt="" border="0">
+
+<p>Choose this output format to create Web Pages (HTML Files). These files can be viewed with
+any Web browser, like Internet Explorer, or Netscape, and they can be placed into the World Wide Web.</p>
+
+<p>Currently, jose supports two layouts: a static layout that can be used for viewing and printing
+(see <a href="../../demo/demo1.html#ext" target="_blank">example</a>). <br>
+And a dynamic layout that uses JavaScript code to let the user actually <i>replay</i> the game on the Web page
+(see <a href="../../demo/demo2.html#ext">example</a>).</p>
+
+<p>If you are planning to make HTML pages publicly available, you should make sure that the pages
+can be viewed on other client systems as well. <br>
+For example:
+<ul>
+<li>Use only fonts that are widely available. The fonts <b>serif</b> and <b>sans-serif</b>
+ are garantueed to work on <i>any</i> system.<br>
+ On the other hand, fonts like <code>Garamond</code> will not be available on all systems,
+ and <code>Times New Roman</code> will most likely not be displayed on non-Windows systems.</li>
+<li>This is especially true for chess figurines. Your best option is to select <b>Image figurines</b>, below. </li>
+</ul>
+</p>
+
+ <!--@toc3:xsl.html.figs.tt--><a name="xsl.html.figs.tt">
+<h3>TrueType figurines</h3><!--/@toc3-->
+
+	<p>Controls the display of chess figurines. If this option is selected, figurines will be rendered
+		witht TrueTypes fonts. To display the page correctly, the viewer must have the appropriate fonts
+		installed on his system. For example, if you plan to put the HTML page into the Web, it's better <b>not to</b>
+		use these fonts, but to use image figurines instead. You can also disable figurines and use normal characters instead:
+	 see <!--@see:figurine.usefont.false-->&#32; <a href="../02-option/08-styles.html#figurine.usefont.false">Text Figurines</a> &#32;<!--/@see-->.</p>
+
+<!--@toc3:xsl.html.figs.img--><a name="xsl.html.figs.img">
+<h3>Image figurines</h3><!--/@toc3-->
+
+	<p>If this option is selected, chess figurines will be displayed as small images. These images can be displayed
+		on any viewer's system, regardless of the installed fonts.
+	 See also <!--@see:figurine.usefont.false-->&#32; <a href="../02-option/08-styles.html#figurine.usefont.false">Text Figurines</a> &#32;<!--/@see-->.</p>
+
+	 <p>The <b>dpi</b> control adjusts the size of the created image files. Enter here the expected
+	 resolution of the viewer's screen.</p>
+
+	 <p>The "dynamic" web page displays a chess board in the upper left corner of the page.
+	 To customize this chess board, use <!--@see:dialog.export.tab.3-->&#32; <a href=""></a> &#32;<!--/@see--> and modify the style "Diagram on Web page".</p>
+
+<!--@toc3:xsl.css.standalone--><a name="xsl.css.standalone">
+<h3>CSS style sheet in separate file</h3><!--/@toc3-->
+
+	<p>If this options is checked, jose will create a -so called- CSS style sheet that is referenced
+		from the HTML page.<br>
+		 If this option is not checked, the CSS information will be included into
+		the HTML page itself, resulting in slightly larger files.</p>
+
+<!--@toc3:xsl.html.img.dir--><a name="xsl.html.img.dir">
+<h3>Location</h3><!--/@toc3-->
+
+	<p>If <b>Image figurines</b> are selected, jose will create a set of figurine images. By default,
+	these images are placed in the same location as the HTML page. You may, however, choose a fixed
+	location that is reference from the HTML page.<br>
+	For example, if you like to store your HTML pages in a directory called <code>C:\Internet Files\Chess Games</code>, you could
+	reserve a separate folder for images, say <code>C:\Internet Files\Images</code>.</p>
+	<p>Click <b>Create Images</b> to create the images immediately. But jose will do this anyway when you save the HTML page.</p>
+
+<!--@toc3:dialog.export.saveas.ref3:dialog.export.saveas--><a name="dialog.export.saveas.ref3">
+<h3>Save As...</h3><!--/@toc3-->
+
+	 <p>Click <b>Save As..</b> to save the HTML file. Choose a destination folder and file name.<br>
+	 If the HTML page references figurine images, they will be created in the same location, or
+	 in the location specified by <!--@see:xsl.html.img.dir-->&#32; <a href="04-html.html#xsl.html.img.dir">Location</a> &#32;<!--/@see--> </p>
+
+
+<!--@toc3:dialog.export.browser--><a name="dialog.export.browser">
+<h3>Browser Preview</h3><!--/@toc3-->
+
+	 <p>Preview the HTML page in a Web browser. <br>
+	 (Note for Linux users: jose might ask you to enter the path to a web browser application)</p>
+
+<!--@footer--><p></p>
+<hr>
+<table width="100%">
+<tr>
+<td align=left>
+<a href="04-html.html"><img src="../../img/previous.gif" width="32" height="32" alt="Previous Page" border="0"></a>
+<a href="04-html.html"><img src="../../img/up.gif" width="32" height="32" alt="Chapter" border="0"></a>
+<a href="10-setup.html"><img src="../../img/next.gif" width="32" height="32" alt="Next Page" border="0"></a>
+</td>
+
+<td align=center class=footer>
+&copy; 2002-2006 &nbsp; <a class=copyright href="http://jose-chess.sourceforge.net">jose-chess.sourceforge.net</a></td>
+<td align=right>
+<a href="../../index.html"><img src="../../img/book.gif" width="30" height="30" alt="Manual" border="0"></a>
+<a href="../../manindex.html"><img src="../../img/index.gif" width="30" height="30" alt="Index" border="0"></a>
+<a href="mailto:jose-chess@sourceforge.net"><img src="../../img/mail.gif" width="30" height="30" alt="Feedback" border="0"></a>
+</td>
+</tr>
+</table><!--/@footer-->
+
+</body>
+</html>
