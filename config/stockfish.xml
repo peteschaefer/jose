@@ -2,7 +2,7 @@
 <PLUGIN ID="stockfish" type="uci">
 	<NAME> Stockfish A </NAME>
 	<EXEC os="Windows">
-		<COMMAND> %dir%\stockfish-windows-x86-64-sse41-popcnt.exe </COMMAND>
+		<COMMAND> %dir%\stockfish-windows-x86-64-avx2.exe </COMMAND>
 	</EXEC>
 	<EXEC os="Linux_i386">
 		<!--note: the os is designated as 'i386' which simply means that the jre
@@ -26,8 +26,8 @@
 	<OPTIONS>
 		<OPTION name="Debug Log File"/>
 		<OPTION name="NumaPolicy"> auto </OPTION>
-		<OPTION name="Threads"> 1 </OPTION>
-		<OPTION name="Hash"> 256 </OPTION>
+		<OPTION name="Threads"> 7 </OPTION>
+		<OPTION name="Hash"> 16 </OPTION>
 		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="MultiPV"> 6 </OPTION>
 		<OPTION name="Skill Level"> 20 </OPTION>
@@ -48,7 +48,7 @@
 	<ARGS/>
 	<STARTUP/>
 	<SEARCH>
-		<TIME selected="true"> 5000 </TIME>
+		<TIME selected="true"> 2000 </TIME>
 		<DEPTH> 10 </DEPTH>
 		<NODES> 1 </NODES>
 		<TIME_CONTROL/>

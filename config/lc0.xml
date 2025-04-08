@@ -30,7 +30,7 @@
 		Don't even try to determine it from factory settings.
 		Just use the default and let the user change it.-->
 		<OPTION name="BackendOptions"/>
-		<OPTION name="Threads"> 0 </OPTION>
+		<OPTION name="Threads"> 1 </OPTION>
 		<OPTION name="NNCacheSize"> 2000000 </OPTION>
 		<OPTION name="MinibatchSize"> 0 </OPTION>
 		<OPTION name="MaxPrefetch"> 32 </OPTION>
@@ -84,7 +84,7 @@
 		<OPTION name="SearchSpinBackoff"> false </OPTION>
 		<OPTION name="ConfigFile"> lc0.config </OPTION>
 		<OPTION name="SyzygyPath"/>
-		<OPTION name="Ponder"> false </OPTION>
+		<OPTION name="Ponder"> true </OPTION>
 		<OPTION name="UCI_Chess960"> false </OPTION>
 		<OPTION name="UCI_ShowWDL"> true </OPTION>
 		<OPTION name="UCI_ShowMovesLeft"> true </OPTION>
