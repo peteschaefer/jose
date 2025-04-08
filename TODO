@@ -101,6 +101,13 @@ java.util.EmptyStackException
 
 
 ==== Project
+[x] move git repo to github
+[x] copy wiki to github
+[x] create releases on github
+[x] copy static web page to github
+[ ] link landing page to peteschaefer.github.io/jose
+[ ] link downloads to https://github.com/peteschaefer/jose/releases
+[ ] link issues to https://github.com/peteschaefer/jose/issues
 
 [x] Java 3D
     1.5 last version from Oracle. Works well for Windows and Linux. Not for Mac
