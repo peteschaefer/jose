@@ -20,6 +20,7 @@ jobs:
         with:
           token: ${{ github.token }}
           #tag: staging # This may also be of the form 'refs/tags/staging'
+          tag: 1.5.5
 
           # Optional another repository
           #repository: owner/repo
