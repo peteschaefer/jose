@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title> Installation </title>
+	<meta name="help" content="install">
+	
+	<!--@css--><link rel="StyleSheet" type="text/css" href="../manual.css"><!--/@css-->
+</head>
+
+<body>
+
+<!--@header--><table width="100%">
+<tr>
+<td align=left>
+<a href="index.html"><img src="../img/previous.gif" width="30" height="30" alt="Previous Page" border="0"></a>
+<a href="index.html"><img src="../img/up.gif" width="30" height="30" alt="Chapter" border="0"></a>
+<a href="index.html"><img src="../img/next.gif" width="30" height="30" alt="Next Page" border="0"></a>
+</td>
+
+<td align=left class=header> <font class="logo">jose</font> &nbsp; 1.2.2 </td>
+<td align=right>
+<a href="../index.html"><img src="../img/book.gif" width="30" height="30" alt="Manual" border="0"></a>
+<a href="../manindex.html"><img src="../img/index.gif" width="30" height="30" alt="Index" border="0"></a>
+<a href="mailto:jose-chess@sourceforge.net"><img src="../img/mail.gif" width="30" height="30" alt="Feedback" border="0"></a>
+</td>
+</tr>
+</table>
+<hr><!--/@header-->
+
+<h1> Installing jose</h1>
+
+<!--@toc3:install.0:System Requirements--><a name="install.0">
+<h3>System Requirements</h3><!--/@toc3-->
+
+<ul>
+<li><b>Operating Systems:</b></li>
+	<ul>
+	<li>Windows (95/98/ME/NT/2000/XP)</li>
+	<li>Linux with Intel processor</li>
+	<li>Mac OS X (not yet tested)</li>
+	</ul>
+
+<li><b>Java Runtime Environment 1.4 or later</b>(1.4.2 recommended) </li>
+</ul>
+
+<p>  Some installation packages (those with "-jre") 
+  already contain the Runtime Environment. 
+  It will be installed along with jose (without affecting 
+  existing Java installations).</p>
+  
+<p>  Alternatively, you can download the JRE from
+    <a href="http://java.sun.com/j2se/1.4.2/download.html">java.sun.com</a>.	
+  Linux users might also have a look at <a href="http://www.blackdown.org">www.blackdown.org</a>
+</p>
+  
+  
+<p>  Please note that jose will not run with Microsoft's JRE (but the installer program will).
+</p>
+<p>If you don't know which version of Java is installed on your system, open a command prompt and type <code>java -version</code>.
+It should show this, or similar, output:<br>
+ <code>java version "1.4.2"</code>
+ </p>
+
+<p>Refer to the <!--@see:install.release-->&#32; <a href="02-release.html">Release Notes</a> &#32;<!--/@see--> for more information.</p>
+ 
+<!--@toc3:install.1:Step 1 - Download--><a name="install.1">
+<h3>Step 1 - Download</h3><!--/@toc3-->
+
+<p>Download an installation package from<br>
+<b><a href="http:jose-chess.sourceforge.net/download.html">jose-chess.sourceforge.net</a></b>
+
+<p>If you have already installed JRE 1.4 on your system, you can download a small installation package.<br>
+otherwise, download a large installation package.</p>
+
+</p>
+
+<!--@toc3:install.2:Step 2 - Run the Installer--><a name="install.2">
+<h3>Step 2 - Run the Installer</h3><!--/@toc3-->
+
+<p><b>Windows</b>: double click the installer executable "jose-win-11.exe".</p>
+
+<p><b>Linux</b>:<br>
+<code>
+  unzip jose-11-linux-intel.bin.zip <br>
+  ./jose-11-linux-intel.bin 
+</code></p>
+
+<!--@toc4:install.2.1:2.1 Introduction--><a name="install.2.1">
+<h4>2.1 Introduction</h4><!--/@toc4-->
+
+<p><img src="shot0001.jpg" width="610" height="402" alt="" border="0"><br>
+Click "Next" to proceed to the next screen.</p><br>
+</a>
+
+<!--@toc4:install.2.2:2.2 Choose a Java Runtime Environment--><a name="install.2.2">
+<h4>2.2 Choose a Java Runtime Environment</h4><!--/@toc4--><br>
+
+<p><img src="shot0002.jpg" width="610" height="402" alt="" border="0"><br>
+
+As mentioned above, jose needs a Java Runtime Environment. If you have downloaded a package that <i>does not  include</i> a JRE,
+you have to choose one that is already installed on your system. Please Note: the installed JRE must have version 1.4
+or later.<br> 
+The installer <i>does not</i> check the correct version, but jose will !<br>
+Specifically, jose <i>will not</i> run with Mircosoft's Java environment, nor will it run with Sun's Java environment version 1.3 or earlier.</p><br>
+</a>
+
+<!--@toc4:install.2.3:2.3 Choose an installation folder--><a name="install.2.3">
+<h4>2.3 Choose an installation folder</h4><!--/@toc4--><br>
+<p><img src="shot0003.jpg" width="610" height="402" alt="" border="0"><br>
+
+Choose a directory on your hard disk. If you already have an older version of jose, you can safely install the new
+version into the same directory ("on-top" of the old installation).
+<p>Note for Linux: make sure that you have write access to the installation directory.</p><br>
+</a>
+
+<!--@toc4:install.2.4:2.4 Create Shortcuts--><a name="install.2.4">
+<h4>2.4 Create Shortcuts</h4><!--/@toc4--><br>
+<p><img src="shot0004.jpg" width="610" height="402" alt="" border="0"><br>
+
+Choose a location where shortcuts will be installed. 
+For example, you can place a shortcut on your Windows desktop (if you like).
+<p>If you don't want any shortcuts created, choose "Don't create icons".</p><br>
+</a>
+
+<!--@toc4:install.2.5:2.5 Summary--><a name="install.2.5">
+<h4>2.5 Summary</h4><!--/@toc4--><br>
+<p><img src="shot0005.jpg" width="610" height="402" alt="" border="0"><br>
+Click "Install" to start the installation.</p>
+
+<p><img src="shot0006.jpg" width="610" height="402" alt="" border="0"><br>
+jose is now installed on your system.</p>
+
+<p><img src="shot0007.jpg" width="610" height="402" alt="" border="0"><br>
+Click "Done" to leave the installer.</p>
+
+
+<!--@toc3:install.3:Step 3 - Run jose--><a name="install.3">
+<h3>Step 3 - Run jose</h3><!--/@toc3-->
+
+<p><b>Windows</b>: double click jose.exe</p>
+
+<p><b>Linux:</b>: execute jose.sh</p>
+
+<p>Alternatively, you can start jose from a command prompt with:<br>
+<code>java -jar jose.jar</code></p>
+
+</a>
+

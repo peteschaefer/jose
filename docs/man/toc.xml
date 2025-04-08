@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE map
+ PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN"
+     "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+<tocitem target="manual.main" text="User Manual" image="img.folder">
+	<tocitem target="manual.install" text="Installation" image="img.folder">
+		<tocitem target="install.release" text="Release Notes" image="img.file"/>
+		<tocitem target="history" text="Development History" image="img.file"/>
+		<tocitem target="roadmap" text="Development Roadmap" image="img.file"/>
+		<tocitem target="parameters" text="Command Line Options" image="img.file"/>
+		<tocitem target="install.engine" text="Engine Installation" image="img.file"/>
+		<tocitem target="license" text="License" image="img.file"/>
+		<tocitem target="porting" text="Porting to other Operating Systems" image="img.file"/>
+	</tocitem>
+	<tocitem target="manual.overview" text="Overview" image="img.folder">
+		<tocitem target="manual.overview.panels" text="Working with Panels" image="img.file"/>
+		<tocitem target="manual.overview.concepts" text="Database Concepts" image="img.file"/>
+	</tocitem>
+	<tocitem target="manual.panels" text="Panels" image="img.folder">
+		<tocitem target="manual.panels.main" text="Main Window Panels" image="img.folder">
+			<tocitem target="window.board" text="The Board Panel" image="img.file">
+				<tocitem target="menu.game.2d.ref1" text="2D View" image="img.empty"/>
+				<tocitem target="menu.game.3d.ref1" text="3D View" image="img.empty"/>
+				<tocitem target="menu.game.flip.ref1" text="Turn Board" image="img.empty"/>
+				<tocitem target="menu.game.coords.ref1" text="Coordinates" image="img.empty"/>
+				<tocitem target="menu.edit.copy.ref3" text="Copy" image="img.empty"/>
+				<tocitem target="menu.edit.paste.ref3" text="Paste" image="img.empty"/>
+				<tocitem target="menu.edit.search.current" text="Search for this Position" image="img.empty"/>
+				<tocitem target="menu.edit.option.ref1" text="Options..." image="img.empty"/>
+				<tocitem target="window.board.write.mode" text="Variations" image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.board.3d" text="The 3D Board Panel" image="img.file"/>
+			<tocitem target="window.game" text="The Game Panel" image="img.file">
+				<tocitem target="menu.game.close.ref1" text="Close" image="img.empty"/>
+				<tocitem target="menu.game.close.all.but.ref1" text="Close All But This" image="img.empty"/>
+				<tocitem target="menu.game.close.all.ref1" text="Close All" image="img.empty"/>
+				<tocitem target="tab.layout" text="Tab Layout" image="img.empty"/>
+				<tocitem target="menu.game.details.ref1" text="Details..." image="img.empty"/>
+				<tocitem target="menu.edit.larger.ref1" text="Increase Text Size" image="img.empty"/>
+				<tocitem target="menu.edit.smaller.ref1" text="Decrease Text Size" image="img.empty"/>
+				<tocitem target="menu.file.save.ref1" text="Save" image="img.empty"/>
+				<tocitem target="menu.file.revert.ref1" text="Revert Game" image="img.empty"/>
+				<tocitem target="doc.menu.annotate" text="Annotate" image="img.empty"/>
+				<tocitem target="pgn.nag.250" text="Diagram" image="img.empty"/>
+				<tocitem target="doc.menu.line.cut" text="Cut Off Line" image="img.empty"/>
+				<tocitem target="doc.menu.line.delete" text="Delete Line" image="img.empty"/>
+				<tocitem target="doc.menu.delete.comment" text="Delete Comment" image="img.empty"/>
+				<tocitem target="doc.menu.line.uncomment" text="Delete All Comments" image="img.empty"/>
+				<tocitem target="doc.menu.line.promote" text="Promote Line" image="img.empty"/>
+				<tocitem target="menu.edit.copy.pgn" text="Copy PGN" image="img.empty"/>
+				<tocitem target="menu.edit.paste.pgn" text="Paste PGN" image="img.empty"/>
+				<tocitem target="menu.edit.ecofy.ref2" text="Classify ECO" image="img.empty"/>
+				<tocitem target="move.format" text="Notation" image="img.empty"/>
+				<tocitem target="menu.edit.option.ref2" text="Options..." image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.toolbar.symbols" text="The Annotation Panel" image="img.file"/>
+			<tocitem target="window.clock" text="The Clock Panel" image="img.file">
+				<tocitem target="clock.mode.analog" text="Analog" image="img.empty"/>
+				<tocitem target="clock.mode.digital" text="Digital" image="img.empty"/>
+				<tocitem target="menu.edit.option.ref3" text="Options..." image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.engine" text="The Engine Panel" image="img.file">
+				<tocitem target="move.start" text="Move Now" image="img.empty"/>
+				<tocitem target="engine.stop" text="Pause" image="img.empty"/>
+				<tocitem target="menu.game.analysis" text="Analysis Mode" image="img.empty"/>
+				<tocitem target="menu.game.hint.ref1" text="Get Hint" image="img.empty"/>
+				<tocitem target="plugin.currentmove.title" text="Move" image="img.empty"/>
+				<tocitem target="plugin.depth.title" text="Search Depth" image="img.empty"/>
+				<tocitem target="plugin.elapsed.time.title" text="Time" image="img.empty"/>
+				<tocitem target="plugin.nodecount.title" text="Node Count" image="img.empty"/>
+				<tocitem target="plugin.nps.title" text="N/sec" image="img.empty"/>
+				<tocitem target="plugin.evaluation" text="Evaluation" image="img.empty"/>
+				<tocitem target="move.start.ref1" text="Move Now" image="img.empty"/>
+				<tocitem target="engine.stop.ref1" text="Pause" image="img.empty"/>
+				<tocitem target="menu.game.analysis.ref2" text="Analysis Mode" image="img.empty"/>
+				<tocitem target="menu.game.hint.ref3" text="Get Hint" image="img.empty"/>
+				<tocitem target="menu.game.draw.ref3" text="Offer Draw" image="img.empty"/>
+				<tocitem target="menu.game.resign.ref1" text="Resign" image="img.empty"/>
+				<tocitem target="menu.game.copy.line" text="Copy Line" image="img.empty"/>
+				<tocitem target="menu.game.paste.line" text="Paste Line" image="img.empty"/>
+				<tocitem target="menu.edit.option.ref4" text="Options..." image="img.empty"/>
+				<tocitem target="restart.plugin" text="Restart Engine" image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.console" text="The Engine Console Panel" image="img.file"/>
+			<tocitem target="window.preview" text="The Print Preview Panel" image="img.file">
+				<tocitem target="dialog.export.paper.size.ref3" text="Size:" image="img.empty"/>
+				<tocitem target="menu.file.print.setup.ref2" text="Page Setup..." image="img.empty"/>
+				<tocitem target="menu.file.print.ref3" text="Print..." image="img.empty"/>
+			</tocitem>
+		</tocitem>
+		<tocitem target="manual.panels.database" text="Database Window Panels" image="img.folder">
+			<tocitem target="window.collectionlist" text="The Database Overview Panel" image="img.file">
+				<tocitem target="menu.edit.cut.ref1" text="Cut" image="img.empty"/>
+				<tocitem target="menu.edit.copy.ref1" text="Copy" image="img.empty"/>
+				<tocitem target="menu.edit.paste.ref1" text="Paste" image="img.empty"/>
+				<tocitem target="menu.edit.clear.ref1" text="Clear" image="img.empty"/>
+				<tocitem target="menu.edit.restore.ref1" text="Restore" image="img.empty"/>
+				<tocitem target="menu.edit.collection.rename" text="Rename" image="img.empty"/>
+				<tocitem target="menu.edit.collection.new.ref1" text="New Folder" image="img.empty"/>
+				<tocitem target="dnd.move.top.level" text="Move to Top Level" image="img.empty"/>
+				<tocitem target="menu.file.save.as.ref1" text="Save As..." image="img.empty"/>
+				<tocitem target="menu.file.print.ref1" text="Print..." image="img.empty"/>
+				<tocitem target="menu.edit.ecofy.ref1" text="Classify ECO" image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.gamelist" text="The Game List Panel" image="img.file">
+				<tocitem target="edit.game" text="Open" image="img.empty"/>
+				<tocitem target="edit.all" text="Open in Tabs" image="img.empty"/>
+				<tocitem target="menu.game.details.ref2" text="Details..." image="img.empty"/>
+				<tocitem target="menu.edit.cut.ref2" text="Cut" image="img.empty"/>
+				<tocitem target="menu.edit.copy.ref2" text="Copy" image="img.empty"/>
+				<tocitem target="menu.edit.clear.ref2" text="Clear" image="img.empty"/>
+				<tocitem target="menu.file.save.as.ref2" text="Save As..." image="img.empty"/>
+				<tocitem target="menu.file.print.ref2" text="Print..." image="img.empty"/>
+				<tocitem target="menu.edit.ecofy.ref3" text="Classify ECO" image="img.empty"/>
+			</tocitem>
+			<tocitem target="window.query" text="The Database Search Panel" image="img.file">
+				<tocitem target="dialog.query.white" text="White:" image="img.empty"/>
+				<tocitem target="dialog.query.black" text="Black:" image="img.empty"/>
+				<tocitem target="dialog.query.event" text="Event:" image="img.empty"/>
+				<tocitem target="dialog.query.site" text="Site:" image="img.empty"/>
+				<tocitem target="dialog.query.opening" text="Opening:" image="img.empty"/>
+				<tocitem target="dialog.query.eco" text="ECO:" image="img.empty"/>
+				<tocitem target="dialog.query.movecount" text="Moves:" image="img.empty"/>
+				<tocitem target="dialog.query.date" text="Date:" image="img.empty"/>
+				<tocitem target="dialog.query.result" text="Result" image="img.empty"/>
+				<tocitem target="dialog.query.color.sensitive" text="Color Sensitive" image="img.empty"/>
+				<tocitem target="dialog.query.swap.colors" text="" image="img.empty"/>
+				<tocitem target="dialog.query.case.sensitive" text="Case Sensitive" image="img.empty"/>
+				<tocitem target="dialog.query.soundex" text="Sounds Like" image="img.empty"/>
+				<tocitem target="dialog.query.com.flag" text="has comments" image="img.empty"/>
+				<tocitem target="dialog.query.var.flag" text="has variations" image="img.empty"/>
+				<tocitem target="dialog.query.annotator" text="Annotator:" image="img.empty"/>
+				<tocitem target="dialog.query.commenttext" text="Comment:" image="img.empty"/>
+				<tocitem target="query.setup.var" text="Search Variations" image="img.empty"/>
+				<tocitem target="query.setup.reversed" text="Search Reversed Colors" image="img.empty"/>
+				<tocitem target="dialog.setup.clear.ref1" text="Clear" image="img.empty"/>
+				<tocitem target="dialog.setup.initial.ref1" text="Initial Position" image="img.empty"/>
+				<tocitem target="dialog.setup.copy.ref1" text="Copy Main Panel" image="img.empty"/>
+				<tocitem target="menu.edit.copy.fen.ref2" text="FEN string" image="img.empty"/>
+				<tocitem target="menu.edit.paste.ref4" text="Paste" image="img.empty"/>
+			</tocitem>
+		</tocitem>
+		<tocitem target="window.toolbar" text="Toolbars" image="img.file"/>
+	</tocitem>
+	<tocitem target="manual.menus" text="Menus" image="img.folder">
+		<tocitem target="menu.file" text="File Menu" image="img.file">
+			<tocitem target="menu.file.new" text="New" image="img.empty"/>
+			<tocitem target="menu.file.new.frc" text="New, FRC" image="img.empty"/>
+			<tocitem target="menu.file.new.shuffle" text="New, Shuffle" image="img.empty"/>
+			<tocitem target="menu.file.open" text="Open..." image="img.empty"/>
+			<tocitem target="menu.file.open.url" text="Open URL..." image="img.empty"/>
+			<tocitem target="menu.file.close" text="Close" image="img.empty"/>
+			<tocitem target="menu.file.save" text="Save" image="img.empty"/>
+			<tocitem target="menu.file.save.as" text="Save As..." image="img.empty"/>
+			<tocitem target="menu.file.save.all" text="Save All" image="img.empty"/>
+			<tocitem target="menu.file.revert" text="Revert Game" image="img.empty"/>
+			<tocitem target="menu.file.print" text="Print..." image="img.empty"/>
+			<tocitem target="menu.file.print.setup" text="Page Setup..." image="img.empty"/>
+			<tocitem target="menu.file.quit" text="Quit" image="img.empty"/>
+		</tocitem>
+		<tocitem target="menu.edit" text="Edit Menu" image="img.file">
+			<tocitem target="menu.edit.select.all" text="Select All" image="img.empty"/>
+			<tocitem target="menu.edit.select.none" text="Select None" image="img.empty"/>
+			<tocitem target="menu.edit.cut" text="Cut" image="img.empty"/>
+			<tocitem target="menu.edit.copy" text="Copy" image="img.empty"/>
+			<tocitem target="menu.edit.paste" text="Paste" image="img.empty"/>
+			<tocitem target="menu.edit.clear" text="Clear" image="img.empty"/>
+			<tocitem target="menu.edit.collection.new" text="New Folder" image="img.empty"/>
+			<tocitem target="menu.edit.empty.trash" text="Empty Trash" image="img.empty"/>
+			<tocitem target="menu.edit.restore" text="Restore" image="img.empty"/>
+			<tocitem target="menu.edit.ecofy" text="Classify ECO" image="img.empty"/>
+			<tocitem target="menu.edit.option" text="Options..." image="img.empty"/>
+		</tocitem>
+		<tocitem target="menu.format" text="Format Menu" image="img.file">
+			<tocitem target="menu.edit.bold" text="Bold" image="img.empty"/>
+			<tocitem target="menu.edit.italic" text="Italic" image="img.empty"/>
+			<tocitem target="menu.edit.underline" text="Underline" image="img.empty"/>
+			<tocitem target="menu.edit.plain" text="Plain Text" image="img.empty"/>
+			<tocitem target="menu.edit.left" text="Left Aligned" image="img.empty"/>
+			<tocitem target="menu.edit.center" text="Centered" image="img.empty"/>
+			<tocitem target="menu.edit.right" text="Right Aligned" image="img.empty"/>
+			<tocitem target="menu.edit.color" text="Text Color" image="img.empty"/>
+			<tocitem target="menu.edit.larger" text="Increase Text Size" image="img.empty"/>
+			<tocitem target="menu.edit.smaller" text="Decrease Text Size" image="img.empty"/>
+			<tocitem target="menu.edit.color" text="Text Color" image="img.empty"/>
+			<tocitem target="move.format" text="Notation" image="img.empty"/>
+			<tocitem target="dialog.option.font.figurine" text="Figurine" image="img.empty"/>
+			<tocitem target="menu.edit.option" text="Options..." image="img.empty"/>
+		</tocitem>
+		<tocitem target="menu.game" text="Game Menu" image="img.file">
+			<tocitem target="menu.game.details" text="Details..." image="img.empty"/>
+			<tocitem target="move.first" text="Start of Game" image="img.empty"/>
+			<tocitem target="move.backward" text="Back" image="img.empty"/>
+			<tocitem target="move.delete" text="Undo Last Move" image="img.empty"/>
+			<tocitem target="engine.stop.ref2" text="Pause" image="img.empty"/>
+			<tocitem target="move.start.ref2" text="Move Now" image="img.empty"/>
+			<tocitem target="move.forward" text="Forward" image="img.empty"/>
+			<tocitem target="move.animate" text="Animation" image="img.empty"/>
+			<tocitem target="move.last" text="End of Game" image="img.empty"/>
+			<tocitem target="menu.game.time.controls" text="Time Control" image="img.empty"/>
+			<tocitem target="menu.game.2d" text="2D View" image="img.empty"/>
+			<tocitem target="menu.game.3d" text="3D View" image="img.empty"/>
+			<tocitem target="menu.game.flip" text="Turn Board" image="img.empty"/>
+			<tocitem target="menu.game.coords" text="Coordinates" image="img.empty"/>
+			<tocitem target="menu.game.analysis.ref1" text="Analysis Mode" image="img.empty"/>
+			<tocitem target="menu.game.hint" text="Get Hint" image="img.empty"/>
+			<tocitem target="menu.game.draw" text="Offer Draw" image="img.empty"/>
+			<tocitem target="menu.game.resign" text="Resign" image="img.empty"/>
+			<tocitem target="menu.game.close" text="Close" image="img.empty"/>
+			<tocitem target="menu.game.close.all" text="Close All" image="img.empty"/>
+			<tocitem target="menu.game.close.all.but" text="Close All But This" image="img.empty"/>
+			<tocitem target="menu.game.setup" text="Setup Position" image="img.empty"/>
+			<tocitem target="menu.game.animate" text="Animate..." image="img.empty"/>
+		</tocitem>
+		<tocitem target="menu.window" text="Window Menu" image="img.file">
+			<tocitem target="window.board.ref1" text="Board" image="img.empty"/>
+			<tocitem target="window.clock.ref1" text="Clock" image="img.empty"/>
+			<tocitem target="window.game.ref1" text="Game" image="img.empty"/>
+			<tocitem target="window.engine.ref1" text="Engine" image="img.empty"/>
+			<tocitem target="window.collectionlist.ref1" text="Database" image="img.empty"/>
+			<tocitem target="window.query.ref1" text="Find" image="img.empty"/>
+			<tocitem target="window.gamelist.ref1" text="Database" image="img.empty"/>
+			<tocitem target="window.console.ref1" text="Engine Console" image="img.empty"/>
+			<tocitem target="window.help.ref1" text="Help" image="img.empty"/>
+			<tocitem target="window.toolbar.symbols.ref1" text="Annotations" image="img.empty"/>
+			<tocitem target="menu.window.reset" text="Reset Layout" image="img.empty"/>
+			<tocitem target="menu.window.fullscreen" text="Fullscreen View" image="img.empty"/>
+			<tocitem target="board.3d.screenshot" text="Screen Shot" image="img.empty"/>
+		</tocitem>
+		<tocitem target="menu.help" text="Help Menu" image="img.file">
+			<tocitem target="menu.help.context" text="Context Help" image="img.empty"/>
+			<tocitem target="menu.help.manual" text="Manual" image="img.empty"/>
+			<tocitem target="menu.help.splash" text="About..." image="img.empty"/>
+			<tocitem target="menu.help.about" text="Info..." image="img.empty"/>
+			<tocitem target="menu.help.license" text="License..." image="img.empty"/>
+			<tocitem target="menu.web.home" text="Home Page" image="img.empty"/>
+			<tocitem target="menu.web.update" text="Online Update" image="img.empty"/>
+			<tocitem target="menu.web.report" text="Bug Report" image="img.empty"/>
+			<tocitem target="menu.web.browser" text="Select Browser..." image="img.empty"/>
+		</tocitem>
+	</tocitem>
+	<tocitem target="manual.dialogs" text="Dialogs" image="img.folder">
+		<tocitem target="manual.dialogs.working" text="Working with Dialogs" image="img.file">
+			<tocitem target="dialog.button.ok" text="OK" image="img.empty"/>
+			<tocitem target="dialog.button.cancel" text="Cancel" image="img.empty"/>
+			<tocitem target="dialog.button.apply" text="Apply" image="img.empty"/>
+			<tocitem target="dialog.button.revert" text="Revert" image="img.empty"/>
+			<tocitem target="dialog.button.help" text="Help" image="img.empty"/>
+		</tocitem>
+		<tocitem target="dialog.option" text="The Settings Dialog" image="img.folder">
+			<tocitem target="dialog.option.tab1" text="General Settings" image="img.file">
+				<tocitem target="dialog.option.user.name" text="Name" image="img.empty"/>
+				<tocitem target="dialog.option.user.language" text="Language" image="img.empty"/>
+				<tocitem target="dialog.option.ui.look.and.feel" text="Look &amp; Feel" image="img.empty"/>
+				<tocitem target="doc.load.history" text="Load Recent Games" image="img.empty"/>
+				<tocitem target="doc.classify.eco" text="Classify Opening by ECO" image="img.empty"/>
+				<tocitem target="dialog.option.sound.moves.dir" text="Move Announcements:" image="img.empty"/>
+				<tocitem target="sound.moves.engine" text="Announce Engine Moves" image="img.empty"/>
+				<tocitem target="sound.moves.ack.user" text="Acknowledge User Moves" image="img.empty"/>
+				<tocitem target="sound.moves.user" text="Announce User Moves" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab2" text="Appearance Settings" image="img.file">
+				<tocitem target="dialog.option.font.diagram" text="Diagram" image="img.empty"/>
+				<tocitem target="dialog.option.doc.write.mode" text="Insert new Move" image="img.empty"/>
+				<tocitem target="dialog.option.animation.speed" text="Speed" image="img.empty"/>
+				<tocitem target="board.animation.hints" text="Show Hints during Animation" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab3" text="Colors" image="img.file"/>
+			<tocitem target="dialog.option.tab4" text="Time Controls" image="img.file">
+				<tocitem target="time.control.new" text="New" image="img.empty"/>
+				<tocitem target="time.control.delete" text="Delete" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab5" text="Engine Settings" image="img.file">
+				<tocitem target="plugin.info" text="General Information" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.name" text="Name:" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.version" text="Version:" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.author" text="Author:" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.dir" text="Directory:" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.exe" text="Executable:" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.logo" text="Logo:" image="img.empty"/>
+				<tocitem target="plugin.protocol.xboard" text="XBoard Protocol" image="img.empty"/>
+				<tocitem target="plugin.protocol.uci" text="UCI Protocol" image="img.empty"/>
+				<tocitem target="plugin.options" text="Engine Options" image="img.empty"/>
+				<tocitem target="plugin.option.Ponder" text="Pondering" image="img.empty"/>
+				<tocitem target="plugin.option.Random" text="Randomize" image="img.empty"/>
+				<tocitem target="plugin.option.MultiPV" text="Primary Variations" image="img.empty"/>
+				<tocitem target="plugin.option.Hash" text="Hash Table Size (MB)" image="img.empty"/>
+				<tocitem target="plugin.option.NalimovPath" text="Path to Nalimov Table Bases" image="img.empty"/>
+				<tocitem target="plugin.option.NalimovCache" text="Cache for Nalimov Bases (MB)" image="img.empty"/>
+				<tocitem target="dialog.option.plugin.default" text="Default Settings" image="img.empty"/>
+				<tocitem target="plugin.startup" text="More Options" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab6" text="Opening Book Settings" image="img.file">
+				<tocitem target="book.engine.options" text="Engine Play" image="img.empty"/>
+				<tocitem target="book.engine.prefer.gui" text="Prefer user books" image="img.empty"/>
+				<tocitem target="book.engine.prefer.engine" text="Prefer engine book" image="img.empty"/>
+				<tocitem target="book.engine.gui.only" text="User books only" image="img.empty"/>
+				<tocitem target="book.engine.no.book" text="Use no opening book" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab7" text="3D Settings" image="img.file">
+				<tocitem target="dialog.option.board.3d.model" text="Model:" image="img.empty"/>
+				<tocitem target="dialog.option.board.3d.clock" text="Clock" image="img.empty"/>
+				<tocitem target="board.3d.hilite.square" text="board.3d.hilite.square" image="img.empty"/>
+				<tocitem target="board.3d.shadow" text="Shadow" image="img.empty"/>
+				<tocitem target="board.3d.reflection" text="Reflections" image="img.empty"/>
+				<tocitem target="dialog.option.board.3d.surface.frame" text="Frame:" image="img.empty"/>
+				<tocitem target="dialog.option.board.3d.light.ambient" text="Ambient Light:" image="img.empty"/>
+				<tocitem target="dialog.option.board.3d.light.directional" text="Directional Light:" image="img.empty"/>
+				<tocitem target="board.3d.fsaa" text="Full Screen Antialiasing" image="img.empty"/>
+				<tocitem target="board.3d.anisotropic" text="Anisotropic Filtering" image="img.empty"/>
+				<tocitem target="dialog.option.board.3d.knight.angle" text="Knights:" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.option.tab8" text="Text Styles" image="img.file">
+				<tocitem target="dialog.option.doc.move.format" text="Notation:" image="img.empty"/>
+				<tocitem target="figurine.usefont.true" text="Graphic Figurines" image="img.empty"/>
+				<tocitem target="figurine.usefont.false" text="Text Figurines" image="img.empty"/>
+				<tocitem target="doc.panel.antialias" text="Use Antialiased Fonts" image="img.empty"/>
+				<tocitem target="font.name" text="Family" image="img.empty"/>
+				<tocitem target="font.size" text="Size" image="img.empty"/>
+				<tocitem target="font.bold" text="Bold" image="img.empty"/>
+				<tocitem target="font.italic" text="Italic" image="img.empty"/>
+				<tocitem target="font.color" text="Color" image="img.empty"/>
+			</tocitem>
+		</tocitem>
+		<tocitem target="dialog.export" text="The Export &amp;amp Print Dialog" image="img.folder">
+			<tocitem target="export.pgn" text="File Export" image="img.file">
+				<tocitem target="export.archive.anchor" text="Jose Archive" image="img.empty"/>
+				<tocitem target="export.pgn.anchor" text="PGN File" image="img.empty"/>
+				<tocitem target="dialog.export.save" text="Save" image="img.empty"/>
+			</tocitem>
+			<tocitem target="print.awt" text="Print" image="img.file">
+				<tocitem target="dialog.export.tab.2.ref1" text="Page Setup" image="img.empty"/>
+				<tocitem target="dialog.export.tab.3.ref1" text="Styles" image="img.empty"/>
+				<tocitem target="dialog.export.print.ref1" text="Print..." image="img.empty"/>
+				<tocitem target="dialog.export.preview.ref1" text="Preview" image="img.empty"/>
+			</tocitem>
+			<tocitem target="xsl.pdf" text="PDF Print" image="img.file">
+				<tocitem target="dialog.export.tab.2.ref2" text="Page Setup" image="img.empty"/>
+				<tocitem target="dialog.export.tab.3.ref4" text="Styles" image="img.empty"/>
+				<tocitem target="xsl.pdf.embed" text="Embed TrueType fonts" image="img.empty"/>
+				<tocitem target="dialog.export.saveas.ref2" text="Save As..." image="img.empty"/>
+				<tocitem target="dialog.export.print.ref2" text="Print..." image="img.empty"/>
+				<tocitem target="dialog.export.preview.ref2" text="Preview" image="img.empty"/>
+			</tocitem>
+			<tocitem target="xsl.html" text="HTML Web Page" image="img.file">
+				<tocitem target="xsl.html.figs.tt" text="TrueType figurines" image="img.empty"/>
+				<tocitem target="xsl.html.figs.img" text="Image figurines" image="img.empty"/>
+				<tocitem target="xsl.css.standalone" text="CSS style sheet in separate file" image="img.empty"/>
+				<tocitem target="xsl.html.img.dir" text="Location" image="img.empty"/>
+				<tocitem target="dialog.export.saveas.ref3" text="Save As..." image="img.empty"/>
+				<tocitem target="dialog.export.browser" text="Browser Preview" image="img.empty"/>
+			</tocitem>
+			<tocitem target="dialog.export.page.setup" text="Page Setup" image="img.file">
+				<tocitem target="dialog.export.paper" text="Paper" image="img.empty"/>
+				<tocitem target="dialog.export.paper.size" text="Size:" image="img.empty"/>
+				<tocitem target="dialog.export.orientation" text="Orientation" image="img.empty"/>
+				<tocitem target="dialog.export.margins" text="Margins" image="img.empty"/>
+			</tocitem>
+			<tocitem target="export.customize" text="Customizing" image="img.file">
+				<tocitem target="xsl" text="Modifying PDF layout" image="img.empty"/>
+			</tocitem>
+		</tocitem>
+		<tocitem target="dialog.game.details" text="The Game Details Dialog" image="img.file">
+			<tocitem target="dialog.details.event" text="Event:" image="img.empty"/>
+			<tocitem target="dialog.details.site" text="Site:" image="img.empty"/>
+			<tocitem target="dialog.details.date" text="Date:" image="img.empty"/>
+			<tocitem target="dialog.details.eventdate" text="Event Date:" image="img.empty"/>
+			<tocitem target="dialog.details.round" text="Round:" image="img.empty"/>
+			<tocitem target="dialog.details.board" text="Board:" image="img.empty"/>
+			<tocitem target="dialog.details.name" text="Name:" image="img.empty"/>
+			<tocitem target="dialog.details.elo" text="ELO:" image="img.empty"/>
+			<tocitem target="dialog.details.title" text="Title:" image="img.empty"/>
+			<tocitem target="dialog.details.result" text="Result:" image="img.empty"/>
+			<tocitem target="dialog.details.eco" text="ECO:" image="img.empty"/>
+			<tocitem target="dialog.details.opening" text="Opening:" image="img.empty"/>
+			<tocitem target="dialog.details.annotator" text="Annotator:" image="img.empty"/>
+		</tocitem>
+		<tocitem target="dialog.setup" text="The Setup Dialog" image="img.file">
+			<tocitem target="dialog.setup.next.white" text="White Moves" image="img.empty"/>
+			<tocitem target="dialog.setup.move.no" text="Move" image="img.empty"/>
+			<tocitem target="dialog.setup.castling" text="Castling" image="img.empty"/>
+			<tocitem target="dialog.setup.castling.frc" text="FRC Castling" image="img.empty"/>
+			<tocitem target="dialog.setup.shuffle.title" text="Shuffle" image="img.empty"/>
+			<tocitem target="dialog.setup.clear" text="Clear" image="img.empty"/>
+			<tocitem target="dialog.setup.initial" text="Initial Position" image="img.empty"/>
+			<tocitem target="dialog.setup.copy" text="Copy Main Panel" image="img.empty"/>
+			<tocitem target="menu.edit.copy.fen.ref2" text="FEN string" image="img.empty"/>
+			<tocitem target="menu.edit.paste.ref5" text="Paste" image="img.empty"/>
+		</tocitem>
+		<tocitem target="dialog.animate" text="The Animation Dialog" image="img.file">
+			<tocitem target="board.animation.hints.ref1" text="Show Hints during Animation" image="img.empty"/>
+		</tocitem>
+		<tocitem target="dialog.color.chooser" text="Color Chooser" image="img.file"/>
+		<tocitem target="dialog.about" text="The About Dialog" image="img.file">
+			<tocitem target="dialog.about.tab.1" text="jose" image="img.empty"/>
+			<tocitem target="dialog.about.tab.2" text="Database" image="img.empty"/>
+			<tocitem target="dialog.about.tab.3" text="Contributions" image="img.empty"/>
+			<tocitem target="dialog.about.tab.4" text="System" image="img.empty"/>
+			<tocitem target="dialog.about.tab.5" text="3D" image="img.empty"/>
+			<tocitem target="dialog.about.tab.6" text="License" image="img.empty"/>
+		</tocitem>
+	</tocitem>
+	<tocitem target="reference" text="Reference" image="img.folder">
+		<tocitem target="10-reference.binary" text="binary" image="img.file"/>
+		<tocitem target="10-reference.db-tables" text="db-tables" image="img.file"/>
+		<tocitem target="10-reference.Properties" text="Properties.html" image="img.file"/>
+	</tocitem>
+</tocitem>
+</toc>
