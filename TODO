@@ -106,6 +106,7 @@ java.util.EmptyStackException
 [x] create releases on github
 [x] copy static web page to github
 [ ] link landing page to peteschaefer.github.io/jose
+    [ ] forward from sourceforge (ftp?)
 [ ] link downloads to https://github.com/peteschaefer/jose/releases
 [ ] link issues to https://github.com/peteschaefer/jose/issues
 
