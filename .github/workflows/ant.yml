@@ -23,3 +23,9 @@ jobs:
         distribution: 'oracle'
     - name: Build jose.jar with Ant
       run: ant -noinput -buildfile build.xml
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: jar-file
+        path: jose.jar
