@@ -27,10 +27,10 @@ jobs:
       run: ant -buildfile pack.xml patch -Dversion=Latest -Ddist-dir=.
 
     - name: 'Upload Artifact'
-#      uses: softprops/action-gh-release@v2
-      uses: actions/upload-artifact@v4
+      uses: softprops/action-gh-release@v2
+#      uses: actions/upload-artifact@v4
       with:
-        name: Patch
-        path: |
-          jose.jar
-          packages/jose-Latest-patch.zip
+        name: Draft
+        body: built from latest sources; apply to one of plattform packages.
+        draft: true
+        path: packages/jose-Latest-patch.zip
