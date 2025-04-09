@@ -27,7 +27,8 @@ jobs:
       run: ant -buildfile pack.xml patch -Dversion=Latest -Ddist-dir=.
 
     - name: 'Upload Artifact'
-      uses: softprops/action-gh-release@v2
+#      uses: softprops/action-gh-release@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Patch
         files: |
