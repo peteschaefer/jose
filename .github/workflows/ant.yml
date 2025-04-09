@@ -30,8 +30,8 @@ jobs:
       uses: softprops/action-gh-release@v2
 #      uses: actions/upload-artifact@v4
       with:
+        token: ${{ secrets.java-ci.CI_TOKEN }}
         name: Draft
         body: built from latest sources; apply to one of plattform packages.
         draft: true
-        token: ${{ secrets.CI_TOKEN }}
         files: packages/jose-Latest-patch.zip
