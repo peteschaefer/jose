@@ -13,7 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+      
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -30,7 +32,7 @@ jobs:
       uses: softprops/action-gh-release@v2
 #      uses: actions/upload-artifact@v4
       with:
-        token: ${{ secrets.java-ci.CI_TOKEN }}
+        token: ${{ secrets.ci-token }}
         name: Draft
         body: built from latest sources; apply to one of plattform packages.
         draft: true
