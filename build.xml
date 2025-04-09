@@ -20,7 +20,7 @@
 	<!-- JavaHelp directory -->
 	<property name="javahelp" location="C:\jh1.1.3\javahelp\lib"/>
 
-	<property name="jdk-dir" location="C:/Program Files/Java/jdk-21.0.6"/>
+	<!--property name="jdk-dir" location="C:/Program Files/Java/jdk-21.0.6"/-->
 	<!--property name="jdk-dir" location="/home/schaefer/lib/jbr-21-x64"/-->
 	<!--property name="jdk-dir" location="/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home"/-->
 
@@ -135,7 +135,6 @@
 	    <!--unzip src="lib/jose15.jar" dest="${java.classes}"/-->
 
 		<javac fork="yes"
-            executable="${jdk-dir}/bin/javac"
 			srcdir="${java.src}" destdir="${java.classes}"
 			source="9" target="9" compiler="modern"
 			nowarn="on" optimize="on"
@@ -143,13 +142,7 @@
 			includejavaruntime="yes"
 			debug="on" encoding="iso8859-1"
 			classpathref="java.build.path">
-
-			<!-- already compiled by target bootClasses -->
-			<!--exclude name="**/de/jose/util/xml/XPathImpl15.java"/-->
-			<!--exclude name="**/de/jose/util/WinUtils.java"/-->
-
-			<!--exclude name="**/de/jose/Main.java"/-->
-			<!--exclude name="**/de/jose/BootError.java"/-->
+			<!--executable="${jdk-dir}/bin/javac"-->
 
 			<exclude name="**/FlyBy.java"/>
 			<exclude name="**/devtools/**"/>
