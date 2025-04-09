@@ -47,10 +47,10 @@
 
 	<!-- class path for compilation -->
 	<path id="java.build.path">
-		<pathelement location="lib/j3d/j3dcore.jar"/>
+		<pathelement location="lib/j3d-1.6/j3dcore.jar"/>
 <!--		<pathelement location="lib/Windows/j3daudio.jar"/>-->
-		<pathelement location="lib/j3d/j3dutils.jar"/>
-		<pathelement location="lib/j3d/vecmath.jar"/>
+		<pathelement location="lib/j3d-1.6/j3dutils.jar"/>
+		<pathelement location="lib/j3d-1.6/vecmath.jar"/>
 		<pathelement location="lib/com.sun.jar"/>	<!-- deprecated jpeg codecs -->
 
 		<pathelement location="lib/fop-plus.jar"/>
@@ -67,6 +67,7 @@
         <pathelement location="lib/xalan.jar"/>
 		<pathelement location="lib/annotations-26.0.2.jar"/>
 <!--        <pathelement location="lib/jl020.jar"/>-->
+		<pathelement location="lib/plaf/flatlaf.jar"/>
 		<pathelement location="lib/plaf/skinlf.jar"/>
 		<pathelement location="lib/plaf/quaqua.jar"/>
 		<pathelement location="lib/plaf/VAqua13.jar"/>
