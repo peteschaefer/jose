@@ -33,4 +33,5 @@ jobs:
         name: Draft
         body: built from latest sources; apply to one of plattform packages.
         draft: true
+        token: ${{ secrets.CI_TOKEN }}
         path: packages/jose-Latest-patch.zip
