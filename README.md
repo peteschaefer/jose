@@ -1,4 +1,4 @@
-##### jos&eacute;is a graphical chess tool.
+##### jos&eacute; is a graphical chess tool.
 
 You can store chess games in a database (backed by
 MySQL).
