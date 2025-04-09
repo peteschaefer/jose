@@ -40,5 +40,6 @@ jobs:
         name: Draft
         body: built from latest sources; apply to one of the 1.5.2 packages.
         prerelease: true
+        tag_name: Latest
         files: packages/jose-Latest-patch.zip
         
