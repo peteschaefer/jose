@@ -33,13 +33,12 @@ jobs:
       with:
         path: packages/jose-Latest-patch.zip
 
-#    - name: 'Release Artifact'
-#      uses: softprops/action-gh-release@v2
-#      with:
-#        token: ${{ secrets.ci-token }}
-        #  todo token is not accepted. why not?
-#        name: Draft
-#        body: built from latest sources; apply to one of plattform packages.
-#        draft: true
-#        files: packages/jose-Latest-patch.zip
+    - name: 'Release Artifact'
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.CI_TOKEN }}
+        name: Draft
+        body: built from latest sources; apply to one of plattform packages.
+        draft: true
+        files: packages/jose-Latest-patch.zip
         
