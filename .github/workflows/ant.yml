@@ -30,4 +30,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: Patch
-        path: jose.jar;*.zip
+        files: |
+          jose.jar
+          packages/jose-Latest-patch.zip
