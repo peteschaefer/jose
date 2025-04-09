@@ -28,10 +28,10 @@ jobs:
     - name: Build patch file
       run: ant -buildfile pack.xml patch -Dversion=Latest -Ddist-dir=.
 
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v4
-      with:
-        path: packages/jose-Latest-patch.zip
+#    - name: 'Upload Artifact'
+#      uses: actions/upload-artifact@v4
+#      with:
+#        path: packages/jose-Latest-patch.zip
 
     - name: 'Release Artifact'
       uses: softprops/action-gh-release@v2
