@@ -110,10 +110,24 @@ java.util.EmptyStackException
 [x] copy wiki to github
 [x] create releases on github
 [x] copy static web page to github
+[x] set up ci pipeline
 [ ] link landing page to peteschaefer.github.io/jose
     [ ] forward from sourceforge (ftp?)
-[ ] link downloads to https://github.com/peteschaefer/jose/releases
 [ ] link issues to https://github.com/peteschaefer/jose/issues
+[x] link downloads to https://github.com/peteschaefer/jose/releases
+
+[x] move repo to gitlab
+    [ ] new ssh key
+[ ] copy wiki to gitlab
+[x] create releases on gitlab
+[ ] upload artifacts to gitlab
+[ ] set up ci pipeline
+[ ] copy static website to gitlab
+[ ] link landing page to gitlab
+    [ ] forward from sourceforge (ftp?)
+[ ] link issues to gitlab
+[ ] link downloads to gitlab
+
 
 [x] Java 3D
     1.5 last version from Oracle. Works well for Windows and Linux. Not for Mac
