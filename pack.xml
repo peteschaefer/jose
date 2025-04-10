@@ -150,7 +150,7 @@
 	<target name="zip-windows-x64">
 		<description>add Windos specific files to zip</description>
 
-		<zip destfile="${zip-file}" update="true">
+		<zip destfile="${zip-file}" update="true" keepcompression="true">
 			<zipfileset dir="${dist-dir}/windows_x64"
 						prefix="${appldir}">
 				<!--include name="JavaApplicationStub"/-->
@@ -347,7 +347,7 @@
 	<target name="zip-linux-x64">
 		<description> add Linux specific stuff to zip </description>
 
-		<zip destfile="${zip-file}" update="true">
+		<zip destfile="${zip-file}" update="true" keepcompression="true">
 			<!-- Linux specific stuff -->
 			<zipfileset dir="." prefix="${appldir}" filemode="775">
 				<include name="jose.sh"/>
@@ -383,7 +383,7 @@
 
 	<target name="zip-macos-intel">
 		<description> add Mac OS X specific stuff to zip </description>
-		<zip destfile="${zip-file}" update="true">
+		<zip destfile="${zip-file}" update="true" keepcompression="true">
 			<zipfileset dir="${dist-dir}/mac_x64/Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
 				<!--include name="JavaApplicationStub"/-->
 				<include name="jose.sh"/>
@@ -483,7 +483,7 @@
 	<target name="zip-macos-arm">
 		<description> add Mac OS X specific stuff to zip </description>
 
-		<zip destfile="${zip-file}" update="true">
+		<zip destfile="${zip-file}" update="true" keepcompression="true">
 			<zipfileset dir="${dist-dir}/mac_arm64/Contents/MacOS" prefix="${appldir}/Contents/MacOS" filemode="775">
 				<!--include name="JavaApplicationStub"/-->
 				<include name="jose.sh"/>
@@ -827,7 +827,19 @@
 			</fileset>
 		</ftp>
 	</target-->
-	<target name="upload-file">
+	<target name="upload-1-gitlab">
+		<exec executable="curl" dir="${target-dir}">
+			<arg value="-s" />
+			<arg value="--progress-bar" />
+			<arg line="--header PRIVATE-TOKEN: <project access token>"/>
+			<arg line="-X PUT" />
+			<arg line="-F files=@${file}" />
+			<arg value="https://gitlab.com/api/v4//projects/68843828/packages/generic/release/${version}/${file}" />
+		</exec>
+	</target>
+
+
+	<target name="upload-1-bitbucket">
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
 			<arg value="--progress-bar" />
@@ -848,23 +860,31 @@
         -->
 	</target>
 
-	<target name="upload-bitbucket">
-		<description>upload to bitbucket</description>
+	<target name="upload-release-bitbucket">
+		<description>upload complete release to bitbucket</description>
 
-		<antcall target="upload-file">
+		<antcall target="upload-1-bitbucket">
 			<param name="file" value="jose-${version}-windows.zip"/>
 		</antcall>
 
-		<antcall target="upload-file">
+		<antcall target="upload-1-bitbucket">
 			<param name="file" value="jose-${version}-linux.zip"/>
 		</antcall>
 
-		<antcall target="upload-file">
+		<antcall target="upload-1-bitbucket">
 			<param name="file" value="jose-${version}-macos-intel.zip"/>
 		</antcall>
 
-		<antcall target="upload-file">
+		<antcall target="upload-1-bitbucket">
 			<param name="file" value="jose-${version}-macos-arm.zip"/>
+		</antcall>
+	</target>
+
+	<target name="upload-patch-bitbucket">
+		<description>upload a patch release to bitbucket</description>
+
+		<antcall target="upload-1-bitbucket">
+			<param name="file" value="jose-${version}-patch.zip"/>
 		</antcall>
 	</target>
 
