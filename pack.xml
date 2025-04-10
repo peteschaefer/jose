@@ -831,7 +831,7 @@
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
 			<arg value="--progress-bar" />
-			<arg line="--header PRIVATE-TOKEN: <project access token>"/>
+			<arg line="--header PRIVATE-TOKEN: %project access token%"/>
 			<arg line="-X PUT" />
 			<arg line="-F files=@${file}" />
 			<arg value="https://gitlab.com/api/v4//projects/68843828/packages/generic/release/${version}/${file}" />
@@ -843,7 +843,7 @@
 		<exec executable="curl" dir="${target-dir}">
 			<arg value="-s" />
 			<arg value="--progress-bar" />
-			<arg line="-u hrimfaxi:ATBBqf6dG8TZLspP7Jj35jgFhTh732D9087A"/>
+			<arg line="-u hrimfaxi:%access token%"/>
 			<arg line="-X POST" />
 			<arg line="-F files=@${file}" />
 			<arg value="https://api.bitbucket.org/2.0/repositories/hrimfaxi/jose/downloads" />
