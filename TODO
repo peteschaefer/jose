@@ -118,7 +118,7 @@ java.util.EmptyStackException
 
 [x] move repo to gitlab
     [ ] new ssh key
-[ ] copy wiki to gitlab
+[x] copy wiki to gitlab
 [x] create releases on gitlab
 [ ] upload artifacts to gitlab
 [ ] set up ci pipeline

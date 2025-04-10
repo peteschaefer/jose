@@ -124,11 +124,13 @@
 		<item id="menu.game.suggestions"	check="true"/>
 		<separator/>
 		<item id="menu.game.analysis" icon="\uf013:#cccc00"/>
-<!--		<item id="menu.game.hint"/> -->
+		<item id="menu.game.threat" icon="\ue0b7:button:bold:#cc9900:#000000"/>
+		<item id="menu.game.hint"	icon="?:#0000d9"/>
+		<separator/>
 		<item id="menu.game.draw" 	icon="\uf2b5:#ddcc00"/>
 		<item id="menu.game.resign" icon="\uf165:#aa0000"/>
 		<separator/>
-<!--		<item id="menu.game.previous"/>
+<!--	<item id="menu.game.previous"/>
 		<item id="menu.game.next"/>
 		<separator/>
 -->		<item id="menu.game.close" key="alt W"/>
@@ -138,8 +140,6 @@
 		<item id="menu.game.setup"	key="F11"/>
 		<item id="menu.game.animate"/>
 		<!--<item id="menu.game.nalimov.online"/>-->
-		<separator/>
-		<item id="menu.game.threat" icon="\ue0b7:button:bold:#cc9900:#000000"/>
 	</menu>
 	<!-- - - - - - - - - - -->
 	<!-- Window Menu       -->
