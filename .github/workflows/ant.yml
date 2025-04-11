@@ -29,7 +29,7 @@ jobs:
     - name: Build jose.jar with Ant
       run: ant -noinput -buildfile build.xml
     - name: Build patch file
-      run: ant -buildfile pack.xml patch -Dversion=Latest -Ddist-dir=.
+      run: ant -buildfile pack.xml patch -Dversion=latest -Ddist-dir=.
 
 #    - name: 'Upload Artifact'
 #      uses: actions/upload-artifact@v4
@@ -44,5 +44,5 @@ jobs:
         body: built from latest sources; apply to one of the 1.5.2 packages.
         prerelease: true
         tag_name: Latest
-        files: packages/jose-Latest-patch.zip
+        files: packages/jose-latest-patch.zip
         
