@@ -125,7 +125,7 @@
 		<separator/>
 		<item id="menu.game.analysis" icon="\uf013:#cccc00"/>
 		<item id="menu.game.threat" icon="\ue0b7:button:bold:#cc9900:#000000"/>
-		<item id="menu.game.hint"	icon="?:#0000d9"/>
+		<!--item id="menu.game.hint"	icon="?:#0000d9"/-->
 		<separator/>
 		<item id="menu.game.draw" 	icon="\uf2b5:#ddcc00"/>
 		<item id="menu.game.resign" icon="\uf165:#aa0000"/>
@@ -184,9 +184,9 @@
 		<item id="menu.web.home" 		icon="\uf015:#ffff88:#000000" url="https://hrimfaxi.bitbucket.io/jose"/>
 		<item id="menu.web.update"/>
 		<!--item id="menu.web.report"		url="http://sourceforge.net/tracker/?func=browse&amp;group_id=60120&amp;atid=493133"/-->
-		<item id="menu.web.report"		url="https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a&amp;statuses=new&amp;statuses=indeterminate&amp;sort=-updated&amp;page=1"/>
-        <item id="menu.web.donate"      url="http://jose-chess.sourceforge.net/main.html#donate"/>
-		<!--item id="menu.web.download"	url="http://jose-chess.sourceforge.net/download.html"/-->
+		<item id="menu.web.report"		url="https://github.com/peteschaefer/jose/issues/new"/>
+        <!--item id="menu.web.donate"      url="http://jose-chess.sourceforge.net/main.html#donate"/-->
+		<item id="menu.web.download"	url="https://github.com/peteschaefer/jose/releases"/>
 		<separator/>
 		<item id="menu.web.browser"/>
 

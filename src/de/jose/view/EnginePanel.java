@@ -727,25 +727,26 @@ public class EnginePanel
 			//	launch analysis
 			Command cmd = new Command("menu.game.analysis");
 			Application.theCommandDispatcher.forward(cmd,this);
+			return;
 		}
-		else
-			switch(hintMode = plugin.getMode())
-			{
-				case THINKING:
-				case PONDERING:
-					//	no hints while engine is thinking (and no ponderMove stored)
-					return;
-				case ANALYZING:
-					//	turn on suggestions
-					hintSuggestions = bpanel.getView().showSuggestions(true);
-					return;
-				case PAUSED:
-					//	turn on analyzing
-					hintSuggestions = bpanel.getView().showSuggestions(true);
-					plugin.analyze(plugin.applPosition);
-					//	turn on suggestions temporarily
-					return;
-			}
+
+		switch(hintMode = plugin.getMode())
+		{
+			case THINKING:
+			case PONDERING:
+				//	no hints while engine is thinking (and no ponderMove stored)
+				return;
+			case ANALYZING:
+				//	turn on suggestions
+				hintSuggestions = bpanel.getView().showSuggestions(true);
+				return;
+			case PAUSED:
+				//	turn on analyzing
+				hintSuggestions = bpanel.getView().showSuggestions(true);
+				plugin.analyze(plugin.applPosition);
+				//	turn on suggestions temporarily
+				return;
+		}
 	}
 
 	private void hideHint()

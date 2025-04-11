@@ -268,12 +268,15 @@
 	<web>
 		<!-- bug tracker url -->
 		<!--tracker-add>http://sourceforge.net/tracker/?func=add&amp;group_id=60120&amp;atid=493133</tracker-add-->
-		<tracker-add>https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a</tracker-add>
+		<!--tracker-add>https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a</tracker-add-->
+		<tracker-add>https://github.com/peteschaefer/jose/issues/new</tracker-add>
 		<!--tracker-action>/tracker/index.php</tracker-action-->
-		<tracker-action>https://bitbucket.org/hrimfaxi/jose/jira?site=e7e0656f-4e79-4cad-9462-98eda6a5d83a</tracker-action>
+		<tracker-action>https://github.com/peteschaefer/jose/issues</tracker-action>
 		<!-- online update info -->
-		<online-update>https://hrimfaxi.bitbucket.io/jose/download.xml</online-update>
-        <!-- online donation -->
+		<!--online-update>https://hrimfaxi.bitbucket.io/jose/download.xml</online-update-->
+		<online-update>https://raw.githubusercontent.com/peteschaefer/jose/refs/heads/main/download.xml</online-update>
+
+		<!-- online donation -->
         <!--online-donate>http://jose-chess.sourceforge.net/main.html#donate</online-donate-->
 		<!-- book download -->
 		<book-download>http://jose-chess.sourceforge.net/download.html#books</book-download>
