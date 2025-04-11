@@ -4,8 +4,11 @@
 name: Java CI
 
 on:
-  push:
+  # trigger on changes to main branch and /src directory
+  push:  
     branches: [ "main" ]
+    paths: [ "src/**" ]
+  # ..and on all pull requests   
   pull_request:
     branches: [ "main" ]
 
