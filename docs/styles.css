@@ -1,0 +1,107 @@
+h2,body,font,td {
+		font-family: Arial,Helvetica,Sans-Serif;
+		font-size: 9pt;
+}
+
+h1 {
+		font-family: Arial,Helvetica,Sans-Serif;
+		font-size: 14pt;
+		font-weight: bold;
+}
+
+h2 {
+		font-family: Palatino,Serif;
+		font-size: 64pt;
+		color: blue;
+		font-style : italic;
+}
+
+a {
+	text-decoration: none;
+}
+
+h3.download {
+	font-family: Arial,Helvetica,Sans-Serif;
+	color: white;
+	background-color: #4040d0;
+	font-size: 11pt;
+	font-weight: bold;
+	padding : 4 4 4 24;
+}
+
+td.download, td.download2 {
+		font-family: Arial,Helvetica,Sans-Serif;
+		font-size: 9pt;
+		line-height: 14pt;
+		text-align: left;
+}
+
+td.download2 {
+		text-align: center;
+}
+
+b.download {
+	color: #000080;
+}
+
+ul {
+	line-height : 10pt;
+}
+
+table.Top {
+	margin : 0 0 0 0;
+	padding : 0 0 0 0;
+}
+
+td.Applet {
+	background-color: #cccccc;
+}
+
+td.requirements {
+	backgroud-color: #eeeeee;
+	border : thin outset;
+	padding: 8 8 8 8;
+}
+
+li {
+	padding-bottom : 10;
+}
+
+td.platform {
+	text-align: center;
+	border : thin outset;
+ 	background-color: #ffffee;
+}
+
+td.platforminner {
+	text-align: center;
+    background-color: #ffffcc;
+	border : medium outset;
+	padding : 16 16 16 16;
+}
+
+font.logo {
+	font-family: Sans-Serif;
+	font-size: 20pt;
+	color: black;
+}
+
+font.download-jose {
+	font-family: Palatino Linotype, Palatino, Serif;	
+	color: blue;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 64;
+}
+
+font.download-version {
+	color: blue;
+	font-weight: bold;
+	font-size: 48;	
+}
+
+font.download-comment {
+	color: black;
+	font-size: 7pt;
+}
+

@@ -1,0 +1,86 @@
+<html>
+
+<body>
+
+<h2>Java System Properties</h2>
+
+These properties are passed on the command line when starting jose:
+<br>
+<code>
+     jose.exe [-D<i>key</i>=<i>value</i>]*
+</code>	 
+<bR> or	 <br>
+<code>
+     java -jar jose.jar [-D<i>key</i>=<i>value</i>]*
+</code>
+<br><br>
+
+<table>
+
+<tr><td> Property </td> <td> Default Value </td> <td> &nbsp; </td> </tr>
+
+<tr colspan=3><td><b> Global Settings </b></td></tr>
+
+<tr> <td> jose.workdir </td> <td> current directory </td> <td> jose working directory </td> </tr>
+
+<tr> <td> jose.db </td> <td> see config/defaults.xml </td> <td> database server, as defined in config/database.xml </td> </tr>
+
+<tr> <td> jose.datadir </td> <td> workdir/database </td> <td> database directory </td> </tr>
+
+<tr> <td> jose.splash </td> <td> true </td> <td> show splash screen on startup </td> </tr>
+
+<tr> <td> jose.show.errors </td> <td> true </td> <td> show exceptions to the user </td> </tr>
+
+<tr> <td> jose.log </td> <td> true </td> <td> log errors to errors.log file </td> </tr>
+
+<tr> <td> jose.3d </td> <td> true </td> <td> enable 3D view </td> </tr>
+
+<tr> <td> jose.2d.double.buffer </td> <td> false for board panel, true for all other panels </td> <td> enable double buffering for board view </td> </tr>
+
+<tr> <td> jose.framerate </td> <td> false </td> <td> log 3D frame rate </td> </tr>
+
+<tr> <td> jose.native.skin </td> <td> true </td> <td> enable native skin functions </td> </tr>
+
+
+<tr> <td> jose.unique.strings </td> <td> true </td> <td> avoid duplicate entries for indentical strings (players, events, etc.); recommended </td> </tr>
+
+<tr> <td> jose.sys.collections </td> <td> true </td> <td> show all games in the list window, including those in the trash </td> </tr>
+
+<tr> <td> jose.asynch.import </td> <td> false </td> <td> run insert statements in a separate thread (not recommended) </td> </tr>
+
+<tr colspan=3><td><b> User Preferences </b></td></tr>
+
+<p>User preferences are stored in the user.prf files. Certain parts of the preferences can be ignored when starting the application.</p>
+
+<tr> <td> jose.discard.profile </td> <td> false </td> <td> create a new user profile with factory settings </td> </tr>
+
+<tr> <td> jose.discard.settings </td> <td> false </td> <td> use factory settings (colors, languages, etc.) </td> </tr>
+
+<tr> <td> jose.discard.layout </td> <td> false </td> <td> use factory layout </td> </tr>
+
+<tr> <td> jose.discard.styles </td> <td> false </td> <td> use factory text styles </td> </tr>
+
+<tr> <td> jose.discard.history </td> <td> false </td> <td> ignore document history </td> </tr>
+
+
+<tr colspan=3><td><b> Debug Options </b></td></tr>
+
+<tr> <td> jose.debug.properties </td> <td> false </td> <td> log all system properties </td> </tr>
+
+<tr> <td> jose.debug.sql </td>  <td> false </td> <td> logs all database queries to std. out </td> </tr>
+
+<tr> <td> jose.debug.commands </td>  <td> false </td> <td> logs all GUI command to std. out </td> </tr>
+
+<tr colspan=3><td><b> Other relevant Properties </b></td></tr>
+
+<tr> <td> user.name </td>  <td> set by JVM </td> <td> default name for human player </td> </tr>
+<tr> <td> user.language </td>  <td> set by JVM </td> <td> default language for user interface </td> </tr>
+
+<tr> <td> sun.java2d.fontpath </td>  <td> &nbsp; </td> <td> path to TrueType fonts </td> </tr>
+
+
+</table>
+
+</body>
+
+</html>

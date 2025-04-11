@@ -1,0 +1,154 @@
+<download-info>
+	<current-version>1.5.2</current-version>
+	<update>
+		<os>Windows</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-windows.zip</url>
+		<!--mirrors>http://prdownloads.sourceforge.net/jose-chess/jose-142-windows-update.zip?download</mirrors-->
+		<type>zip</type>
+		<size>369438322</size>
+	</update>
+	<update>
+		<os>Linux_i386</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-linux.zip</url>
+		<type>zip</type>
+		<size>353782690</size>
+	</update>
+	<update>
+		<os>Linux_amd64</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-linux.zip</url>
+		<type>zip</type>
+		<size>353782690</size>
+	</update>
+	<update>
+		<os>Mac</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-macos-intel.zip</url>
+		<type>zip</type>
+		<size>351659599</size>
+	</update>
+	<update>
+		<os>Mac_intel</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-macos-intel.zip</url>
+		<type>zip</type>
+		<size>351659599</size>
+	</update>
+	<update>
+		<os>Mac_arm</os>
+		<url>https://bitbucket.org/hrimfaxi/jose/downloads/jose-152-macos-arm.zip</url>
+		<type>zip</type>
+		<size>349860287</size>
+	</update>
+	<files>
+		<host>https://bitbucket.org/hrimfaxi/jose/downloads/</host>
+		<!--suffix>?use_mirror=belnet</suffix-->
+		<!--
+		<file key="jose-windows-jre">
+			<path>jose-142-windows-jre.exe</path>
+			<size>32866009</size>
+		</file>
+		<file key="jose-windows">
+			<path>jose-142-windows.exe</path>
+			<size>15325599</size>
+		</file>
+		<file key="jose-linux-jre">
+			<path>jose-142-linux-jre.zip</path>
+			<size>40405866</size>
+		</file>
+		<file key="jose-linux">
+			<path>jose-142-linux.zip</path>
+			<size>14647177</size>
+		</file>
+		<file key="jose-macosx">
+			<path>jose-142-macosx.dmg</path>
+			<size>14628251</size>
+		</file>
+		<file key="jose-upgrade-windows">
+			<path>jose-142-windows-update.zip</path>
+			<size>10077260</size>
+		</file>
+		<file key="jose-upgrade-linux">
+			<path>jose-142-linux-update.zip</path>
+			<size>10300140</size>
+		</file>
+		<file key="jose-upgrade-macosx">
+			<path>jose-142-macosx-update.zip</path>
+			<size>11487565</size>
+		</file>
+		<file key="j3d-windows">
+			<path>jose-3d-132-windows.zip</path>
+			<size>2485300</size>
+		</file>
+		<file key="j3d-linux">
+			<path>jose-3d-132-linux.zip</path>
+			<size>2290549</size>
+		</file>
+		<file key="bonus-textures">
+			<path>bonus-textures.zip</path>
+			<size>3530017</size>
+		</file>
+		<file key="jose-sounds">
+			<path>jose-sounds.zip</path>
+			<size>3533302</size>
+		</file>
+		-->
+		<file key="db-10k">
+			<path>database-10k.jose</path>
+			<size>967605</size>
+		</file>
+		<file key="db-500k">
+			<path>database-500k.jose</path>
+			<size>42676590</size>
+		</file>
+		<file key="db-1700k">
+			<path>database-1700k.jose</path>
+			<size>138819752</size>
+		</file>
+		<!--
+		<file key="book-bin">
+			<path>book.bin</path>
+			<size>1544096</size>
+		</file>
+		<file key="book-small-bin">
+			<path>book_small.bin</path>
+			<size>72672</size>
+		</file>
+		<file key="dcbook-large-bin">
+			<path>DCbook_large.zip</path>
+			<size>3703842</size>
+		</file>
+		<file key="performance-bin">
+			<path>Performance.bin</path>
+			<size>1487264</size>
+		</file>
+		<file key="varied-bin">
+			<path>Varied.bin</path>
+			<size>1475664</size>
+		</file>
+		-->
+		<!--
+		<url key="mac-j3d-download">
+			http://www.apple.com/downloads/macosx/apple/java3dandjavaadvancedimagingupdate.html
+		</url>
+		-->
+	</files>
+	<history>
+		<h3>1.5 (2025-01)</h3>
+		<ul>
+			<li>Leela and Stockfish</li>
+			<li>WDL scores &amp; Leela diagnostics</li>
+			<li>node-restricted search</li>
+			<li>eval graph</li>
+			<li>Chessnut boards</li>
+		</ul>
+		<h3>1.5.1 (2025-02)</h3>
+		<ul>
+			<li>hi-dpi improved</li>
+			<li>Lichess Opening Explorer</li>
+		</ul>
+		<h3>1.5.2 (2025-03)</h3>
+		<ul>
+			<li>Database Repair Tool</li>
+			<li>Threat Analysis</li>
+			<li>GUI and stability improvements</li>
+		</ul>
+	</history>
+</download-info>
