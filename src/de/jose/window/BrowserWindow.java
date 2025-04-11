@@ -21,6 +21,7 @@ import de.jose.util.StringUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -37,16 +38,27 @@ public class BrowserWindow
 	public static final int ASK 			= 2;
 	public static final int ALWAYS_ASK 		= 3;
 
-	private URL url;
+	private URI uri;
 
 
-	public static void showWindow(String url) throws IOException
-	{
-		showWindow(new URL(url));
-	}
+	public static void showWindow(String url) throws IOException {
+        try {
+            showWindow(new URI(url));
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
+    }
 
 
-	public static void showWindow(URL url) throws IOException
+	public static void showWindow(URL url) throws IOException {
+        try {
+            showWindow(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
+    }
+
+	public static void showWindow(URI uri) throws IOException
 	{
 		/**
 		 * launching the default browser in Windows is accomplished
@@ -54,21 +66,17 @@ public class BrowserWindow
 		 */
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(url.toURI());
-            } catch (URISyntaxException e) {
-                throw new IOException(e);
-            }
+            desktop.browse(uri);
         }
  		else if(Version.windows)
-			winBrowser(url);
+			winBrowser(uri);
 		else
-			new BrowserWindow(url).start();
+			new BrowserWindow(uri).start();
 	}
 
-	protected BrowserWindow(URL url)
+	protected BrowserWindow(URI uri)
 	{
-		this.url = url;
+		this.uri = uri;
 	}
 
 
@@ -113,7 +121,7 @@ public class BrowserWindow
 			if (command==null)
 				return;
 
-			if (unixBrowser(command,url))
+			if (unixBrowser(command,uri))
 				return;	//	succeeded
 			else
 				Application.theUserProfile.set("default.browser",null);	//	failed
@@ -122,18 +130,18 @@ public class BrowserWindow
 
 	/**
 	 * open the installed default browser (on Windows)
-	 * @param url
+	 * @param uri
 	 */
-	protected static boolean winBrowser(URL url)
+	protected static boolean winBrowser(URI uri)
 		throws IOException
 	{
 		String command = getBrowser(DEFAULT);		//	no need to interact with user
-		command = StringUtil.replace(command,"%url%",url.toExternalForm());
+		command = StringUtil.replace(command,"%url%",uri.toString());
 		Process proc = Runtime.getRuntime().exec(command);
 		return true;
 	}
 
-	protected static boolean unixBrowser(String command, URL url)
+	protected static boolean unixBrowser(String command, URI uri)
 	{
 		try {
 			if (isMozilla(command)) {
@@ -143,7 +151,7 @@ public class BrowserWindow
 				 * - if this fails, try mozilla %url% "
 				 */
 				String command1 = StringUtil.replace(command,"%url%", " -remote openURL(%url%) ");
-				command1 = StringUtil.replace(command1,"%url%",url.toExternalForm());
+				command1 = StringUtil.replace(command1,"%url%",uri.toString());
 				Process proc = Runtime.getRuntime().exec(command1);
 
 				// wait for exit code -- if it's 0, command worked,
@@ -152,7 +160,7 @@ public class BrowserWindow
 					return true;	//	allright
 			}
 
-			command = StringUtil.replace(command,"%url%",url.toExternalForm());
+			command = StringUtil.replace(command,"%url%",uri.toString());
 			Process proc = Runtime.getRuntime().exec(command);
 			return proc.waitFor()==0;
 

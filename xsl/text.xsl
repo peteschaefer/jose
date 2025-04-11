@@ -38,7 +38,7 @@
 </xsl:text>
 			</xsl:for-each>
 			<xsl:text>
-			(created with jose Chess: hrimfaxi.bitbucket.io/jose)
+			(created with jose Chess: peteschaefer.github.io/jose)
 			</xsl:text>
 	</xsl:template>
 	

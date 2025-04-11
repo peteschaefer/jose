@@ -1968,8 +1968,8 @@ public class Application
 					else if (external) {
 						//  preview in Web Browser
 						HtmlUtil.exportTemporary(context,false);
-						URL url = new URL("file",null,((File)context.target).getAbsolutePath());
-						BrowserWindow.showWindow(url);
+						URI uri = ((File)context.target).toURI();
+						BrowserWindow.showWindow(uri);
 					}
 					else
 						throw new IllegalArgumentException();

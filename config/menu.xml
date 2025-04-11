@@ -181,7 +181,7 @@
 		<separator/>
 		<item id="menu.help.repair"/>
 		<separator/>
-		<item id="menu.web.home" 		icon="\uf015:#ffff88:#000000" url="https://hrimfaxi.bitbucket.io/jose"/>
+		<item id="menu.web.home" 		icon="\uf015:#ffff88:#000000" url="https://peteschaefer.github.io/jose"/>
 		<item id="menu.web.update"/>
 		<!--item id="menu.web.report"		url="http://sourceforge.net/tracker/?func=browse&amp;group_id=60120&amp;atid=493133"/-->
 		<item id="menu.web.report"		url="https://github.com/peteschaefer/jose/issues/new"/>

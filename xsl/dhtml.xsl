@@ -92,7 +92,7 @@
 
 		<xsl:apply-templates select="game"/>
 
-			<center class="body_comment_4">created with <a href="http://hrimfaxi.bitbucket.io/jose">jose Chess</a></center>
+			<center class="body_comment_4">created with <a href="https://peteschaefer.github.io/jose/">jose Chess</a></center>
 		</body>
 	</html>
 		

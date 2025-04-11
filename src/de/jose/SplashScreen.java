@@ -39,7 +39,7 @@ public class SplashScreen
     public static final String version = "1.5.6";
     public static final String author = "Peter Sch\u00e4fer";
     public static final String year = "2002-25";
-	public static final String url = "hrimfaxi.bitbucket.io/jose";
+	public static final String url = "peteschaefer.github.io/jose";
 
     protected static SplashScreen theSplashScreen;
 
