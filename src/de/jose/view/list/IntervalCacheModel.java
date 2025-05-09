@@ -23,6 +23,7 @@ import de.jose.util.StringUtil;
 import de.jose.util.map.IntIntMap;
 import de.jose.view.ListPanel;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
@@ -302,7 +303,7 @@ abstract public class IntervalCacheModel
                         break;
 
 	                case FINISHED:
-		                return;
+						return;
 
 					case REFRESH:
 						try {
@@ -396,23 +397,14 @@ abstract public class IntervalCacheModel
 		                        if (res.next())
 		                        {
 		                            chunk++;
-		                            if (posFilter.accept(res))
-		                            {
-		                                pkStore.set(current++, res.getInt(1));
-
-		                                if (current > rowCount) {
-		                                    rowCount = current;
-
-		                                    if (rowCount < 30)
-		                                        fireTableRowsInserted(fired, fired=rowCount);
-		                                    else if (rowCount < 1000) {
-		                                        if ((rowCount%50)==0)
-		                                            fireTableRowsInserted(fired, fired=rowCount);
-		                                    }
-		                                    else if ((rowCount%500)==0)
-		                                         fireTableRowsInserted(fired, fired=rowCount);
-		                                }
-		                            }
+									switch(posFilter.accept(res, (int GId)->addResult(GId)))
+									{
+										case REJECT:	break;
+										case WAIT:		/*will call back asynchroneously*/ break;
+										case ACCEPT:
+											addResult(res.getInt(1));
+											break;
+									}
 		                       }
 		                       else {
 		                            /*  reached end of result set */
@@ -431,7 +423,10 @@ abstract public class IntervalCacheModel
 		                            }
 		                            else {
 		                                //  results exhausted
-		                                min = max = current = -1;
+										//	wait for PosFilterPool to finish queries
+										PositionFilter.waitFinished();
+
+										min = max = current = -1;
 		                                status = REFRESH;
 //			                            System.out.println("REFRESH (10)");
 		                                if (rowCount > fired)
@@ -453,7 +448,29 @@ abstract public class IntervalCacheModel
 	            } catch (SQLException e) { }
             }
         }
-    }
+
+		private void addResult(int GId)
+		{
+			pkStore.set(current++, GId);
+
+			if (current > rowCount) {
+				rowCount = current;
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (rowCount < 30)
+							fireTableRowsInserted(fired, fired=rowCount);
+						else if (rowCount < 1000) {
+							if ((rowCount%50)==0)
+								fireTableRowsInserted(fired, fired=rowCount);
+						}
+						else if ((rowCount%500)==0)
+							fireTableRowsInserted(fired, fired=rowCount);
+					}
+				});
+			}
+		}
+	}
 
     /** the statement used to retrieve primary keys */
     protected ParamStatement pkStatement;
@@ -513,7 +530,8 @@ abstract public class IntervalCacheModel
 
 		pkStore.ensureCapacity(size);
 		pkStatement = pkStm;
-	    posFilter = filter;
+
+		posFilter = filter;
 		rowCount = size;
         rowCountAccurate = accurate;
 

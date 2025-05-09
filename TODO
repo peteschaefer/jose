@@ -43,27 +43,6 @@
     [-] remove l&f selection
     [ ] from command line
 
-[ ] MySQL connection timeout
-    [ ] check tomorrow on 18.159.135.101:8081
-    [x] keep-alive process that closes pooled connections in regular intervals
-        (before the Connection time out kills them)
-    [x] pool needs to be thread-safe (easily accomplished with a Vector?)
-
-[x] Gigabase
-    [x] import pgn.7z
-    [x] delay-key-write
-    [x] export .jose (copy Player is slooow. progress bar don't show progress)
-    [x] massage into a single collection (schema 'giga', use db console)
-    [x] import .jose.7z
-    [ ] SELECT Game.Id FROM Game WHERE Game.CId  = 1002 ORDER BY Game.GameDate DESC
-        [.] missing indexes
-            Game(CId,GameDate,Id), Game(CId,ECO,Id)
-            Game(CId,Result,Id)
-        [.] Game(CId,WhiteELOId), Game(CId,BlackELO,Id),
-            Game(PlyCount),
-    [x] bug: order by Annotator
-        don't order by Annotator :(
-
 [ ] 7z decompression
     [x] apache commons compress
     [x] input pgn.7z
@@ -91,6 +70,88 @@
     [ ] Cut/Paste/Delete
         - when affecting multiple nodes
         - record edits in list
+
+
+[ ] Parallel Position Search
+    - mixed results. little speedup on early position. Speedup ~2 on later positions.
+    -> more research needed
+    [ ] missing results? fireTableRowsInserted missed?
+
+==== Interesting New Features
+
+* FOP printing: subtitles for Events and Rounds
+    Q: sort by Collection, or by Event name (needs to be curated accurately) ?
+    - drop info from Game header
+* Bulk edit with F4
+    - GameDetailsDialog uses GameSource. Two modes:
+        GameSource(object) refers to an opened document. ID==0 = new, or ID > 0 = existing
+        GemsSource(...) refers to a set of games. Write to DB directly.
+* Autocompletion for database fields (Event, Player, ...)
+* Search ELO >=
+* Query History
+
+* Search Pawn Structure
+    - mode on Zobrist keys
+    - Pawn Mat Signature: extract from existing
+
+* Store MatSignature in DB
+    - speeds up Position search
+    - for 10, 20, end position ? - allows cut-offs for opening positions
+    - requires cross-over & re-built archive files !
+    - next: custom MySQL function pos_reachable(), pawn_reachable()
+    - benchmark?
+
+
+* RTF export? currently possible via copy/paste.
+  - fop 0.20 does not support it
+  - upgrading fop seems painful (and has little merit)
+  - RTFGenerator is not flawless but better than nothing
+    (why does Oracle not support it?)
+
+* Logos: User
+    [ ] document? (would have to be stored in db :(
+
+* Foldable variations.
+    - Use LineLabelNode as buttons
+    - no need for extra gui real estate
+
+* Figurines in Opening names (like from Eco)
+  - heuristic to detect moves
+  - for any language
+
+* LiChess Opening Explorer
+    [ ] MoreGame.ExternalKey (:=Lichess GameId)
+
+* replace Nalimov query with Lichess tablebase query
+
+* Graph View interactive
+    [x] mark current move.
+    [ ] tooltips
+    [ ] click navigate
+    [x] use paintImmediately for BoardView2D score?  (instead of repaint!)
+
+* Comment search
+    * regex
+    * replace
+
+* Contempt Slider
+        White seeks a draw - neutral - Black seeks a draw - Armageddon
+    -1   ...............        0         ............         +1
+        Black avoids a draw            White avoids a draw
+
+    Armageddon = Black seeks a draw at any cost; white avoids a draw at any cost.
+
+? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
+ there is some confusion about the effective parameters. Online docu is not up-to-date :(
+
+* score POV adjustable?
+  * uci reports current pov
+  * UciPlugin "adjusts" pov to white (in the process creating artifacts, like negative win-percentage)
+  * panel shows always white pov (might be user-adjustable)
+  * eval bar **must** use white pov [0..1]
+  * suggestions arrows **must** use current pov * [0..1]
+
+* commentary arrows and highlights
 
 
 
@@ -171,84 +232,6 @@ Alternative JREs:
     - 64+2 bits instead of fRedraw
     - set bits selectively when painting/undoing arrows
 * double buffering still needed ? (probably)
-
-==== Interesting New Features
-
-* FOP printing: subtitles for Events and Rounds
-    Q: sort by Collection, or by Event name (needs to be curated accurately) ?
-    - drop info from Game header
-* Bulk edit with F4
-    - GameDetailsDialog uses GameSource. Two modes:
-        GameSource(object) refers to an opened document. ID==0 = new, or ID > 0 = existing
-        GemsSource(...) refers to a set of games. Write to DB directly.
-* Autocompletion for database fields (Event, Player, ...)
-* Search ELO >=
-* Query History
-
-* Parallel Position Search
-* Search Pawn Structure
-    - mode on Zobrist keys
-    - Pawn Mat Signature: extract from existing
-
-* Store MatSignature in DB
-    - speeds up Position search
-    - for 10, 20, end position ? - allows cut-offs for opening positions
-    - requires cross-over & re-built archive files !
-    - next: custom MySQL function pos_reachable(), pawn_reachable()
-    - benchmark?
-
-
-* RTF export? currently possible via copy/paste.
-  - fop 0.20 does not support it
-  - upgrading fop seems painful (and has little merit)
-  - RTFGenerator is not flawless but better than nothing
-    (why does Oracle not support it?)
-
-* Logos: User
-    [ ] document? (would have to be stored in db :(
-
-* Foldable variations.
-    - Use LineLabelNode as buttons
-    - no need for extra gui real estate
-
-* Figurines in Opening names (like from Eco)
-  - heuristic to detect moves
-  - for any language
-
-* LiChess Opening Explorer
-    [ ] MoreGame.ExternalKey (:=Lichess GameId)
-
-* replace Nalimov query with Lichess tablebase query
-
-* Graph View interactive
-    [x] mark current move.
-    [ ] tooltips
-    [ ] click navigate
-    [x] use paintImmediately for BoardView2D score?  (instead of repaint!)
-
-* Comment search
-    * regex
-    * replace
-
-* Contempt Slider
-        White seeks a draw - neutral - Black seeks a draw - Armageddon
-    -1   ...............        0         ............         +1
-        Black avoids a draw            White avoids a draw
-
-    Armageddon = Black seeks a draw at any cost; white avoids a draw at any cost.
-
-? see https://lczero.org/blog/2023/07/the-lc0-v0.30.0-wdl-rescale/contempt-implementation/
- there is some confusion about the effective parameters. Online docu is not up-to-date :(
-
-* score POV adjustable?
-  * uci reports current pov
-  * UciPlugin "adjusts" pov to white (in the process creating artifacts, like negative win-percentage)
-  * panel shows always white pov (might be user-adjustable)
-  * eval bar **must** use white pov [0..1]
-  * suggestions arrows **must** use current pov * [0..1]
-
-* commentary arrows and highlights
-
 
 ==== Misc Errors
 

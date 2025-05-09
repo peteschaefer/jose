@@ -19,6 +19,13 @@ import de.jose.chess.Position;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.function.IntConsumer;
 
 
 /**
@@ -34,14 +41,18 @@ public class PositionFilter
 
 	protected MatSignature targetSig, targetSigReversed;
 
-	protected HashKey searchKey, searchKeyReversed;
-	protected MatSignature searchSig;
+//	protected HashKey searchKey, searchKeyReversed;
+//	protected MatSignature searchSig;
 
 	protected boolean inLine,ignoreLine;
-	protected boolean result;
+	protected Result result;
+
+	public enum Result  {
+		REJECT, ACCEPT, WAIT
+	};
 
 	public static PositionFilter PASS_FILTER = new PositionFilter(true) {
-		public boolean accept(ResultSet res) throws SQLException		{ return true; }
+		public Result accept(ResultSet res, IntConsumer callback) throws SQLException		{ return Result.ACCEPT; }
 	};
 
 	private PositionFilter(boolean privateCtor) {
@@ -52,9 +63,9 @@ public class PositionFilter
 	{
 		super(new Position());
 
-		searchKey = pos.getHashKey();
-		searchKeyReversed = pos.getReversedHashKey();
-		searchSig = pos.getMatSig();
+//		searchKey = pos.getHashKey();
+//		searchKeyReversed = pos.getReversedHashKey();
+//		searchSig = pos.getMatSig();
 
 		//  calculate hash keys & material signature
 		pos.setOption(Position.INCREMENT_HASH,true);
@@ -77,24 +88,51 @@ public class PositionFilter
     public Object clone()
     {
         PositionFilter that = new PositionFilter(false);
-        that.pos = this.pos;
-        that.searchKey = (this.searchKey==null) ? null : (HashKey)this.searchKey.clone();
-        that.searchKeyReversed = (this.searchKeyReversed==null) ? null : (HashKey)this.searchKeyReversed.clone();
-        that.targetSig = (this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-        that.targetSigReversed = (this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
-        that.searchSig = (this.searchSig==null) ? null : (MatSignature)this.searchSig.clone();
-        that.targetKey = this.targetKey;
-        that.targetKeyReversed = this.targetKeyReversed;
-        that.searchVariations = this.searchVariations;
-        that.inLine = this.inLine;
-        that.ignoreLine = this.ignoreLine;
-        that.result = this.result;
-        return that;
+		that.pos = this.pos;	//	don't clone Position, right?? or not?
+//		that.searchKey = (this.searchKey==null) ? null : (HashKey)this.searchKey.clone();
+//		that.searchKeyReversed = (this.searchKeyReversed==null) ? null : (HashKey)this.searchKeyReversed.clone();
+//		that.searchSig = (this.searchSig==null) ? null : (MatSignature)this.searchSig.clone();
+		this.cloneInto(that);
+		return that;
     }
+
+	private void cloneInto(PositionFilter that)
+	{
+		that.targetSig = (this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
+		that.targetSigReversed = (this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
+		that.targetKey = this.targetKey;
+		that.targetKeyReversed = this.targetKeyReversed;
+		that.searchVariations = this.searchVariations;
+		that.inLine = this.inLine;
+		that.ignoreLine = this.ignoreLine;
+		that.result = this.result;
+	}
 
 	public void clear() {
 		targetKey = targetKeyReversed = 0L;
 		searchVariations = false;
+	}
+
+	private static ExecutorService executorPool = Executors.newFixedThreadPool(7);//newCachedThreadPool();
+	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
+		@Override
+		protected PositionFilter initialValue() { return new PositionFilter(); }
+	};
+
+	public static void waitFinished()
+	{
+        try {
+            executorPool.awaitTermination(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // ok, we tried
+        }
+    }
+
+	public PositionFilter getFilterLike()
+	{
+		PositionFilter pf = pooledFilter.get();
+		this.cloneInto(pf);
+		return pf;
 	}
 
 	public boolean isEmpty()
@@ -123,14 +161,55 @@ public class PositionFilter
 
 	public boolean hasVariations()              { return searchVariations; }
 
-	public boolean accept(ResultSet res) throws SQLException
+	private static class PosFilterJob implements Runnable
 	{
-		result = false;
+		PositionFilter query;
+		int GId;
+		String fen;
+		byte[] bin;
+		IntConsumer callback;
 
+		public PosFilterJob(PositionFilter query, int GId, String fen, byte[] bin, IntConsumer callback) {
+			this.query = query;
+			this.bin = bin;
+			this.fen = fen;
+			this.GId = GId;
+			this.callback = callback;
+		}
+
+		@Override
+		public void run() {
+			PositionFilter pf = query.getFilterLike();
+			Result rs = pf.accept(fen, bin);
+			if (rs == Result.ACCEPT) callback.accept(GId);
+		}
+	}
+
+
+	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
+	{
+		int GId = res.getInt(1);
 		String fen = res.getString(2);
 		byte[] bin = res.getBytes(3);
-		if (bin==null) return false;	//	todo why can this happen at all?
+		//bin = bin.clone();	//	just in case that the driver returns a mutable value
 
+		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
+
+		if (asyncCallback!=null) {
+			//	submit job to executor pool
+			PosFilterJob job = new PosFilterJob(this,GId,fen,bin,asyncCallback);
+			executorPool.submit(job);
+			return Result.WAIT;
+		}
+		else {
+			//	do it now
+			return accept(fen, bin);
+		}
+	}
+
+	public Result accept(String fen, byte[] bin)
+	{
+		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
 /*	TODO
 	it would be great if the final MatSignatures were stored in the database.
 	we could do early cut-offs before even reading the game. Especially for endgame positions.
@@ -138,29 +217,30 @@ public class PositionFilter
 	But it is not so. Yet. Introducing new columns, populating and backporting (archive files) is quite some  work.
 	So, in the meantine, we inspect every result row.
  */
-
+		result = Result.REJECT;	// unless...
 		ignoreLine = inLine = false;
 		read(bin,0, null,0, fen,true);
 		//  read will call back to (BinReader)this
-
 		return result;
 	}
 
 	private void compareKeys()
 	{
 		/** check hash key  */
-        if (searchKey.equals(targetKey))
-            result = eof = true;	 //  this will terminate the read() method
-        else if (searchKeyReversed.equals(targetKeyReversed))
-            result = eof = true;	 //  this will terminate the read() method
+        if (pos.getHashKey().equals(targetKey) || pos.getReversedHashKey().equals(targetKeyReversed)) {
+			eof = true; //  this will terminate the read() method
+            result = Result.ACCEPT;
+		}
 	}
 
 	private void checkCutOff()
 	{
 		/** check material signature for early cut-off */
-		if (!searchSig.canReach(targetSig) &&
-		    (targetSigReversed==null || !searchSig.canReach(targetSig)))
+		if (!pos.getMatSig().canReach(targetSig) &&
+		    (targetSigReversed==null || !pos.getMatSig().canReach(targetSig))) {
 			eof = true; //  signature cut-off
+			result = Result.REJECT;
+		}
 	}
 
 	//  BinReader callback methods:
