@@ -456,19 +456,25 @@ abstract public class IntervalCacheModel
 			if (current > rowCount) {
 				rowCount = current;
 
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (rowCount < 30)
-							fireTableRowsInserted(fired, fired=rowCount);
-						else if (rowCount < 1000) {
-							if ((rowCount%50)==0)
-								fireTableRowsInserted(fired, fired=rowCount);
-						}
-						else if ((rowCount%500)==0)
-							fireTableRowsInserted(fired, fired=rowCount);
-					}
-				});
+				if (SwingUtilities.isEventDispatchThread())
+					fireRowsInserted();
+				else {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() { fireRowsInserted(); }
+					});
+				}
 			}
+		}
+
+		private void fireRowsInserted() {
+			if (rowCount < 30)
+				fireTableRowsInserted(fired, fired=rowCount);
+			else if (rowCount < 1000) {
+				if ((rowCount%50)==0)
+					fireTableRowsInserted(fired, fired=rowCount);
+			}
+			else if ((rowCount%500)==0)
+				fireTableRowsInserted(fired, fired=rowCount);
 		}
 	}
 

@@ -113,7 +113,7 @@ public class PositionFilter
 		searchVariations = false;
 	}
 
-	private static ExecutorService executorPool = Executors.newFixedThreadPool(7);//newCachedThreadPool();
+	private static ThreadPoolExecutor executorPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(7);//newCachedThreadPool();
 	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
 		@Override
 		protected PositionFilter initialValue() { return new PositionFilter(); }
@@ -122,10 +122,14 @@ public class PositionFilter
 	public static void waitFinished()
 	{
         try {
+			executorPool.shutdown();
             executorPool.awaitTermination(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             // ok, we tried
-        }
+			System.err.println("PositionFilter wait interrupted");
+        } finally {
+			executorPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(7);//newCachedThreadPool();
+		}
     }
 
 	public PositionFilter getFilterLike()
