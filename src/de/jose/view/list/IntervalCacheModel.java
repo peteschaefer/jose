@@ -278,6 +278,8 @@ abstract public class IntervalCacheModel
                 for (;;) {
                     switch (status) {
                     case HALTED:
+						PositionFilter.abortJobs();
+
                         min = max = current = -1;
                         status = WAITING;
 //	                    System.out.println("WAITING (7)");

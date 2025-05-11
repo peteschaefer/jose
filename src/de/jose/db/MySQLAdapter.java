@@ -940,7 +940,8 @@ public class MySQLAdapter
 			int connId = conn.connectionId;
 			if (connId >= 0) try {
 				adminConn = JoConnection.get();
-				adminConn.executeUpdate("KILL QUERY "+connId);
+				//adminConn.executeUpdate("KILL QUERY "+connId);
+				adminConn.selectString("KILL QUERY "+connId);
 			} finally {
 				if (adminConn!=null) adminConn.release();
 			}

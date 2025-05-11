@@ -75,7 +75,13 @@
 [ ] Parallel Position Search
     - mixed results. little speedup on early position. Speedup ~2 on later positions.
     -> more research needed
-    [ ] missing results? fireTableRowsInserted missed?
+    [x] missing results? fireTableRowsInserted missed?
+    [ ] Job: quick abort (BinReader.eof)
+    [ ] Job: clean shutdown w/out having to re-create the pool
+    [ ] benchmark
+        - ResultSet traversal
+        - BinReader
+        - parallelisation overhead
 
 ==== Interesting New Features
 
@@ -96,7 +102,10 @@
 
 * Store MatSignature in DB
     - speeds up Position search
-    - for 10, 20, end position ? - allows cut-offs for opening positions
+    - for 10, 20, end position ?
+        test whether it improves selectivity:
+        `reachable(query,sig10) or reachable(sig10,query)
+         and reachable(query,sigend)`
     - requires cross-over & re-built archive files !
     - next: custom MySQL function pos_reachable(), pawn_reachable()
     - benchmark?

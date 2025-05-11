@@ -21,10 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.IntConsumer;
 
 
@@ -113,7 +110,8 @@ public class PositionFilter
 		searchVariations = false;
 	}
 
-	private static ThreadPoolExecutor executorPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(7);//newCachedThreadPool();
+	private static ArrayBlockingQueue executorQueue = new ArrayBlockingQueue<>(16000000);
+	private static ThreadPoolExecutor executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
 	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
 		@Override
 		protected PositionFilter initialValue() { return new PositionFilter(); }
@@ -121,16 +119,31 @@ public class PositionFilter
 
 	public static void waitFinished()
 	{
-        try {
+		if ((executorPool.getActiveCount()+executorQueue.size())==0) return;
+		try {
 			executorPool.shutdown();
             executorPool.awaitTermination(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             // ok, we tried
 			System.err.println("PositionFilter wait interrupted");
         } finally {
-			executorPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(7);//newCachedThreadPool();
+			//	todo find a way to reset the pool to working state; w/out creating it from scratch!
+			executorQueue.clear();
+			executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
 		}
     }
+
+	public static void abortJobs()
+	{
+		executorQueue.clear();
+		if (executorPool.getActiveCount()==0) return;
+		//	todo BinReader.eof=true for all waiting jobs?
+		try {
+			executorPool.shutdownNow();
+		} finally {
+			executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
+		}
+	}
 
 	public PositionFilter getFilterLike()
 	{
