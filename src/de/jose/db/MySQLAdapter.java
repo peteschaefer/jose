@@ -204,6 +204,7 @@ public class MySQLAdapter
 		if (Util.allOf(mode, JoConnection.CREATE))
 			props.put("create","true");
 */
+		props.put("clobberStreamingResults","true");
 		Connection conn = super.createConnection(mode);
 		return conn;
 	}
