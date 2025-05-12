@@ -178,14 +178,12 @@ public class PositionFilter
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
-		int GId = res.getInt(1);
-		String fen = res.getString(2);
-		byte[] bin = res.getBytes(3);
-
 		MatSignature gameEndSig = new MatSignature(res.getLong(4),res.getLong(5));
 		if (!targetSig.canReach(gameEndSig)) return Result.REJECT;
 
-		//bin = bin.clone();	//	just in case that the driver returns a mutable value
+		int GId = res.getInt(1);
+		String fen = res.getString(2);
+		byte[] bin = res.getBytes(3);
 
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
 
@@ -197,7 +195,7 @@ public class PositionFilter
 		}
 		else {
 			//	do it now
-			return accept(fen, bin, null);
+			return accept(fen, bin, null);	//	note: MatSignature already checked synchroneously, above
 		}
 	}
 

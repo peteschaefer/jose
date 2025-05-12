@@ -74,22 +74,20 @@
 
 [ ] Parallel Position Search
     - mixed results. little speedup on early position. Speedup ~2 on later positions.
-    -> more research needed
-    [x] missing results? fireTableRowsInserted missed?
     [-] Job: quick abort (BinReader.eof)
     [x] Job: clean shutdown w/out having to re-create the pool
     [ ] benchmark
-        - ResultSet traversal is **small** [2.6M = 0.49 s]
+        - ResultSet traversal is **cheap** [2.6M = 0.49 s]
         - BinReader [2.6M = 0.46 s .. 6.4 s] dominates, in particular for **late** positions
-        - parallelisation overhead [2.6M = 8.2 s] is big; not worth for **early**positions
+        - parallelisation overhead [2.6M = 8.2 s] is expensive; not worth for **early**positions
        --> parallelisation only favorable for **late** positions
        --> stored MatSignature might help **late** positions, too
        --> db-evaluated MatSignature might be less important
 [ ] Mat Signature in DB
-    [x] Crossover 1010 (sloow :(
-    [ ] Crossover Archive files
+    [x] Crossover 1010
+    [ ] Crossover Archive files (old ones and downloadable ones)
     [ ] store with new/modified/imported Games
-    [ ] use with PosFilter. How is the selectivity for?
+    [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get exact figures
 
@@ -272,23 +270,6 @@ java.lang.RuntimeException: Invalid insert
 	at de.jose.pgn.Game.doInsertMove(Game.java:797)
 	at de.jose.pgn.Game.insertMove(Game.java:782)
 	at de.jose.Application.handleUserMove(Application.java:2401)
-
-
-[ ] BUG
-java.sql.SQLException: Streaming result set com.mysql.jdbc.RowDataDynamic@585e4cb0 is still active.
-    Only one streaming result set may be open and in use per-connection.
-    Ensure that you have called .close() on  any active result sets before attempting more queries.
-	at com.mysql.jdbc.MysqlIO.checkForOutstandingStreamingData(MysqlIO.java:2066)
-	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1481)
-	at com.mysql.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:1124)
-	at com.mysql.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:676)
-	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:773)
-	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:74)
-	at de.jose.db.JoPreparedStatement.execute(JoPreparedStatement.java:97)
-	at de.jose.view.list.IntervalCacheModel.readData(IntervalCacheModel.java:698)
-	at de.jose.view.list.IntervalCacheModel.readRow(IntervalCacheModel.java:642)
-	at de.jose.view.list.IntervalCacheModel.getRowAt(IntervalCacheModel.java:601)
-	at de.jose.view.list.IntervalCacheModel.getValueAt(IntervalCacheModel.java:567)
 
 [ ] db: expected data on row
 java.sql.SQLException: data expected at row 17, Id=1018
