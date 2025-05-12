@@ -44,7 +44,7 @@ public class MatSignature
      *  4 bits  rook count (0..10)
      *  4 bits  queen count (0..9)
      *
-     *  4 bits  total piece count (0..15, not including king)
+     *  4 bits  total piece count (0..15, not including king) (@deprecated? compute from sum)
      *
      *  8 bits  pawns on home row (1 bit for each file)
      *

@@ -34,6 +34,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.function.IntConsumer;
 
 import static de.jose.pgn.PositionFilter.PASS_FILTER;
 
@@ -189,6 +190,7 @@ abstract public class IntervalCacheModel
         /** current result set  */
         protected ResultSet res;
 	    protected StatementExecutor executor;
+		protected IntConsumer acceptCallback = (int GId) -> addResult(GId);
 
         ResultSetReader() throws Exception
         {
@@ -409,7 +411,7 @@ abstract public class IntervalCacheModel
 		                        if (res.next())
 		                        {
 		                            chunk++;
-									switch(posFilter.accept(res, parallelPosSearch ? (int GId)->addResult(GId) : null))
+									switch(posFilter.accept(res, (chunk%4==0) ? acceptCallback : null))
 									{
 										case REJECT:	break;
 										case WAIT:		/*will call back asynchroneously*/ break;
@@ -441,8 +443,8 @@ abstract public class IntervalCacheModel
 										System.err.println(time/1000.0+"s"
 															+"; result rows="+rowCount
 															+"; result set size="+chunk
-															+"; parallel="+parallelPosSearch+
-															"; queue watermark="+PositionFilter.executorPool.getQueueWatermark()+"]");
+															+"; pll jobs="+PositionFilter.executorPool.jobCount
+															+"; queue watermark="+PositionFilter.executorPool.getQueueWatermark()+"]");
 
 										min = max = current = -1;
 		                                status = REFRESH;

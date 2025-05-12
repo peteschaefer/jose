@@ -88,17 +88,14 @@ public class PositionFilter
     {
         PositionFilter that = new PositionFilter(false);
 		that.pos = this.pos;	//	don't clone Position, right?? or not?
-//		that.searchKey = (this.searchKey==null) ? null : (HashKey)this.searchKey.clone();
-//		that.searchKeyReversed = (this.searchKeyReversed==null) ? null : (HashKey)this.searchKeyReversed.clone();
-//		that.searchSig = (this.searchSig==null) ? null : (MatSignature)this.searchSig.clone();
-		this.cloneInto(that);
+		this.copySearchParams(that);
 		return that;
     }
 
-	private void cloneInto(PositionFilter that)
+	public void copySearchParams(PositionFilter that)
 	{
-		that.targetSig = (this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.targetSigReversed = (this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
+		that.targetSig = this.targetSig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
+		that.targetSigReversed = this.targetSigReversed; //(this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
 		that.targetKey = this.targetKey;
 		that.targetKeyReversed = this.targetKeyReversed;
 		that.searchVariations = this.searchVariations;
@@ -112,7 +109,7 @@ public class PositionFilter
 		searchVariations = false;
 	}
 
-	public static JoThreadPool executorPool = new JoThreadPool<PosFilterJob>(16000000);
+	public static JoThreadPool executorPool = new JoThreadPool<PosFilterJob>(64000);
 	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
 		@Override
 		protected PositionFilter initialValue() { return new PositionFilter(); }
@@ -121,7 +118,7 @@ public class PositionFilter
 	public PositionFilter getFilterLike()
 	{
 		PositionFilter pf = pooledFilter.get();
-		this.cloneInto(pf);
+		this.copySearchParams(pf);
 		return pf;
 	}
 

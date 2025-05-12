@@ -79,18 +79,23 @@
     [ ] benchmark
         - ResultSet traversal is **cheap** [2.6M = 0.49 s]
         - BinReader [2.6M = 0.46 s .. 6.4 s] dominates, in particular for **late** positions
-        - parallelisation overhead [2.6M = 8.2 s] is expensive; not worth for **early**positions
+        - parallelisation overhead [2.6M = 8.2 s] is heavy; not worth for **early**positions
        --> parallelisation only favorable for **late** positions
        --> stored MatSignature might help **late** positions, too
        --> db-evaluated MatSignature might be less important
 [ ] Mat Signature in DB
     [x] Crossover 1010
     [ ] Crossover Archive files (old ones and downloadable ones)
-    [ ] store with new/modified/imported Games
+    [ ] store with Games (whichever modifies MoreGame.Bin must also set MoreGame.xxxSignature)
+         [ ] pgn import
+         [ ] archive import (backwards compatible!)
+         [ ] save document
+         [ ] copy game
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
-        todo get exact figures
-
+        todo get better figures
+[ ] heuristics? single-threaded for opening positions, pll for endgame?
+[ ] better pool? but how?
 
 ==== Interesting New Features
 
@@ -108,6 +113,8 @@
 * Search Pawn Structure
     - mode on Zobrist keys
     - Pawn Mat Signature: extract from existing
+* Material searches ("knight vs 2 pawns")
+     should be easy to do with MatSignature and a small amount of bit-twiddling
 
 * Store MatSignature in DB
     - speeds up Position search

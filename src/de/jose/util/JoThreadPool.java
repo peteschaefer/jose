@@ -12,7 +12,7 @@ import java.util.concurrent.*;
 public class JoThreadPool<R extends Runnable> extends ThreadPoolExecutor
 {
     public JoThreadPool(int queueCapacity) {
-        this(Runtime.getRuntime().availableProcessors()-1, queueCapacity);
+        this(Runtime.getRuntime().availableProcessors()/2-1, queueCapacity);
     }
 
     public JoThreadPool(int poolSize, int queueCapacity) {
@@ -22,10 +22,12 @@ public class JoThreadPool<R extends Runnable> extends ThreadPoolExecutor
 
     private Thread closingThread = null;
     private int queueWatermark = 0;
+    public long jobCount = 0;
 
     @Override
     public Future<?> submit(Runnable task) {
         Future<?> result = super.submit(task);
+        jobCount++;
         if (getQueue().size() > queueWatermark) queueWatermark = getQueue().size();
         return result;
     }
@@ -34,6 +36,7 @@ public class JoThreadPool<R extends Runnable> extends ThreadPoolExecutor
     {
         getQueue().clear();
         queueWatermark = 0;
+        jobCount = 0;
     }
 
     public int getQueueWatermark() {
