@@ -52,6 +52,9 @@ abstract public class IntervalCacheModel
     public static final int HALTED                  = 7;
 	public static final int FINISHED                = 8;
 
+	private static boolean parallelPosSearch=true;
+
+
 	class StatementExecutor extends Thread
 	{
 		protected JoConnection conn;
@@ -278,7 +281,7 @@ abstract public class IntervalCacheModel
                 for (;;) {
                     switch (status) {
                     case HALTED:
-						PositionFilter.abortJobs();
+						PositionFilter.executorPool.abort();
 
                         min = max = current = -1;
                         status = WAITING;
@@ -322,6 +325,10 @@ abstract public class IntervalCacheModel
                         if (res != null) res.close();
                         pkStatement.setLimit(min-1, (max < 0) ? -1 : (max-min));
 
+						startTime = System.currentTimeMillis();
+						PositionFilter.executorPool.reset();
+						parallelPosSearch = !parallelPosSearch;	//	for debugging purposes only
+
 //						startTime = System.currentTimeMillis();
 	                    if (max > 0 && max < Integer.MAX_VALUE/2) {
 		                    try {
@@ -330,7 +337,7 @@ abstract public class IntervalCacheModel
 			                    pstm = pkStatement.toPreparedStatement(synch_conn);
 			                    if (synch_conn.isConnectorJ())
 			                        pstm.setFetchSize(0);	//	hint to Connector/J driver: fetch complete set
-//			                    System.out.println(pkStatement.toString());
+								System.err.println("["+pkStatement.toString()+" ");
 			                    pstm.execute();
 //		                    Util.printTime("synch. execute",startTime);
 		                    } catch (SQLException e) {
@@ -348,7 +355,7 @@ abstract public class IntervalCacheModel
 			                    //  read the result
 			                    status = EXECUTED;
 //			                    System.out.println("EXECUTED (5)");
-	                    }
+	                    	}
 	                    }
 	                    else {
 		                    //  execute is expensive: do it in parallel thread
@@ -366,6 +373,7 @@ abstract public class IntervalCacheModel
                              * - execute it in the StatemenExecutor thread
                              */
                             pstm = null;    //  will be created by StatementExecutor
+							System.err.println("["+pkStatement.toString()+" ");
 		                    executor.execute(pkStatement);
 
 		                    if (status!=HALTED) {
@@ -399,7 +407,7 @@ abstract public class IntervalCacheModel
 		                        if (res.next())
 		                        {
 		                            chunk++;
-									switch(posFilter.accept(res, (int GId)->addResult(GId)))
+									switch(posFilter.accept(res, parallelPosSearch ? (int GId)->addResult(GId) : null))
 									{
 										case REJECT:	break;
 										case WAIT:		/*will call back asynchroneously*/ break;
@@ -426,7 +434,13 @@ abstract public class IntervalCacheModel
 		                            else {
 		                                //  results exhausted
 										//	wait for PosFilterPool to finish queries
-										PositionFilter.waitFinished();
+										PositionFilter.executorPool.finish();
+										long time = System.currentTimeMillis() - startTime;
+										System.err.println(time/1000.0+"s"
+															+"; result rows="+rowCount
+															+"; result set size="+chunk
+															+"; parallel="+parallelPosSearch+
+															"; queue watermark="+PositionFilter.executorPool.getQueueWatermark()+"]");
 
 										min = max = current = -1;
 		                                status = REFRESH;
@@ -482,6 +496,7 @@ abstract public class IntervalCacheModel
 
     /** the statement used to retrieve primary keys */
     protected ParamStatement pkStatement;
+	protected long startTime;
 	/** position search filter  */
 	protected PositionFilter posFilter;
 

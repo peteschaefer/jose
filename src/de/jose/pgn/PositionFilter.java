@@ -16,6 +16,7 @@ import de.jose.chess.HashKey;
 import de.jose.chess.MatSignature;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
+import de.jose.util.JoThreadPool;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -110,40 +111,11 @@ public class PositionFilter
 		searchVariations = false;
 	}
 
-	private static ArrayBlockingQueue executorQueue = new ArrayBlockingQueue<>(16000000);
-	private static ThreadPoolExecutor executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
+	public static JoThreadPool executorPool = new JoThreadPool<PosFilterJob>(16000000);
 	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
 		@Override
 		protected PositionFilter initialValue() { return new PositionFilter(); }
 	};
-
-	public static void waitFinished()
-	{
-		if ((executorPool.getActiveCount()+executorQueue.size())==0) return;
-		try {
-			executorPool.shutdown();
-            executorPool.awaitTermination(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            // ok, we tried
-			System.err.println("PositionFilter wait interrupted");
-        } finally {
-			//	todo find a way to reset the pool to working state; w/out creating it from scratch!
-			executorQueue.clear();
-			executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
-		}
-    }
-
-	public static void abortJobs()
-	{
-		executorQueue.clear();
-		if (executorPool.getActiveCount()==0) return;
-		//	todo BinReader.eof=true for all waiting jobs?
-		try {
-			executorPool.shutdownNow();
-		} finally {
-			executorPool = new ThreadPoolExecutor(7, 7, 0L, TimeUnit.MILLISECONDS, executorQueue);
-		}
-	}
 
 	public PositionFilter getFilterLike()
 	{
