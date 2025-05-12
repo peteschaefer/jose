@@ -76,12 +76,23 @@
     - mixed results. little speedup on early position. Speedup ~2 on later positions.
     -> more research needed
     [x] missing results? fireTableRowsInserted missed?
-    [ ] Job: quick abort (BinReader.eof)
-    [ ] Job: clean shutdown w/out having to re-create the pool
+    [-] Job: quick abort (BinReader.eof)
+    [x] Job: clean shutdown w/out having to re-create the pool
     [ ] benchmark
-        - ResultSet traversal
-        - BinReader
-        - parallelisation overhead
+        - ResultSet traversal is **small** [2.6M = 0.49 s]
+        - BinReader [2.6M = 0.46 s .. 6.4 s] dominates, in particular for **late** positions
+        - parallelisation overhead [2.6M = 8.2 s] is big; not worth for **early**positions
+       --> parallelisation only favorable for **late** positions
+       --> stored MatSignature might help **late** positions, too
+       --> db-evaluated MatSignature might be less important
+[ ] Mat Signature in DB
+    [x] Crossover 1010 (sloow :(
+    [ ] Crossover Archive files
+    [ ] store with new/modified/imported Games
+    [ ] use with PosFilter. How is the selectivity for?
+        about 50% for late positions (parallel=false)
+        todo get exact figures
+
 
 ==== Interesting New Features
 

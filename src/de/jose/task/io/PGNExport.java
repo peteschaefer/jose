@@ -504,7 +504,7 @@ public class PGNExport
 	    byte[] comments = res.getBytes(i++);
 
 	    try {
-			binReader.read(bin,0, comments,0, fen,true);
+			binReader.read(bin,0, comments,0, fen,true,true);
 	    } catch (RuntimeException rex) {
 			//	replay error
 		    out.println();
@@ -643,7 +643,7 @@ public class PGNExport
 	    byte[] comments = writer.getComments();
 
 	    try {
-			binReader.read(bin,0, comments,0, fen,true);
+			binReader.read(bin,0, comments,0, fen,true,true);
 	    } catch (RuntimeException rex) {
 			//	replay error
 		    out.println();

@@ -524,7 +524,7 @@ public class LineNode
         reader.pos.setOption(Board.CHECK, true);
 	    reader.pos.setOption(Board.STALEMATE, true);
 
-	    reader.read(bin,boffset, comments,coffset, fen,replay);
+	    reader.read(bin,boffset, comments,coffset, fen,replay,true);
 
 	    reader.pos.setOptions(oldOptions);
     }
@@ -600,7 +600,7 @@ public class LineNode
 	    pos.setOption(Board.CHECK, true);
 		pos.setOption(Board.STALEMATE, true);
 
-		reader.read(bin,boffset, comments,coffset, fen,true);
+		reader.read(bin,boffset, comments,coffset, fen,true,true);
 
 		pos.setOptions(oldOptions);
 	}

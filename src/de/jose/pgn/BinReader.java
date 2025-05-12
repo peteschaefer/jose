@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ abstract public class BinReader
 
     public void read(byte[] binary, int startOffset,
                      byte[] comments, int coffset,
-                     String fen, boolean replay)
+                     String fen, boolean replay, boolean reset)
     {
         bin = binary;
         offset = startOffset;
@@ -103,6 +103,7 @@ abstract public class BinReader
 	    hasErrors = false;
 	    hasResult = false;
 	    result = PgnConstants.RESULT_UNKNOWN;
+        if (bin==null) eof = true;
 
         while (!eof) {
             short code = (short)((short)bin[offset++] & 0x00ff);
@@ -239,7 +240,8 @@ abstract public class BinReader
         }
 
 		endOfLine(0);
-        pos.reset();
+        if (reset)
+            pos.reset();
     }
 
 	public boolean hasVariations() {

@@ -35,6 +35,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.BitSet;
 
+import static de.jose.pgn.PositionFilter.PASS_FILTER;
+
 //import com.mysql.embedded.jdbc.MySqlError;
 
 
@@ -575,7 +577,7 @@ abstract public class IntervalCacheModel
 			//  (b) don't require too many expensive queries
 			reader.fired = 0;
 
-			if (posFilter==null || posFilter==PositionFilter.PASS_FILTER)
+			if (posFilter==null || posFilter== PASS_FILTER)
 				reader.reset(1,intvalSize+1,true); //  fetch some rows, then all the rest
 			else
 				reader.reset(1,Integer.MAX_VALUE/2,true); //  fetch all rows

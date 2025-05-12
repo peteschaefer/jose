@@ -449,7 +449,8 @@ public class SearchRecord implements Cloneable
 //		System.out.println(sql.toString());
 
 		if (!posFilter.isEmpty())
-			sql.select.append(", MoreGame.FEN, MoreGame.Bin");
+			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, "+
+								" MoreGame.WhiteSignature, MoreGame.BlackSignature");
 
 		return sql;
 	}

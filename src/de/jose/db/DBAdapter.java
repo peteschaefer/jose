@@ -395,6 +395,19 @@ abstract public class DBAdapter
 			return result.booleanValue();
 	}
 
+	public boolean existsColumn(String schema, String table, String column) throws SQLException {
+		JoConnection conn = null;
+		ResultSet res = null;
+		try {
+			conn = JoConnection.get();
+			res = conn.getMetaData().getColumns(null,schema,table,column);
+			return res.next();
+		} finally {
+			if (res != null) res.close();
+			if (conn!=null) conn.release();
+		}
+	}
+
 	/**	does the database understand the UNIQUE constraint ?	 */
 	public final boolean canUnique()					{ return can("unique"); }
 	/**	does the database understand the REFERNCES constraint ?	 */
@@ -687,6 +700,12 @@ abstract public class DBAdapter
 			if (version < 1009)
 				try {
 					version = Crossover1009.crossOver(version,connection,config);
+				} catch (Exception e) {
+					Application.error(e);
+				}
+			if (version < 1010)
+				try {
+					version = Crossover1010.crossOver(version,connection,config);
 				} catch (Exception e) {
 					Application.error(e);
 				}

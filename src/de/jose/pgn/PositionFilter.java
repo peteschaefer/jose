@@ -12,7 +12,6 @@
 
 package de.jose.pgn;
 
-import de.jose.chess.HashKey;
 import de.jose.chess.MatSignature;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
@@ -20,9 +19,6 @@ import de.jose.util.JoThreadPool;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.util.Vector;
-import java.util.concurrent.*;
 import java.util.function.IntConsumer;
 
 
@@ -65,6 +61,11 @@ public class PositionFilter
 //		searchKeyReversed = pos.getReversedHashKey();
 //		searchSig = pos.getMatSig();
 
+		setPosOptions();
+	}
+
+	protected void setPosOptions()
+	{
 		//  calculate hash keys & material signature
 		pos.setOption(Position.INCREMENT_HASH,true);
 		pos.setOption(Position.INCREMENT_REVERSED_HASH,true);
@@ -83,7 +84,7 @@ public class PositionFilter
 	}
 
 
-    public Object clone()
+	public Object clone()
     {
         PositionFilter that = new PositionFilter(false);
 		that.pos = this.pos;	//	don't clone Position, right?? or not?
@@ -169,7 +170,7 @@ public class PositionFilter
 		@Override
 		public void run() {
 			PositionFilter pf = query.getFilterLike();
-			Result rs = pf.accept(fen, bin);
+			Result rs = pf.accept(fen, bin, null);	//	note MatSignature already checked
 			if (rs == Result.ACCEPT) callback.accept(GId);
 		}
 	}
@@ -180,6 +181,10 @@ public class PositionFilter
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
 		byte[] bin = res.getBytes(3);
+
+		MatSignature gameEndSig = new MatSignature(res.getLong(4),res.getLong(5));
+		if (!targetSig.canReach(gameEndSig)) return Result.REJECT;
+
 		//bin = bin.clone();	//	just in case that the driver returns a mutable value
 
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
@@ -192,24 +197,20 @@ public class PositionFilter
 		}
 		else {
 			//	do it now
-			return accept(fen, bin);
+			return accept(fen, bin, null);
 		}
 	}
 
-	public Result accept(String fen, byte[] bin)
+	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-/*	TODO
-	it would be great if the final MatSignatures were stored in the database.
-	we could do early cut-offs before even reading the game. Especially for endgame positions.
-	We could do filtering with server-side database functions.
-	But it is not so. Yet. Introducing new columns, populating and backporting (archive files) is quite some  work.
-	So, in the meantine, we inspect every result row.
- */
+		if (gameEndSig!=null && !targetSig.canReach(gameEndSig)) return Result.REJECT;
+
 		result = Result.REJECT;	// unless...
 		ignoreLine = inLine = false;
-		read(bin,0, null,0, fen,true);
+		read(bin,0, null,0, fen,true,true);
 		//  read will call back to (BinReader)this
+		//	note: reset==false keeps the final position
 		return result;
 	}
 
@@ -225,12 +226,20 @@ public class PositionFilter
 	private void checkCutOff()
 	{
 		/** check material signature for early cut-off */
-		if (!pos.getMatSig().canReach(targetSig) &&
+		if (!getMatSig().canReach(targetSig) &&
 		    (targetSigReversed==null || !pos.getMatSig().canReach(targetSig))) {
 			eof = true; //  signature cut-off
 			result = Result.REJECT;
 		}
 	}
+
+	public MatSignature getMatSig()
+	{
+		if (!pos.hasOption(Position.INCREMENT_SIGNATURE))
+			pos.computeMatSig();
+		return pos.getMatSig();
+	}
+
 
 	//  BinReader callback methods:
 

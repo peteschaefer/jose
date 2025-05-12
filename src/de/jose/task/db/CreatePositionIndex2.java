@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import java.sql.SQLException;
     + easy search (simply add a clause: MATCH ... AGAINST)
     - storage requirement about 2.2KB per game
 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 public class CreatePositionIndex2
         extends MaintenanceTask
@@ -182,7 +182,7 @@ public class CreatePositionIndex2
                 mainOut.setLength(0);
                 varOut.setLength(0);
 
-                reader.read(bin,0, null,0, fen,true);
+                reader.read(bin,0, null,0, fen,true,true);
 
                 Game.updatePositionIndex(getConnection(), GId,
                         mainOut.getValue(),mainOut.length(),

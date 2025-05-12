@@ -4,7 +4,7 @@
 		<!--	Database Definition	-->
 		<!-- - - - - - - - - - - -  -->
 		<NAME> MAIN </NAME>
-		<VERSION> 1009 </VERSION>
+		<VERSION> 1010 </VERSION>
 		<TABLE>
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!--	Opening Index (maps positions to opening codes and names)  -->
@@ -464,7 +464,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<TABLE>
 			<NAME> MoreGame </NAME>
-			<VERSION> 102 </VERSION>
+			<VERSION> 103 </VERSION>
 			<COLUMN>
 				<NAME> GId </NAME>
 				<TYPE> INTEGER </TYPE>
@@ -512,68 +512,23 @@
 				<!-- non-standard PGN tags
 			         list of "key=value", separated by semicolons
 			     -->
-				<NAME> Info </NAME>
+				<NAME> Info </NAME>w
 				<TYPE> VARCHAR </TYPE>
 				<SIZE> 255 </SIZE>
 				<INDEX/>
 			</COLUMN>
-<!--
-			TODO storing MatSignatures would improve position search.
-			We could filter in the SQL statement.
-			We could even implement the MatSignature relation server-side (with custom functions).
-			But populating the columns and cross-over existing dbs and archives is some work to do.
-
 			<COLUMN>
-				<!- - number of white pieces in final position - ->
-				<!- - redundant. can be bit-twiddled from MatSignature - ->
-				<NAME> WhiteCount </NAME>
-				<TYPE> TINYINT </TYPE>
-				<INDEX/>
-			</COLUMN>
-			<COLUMN>
-				<!- - number of black pieces in final position - ->
-				<!- - redundant. can be bit-twiddled from MatSignature - ->
-				<NAME> BlackCount </NAME>
-				<TYPE> TINYINT </TYPE>
-				<INTDEX/>
-			</COLUMN>
-			<COLUMN>
-				<!- - number of white pawns in final position - ->
-				<!- - redundant. can be bit-twiddled from MatSignature - ->
-				<NAME> WhitePawnCount </NAME>
-				<TYPE> TINYINT </TYPE>
-				<INDEX/>
-			</COLUMN>
-			<COLUMN>
-				<!- - number of black pawns in final position - ->
-				<!- - redundant. can be bit-twiddled from MatSignature - ->
-				<NAME> BlackPawnCount </NAME>
-				<TYPE> TINYINT </TYPE>
-				<INTDEX/>
-			</COLUMN>
-			<COLUMN>
-				<!- - material signature in final position (requires 54 bits) - ->
+				<!-- material signature in final position (requires 54 bits) -->
 				<NAME> WhiteSignature </NAME>
 				<TYPE> BIGINT </TYPE>
+				<NOT_NULL/>
 			</COLUMN>
 			<COLUMN>
-				<!- - material signature in final position (requires 54 bits) - ->
+				<!-- material signature in final position (requires 54 bits) -->
 				<NAME> BlackSignature </NAME>
 				<TYPE> BIGINT </TYPE>
+				<NOT_NULL/>
 			</COLUMN>
-			<COLUMN>
-				<!- - pawn signature in final position - ->
-				<!- - redundant. already contained in MatSignature - ->
-				<NAME> WhitePawnSignature </NAME>
-				<TYPE> BIGINT </TYPE>
-			</COLUMN>
-			<COLUMN>
-				<NAME> BlackPawnSignature </NAME>
-				<TYPE> BIGINT </TYPE>
-			</COLUMN>
-			<!- - idea: store not only MatSignature for end position, but
-				after 5,10,20 moves. Allows to filter opening positions, too. - ->
--->			
 			<COLUMN>
 				<!-- the actual game lines and variations -->
 				<NAME> Bin </NAME>
