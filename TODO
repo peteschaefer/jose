@@ -83,14 +83,16 @@
        --> parallelisation only favorable for **late** positions
        --> stored MatSignature might help **late** positions, too
        --> db-evaluated MatSignature might be less important
+
 [ ] Mat Signature in DB
     [x] Crossover 1010
-    [ ] Crossover Archive files (old ones and downloadable ones)
     [ ] store with Games (whichever modifies MoreGame.Bin must also set MoreGame.xxxSignature)
          [ ] pgn import
          [ ] archive import (backwards compatible!)
-         [ ] save document
-         [ ] copy game
+         [ ] archive export
+         [ ] save Game
+         [ ] copy games
+    [ ] Crossover Archive files (old ones and downloadable ones)
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get better figures

@@ -15,6 +15,7 @@ package de.jose.pgn;
 import de.jose.Application;
 import de.jose.Version;
 import de.jose.chess.BinaryConstants;
+import de.jose.chess.MatSignature;
 import de.jose.chess.Position;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
@@ -79,6 +80,7 @@ public class GameBuffer
 		public String ECO;
 		/** MoreGame Fields     */
 		public StringBuffer More;
+		public MatSignature signature = new MatSignature();
 		public int binLen;
         public int commentsLen;
 		//	two buffers for GameText: one used by preparedStatement, one by reader thread
@@ -151,7 +153,7 @@ public class GameBuffer
 
 	public static final String SQL_INSERT_2 =
 //          %DELAYED% ?
-		"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments) "+
+		"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments) "+
 		" VALUES ";
 	public static final int COUNT_VALUES_2 = 9;
 
@@ -264,6 +266,7 @@ public class GameBuffer
 
         r.binLen = parser.getBinLength();
         r.commentsLen = parser.getCommentsLength();
+		r.signature = parser.pos.getMatSig().cloneSig();	// right?
 
         r.Bin[r.binLen++] = (byte)SHORT_END_OF_DATA;
         r.PlyCount = parser.pos.ply();
@@ -370,6 +373,7 @@ public class GameBuffer
 		r.More = null;
 		r.binLen = 0;
 		r.commentsLen = 0;
+		r.signature.clear();
 
 		for (int i=0; i<r.sid.length; i++) {
 			r.sid[i] = 0;
@@ -426,6 +430,8 @@ public class GameBuffer
         pstm2.setString			(p2++, r.Board);
         pstm2.setString			(p2++, r.FEN);
 		pstm2.setString			(p2++, r.More);
+		pstm2.setLong			(p2++, r.signature.wsig);
+		pstm2.setLong			(p2++, r.signature.bsig);
 
         if (r.binLen==0)
             pstm2.setNull           (p2++, Types.LONGVARBINARY);

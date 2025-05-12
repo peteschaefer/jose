@@ -230,8 +230,7 @@ public class PositionFilter
 
 	public MatSignature getMatSig()
 	{
-		if (!pos.hasOption(Position.INCREMENT_SIGNATURE))
-			pos.computeMatSig();
+		pos.updateMatSig();
 		return pos.getMatSig();
 	}
 

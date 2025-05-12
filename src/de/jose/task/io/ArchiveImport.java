@@ -13,6 +13,7 @@
 package de.jose.task.io;
 
 import de.jose.Application;
+import de.jose.db.crossover.Crossover1010;
 import de.jose.task.TaskAbortedException;
 import de.jose.task.db.CheckDBTask;
 import de.jose.util.Metaphone;
@@ -175,7 +176,7 @@ public class ArchiveImport
 	    copyNames("Opening");
 	    setProgress(0.35);
 
-	    gameCount = copyGame();
+	    gameCount = copyGame(inputVersion);
 
 
 	    //  enable keys; we can do it safely since here we are in a separate thread
@@ -233,8 +234,9 @@ public class ArchiveImport
 
 	    int count = 0;
 	    try {
-		String sql=    "INSERT INTO "+tempdb+".Map_Collection " +
-				    " SELECT Import.Id AS OId, @NextId:=(@NextId+1) AS NId " +
+		String sql=
+				"INSERT INTO "+tempdb+".Map_Collection " +
+				" SELECT Import.Id AS OId, @NextId:=(@NextId+1) AS NId " +
 				" FROM "+tempdb+".IO_Collection AS Import";
 
 		    nextCId = Collection.getSequence(connection);
@@ -367,7 +369,7 @@ public class ArchiveImport
 		return count;
 	}
 
-	protected int copyGame() throws Exception
+	protected int copyGame(int inputVersion) throws Exception
     {
 //	    System.out.print("[Game ");
 
@@ -409,16 +411,30 @@ public class ArchiveImport
 			throwAborted();
 			setProgress(0.50);
 
-			sql =
-				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,Bin," +
+			if (inputVersion >= 1010)
+				sql =
+				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,"+
+				"	  WhiteSignature, BlackSignature, Bin," +
 				"     Comments,PosMain,PosVar,Eval) "+
 				" SELECT @NextId:=(@NextId+1) AS GId," +
-				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info,Bin,Comments, PosMain,PosVar,Eval"+
+				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, WhitSignature,BlackSignature, "+
+				"        Bin,Comments, PosMain,PosVar,Eval"+
 				" FROM "+tempdb+".IO_Game ";
+			else
+				sql =
+				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,"+
+						"	  Bin, Comments,PosMain,PosVar,Eval) "+
+						" SELECT @NextId:=(@NextId+1) AS GId," +
+						"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+
+						"        Bin,Comments, PosMain,PosVar,Eval"+
+						" FROM "+tempdb+".IO_Game ";
 
 			connection.executeUpdate("SET @NextId="+(nextId-1));
 			connection.executeUpdate(sql);
 		    throwAborted();
+
+			if (inputVersion < 1010)
+				Crossover1010.fillMatSignatures(connection);
 
 	    } catch (SQLException e)
 	    {

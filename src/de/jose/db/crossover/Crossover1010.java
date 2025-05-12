@@ -112,7 +112,7 @@ public class Crossover1010
 			pos.setOption(Position.INCREMENT_HASH,false);
 			pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
 			//	no need for incremental signature
-			pos.setOption(Position.INCREMENT_SIGNATURE,false);
+			pos.setOption(Position.INCREMENT_SIGNATURE,true);
 			//	TODO Pawn Hash
 			//  don't calculate castling & ep privileges (cause they are not known in the target position)
 		}

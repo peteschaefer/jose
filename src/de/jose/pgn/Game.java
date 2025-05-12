@@ -1409,6 +1409,8 @@ public class Game
         stm.setString(i++,     (String)getTagValue(TAG_FEN));
         stm.setString(i++,     getMoreInfo());
 		if (writer != null) {
+			stm.setLong(i++,    writer.pos.getMatSig().wsig);	//	right?
+			stm.setLong(i++, 	writer.pos.getMatSig().bsig);
 			stm.setBytes(i++,      writer.getText());
 			stm.setBytes(i++,      writer.getComments());
 
@@ -1513,7 +1515,7 @@ public class Game
         String sql2 =   "UPDATE MoreGame "+
                         " SET WhiteTitle=?,BlackTitle=?,Round=?,Board=?,FEN=?,Info=? ";
 		if (withData) {
-			sql2 += ",Bin=?,Comments=?,PosMain=?,PosVar=?,Eval=? ";
+			sql2 += ",WhiteSignature=?,BlackSignature=?,Bin=?,Comments=?,PosMain=?,PosVar=?,Eval=? ";
 		}
 		sql2	+=      " WHERE GId = ?";
 

@@ -663,7 +663,7 @@
         <!--	Import/Export Schema	-->
         <!-- - - - - - - - - - - -  -->
         <NAME> IO </NAME>
-        <VERSION> 1003 </VERSION>
+        <VERSION> 1004 </VERSION>
         <TABLE pack="true">
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <!--	Opening Index (maps positions to opening codes and names)  -->
@@ -816,7 +816,7 @@
         <TABLE pack="true">
             <!-- models a single game in a pgn file -->
             <NAME> IO_Game </NAME>
-            <VERSION> 102 </VERSION>
+            <VERSION> 103 </VERSION>
 <!--
             <COLUMN>
                 <! - - primary key - - >
@@ -967,6 +967,16 @@
                 <TYPE> VARCHAR </TYPE>
                 <SIZE> 255 </SIZE>
             </COLUMN>
+			<COLUMN>
+				<NAME> WhiteSignature </NAME>
+				<TYPE> BIGINT </TYPE>
+				<NOT_NULL/>
+			</COLUMN>
+			<COLUMN>
+				<NAME> BlackSignature </NAME>
+				<TYPE> BIGINT </TYPE>
+				<NOT_NULL/>
+			</COLUMN>
             <COLUMN>
                 <!-- the actual game lines and variations -->
                 <NAME> Bin </NAME>

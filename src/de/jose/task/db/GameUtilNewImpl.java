@@ -71,8 +71,8 @@ public class GameUtilNewImpl extends GameUtil
 
 		/*	copy from MoreGame to MoreGame		*/
 	    String sql4 =
-	        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments) "+
-			" SELECT "+newGId+",WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments "+
+	        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments) "+
+			" SELECT "+newGId+",WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments "+
 			" FROM MoreGame WHERE GId = "+oldGId;
 		connection.executeUpdate(sql4);
 
@@ -126,8 +126,8 @@ public class GameUtilNewImpl extends GameUtil
 
 	    /*	copy more_game  */
 	    String sql5 =
-	        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments) "+
-	        " SELECT @newId:=@newId+1, WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments "+
+	        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments) "+
+	        " SELECT @newId:=@newId+1, WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments "+
 	        " FROM MoreGame, Game "+
 	        " WHERE MoreGame.GId = Game.Id AND Game.CId = "+CId+
 	        " ORDER BY Game.Idx,Id";
@@ -191,8 +191,8 @@ public class GameUtilNewImpl extends GameUtil
 
 		/** Copy from MoreGame INTO MoreGame */
 		StringBuffer sql4 = new StringBuffer(
-		        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments) "+
-		        " SELECT @newId:=@newId+1, WhiteTitle,BlackTitle,Round,Board,FEN,Info,Bin,Comments "+
+		        "INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments) "+
+		        " SELECT @newId:=@newId+1, WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments "+
 		        " FROM MoreGame, Game" +
                 " WHERE MoreGame.GId = Game.Id " +
                 "   AND Game.Id IN (");
