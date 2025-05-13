@@ -89,7 +89,7 @@
     [ ] store with Games (whichever modifies MoreGame.Bin must also set MoreGame.xxxSignature)
          [ ] pgn import
             [x] fix bad move code
-            [ ] fix in Gigabase. Manually?
+            [ ] fix in Gigabase. Import from PGN. Replace MoreGame.Bin,WhiteSignature,BlackSignature.
             [x] fix matsignature at end
          [x] archive import 1008
          [x] archive export
