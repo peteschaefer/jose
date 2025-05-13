@@ -155,7 +155,7 @@ public class GameBuffer
 //          %DELAYED% ?
 		"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle,Round,Board,FEN,Info,WhiteSignature,BlackSignature,Bin,Comments) "+
 		" VALUES ";
-	public static final int COUNT_VALUES_2 = 9;
+	public static final int COUNT_VALUES_2 = 11;
 
 
 	//-------------------------------------------------------------------------------
