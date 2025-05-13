@@ -417,7 +417,7 @@ public class ArchiveImport
 				"	  WhiteSignature, BlackSignature, Bin," +
 				"     Comments,PosMain,PosVar,Eval) "+
 				" SELECT @NextId:=(@NextId+1) AS GId," +
-				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, WhitSignature,BlackSignature, "+
+				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, WhiteSignature,BlackSignature, "+
 				"        Bin,Comments, PosMain,PosVar,Eval"+
 				" FROM "+tempdb+".IO_Game ";
 			else
