@@ -266,7 +266,7 @@ public class GameBuffer
 
         r.binLen = parser.getBinLength();
         r.commentsLen = parser.getCommentsLength();
-		r.signature = parser.pos.getMatSig().cloneSig();	// right?
+		r.signature = parser.pos.computeMatSig().cloneSig();
 
         r.Bin[r.binLen++] = (byte)SHORT_END_OF_DATA;
         r.PlyCount = parser.pos.ply();

@@ -158,9 +158,10 @@ public class Position
 		computeHashKey(theReversedHashKey);
 	}
 
-	public void computeMatSig()
+	public MatSignature computeMatSig()
 	{
 		theMatSignature.setBoard(this);
+		return theMatSignature;
 	}
 
 	public void computeHashCount()
