@@ -411,23 +411,16 @@ public class ArchiveImport
 			throwAborted();
 			setProgress(0.50);
 
+			String withSignature="";
 			if (inputVersion >= 1010)
-				sql =
-				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,"+
-				"	  WhiteSignature, BlackSignature, Bin," +
-				"     Comments,PosMain,PosVar,Eval) "+
+				withSignature = "WhiteSignature, BlackSignature, ";
+			sql =
+				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
+				"     Bin, Comments,PosMain,PosVar,Eval) "+
 				" SELECT @NextId:=(@NextId+1) AS GId," +
-				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, WhiteSignature,BlackSignature, "+
+				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
 				"        Bin,Comments, PosMain,PosVar,Eval"+
 				" FROM "+tempdb+".IO_Game ";
-			else
-				sql =
-				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info,"+
-						"	  Bin, Comments,PosMain,PosVar,Eval) "+
-						" SELECT @NextId:=(@NextId+1) AS GId," +
-						"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+
-						"        Bin,Comments, PosMain,PosVar,Eval"+
-						" FROM "+tempdb+".IO_Game ";
 
 			connection.executeUpdate("SET @NextId="+(nextId-1));
 			connection.executeUpdate(sql);

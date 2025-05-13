@@ -91,12 +91,12 @@
             [x] fix bad move code
             [ ] fix in Gigabase. Manually?
             [x] fix matsignature at end
-         [ ] archive import 1009
-         [ ] archive export
-         [ ] archive import 1010
-         [ ] save Game
-         [ ] copy games
-    [ ] Crossover Archive files (read 1009, write 1010)
+         [x] archive import 1008
+         [x] archive export
+         [x] archive import 1010
+         [x] save Game
+         [x] copy games
+    [ ] Crossover Archive files (read 1008, write 1010)
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get better figures
