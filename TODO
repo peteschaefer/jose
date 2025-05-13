@@ -88,11 +88,15 @@
     [x] Crossover 1010
     [ ] store with Games (whichever modifies MoreGame.Bin must also set MoreGame.xxxSignature)
          [ ] pgn import
-         [ ] archive import (backwards compatible!)
+            [x] fix bad move code
+            [ ] fix in Gigabase. How?
+            [ ] fix matsignature at end
+         [ ] archive import 1009
          [ ] archive export
+         [ ] archive import 1010
          [ ] save Game
          [ ] copy games
-    [ ] Crossover Archive files (old ones and downloadable ones)
+    [ ] Crossover Archive files (read 1009, write 1010)
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get better figures
@@ -116,7 +120,7 @@
     - mode on Zobrist keys
     - Pawn Mat Signature: extract from existing
 * Material searches ("knight vs 2 pawns")
-     should be easy to do with MatSignature and a small amount of bit-twiddling
+    - should be easy to do with MatSignature and a small amount of bit-twiddling
 
 * Store MatSignature in DB
     - speeds up Position search

@@ -362,6 +362,7 @@ public class Position
 
 			if(move.isPromotion()) {
 				frame.promoted = getUnpromotedPiece(movesNext()+move.getPromotionPiece());
+				frame.promotedOldPawnFile = frame.promoted.pawnFile;
 				frame.promoted.setSquare(move.to);
 
 	            int pawnFile = FILE_A+move.moving.listIndex();
@@ -451,7 +452,7 @@ public class Position
 				frame.promoted.setVacant();	//	mark for reuse
 
 	            int pawnFile = frame.promoted.getPawnFile();
-				frame.promoted.setPawnFile(0);
+				frame.promoted.setPawnFile(frame.promotedOldPawnFile);	//	maybe this piece had a valid pawn file before !!
 	            setPromoPiece(movedLast(), pawnFile, null);
 
 				frame.promoted = null;
