@@ -72,6 +72,9 @@
         - record edits in list
 
 
+[ ] order by Round: numeric instead of alpha
+[ ] search for Year (fill in 1.1.xxxx automatically)
+
 [ ] Parallel Position Search
     - mixed results. little speedup on early position. Speedup ~2 on later positions.
     [-] Job: quick abort (BinReader.eof)
@@ -85,25 +88,6 @@
        --> db-evaluated MatSignature might be less important
 
 [ ] Mat Signature in DB
-    [x] Crossover 1010
-    [x] store with Games (whichever modifies MoreGame.Bin must also set MoreGame.xxxSignature)
-         [x] pgn import
-            [x] fix bad move code
-            [x] fix in Gigabase.
-                [x] import 2024 from pgn
-                [x] import 2025.5 from pgn
-                [x] move games
-            [x] fix matsignature at end
-         [x] archive import 1008
-         [x] archive export
-         [x] archive import 1010
-         [x] save Game
-         [x] copy games
-    [ ] Crossover Archive files (read 1008, write 1010)
-        [x] read with 1008 database 10,50,1700
-        [x] write 1010
-        [x] unzip + 7z
-        [ ] import 1010
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get better figures
@@ -130,7 +114,7 @@
     - Pawn Mat Signature: extract from existing
 * Material searches ("knight vs 2 pawns")
     - should be easy to do with MatSignature and a small amount of bit-twiddling
-    - opposite colored bishoped (extend MatSignature)
+    - opposite colored bishops (needs extended MatSignature)
 
 * Store MatSignature in DB
     - speeds up Position search

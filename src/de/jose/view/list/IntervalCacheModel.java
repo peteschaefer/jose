@@ -719,6 +719,10 @@ abstract public class IntervalCacheModel
 
     public Row readData(int rowNum, int pk) throws Exception
     {
+		Row row = new Row();
+		row.setRowNum(rowNum);
+		row.setPK(pk);
+
 		if (pk <= 0) {
 			/**	indicates an inconsistent state of the database and should never happen
 			 * 	(actual result set smaller than estimated ? )
@@ -730,47 +734,42 @@ abstract public class IntervalCacheModel
                 isOutOfSynch = true;
 //                System.out.println("database out of synch ?!");
             }
-			Row row = new Row(99);
-			row.setRowNum(rowNum);
-			row.setPK(-1);
+			row.setColumnCount(99);
 			return row;
 		}
 
         JoConnection conn = null;
         ResultSet result = null;
+
         try {
-            conn = JoConnection.get();
-            JoPreparedStatement pstm = conn.getPreparedStatement(dataSql1);
-			pstm.setInt(1,pk);
+			conn = JoConnection.get();
+			JoPreparedStatement pstm = conn.getPreparedStatement(dataSql1);
+			pstm.setInt(1, pk);
 			pstm.execute(false);
-			//	todo may throw if there is another *streaming* result set underway. Do reader.res.close() before!?
+			//	may throw if there is another *streaming* result set underway. clobberStreamResult=on
 
 			result = pstm.getResultSet();
 
-			if (columnTypes==null) setMetaData(result.getMetaData());
+			if (columnTypes == null) setMetaData(result.getMetaData());
 
-			Row row = new Row();
 			if (result.next())
 				row.read(result, columnTypes);
-			else if (Version.mac) {	//	todo what's that? was it meant for standalone process (so it should be used everywhere?)
-                row.setSize(columnTypes.length);
-                System.out.println("data expected at row "+rowNum+", Id="+pk);
-            }
-			else
-				throw new SQLException("data expected at row "+rowNum+", Id="+pk);
-	        /**
-	         * note: this can happen when data from trash is displayed & erased at the same time
-	         * TODO: when erasing the trash, don't show data from trash
-	         */
-
-			row.setRowNum(rowNum);
-			row.setPK(pk);
-            return row;
-
+			else {
+				row.setSize(columnTypes.length);
+				System.out.println("data expected at row " + rowNum + ", Id=" + pk);
+			}
+			/**
+			 * note: this can happen when data from trash is displayed & erased at the same time
+			 * TODO: when erasing the trash, don't show data from trash
+			 */
+		} catch(SQLException e) {
+			if (e.getErrorCode()!=MySQLAdapter.ER_QUERY_INTERRUPTED)
+				throw e;
         } finally {
 			if (result!=null) result.close();
             JoConnection.release(conn);
         }
+		return row;
     }
 
 	protected void readBulkData(int rowIdxTop, int rowIdxBottom) throws Exception

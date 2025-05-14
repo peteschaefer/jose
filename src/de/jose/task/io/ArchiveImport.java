@@ -160,6 +160,8 @@ public class ArchiveImport
 		int inputVersion = Setup.getSchemaVersion(connection, tempdb, "MAIN");
 		int thisVersion = Setup.getSchemaVersion(connection, null, "MAIN");
 
+		System.err.println("["+getName()+" "+inputVersion+" -> "+thisVersion+"]");
+
 	    copyCollection();
 		setProgress(0.15);
 		//  don't abort from within copyCollection, to keep database consistent !
