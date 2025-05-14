@@ -98,6 +98,15 @@ public class Crossover1010
 			res.updateLong(4, matsig.wsig);
 			res.updateLong(5, matsig.bsig);
 			res.updateRow();
+			/*	not sure if updatable result set is really efficient.
+				Maybe use a temporary (memory) table and update en gros:
+
+				UPDATE MoreGame JOIN Temp_NewMatSig as T ON MoreGame.GId=T.GId
+				SET MoreGame.WhiteSignature = T.WhiteSignature,
+					MoreGame.BlackSignature = T.BlackSignature
+
+				(for future changes on MatSignature, maybe)
+			 */
 		}
 	}
 

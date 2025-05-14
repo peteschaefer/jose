@@ -100,14 +100,14 @@
          [x] save Game
          [x] copy games
     [ ] Crossover Archive files (read 1008, write 1010)
-        [ ] read with 1008 database 10,50,1700
+        [x] read with 1008 database 10,50,1700
         [x] write 1010
         [x] unzip + 7z
         [ ] import 1010
     [.] use with PosFilter. How is the selectivity for?
         about 50% for late positions (parallel=false)
         todo get better figures
-[ ] bug: duplicate result on Open
+[x] bug: duplicate result on Open (just an optical text doc bug)
 [ ] heuristics? single-threaded for opening positions, pll for endgame?
 [ ] better pool? but how?
 

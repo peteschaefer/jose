@@ -142,6 +142,7 @@ public class ArchiveImport
     public int work()
             throws Exception
     {
+		long startTime = System.currentTimeMillis();
         broadcastOnUpdate(getName());
 
         archive.extractAllFiles(dataDir);
@@ -188,6 +189,9 @@ public class ArchiveImport
 
 	    setProgress(0.98);
 
+		long elapsedTime = System.currentTimeMillis() - startTime;
+		long MINUTES = 1000*60;
+		System.err.println("["+getName()+" "+(elapsedTime/MINUTES)+" minutes ]");
 		return SUCCESS;
     }
 
