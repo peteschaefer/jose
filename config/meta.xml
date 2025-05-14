@@ -541,13 +541,13 @@
                 <INDEX type="full-text"/>
 			</COLUMN>
             <COLUMN>
-                <!-- position hash keys (main line) -->
+                <!-- position hash keys (main line) @deprecated -->
                 <NAME> PosMain </NAME>
                 <TYPE> LONG VARCHAR </TYPE>
                 <INDEX type="full-text"/>
             </COLUMN>
             <COLUMN>
-                <!-- position hash keys (var. lines) -->
+                <!-- position hash keys (var. lines) @deprecated -->
                 <NAME> PosVar </NAME>
                 <TYPE> LONG VARCHAR </TYPE>
                 <INDEX type="full-text"/>

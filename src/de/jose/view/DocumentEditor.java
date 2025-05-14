@@ -69,7 +69,7 @@ public class DocumentEditor
 	/**	hilite tag for current move	*/
 	protected Object hiliteCurrentMove;
 	/** use font antialising    */
-	protected boolean antialias;
+	protected boolean antialias=true;
     /** is the caret listener on ?  */
     protected boolean caretListen;
 	protected boolean updateCaretAfterEdit;

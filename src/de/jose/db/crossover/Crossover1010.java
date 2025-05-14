@@ -83,10 +83,17 @@ public class Crossover1010
 		JoStatement stm = new JoStatement(conn,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);
 		ResultSet res = stm.executeQuery(select);
 		while (res.next()) {
+			int GId = res.getInt(1);
 			String fen = res.getString(2);
 			byte[] bin = res.getBytes(3);
 
-			MatSignature matsig = computeMatSignature(fen,bin);
+			MatSignature matsig;
+			try {
+				matsig = computeMatSignature(fen, bin);
+			} catch(Throwable e) {
+				matsig = new MatSignature(0,0);
+				System.err.println("[dropped mat signature "+GId+"]");
+			}
 
 			res.updateLong(4, matsig.wsig);
 			res.updateLong(5, matsig.bsig);

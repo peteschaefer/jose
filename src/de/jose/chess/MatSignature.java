@@ -60,6 +60,8 @@ public class MatSignature
 	 *
 	 * =======
 	 * 	54 bits
+	 *
+	 * 	todo distinguish light squared, dark squared bishops!
 	 */
     public long wsig, bsig;
 

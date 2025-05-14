@@ -378,7 +378,7 @@ public class Game
 				}
 				getStyleContext().assertCustomFonts();
 				position.reset();
-				insertNode(0,root);
+				setContent(root);
 				currentMove = null;
 			}
 		} finally {
@@ -666,19 +666,6 @@ public class Game
             }
         }
 		return dirty;
-	}
-
-	public final boolean setResult(int res, Game doc)
-			throws BadLocationException, ParseException
-	{
-		try {
-			doc.ignoreCaretUpdate = true;
-
-			return setResult(res);
-
-		} finally {
-			doc.ignoreCaretUpdate = false;
-		}
 	}
 
 	public final void setDirty(TagNode tag) {
@@ -1091,6 +1078,16 @@ public class Game
 			throw new RuntimeException(blex.getMessage());
 		}
 	}
+
+	protected void setContent(Node root)
+	{
+        try {
+            remove(0,getLength());
+        } catch (BadLocationException e) {
+        }
+        insertNode(0,root);
+	}
+
 /*
 	protected void newTree(int at, Node tree)
 	{
@@ -2013,7 +2010,7 @@ public class Game
 		setupDoc();
 
 		position.reset();
-		insertNode(0, root);
+		setContent(root);
 
 		position.reset();
 		currentMove = null;
@@ -2047,7 +2044,7 @@ public class Game
 		mainLine = new LineNode(this, bin,0, comments, 0, null, fen, true);
 		setupDoc();
 
-		insertNode(0, root);
+		setContent(root);
 
 		position.reset();
 		currentMove = null;

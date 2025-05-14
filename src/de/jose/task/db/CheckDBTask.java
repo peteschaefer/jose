@@ -31,7 +31,7 @@ public class CheckDBTask
 
 	public CheckDBTask(JoConnection conn) throws SQLException
 	{
-		super("CheckIntegrity", conn);
+		super("Check Database Integrity", conn);
 		shared = false; //  do release this connection upon completion
 	}
 
