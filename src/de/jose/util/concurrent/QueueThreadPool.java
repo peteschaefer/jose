@@ -1,21 +1,25 @@
-package de.jose.util;
-
-import de.jose.pgn.PositionFilter;
+package de.jose.util.concurrent;
 
 import java.util.concurrent.*;
 
 /**
  * A thread pool with more flexible shutdown phase.
  * finish() and abort() wait for tasks to finish, without having to enter the shutdown() phase.
+ * There is no mechanism for aborting jobs, assuming that jobs are cheap.
+ *
+ *  extendsd ThreadPoolExecutor
+ *  exposes the undelying Queue, so that it can be monitored, or cleared on shutdown
  *
  */
-public class JoThreadPool<R extends Runnable> extends ThreadPoolExecutor
+public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
 {
-    public JoThreadPool(int queueCapacity) {
-        this(Runtime.getRuntime().availableProcessors()/2-1, queueCapacity);
+    public QueueThreadPool(int queueCapacity) {
+        //  assuming that are tasks are memory-bound, we don't want to use hyper-threading
+        //  use physical processor count (and let 1 free for the gui)
+        this(Math.max(2,Runtime.getRuntime().availableProcessors()/2-1), queueCapacity);
     }
 
-    public JoThreadPool(int poolSize, int queueCapacity) {
+    public QueueThreadPool(int poolSize, int queueCapacity) {
         super(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS,
                 (BlockingQueue<Runnable>) new ArrayBlockingQueue<R>(queueCapacity));
     }

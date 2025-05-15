@@ -15,7 +15,8 @@ package de.jose.pgn;
 import de.jose.chess.MatSignature;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
-import de.jose.util.JoThreadPool;
+import de.jose.util.concurrent.BatchThreadPool;
+import de.jose.util.concurrent.QueueThreadPool;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,10 +31,10 @@ public class PositionFilter
         extends BinReader
         implements Cloneable
 {
-	public long targetKey, targetKeyReversed;
+	public long queryKey, queryKeyReversed;
 	public boolean searchVariations;
 
-	protected MatSignature targetSig, targetSigReversed;
+	public MatSignature querySig, querySigReversed;
 
 //	protected HashKey searchKey, searchKeyReversed;
 //	protected MatSignature searchSig;
@@ -48,6 +49,14 @@ public class PositionFilter
 	public static PositionFilter PASS_FILTER = new PositionFilter(true) {
 		public Result accept(ResultSet res, IntConsumer callback) throws SQLException		{ return Result.ACCEPT; }
 	};
+
+	public static QueueThreadPool executorPool = new BatchThreadPool<PosFilterJob>(200000,80);
+	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
+		@Override
+		protected PositionFilter initialValue() { return new PositionFilter(); }
+	};
+
+
 
 	private PositionFilter(boolean privateCtor) {
 		super(null);
@@ -94,10 +103,10 @@ public class PositionFilter
 
 	public void copySearchParams(PositionFilter that)
 	{
-		that.targetSig = this.targetSig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.targetSigReversed = this.targetSigReversed; //(this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
-		that.targetKey = this.targetKey;
-		that.targetKeyReversed = this.targetKeyReversed;
+		that.querySig = this.querySig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
+		that.querySigReversed = this.querySigReversed; //(this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
+		that.queryKey = this.queryKey;
+		that.queryKeyReversed = this.queryKeyReversed;
 		that.searchVariations = this.searchVariations;
 		that.inLine = this.inLine;
 		that.ignoreLine = this.ignoreLine;
@@ -105,15 +114,9 @@ public class PositionFilter
 	}
 
 	public void clear() {
-		targetKey = targetKeyReversed = 0L;
+		queryKey = queryKeyReversed = 0L;
 		searchVariations = false;
 	}
-
-	public static JoThreadPool executorPool = new JoThreadPool<PosFilterJob>(64000);
-	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
-		@Override
-		protected PositionFilter initialValue() { return new PositionFilter(); }
-	};
 
 	public PositionFilter getFilterLike()
 	{
@@ -124,7 +127,7 @@ public class PositionFilter
 
 	public boolean isEmpty()
 	{
-		return (targetKey==0L) && (targetKeyReversed==0L);
+		return (queryKey ==0L) && (queryKeyReversed ==0L);
 	}
 
 	public void setTargetPosition(String fen, boolean calcReversed)
@@ -135,12 +138,12 @@ public class PositionFilter
         pos.computeHashKeys();
 		pos.computeMatSig();
 
-        targetKey = pos.getHashKey().value();
-		targetSig = pos.getMatSig().cloneSig();
+        queryKey = pos.getHashKey().value();
+		querySig = pos.getMatSig().cloneSig();
 
         if (calcReversed) {
-            targetKeyReversed = pos.getReversedHashKey().value();
-			targetSigReversed = pos.getMatSig().cloneSigReversed();
+            queryKeyReversed = pos.getReversedHashKey().value();
+			querySigReversed = pos.getMatSig().cloneSigReversed();
         }
 	}
 
@@ -176,7 +179,7 @@ public class PositionFilter
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
 		MatSignature gameEndSig = new MatSignature(res.getLong(4),res.getLong(5));
-		if (!targetSig.canReach(gameEndSig)) return Result.REJECT;
+		if (!querySig.canReach(gameEndSig)) return Result.REJECT;
 
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
@@ -194,12 +197,12 @@ public class PositionFilter
 			//	do it now
 			return accept(fen, bin, null);	//	note: MatSignature already checked synchroneously, above
 		}
-	}
+ 	}
 
 	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-		if (gameEndSig!=null && !targetSig.canReach(gameEndSig)) return Result.REJECT;
+		if (gameEndSig!=null && !querySig.canReach(gameEndSig)) return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
 		ignoreLine = inLine = false;
@@ -212,7 +215,7 @@ public class PositionFilter
 	private void compareKeys()
 	{
 		/** check hash key  */
-        if (pos.getHashKey().equals(targetKey) || pos.getReversedHashKey().equals(targetKeyReversed)) {
+        if (pos.getHashKey().equals(queryKey) || pos.getReversedHashKey().equals(queryKeyReversed)) {
 			eof = true; //  this will terminate the read() method
             result = Result.ACCEPT;
 		}
@@ -221,8 +224,8 @@ public class PositionFilter
 	private void checkCutOff()
 	{
 		/** check material signature for early cut-off */
-		if (!getMatSig().canReach(targetSig) &&
-		    (targetSigReversed==null || !pos.getMatSig().canReach(targetSig))) {
+		if (!getMatSig().canReach(querySig) &&
+		    (querySigReversed ==null || !pos.getMatSig().canReach(querySig))) {
 			eof = true; //  signature cut-off
 			result = Result.REJECT;
 		}

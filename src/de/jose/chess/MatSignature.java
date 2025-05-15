@@ -148,6 +148,18 @@ public class MatSignature
 	static int minadvance(long mat)                 { return get6(mat,OFF_MIN_ADVANCE); }
 	static int maxadvance(long mat)                 { return get6(mat,OFF_MAX_ADVANCE); }
 
+	public int minMoves() {
+		return Math.max(minMoves(wsig),minMoves(bsig));
+	}
+
+	static int minMoves(long mat) {
+		//	minimal number of moves that happened
+		int captures = 15-totalcount(mat);
+		int pawnadv = minadvance(mat);
+		int promo = minpromo(mat)*5;
+		return Math.max(captures, pawnadv+promo);
+	}
+
 	// --------------------------------------
 	//      Default Methods
 	// --------------------------------------

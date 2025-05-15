@@ -79,21 +79,37 @@
     - mixed results. little speedup on early position. Speedup ~2 on later positions.
     [-] Job: quick abort (BinReader.eof)
     [x] Job: clean shutdown w/out having to re-create the pool
-    [ ] benchmark
-        - ResultSet traversal is **cheap** [2.6M = 0.49 s]
-        - BinReader [2.6M = 0.46 s .. 6.4 s] dominates, in particular for **late** positions
-        - parallelisation overhead [2.6M = 8.2 s] is heavy; not worth for **early**positions
-       --> parallelisation only favorable for **late** positions
-       --> stored MatSignature might help **late** positions, too
-       --> db-evaluated MatSignature might be less important
+    [ ] benchmark on 16M databae
+        - ResultSet traversal [11 s]
+        - BinReader serial,
+            - initial position [18.5]
+            - midgame position [30]
+            - late position [125] **too slow**
+        - BinReader full pll,
+            - initial position [52]. MatSig selectivity < 20%
+            - midgame position [29]. MatSig selectivity ~ 60%
+            - late position [15] **good** MatSig selectivity > 95%
+        - BinReader 25% pll
+            - initial position [52]
+            - midgame position [36]
+            - late position [14.2]
+        - BinReader full **batched** pll,
+            - initial position [9.5]. MatSig selectivity < 20%
+            - midgame position [9.5]. MatSig selectivity ~ 60%
+            - late position [8.6] **good** MatSig selectivity > 95%
 
-[ ] Mat Signature in DB
-    [.] use with PosFilter. How is the selectivity for?
-        about 50% for late positions (parallel=false)
-        todo get better figures
-[x] bug: duplicate result on Open (just an optical text doc bug)
-[ ] heuristics? single-threaded for opening positions, pll for endgame?
-[ ] better pool? but how?
+        --> serial for very early positions
+        --> full pll for others
+        [x] batched pool (less overhead)
+        [ ] udf MatSignature (but early positions are our most urgent problem)
+
+* Search Pawn Structure
+    - mode on Zobrist keys
+    - OR: store pawn structure in MatSignature 8x4 bits
+
+* Material searches ("knight vs 2 pawns")
+    - should be easy to do with MatSignature and a small amount of bit-twiddling
+    - store opposite colored bishops in MatSignature
 
 ==== Interesting New Features
 
@@ -109,12 +125,6 @@
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
 
-* Search Pawn Structure
-    - mode on Zobrist keys
-    - Pawn Mat Signature: extract from existing
-* Material searches ("knight vs 2 pawns")
-    - should be easy to do with MatSignature and a small amount of bit-twiddling
-    - opposite colored bishops (needs extended MatSignature)
 
 * Store MatSignature in DB
     - speeds up Position search

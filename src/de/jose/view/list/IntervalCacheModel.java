@@ -14,8 +14,6 @@ package de.jose.view.list;
 
 import de.jose.Application;
 import de.jose.Util;
-import de.jose.Version;
-import de.jose.task.DBTask;
 import de.jose.db.*;
 import de.jose.pgn.PositionFilter;
 import de.jose.store.IntBuffer;
@@ -23,7 +21,6 @@ import de.jose.util.StringUtil;
 import de.jose.util.map.IntIntMap;
 import de.jose.view.ListPanel;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
@@ -331,7 +328,6 @@ abstract public class IntervalCacheModel
 
 						startTime = System.currentTimeMillis();
 						PositionFilter.executorPool.reset();
-						parallelPosSearch = !parallelPosSearch;	//	for debugging purposes only
 
 //						startTime = System.currentTimeMillis();
 	                    if (max > 0 && max < Integer.MAX_VALUE/2) {
@@ -411,7 +407,7 @@ abstract public class IntervalCacheModel
 		                        if (res.next())
 		                        {
 		                            chunk++;
-									switch(posFilter.accept(res, (chunk%4==0) ? acceptCallback : null))
+									switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
 									{
 										case REJECT:	break;
 										case WAIT:		/*will call back asynchroneously*/ break;
@@ -559,6 +555,8 @@ abstract public class IntervalCacheModel
 		pkStatement = pkStm;
 
 		posFilter = filter;
+		parallelPosSearch = true;
+
 		rowCount = size;
         rowCountAccurate = accurate;
 

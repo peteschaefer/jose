@@ -1109,10 +1109,10 @@ public class Game
 
 	public boolean gotoMove(PositionFilter filter)
 	{
-		if (filter==null || filter.targetKey==0L)
+		if (filter==null || filter.queryKey ==0L)
 			return false;
 		else
-			return gotoMove(filter.targetKey, filter.targetKeyReversed, filter.searchVariations);
+			return gotoMove(filter.queryKey, filter.queryKeyReversed, filter.searchVariations);
 	}
 
 	public boolean gotoMove(long targetKey, long targetKeyReversed,
