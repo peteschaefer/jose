@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.concurrent.Future;
 
 /**
+ * A thread pool that collects small tasks into batches.
+ * - less overhead for thread pool management
+ * -> better throughput
+ * (higher latency to do batching, but that's not our concern)
  *
  * @param <R>
  */
 public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 {
     private int batchSize;
-    private BatchJob batch;
+    private BatchJob batch=null;
 
     public BatchThreadPool(int poolSize, int queueCapacity, int batchSize) {
         super(poolSize, queueCapacity);
@@ -24,7 +28,7 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 
 
     public Future submit(Runnable task) {
-        if (batch == null) batch = new BatchJob();
+        if (batch == null) batch = new BatchJob(batchSize);
         batch.add(task);
         if (batch.size() >= batchSize) flush();
         return null;
@@ -59,6 +63,10 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 
     private static class BatchJob extends ArrayList<Runnable> implements Runnable
     {
+        public BatchJob(int initialCapacity) {
+            super(initialCapacity);
+        }
+
         @Override
         public void run() {
             for (Runnable r : this) r.run();

@@ -51,6 +51,8 @@ public class PositionFilter
 	};
 
 	public static QueueThreadPool executorPool = new BatchThreadPool<PosFilterJob>(200000,80);
+	//	note: using a batched pool drastically increases throughtput and reduces thread pool overhead
+	//	we assume that tasks (PosFilterJob) are small and run quickly. Batching 80 of them into one is ok.
 	private static ThreadLocal<PositionFilter> pooledFilter = new ThreadLocal<PositionFilter>() {
 		@Override
 		protected PositionFilter initialValue() { return new PositionFilter(); }
