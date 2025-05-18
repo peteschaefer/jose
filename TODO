@@ -71,41 +71,35 @@
         - when affecting multiple nodes
         - record edits in list
 
+Maintenance:
+[ ] bug? db update 1010 on Linux
+[ ] bug? embedded fonts in pdf (linux, system fonts?)
 
-[ ] order by Round: numeric instead of alpha
 [ ] search for Year (fill in 1.1.xxxx automatically)
+[ ] smarter date input. time zone jump on input ?
+[ ] insert diagram *before* move
+[ ] order by Round: numeric instead of alpha
 
-[ ] Parallel Position Search
-    - mixed results. little speedup on early position. Speedup ~2 on later positions.
-    [-] Job: quick abort (BinReader.eof)
-    [x] Job: clean shutdown w/out having to re-create the pool
-    [ ] benchmark on 16M databae
-        - ResultSet traversal [11 s]
-        - BinReader serial,
-            - initial position [18.5]
-            - midgame position [30]
-            - late position [125] **too slow**
-        - BinReader full pll,
-            - initial position [52]. MatSig selectivity < 20%
-            - midgame position [29]. MatSig selectivity ~ 60%
-            - late position [15] **good** MatSig selectivity > 95%
-        - BinReader 25% pll
-            - initial position [52]
-            - midgame position [36]
-            - late position [14.2]
-        - BinReader full **batched** pll,
-            - initial position [9.5]. MatSig selectivity < 20%
-            - midgame position [9.5]. MatSig selectivity ~ 60%
-            - late position [8.6] **good** MatSig selectivity > 95%
+[ ] PosFilter + CId is slow. why?
+    - position search is just a full-table scan on MoreGame
+    - CId filter introduces indexing on Game
+    -> MoreGame STRAIGHT_JOIN Game, maybe ?
 
-        --> serial for very early positions
-        --> full pll for others
-        [x] batched pool (less overhead)
-        [ ] udf MatSignature (but early positions are our most urgent problem)
+[ ] Matsig V2
+    [ ] pawn bitset, piece counts, bishop colors
+    [ ] unit tests
+        [ ] hard cases
+        [ ] random games (incremental mode)
+        [ ] db games (incremental mode)
+    [ ] opposite bishop, even bishop
+    [ ] good bishop, bad bishop
+    [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
+    [ ] cross-over (faster this time, batched pll + temp table?)
 
 * Search Pawn Structure
     - mode on Zobrist keys
-    - OR: store pawn structure in MatSignature 8x4 bits
+    - better: store pawn structure in MatSignature 8x4 bits
+* NAG search (so easy!)
 
 * Material searches ("knight vs 2 pawns")
     - should be easy to do with MatSignature and a small amount of bit-twiddling
