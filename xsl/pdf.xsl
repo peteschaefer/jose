@@ -39,6 +39,14 @@
 					<xsl:attribute name="margin-bottom"><xsl:value-of select="//page/margin-bottom"/>pt</xsl:attribute>
 					<xsl:attribute name="margin-left"><xsl:value-of select="//page/margin-left"/>pt</xsl:attribute>
 					<xsl:attribute name="margin-right"><xsl:value-of select="//page/margin-right"/>pt</xsl:attribute>
+
+					<fo:region-body
+							column-gap="10pt">
+						<xsl:attribute name="column-count"><xsl:value-of select="$column-count"/></xsl:attribute>
+						<xsl:attribute name="margin-top"><xsl:value-of select="$header_extent"/></xsl:attribute>
+						<xsl:attribute name="margin-bottom"><xsl:value-of select="$footer_extent"/></xsl:attribute>
+					</fo:region-body>
+
 					<fo:region-before>
 						<xsl:attribute name="extent"><xsl:value-of select="$header_extent"/></xsl:attribute>
 					</fo:region-before>
@@ -46,13 +54,7 @@
 						<xsl:attribute name="extent"><xsl:value-of select="$footer_extent"/></xsl:attribute>
 					</fo:region-after>
 					
-					<fo:region-body 
-						column-gap="10pt">
-						<xsl:attribute name="column-count"><xsl:value-of select="$column-count"/></xsl:attribute>
-						<xsl:attribute name="margin-top"><xsl:value-of select="$header_extent"/></xsl:attribute>
-						<xsl:attribute name="margin-bottom"><xsl:value-of select="$footer_extent"/></xsl:attribute>
-					</fo:region-body>
-						
+
 				</fo:simple-page-master>
 				<fo:page-sequence-master master-name="content-sequence">
 					<fo:repeatable-page-master-reference master-reference="content-page"/>

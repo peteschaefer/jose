@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@ import de.jose.profile.UserProfile;
 import de.jose.util.print.PrintableDocument;
 import de.jose.util.print.AWTPrintableDocument;
 import de.jose.util.print.HTMLPrintableDocument;
-import de.jose.util.print.FOPrintableDocument;
 import de.jose.Application;
 import de.jose.Version;
 import de.jose.view.style.JoStyleContext;
@@ -30,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * collects all necessary information for printing/exporting a document
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 public class ExportContext implements Cloneable
@@ -109,7 +108,7 @@ public class ExportContext implements Cloneable
 		case ExportConfig.OUTPUT_XSL_FO:
 			//  create PrintableDocuments from XSL-FO
 			Version.loadFop();
-			return new FOPrintableDocument(this);
+			return null;//new FOPrintableDocument(this);
 
 		default:
 			//  other output formats not supported

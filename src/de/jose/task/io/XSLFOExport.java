@@ -15,8 +15,8 @@ package de.jose.task.io;
 import de.jose.export.ExportContext;
 import de.jose.export.ExportConfig;
 import de.jose.util.file.FileUtil;
+import de.jose.util.print.JoConsoleLogger;
 import de.jose.util.xml.XMLUtil;
-import de.jose.util.print.FOPUtil;
 import de.jose.comm.Command;
 import de.jose.view.style.JoStyleContext;
 
@@ -26,9 +26,10 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-import org.apache.fop.apps.Driver;
-import org.apache.fop.apps.FOPException;
+//import org.apache.fop.apps.Driver;
+import org.apache.fop.apps.*;
 import org.apache.fop.render.awt.AWTRenderer;
+import org.xml.sax.SAXException;
 
 /**
  * XSLFOExport
@@ -98,23 +99,31 @@ public class XSLFOExport
 	    }
     }
 
+	private static JoConsoleLogger gConsoleLogger = new JoConsoleLogger();
+	private static FopFactory fopFactory = null;
+	private static FopFactory getFopFactory() throws IOException, SAXException {
+		if (fopFactory == null)
+			fopFactory = FopFactory.newInstance(new File("fop/fop.xconf"));
+		return fopFactory;
+	}
+
 	public static Result process(Source source, File xslFile, OutputStream outputStream,
 	                           String targetName,
 	                           JoStyleContext styles, boolean embed_fonts)
-	        throws TransformerException, IOException, FOPException
-	{
+            throws TransformerException, IOException, SAXException {
 		/*  XSLT transformer */
-		XMLUtil.getTransformerFactory().setErrorListener(FOPUtil.gConsoleLogger);
+		XMLUtil.getTransformerFactory().setErrorListener(gConsoleLogger);
 		Transformer tf = XMLUtil.getTransformer(xslFile);
-		tf.setErrorListener(FOPUtil.gConsoleLogger);
+		tf.setErrorListener(gConsoleLogger);
 
-		Driver driver = null;
+		FopFactory fopFactory = getFopFactory();
+		Fop fop;
 		Result result;
 
-		FOPUtil.config();
+	/*	FOPUtil.config();
 		if (styles!=null)
 			FOPUtil.assertFontMetrics(styles,true,embed_fonts);
-        /* note that this doesn't work for inlined styles !
+      */  /* note that this doesn't work for inlined styles !
          *  inlined styles are parsed directly from the DB, so there's little chance to fetch the fonts
          *  before processing them...
          *  @see de.jose.util.style.MarkupParser
@@ -122,32 +131,31 @@ public class XSLFOExport
 
 		/* transform source via XSL into XSL-FO    */
 		if (FileUtil.hasExtension(targetName,"txt"))
-			driver = FOPUtil.getDriver(Driver.RENDER_TXT);
+			fop = fopFactory.newFop(MimeConstants.MIME_PLAIN_TEXT,outputStream);
 		else if (FileUtil.hasExtension(targetName,"ps"))
-			driver = FOPUtil.getDriver(Driver.RENDER_PS);      //  PostScript
+			fop = fopFactory.newFop(MimeConstants.MIME_POSTSCRIPT,outputStream);			//  PostScript
 		else if (FileUtil.hasExtension(targetName,"svg"))
-			driver = FOPUtil.getDriver(Driver.RENDER_SVG);     //  SVG requires Batik ! (not included with jose)
+			fop = fopFactory.newFop(MimeConstants.MIME_SVG,outputStream);     //  SVG requires Batik ! (not included with jose)
 		else if (FileUtil.hasExtension(targetName,"xml"))
-			driver = FOPUtil.getDriver(Driver.RENDER_XML);     //  internal XML (for debugging)
+			fop = fopFactory.newFop("text/xml",outputStream);     //  internal XML (for debugging)
 		else if (FileUtil.hasExtension(targetName,"fo")) //  create XSL-FO only
-			driver = null;
-		else
-			driver = FOPUtil.getDriver(Driver.RENDER_PDF);
+			fop = fopFactory.newFop(MimeConstants.MIME_FOP_IF,outputStream);
+		else {
+			outputStream = new BufferedOutputStream(outputStream);
+			fop = fopFactory.newFop(MimeConstants.MIME_PDF, outputStream);
+		}
 
-		if (driver != null) {
-			//Setup the OutputStream for FOP
-			driver.setOutputStream(outputStream);
-
+		if (fop != null) {
 			//Make sure the XSL transformation's result is piped through to FOP
-			result = new SAXResult(driver.getContentHandler());
+			result = new SAXResult(fop.getDefaultHandler());
 			tf.transform(source,result);
-
-			FOPUtil.release(driver);
 		}
 		else {
 			result = new StreamResult(outputStream);  //  XSL-FO, not rendered (for debugging)
 			tf.transform(source,result);
 		}
+
+		FormattingResults results = fop.getResults();
 
 		XMLUtil.releaseTransformer(xslFile,tf);
 		return result;
@@ -167,31 +175,32 @@ public class XSLFOExport
 			pollProgress = 1000;
 		}
 
-		public int work() throws TransformerException, IOException, FOPException
+		public int work() throws TransformerException, IOException, SAXException
 		{
 			Source source = createSAXSource(context);
 
 			/*  XSLT transformer */
 			File xslFile = ExportConfig.getFile(context.config);
-			XMLUtil.getTransformerFactory().setErrorListener(FOPUtil.gConsoleLogger);
+			XMLUtil.getTransformerFactory().setErrorListener(gConsoleLogger);
 			Transformer tf = XMLUtil.getTransformer(xslFile);
-			tf.setErrorListener(FOPUtil.gConsoleLogger);
+			tf.setErrorListener(gConsoleLogger);
 
 			//  create XSL-FO
-			FOPUtil.config();
-			FOPUtil.assertFontMetrics(context.styles,false,false);
+			//FOPUtil.config();
+			//FOPUtil.assertFontMetrics(context.styles,false,false);
 
-			Driver driver = FOPUtil.getDriver(Driver.RENDER_AWT);
+			FopFactory fopFactory = getFopFactory();
+			Fop fop = fopFactory.newFop(MimeConstants.MIME_FOP_AWT_PREVIEW);
 			//Setup logging here: driver.setLogger(...
 
 			//Make sure the XSL transformation's result is piped through to FOP
-			Result result = new SAXResult(driver.getContentHandler());
+			Result result = new SAXResult(fop.getDefaultHandler());
 			tf.transform(source,result);
 
 			XMLUtil.releaseTransformer(xslFile,tf);
-			FOPUtil.release(driver);
+			//FOPUtil.release(driver);
 
-			renderer = (AWTRenderer)driver.getRenderer();
+			renderer = null;	//	??? no such thing in Fop 2.11 ?
 			return SUCCESS;
 		}
 	}

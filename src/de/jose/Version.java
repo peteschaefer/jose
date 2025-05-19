@@ -188,9 +188,9 @@ public class Version
 				}
 
 				//  append class path
-				File lib = new File(Application.theWorkingDirectory,"lib");
-				ClassPathUtil.addAllToClassPath(lib, "fop-plus.jar");
-				Class.forName("org.apache.fop.apps.Driver");
+				//File lib = new File(Application.theWorkingDirectory,"lib");
+				//ClassPathUtil.addAllToClassPath(lib, "fop-plus.jar");
+				//Class.forName("org.apache.fop.apps.Driver");
 				checkedFop = true;
 			}
 	}
