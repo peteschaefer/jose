@@ -24,4 +24,12 @@ public class BitUtil
     public static long minus8(long l1, long l2) {
         return (l1 & ~l2) & 0x0ffL;
     }
+
+    public static long clear1(long value, int offset) {
+        return (value & ~(1L<<offset));
+    }
+
+    public static long clear(long value, long mask) {
+        return value & ~mask;
+    }
 }
