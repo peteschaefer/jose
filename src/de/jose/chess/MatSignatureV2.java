@@ -192,7 +192,7 @@ public class MatSignatureV2
         }
 
         int pawnAdvanceRemaining() {
-            return 48-padv_base;
+            return 48-computePawnAdvance(sig);
         }
 
         private void setBoard(Board board, int color)
