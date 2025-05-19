@@ -36,15 +36,14 @@ import static de.jose.util.BitUtil.*;
  * 				- sum = total piece count.
  * 					mostly exact, very rarely lower bound
  *
- * 	6 bits		[0..48] pawn advance
- * 				exact if pawncount()==8 || incremental
- * 				unknown otherwise (only in query). compute lower/upper bound from: bitset, missing pawns, known promotions
+ * 	3 bits		0 = number of promotions not known
+ * 	            [1..6] number of promotions +1
+ * 	            7 = 6 or more promotions
  *
- *  2 bits		castling rights
+ *  (2 bits)	castling rights
  *
  * 	======
- * 	66 bits	 oh :(	 something has to give. probably castling right b/cause it has less discriminating value.
- * 						it can be used by PosFilter nevertheless (known in query and incremental)
+ * 	63 bits
  *
  * 	more things to detect
  * 	- opposite bishops / even bishops
@@ -105,14 +104,14 @@ public class MatSignatureV2
         bfeat = swapf;
     }
 
-    public boolean opposingBishops()
+    public boolean oppositeColouredBishops()
     {
         return      bishopCount(wfeat.sig)==1
                 &&  bishopCount(bfeat.sig)==1
                 &&  lightBishopCount(wfeat.sig)!=lightBishopCount(bfeat.sig);
     }
 
-    public boolean evenBishops()
+    public boolean evenColouredBishops()
     {
         return      bishopCount(wfeat.sig)==1
                 &&  bishopCount(bfeat.sig)==1
@@ -173,37 +172,37 @@ public class MatSignatureV2
         int count_officers = 0;          //  number of officers on the board; lower bound, including known promotions
         int known_promos = 0;   //  number of known promotions
         int unknown_promos = 0;   //  number of unknown promotions
-        int pawn_advance_lower = 0; //  lower bound for pawn moves (including past, known promotions)
-        int pawn_advance_upper = 0; //  upper bound for pawn moves (including future promotions)
-        int pawn_advance_left = 48; // pawn moves left
+        int pawn_advance = 0; //  pawn moves (not including promotions
 
-        void compute() {
-            computeOfficersAndPromos();
-            computePawnAdvanceBounds();
-        }
         void clear() {
             sig = 0;
             count_officers = 0;
             known_promos = 0;
             unknown_promos = 0;
-            pawn_advance_lower = 0;
-            pawn_advance_upper = 0;
-            pawn_advance_left = 48;
+            pawn_advance = 0;
         }
         void copyFrom(Features that) {
             sig = that.sig;
             count_officers = that.count_officers;
             known_promos = that.known_promos;
             unknown_promos = that.unknown_promos;
-            pawn_advance_lower = that.pawn_advance_lower;
-            pawn_advance_upper = that.pawn_advance_upper;
-            pawn_advance_left = that.pawn_advance_left;
+            pawn_advance = that.pawn_advance;
+        }
+
+        int pawnAdvanceLowerBound() {
+            return pawn_advance+known_promos*6;
+        }
+        int pawnAdvanceUpperBound() {
+            return pawn_advance+(known_promos+unknown_promos)*6;
+        }
+        int pawnAdvanceRemaining() {
+            return 48-pawn_advance;
         }
 
         private void setBoard(Board board, int color)
         {
             /** copy pawn structure */
-            sig = 0L;
+            sig = 0;
             List<Piece> pawns = board.pieceList(EngUtil.PAWN|color);
             for(Piece p : pawns) {
                 int sq = p.square();
@@ -230,64 +229,59 @@ public class MatSignatureV2
             this.compute();
         }
 
-        private void computeOfficersAndPromos() {
-            boolean unknown_promo = false;
-            int max_promo = 8-pawnCount(sig);
-
+        private void compute()
+        {
             int ncnt = knightCount(sig);
             int lbcnt = lightBishopCount(sig);
             int dbcnt = darkBishopCount(sig);
             int rcnt = rookCount(sig);
             int qcnt = queenCount(sig);
-
-            if (ncnt>=3)    { known_promos++; unknown_promo=true; }
-            if (lbcnt==2)   { known_promos++; }
-            if (lbcnt>=3)   { known_promos++; unknown_promo=true; }
-            if (dbcnt==2)   { known_promos++; }
-            if (dbcnt>=3)   { known_promos++; unknown_promo=true; }
-            if (rcnt>=3)    { known_promos++; unknown_promo=true; }
-            if (qcnt==2)    { known_promos++; }
-            if (qcnt>=3)    { known_promos++; unknown_promo=true; }
-
-            //  lower bound
             count_officers = ncnt+lbcnt+dbcnt+rcnt+qcnt;
-            //  upper bound
-            if (unknown_promo)
-                unknown_promos = max_promo-known_promos;
-            else
-                unknown_promos = 0;
-        }
 
+            int counted_promos = 0;
+            if (ncnt>=3)    counted_promos++;
+            if (lbcnt==2)   counted_promos++;
+            if (lbcnt>=3)   counted_promos++;
+            if (dbcnt==2)   counted_promos++;
+            if (dbcnt>=3)   counted_promos++;
+            if (rcnt>=3)    counted_promos++;
+            if (qcnt==2)    counted_promos++;
+            if (qcnt>=3)    counted_promos++;
 
-        public void computePawnAdvanceBounds()
-        {
-            int adv = getPawnAdvance(sig); //  pawn advance, not regarding promotions
-            pawn_advance_left = pawnCount(sig)*6 - adv;   //  still possible
-
-            sig = BitUtil.clear(sig,ADVANCE_MASK);
-            if (adv!=ADVANCE_UNKNOWN) {
-                pawn_advance_lower = pawn_advance_upper = adv;
-                sig |= BitUtil.set6(adv,ADVANCE_OFFSET);
+            int stored_promos = get3(sig,PROMO_OFFSET);
+            int max_promos = 8-pawnCount(sig);
+            switch (stored_promos) {
+                case 0: known_promos = counted_promos;
+                        unknown_promos = max_promos-known_promos;
+                        break;
+                case 7: known_promos = Math.max(counted_promos, stored_promos-1);
+                        unknown_promos = max_promos-known_promos;
+                        break;
+                default:assert(counted_promos<=(stored_promos-1));
+                        known_promos = stored_promos-1;
+                        unknown_promos = 0;
+                        break;
             }
-            else {
-                pawn_advance_lower = computePawnAdvance(sig) + known_promos*6;   //  pawn advance with past promotions
-                pawn_advance_upper = Math.min(pawn_advance_lower + unknown_promos*6, 48);
-                sig |= BitUtil.set6(ADVANCE_UNKNOWN,ADVANCE_OFFSET);
-            }
+
+            if (unknown_promos==0)
+                sig |= BitUtil.set3(Math.max(7,known_promos+1),PROMO_OFFSET);
         }
 
         public void del_pawn(int square) {
             sig = BitUtil.clear1(sig,pawnOffset(square));
-            //pawn_advance_left -= ;
+            pawn_advance -= (rowOf(square)-ROW_2);
+            assert(pawn_advance==computePawnAdvance(sig));
         }
 
-        public void updatePiece(Board board, int captured) {
+        public void updatePiece(Board board, int piece) {
             //  todo
         }
 
         public void advance_pawn(int from, int to) {
-            //pawn_advance_lower += ;
-            //pawn_advance_left -= ;
+            sig = clear1(sig,pawnOffset(from));
+            sig |= set1(1,pawnOffset(to));
+            pawn_advance += (rowOf(to)-rowOf(from));
+            assert(pawn_advance==computePawnAdvance(sig));
         }
     }
 
@@ -298,15 +292,13 @@ public class MatSignatureV2
     private static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
 
     //  next 10 bits encode piece count, 2 bits each
-    private static int KNIGHT_OFFSET        = 48;
-    private static int LIGHT_BISHOP_OFFSET  = 50;
-    private static int DARK_BISHOP_OFFSET   = 52;
-    private static int ROOK_OFFSET          = 54;
-    private static int QUEEN_OFFSET         = 56;
-    //  pawn advance count (uppermost 6 bits, may be unknown)
-    private static int ADVANCE_OFFSET       = 58;
-    private static long ADVANCE_MASK = 0xfc00000000000000L;
-    private static int ADVANCE_UNKNOWN = 0x03f;
+    private static final int KNIGHT_OFFSET        = 48;
+    private static final int LIGHT_BISHOP_OFFSET  = 50;
+    private static final int DARK_BISHOP_OFFSET   = 52;
+    private static final int ROOK_OFFSET          = 54;
+    private static final int QUEEN_OFFSET         = 56;
+    //  pawn advance count (bits, may be unknown)
+    private static final int PROMO_OFFSET       = 58;
 
     private static int rowOffset(int row) {
         return (row-ROW_1)*8;
@@ -340,10 +332,6 @@ public class MatSignatureV2
     }
     private static int pawnCount(long sig, int row) {
         return Long.bitCount(sig & rowMask(row));
-    }
-
-    private static int getPawnAdvance(long sig) {
-        return BitUtil.get6(sig,ADVANCE_OFFSET);
     }
 
     private static int computePawnAdvance(long sig)
@@ -384,8 +372,8 @@ public class MatSignatureV2
         //  todo for each officer in detail
 
         /** check pawn advance (lower/upper bounds) */
-        if (from.pawn_advance_lower > to.pawn_advance_upper) return false;  //  pawns are too advanced
-        if ((from.pawn_advance_upper+from.pawn_advance_left) < to.pawn_advance_lower) return false; //  target is too advanced
+        if (from.pawnAdvanceLowerBound() > to.pawnAdvanceUpperBound()) return false;  //  pawns are too advanced
+        if ((from.pawnAdvanceUpperBound()+from.pawnAdvanceRemaining()) < to.pawnAdvanceLowerBound()) return false; //  target is too advanced
 
         /** check pawn home row */
         long hometo = pawnRow(to.sig,ROW_2);
