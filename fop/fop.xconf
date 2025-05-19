@@ -32,7 +32,7 @@ the location of this file.
     <renderer mime="application/pdf">
       <filterList>
         <!-- provides compression using zlib flate (default is on) -->
-        <!--value>flate</value-->
+        <value>null</value>
   
         <!-- encodes binary data into printable ascii characters (default off)
              This provides about a 4:5 expansion of data size -->
@@ -68,19 +68,19 @@ the location of this file.
         -->
 
         <!--
-        <font metrics-url="arial.xml" kerning="yes" embed-url="arial.ttf">
-          <font-triplet name="Arial" style="normal" weight="normal"/>
-          <font-triplet name="ArialMT" style="normal" weight="normal"/>
+        <font kerning="yes" embed-url="/home/schaefer/src/jose/fonts/BERLIN.TTF" embedding-mode="subset">
+          <font-triplet name="Chess Berlin" style="normal" weight="normal"/>
         </font>
-        <font metrics-url="arialb.xml" kerning="yes" embed-url="arialb.ttf">
-          <font-triplet name="Arial" style="normal" weight="bold"/>
-          <font-triplet name="ArialMT" style="normal" weight="bold"/>
+        <font kerning="yes" embed-url="/home/schaefer/src/jose/fonts/ARIAL.TTF" embedding-mode="subset">
+          <font-triplet name="Arial" style="normal" weight="normal"/>
         </font>
         -->
+        <!--
         <directory>/home/schaefer/src/jose/fonts</directory>
+        -->
 
         <!-- auto-detect fonts -->
-        <auto-detect/>
+        <!-- <auto-detect/> -->
 
       </fonts>
 

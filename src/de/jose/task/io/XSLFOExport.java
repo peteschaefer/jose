@@ -103,7 +103,7 @@ public class XSLFOExport
 	private static FopFactory fopFactory = null;
 	private static FopFactory getFopFactory() throws IOException, SAXException {
 		if (fopFactory == null)
-			fopFactory = FopFactory.newInstance(new File("fop/fop.xconf"));
+			fopFactory = FopFactory.newInstance(new File("/home/schaefer/src/jose/fop/fop.xconf"));
 		return fopFactory;
 	}
 
