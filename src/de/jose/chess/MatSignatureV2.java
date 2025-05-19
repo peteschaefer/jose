@@ -175,24 +175,29 @@ public class MatSignatureV2
     {
         long sig;
         int count_officers = 0;          //  number of officers on the board; lower bound, including known promotions
-        int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
-        int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
+        int known_promos = 0;   //  number of known promotions
+        int unknown_promos = 0;   //  number of unknown promotions
+        int pawn_advance_lower = 0; //  lower bound for pawn moves (including past, known promotions)
+        int pawn_advance_upper = 0; //  upper bound for pawn moves (including future promotions)
+        int pawn_advance_left = 48; // pawn moves left
 
         void clear() {
             sig = 0;
             count_officers = 0;
-            padv_base = 0;
-            padv_upper = 0;
+            known_promos = 0;
+            unknown_promos = 0;
+            pawn_advance_lower = 0;
+            pawn_advance_upper = 0;
+            pawn_advance_left = 48;
         }
         void copyFrom(Features that) {
             sig = that.sig;
             count_officers = that.count_officers;
-            padv_base = that.padv_base;
-            padv_upper = that.padv_upper;
-        }
-
-        int pawnAdvanceRemaining() {
-            return 48-computePawnAdvance(sig);
+            known_promos = that.known_promos;
+            unknown_promos = that.unknown_promos;
+            pawn_advance_lower = that.pawn_advance_lower;
+            pawn_advance_upper = that.pawn_advance_upper;
+            pawn_advance_left = that.pawn_advance_left;
         }
 
         private void setBoard(Board board, int color)
@@ -231,58 +236,43 @@ public class MatSignatureV2
             int rcnt = rookCount(sig);
             int qcnt = queenCount(sig);
             count_officers = ncnt+lbcnt+dbcnt+rcnt+qcnt;
-
-            int promo_lower = 0;
-            int promo_upper = 8-pawnCount(sig);
-            boolean more_promos=false;
-            if (ncnt>=3)    promo_lower++;
-            if (lbcnt==2)   promo_lower++;
-            if (lbcnt>=3)   promo_lower++;
-            if (dbcnt==2)   promo_lower++;
-            if (dbcnt>=3)   promo_lower++;
-            if (rcnt>=3)    promo_lower++;
-            if (qcnt==2)    promo_lower++;
-            if (qcnt>=3)    promo_lower++;
-            //  todo get a second promo_lower bound from Board
-
-            int stored_padv = get6(sig,ADV_OFFSET)-1;
-            switch (stored_padv) {
-                case -1: //  not known; estimate lower and upper bounds
-                        padv_base = computePawnAdvance(sig) + promo_lower*6;
-                        padv_upper = padv_base+promo_upper*6;
-                        break;
-                case 46: // [46..48] rare case
-                        padv_base = 46;
-                        padv_upper = 48;
-                        break;
-                default:// exact value was stored
-                        padv_upper = padv_base = stored_padv;
-                        break;
-            }
-
-            if (padv_base==padv_upper)
-                sig |= BitUtil.set6(Math.max(46,padv_base+1),ADV_OFFSET);
+            //  upper bound
+            if (unknown_promo)
+                unknown_promos = max_promo-known_promos;
             else
-                sig |= BitUtil.set6(47,ADV_OFFSET);
+                unknown_promos = 0;
+        }
+
+
+        public void computePawnAdvanceBounds()
+        {
+            int adv = getPawnAdvance(sig); //  pawn advance, not regarding promotions
+            pawn_advance_left = pawnCount(sig)*6 - adv;   //  still possible
+
+            sig = BitUtil.clear(sig,ADVANCE_MASK);
+            if (adv!=ADVANCE_UNKNOWN) {
+                pawn_advance_lower = pawn_advance_upper = adv;
+                sig |= BitUtil.set6(adv,ADVANCE_OFFSET);
+            }
+            else {
+                pawn_advance_lower = computePawnAdvance(sig) + known_promos*6;   //  pawn advance with past promotions
+                pawn_advance_upper = Math.min(pawn_advance_lower + unknown_promos*6, 48);
+                sig |= BitUtil.set6(ADVANCE_UNKNOWN,ADVANCE_OFFSET);
+            }
         }
 
         public void del_pawn(int square) {
             sig = BitUtil.clear1(sig,pawnOffset(square));
+            //pawn_advance_left -= ;
         }
 
-        public void del_piece(int piece, int square, Board board) {
-            // todo decrement piece counter; watch out for unknown promotions
-        }
-
-        public void add_piece(int piece, int square, Board board) {
-            // todo decrement piece counter; watch out for unknown promotions
+        public void updatePiece(Board board, int captured) {
+            //  todo
         }
 
         public void advance_pawn(int from, int to) {
-            sig = clear1(sig,pawnOffset(from));
-            sig |= set1(1,pawnOffset(to));
-            padv_base += (rowOf(to)-rowOf(from));
-            padv_upper = Math.max(padv_upper,padv_base);
+            //pawn_advance_lower += ;
+            //pawn_advance_left -= ;
         }
     }
 
@@ -293,13 +283,15 @@ public class MatSignatureV2
     private static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
 
     //  next 10 bits encode piece count, 2 bits each
-    private static final int KNIGHT_OFFSET        = 48;
-    private static final int LIGHT_BISHOP_OFFSET  = 50;
-    private static final int DARK_BISHOP_OFFSET   = 52;
-    private static final int ROOK_OFFSET          = 54;
-    private static final int QUEEN_OFFSET         = 56;
-    //  pawn advance count (bits, may be unknown)
-    private static final int ADV_OFFSET       = 58;
+    private static int KNIGHT_OFFSET        = 48;
+    private static int LIGHT_BISHOP_OFFSET  = 50;
+    private static int DARK_BISHOP_OFFSET   = 52;
+    private static int ROOK_OFFSET          = 54;
+    private static int QUEEN_OFFSET         = 56;
+    //  pawn advance count (uppermost 6 bits, may be unknown)
+    private static int ADVANCE_OFFSET       = 58;
+    private static long ADVANCE_MASK = 0xfc00000000000000L;
+    private static int ADVANCE_UNKNOWN = 0x03f;
 
     private static int rowOffset(int row) {
         return (row-ROW_1)*8;
@@ -372,8 +364,8 @@ public class MatSignatureV2
         //  todo for each officer in detail
 
         /** check pawn advance (lower/upper bounds) */
-        if (from.padv_base > to.padv_upper) return false;  //  pawns are too advanced
-        if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
+        if (from.pawn_advance_lower > to.pawn_advance_upper) return false;  //  pawns are too advanced
+        if ((from.pawn_advance_upper+from.pawn_advance_left) < to.pawn_advance_lower) return false; //  target is too advanced
 
         /** check pawn home row */
         long homefrom = pawnRow(from.sig,ROW_2);
