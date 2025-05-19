@@ -174,6 +174,10 @@ public class EngUtil
 		return a + dfile + drow * OUTER_BOARD_WIDTH;
 	}
 
+	public static int rotateSquare(int square) { return OUTER_BOARD_SIZE-1-square; }
+
+	public static int rotateSquare(int file, int row) { return rotateSquare(square(file,row)); }
+
 	/**
 	 * @return true if the given square is inside the proper board
 	 */

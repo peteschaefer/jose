@@ -43,14 +43,7 @@
     [-] remove l&f selection
     [ ] from command line
 
-[ ] 7z decompression
-    [x] apache commons compress
-    [x] input pgn.7z
-    [x] input jose.7z
-    [?] output pgn.7z
-    [?] (output jose .7z)
-    [ ] .zst ? yes, it's fast. but not that much better than gzip, zip.
-    [x] bug: add commons-lang3 to class path
+[ ] .zst compression ? yes, it's fast. but not that much better than gzip, zip.
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?
@@ -72,8 +65,10 @@
         - record edits in list
 
 Maintenance:
-[ ] bug? db update 1010 on Linux
-[ ] bug? embedded fonts in pdf (linux, system fonts?)
+[-] bug? db update 1010 on Linux
+[-] embedded fonts in pdf (linux, system fonts)
+    [ ] scan font directories recursively
+    [ ] FOP can't handle .otf (see refactorings)
 
 [ ] search for Year (fill in 1.1.xxxx automatically)
 [ ] smarter date input. time zone jump on input ?
@@ -83,7 +78,9 @@ Maintenance:
 [ ] PosFilter + CId is slow. why?
     - position search is just a full-table scan on MoreGame
     - CId filter introduces indexing on Game
-    -> MoreGame STRAIGHT_JOIN Game, maybe ?
+    - check out https://dev.mysql.com/doc/refman/5.7/en/index-hints.html
+    - experiment with USE/FORCE/IGNORE INDEX
+      (FORCE avoids full-table scans. But for large DBs we *prefer* a full-table scan on MoreGame :)
 
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors
@@ -119,23 +116,6 @@ Maintenance:
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
 
-
-* Store MatSignature in DB
-    - speeds up Position search
-    - for 10, 20, end position ?
-        test whether it improves selectivity:
-        `reachable(query,sig10) or reachable(sig10,query)
-         and reachable(query,sigend)`
-    - requires cross-over & re-built archive files !
-    - next: custom MySQL function pos_reachable(), pawn_reachable()
-    - benchmark?
-
-
-* RTF export? currently possible via copy/paste.
-  - fop 0.20 does not support it
-  - upgrading fop seems painful (and has little merit)
-  - RTFGenerator is not flawless but better than nothing
-    (why does Oracle not support it?)
 
 * Logos: User
     [ ] document? (would have to be stored in db :(
@@ -254,6 +234,16 @@ Alternative JREs:
   - can't delete? (Apply !!)
 
 ==== Refactorings
+
+* upgrade FOP
+    + no more metrics files needed
+    + no more font file scanning
+    + supports .otf
+    + .rtf output, maybe
+    - api change (massive? tolerable? - research)
+    - templates compatible? (should be)
+    - cheap solution: tweak TTFReader to read OTF and hope that PDF renderer can pick it up
+
 
 [x] lang.properties to utf-8
 
