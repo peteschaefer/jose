@@ -262,21 +262,28 @@ public class MatSignatureV2
             }
 
             if (padv_base==padv_upper)
-                sig |= BitUtil.set6(Math.max(47,padv_base+1),ADV_OFFSET);
+                sig |= BitUtil.set6(Math.max(46,padv_base+1),ADV_OFFSET);
+            else
+                sig |= BitUtil.set6(47,ADV_OFFSET);
         }
 
         public void del_pawn(int square) {
             sig = BitUtil.clear1(sig,pawnOffset(square));
         }
 
-        public void updatePiece(Board board, int captured) {
-            //  todo
+        public void del_piece(int piece, int square, Board board) {
+            // todo decrement piece counter; watch out for unknown promotions
+        }
+
+        public void add_piece(int piece, int square, Board board) {
+            // todo decrement piece counter; watch out for unknown promotions
         }
 
         public void advance_pawn(int from, int to) {
             sig = clear1(sig,pawnOffset(from));
             sig |= set1(1,pawnOffset(to));
             padv_base += (rowOf(to)-rowOf(from));
+            padv_upper = Math.max(padv_upper,padv_base);
         }
     }
 
@@ -357,8 +364,8 @@ public class MatSignatureV2
     private static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcfrom = pawnCount(from.sig);
         int pcto = pawnCount(to.sig);
+        int pcfrom = pawnCount(from.sig);
         if (pcto > pcfrom) return false;    //  not enough pawns
 
         /** check officers count    */
@@ -370,8 +377,8 @@ public class MatSignatureV2
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
 
         /** check pawn home row */
-        long homefrom = pawnRow(from.sig,ROW_2);
         long hometo = pawnRow(to.sig,ROW_2);
+        long homefrom = pawnRow(from.sig,ROW_2);
 
         if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
 
