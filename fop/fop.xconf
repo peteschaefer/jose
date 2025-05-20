@@ -75,12 +75,12 @@ the location of this file.
           <font-triplet name="Arial" style="normal" weight="normal"/>
         </font>
         -->
-        <!--
-        <directory>/home/schaefer/src/jose/fonts</directory>
-        -->
 
-        <!-- auto-detect fonts -->
-        <!-- <auto-detect/> -->
+        <!-- custom fonts -->
+        <directory>fonts</directory>
+
+        <!-- auto-detect system fonts. this is very expensive the first time :(  but gets better... -->
+        <auto-detect/>
 
       </fonts>
 

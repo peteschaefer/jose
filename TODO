@@ -235,14 +235,16 @@ Alternative JREs:
 
 ==== Refactorings
 
-* upgrade FOP
-    + no more metrics files needed
-    + no more font file scanning
-    + supports .otf
-    + .rtf output, maybe
-    - api change (massive? tolerable? - research)
-    - templates compatible? (should be)
-    - cheap solution: tweak TTFReader to read OTF and hope that PDF renderer can pick it up
+* upgrade FOP 2.11
+    [x] no more metrics files needed
+    [x] automatic font file scanning
+    [x] supports .otf
+    [x] .rtf output; no embedded fonts
+    [x] api change (easy)
+    [ ] preview ?
+    [x] templates compatible? (should be)
+    [ ] hyphenation ?
+    [x] batik needed. yes
 
 
 [x] lang.properties to utf-8

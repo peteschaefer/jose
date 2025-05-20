@@ -103,7 +103,8 @@ public class XSLFOExport
 	private static FopFactory fopFactory = null;
 	private static FopFactory getFopFactory() throws IOException, SAXException {
 		if (fopFactory == null)
-			fopFactory = FopFactory.newInstance(new File("/home/schaefer/src/jose/fop/fop.xconf"));
+			fopFactory = FopFactory.newInstance(new File("fop/fop.xconf"));
+		//	configure programatically. harder than you think
 		return fopFactory;
 	}
 
@@ -128,6 +129,7 @@ public class XSLFOExport
          *  before processing them...
          *  @see de.jose.util.style.MarkupParser
          * */
+		outputStream = new BufferedOutputStream(outputStream);
 
 		/* transform source via XSL into XSL-FO    */
 		if (FileUtil.hasExtension(targetName,"txt"))
@@ -137,25 +139,31 @@ public class XSLFOExport
 		else if (FileUtil.hasExtension(targetName,"svg"))
 			fop = fopFactory.newFop(MimeConstants.MIME_SVG,outputStream);     //  SVG requires Batik ! (not included with jose)
 		else if (FileUtil.hasExtension(targetName,"xml"))
-			fop = fopFactory.newFop("text/xml",outputStream);     //  internal XML (for debugging)
+			fop = null;
 		else if (FileUtil.hasExtension(targetName,"fo")) //  create XSL-FO only
-			fop = fopFactory.newFop(MimeConstants.MIME_FOP_IF,outputStream);
-		else {
-			outputStream = new BufferedOutputStream(outputStream);
+			fop = null;	//	print xml (as xsl-fo)
+		else if (FileUtil.hasExtension(targetName,"if")) //  create XSL-FO only
+			fop = fopFactory.newFop(MimeConstants.MIME_FOP_IF,outputStream);	//	print xml (as xsl-fo intermediate format) debugging only
+		else if (FileUtil.hasExtension(targetName,"at")) //  create XSL-FO only
+			fop = fopFactory.newFop(MimeConstants.MIME_FOP_AREA_TREE,outputStream);	//	print xml (as xsl-fo) debugging only
+		else
 			fop = fopFactory.newFop(MimeConstants.MIME_PDF, outputStream);
-		}
 
-		if (fop != null) {
-			//Make sure the XSL transformation's result is piped through to FOP
-			result = new SAXResult(fop.getDefaultHandler());
-			tf.transform(source,result);
+		try {
+			if (fop != null) {
+				fop.getUserAgent().getEventBroadcaster().addEventListener(gConsoleLogger);
+				//Make sure the XSL transformation's result is piped through to FOP
+				result = new SAXResult(fop.getDefaultHandler());
+				tf.transform(source, result);
+//			FormattingResults results = fop.getResults();
+			} else {
+				result = new StreamResult(outputStream);  //  XSL-FO, not rendered (for debugging)
+				tf.transform(source, result);
+			}
+		} finally {
+			outputStream.flush();
+			outputStream.close();
 		}
-		else {
-			result = new StreamResult(outputStream);  //  XSL-FO, not rendered (for debugging)
-			tf.transform(source,result);
-		}
-
-		FormattingResults results = fop.getResults();
 
 		XMLUtil.releaseTransformer(xslFile,tf);
 		return result;
@@ -196,6 +204,8 @@ public class XSLFOExport
 			//Make sure the XSL transformation's result is piped through to FOP
 			Result result = new SAXResult(fop.getDefaultHandler());
 			tf.transform(source,result);
+
+			//	todo how connect fop to AWTRenderer ?
 
 			XMLUtil.releaseTransformer(xslFile,tf);
 			//FOPUtil.release(driver);

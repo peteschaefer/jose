@@ -174,6 +174,7 @@ public class Version
 	}
 
 
+	// @deprecated fop is in classpath; configuration is in fop/fop.xconf
 	public static void loadFop() throws Exception
 	{
 		if (!checkedFop)
