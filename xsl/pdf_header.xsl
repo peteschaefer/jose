@@ -14,7 +14,7 @@
 
 		<!-- FOP workaround: keep-together works only within table-row !! -->
 		<fo:table table-layout="fixed" width="100%">
-			<fo:table-column/>
+			<fo:table-column column-width="100%"/>
 			<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell> 
 			
 			<fo:block><!-- header block -->

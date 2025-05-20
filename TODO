@@ -242,7 +242,8 @@ Alternative JREs:
     [x] .rtf output; no embedded fonts
     [x] api change (easy)
     [x] preview
-        [ ] pick up fonts
+        [?] pick up fonts. difficult, even for system fonts :(
+        [ ] replace with system pdf viewer. it's better anyway.
     [x] templates compatible? yes.
     [ ] line breaks
     [ ] hyphenation ?

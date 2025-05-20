@@ -16,7 +16,7 @@ the location of this file.
 <fop version="1.0">
 
   <!-- Base URL for resolving relative URLs -->
-  <base>.</base>
+  <base>/home/schaefer/src/jose</base>
   
   <!-- Source resolution in dpi (dots/pixels per inch) for determining the size of pixels in SVG and bitmap images, default: 72dpi -->
   <source-resolution>72</source-resolution>
@@ -32,7 +32,7 @@ the location of this file.
     <renderer mime="application/pdf">
       <filterList>
         <!-- provides compression using zlib flate (default is on) -->
-        <value>null</value>
+        <value>flate</value>
   
         <!-- encodes binary data into printable ascii characters (default off)
              This provides about a 4:5 expansion of data size -->

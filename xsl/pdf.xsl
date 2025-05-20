@@ -63,20 +63,22 @@
 
 			<!-- Index -->
 			<xsl:if test="//bookmarks='true'">
-				<xsl:for-each select="//game">
-				<fox:outline>
-					<xsl:attribute name="internal-destination">game-<xsl:value-of select="position()"/></xsl:attribute>
-					<fox:label>
-						<xsl:value-of select="head/tag[key='White']/value"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="head/tag[key='Black']/value"/>
-						<xsl:text>, </xsl:text>
-						<xsl:value-of select="head/tag[key='Site']/value"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="head/tag[key='Date']/value"/>
-					</fox:label>
-				</fox:outline>
-				</xsl:for-each>
+				<fo:bookmark-tree>
+					<xsl:for-each select="//game">
+					<fo:bookmark>
+						<xsl:attribute name="internal-destination">game-<xsl:value-of select="position()"/></xsl:attribute>
+						<fo:bookmark-title>
+							<xsl:value-of select="head/tag[key='White']/value"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="head/tag[key='Black']/value"/>
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="head/tag[key='Site']/value"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="head/tag[key='Date']/value"/>
+						</fo:bookmark-title>
+					</fo:bookmark>
+					</xsl:for-each>
+				</fo:bookmark-tree>
 			</xsl:if>
 
 			<fo:page-sequence master-reference="content-sequence">
@@ -529,7 +531,7 @@
 	<!-- FOP workaround: keep-together works only in table rows !!!! -->
 	<!-- that's why another table is wrapped around -->
 		<fo:table table-layout="fixed" width="100%">
-		<fo:table-column/>
+		<fo:table-column column-width="100%"/>
 		<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell>
 		
 		<fo:block space-before="-0.0em" space-after="-0.0em" text-align="center">

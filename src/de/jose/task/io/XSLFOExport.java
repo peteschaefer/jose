@@ -15,7 +15,9 @@ package de.jose.task.io;
 import de.jose.export.ExportContext;
 import de.jose.export.ExportConfig;
 import de.jose.util.file.FileUtil;
+import de.jose.util.print.FOPUtil;
 import de.jose.util.print.JoConsoleLogger;
+import de.jose.util.print.Triplet;
 import de.jose.util.xml.XMLUtil;
 import de.jose.comm.Command;
 import de.jose.view.style.JoStyleContext;
@@ -24,14 +26,24 @@ import javax.swing.*;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.Set;
 
 //import org.apache.fop.apps.Driver;
+import org.apache.commons.io.output.NullOutputStream;
 import org.apache.fop.apps.*;
+import org.apache.fop.apps.io.InternalResourceResolver;
+import org.apache.fop.apps.io.ResourceResolverFactory;
 import org.apache.fop.area.AreaTreeHandler;
 import org.apache.fop.area.RenderPagesModel;
 import org.apache.fop.fo.FOEventHandler;
 import org.apache.fop.fo.FOTreeBuilder;
+import org.apache.fop.fonts.*;
+import org.apache.fop.fonts.Font;
 import org.apache.fop.render.awt.AWTRenderer;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -104,25 +116,15 @@ public class XSLFOExport
 	    }
     }
 
-	private static JoConsoleLogger gConsoleLogger = new JoConsoleLogger();
-	private static FopFactory fopFactory = null;
-	private static FopFactory getFopFactory() throws IOException, SAXException {
-		if (fopFactory == null)
-			fopFactory = FopFactory.newInstance(new File("fop/fop.xconf"));
-		//	configure programatically. harder than you think
-		return fopFactory;
-	}
-
 	public static Result process(Source source, File xslFile, OutputStream outputStream,
 	                           String targetName,
 	                           JoStyleContext styles, boolean embed_fonts)
             throws TransformerException, IOException, SAXException {
 		/*  XSLT transformer */
-		XMLUtil.getTransformerFactory().setErrorListener(gConsoleLogger);
+		XMLUtil.getTransformerFactory().setErrorListener(FOPUtil.gConsoleLogger);
 		Transformer tf = XMLUtil.getTransformer(xslFile);
-		tf.setErrorListener(gConsoleLogger);
+		tf.setErrorListener(FOPUtil.gConsoleLogger);
 
-		FopFactory fopFactory = getFopFactory();
 		Fop fop;
 		Result result;
 
@@ -138,28 +140,33 @@ public class XSLFOExport
 
 		/* transform source via XSL into XSL-FO    */
 		if (FileUtil.hasExtension(targetName,"txt"))
-			fop = fopFactory.newFop(MimeConstants.MIME_PLAIN_TEXT,outputStream);
+			fop = FOPUtil.newFop(MimeConstants.MIME_PLAIN_TEXT,outputStream);
 		else if (FileUtil.hasExtension(targetName,"ps"))
-			fop = fopFactory.newFop(MimeConstants.MIME_POSTSCRIPT,outputStream);			//  PostScript
+			fop = FOPUtil.newFop(MimeConstants.MIME_POSTSCRIPT,outputStream);			//  PostScript
 		else if (FileUtil.hasExtension(targetName,"svg"))
-			fop = fopFactory.newFop(MimeConstants.MIME_SVG,outputStream);     //  SVG requires Batik ! (not included with jose)
+			fop = FOPUtil.newFop(MimeConstants.MIME_SVG,outputStream);     //  SVG requires Batik ! (not included with jose)
 		else if (FileUtil.hasExtension(targetName,"xml"))
 			fop = null;
 		else if (FileUtil.hasExtension(targetName,"fo")) //  create XSL-FO only
 			fop = null;	//	print xml (as xsl-fo)
 		else if (FileUtil.hasExtension(targetName,"if")) //  create XSL-FO only
-			fop = fopFactory.newFop(MimeConstants.MIME_FOP_IF,outputStream);	//	print xml (as xsl-fo intermediate format) debugging only
+			fop = FOPUtil.newFop(MimeConstants.MIME_FOP_IF,outputStream);	//	print xml (as xsl-fo intermediate format) debugging only
 		else if (FileUtil.hasExtension(targetName,"at")) //  create XSL-FO only
-			fop = fopFactory.newFop(MimeConstants.MIME_FOP_AREA_TREE,outputStream);	//	print xml (as xsl-fo) debugging only
+			fop = FOPUtil.newFop(MimeConstants.MIME_FOP_AREA_TREE,outputStream);	//	print xml (as xsl-fo) debugging only
 		else
-			fop = fopFactory.newFop(MimeConstants.MIME_PDF, outputStream);
+			fop = FOPUtil.newFop(MimeConstants.MIME_PDF, outputStream);
 
 		try {
 			if (fop != null) {
-				fop.getUserAgent().getEventBroadcaster().addEventListener(gConsoleLogger);
 				//Make sure the XSL transformation's result is piped through to FOP
 				result = new SAXResult(fop.getDefaultHandler());
 				tf.transform(source, result);
+/*
+				FontInfo finfo = areaTreeHandler.getFontInfo();
+				FontTriplet trip1 = finfo.fontLookup("Chess Berlin","normal",400);
+				FontTriplet trip2 = finfo.fontLookup("Z003","normal",400);
+				System.out.println(trip1.toString());
+				System.out.println(trip2.toString());*/
 //			FormattingResults results = fop.getResults();
 			} else {
 				result = new StreamResult(outputStream);  //  XSL-FO, not rendered (for debugging)
@@ -189,39 +196,78 @@ public class XSLFOExport
 			pollProgress = 1000;
 		}
 
-		public int work() throws TransformerException, IOException, SAXException
-		{
+		public int work() throws TransformerException, IOException, SAXException, URISyntaxException {
 			Source source = createSAXSource(context);
 
 			/*  XSLT transformer */
 			File xslFile = ExportConfig.getFile(context.config);
-			XMLUtil.getTransformerFactory().setErrorListener(gConsoleLogger);
+			XMLUtil.getTransformerFactory().setErrorListener(FOPUtil.gConsoleLogger);
 			Transformer tf = XMLUtil.getTransformer(xslFile);
-			tf.setErrorListener(gConsoleLogger);
-
+			tf.setErrorListener(FOPUtil.gConsoleLogger);
+/*
+			Set<Triplet> fontInfo = context.styles.collectFontInfo();
+			for(Triplet tp : fontInfo) {
+				java.awt.Font font = de.jose.util.FontUtil.getFont(tp.family, java.awt.Font.PLAIN,false);
+				GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+			}
+ */
 			//  create XSL-FO
 			//FOPUtil.config();
 			//FOPUtil.assertFontMetrics(context.styles,false,false);
 
-			FopFactory fopFactory = getFopFactory();
-			FOUserAgent agent = fopFactory.newFOUserAgent();
-			AWTRenderer renderer = new AWTRenderer(agent);
-			agent.setRendererOverride(renderer);
+			//FopFactory fopFactory = getFopFactory();
+			//FOUserAgent agent = fopFactory.newFOUserAgent();
+			//AWTRenderer renderer = new AWTRenderer(agent);
+			//agent.setRendererOverride(renderer);
 
-			Fop fop = fopFactory.newFop(MimeConstants.MIME_FOP_AWT_PREVIEW);
-			//Setup logging here: driver.setLogger(...
-
-			//Make sure the XSL transformation's result is piped through to FOP
-			DefaultHandler defaultHandler = fop.getDefaultHandler();
-			Result result = new SAXResult(defaultHandler);
-			tf.transform(source,result);
+			Fop fop = FOPUtil.newPreviewFop();
 
 			//	navigating through the FOP class hierarchy is a bit of a ... nuisance
 			//	we need a Renderer to actually print pages; AreaTreeHandle has it.
 			//	@see FOPrintableDocument
-			FOTreeBuilder fotb = (FOTreeBuilder) defaultHandler;
-			this.areaTreeHandler = (AreaTreeHandler) fotb.getEventHandler();
+			this.areaTreeHandler = FOPUtil.getAreaTreeHandler(fop);
+			//FontInfo previewFontInfo = this.areaTreeHandler.getFontInfo();
+			//	copy font info from PDF renderer
+/*
+			Fop pdfFop = FOPUtil.newFop(MimeConstants.MIME_PDF,new NullOutputStream());
+			FontInfo pdfFontInfo = FOPUtil.getAreaTreeHandler(pdfFop).getFontInfo();
 
+			org.apache.fop.render.Renderer rend = fop.getUserAgent().getRendererOverride();
+			rend.setupFontInfo(pdfFontInfo);
+
+			previewFontInfo = FOPUtil.getAreaTreeHandler(fop).getFontInfo();
+			FontTriplet trip1 = previewFontInfo.fontLookup("Chess Berlin","normal",400);
+			FontTriplet trip2 = pdfFontInfo.fontLookup("Chess Berlin","normal",400);
+			System.out.println(trip1.toString());
+			System.out.println(trip2.toString());
+*/
+			/* 	for reasons beyond our imagination, PDF-FOP can pick up a list of custom fonts through the configuration file fop/fop.xconf
+				AWT-FOP can't do this. why not?
+				don't bother - just copy the font information NOW
+			 */
+			//FOPUtil.copyFontInfo(pdfFontInfo,previewFontInfo);
+
+			//trip1 = previewFontInfo.fontLookup("Chess Berlin","normal",400);
+			//System.out.println(trip1.toString());
+
+/*			FontManager fontmgr = fopFactory.getFontManager();
+			InternalResourceResolver uriResolver = ResourceResolverFactory.createInternalResourceResolver(
+					URI.create("file:///home/schaefer/src/jose/fonts"),
+					ResourceResolverFactory.createDefaultResourceResolver());
+			FontCollection customFonts = new CustomFontCollection(uriResolver, Collections.emptyList(), false);
+			fontmgr.setup(finfo, new FontCollection[]{customFonts});
+			FontTriplet trip1 = finfo.fontLookup("Chess Berlin","normal",400);
+			FontTriplet trip2 = finfo.fontLookup("Z003","normal",400);
+*/
+			Result result = new SAXResult(fop.getDefaultHandler());
+			tf.transform(source,result);
+/*
+			finfo = areaTreeHandler.getFontInfo();
+			FontTriplet trip3 = finfo.fontLookup("Chess Berlin","normal",400);
+			FontTriplet trip4 = finfo.fontLookup("Z003","normal",400);
+			System.out.println(trip3.toString());
+			System.out.println(trip4.toString());
+*/
 			XMLUtil.releaseTransformer(xslFile,tf);
 			//FOPUtil.release(driver);
 			return SUCCESS;

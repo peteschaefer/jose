@@ -183,6 +183,7 @@ public class FontUtil
 		Font font = null;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT,input);
+			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
 		} catch (FontFormatException e) {
 			Application.warning("while loading "+file.getName());
 			Application.error(e);

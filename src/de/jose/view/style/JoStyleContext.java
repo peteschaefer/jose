@@ -152,10 +152,10 @@ public class JoStyleContext
 			return null;
 	}
 
-	public static List getChildren(Style style)
+	public static List<Style> getChildren(Style style)
 	{
 		if (style.isDefined("children"))
-			return (List)style.getAttribute("children");
+			return (List<Style>)style.getAttribute("children");
 		else
 			return null;
 	}
@@ -276,15 +276,15 @@ public class JoStyleContext
 	 * make sure that all custom fonts (symbols, figurines) are loaded
 	 * Set<String>
 	 */
-	public Set collectFontInfo()
+	public Set<Triplet> collectFontInfo()
 	{
 	    Style root = getStyle("base");
-		HashSet set = new HashSet();
+		HashSet<Triplet> set = new HashSet<>();
 	    collectFontInfo(root,set);
 		return set;
 	}
 
-	protected void collectFontInfo(Style root, Set collect)
+	protected void collectFontInfo(Style root, Set<Triplet> collect)
 	{
 		String family = JoFontConstants.getFontFamily(root);
 		boolean bold = JoFontConstants.isBold(root);
@@ -292,7 +292,7 @@ public class JoStyleContext
 
 		collect.add(new Triplet(family,bold,italic));
 
-	    List children = getChildren(root);
+	    List<Style> children = getChildren(root);
 		if (children != null)
 			for (int i=0; i<children.size(); i++) {
 				Style child = (Style)children.get(i);
