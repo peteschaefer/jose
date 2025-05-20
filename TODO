@@ -66,11 +66,10 @@
 
 Maintenance:
 [-] bug? db update 1010 on Linux
-[-] embedded fonts in pdf (linux, system fonts)
-    [ ] scan font directories recursively
-    [ ] FOP can't handle .otf (see refactorings)
 
 [ ] Paste text from Clipboad
+    [ ] check resource: /de/jose/util/rtf/charsets/ansi.txt
+
 [ ] search for Year (fill in 1.1.xxxx automatically)
 [ ] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move

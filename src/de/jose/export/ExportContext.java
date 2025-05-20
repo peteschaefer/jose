@@ -117,4 +117,8 @@ public class ExportContext implements Cloneable
 		}
 	}
 
+	@Override
+	public String toString() {
+		return config.toString();
+	}
 }
