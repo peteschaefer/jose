@@ -128,9 +128,14 @@ public class MatSignatureV2
         return bad_bishop(EngUtil.isWhite(color) ? wfeat.sig : bfeat.sig);
     }
 
-
+    /**
+     * incremental update
+     * @param board
+     * @param mv
+     */
     public void update(Board board, Move mv)
     {
+        //  notify "loud" moves: captures and pawn moves
         if (mv.isCapture())
         {
             Features fthat = EngUtil.isWhite(mv.moving.piece) ? bfeat:wfeat;
@@ -139,7 +144,7 @@ public class MatSignatureV2
             else if (mv.captured.isPawn())
                 fthat.del_pawn(EngUtil.rotateSquare(mv.captured.square)); // black pawns are rotated
             else
-                fthat.updatePiece(board, mv.captured.piece);   //  decrease piece count
+                fthat.del_piece(mv.captured.piece,mv.captured.square,board);   //  decrease piece count
         }
         if (mv.moving!=null && mv.moving.isPawn())
         {
@@ -147,7 +152,7 @@ public class MatSignatureV2
             int color = mv.moving.color();
             fthis.advance_pawn(mv.from,mv.to);
             if (mv.isPromotion())
-                fthis.updatePiece(board, mv.getPromotionPiece());
+                fthis.add_piece(mv.getPromotionPiece(),mv.to,board);
         }
     }
 
@@ -206,7 +211,7 @@ public class MatSignatureV2
             int lbcnt = 0;
             for(Piece p : bishops) if (EngUtil.isLightSquare(p.square())) lbcnt++;
             int dbcnt = bishops.size()-lbcnt;
-            int ncnt = board.pieceList(EngUtil.KNIGHT|color).size();
+            int ncnt = board.pieceList(EngUtil.KNIGHT|color).size();    //  todo don't count *vacant* pieces
             int rcnt = board.pieceList(EngUtil.ROOK|color).size();
             int qcnt = board.pieceList(EngUtil.QUEEN|color).size();
 
@@ -229,51 +234,56 @@ public class MatSignatureV2
             int qcnt = queenCount(sig);
             count_officers = ncnt+lbcnt+dbcnt+rcnt+qcnt;
 
-            int counted_promos = 0;
+            int promo_lower = 0;
+            int promo_upper = 8-pawnCount(sig);
             boolean more_promos=false;
-            if (ncnt>=3)    { counted_promos++; more_promos = true; }
-            if (lbcnt==2)   { counted_promos++; }
-            if (lbcnt>=3)   { counted_promos++; more_promos = true; }
-            if (dbcnt==2)   { counted_promos++; }
-            if (dbcnt>=3)   { counted_promos++; more_promos = true; }
-            if (rcnt>=3)    { counted_promos++; more_promos = true; }
-            if (qcnt==2)    { counted_promos++; }
-            if (qcnt>=3)    { counted_promos++; more_promos = true; }
+            if (ncnt>=3)    promo_lower++;
+            if (lbcnt==2)   promo_lower++;
+            if (lbcnt>=3)   promo_lower++;
+            if (dbcnt==2)   promo_lower++;
+            if (dbcnt>=3)   promo_lower++;
+            if (rcnt>=3)    promo_lower++;
+            if (qcnt==2)    promo_lower++;
+            if (qcnt>=3)    promo_lower++;
 
             int stored_padv = get6(sig,ADV_OFFSET)-1;
-            int max_promos = 8-pawnCount(sig);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = computePawnAdvance(sig) + counted_promos*6;
-                        padv_upper = padv_base+max_promos*6;
+                        padv_base = computePawnAdvance(sig) + promo_lower*6;
+                        padv_upper = padv_base+promo_upper*6;
                         break;
                 case 46: // [46..48] rare case
                         padv_base = 46;
                         padv_upper = 48;
                         break;
                 default:// exact value was stored
-                        padv_base = stored_padv;
-                        padv_upper = padv_base+max_promos*6;
-                        assert(padv_base >= computePawnAdvance(sig));
+                        padv_upper = padv_base = stored_padv;
                         break;
             }
 
             if (padv_base==padv_upper)
-                sig |= BitUtil.set6(Math.max(47,padv_base+1),ADV_OFFSET);
+                sig |= BitUtil.set6(Math.max(46,padv_base+1),ADV_OFFSET);
+            else
+                sig |= BitUtil.set6(47,ADV_OFFSET);
         }
 
         public void del_pawn(int square) {
             sig = BitUtil.clear1(sig,pawnOffset(square));
         }
 
-        public void updatePiece(Board board, int piece) {
-            //  todo
+        public void del_piece(int piece, int square, Board board) {
+            // todo decrement piece counter; watch out for unknown promotions
+        }
+
+        public void add_piece(int piece, int square, Board board) {
+            // todo decrement piece counter; watch out for unknown promotions
         }
 
         public void advance_pawn(int from, int to) {
             sig = clear1(sig,pawnOffset(from));
             sig |= set1(1,pawnOffset(to));
             padv_base += (rowOf(to)-rowOf(from));
+            padv_upper = Math.max(padv_upper,padv_base);
         }
     }
 
