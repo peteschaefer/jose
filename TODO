@@ -70,6 +70,7 @@ Maintenance:
     [ ] scan font directories recursively
     [ ] FOP can't handle .otf (see refactorings)
 
+[ ] Paste text from Clipboad
 [ ] search for Year (fill in 1.1.xxxx automatically)
 [ ] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move
@@ -246,7 +247,7 @@ Alternative JREs:
         [?] pick up fonts. only partially on Linux :(
         [ ] replace with system pdf viewer. it's better anyway.
     [x] templates compatible? yes.
-    [ ] line breaks
+    [x] line breaks
     [ ] hyphenation ?
     [x] batik needed. yes
 
