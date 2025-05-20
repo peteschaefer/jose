@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Random;
+import java.util.function.Function;
 
 /**
  * represents the Chess Board
@@ -127,6 +128,31 @@ public class Board
 			return theWhitePieces[EngUtil.uncolored(p)];
 		else
 			return theBlackPieces[EngUtil.uncolored(p)];
+	}
+
+	public final int countPieces(int p) {
+		List<Piece> list = pieceList(p);
+		int count=0;
+		for (Piece piece : list)
+			if (!piece.isVacant()) count++;
+		return count;
+	}
+
+	public final int countPromotedPieces(int color) {
+		List<Piece>[] lists = EngUtil.isWhite(color) ? theWhitePieces : theBlackPieces;
+		int count=0;
+		for(List<Piece> list : lists)
+			for (Piece piece : list)
+				if (!piece.isVacant() && piece.isPromotionPiece()) count++;
+		return count;
+	}
+
+	public final int countPieces(int p, Function<Piece,Boolean> predicate) {
+		List<Piece> list = pieceList(p);
+		int count=0;
+		for (Piece piece : list)
+			if (!piece.isVacant() && predicate.apply(piece)) count++;
+		return count;
 	}
 
 	public final Piece getPiece(int pc, int index)
