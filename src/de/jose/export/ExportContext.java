@@ -14,6 +14,7 @@ package de.jose.export;
 
 import de.jose.task.GameSource;
 import de.jose.profile.UserProfile;
+import de.jose.util.print.FOPrintableDocument;
 import de.jose.util.print.PrintableDocument;
 import de.jose.util.print.AWTPrintableDocument;
 import de.jose.util.print.HTMLPrintableDocument;
@@ -107,8 +108,8 @@ public class ExportContext implements Cloneable
 
 		case ExportConfig.OUTPUT_XSL_FO:
 			//  create PrintableDocuments from XSL-FO
-			Version.loadFop();
-			return null;//new FOPrintableDocument(this);
+			//Version.loadFop();
+			return new FOPrintableDocument(this);
 
 		default:
 			//  other output formats not supported

@@ -28,8 +28,13 @@ import java.io.*;
 
 //import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.*;
+import org.apache.fop.area.AreaTreeHandler;
+import org.apache.fop.area.RenderPagesModel;
+import org.apache.fop.fo.FOEventHandler;
+import org.apache.fop.fo.FOTreeBuilder;
 import org.apache.fop.render.awt.AWTRenderer;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * XSLFOExport
@@ -172,7 +177,8 @@ public class XSLFOExport
 
 	public static class Preview extends XSLFOExport
 	{
-		public AWTRenderer renderer;
+		//public AWTRenderer renderer;
+		public AreaTreeHandler areaTreeHandler=null;
 
 		public Preview (ExportContext context, Runnable onComplete, Command onSuccess) throws Exception
 		{
@@ -198,19 +204,26 @@ public class XSLFOExport
 			//FOPUtil.assertFontMetrics(context.styles,false,false);
 
 			FopFactory fopFactory = getFopFactory();
+			FOUserAgent agent = fopFactory.newFOUserAgent();
+			AWTRenderer renderer = new AWTRenderer(agent);
+			agent.setRendererOverride(renderer);
+
 			Fop fop = fopFactory.newFop(MimeConstants.MIME_FOP_AWT_PREVIEW);
 			//Setup logging here: driver.setLogger(...
 
 			//Make sure the XSL transformation's result is piped through to FOP
-			Result result = new SAXResult(fop.getDefaultHandler());
+			DefaultHandler defaultHandler = fop.getDefaultHandler();
+			Result result = new SAXResult(defaultHandler);
 			tf.transform(source,result);
 
-			//	todo how connect fop to AWTRenderer ?
+			//	navigating through the FOP class hierarchy is a bit of a ... nuisance
+			//	we need a Renderer to actually print pages; AreaTreeHandle has it.
+			//	@see FOPrintableDocument
+			FOTreeBuilder fotb = (FOTreeBuilder) defaultHandler;
+			this.areaTreeHandler = (AreaTreeHandler) fotb.getEventHandler();
 
 			XMLUtil.releaseTransformer(xslFile,tf);
 			//FOPUtil.release(driver);
-
-			renderer = null;	//	??? no such thing in Fop 2.11 ?
 			return SUCCESS;
 		}
 	}

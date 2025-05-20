@@ -241,8 +241,10 @@ Alternative JREs:
     [x] supports .otf
     [x] .rtf output; no embedded fonts
     [x] api change (easy)
-    [ ] preview ?
-    [x] templates compatible? (should be)
+    [x] preview
+        [ ] pick up fonts
+    [x] templates compatible? yes.
+    [ ] line breaks
     [ ] hyphenation ?
     [x] batik needed. yes
 
