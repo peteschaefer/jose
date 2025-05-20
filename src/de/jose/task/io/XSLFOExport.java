@@ -143,6 +143,8 @@ public class XSLFOExport
 			fop = FOPUtil.newFop(MimeConstants.MIME_PLAIN_TEXT,outputStream);
 		else if (FileUtil.hasExtension(targetName,"ps"))
 			fop = FOPUtil.newFop(MimeConstants.MIME_POSTSCRIPT,outputStream);			//  PostScript
+		else if (FileUtil.hasExtension(targetName,"rtf"))
+			fop = FOPUtil.newFop(MimeConstants.MIME_RTF,outputStream);			//  PostScript
 		else if (FileUtil.hasExtension(targetName,"svg"))
 			fop = FOPUtil.newFop(MimeConstants.MIME_SVG,outputStream);     //  SVG requires Batik ! (not included with jose)
 		else if (FileUtil.hasExtension(targetName,"xml"))

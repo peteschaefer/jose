@@ -239,10 +239,11 @@ Alternative JREs:
     [x] no more metrics files needed
     [x] automatic font file scanning
     [x] supports .otf
-    [x] .rtf output; no embedded fonts
+    [x] .rtf output; no embedded fonts, of course
+        [ ] fix page layout
     [x] api change (easy)
     [x] preview
-        [?] pick up fonts. difficult, even for system fonts :(
+        [?] pick up fonts. only partially on Linux :(
         [ ] replace with system pdf viewer. it's better anyway.
     [x] templates compatible? yes.
     [ ] line breaks

@@ -282,8 +282,10 @@
 
 	<!-- Move -->
 	<xsl:template match="m">
-		<fo:inline> <!-- hyphenate="false" keep-together.within-line="always"  ignored by FOP -->
-			<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>
+		<xsl:text> </xsl:text>
+		<fo:inline> <!-- hyphenate="false" keep-together.within-line="always"  ignored by FOP (still?) -->
+			<xsl:attribute name="wrap-option">no-wrap</xsl:attribute>
+			<xsl:apply-templates/><xsl:text> </xsl:text>
 		</fo:inline>
 	</xsl:template>
 
@@ -530,11 +532,13 @@
 
 	<!-- FOP workaround: keep-together works only in table rows !!!! -->
 	<!-- that's why another table is wrapped around -->
+		<!--
 		<fo:table table-layout="fixed" width="100%">
 		<fo:table-column column-width="100%"/>
 		<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell>
-		
+		-->
 		<fo:block space-before="-0.0em" space-after="-0.0em" text-align="center">
+			<xsl:attribute name="keep-together.within-column">always</xsl:attribute>
 			<!-- font attributes -->
 			<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
 			<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>
@@ -549,8 +553,9 @@
 
 			<xsl:apply-templates select="table/tr"/>
 		</fo:block>
-
+		<!--
 		</fo:table-cell></fo:table-row></fo:table-body></fo:table>
+		-->
 	</xsl:template>
 
 	<xsl:template match="tr">

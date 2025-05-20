@@ -12,43 +12,37 @@
 		<xsl:param name="style" select="$styles//style[name='header']"/>
 		<xsl:param name="color" select="$style/a[key='foreground']/value"/>
 
-		<!-- FOP workaround: keep-together works only within table-row !! -->
-		<fo:table table-layout="fixed" width="100%">
-			<fo:table-column column-width="100%"/>
-			<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell> 
-			
-			<fo:block><!-- header block -->
-				<!-- font attributes -->
-				<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
-				<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="string-length($color)=0"><xsl:attribute name="color">black</xsl:attribute></xsl:when>
-					<xsl:otherwise><xsl:attribute name="color"><xsl:value-of select="$color"/></xsl:attribute></xsl:otherwise>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="$style/a[key='bold']/value='true'"><xsl:attribute name="font-weight">bold</xsl:attribute></xsl:when>
-					<xsl:otherwise><xsl:attribute name="font-weight">normal</xsl:attribute></xsl:otherwise>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="$style/a[key='italic']/value='true'"><xsl:attribute name="font-style">italic</xsl:attribute></xsl:when>
-					<xsl:otherwise><xsl:attribute name="font-style">normal</xsl:attribute></xsl:otherwise>
-				</xsl:choose>
-	
-				<xsl:call-template name="first-header-line">
-					<xsl:with-param name="head" select="."/>
-				</xsl:call-template>
-	
-				<xsl:call-template name="second-header-line">
-					<xsl:with-param name="head" select="."/>
-				</xsl:call-template>
-	
-				<xsl:call-template name="third-header-line">
-					<xsl:with-param name="head" select="."/>
-				</xsl:call-template>
-	
-			</fo:block>
-		</fo:table-cell> </fo:table-row> </fo:table-body> </fo:table>
-			
+		<fo:block><!-- header block -->
+			<xsl:attribute name="keep-together.within-column">always</xsl:attribute>
+			<!-- font attributes -->
+			<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
+			<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="string-length($color)=0"><xsl:attribute name="color">black</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="color"><xsl:value-of select="$color"/></xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="$style/a[key='bold']/value='true'"><xsl:attribute name="font-weight">bold</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="font-weight">normal</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="$style/a[key='italic']/value='true'"><xsl:attribute name="font-style">italic</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="font-style">normal</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+
+			<xsl:call-template name="first-header-line">
+				<xsl:with-param name="head" select="."/>
+			</xsl:call-template>
+
+			<xsl:call-template name="second-header-line">
+				<xsl:with-param name="head" select="."/>
+			</xsl:call-template>
+
+			<xsl:call-template name="third-header-line">
+				<xsl:with-param name="head" select="."/>
+			</xsl:call-template>
+
+		</fo:block>
 	</xsl:template>
 
 
@@ -192,7 +186,7 @@
 					
 						<xsl:if test="$isRound">
 							<fo:inline keep-together.within-line="always">
-								<!-- note: keep-together ignored by FOP -->
+								<!-- note: keep-together ignored by FOP (still?) -->
 								<xsl:value-of select="$head/tag[key='Round']/text"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="$Round"/>
@@ -205,7 +199,7 @@
 
 						<xsl:if test="$isBoard">
 							<fo:inline keep-together.within-line="always">
-								<!-- note: keep-together ignored by FOP -->
+								<!-- note: keep-together ignored by FOP (still?) -->
 								<xsl:value-of select="$head/tag[key='Board']/text"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="$Board"/>
