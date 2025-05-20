@@ -28,7 +28,9 @@
 
 		<xsl:param name="column-count">2</xsl:param>
 
-		<xsl:param name="language">de</xsl:param>
+		<xsl:param name="language">
+			<xsl:value-of select="//language"/>
+		</xsl:param>
 
 		<fo:root>
 			<fo:layout-master-set>

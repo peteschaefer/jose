@@ -245,10 +245,10 @@ Alternative JREs:
     [x] api change (easy)
     [x] preview
         [?] pick up fonts. only partially on Linux :(
-        [ ] replace with system pdf viewer. it's better anyway.
+        [-] replace with system pdf viewer. it's better anyway.
     [x] templates compatible? yes.
     [x] line breaks
-    [ ] hyphenation ?
+    [x] hyphenation
     [x] batik needed. yes
 
 
