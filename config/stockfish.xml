@@ -22,8 +22,8 @@
 	<EXEC os="Mac_arm">
 		<COMMAND> %dir%/stockfish-macos-m1-apple-silicon </COMMAND>
 	</EXEC>
-	<DIR> %local%/engines/stockfish </DIR>
-	<LOGO> %dir%/Stockfish-large.bmp </LOGO>
+	<DIR> %local%\engines\stockfish </DIR>
+	<LOGO> %dir%\Stockfish-large.bmp </LOGO>
 	<VERSION> 17 </VERSION>
 	<AUTHOR> the Stockfish developers (see AUTHORS file) </AUTHOR>
 	<OPTIONS>

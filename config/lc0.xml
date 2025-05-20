@@ -22,8 +22,8 @@
 	<EXEC os="Mac_arm">
 		<COMMAND> %dir%/lc0 </COMMAND>
 	</EXEC>
-	<DIR> %local%/engines/lc0 </DIR>
-	<LOGO> %dir%/Leela_Chess_Zero_logo.png </LOGO>
+	<DIR> %local%\engines\lc0 </DIR>
+	<LOGO> %dir%\Leela_Chess_Zero_logo.png </LOGO>
 	<VERSION> v0.31.2 </VERSION>
 	<AUTHOR> The LCZero Authors. </AUTHOR>
 	<OPTIONS>
@@ -33,7 +33,7 @@
 		Don't even try to determine it from factory settings.
 		Just use the default and let the user change it.-->
 		<OPTION name="BackendOptions"/>
-		<OPTION name="Threads"> 1 </OPTION>
+		<OPTION name="Threads"> 3 </OPTION>
 		<OPTION name="NNCacheSize"> 2000000 </OPTION>
 		<OPTION name="MinibatchSize"> 0 </OPTION>
 		<OPTION name="MaxPrefetch"> 32 </OPTION>
@@ -98,7 +98,7 @@
 		<OPTION name="TimeManager"> legacy </OPTION>
 		<OPTION name="ValueOnly"> false </OPTION>
 		<OPTION name="LogFile"/>
-		<OPTION name="Backend"> eigen </OPTION>
+		<OPTION name="Backend"> cuda-auto </OPTION>
 	</OPTIONS>
 	<ARGS/>
 	<STARTUP/>
