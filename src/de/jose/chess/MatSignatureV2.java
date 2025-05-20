@@ -175,7 +175,7 @@ public class MatSignatureV2
     {
         long sig;
         int count_officers = 0;          //  number of officers on the board; lower bound, including known promotions
-        int padv_base = 0; //  pawn moves (including already captured and promoted pawns)
+        int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
         void clear() {
@@ -207,13 +207,11 @@ public class MatSignatureV2
             }
 
             /** count officers; clip at 3 */
-            List<Piece> bishops = board.pieceList(EngUtil.BISHOP|color);
-            int lbcnt = 0;
-            for(Piece p : bishops) if (EngUtil.isLightSquare(p.square())) lbcnt++;
-            int dbcnt = bishops.size()-lbcnt;
-            int ncnt = board.pieceList(EngUtil.KNIGHT|color).size();    //  todo don't count *vacant* pieces
-            int rcnt = board.pieceList(EngUtil.ROOK|color).size();
-            int qcnt = board.pieceList(EngUtil.QUEEN|color).size();
+            int ncnt = board.countPieces(EngUtil.KNIGHT|color);
+            int lbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()));
+            int dbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()));
+            int rcnt = board.countPieces(EngUtil.ROOK|color);
+            int qcnt = board.countPieces(EngUtil.QUEEN|color);
 
             sig |= clip2(ncnt,KNIGHT_OFFSET);
             sig |= clip2(lbcnt,LIGHT_BISHOP_OFFSET);
@@ -245,6 +243,7 @@ public class MatSignatureV2
             if (rcnt>=3)    promo_lower++;
             if (qcnt==2)    promo_lower++;
             if (qcnt>=3)    promo_lower++;
+            //  todo get a second promo_lower bound from Board
 
             int stored_padv = get6(sig,ADV_OFFSET)-1;
             switch (stored_padv) {
@@ -364,8 +363,8 @@ public class MatSignatureV2
     private static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcto = pawnCount(to.sig);
         int pcfrom = pawnCount(from.sig);
+        int pcto = pawnCount(to.sig);
         if (pcto > pcfrom) return false;    //  not enough pawns
 
         /** check officers count    */
@@ -377,8 +376,8 @@ public class MatSignatureV2
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
 
         /** check pawn home row */
-        long hometo = pawnRow(to.sig,ROW_2);
         long homefrom = pawnRow(from.sig,ROW_2);
+        long hometo = pawnRow(to.sig,ROW_2);
 
         if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
 
