@@ -175,7 +175,7 @@ public class MatSignatureV2
     {
         long sig;
         int count_officers = 0;          //  number of officers on the board; lower bound, including known promotions
-        int padv_base = 0; //  pawn moves (including already captured and promoted pawns)
+        int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
         void clear() {
@@ -232,32 +232,31 @@ public class MatSignatureV2
             int qcnt = queenCount(sig);
             count_officers = ncnt+lbcnt+dbcnt+rcnt+qcnt;
 
-            int counted_promos = 0;
+            int promo_lower = 0;
+            int promo_upper = 8-pawnCount(sig);
             boolean more_promos=false;
-            if (ncnt>=3)    { counted_promos++; more_promos = true; }
-            if (lbcnt==2)   { counted_promos++; }
-            if (lbcnt>=3)   { counted_promos++; more_promos = true; }
-            if (dbcnt==2)   { counted_promos++; }
-            if (dbcnt>=3)   { counted_promos++; more_promos = true; }
-            if (rcnt>=3)    { counted_promos++; more_promos = true; }
-            if (qcnt==2)    { counted_promos++; }
-            if (qcnt>=3)    { counted_promos++; more_promos = true; }
+            if (ncnt>=3)    promo_lower++;
+            if (lbcnt==2)   promo_lower++;
+            if (lbcnt>=3)   promo_lower++;
+            if (dbcnt==2)   promo_lower++;
+            if (dbcnt>=3)   promo_lower++;
+            if (rcnt>=3)    promo_lower++;
+            if (qcnt==2)    promo_lower++;
+            if (qcnt>=3)    promo_lower++;
+            //  todo get a second promo_lower bound from Board
 
             int stored_padv = get6(sig,ADV_OFFSET)-1;
-            int max_promos = 8-pawnCount(sig);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = computePawnAdvance(sig) + counted_promos*6;
-                        padv_upper = padv_base+max_promos*6;
+                        padv_base = computePawnAdvance(sig) + promo_lower*6;
+                        padv_upper = padv_base+promo_upper*6;
                         break;
                 case 46: // [46..48] rare case
                         padv_base = 46;
                         padv_upper = 48;
                         break;
                 default:// exact value was stored
-                        padv_base = stored_padv;
-                        padv_upper = padv_base+max_promos*6;
-                        assert(padv_base >= computePawnAdvance(sig));
+                        padv_upper = padv_base = stored_padv;
                         break;
             }
 
@@ -364,8 +363,8 @@ public class MatSignatureV2
     private static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcto = pawnCount(to.sig);
         int pcfrom = pawnCount(from.sig);
+        int pcto = pawnCount(to.sig);
         if (pcto > pcfrom) return false;    //  not enough pawns
 
         /** check officers count    */
@@ -377,8 +376,8 @@ public class MatSignatureV2
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
 
         /** check pawn home row */
-        long hometo = pawnRow(to.sig,ROW_2);
         long homefrom = pawnRow(from.sig,ROW_2);
+        long hometo = pawnRow(to.sig,ROW_2);
 
         if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
 
