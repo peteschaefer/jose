@@ -10,7 +10,7 @@ import de.jose.task.GameSource;
 import de.jose.task.GameTask;
 import de.jose.task.io.ArchiveExport;
 import de.jose.task.io.PGNExport;
-import org.apache.fop.tools.IOUtil;
+import org.apache.commons.io.IOUtils;
 
 @WebServlet(name = "DownloadServlet", value = "/download-servlet")
 public class DownloadServlet extends HttpServlet {
@@ -79,7 +79,7 @@ public class DownloadServlet extends HttpServlet {
         response.setContentLength((int)size);
 
         //  stream temp file to output
-        IOUtil.copyStream(new FileInputStream(tempFile), response.getOutputStream());
+        IOUtils.copy(new FileInputStream(tempFile), response.getOutputStream());
     }
 
     public void destroy() {

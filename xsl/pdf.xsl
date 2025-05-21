@@ -28,7 +28,9 @@
 
 		<xsl:param name="column-count">2</xsl:param>
 
-		<xsl:param name="language">de</xsl:param>
+		<xsl:param name="language">
+			<xsl:value-of select="//language"/>
+		</xsl:param>
 
 		<fo:root>
 			<fo:layout-master-set>
@@ -39,6 +41,14 @@
 					<xsl:attribute name="margin-bottom"><xsl:value-of select="//page/margin-bottom"/>pt</xsl:attribute>
 					<xsl:attribute name="margin-left"><xsl:value-of select="//page/margin-left"/>pt</xsl:attribute>
 					<xsl:attribute name="margin-right"><xsl:value-of select="//page/margin-right"/>pt</xsl:attribute>
+
+					<fo:region-body
+							column-gap="10pt">
+						<xsl:attribute name="column-count"><xsl:value-of select="$column-count"/></xsl:attribute>
+						<xsl:attribute name="margin-top"><xsl:value-of select="$header_extent"/></xsl:attribute>
+						<xsl:attribute name="margin-bottom"><xsl:value-of select="$footer_extent"/></xsl:attribute>
+					</fo:region-body>
+
 					<fo:region-before>
 						<xsl:attribute name="extent"><xsl:value-of select="$header_extent"/></xsl:attribute>
 					</fo:region-before>
@@ -46,13 +56,7 @@
 						<xsl:attribute name="extent"><xsl:value-of select="$footer_extent"/></xsl:attribute>
 					</fo:region-after>
 					
-					<fo:region-body 
-						column-gap="10pt">
-						<xsl:attribute name="column-count"><xsl:value-of select="$column-count"/></xsl:attribute>
-						<xsl:attribute name="margin-top"><xsl:value-of select="$header_extent"/></xsl:attribute>
-						<xsl:attribute name="margin-bottom"><xsl:value-of select="$footer_extent"/></xsl:attribute>
-					</fo:region-body>
-						
+
 				</fo:simple-page-master>
 				<fo:page-sequence-master master-name="content-sequence">
 					<fo:repeatable-page-master-reference master-reference="content-page"/>
@@ -61,20 +65,22 @@
 
 			<!-- Index -->
 			<xsl:if test="//bookmarks='true'">
-				<xsl:for-each select="//game">
-				<fox:outline>
-					<xsl:attribute name="internal-destination">game-<xsl:value-of select="position()"/></xsl:attribute>
-					<fox:label>
-						<xsl:value-of select="head/tag[key='White']/value"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="head/tag[key='Black']/value"/>
-						<xsl:text>, </xsl:text>
-						<xsl:value-of select="head/tag[key='Site']/value"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="head/tag[key='Date']/value"/>
-					</fox:label>
-				</fox:outline>
-				</xsl:for-each>
+				<fo:bookmark-tree>
+					<xsl:for-each select="//game">
+					<fo:bookmark>
+						<xsl:attribute name="internal-destination">game-<xsl:value-of select="position()"/></xsl:attribute>
+						<fo:bookmark-title>
+							<xsl:value-of select="head/tag[key='White']/value"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="head/tag[key='Black']/value"/>
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="head/tag[key='Site']/value"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="head/tag[key='Date']/value"/>
+						</fo:bookmark-title>
+					</fo:bookmark>
+					</xsl:for-each>
+				</fo:bookmark-tree>
 			</xsl:if>
 
 			<fo:page-sequence master-reference="content-sequence">
@@ -278,8 +284,10 @@
 
 	<!-- Move -->
 	<xsl:template match="m">
-		<fo:inline> <!-- hyphenate="false" keep-together.within-line="always"  ignored by FOP -->
-			<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>
+		<xsl:text> </xsl:text>
+		<fo:inline> <!-- hyphenate="false" keep-together.within-line="always"  ignored by FOP (still?) -->
+			<xsl:attribute name="wrap-option">no-wrap</xsl:attribute>
+			<xsl:apply-templates/><xsl:text> </xsl:text>
 		</fo:inline>
 	</xsl:template>
 
@@ -526,11 +534,13 @@
 
 	<!-- FOP workaround: keep-together works only in table rows !!!! -->
 	<!-- that's why another table is wrapped around -->
+		<!--
 		<fo:table table-layout="fixed" width="100%">
-		<fo:table-column/>
+		<fo:table-column column-width="100%"/>
 		<fo:table-body> <fo:table-row keep-together="always"><fo:table-cell>
-		
+		-->
 		<fo:block space-before="-0.0em" space-after="-0.0em" text-align="center">
+			<xsl:attribute name="keep-together.within-column">always</xsl:attribute>
 			<!-- font attributes -->
 			<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
 			<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>
@@ -545,8 +555,9 @@
 
 			<xsl:apply-templates select="table/tr"/>
 		</fo:block>
-
+		<!--
 		</fo:table-cell></fo:table-row></fo:table-body></fo:table>
+		-->
 	</xsl:template>
 
 	<xsl:template match="tr">

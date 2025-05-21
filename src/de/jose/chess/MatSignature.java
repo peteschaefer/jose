@@ -16,6 +16,8 @@ import de.jose.Util;
 
 import java.util.List;
 
+import static de.jose.util.BitUtil.*;
+
 /**
  *
  * can be used to filter position searches
@@ -60,8 +62,6 @@ public class MatSignature
 	 *
 	 * =======
 	 * 	54 bits
-	 *
-	 * 	todo distinguish light squared, dark squared bishops!
 	 */
     public long wsig, bsig;
 
@@ -120,15 +120,6 @@ public class MatSignature
     // --------------------------------------
     //      Basic Methods
     // --------------------------------------
-
-	static int get2(long mat, int offset)     { return (int)(mat >> offset) & 0x0003; }
-    static int get3(long mat, int offset)     { return (int)(mat >> offset) & 0x0007; }
-    static int get4(long mat, int offset)     { return (int)(mat >> offset) & 0x000f; }
-    static int get5(long mat, int offset)     { return (int)(mat >> offset) & 0x001f; }
-	static int get6(long mat, int offset)     { return (int)(mat >> offset) & 0x003f; }
-	static int get8(long mat, int offset)     { return (int)(mat >> offset) & 0x00ff; }
-
-	static boolean is(long mat, long flag)    { return (mat&flag) != 0L; }
 
 	static int pawncount(long mat)                  { return get4(mat,OFF_PAWN); }
 	static int knightcount(long mat)                { return get4(mat,OFF_KNIGHT); }

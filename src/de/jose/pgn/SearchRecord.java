@@ -387,28 +387,33 @@ public class SearchRecord implements Cloneable
     /**
      * estimate the number of results, if available
      */
-    public int estimateResults() throws Exception
+    public int estimateResults() throws SQLException
     {
         if (hasFilter())
-            return -1;
-            /** estimating is too expensive */
-        /** else:
-         *  estimating is easy, just sum up the collection sizes
-         */
-        ParamStatement sql = new ParamStatement();
-        sql.select.append("SUM(GameCount)");
-        sql.from.append("Collection");
+            return -1; /** estimating is too expensive */
+		else
+			return estimateCollectionSizes(this.collections);
+		/** else:
+		 *  estimating is easy, just sum up the collection sizes
+		 */
+	}
 
-        makeCollectionFilter(sql,"Id");
+	public int estimateCollectionSizes(IntHashSet collections) throws SQLException
+	{
+		ParamStatement sql = new ParamStatement();
+		sql.select.append("SUM(GameCount)");
+		sql.from.append("Collection");
 
-        JoConnection conn = null;
-        try {
-            conn = JoConnection.get();
-            return sql.toPreparedStatement(conn).selectInt();
-        } finally {
-            JoConnection.release(conn);
-        }
-    }
+		makeCollectionFilter(sql,"Id",collections);
+
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			return sql.toPreparedStatement(conn).selectInt();
+		} finally {
+			JoConnection.release(conn);
+		}
+	}
 
 	public ParamStatement makeIdStatement() throws SQLException
 	{
@@ -428,15 +433,27 @@ public class SearchRecord implements Cloneable
         joins = 0;  //  JOIN_STRAIGHT; not needed if tables are analyzed regularly !
 	    driving = 0;
 
-		makeCollectionFilter(sql,"Game.CId");
+		makeCollectionFilter(sql,"Game.CId",this.collections);
 
 		makeSearchFilter(sql,reversedColors);
 
         makeOrder(sql);
 
-		if (!posFilter.isEmpty())
+		if (!posFilter.isEmpty()) {
 			joins |= JOIN_MORE;
-		/**	STRAIGHT_JOIN is a hint to the MySQL "optimiser"	*/
+			if ((joins & JOIN_GAME) != 0 && !hasInfoFilter() && !hasCommentFilter()) {
+				//	join Game,MoreGame
+				int result1 = estimateCollectionSizes(this.collections);
+				int result2 = estimateCollectionSizes(null);
+				//	and Collection is large (compared to the whole db)
+				if (result1 >= result2*0.5) {
+					driving = JOIN_MORE;
+					joins |= JOIN_STRAIGHT;
+					//	"MoreGame STRAIGHT_JOIN Game" produces a table-scan on MoreGame
+					//	since the collection is large, we have to do it anyway.
+				}
+			}
+		}
 
 		if (joins==0) joins = JOIN_GAME;
 
@@ -448,9 +465,10 @@ public class SearchRecord implements Cloneable
 		}
 //		System.out.println(sql.toString());
 
-		if (!posFilter.isEmpty())
-			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, "+
-								" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+		if (!posFilter.isEmpty()) {
+			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
+					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+		}
 
 		return sql;
 	}
@@ -477,7 +495,7 @@ public class SearchRecord implements Cloneable
 		        | JOIN_MORE;
 	    driving = 0;
 
-		makeCollectionFilter(sql,"Game.CId");
+		makeCollectionFilter(sql,"Game.CId",this.collections);
 
 		makeSearchFilter(sql,reversedColors);
 
@@ -1042,7 +1060,7 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
-	protected void makeCollectionFilter(ParamStatement sql, String cidColumn) throws SQLException
+	protected void makeCollectionFilter(ParamStatement sql, String cidColumn, IntHashSet collections) throws SQLException
 	{
 		/* set collection filter    */
         if (collections==null || collections.isEmpty())

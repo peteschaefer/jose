@@ -174,6 +174,7 @@ public class Version
 	}
 
 
+	// @deprecated fop is in classpath; configuration is in fop/fop.xconf
 	public static void loadFop() throws Exception
 	{
 		if (!checkedFop)
@@ -188,9 +189,9 @@ public class Version
 				}
 
 				//  append class path
-				File lib = new File(Application.theWorkingDirectory,"lib");
-				ClassPathUtil.addAllToClassPath(lib, "fop-plus.jar");
-				Class.forName("org.apache.fop.apps.Driver");
+				//File lib = new File(Application.theWorkingDirectory,"lib");
+				//ClassPathUtil.addAllToClassPath(lib, "fop-plus.jar");
+				//Class.forName("org.apache.fop.apps.Driver");
 				checkedFop = true;
 			}
 	}

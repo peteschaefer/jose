@@ -43,14 +43,7 @@
     [-] remove l&f selection
     [ ] from command line
 
-[ ] 7z decompression
-    [x] apache commons compress
-    [x] input pgn.7z
-    [x] input jose.7z
-    [?] output pgn.7z
-    [?] (output jose .7z)
-    [ ] .zst ? yes, it's fast. but not that much better than gzip, zip.
-    [x] bug: add commons-lang3 to class path
+[ ] .zst compression ? yes, it's fast. but not that much better than gzip, zip.
 
 [ ] Undo
     which operations need to be recorded; and on which level of detail ?
@@ -73,23 +66,50 @@
 
 Maintenance:
 [-] bug? db update 1010 on Linux
-[-] embedded fonts in pdf (linux, system fonts)
-    [ ] scan font directories recursively
-    [ ] FOP can't handle .otf (see refactorings)
 
-[ ] Paste text from Clipboad
+[x] Paste text from Clipboad
+    [x] check resource: /de/jose/util/rtf/charsets/ansi.txt
+
 [ ] search for Year (fill in 1.1.xxxx automatically)
 [ ] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move
 [ ] order by Round: numeric instead of alpha
 
-[ ] PosFilter + CId is slow. why?
-    - position search is just a full-table scan on MoreGame
-    - CId filter introduces indexing on Game
-    - check out https://dev.mysql.com/doc/refman/5.7/en/index-hints.html
-    - experiment with USE/FORCE/IGNORE INDEX
-      (FORCE avoids full-table scans. But for large DBs we *prefer* a full-table scan on MoreGame :)
+[.] PosFilter + CId is slow.
+    - full-table scan on MoreGame is more effective than indexing
+    - use MoreGame STRAIGHT_JOIN Game if the expected result is large
+        SIMPLE,MoreGame,ALL,PRIMARY,,,,15835553
+        SIMPLE,Game,eq_ref,Using where
+    which means, roughly: full-table scan on MoreGame, then lookup Game
+    i.e. a nested loop join; instead of a hash join :(
 
+[ ] upgrade FOP 2.11
+    [x] no more metrics files needed
+    [x] automatic font file scanning
+    [x] supports .otf
+    [x] .rtf output; no embedded fonts, of course
+        [ ] fix page layout
+    [x] api change (easy)
+    [x] preview
+        [?] pick up fonts. only partially on Linux :(
+        [-] replace with system pdf viewer. it's better anyway.
+    [x] templates compatible? yes.
+    [x] line breaks
+    [x] hyphenation
+    [x] batik needed. yes
+    [ ] Annotations !?
+    [ ] deploy patch: check that all the files are present. classpath etc.
+
+[ ] Matsig V2
+    [ ] pawn bitset, piece counts, bishop colors
+    [ ] unit tests
+        [ ] hard cases
+        [ ] random games (incremental mode)
+        [ ] db games (incremental mode)
+    [ ] opposite bishop, even bishop
+    [ ] good bishop, bad bishop
+    [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
+    [ ] cross-over (faster this time, batched pll + temp table?)
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors
     [ ] unit tests
@@ -124,6 +144,23 @@ Maintenance:
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
 
+
+* Store MatSignature in DB
+    - speeds up Position search
+    - for 10, 20, end position ?
+        test whether it improves selectivity:
+        `reachable(query,sig10) or reachable(sig10,query)
+         and reachable(query,sigend)`
+    - requires cross-over & re-built archive files !
+    - next: custom MySQL function pos_reachable(), pawn_reachable()
+    - benchmark?
+
+
+* RTF export? currently possible via copy/paste.
+  - fop 0.20 does not support it
+  - upgrading fop seems painful (and has little merit)
+  - RTFGenerator is not flawless but better than nothing
+    (why does Oracle not support it?)
 
 * Logos: User
     [ ] document? (would have to be stored in db :(
@@ -242,22 +279,6 @@ Alternative JREs:
   - can't delete? (Apply !!)
 
 ==== Refactorings
-
-* upgrade FOP 2.11
-    [x] no more metrics files needed
-    [x] automatic font file scanning
-    [x] supports .otf
-    [x] .rtf output; no embedded fonts, of course
-        [ ] fix page layout
-    [x] api change (easy)
-    [x] preview
-        [?] pick up fonts. only partially on Linux :(
-        [ ] replace with system pdf viewer. it's better anyway.
-    [x] templates compatible? yes.
-    [x] line breaks
-    [ ] hyphenation ?
-    [x] batik needed. yes
-
 
 [x] lang.properties to utf-8
 

@@ -12,12 +12,19 @@
 
 package de.jose.util.print;
 
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.FOUserAgent;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.fop.area.AreaTreeHandler;
+import org.apache.fop.area.PageViewport;
+import org.apache.fop.render.Renderer;
 import org.apache.fop.render.awt.AWTRenderer;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
 import de.jose.export.ExportContext;
@@ -25,6 +32,7 @@ import de.jose.task.io.XSLFOExport;
 import de.jose.Application;
 import de.jose.Language;
 import de.jose.comm.Command;
+import org.apache.fop.render.java2d.Java2DRenderer;
 
 /**
  * FOPrintableDocument
@@ -36,7 +44,8 @@ public class FOPrintableDocument
         extends PrintableDocument
 {
 	protected ExportContext context;
-	protected AWTRenderer renderer;
+	//protected AWTRenderer renderer;
+	protected AreaTreeHandler areaTreeHandler;
 	protected XSLFOExport.Preview fopreview;
 
 	protected PageFormat oldFormat;
@@ -92,7 +101,7 @@ public class FOPrintableDocument
 
 //			g2.clip(clipRect);
 			//  clipRect and paintRect are still in Print coordinates, right ?
-			if (renderer==null) {
+			if (areaTreeHandler==null) {
 				//  wait for renderer to become available
 				Font font = g.getFont().deriveFont(24.0f);
 				g.setFont(font);
@@ -100,6 +109,8 @@ public class FOPrintableDocument
 				return NOT_AVAILABLE;
 			}
 			else {
+				//PageViewport page = areaTreeHandler.getAreaTreeModel().getPage(1,pageNumber);
+				Java2DRenderer renderer = (Java2DRenderer) areaTreeHandler.getUserAgent().getRendererOverride();
 				return renderer.print(g2, getPageFormat(), pageNumber);
 			}
 
@@ -107,43 +118,32 @@ public class FOPrintableDocument
 			g2.setTransform(oldtf);
 			g2.setClip(oldclip);
 		}
-
-		/** or ?
-		 */
-/*
-		renderer.render(pageNumber);
-
-		BufferedImage bimg = renderer.getLastRenderedPage();
-		g.drawImage(bimg,
-		        screenX,screenY, screenX+bimg.getWidth(), screenX+bimg.getHeight(),
-		        0,0, bimg.getWidth(), bimg.getHeight(), null);
-*/
 	}
 
 	//  implements Pageable
 	public int getNumberOfPages()
 	{
-		if (renderer==null)
+		if (areaTreeHandler==null)
 			return-1;
 		else
-			return renderer.getNumberOfPages();
+			return areaTreeHandler.getAreaTreeModel().getPageCount(1);
 	}
 
 	public void dispose()
 	{
-		if (renderer!=null) FOPUtil.release(renderer);
-		renderer = null;
+		//if (renderer!=null) FOPUtil.release(renderer);
+		areaTreeHandler = null;
 	}
 
 
 	public void newRenderer()
 	{
 		synchronized (this) {
-			if (renderer!=null) return;     //  already finished, even better
+			if (areaTreeHandler!=null) return;     //  already finished, even better
 			if (fopreview!=null) return;         //  already creating
 
 			Runnable result = () -> {
-                FOPrintableDocument.this.renderer = fopreview.renderer;
+                FOPrintableDocument.this.areaTreeHandler = fopreview.areaTreeHandler;
                 FOPrintableDocument.this.fopreview = null;
             };
 

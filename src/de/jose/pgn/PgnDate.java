@@ -18,8 +18,11 @@ import de.jose.util.StringUtil;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+
+import static org.apache.commons.lang3.time.DateUtils.MILLIS_PER_DAY;
 
 /**
  * extends Date
@@ -113,7 +116,12 @@ public class PgnDate
 
 	public PgnDate(Date dt, short flags)
 	{
-		setTime(dt.getTime());
+		//	note that Date comes from the jdbc driver and might carry timezone info.
+		//	we want to get rid of timezone, w/out introducing naughty shifts!
+		//	our code is timezone-agnostic (and should be)
+		LocalDate localDate = LocalDate.of(1900+dt.getYear(),dt.getMonth()+1,dt.getDate());
+		long millis = localDate.toEpochDay() * MILLIS_PER_DAY;
+		super.setTime(millis);
 		dateFlags = flags;
 	}
 

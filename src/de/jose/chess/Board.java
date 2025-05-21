@@ -34,8 +34,8 @@ public class Board
 	/**	the board 	 */
 	protected Piece[] theBoard;
 	/*	the pieces	*/
-	protected ArrayList[] theWhitePieces;
-	protected ArrayList[] theBlackPieces;
+	protected ArrayList<Piece>[] theWhitePieces;
+	protected ArrayList<Piece>[] theBlackPieces;
     /** white promotion pieces  */
     protected Piece[]   theWhitePromoPieces;
     protected Piece[]   theBlackPromoPieces;
@@ -122,7 +122,7 @@ public class Board
 	public final boolean isEmpty(int idx)			{ return theBoard[idx] == null; }
 	public final boolean isEmpty(int file, int row)	{ return isEmpty(EngUtil.square(file,row)); }
 
-	public final List pieceList(int p) {
+	public final List<Piece> pieceList(int p) {
 		if (EngUtil.isWhite(p))
 			return theWhitePieces[EngUtil.uncolored(p)];
 		else

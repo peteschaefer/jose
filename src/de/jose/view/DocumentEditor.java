@@ -536,10 +536,10 @@ public class DocumentEditor
 
         if (text==null) //  paste html formatted
             text = ClipboardUtil.getHtmlText(docPanel);
-        if (text==null)
- */
-		//  paste plain text
-        String text = ClipboardUtil.getPlainText(docPanel);
+        if (text==null) //  paste plain text
+*/
+		String text = ClipboardUtil.getPlainText(docPanel);
+
         if (text!=null)
             replaceSelection(text);
         else

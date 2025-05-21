@@ -339,19 +339,23 @@ public class HtmlUtil
 
 		String cssCreator = ExportConfig.getParam(context.config, "css-xsl");
 		String cssTarget = ExportConfig.getParam(context.config, "css-file");
-		File cssFile;
+		File cssFile=null;
 		if (context.collateral!=null)
 			cssFile = new File(context.collateral,cssTarget);
-		else
+		else if (cssTarget!=null)
 			cssFile = new File(Application.theWorkingDirectory,cssTarget);
 
-		Set<String> fontFamilies = createCSS(context, new File(homeDir,cssCreator), cssFile);
+		Set<String> fontFamilies = null;
+		if (cssFile!=null) {
+			fontFamilies = createCSS(context, new File(homeDir, cssCreator), cssFile);
+		}
 		if (context.collateral==null)
 			return null;	//	our work is done
 
 		//	if there is a collateral directory, copy some necessary stuff, too:
 		//	e.g. Web Context. Copy fonts to server directory
-		tryCopyFonts(fontFamilies, context.collateral+"/fonts");
+		if (fontFamilies!=null)
+			tryCopyFonts(fontFamilies, context.collateral+"/fonts");
 
 		//  copy JavaScript
 		String[] jsFiles = ExportConfig.getParams(context.config, "js-file");

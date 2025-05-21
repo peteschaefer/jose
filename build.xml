@@ -42,10 +42,16 @@
 	<property name="classpath.java3d"
 			  value="lib/j3d/j3dcore.jar lib/j3d/j3dutils.jar lib/j3d/vecmath.jar lib/j3d/jogamp-fat.jar"/>
 	<property name="classpath.compress"
-			  value="lib/commons-compress-1.27.1.jar lib/commons-io-2.19.0.jar lib/xz-1.10.jar lib/commons-lang3-3.17.0.jar"/>
+			  value="lib/commons/commons-compress-1.27.1.jar lib/commons/commons-io-2.19.0.jar lib/xz-1.10.jar lib/commons/commons-lang3-3.17.0.jar"/>
+	<property name="classpath.commons"
+			  value="lib/commons/commons-logging-1.3.0.jar lib/commons/commons-net-1.4.1.jar lib/commons/xmlgraphics-commons-2.11.jar"/>
+	<property name="classpath.fop"
+			  value="lib/fop/fop-core-2.11.jar lib/fop/fop-2.11.jar lib/fop/fontbox-3.0.3.jar lib/fop/fop-events-2.11.jar lib/fop/fop-hyph.jar lib/fop/fop-util-2.11.jar lib/fop/pdfbox-io-3.0.3.jar"/>
+	<property name="classpath.batik"
+			  value="lib/batik/batik-anim-1.19.jar lib/batik/batik-awt-util-1.19.jar lib/batik/batik-bridge-1.19.jar lib/batik/batik-codec-1.19.jar lib/batik/batik-constants-1.19.jar lib/batik/batik-css-1.19.jar lib/batik/batik-dom-1.19.jar lib/batik/batik-ext-1.19.jar lib/batik/batik-extension-1.19.jar lib/batik/batik-gvt-1.19.jar lib/batik/batik-i18n-1.19.jar lib/batik/batik-parser-1.19.jar lib/batik/batik-script-1.19.jar lib/batik/batik-shared-resources-1.19.jar lib/batik/batik-svg-dom-1.19.jar lib/batik/batik-svggen-1.19.jar lib/batik/batik-transcoder-1.19.jar lib/batik/batik-util-1.19.jar lib/batik/batik-xml-1.19.jar"/>
 
 	<property name="java.runtime.path"
-			  value="lib/jh.jar lib/json.jar lib/fop-plus.jar ${classpath.compress} ${classpath.java3d} ${classpath.plaf}"/>
+			  value="lib/jh.jar lib/json.jar ${classpath.compress} ${classpath.java3d} ${classpath.plaf} ${classpath.commons} ${classpath.fop} ${classpath.batik}"/>
 
 	<!-- class path for compilation -->
 	<path id="java.build.path">
@@ -55,7 +61,7 @@
 		<pathelement location="lib/j3d-1.6/vecmath.jar"/>
 		<pathelement location="lib/com.sun.jar"/>	<!-- deprecated jpeg codecs -->
 
-		<pathelement location="lib/fop-plus.jar"/>
+		<!--pathelement location="lib/fop-plus.jar"/-->
 		<pathelement location="lib/jai_codec.jar"/>
 <!--		<pathelement location="lib/jcommon.jar"/>-->
 <!--		<pathelement location="lib/jfreechart.jar"/>-->
@@ -77,10 +83,42 @@
 <!--        <pathelement location="lib/plaf/nativeskin.jar"/>-->
 		<pathelement location="lib/jdbc/mysql.jar"/>
 		<pathelement location="lib/jdbc/mysql-je.jar"/>
-		<pathelement location="lib/commons-compress-1.27.1.jar"/>
-		<pathelement location="lib/commons-io-2.19.0.jar"/>
-		<pathelement location="lib/commons-lang3-3.17.0.jar"/>
+		<pathelement location="lib/commons/commons-compress-1.27.1.jar"/>
+		<pathelement location="lib/commons/commons-io-2.19.0.jar"/>
+		<pathelement location="lib/commons/commons-lang3-3.17.0.jar"/>
 		<pathelement location="lib/xz-1.10.jar"/>
+
+		<pathelement location="lib/commons/commons-logging-1.3.0.jar"/>
+		<pathelement location="lib/commons/commons-net-1.4.1.jar"/>
+		<pathelement location="lib/commons/xmlgraphics-commons-2.11.jar"/>
+
+		<pathelement location="lib/fop/fop-core-2.11.jar"/>
+		<pathelement location="lib/fop/fop-2.11.jar"/>
+		<pathelement location="lib/fop/fontbox-3.0.3.jar"/>
+		<pathelement location="lib/fop/fop-events-2.11.jar"/>
+		<pathelement location="lib/fop/fop-hyph.jar"/>
+		<pathelement location="lib/fop/fop-util-2.11.jar"/>
+		<pathelement location="lib/fop/pdfbox-io-3.0.3.jar"/>
+
+		<pathelement location="lib/batik/batik-anim-1.19.jar"/>
+		<pathelement location="lib/batik/batik-awt-util-1.19.jar"/>
+		<pathelement location="lib/batik/batik-bridge-1.19.jar"/>
+		<pathelement location="lib/batik/batik-codec-1.19.jar"/>
+		<pathelement location="lib/batik/batik-constants-1.19.jar"/>
+		<pathelement location="lib/batik/batik-css-1.19.jar"/>
+		<pathelement location="lib/batik/batik-dom-1.19.jar"/>
+		<pathelement location="lib/batik/batik-ext-1.19.jar"/>
+		<pathelement location="lib/batik/batik-extension-1.19.jar"/>
+		<pathelement location="lib/batik/batik-gvt-1.19.jar"/>
+		<pathelement location="lib/batik/batik-i18n-1.19.jar"/>
+		<pathelement location="lib/batik/batik-parser-1.19.jar"/>
+		<pathelement location="lib/batik/batik-script-1.19.jar"/>
+		<pathelement location="lib/batik/batik-shared-resources-1.19.jar"/>
+		<pathelement location="lib/batik/batik-svg-dom-1.19.jar"/>
+		<pathelement location="lib/batik/batik-svggen-1.19.jar"/>
+		<pathelement location="lib/batik/batik-transcoder-1.19.jar"/>
+		<pathelement location="lib/batik/batik-util-1.19.jar"/>
+		<pathelement location="lib/batik/batik-xml-1.19.jar"/>
 
 <!--		<pathelement location="lib/jdbc/jds.jar"/>-->
 <!--		<pathelement location="lib/lucene.jar"/>-->
@@ -160,8 +198,11 @@
 
 			<exclude name="**/com/shredderchess/**"/>
 			<exclude name="**/shredder/**"/>
+		</javac>
 
-			</javac>
+		<!-- copy resource -->
+		<copy file="${java.src}/de/jose/util/rtf/charsets/ansi.txt"
+			  todir="${java.classes}/de/jose/util/rtf/charsets"/>
 
 		<!-- copy resource -->
 		<copy file="${java.src}/de/jose/util/rtf/charsets/ansi.txt"
@@ -209,10 +250,10 @@
 			<zipfileset dir="classes" prefix="WEB-INF/classes"/>
 			<!-- fop library (needed to print html, pdf) -->
 			<zipfileset dir="lib" prefix="WEB-INF/lib">
-				<include name="fop-plus.jar"/>
-				<include name="commons-compress-1.27.1.jar"/>
-				<include name="commons-io-2.19.0.jar"/>
-				<include name="commons-lang3-3.17.0.jar"/>
+				<!--include name="fop-plus.jar"/-->
+				<include name="fop/*.jar"/>
+				<include name="commons/*.jar"/>
+				<include name="batik/*.jar"/>
 				<include name="xz-1.10.jar"/>
 			</zipfileset>
 			<!-- navigation images (@deprecated)-->

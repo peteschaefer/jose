@@ -112,11 +112,12 @@
 				<include name="plaf/flatlaf-theme-editor.jar"/>
 				<include name="com.sun.jar" />
 				<include name="json.jar" />
-				<include name="commons-compress-1.27.1.jar"/>
-				<include name="commons-io-2.19.0.jar"/>
-				<include name="commons-lang3-3.17.0.jar"/>
 				<include name="xz-1.10.jar"/>
 			</zipfileset>
+
+			<zipfileset dir="lib/commons" prefix="${appldir}/lib/commons"/>
+			<zipfileset dir="lib/batik" prefix="${appldir}/lib/batik"/>
+			<zipfileset dir="lib/fop" prefix="${appldir}/lib/fop"/>
 
 			<zipfileset dir="sounds" prefix="${appldir}/sounds">
 				<!--include name="KDE_*"/-->
@@ -290,15 +291,17 @@
 				<include name="FontAwesome.otf"/>
 			</zipfileset>
 			<zipfileset dir="lib" prefix="lib">
-				<include name="commons-compress-1.27.1.jar"/>
-				<include name="commons-io-2.19.0.jar"/>
-				<include name="commons-lang3-3.17.0.jar"/>
 				<include name="xz-1.10.jar"/>
 			</zipfileset>
 			<zipfileset dir="lib/plaf" prefix="lib/plaf">
 				<include name="flatlaf.jar"/>
 				<include name="flatlaf-theme-editor.jar"/>
 			</zipfileset>
+
+			<zipfileset dir="lib/commons" prefix="lib/commons"/>
+			<zipfileset dir="lib/fop" prefix="lib/fop"/>
+			<zipfileset dir="lib/batik" prefix="lib/batik"/>
+
 			<zipfileset dir="lib/jdbc" prefix="lib/jdbc">
 				<include name="mysql-connector-java-8.0.27.jar"/>
 				<include name="mariadb-java-client-3.3.4.jar"/>
@@ -308,6 +311,7 @@
 			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
+				<include name="fop.xconf"/>
 			</zipfileset>
 			<zipfileset dir="xsl" prefix="xsl">
 			</zipfileset>
