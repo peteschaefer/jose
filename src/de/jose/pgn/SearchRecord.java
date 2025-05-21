@@ -392,19 +392,19 @@ public class SearchRecord implements Cloneable
         if (hasFilter())
             return -1; /** estimating is too expensive */
 		else
-			return estimateCollectionSizes();
+			return estimateCollectionSizes(this.collections);
 		/** else:
 		 *  estimating is easy, just sum up the collection sizes
 		 */
 	}
 
-	public int estimateCollectionSizes() throws SQLException
+	public int estimateCollectionSizes(IntHashSet collections) throws SQLException
 	{
 		ParamStatement sql = new ParamStatement();
 		sql.select.append("SUM(GameCount)");
 		sql.from.append("Collection");
 
-		makeCollectionFilter(sql,"Id");
+		makeCollectionFilter(sql,"Id",collections);
 
 		JoConnection conn = null;
 		try {
@@ -433,7 +433,7 @@ public class SearchRecord implements Cloneable
         joins = 0;  //  JOIN_STRAIGHT; not needed if tables are analyzed regularly !
 	    driving = 0;
 
-		makeCollectionFilter(sql,"Game.CId");
+		makeCollectionFilter(sql,"Game.CId",this.collections);
 
 		makeSearchFilter(sql,reversedColors);
 
@@ -442,9 +442,10 @@ public class SearchRecord implements Cloneable
 		if (!posFilter.isEmpty()) {
 			if (joins!=0) {
 				//	join Game,MoreGame
-				int results = estimateCollectionSizes();
+				int result1 = estimateCollectionSizes(this.collections);
+				int result2 = estimateCollectionSizes(null);
 				//	and Collection is large (compared to the whole db)
-				if (results >= 100000) {
+				if (result1 >= result2*0.5) {
 					driving = JOIN_MORE;
 					joins |= JOIN_STRAIGHT;
 					//	"MoreGame STRAIGHT_JOIN Game" produces a table-scan on MoreGame
@@ -502,7 +503,7 @@ public class SearchRecord implements Cloneable
 		        | JOIN_MORE;
 	    driving = 0;
 
-		makeCollectionFilter(sql,"Game.CId");
+		makeCollectionFilter(sql,"Game.CId",this.collections);
 
 		makeSearchFilter(sql,reversedColors);
 
@@ -1067,7 +1068,7 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
-	protected void makeCollectionFilter(ParamStatement sql, String cidColumn) throws SQLException
+	protected void makeCollectionFilter(ParamStatement sql, String cidColumn, IntHashSet collections) throws SQLException
 	{
 		/* set collection filter    */
         if (collections==null || collections.isEmpty())

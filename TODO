@@ -80,6 +80,22 @@ Maintenance:
     - use MoreGame STRAIGHT_JOIN Game if the expected result is large
     [ ] check with GigaBase
 
+[ ] upgrade FOP 2.11
+    [x] no more metrics files needed
+    [x] automatic font file scanning
+    [x] supports .otf
+    [x] .rtf output; no embedded fonts, of course
+        [ ] fix page layout
+    [x] api change (easy)
+    [x] preview
+        [?] pick up fonts. only partially on Linux :(
+        [-] replace with system pdf viewer. it's better anyway.
+    [x] templates compatible? yes.
+    [x] line breaks
+    [x] hyphenation
+    [x] batik needed. yes
+    [ ] deploy patch: check that all the files are present. classpath etc.
+
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors
     [ ] unit tests
@@ -232,25 +248,6 @@ Alternative JREs:
   - can't delete? (Apply !!)
 
 ==== Refactorings
-
-* upgrade FOP 2.11
-    [x] no more metrics files needed
-    [x] automatic font file scanning
-    [x] supports .otf
-    [x] .rtf output; no embedded fonts, of course
-        [ ] fix page layout
-    [x] api change (easy)
-    [x] preview
-        [?] pick up fonts. only partially on Linux :(
-        [-] replace with system pdf viewer. it's better anyway.
-    [x] templates compatible? yes.
-    [x] line breaks
-    [x] hyphenation
-    [x] batik needed. yes
-    [ ] deploy patch: check that all the files are present. classpath etc.
-
-
-[x] lang.properties to utf-8
 
 * fine-grained BoardView2D updates
     - 64+2 bits instead of fRedraw
