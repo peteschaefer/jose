@@ -441,7 +441,7 @@ public class SearchRecord implements Cloneable
 
 		if (!posFilter.isEmpty()) {
 			joins |= JOIN_MORE;
-			if (joins!=0) {
+			if ((joins & JOIN_GAME) != 0 && !hasInfoFilter() && !hasCommentFilter()) {
 				//	join Game,MoreGame
 				int result1 = estimateCollectionSizes(this.collections);
 				int result2 = estimateCollectionSizes(null);

@@ -540,6 +540,8 @@ public class MySQLAdapter
 		//	huge database have around 3GB, or more.
 		command.add("--tmp-table-size=16G");
 		command.add("--max-heap-table-size=16G");
+		//command.add("--default-time-zone='+00:00'"); does not work
+
 
 		//	for server-side operation: set connection timeout as high as possible:
 		String infTimeout = Version.windows ? "2147483" : "31536000";
