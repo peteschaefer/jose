@@ -190,7 +190,7 @@ Maintenance:
     [x] Windows (x) stand-alone
     [x] Linux (x) embeded (x) stand-alone
     [x] Mac intel
-    [ ] Mac arm
+    [x] Mac arm
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
     [-] Linux builds but don't work
@@ -249,6 +249,7 @@ Alternative JREs:
     [x] line breaks
     [x] hyphenation
     [x] batik needed. yes
+    [ ] deploy patch: check that all the files are present. classpath etc.
 
 
 [x] lang.properties to utf-8
