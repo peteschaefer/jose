@@ -440,6 +440,7 @@ public class SearchRecord implements Cloneable
         makeOrder(sql);
 
 		if (!posFilter.isEmpty()) {
+			joins |= JOIN_MORE;
 			if (joins!=0) {
 				//	join Game,MoreGame
 				int result1 = estimateCollectionSizes(this.collections);
@@ -452,7 +453,6 @@ public class SearchRecord implements Cloneable
 					//	since the collection is large, we have to do it anyway.
 				}
 			}
-			joins |= JOIN_MORE;
 		}
 
 		if (joins==0) joins = JOIN_GAME;
@@ -466,14 +466,6 @@ public class SearchRecord implements Cloneable
 //		System.out.println(sql.toString());
 
 		if (!posFilter.isEmpty()) {
-/*
-			if(joins==(JOIN_MORE|JOIN_GAME)) {
-				sql.from.setLength(0);
-				sql.from.append("MoreGame STRAIGHT_JOIN Game ON (MoreGame.GId = Game.Id)");
-				sql.select.setLength(0);
-				sql.select.append("MoreGame.GId");
-			}
-*/
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
 		}

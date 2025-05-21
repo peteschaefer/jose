@@ -94,6 +94,7 @@ Maintenance:
     [x] line breaks
     [x] hyphenation
     [x] batik needed. yes
+    [ ] Annotations !?
     [ ] deploy patch: check that all the files are present. classpath etc.
 
 [ ] Matsig V2
