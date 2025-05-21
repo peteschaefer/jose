@@ -198,9 +198,6 @@
 
 			<exclude name="**/com/shredderchess/**"/>
 			<exclude name="**/shredder/**"/>
-
-			<include name="/de/jose/util/rtf/charsets/ansi.txt"/>
-
 		</javac>
 
 		<!-- copy resource -->
