@@ -67,20 +67,18 @@
 Maintenance:
 [-] bug? db update 1010 on Linux
 
-[ ] Paste text from Clipboad
-    [ ] check resource: /de/jose/util/rtf/charsets/ansi.txt
+[x] Paste text from Clipboad
+    [x] check resource: /de/jose/util/rtf/charsets/ansi.txt
 
 [ ] search for Year (fill in 1.1.xxxx automatically)
 [ ] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move
 [ ] order by Round: numeric instead of alpha
 
-[ ] PosFilter + CId is slow. why?
-    - position search is just a full-table scan on MoreGame
-    - CId filter introduces indexing on Game
-    - check out https://dev.mysql.com/doc/refman/5.7/en/index-hints.html
-    - experiment with USE/FORCE/IGNORE INDEX
-      (FORCE avoids full-table scans. But for large DBs we *prefer* a full-table scan on MoreGame :)
+[x] PosFilter + CId is slow.
+    - full-table scan on MoreGame is more effective than indexing
+    - use MoreGame STRAIGHT_JOIN Game if the expected result is large
+    [ ] check with GigaBase
 
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors

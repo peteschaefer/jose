@@ -387,28 +387,33 @@ public class SearchRecord implements Cloneable
     /**
      * estimate the number of results, if available
      */
-    public int estimateResults() throws Exception
+    public int estimateResults() throws SQLException
     {
         if (hasFilter())
-            return -1;
-            /** estimating is too expensive */
-        /** else:
-         *  estimating is easy, just sum up the collection sizes
-         */
-        ParamStatement sql = new ParamStatement();
-        sql.select.append("SUM(GameCount)");
-        sql.from.append("Collection");
+            return -1; /** estimating is too expensive */
+		else
+			return estimateCollectionSizes();
+		/** else:
+		 *  estimating is easy, just sum up the collection sizes
+		 */
+	}
 
-        makeCollectionFilter(sql,"Id");
+	public int estimateCollectionSizes() throws SQLException
+	{
+		ParamStatement sql = new ParamStatement();
+		sql.select.append("SUM(GameCount)");
+		sql.from.append("Collection");
 
-        JoConnection conn = null;
-        try {
-            conn = JoConnection.get();
-            return sql.toPreparedStatement(conn).selectInt();
-        } finally {
-            JoConnection.release(conn);
-        }
-    }
+		makeCollectionFilter(sql,"Id");
+
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			return sql.toPreparedStatement(conn).selectInt();
+		} finally {
+			JoConnection.release(conn);
+		}
+	}
 
 	public ParamStatement makeIdStatement() throws SQLException
 	{
@@ -434,9 +439,20 @@ public class SearchRecord implements Cloneable
 
         makeOrder(sql);
 
-		if (!posFilter.isEmpty())
+		if (!posFilter.isEmpty()) {
+			if (joins!=0) {
+				//	join Game,MoreGame
+				int results = estimateCollectionSizes();
+				//	and Collection is large (compared to the whole db)
+				if (results >= 100000) {
+					driving = JOIN_MORE;
+					joins |= JOIN_STRAIGHT;
+					//	"MoreGame STRAIGHT_JOIN Game" produces a table-scan on MoreGame
+					//	since the collection is large, we have to do it anyway.
+				}
+			}
 			joins |= JOIN_MORE;
-		/**	STRAIGHT_JOIN is a hint to the MySQL "optimiser"	*/
+		}
 
 		if (joins==0) joins = JOIN_GAME;
 
@@ -448,9 +464,18 @@ public class SearchRecord implements Cloneable
 		}
 //		System.out.println(sql.toString());
 
-		if (!posFilter.isEmpty())
-			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, "+
-								" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+		if (!posFilter.isEmpty()) {
+/*
+			if(joins==(JOIN_MORE|JOIN_GAME)) {
+				sql.from.setLength(0);
+				sql.from.append("MoreGame STRAIGHT_JOIN Game ON (MoreGame.GId = Game.Id)");
+				sql.select.setLength(0);
+				sql.select.append("MoreGame.GId");
+			}
+*/
+			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
+					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+		}
 
 		return sql;
 	}
