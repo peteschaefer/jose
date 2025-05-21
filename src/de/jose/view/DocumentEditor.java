@@ -524,6 +524,7 @@ public class DocumentEditor
 
     public void paste()
     {
+/*
         //  paste rtf formatted ? (ugly but widely used)
         String text = ClipboardUtil.getRtfText(docPanel);
         if (text!=null) {
@@ -535,9 +536,10 @@ public class DocumentEditor
 
         if (text==null) //  paste html formatted
             text = ClipboardUtil.getHtmlText(docPanel);
-        if (text==null) //  paste plain text
-            text = ClipboardUtil.getPlainText(docPanel);
-
+        if (text==null)
+ */
+		//  paste plain text
+        String text = ClipboardUtil.getPlainText(docPanel);
         if (text!=null)
             replaceSelection(text);
         else

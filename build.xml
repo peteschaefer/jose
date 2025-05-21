@@ -163,6 +163,10 @@
 
 			</javac>
 
+		<!-- copy resource -->
+		<copy file="${java.src}/de/jose/util/rtf/charsets/ansi.txt"
+			  todir="${java.classes}/de/jose/util/rtf/charsets"/>
+
 	    <!--boot classes-->
 	    <!--unzip src="lib/jose15.jar" dest="${java.classes}"/-->
 
