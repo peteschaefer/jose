@@ -1,3 +1,24 @@
+# macOS Hotfix
+
+There was a bug that caused jose to stop working after some time on macOS. 
+
+Quite annoying.
+
+Here's how you can fix it:
+
+* open a Terminal window
+* navigate to the jose application folder
+* then type
+```
+cd jose.app/Contents/MacOS
+./shc -e 01/01/2199 -o jose -f jose.sh
+```
+and everything should be fine again.
+
+<sub>(background info: Contents/MacOS/jose is nothing but a tiny compiled version of the shell script jose.sh. Strangely enough, the executable had an *expiry date* that your unmindful maintainer was not aware of.)</sub>
+
+---
+
 #### jos&eacute; is a graphical chess tool.
 
 You can store chess games in a database (backed by
