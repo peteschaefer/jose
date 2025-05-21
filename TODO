@@ -248,6 +248,8 @@ Alternative JREs:
     [x] templates compatible? yes.
     [x] line breaks
     [x] hyphenation
+    [ ] annotations !!
+    [x] fop/fop.xconf no absolute paths
     [x] batik needed. yes
     [ ] deploy patch: check that all the files are present. classpath etc.
 
