@@ -369,6 +369,7 @@
 			<xsl:when test="count(sym)&gt;0">
 				<xsl:call-template name="sym-annotation">
 					<xsl:with-param name="sym" select="sym"/>
+					<xsl:with-param name="chr" select="chr"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -382,11 +383,13 @@
 
 	<xsl:template name="sym-annotation">
 		<xsl:param name="sym"/>
+		<xsl:param name="chr"/>
 
 		<xsl:param name="style" select="$styles//style[name='body.symbol']"/>
 		<xsl:param name="color" select="$style/a[key='foreground']/value"/>
 
-		<fo:inline>
+		<fo:character>
+			<xsl:attribute name="character"><xsl:value-of select="$sym" /></xsl:attribute>
 			<!-- font attributes -->
 			<xsl:attribute name="font-family"><xsl:value-of select="$style/a[key='family']/value"/></xsl:attribute>
 			<xsl:attribute name="font-size"><xsl:value-of select="$style/a[key='size']/value"/>pt</xsl:attribute>
@@ -402,9 +405,7 @@
 				<xsl:when test="$style/a[key='italic']/value='true'"><xsl:attribute name="font-style">italic</xsl:attribute></xsl:when>
 				<xsl:otherwise><xsl:attribute name="font-style">normal</xsl:attribute></xsl:otherwise>
 			</xsl:choose>
-
-			<xsl:value-of select="$sym"/>
-		</fo:inline>
+		</fo:character>
 	</xsl:template>
 
 

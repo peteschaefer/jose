@@ -83,7 +83,7 @@ Maintenance:
     which means, roughly: full-table scan on MoreGame, then lookup Game
     i.e. a nested loop join; instead of a hash join :(
 
-[ ] upgrade FOP 2.11
+[x] upgrade FOP 2.11
     [x] no more metrics files needed
     [x] automatic font file scanning
     [x] supports .otf
@@ -97,8 +97,10 @@ Maintenance:
     [x] line breaks
     [x] hyphenation
     [x] batik needed. yes
-    [ ] Annotations !?
-    [ ] deploy patch: check that all the files are present. classpath etc.
+    [x] Annotations
+        [x] works for AWT, fop 0.29
+        [x] fix Character Mapping for Figurine S2,T2
+    [x] deploy patch: check that all the files are present. classpath etc.
 
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors

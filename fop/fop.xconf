@@ -16,7 +16,7 @@ the location of this file.
 <fop version="1.0">
 
   <!-- Base URL for resolving relative URLs -->
-  <base>/home/schaefer/src/jose</base>
+  <base>.</base>
   
   <!-- Source resolution in dpi (dots/pixels per inch) for determining the size of pixels in SVG and bitmap images, default: 72dpi -->
   <source-resolution>72</source-resolution>
@@ -30,6 +30,7 @@ the location of this file.
   <!-- Uses renderer mime type for renderers -->
   <renderers>
     <renderer mime="application/pdf">
+      <version>1.5</version>
       <filterList>
         <!-- provides compression using zlib flate (default is on) -->
         <value>flate</value>
@@ -79,7 +80,7 @@ the location of this file.
         <!-- custom fonts -->
         <directory>fonts</directory>
 
-        <!-- auto-detect system fonts. this is very expensive the first time :(  but gets better... -->
+        <!-- auto-detect system fonts. this is very expensive the first time :(  but gets better...-->
         <auto-detect/>
 
       </fonts>

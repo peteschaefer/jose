@@ -234,7 +234,7 @@ public class FontList
 
 			if (current!=null) {
 				current.fontColor = StyleUtil.contrast(bg, Color.black, Color.lightGray);
-				current.paint(g, getBounds(), RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				current.paint(g, getBounds());
 			}
 		}
 

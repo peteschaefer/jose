@@ -16,8 +16,6 @@ import de.jose.export.ExportContext;
 import de.jose.export.ExportConfig;
 import de.jose.util.file.FileUtil;
 import de.jose.util.print.FOPUtil;
-import de.jose.util.print.JoConsoleLogger;
-import de.jose.util.print.Triplet;
 import de.jose.util.xml.XMLUtil;
 import de.jose.comm.Command;
 import de.jose.view.style.JoStyleContext;
@@ -26,27 +24,12 @@ import javax.swing.*;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.Set;
 
-//import org.apache.fop.apps.Driver;
-import org.apache.commons.io.output.NullOutputStream;
 import org.apache.fop.apps.*;
-import org.apache.fop.apps.io.InternalResourceResolver;
-import org.apache.fop.apps.io.ResourceResolverFactory;
 import org.apache.fop.area.AreaTreeHandler;
-import org.apache.fop.area.RenderPagesModel;
-import org.apache.fop.fo.FOEventHandler;
-import org.apache.fop.fo.FOTreeBuilder;
-import org.apache.fop.fonts.*;
-import org.apache.fop.fonts.Font;
-import org.apache.fop.render.awt.AWTRenderer;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * XSLFOExport

@@ -99,7 +99,7 @@ public class UserProfile
 		return "Chess Berlin";
 	}
 
-	public static String getFactorySymbolFont() { return "FigurineSymbol S2"; }
+	public static String getFactorySymbolFont() { return "FigurineSymbol S"; }
 
 	public static final String FACTORY_ENGINES = "lc0;stockfish";
 

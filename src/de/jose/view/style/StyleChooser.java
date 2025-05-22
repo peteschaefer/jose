@@ -664,7 +664,7 @@ public class StyleChooser
 				String name = Language.get(style.getName());
 				boolean dark = !getBackground().equals(Color.white);
 				sample.setStyle(style, styles.getFontScale(), name, 0, dark); // JoStyleContext.getNestLevel(style));
-				sample.paint(g, bounds, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				sample.paint(g, bounds);
 			}
 			else
 				g.drawString("?",0,20);

@@ -101,85 +101,75 @@ public class FontSample
             flags = showFigurineSample;
         else if (JoFontConstants.isDiagram(style) || JoFontConstants.isInline(style))
             flags = showDiagramSample;
-        else
+        else if (JoFontConstants.isSymbol(style))
+			flags = 0;
+		else
             flags = showFont;
 
 		font = null;
 	    fontScale = scale;
     }
 
-	public void paint(Graphics g, Rectangle bounds, Object antialiasMode)
+	public void paint(Graphics g, Rectangle bounds)
 	{
-		Object oldMode = null;
-		try {
-			if (antialiasMode != null) {
-				Graphics2D g2 = (Graphics2D)g;
-				oldMode = g2.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-				if (Util.equals(antialiasMode,oldMode))
-					oldMode = null;
-				else
-					g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,antialiasMode);
-			}
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-			if (font==null)
-			switch (flags) {
-			case FontSample.showFont:
-					fontSize = Util.nvl(fontSize,12);
-					font = FontUtil.newFont(fontName,fontStyle,
-					                fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
-					if (font.canDisplayUpTo(fontText) >= 0)
-						flags = 0;  //  can't display font text ;-(
-					break;
+		if (font==null)
+		switch (flags) {
+		case FontSample.showFont:
+				fontSize = Util.nvl(fontSize,12);
+				font = FontUtil.newFont(fontName,fontStyle,
+								fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
+				if (font.canDisplayUpTo(fontText) >= 0)
+					flags = 0;  //  can't display font text ;-(
+				break;
 
-			case FontSample.showDiagramSample:
-					fontSize = Util.nvl(fontSize,24);
-					font = FontUtil.newFont(fontName,fontStyle,
-					                fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
-					FontEncoding enc = FontEncoding.getEncoding(fontName);
-					sampleText = enc.getDiagramSampleString(true);
-					if (font.canDisplayUpTo(sampleText) >= 0)
+		case FontSample.showDiagramSample:
+				fontSize = Util.nvl(fontSize,24);
+				font = FontUtil.newFont(fontName,fontStyle,
+								fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
+				FontEncoding enc = FontEncoding.getEncoding(fontName);
+				sampleText = enc.getDiagramSampleString(true);
+				if (font.canDisplayUpTo(sampleText) >= 0)
+					flags = 0;  //  can't display sampleText ;-(
+				break;
+
+		case FontSample.showFigurineSample:
+				fontSize = Util.nvl(fontSize,24);
+				font = FontUtil.newFont(fontName,fontStyle,
+								fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
+				enc = FontEncoding.getEncoding(fontName);
+				sampleText = enc.getFigurineSampleString();
+				if (sampleText==null || font.canDisplayUpTo(sampleText) >= 0) {
+					sampleText = enc.getDiagramSampleString(false);
+					if (sampleText==null || font.canDisplayUpTo(sampleText) >= 0)
 						flags = 0;  //  can't display sampleText ;-(
-					break;
-
-			case FontSample.showFigurineSample:
-					fontSize = Util.nvl(fontSize,24);
-					font = FontUtil.newFont(fontName,fontStyle,
-					                fontScale*Util.inBounds(minFontSize,fontSize,maxFontSize));
-					enc = FontEncoding.getEncoding(fontName);
-					sampleText = enc.getFigurineSampleString();
-					if (sampleText==null || font.canDisplayUpTo(sampleText) >= 0) {
-						sampleText = enc.getDiagramSampleString(false);
-						if (sampleText==null || font.canDisplayUpTo(sampleText) >= 0)
-							flags = 0;  //  can't display sampleText ;-(
-					}
-					break;
-			}
-
-			Font textFont = null;
-			if (flags != 0)
-				textFont = g.getFont();
-
-			if (flags==FontSample.showFont)
-				g.setFont(font);
-
-			g.setColor(fontColor);
-
-			int x = 4;
-			FontMetrics fmx = g.getFontMetrics();
-			g.drawString(fontText, x, (bounds.height+fmx.getAscent())/2);
-			x += fmx.stringWidth(fontText);
-
-			if (flags==FontSample.showDiagramSample || flags==FontSample.showFigurineSample) {
-				g.setFont(font);
-				fmx = g.getFontMetrics();
-				g.drawString(sampleText, x+8, (bounds.height+fmx.getAscent()-fmx.getDescent())/2);
-			}
-
-			if (textFont != null) g.setFont(textFont);
-		} finally {
-			if (oldMode!=null)
-				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, oldMode);
+				}
+				break;
 		}
+
+		Font textFont = null;
+		if (flags != 0)
+			textFont = g.getFont();
+
+		if (flags==FontSample.showFont)
+			g.setFont(font);
+
+		g.setColor(fontColor);
+
+		int x = 4;
+		FontMetrics fmx = g.getFontMetrics();
+		g.drawString(fontText, x, (bounds.height+fmx.getAscent())/2);
+		x += fmx.stringWidth(fontText);
+
+		if (flags==FontSample.showDiagramSample || flags==FontSample.showFigurineSample) {
+			g.setFont(font);
+			fmx = g.getFontMetrics();
+			g.drawString(sampleText, x+8, (bounds.height+fmx.getAscent()-fmx.getDescent())/2);
+		}
+
+		if (textFont != null) g.setFont(textFont);
 	}
 
 
