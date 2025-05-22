@@ -308,6 +308,8 @@
 			</zipfileset>
 			<zipfileset dir="lib/Windows" prefix="lib/Windows">
 				<include name="winUtils.dll"/>
+				<include name="hidapi.dll"/>
+				<include name="easylink.dll"/>
 			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>

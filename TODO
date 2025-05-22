@@ -71,7 +71,7 @@ Maintenance:
     [x] check resource: /de/jose/util/rtf/charsets/ansi.txt
 
 [ ] search for Year (fill in 1.1.xxxx automatically)
-[ ] smarter date input. time zone jump on input ?
+[x] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move
 [ ] order by Round: numeric instead of alpha
 
@@ -83,25 +83,6 @@ Maintenance:
     which means, roughly: full-table scan on MoreGame, then lookup Game
     i.e. a nested loop join; instead of a hash join :(
 
-[x] upgrade FOP 2.11
-    [x] no more metrics files needed
-    [x] automatic font file scanning
-    [x] supports .otf
-    [x] .rtf output; no embedded fonts, of course
-        [ ] fix page layout
-    [x] api change (easy)
-    [x] preview
-        [?] pick up fonts. only partially on Linux :(
-        [-] replace with system pdf viewer. it's better anyway.
-    [x] templates compatible? yes.
-    [x] line breaks
-    [x] hyphenation
-    [x] batik needed. yes
-    [x] Annotations
-        [x] works for AWT, fop 0.29
-        [x] fix Character Mapping for Figurine S2,T2
-    [x] deploy patch: check that all the files are present. classpath etc.
-
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors
     [ ] unit tests
@@ -112,25 +93,9 @@ Maintenance:
     [ ] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
     [ ] cross-over (faster this time, batched pll + temp table?)
-[ ] Matsig V2
-    [ ] pawn bitset, piece counts, bishop colors
-    [ ] unit tests
-        [ ] hard cases
-        [ ] random games (incremental mode)
-        [ ] db games (incremental mode)
-    [ ] opposite bishop, even bishop
-    [ ] good bishop, bad bishop
-    [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [ ] cross-over (faster this time, batched pll + temp table?)
-
-* Search Pawn Structure
-    - mode on Zobrist keys
-    - better: store pawn structure in MatSignature 8x4 bits
-* NAG search (so easy!)
-
-* Material searches ("knight vs 2 pawns")
-    - should be easy to do with MatSignature and a small amount of bit-twiddling
-    - store opposite colored bishops in MatSignature
+[ ] search pawn structure
+[ ] search material balance
+[ ] search NAGs
 
 ==== Interesting New Features
 
@@ -214,13 +179,7 @@ Maintenance:
 ==== Project
 
 [x] Linux ARM
-    [x] build with older glibc. Currently it's 2.29 (or 2.23?)
-        [x] mysqld
-        [x] lc0
-        [?] permissions for /var/lib/mysql required? use --socket /tmp/mysql.sock instead?
-        [x] fix & upload jose-152-linux-arm.zip
-    [x] try Nice DCV image. It's free and has better RDP, supposedly.
-        [x] run tomcat
+[ ] Windows: build all .dll's in release mode
 
 [ ] package stockfish network files
     seems like stockfish can run withouth; but not arm version?
@@ -241,6 +200,12 @@ Maintenance:
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
     [-] Linux builds but don't work
+[ ] give mariadb a chance
+    [ ] can run w/out authentication?
+    [ ] supports MyIsam
+    [ ] better query planner?
+    [ ] up-to-date releases
+
 
 Alternative JREs:
 * JBR 21: better hidpi support, but touch&drag bug (which is a showstopper for me).

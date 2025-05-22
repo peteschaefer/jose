@@ -238,14 +238,11 @@ public class WinUtils
 	private static native void UnmapViewOfFile(int mapHandle);
 
 
-	protected static void loadLib()
+	protected static void loadLib() throws UnsatisfiedLinkError
 	{
 		if (!libLoaded) {
-			try {
-				System.loadLibrary("winUtils");
-				libLoaded = true;
-				return;
-			} catch (UnsatisfiedLinkError e) { }
+			System.loadLibrary("winUtils");
+			libLoaded = true;
 		}
 	}
 
