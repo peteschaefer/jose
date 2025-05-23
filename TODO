@@ -204,7 +204,9 @@ Maintenance:
 [ ] give mariadb a try
     [.] can run with quick setup (unzip data dir?)
     [x] supports MyIsam
-    [ ] better query planner?
+    [ ] Crossover
+        [x] move mysql/jose directory :)
+        [x] 'alter table force' required to update MyISAM contents :(
     [ ] .jose import
     [ ] .jose export
     [ ] build for
@@ -213,6 +215,10 @@ Maintenance:
         [ ] Linux arm64
         [ ] macOS x64
         [ ] macOS aarch64
+    [ ] better query planner? should be. Hash joins are available.
+    [ ] research R2DBC. could simplify a lot of IntervalCacheModel.
+        But then again ... why change working stuff ?
+
 
 
 

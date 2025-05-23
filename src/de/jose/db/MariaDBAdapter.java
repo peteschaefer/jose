@@ -5,8 +5,13 @@ import de.jose.Version;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.*;
 import java.util.Random;
 import java.util.Vector;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class MariaDBAdapter extends MySQLAdapter
 {
@@ -196,6 +201,12 @@ public class MariaDBAdapter extends MySQLAdapter
         return createServerProcess(command, env, printCommandLine);
     }
 
+    @Override
+    protected void shutdown(Connection conn) throws Exception {
+        Statement stm = conn.createStatement();
+        stm.execute("SHUTDOWN");
+    }
+
     public File getDataDir() {
         return new File(Application.theDatabaseDirectory, "mariadb" + File.separator + "data");
     }
@@ -204,4 +215,24 @@ public class MariaDBAdapter extends MySQLAdapter
     protected boolean serverIsReady(String line) {
         return line.contains("ready for connections");
     }
+
+    @Override
+    public boolean askBootstrap(File datadir) {
+        //  Crossover Mysql data directory to MariaDB directory.
+        //  Simply move it to its new location :)
+        Path josedir = new File(datadir, "jose").toPath();
+        if (!Files.exists(josedir)) {
+            //  look for an old MySQL directory - steal it :)
+            Path mysqldir = new File (datadir.getParentFile().getParentFile(), "mysql"+File.separator+"jose").toPath();
+            if (Files.exists(mysqldir))
+                try {
+                    Files.move(mysqldir,josedir,REPLACE_EXISTING);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+        }
+
+        return super.askBootstrap(datadir);
+    }
+
 }
