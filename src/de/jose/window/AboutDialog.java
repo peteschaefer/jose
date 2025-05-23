@@ -12,12 +12,14 @@
 
 package de.jose.window;
 
+import com.l2fprod.util.ImageUtils;
 import de.jose.*;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
+import de.jose.image.ImgUtil;
 import de.jose.jo3d.Util3D;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
@@ -195,7 +197,8 @@ public class AboutDialog
 		String imageDir = Application.theWorkingDirectory.getAbsolutePath()
 						  +File.separator+"images"+File.separator;
 		String db = getDBIdentifier(Application.theApplication.theDatabaseId);
-		tab2.add(new JLabel(new ImageIcon(imageDir+"db."+db+".gif")),
+		ImageIcon icon = ImgUtil.getIcon(".","db."+db);
+		tab2.add(new JLabel(icon),
 		        JoDialog.gridConstraint(LABEL_ONE, 0,0,1));
 //	todo use png, or svg
 		JoStyledLabel label = new JoStyledLabel("dialog.about.info.db");
