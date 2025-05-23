@@ -12,6 +12,7 @@
 
 package de.jose.task.db;
 
+import de.jose.db.MySQLAdapter;
 import de.jose.task.DBTask;
 import de.jose.task.io.PGNImport;
 import de.jose.db.JoConnection;
@@ -37,6 +38,24 @@ public class CheckDBTask
 
 	public int work() throws Exception
 	{
+		//	MySQL Table Data version
+		try {
+			Setup.getSchemaVersion(connection,"META");
+			Setup.getSchemaVersion(connection,"MAIN");
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1707) {
+				//	Table rebuild required. Please do "ALTER TABLE `%s` FORCE" or dump/reload to fix it!
+				//	MyISAM tables need a fix (for whatever reason...)
+				MySQLAdapter.upgradeTables(connection,"jose");
+			}
+		}
+		/*try {
+
+		} catch (SQLException e) {
+
+		}*/
+
+
 		//  update meta versions
 		connection.setAutoCommit(false);
 		checkMetaVersion(Application.theApplication.theConfig);
