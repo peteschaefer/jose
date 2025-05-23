@@ -5,11 +5,11 @@
 #include <windows.h>
 #include <exception>
 
-extern void throwRuntimeException(JNIEnv* env, const char* pattern, ...);
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern void throwRuntimeException(JNIEnv* env, const char* pattern, ...);
 
 #define catch_all(env) \
 	catch (std::exception& ex) { throwRuntimeException(env,"exception in native code: %s",ex.what()); } \
@@ -55,15 +55,15 @@ bool startsWith(WCHAR* str, char* prefix)
 
 HKEY getRootKey(WCHAR* key)
 {
-	if (startsWith(key,"HKEY_CLASSES_ROOT\\")) return HKEY_CLASSES_ROOT;
-	if (startsWith(key,"HKEY_CURRENT_CONFIG\\")) return HKEY_CURRENT_CONFIG;
-	if (startsWith(key,"HKEY_CURRENT_USER\\")) return HKEY_CURRENT_USER;
-	if (startsWith(key,"HKEY_LOCAL_MACHINE\\")) return HKEY_LOCAL_MACHINE;
-	if (startsWith(key,"HKEY_PERFORMANCE_DATA\\")) return HKEY_PERFORMANCE_DATA;
-	if (startsWith(key,"HKEY_PERFORMANCE_NLSTEXT\\")) return HKEY_PERFORMANCE_NLSTEXT;
-	if (startsWith(key,"HKEY_PERFORMANCE_TEXT\\")) return HKEY_PERFORMANCE_TEXT;
-	if (startsWith(key,"HKEY_USERS\\")) return HKEY_USERS;
-	if (startsWith(key,"HKEY_DYN_DATA\\")) return HKEY_DYN_DATA;
+	if (startsWith(key,(char*)"HKEY_CLASSES_ROOT\\")) return HKEY_CLASSES_ROOT;
+	if (startsWith(key,(char*)"HKEY_CURRENT_CONFIG\\")) return HKEY_CURRENT_CONFIG;
+	if (startsWith(key,(char*)"HKEY_CURRENT_USER\\")) return HKEY_CURRENT_USER;
+	if (startsWith(key,(char*)"HKEY_LOCAL_MACHINE\\")) return HKEY_LOCAL_MACHINE;
+	if (startsWith(key,(char*)"HKEY_PERFORMANCE_DATA\\")) return HKEY_PERFORMANCE_DATA;
+	if (startsWith(key,(char*)"HKEY_PERFORMANCE_NLSTEXT\\")) return HKEY_PERFORMANCE_NLSTEXT;
+	if (startsWith(key,(char*)"HKEY_PERFORMANCE_TEXT\\")) return HKEY_PERFORMANCE_TEXT;
+	if (startsWith(key,(char*)"HKEY_USERS\\")) return HKEY_USERS;
+	if (startsWith(key,(char*)"HKEY_DYN_DATA\\")) return HKEY_DYN_DATA;
 
 	//	if all else fails:
 	return NULL;
@@ -138,7 +138,7 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 		HKEY hkey;
 
 		assertSuccess( RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -149,7 +149,7 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 		
 		assertSuccess( RegQueryInfoKey(hkey, NULL,NULL, NULL,&countKeys,&maxKeyLen, NULL, 
 				&countValues,&maxValueNameLen,&maxValueLen,NULL,NULL),
-			env,"error retrieving key info");
+			env,(char*)"error retrieving key info");
 
 		//	get value by index
 		if (index >= 0 && (unsigned int)index < countValues)
@@ -159,7 +159,7 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 			DWORD type;
 			DWORD size;
 			assertSuccess( RegEnumValue(hkey,index, valueName,&maxValueNameLen, NULL, &type, buffer,&size),
-				env,"could not read value");
+				env,(char*)"could not read value");
 			
 			delete[] buffer;
 			delete[] valueName;
@@ -188,7 +188,7 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 
 		HKEY hkey;
 		assertSuccess( RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 		
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -198,7 +198,7 @@ JNIEXPORT jobject JNICALL Java_de_jose_util_WinRegistry_get_1value__Ljava_lang_S
 		DWORD maxValueLen;
 		assertSuccess( RegQueryInfoKey(hkey, NULL,NULL, NULL,&countKeys,&maxKeyLen, NULL, 
 				&countValues,&maxValueNameLen,&maxValueLen,NULL,NULL),
-			env,"error retrieving key info");
+			env,(char*)"error retrieving key info");
 
 		//	allocate result buffer
 		BYTE* buffer = new BYTE[++maxValueLen];
@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_de_jose_util_WinRegistry_set_1string_1value
 		HKEY hkey;
 		DWORD disposition;
 		assertSuccess (RegCreateKeyExW(getRootKey(ckey),getSubKey(ckey),0,NULL,REG_OPTION_NON_VOLATILE,KEY_WRITE,NULL,&hkey,&disposition),
-			env,"key not found");
+			env,(char*)"key not found");
 		
 		RegSetValueExW(hkey,cvalue,0,REG_SZ,(BYTE*)cdata, sizeof(WCHAR)*(wstrlen(cdata)+1));
 		RegCloseKey(hkey);
@@ -288,7 +288,7 @@ JNIEXPORT jboolean JNICALL Java_de_jose_util_WinRegistry_create_1key
 
 		HKEY hkey;
 		assertSuccess (RegCreateKeyExW(getRootKey(ckey),getSubKey(ckey),0,NULL,REG_OPTION_NON_VOLATILE,KEY_READ,NULL,&hkey,&disposition),
-			env,"error creating key");
+			env,(char*)"error creating key");
 
 		RegCloseKey(hkey);
 
@@ -359,7 +359,7 @@ JNIEXPORT jint JNICALL Java_de_jose_util_WinRegistry_count_1subkeys
 
 		HKEY hkey;
 		assertSuccess (RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -395,7 +395,7 @@ JNIEXPORT jint JNICALL Java_de_jose_util_WinRegistry_count_1values
 
 		HKEY hkey;
 		assertSuccess (RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -405,7 +405,7 @@ JNIEXPORT jint JNICALL Java_de_jose_util_WinRegistry_count_1values
 		DWORD maxValueLen;
 		assertSuccess (RegQueryInfoKey(hkey, NULL,NULL, NULL,&countKeys,&maxKeyLen, NULL, 
 				&countValues,&maxValueNameLen,&maxValueLen,NULL,NULL),
-			env,"error retrieving key info");
+			env,(char*)"error retrieving key info");
 
 		result = countValues;
 
@@ -432,7 +432,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinRegistry_get_1value_1name
 		HKEY hkey;
 
 		assertSuccess (RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -442,7 +442,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinRegistry_get_1value_1name
 		DWORD maxValueLen;
 		assertSuccess (RegQueryInfoKey(hkey, NULL,NULL, NULL,&countKeys,&maxKeyLen, NULL, 
 				&countValues,&maxValueNameLen,&maxValueLen,NULL,NULL),
-			env,"error retrieving key info");
+			env,(char*)"error retrieving key info");
 
 		//	get value by index
 		char* valueName = new char[++maxValueNameLen];
@@ -484,7 +484,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinRegistry_get_1subkey
 		HKEY hkey;
 
 		assertSuccess (RegOpenKeyExW(getRootKey(ckey),getSubKey(ckey),0,KEY_READ,&hkey),
-			env,"key not found");
+			env,(char*)"key not found");
 
 		//	determine required buffer sizes
 		DWORD countKeys;
@@ -494,7 +494,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinRegistry_get_1subkey
 		DWORD maxValueLen;
 		assertSuccess (RegQueryInfoKey(hkey, NULL,NULL, NULL,&countKeys,&maxKeyLen, NULL, 
 				&countValues,&maxValueNameLen,&maxValueLen,NULL,NULL),
-			env,"error retrieving key info");
+			env,(char*)"error retrieving key info");
 
 		//	get key name by index
 		if (index >= 0 && (unsigned int)index < countKeys)
@@ -502,7 +502,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinRegistry_get_1subkey
 			char* buffer = new char[++maxKeyLen];
 			FILETIME lastmod;
 			assertSuccess (RegEnumKeyEx(hkey,index, buffer,&maxKeyLen, NULL,NULL,NULL,&lastmod),
-				env,"could not retrieve key");
+				env,(char*)"could not retrieve key");
 
 			buffer[maxKeyLen] = 0;
 			result = env->NewStringUTF(buffer);

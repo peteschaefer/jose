@@ -8,6 +8,10 @@
 jclass class_RuntimeException;
 char* error_message = NULL;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
 	JNIEnv* env;
@@ -135,3 +139,7 @@ JNIEXPORT jstring JNICALL Java_de_jose_util_WinUtils_getSystemDirectory
 		return env->NewStringUTF((const char*)fontChars);
 	} catch_all(env)
 }
+
+#ifdef __cplusplus
+}
+#endif

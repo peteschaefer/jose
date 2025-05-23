@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 project(winUtils)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 
 include_directories(
         "C:\\Program Files\\Java\\jdk-21.0.6\\include",

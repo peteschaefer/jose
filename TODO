@@ -179,7 +179,7 @@ Maintenance:
 ==== Project
 
 [x] Linux ARM
-[ ] Windows: build all .dll's in release mode
+[x] Windows: build all .dll's in release mode
 
 [ ] package stockfish network files
     seems like stockfish can run withouth; but not arm version?
