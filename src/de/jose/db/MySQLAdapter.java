@@ -140,6 +140,16 @@ public class MySQLAdapter
 		return line.contains("ready for connections");
 	}
 
+	public static void upgradeTables(JoConnection conn, String schema) throws SQLException
+	{
+		DatabaseMetaData dbmeta = conn.jdbcConnection.getMetaData();
+		ResultSet res = dbmeta.getTables("jose", null, null, new String[]{"TABLE"});
+		while (res.next()) {
+			String tableName = res.getString("TABLE_NAME");
+			conn.executeUpdate("ALTER TABLE " + tableName + " FORCE");
+		}
+	}
+
 	/**
 	 * Background thread to start the mysqld server process
 	 * and setup the first Connection
@@ -207,9 +217,8 @@ public class MySQLAdapter
 				Task checkIntegrity = new CheckDBTask(connection);
 				checkIntegrity.setSilentTime(5000);
 				checkIntegrity.run();
-				//	will release connection upon completion
-
-				init_server = true;
+				if (checkIntegrity.wasSuccess())
+					init_server = true;
 
 				//JoConnection.release(connection);
             } catch (SQLException e) {
