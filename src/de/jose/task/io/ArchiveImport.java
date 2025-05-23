@@ -112,7 +112,7 @@ public class ArchiveImport
 
 		tempdb = "IO_"+System.currentTimeMillis();
 		connection.executeUpdate("CREATE DATABASE "+tempdb);
-		dataDir = new File(Application.theDatabaseDirectory,"mysql/"+tempdb);
+		dataDir = new File(JoConnection.getAdapter().getDataDir(),tempdb);
 
 	    sndx = new Metaphone(6);
 //        MySQLAdapter.defineUDFs(getConnection());

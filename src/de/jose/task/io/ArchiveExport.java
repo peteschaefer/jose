@@ -98,7 +98,7 @@ public class ArchiveExport
 
 	    tempdb = "IO_"+System.currentTimeMillis();
 	    connection.executeUpdate("CREATE DATABASE "+tempdb);
-	    dataDir = new File(Application.theDatabaseDirectory,"mysql/"+tempdb);
+	    dataDir = new File(JoConnection.getAdapter().getDataDir(), tempdb);
 
         archive.create(ArchiveFile.TABLE_MYISAM,
 		        ArchiveFile.PACK_TAR,

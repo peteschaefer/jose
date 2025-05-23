@@ -745,6 +745,11 @@ abstract public class DBAdapter
 	 */
 	protected java.util.List<Command> deferredActions = new ArrayList<>();
 
+
+	//	implemented by MySQLAdapter
+	public File getDataDir() { return null; }
+
+	//	implemented by MySQLAdapter
 	public Thread launchProcess() {
 		return null;
 	}

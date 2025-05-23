@@ -250,21 +250,27 @@ Maintenance:
 
 [ ] give mariadb a try
     [.] can run with quick setup (unzip data dir?)
+        [ ] really? check dependencies (plugin-dir,data-dir, ...)
     [x] supports MyIsam
-    [ ] Crossover
+    [x] Crossover
         [x] move mysql/jose directory :)
         [x] 'alter table force' required to update MyISAM contents :(
-    [ ] .jose import
-    [ ] .jose export
+    [x] .jose import
+    [x] .jose export
+        [ ] Collection missing?
     [ ] build for
-        [ ] Win
-        [ ] Linux x64
-        [ ] Linux arm64
-        [ ] macOS x64
-        [ ] macOS aarch64
-    [ ] better query planner? should be. Hash joins are available.
-    [ ] research R2DBC. could simplify a lot of IntervalCacheModel.
-        But then again ... why change working stuff ?
+        [x] Win (download)
+        [ ] Linux x64 (download)
+        [ ] Linux arm64 (download)
+        [ ] macOS x64 (homebrew)
+        [ ] macOS aarch64 (homebrew?)
+    [ ] better query planner? should be
+        [ ] check with PosFilter+CId
+            - 38s not too bad for a start. Xmx16G required
+            - try to use hash joins!
+    [ ] research R2DBC. could simplify *a lot* of IntervalCacheModel.
+        But then again ... why touch working stuff ?
+    [ ] research Aria Storage (good at group-by,crash-safe, no insert delayed)
 
 
 

@@ -244,6 +244,7 @@
 				<NAME> LastModified </NAME>
 				<TYPE> TIMESTAMP </TYPE>
 				<NOT_NULL/>
+				<DEFAULT> 0 </DEFAULT>
 				<INDEX/>
 			</COLUMN>
 			<COLUMN>
@@ -777,7 +778,7 @@
                 <!-- parent folder -->
                 <NAME> PId </NAME>
                 <TYPE> INTEGER </TYPE>
-                <NOT_NULL/>
+                <!--NOT_NULL/-->
             </COLUMN>
             <COLUMN>
                 <!-- Collection Name (initially name of local or downloaded file) -->
