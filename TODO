@@ -158,6 +158,18 @@ Maintenance:
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
 
+
+* Store MatSignature in DB
+    - speeds up Position search
+    - for 10, 20, end position ?
+        test whether it improves selectivity:
+        `reachable(query,sig10) or reachable(sig10,query)
+         and reachable(query,sigend)`
+    - requires cross-over & re-built archive files !
+    - next: custom MySQL function pos_reachable(), pawn_reachable()
+    - benchmark?
+
+
 * RTF export? currently possible via copy/paste.
   - fop 0.20 does not support it
   - upgrading fop seems painful (and has little merit)
@@ -215,10 +227,6 @@ Maintenance:
 
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode
-[ ] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
-             causes easylink.dll to crash when called from jre/bin/java.exe.
-             *Fortunately* not from jose.exe b/c it pulls the system-supplied msvcp140.dll.
-
 
 [ ] package stockfish network files
     seems like stockfish can run withouth; but not arm version?
@@ -239,13 +247,21 @@ Maintenance:
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
     [-] Linux builds but don't work
-[ ] mariadb 8.3
-    [-] ok, but no performance improvement
-    [-] setup complicated, but ok
-[ ] mysql 11
-    [-] ok, but no performance improvement
-    [-] setup more complicated, but ok
-    [-] switch when it becomes useful
+
+[ ] give mariadb a try
+    [.] can run with quick setup (unzip data dir?)
+    [x] supports MyIsam
+    [ ] better query planner?
+    [ ] .jose import
+    [ ] .jose export
+    [ ] build for
+        [ ] Win
+        [ ] Linux x64
+        [ ] Linux arm64
+        [ ] macOS x64
+        [ ] macOS aarch64
+
+
 
 Alternative JREs:
 * JBR 21: better hidpi support, but touch&drag bug (which is a showstopper for me).

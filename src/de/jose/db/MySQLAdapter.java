@@ -105,11 +105,39 @@ public class MySQLAdapter
 			String line = bin.readLine();
 			if (line!=null) {
 				System.out.println(line);
-				if (line.contains("ready for connections"))
+				if (serverIsReady(line))
 					return true;
 			}
 		}
 		return false;
+	}
+
+	protected Process createServerProcess(Vector command, Vector env, boolean printCommandLine) throws IOException
+	{
+		String[] commandArray = StringUtil.toArray(command);
+		String[] envArray = StringUtil.toArray(env);
+
+		if (printCommandLine) {    //  print command line
+			for (int i=0; i<envArray.length; i++)
+				System.err.println(envArray[i]);
+			System.err.println();
+			for (int i=0; i<commandArray.length; i++) {
+				System.err.print(commandArray[i]);
+				System.err.print(" ");
+			}
+			System.err.println();
+		}
+
+		Runtime runtime = Runtime.getRuntime();
+		Process result = runtime.exec(commandArray,envArray);
+		if (killProcess!=null)
+			runtime.removeShutdownHook(killProcess);
+		runtime.addShutdownHook(killProcess = new KillMySqlProcess(serverProcess));
+		return result;
+	}
+
+	protected boolean serverIsReady(String line) {
+		return line.contains("ready for connections");
 	}
 
 	/**
@@ -130,13 +158,13 @@ public class MySQLAdapter
 			}
 
 			boolean bootstrap = false;
-			File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+			File mysqldir = getDataDir();
 
             switch(getServerMode()) {
 				case MODE_STANDALONE:
-					props.put("user","");
-					props.put("password","");
-					props.put("characterEncoding","UTF8");
+					//props.put("user","");
+					//props.put("password","");
+					//props.put("characterEncoding","UTF8");
 					String portno = Version.getSystemProperty("jose.db.port");
 					if (portno!=null)
 						props.put("port-no",portno);
@@ -226,7 +254,7 @@ public class MySQLAdapter
 
 	private void initEmbeddedServer()
 	{
-		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+		File mysqldir = getDataDir();
 		File bindir = new File(Application.theWorkingDirectory, "bin");
 		File libdir = new File(Application.theWorkingDirectory, "lib/"+Version.osDir);
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
@@ -292,7 +320,7 @@ public class MySQLAdapter
 	{
 		/**	do not run two embedded servers on the same directory	*/
 		try {
-			File watchFile = new File(Application.theDatabaseDirectory, "mysql/db.lock");
+			File watchFile = new File(getDataDir(), "db.lock");
 			watch = new FileWatch(watchFile,"error.duplicate.database.access");
 		} catch (IOException e) {
 			//  maybe we are reading from a read-only medium ?
@@ -455,9 +483,9 @@ public class MySQLAdapter
 		return result.toString();
 	}
 
-	public static Process repairIndexes(String[] tables, String[] switches) throws IOException, InterruptedException
+	public Process repairIndexes(String[] tables, String[] switches) throws IOException, InterruptedException
 	{
-		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+		File mysqldir = getDataDir();
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 		File lockFile = new File(Application.theDatabaseDirectory, "db.lock");
 
@@ -497,7 +525,7 @@ public class MySQLAdapter
 		 *  --basedir=...
 		 *  -u root
 		 */
-		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
+		File mysqldir = getDataDir();
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 
 		Vector command = new Vector();
@@ -673,26 +701,11 @@ public class MySQLAdapter
 		command.add("--basedir");
 		command.add(binPath);
 
-		String[] commandArray = StringUtil.toArray(command);
-		String[] envArray = StringUtil.toArray(env);
+		return createServerProcess(command,env, printCommandLine);
+	}
 
-		if (printCommandLine) {    //  print command line
-			for (int i=0; i<envArray.length; i++)
-				System.err.println(envArray[i]);
-			System.err.println();
-			for (int i=0; i<commandArray.length; i++) {
-				System.err.print(commandArray[i]);
-				System.err.print(" ");
-			}
-			System.err.println();
-		}
-
-		Runtime runtime = Runtime.getRuntime();
-		Process result = runtime.exec(commandArray,envArray);
-		if (killProcess!=null)
-			runtime.removeShutdownHook(killProcess);
-		runtime.addShutdownHook(killProcess = new KillMySqlProcess(serverProcess));
-		return result;
+	public File getDataDir() {
+		return new File(Application.theDatabaseDirectory, "mysql");
 	}
 /*
 

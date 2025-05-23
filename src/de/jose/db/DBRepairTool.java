@@ -363,7 +363,8 @@ public class DBRepairTool
      * @throws InterruptedException
      */
     protected boolean checkIndexes(String[] switches) throws IOException, InterruptedException {
-        Process proc = MySQLAdapter.repairIndexes(tables,switches);
+        MySQLAdapter ad = (MySQLAdapter)JoConnection.getAdapter(true);
+        Process proc = ad.repairIndexes(tables,switches);
         Thread pipeThread = new PipeThread(proc, tailStream);
         pipeThread.start();
         waitFor(pipeThread);
