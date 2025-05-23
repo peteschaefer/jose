@@ -114,6 +114,7 @@ public class MariaDBAdapter extends MySQLAdapter
 			(it would matter if we used mixed casing, but we don't)
 		*/
         command.add("--lower_case_table_names=1");
+        command.add("--default-storage-engine=MYISAM");
         //  means: always use lower case, compare insensitive
         //  lower_case_table_names=0 would make even more sense, but not accepted on Windows.
         //  todo check with imported files
