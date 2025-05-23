@@ -197,8 +197,9 @@ public class AboutDialog
 		String db = getDBIdentifier(Application.theApplication.theDatabaseId);
 		tab2.add(new JLabel(new ImageIcon(imageDir+"db."+db+".gif")),
 		        JoDialog.gridConstraint(LABEL_ONE, 0,0,1));
-
+//	todo use png, or svg
 		JoStyledLabel label = new JoStyledLabel("dialog.about.info.db");
+//	todo adapt text
 		tab2.add(reg(label), JoDialog.gridConstraint(ELEMENT_REMAINDER, 1,0,3));
 
 		label.setBackground(Color.white);

@@ -77,28 +77,26 @@
 	</data-source>
 
 	<data-source default="false">
-		<display-name> Maria-helio </display-name>
-		<jndi-name> jdbc/maria-helio </jndi-name>
+		<display-name> Maria-local </display-name>
+		<jndi-name> jdbc/maria-local </jndi-name>
 		<!-- runs MariaDB 10.5 -->
 		<adapter-class mode="external"> de.jose.db.MySQLAdapter </adapter-class>
 		<driver-class> org.mariadb.jdbc.Driver </driver-class>
-		<class-path>mariadb-java-client-3.3.4.jar</class-path>
-		<!-- heliohost is quite slow and unreliable, but -hey- free -->
-		<!-- goes to show that MariaDB works just as well -->
-		<jdbc-url> jdbc:mariadb://josechess.helioho.st:3306/josechess_1 </jdbc-url>
+		<class-path>mariadb-java-client-3.5.3.jar</class-path>
+		<jdbc-url> jdbc:mariadb://localhost:3306/jose </jdbc-url>
 		<!-- insert actual host name or IP address	-->
 		<!-- insert port number, unless default -->
 
 		<!-- insert user name -->
 		<connection-param>
 			<param-name> user </param-name>
-			<param-value> josechess_1 </param-value>
+			<param-value> root </param-value>
 		</connection-param>
 
 		<!-- insert password (if required) -->
 		<connection-param>
 			<param-name> password </param-name>
-			<param-value> TY0+2o*4=Ujm </param-value>
+			<param-value> jose </param-value>
 		</connection-param>
 
 		<!-- transactions are supported but not required	-->
@@ -119,5 +117,78 @@
 			<param-value> false </param-value>
 		</connection-param>
 	</data-source>
+
+
+	<!-- MySQL separate server process -->
+	<data-source default="true">
+		<display-name> Maria-standalone </display-name>
+		<jndi-name> jdbc/maria-standalone </jndi-name>
+		<adapter-class mode="standalone"> de.jose.db.MariaDBAdapter </adapter-class>
+		<driver-class> org.mariadb.jdbc.Driver </driver-class>
+		<class-path> mariadb-java-client-3.5.3.jar </class-path>
+		<jdbc-url> jdbc:mariadb://localhost:3306/jose </jdbc-url>
+		<!-- this argument is ignored by MySQLAdapter when running as embedded server -->
+
+		<!-- insert user name -->
+		<connection-param>
+			<param-name> user </param-name>
+			<param-value> root </param-value>
+		</connection-param>
+
+		<!-- insert password (if required) -->
+		<connection-param>
+			<param-name> password </param-name>
+			<param-value> jose </param-value>
+		</connection-param>
+
+		<connection-param>
+			<param-name>useServerPrepStmts</param-name>
+			<param-value>true</param-value>
+		</connection-param>
+
+		<!-- transactions are supported but not required	-->
+		<connection-param>
+			<param-name> relaxAutocommit</param-name>
+			<param-value> true </param-value>
+		</connection-param>
+
+		<!-- use Unicode ? (not really efficient) -->
+		<connection-param>
+			<param-name> useUnicode </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+
+		<connection-param>
+			<param-name>useNewIO</param-name>
+			<param-value>false</param-value>
+		</connection-param>
+
+		<!-- for debugging only: -->
+		<connection-param>
+			<param-name> profileSql </param-name>
+			<param-value> false </param-value>
+		</connection-param>
+
+		<!-- UNIX only: path to socket file; make sure that ordinary users have access to it !!
+			note that users usually don't have access to the default /var/lib/mysql/mysql.sock
+		-->
+		<!-- (comment out to revert to TCP/IP)
+		<connection-param>
+			<param-name> socket-file </param-name>
+			<param-value> /tmp/mysql.jose.sock </param-value>
+		</connection-param>
+		-->
+
+		<!-- Windows 2000/XP: named pipes -->
+		<!-- (comment out to revert to TCP/IP) -->
+		<!--
+                <connection-param>
+                    <param-name> pipe-name </param-name>
+                    <param-value> mysql.jose </param-value>
+                </connection-param>
+        -->
+
+	</data-source>
+
 
 </data-sources>
