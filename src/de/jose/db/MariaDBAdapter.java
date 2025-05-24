@@ -55,7 +55,7 @@ public class MariaDBAdapter extends MySQLAdapter
         //	MyISAM parameters; bump up default values to accomodate GIGA databases
         command.add("--key-buffer-size=64M");
         command.add("--max-allowed-packet=1M");
-        command.add("--table-cache=64");
+        command.add("--table-open-cache=64");
         command.add("--net-buffer-length=8K");
         command.add("--read-buffer-size=16M");
         command.add("--read-rnd-buffer_size=128M");
@@ -69,6 +69,21 @@ public class MariaDBAdapter extends MySQLAdapter
         command.add("--tmp-table-size=16G");
         command.add("--max-heap-table-size=16G");
         //command.add("--default-time-zone='+00:00'"); does not work
+
+        //  controls hash joins?
+
+
+        //  big query optimisation
+        // Turn on disk-ordered reads
+        command.add("--optimizer-switch=mrr=on");
+        command.add("--optimizer_switch=mrr_cost_based=off");
+        // Turn on Batched Key Access (BKA)
+        command.add("--join-cache-level=8");
+        // Size limit for the whole join
+        command.add("--join-buffer-space-limit=300M");
+        // Limit for each individual table
+        command.add("--join_buffer_size=100M");
+        command.add("--optimizer_switch=index_merge_sort_intersection=on");
 
 
         //	for server-side operation: set connection timeout as high as possible:
