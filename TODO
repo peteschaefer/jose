@@ -252,25 +252,25 @@ Maintenance:
     [.] can run with quick setup (unzip data dir?)
         [ ] really? check dependencies (plugin-dir,data-dir, ...)
     [x] supports MyIsam
+        [x] 'alter table force' required for old data (not for IO_, fortunately :)
     [x] Crossover
-        [x] move mysql/jose directory :)
-        [x] 'alter table force' required to update MyISAM contents :(
+        [x] just move mysql/jose directory :)
     [x] .jose import
-    [x] .jose export
+        Gigabase = 52 minutes. ok.
         [ ] Collection missing?
+    [x] .jose export
     [ ] build for
         [x] Win (download)
         [ ] Linux x64 (download)
         [ ] Linux arm64 (download)
         [ ] macOS x64 (homebrew)
         [ ] macOS aarch64 (homebrew?)
-    [ ] better query planner? should be
-        [ ] check with PosFilter+CId
-            - 38s not too bad for a start. Xmx16G required
-            - try to use hash joins!
+    [?] better query planner? not quite
     [ ] research R2DBC. could simplify *a lot* of IntervalCacheModel.
         But then again ... why touch working stuff ?
     [ ] research Aria Storage (good at group-by,crash-safe, no insert delayed)
+    [x] "big query" optimisation
+    [ ] try mysql 9.3 with similar setup (datadir)
 
 
 
