@@ -829,16 +829,9 @@ public class MySQLAdapter
 		return false;
 	}
 
-	public void shutDown(Connection conn) throws Exception {
-		//	(1) com.mysql.jdbc.MiniAdmin.shutDown1()
-		//	(2) com.mysql.jdbc.Connection.shutdownServer()
-
-		//	note however, that both classes are not in the system classpath
-		//	use urlClassloaded instead, with some reflection
-		Class myclass = urlClassLoader.loadClass("com.mysql.jdbc.Connection");
-		Object myconn = myclass.cast(conn);
-		Method shutdown = myclass.getMethod("shutdownServer");
-		shutdown.invoke(myconn);
+	protected void shutdown(Connection conn) throws Exception {
+		Statement stm = conn.createStatement();
+		stm.execute("SHUTDOWN");
 	}
 
 	class KillMySqlProcess extends KillProcess
@@ -860,7 +853,7 @@ public class MySQLAdapter
 				//mysqladmin("shutdown");
 				if (conn==null)	conn = JoConnection.get();
 				if (conn.jdbcConnection==null) conn = JoConnection.theConnections.create(MySQLAdapter.this);
-				shutDown(conn.jdbcConnection);
+				shutdown(conn.jdbcConnection);
 				//	driver version 8 has a similar function.
 				//	but we stick with version 5 for the standalone case, don't we?
 				done = true;

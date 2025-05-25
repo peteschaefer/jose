@@ -217,12 +217,6 @@ public class MariaDBAdapter extends MySQLAdapter
         return createServerProcess(command, env, printCommandLine);
     }
 
-    @Override
-    protected void shutdown(Connection conn) throws Exception {
-        Statement stm = conn.createStatement();
-        stm.execute("SHUTDOWN");
-    }
-
     public File getDataDir() {
         return new File(Application.theDatabaseDirectory, "mariadb" + File.separator + "data");
     }
