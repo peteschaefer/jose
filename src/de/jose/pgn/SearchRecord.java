@@ -563,9 +563,9 @@ public class SearchRecord implements Cloneable
 				Heuristic:
 				instead of searching CId, we search for min/max GId within a Collection.
 				works fine as long as the Collection contains consecutive Ids, which is usually
-				the case with large Game collection.
-				May returns too many results, if Game IDs are not consecutive. We accept this
-				error.
+				the case with large, imported Game collection.
+				May returns too many results, if Game IDs are not consecutive.
+				We decide that this sloppy behavior is better than slow queries .. well ;)
 			 */
 			//	join Game,MoreGame
 			int result1 = estimateCollectionSizes(this.collections);
@@ -576,7 +576,7 @@ public class SearchRecord implements Cloneable
 				//driving = JOIN_MORE;
 				//joins |= JOIN_STRAIGHT;
 				joins &= ~JOIN_GAME;
-				sql.where.setLength(0);
+				sql.where.setLength(0);	// undo join Game; todo find a nicer solution
 				sql.where.append("MoreGame.GId BETWEEN "+minmax[0]+" AND "+minmax[1]);
 			}
 		}
