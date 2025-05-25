@@ -17,6 +17,7 @@ import de.jose.Version;
 import de.jose.Application;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
+import de.jose.db.JoPreparedStatement;
 import de.jose.db.ParamStatement;
 import de.jose.util.Metaphone;
 import de.jose.util.StringUtil;
@@ -24,6 +25,8 @@ import de.jose.util.map.IntHashSet;
 import de.jose.view.ListPanel;
 import de.jose.view.input.JDateField;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.DateFormat;
@@ -415,6 +418,27 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
+	public int[] findMinMaxGameIds(IntHashSet collections) throws SQLException
+	{
+		ParamStatement sql = new ParamStatement();
+		sql.select.append("MIN(Id),MAX(Id)");
+		sql.from.append("Game");
+		makeCollectionFilter(sql,"CId",collections);
+
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			JoPreparedStatement pstm = sql.toPreparedStatement(conn);
+			if (!pstm.execute()) throw new SQLException("can't execute query");
+			ResultSet res = pstm.getResultSet();
+			if (!res.next()) throw new SQLException("no result");
+			return new int[] { res.getInt(1), res.getInt(2) };
+		} finally {
+			JoConnection.release(conn);
+		}
+	}
+
+
 	public ParamStatement makeIdStatement() throws SQLException
 	{
 		ParamStatement pstm = makeIdStatement(false);
@@ -435,25 +459,11 @@ public class SearchRecord implements Cloneable
 
 		makeCollectionFilter(sql,"Game.CId",this.collections);
 
+		makePositionConditions(sql);
+
 		makeSearchFilter(sql,reversedColors);
 
         makeOrder(sql);
-
-		if (!posFilter.isEmpty()) {
-			joins |= JOIN_MORE;
-			if ((joins & JOIN_GAME) != 0 && !hasInfoFilter() && !hasCommentFilter()) {
-				//	join Game,MoreGame
-				int result1 = estimateCollectionSizes(this.collections);
-				int result2 = estimateCollectionSizes(null);
-				//	and Collection is large (compared to the whole db)
-				if (result1 >= result2*0.5) {
-					driving = JOIN_MORE;
-					joins |= JOIN_STRAIGHT;
-					//	"MoreGame STRAIGHT_JOIN Game" produces a table-scan on MoreGame
-					//	since the collection is large, we have to do it anyway.
-				}
-			}
-		}
 
 		if (joins==0) joins = JOIN_GAME;
 
@@ -534,6 +544,42 @@ public class SearchRecord implements Cloneable
 			return PositionFilter.PASS_FILTER;
 		else
 			return posFilter;
+	}
+
+	public void makePositionConditions(ParamStatement sql) throws SQLException {
+		if (posFilter.isEmpty()) return;
+
+		joins |= JOIN_MORE;
+		if ((joins & JOIN_GAME) != 0
+				&& !collections.isEmpty()
+				&& !hasInfoFilter() && !hasCommentFilter())
+		{
+			/*	Problem:
+				posFilter without CId condition performs a full-table scan on MoreGame. not bad at all.
+				with Game.CId conditions we get an extra join on Game, which MySQL can't handle efficiently.
+				Doing a hash-join on Game, MoreGame would be a solution, but MySQL can't find it.
+				For a 16M database it's 12s (full-table-scan) vs. 40s (extra join).
+
+				Heuristic:
+				instead of searching CId, we search for min/max GId within a Collection.
+				works fine as long as the Collection contains consecutive Ids, which is usually
+				the case with large Game collection.
+				May returns too many results, if Game IDs are not consecutive. We accept this
+				error.
+			 */
+			//	join Game,MoreGame
+			int result1 = estimateCollectionSizes(this.collections);
+			int result2 = estimateCollectionSizes(null);
+			//	and Collection is large (compared to the whole db)
+			if (result1 >= result2*0.5) {
+				int[] minmax = findMinMaxGameIds(this.collections);
+				//driving = JOIN_MORE;
+				//joins |= JOIN_STRAIGHT;
+				joins &= ~JOIN_GAME;
+				sql.where.setLength(0);
+				sql.where.append("MoreGame.GId BETWEEN "+minmax[0]+" AND "+minmax[1]);
+			}
+		}
 	}
 
 	public static String trimEcoLike(String eco, java.util.List errors)

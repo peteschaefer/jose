@@ -20,7 +20,7 @@ public class ChessNutConnector extends EBoardConnector implements EasyLink.IReal
     {
         if (!doAvailable())
             return false;
-        if (EasyLink.connect()==0)
+        if (true/*EasyLink.connect()==0*/)
             return false;
 
         EasyLink.setRealtimeCallback(this);
