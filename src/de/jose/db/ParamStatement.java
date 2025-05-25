@@ -382,7 +382,7 @@ public class ParamStatement
 			else
 				limit.append(String.valueOf(Integer.MAX_VALUE));	//	retrieve rest
 		}
-		else if (length > 0)
+		else if (length > 0 && length < Integer.MAX_VALUE/2)
 			limit.append(length);
 	}
 

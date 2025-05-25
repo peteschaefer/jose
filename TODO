@@ -223,7 +223,9 @@ Maintenance:
         But then again ... why touch working stuff ?
     [ ] research Aria Storage (good at group-by,crash-safe, no insert delayed)
     [x] "big query" optimisation
-    [ ] try mysql 9.3 with similar setup (datadir)
+[ ] try mysql 9.3 with similar setup
+    [x] datadir is larger, bunch of dll's needed, different startup args
+    [ ] PosSearch is awfully slow. where's the bottleneck??
 
 
 

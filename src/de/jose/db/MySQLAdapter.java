@@ -824,15 +824,8 @@ public class MySQLAdapter
 	}
 
 	protected void shutdown(Connection conn) throws Exception {
-		//	(1) com.mysql.jdbc.MiniAdmin.shutdown()
-		//	(2) com.mysql.jdbc.Connection.shutdownServer()
-
-		//	note however, that both classes are not in the system classpath
-		//	use urlClassloaded instead, with some reflection
-		Class myclass = urlClassLoader.loadClass("com.mysql.jdbc.Connection");
-		Object myconn = myclass.cast(conn);
-		Method shutdown = myclass.getMethod("shutdownServer");
-		shutdown.invoke(myconn);
+		Statement stm = conn.createStatement();
+		stm.execute("SHUTDOWN");
 	}
 
 	class KillMySqlProcess extends KillProcess
