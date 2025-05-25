@@ -239,6 +239,9 @@ public class MySQLAdapter
 		if (Util.allOf(mode, JoConnection.CREATE))
 			props.put("create","true");
 */
+		props.put("allowPublicKeyRetrieval","true");
+		props.put("useSSL","false");
+		props.put("sslMode","DISABLED");
 		props.put("clobberStreamingResults","true");
 		Connection conn = super.createConnection(mode);
 		return conn;
@@ -296,7 +299,7 @@ public class MySQLAdapter
 		props.put("--skip-grant-tables","");
 		props.put("--skip-locking","");
 		props.put("--skip-external-locking","");
-		props.put("--lower_case_table_names","0");   //  means: always use exact case
+//		props.put("--lower_case_table_names","1");   //  means: store lower case, accept any case
 
 //					props.put("--debug","O,debug.log");//"d:D,20:O,debug.log");
 //					props.put("--log-error","/windows/D/jose/work/error.log");
@@ -551,10 +554,12 @@ public class MySQLAdapter
 
 		//  most of the following are already defined in my.ini
 		//  doesn't hurt to define them twice:
-		command.add("--skip-bdb");
-		command.add("--skip-innodb");
-		command.add("--skip-grant-tables");
-		command.add("--skip-name-resolve");
+//		command.add("--skip-bdb");
+//		command.add("--skip-innodb");
+		command.add("--default-storage-engine=MYISAM");
+
+//		command.add("--skip-grant-tables");	NO: implies --skip-networking also
+//		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
 		command.add("--console");	// do write to std-out
@@ -562,18 +567,17 @@ public class MySQLAdapter
 		//	MyISAM parameters; bump up default values to accomodate GIGA databases
 		command.add("--key-buffer-size=64M");
 		command.add("--max-allowed-packet=1M");
-		command.add("--table-cache=64");
+		command.add("--table-open-cache=64");
 		command.add("--net-buffer-length=8K");
 		command.add("--read-buffer-size=16M");
 		command.add("--read-rnd-buffer_size=128M");
 		command.add("--sort-buffer-size=512M");
 		command.add("--bulk-insert-buffer-size=256M");	//	for import?
 		command.add("--myisam-sort-buffer-size=256M");
-		command.add("--myisam-recover=FORCE"); //  always check for corrupted index files, etc.
+		command.add("--myisam-recover-options=FORCE"); //  always check for corrupted index files, etc.
 		//command.add("--myisam-use-mmap=ON");	//	since 5.1 !
 		//	default table size for tmp and memory tables is 16MB. Not enough.
 		//	huge database have around 3GB, or more.
-		command.add("--concurrent-insert=2");	//2=ALWAYS
 		command.add("--tmp-table-size=16G");
 		command.add("--max-heap-table-size=16G");
 		//command.add("--default-time-zone='+00:00'"); does not work
@@ -606,7 +610,7 @@ public class MySQLAdapter
 		}
 
 		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
-		command.add("--skip-locking");
+//		command.add("--skip-locking");
 
 		// only connect to local host; skip DNS name resolve
 //		if (Version.mysql40) {
@@ -621,6 +625,7 @@ public class MySQLAdapter
 			on Windows, it doesn't matter anyway
 			(it would matter if we used mixed casing, but we don't)
 		*/
+		command.add("--lower_case_table_names=1");   //  means: always use exact case
 		if (Version.windows)
 			command.add("--lower_case_table_names=1");
 		else if (Version.linux)

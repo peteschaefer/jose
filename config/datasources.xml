@@ -21,10 +21,21 @@
 		<display-name> MySQL-standalone </display-name>
 		<jndi-name> jdbc/mysql-standalone </jndi-name>
         <adapter-class mode="standalone"> de.jose.db.MySQLAdapter </adapter-class>
-		<driver-class> com.mysql.jdbc.Driver </driver-class>
-		<class-path>mysql.jar</class-path>
+		<driver-class> com.mysql.cj.jdbc.Driver </driver-class>
+		<class-path>mysql-connector-j-9.3.0.jar</class-path>
 		<jdbc-url> jdbc:mysql://127.0.0.1/jose </jdbc-url>
 		<!-- this argument is ignored by MySQLAdapter when running as embedded server -->
+
+		<connection-param>
+			<param-name> user </param-name>
+			<param-value> root </param-value>
+		</connection-param>
+
+		<!-- insert password (if required) -->
+		<connection-param>
+			<param-name> password </param-name>
+			<param-value> jose </param-value>
+		</connection-param>
 
 		<connection-param>
 			<param-name>useServerPrepStmts</param-name>
