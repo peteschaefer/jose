@@ -456,7 +456,7 @@ abstract public class IntervalCacheModel
                 }
 
 			} catch (SQLException e) {
-				if (e.getErrorCode()!=MySQLAdapter.ER_QUERY_INTERRUPTED) { /*fine*/	}
+				if (e.getErrorCode()!=MySQLAdapter.ER_QUERY_INTERRUPTED) Application.error(e);
             } catch (Exception ex) {
 				Application.error(ex);
             } finally {
