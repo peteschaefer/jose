@@ -422,7 +422,7 @@ public class Position
 		}
 
 		if (hasOption(INCREMENT_SIGNATURE)) {
-			theMatSignature.update(this,move);
+			theMatSignature.update(move);
 		}
 	}
 
