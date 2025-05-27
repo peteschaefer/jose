@@ -138,7 +138,7 @@ public class PositionFilter
 		pos.computeMatSig();
 
         queryKey = pos.getHashKey().value();
-		querySig = pos.getMatSig().cloneSig();
+		querySig = (MatSignature) pos.getMatSig().clone();
 
         if (calcReversed) {
             queryKeyReversed = pos.getReversedHashKey().value();

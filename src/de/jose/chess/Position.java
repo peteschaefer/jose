@@ -13,7 +13,6 @@
 package de.jose.chess;
 
 import de.jose.Util;
-import de.jose.util.map.ObjIntMap;
 import de.jose.util.map.LongIntMap;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class Position
 
 	public Position()
 	{
-		this(JoseHashKey.class,MatSignature.class);
+		this(JoseHashKey.class, MatSignatureV1.class);
 	}
 
 	public Position (Class hashKeyClass, Class matSigClass)
@@ -317,8 +316,8 @@ public class Position
 		frame.silentPlies = theSilentPlies;
 		frame.hashValue = theHashKey.value();
 		frame.reversedHashValue = theReversedHashKey.value();
-		frame.whiteSignature = theMatSignature.wsig;
-		frame.blackSignature = theMatSignature.bsig;
+		frame.whiteSignature = theMatSignature.getWhiteSignature();
+		frame.blackSignature = theMatSignature.getBlackSignature();
 
 		if (move.isNullMove()) {
 			//  NULLMOVE
@@ -657,8 +656,7 @@ public class Position
 		return theReversedHashKey;
 	}
 
-	public final MatSignature getMatSig()
-	{
+	public final MatSignature getMatSig() {
 		return theMatSignature;
 	}
 
