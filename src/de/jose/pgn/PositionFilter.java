@@ -34,7 +34,7 @@ public class PositionFilter
 	public long queryKey, queryKeyReversed;
 	public boolean searchVariations;
 
-	public MatSignature querySig, querySigReversed;
+	public MatSignature querySig;
 
 //	protected HashKey searchKey, searchKeyReversed;
 //	protected MatSignature searchSig;
@@ -106,7 +106,6 @@ public class PositionFilter
 	public void copySearchParams(PositionFilter that)
 	{
 		that.querySig = this.querySig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.querySigReversed = this.querySigReversed; //(this.targetSigReversed==null) ? null : (MatSignature)this.targetSigReversed.clone();
 		that.queryKey = this.queryKey;
 		that.queryKeyReversed = this.queryKeyReversed;
 		that.searchVariations = this.searchVariations;
@@ -145,7 +144,6 @@ public class PositionFilter
 
         if (calcReversed) {
             queryKeyReversed = pos.getReversedHashKey().value();
-			querySigReversed = pos.getMatSig().cloneSigReversed();
         }
 	}
 
@@ -230,7 +228,7 @@ public class PositionFilter
 		if (!pos.wasSilent()) {
 			pos.updateMatSig();
 			if (!pos.getMatSig().canReach(querySig) &&
-				(querySigReversed == null || !pos.getMatSig().canReachReversed(querySigReversed))) {
+				(queryKeyReversed == 0L || !pos.getMatSig().canReachReversed(querySig))) {
 				eof = true; //  signature cut-off
 				result = Result.REJECT;
 			}

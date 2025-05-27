@@ -585,7 +585,12 @@ public class MySQLAdapter
 			on Windows, it doesn't matter anyway
 			(it would matter if we used mixed casing, but we don't)
 		*/
-		command.add("--lower_case_table_names=1");   //  means: always use exact case
+		if (Version.windows)
+			command.add("--lower_case_table_names=1");
+		else if (Version.linux)
+			command.add("--lower_case_table_names=2");
+		else if (Version.mac)
+			command.add("--lower_case_table_names=2");
 //		large key buffer is useful(?) for bulk inserts
 
 		boolean tcpConnect = false;

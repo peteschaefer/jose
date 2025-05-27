@@ -39,6 +39,17 @@ public class GameDetailsDialog
 {
 	protected int GId;
 	protected Game game;
+	/*	todo bulk edit
+		use GameSource which can represent
+		- a game with an ID
+		- a game object (with or w/out an ID)
+		- a set of games
+
+		so that we can operate upon a single game, or a set of games
+		todo find common values and track which have been changed
+		todo update games in bulk into the database
+		todo auto-completion for player, event, site, ...
+	 */
 	protected HashMap values;
 	protected JPanel moreTags;
 
