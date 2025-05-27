@@ -91,6 +91,11 @@ public class MatSignatureV2 extends MatSignature
         bsig = bfeat.setBoard(board,BLACK);
     }
 
+    public boolean matches(Board board)
+    {
+        return wfeat.matches(board,WHITE) && bfeat.matches(board,BLACK);
+    }
+
     // --------------------------------------
     //      Methods
     // --------------------------------------
@@ -206,7 +211,7 @@ public class MatSignatureV2 extends MatSignature
         }
 
         int pawnAdvanceRemaining() {
-            return 48-computePawnAdvance(sig);
+            return ADV_TOP-computePawnAdvance(sig);
         }
 
         protected long setBoard(Board board, int color)
@@ -215,6 +220,7 @@ public class MatSignatureV2 extends MatSignature
             sig = 0;
             List<Piece> pawns = board.pieceList(EngUtil.PAWN|color);
             for(Piece p : pawns) {
+                if (p.isVacant()) continue;
                 int sq = p.square();
                 if (color==BLACK) sq = EngUtil.rotateSquare(sq);
                 sig |= pawnAt(sq);
@@ -266,9 +272,9 @@ public class MatSignatureV2 extends MatSignature
                         padv_base = computePawnAdvance(sig) + promo_lower*6;
                         padv_upper = padv_base+promo_upper*6;
                         break;
-                case 46: // [46..48] rare case
-                        padv_base = 46;
-                        padv_upper = 48;
+                case ADV_MAX: // [46..48] rare case
+                        padv_base = ADV_MAX;
+                        padv_upper = ADV_TOP;
                         break;
                 default:// exact value was stored
                         padv_upper = padv_base = stored_padv;
@@ -276,9 +282,27 @@ public class MatSignatureV2 extends MatSignature
             }
 
             if (padv_base==padv_upper)
-                sig |= BitUtil.set6(Math.max(46,padv_base+1),ADV_OFFSET);
-            else
-                sig |= BitUtil.set6(47,ADV_OFFSET);
+                sig |= BitUtil.set6(Math.min(ADV_MAX,padv_base+1),ADV_OFFSET);
+            // else: unknown = 0
+        }
+
+        public boolean matches(Board board, int color)
+        {
+            if (board.countPieces(PAWN|color) != pawnCount(sig)) return false;
+            if (board.countPieces(KNIGHT|color) != knightCount(sig)) return false;
+            if (board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()) ) != lightBishopCount(sig)) return false;
+            if (board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()) ) != darkBishopCount(sig)) return false;
+            if (board.countPieces(ROOK|color) != rookCount(sig)) return false;
+            if (board.countPieces(QUEEN|color) != queenCount(sig)) return false;
+
+            List<Piece> pawns = board.pieceList(EngUtil.PAWN|color);
+            for(Piece p : pawns) {
+                if (p.isVacant()) continue;
+                int sq = p.square();
+                if (color==BLACK) sq = EngUtil.rotateSquare(sq);
+                if (! BitUtil.get1(sig,pawnOffset(sq))) return false;
+            }
+            return true;
         }
 
         public void del_pawn(int square) {
@@ -307,7 +331,7 @@ public class MatSignatureV2 extends MatSignature
         buf.append('[');
         print1Sig(buf,wfeat,WHITE);
         buf.append(" - ");
-        print1Sig(buf,wfeat,BLACK);
+        print1Sig(buf,bfeat,BLACK);
         buf.append(']');
         return buf.toString();
     }
@@ -325,30 +349,39 @@ public class MatSignatureV2 extends MatSignature
 
     private void print1Sig(StringBuffer buf, Features feat, int color)
     {
-        for(int row=ROW_6; row >= ROW_2; row--) {
+        for(int row=ROW_7; row >= ROW_2; row--) {
             printPawnRow(buf, pawnRow(feat.sig, row), color);
             if (row>ROW_2) buf.append("/");
         }
-        buf.append(' ');
-        buf.append(EngUtil.pieceCharacter(KNIGHT|color));
-        buf.append(knightCount(feat.sig));
-        buf.append(' ');
-        buf.append(EngUtil.pieceCharacter(BISHOP|color));
-        buf.append(lightBishopCount(feat.sig));
-        buf.append('+');
-        buf.append(darkBishopCount(feat.sig));
-        buf.append(' ');
-        buf.append(EngUtil.pieceCharacter(ROOK|color));
-        buf.append(rookCount(feat.sig));
-        buf.append(' ');
-        buf.append(EngUtil.pieceCharacter(QUEEN|color));
-        buf.append(queenCount(feat.sig));
+        if (knightCount(feat.sig) > 0) {
+            buf.append(' ');
+            buf.append(knightCount(feat.sig));
+            buf.append(EngUtil.coloredPieceCharacter(KNIGHT|color));
+        }
+        if (bishopCount(feat.sig) > 0) {
+            buf.append(' ');
+            buf.append(lightBishopCount(feat.sig));
+            buf.append('+');
+            buf.append(darkBishopCount(feat.sig));
+            buf.append(EngUtil.coloredPieceCharacter(BISHOP|color));
+        }
+        if (rookCount(feat.sig) > 0) {
+            buf.append(' ');
+            buf.append(rookCount(feat.sig));
+            buf.append(EngUtil.coloredPieceCharacter(ROOK|color));
+        }
+        if (queenCount(feat.sig) > 0) {
+            buf.append(' ');
+            buf.append(queenCount(feat.sig));
+            buf.append(EngUtil.coloredPieceCharacter(QUEEN|color));
+        }
+
         buf.append(' ');
         int i = pawnAdvance(feat.sig);
         switch(i) {
-            case -1:    buf.append("?"); break;
-            case 46:    buf.append(">=46"); break;
-            default:    buf.append(i); break;
+            case -1:         buf.append("?"); break;
+            case ADV_MAX:    buf.append(">="); buf.append(ADV_MAX); break;
+            default:         buf.append(i); break;
         }
     }
 
@@ -357,7 +390,7 @@ public class MatSignatureV2 extends MatSignature
         for(int bit=1; bit <= 0x80; bit <<= 1)
             if ((bits&bit) != 0) {
                 if (empty > 0) buf.append(empty);
-                buf.append(EngUtil.pieceCharacter(PAWN|color));
+                buf.append(EngUtil.coloredPieceCharacter(PAWN|color));
                 empty=0;
             }
             else {
@@ -380,10 +413,13 @@ public class MatSignatureV2 extends MatSignature
     private static final int ROOK_OFFSET          = 54;
     private static final int QUEEN_OFFSET         = 56;
     //  pawn advance count (bits, may be unknown)
-    private static final int ADV_OFFSET       = 58;
+    private static final int ADV_OFFSET             = 58;
+
+    private static final int ADV_TOP              = 48;
+    private static final int ADV_MAX              = ADV_TOP-2;
 
     private static int rowOffset(int row) {
-        return (row-ROW_1)*8;
+        return (row-ROW_2)*8;
     }
     private static int fileOffset(int file) {
         return file-FILE_A;

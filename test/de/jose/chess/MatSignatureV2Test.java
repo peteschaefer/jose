@@ -63,13 +63,17 @@ class MatSignatureV2Test {
 
         pos.setup(START_POSITION);
         sig.setBoard(pos);
-        System.out.println(sig.toHexString());
         System.out.println(sig.toString());
+        assertEquals("[5960000000000ff-5960000000000ff]",sig.toHexString());
+        assertEquals("[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - 8/8/8/8/8/pppppppp 2n 1+1b 2r 1q 0]",sig.toString());
+        assertTrue(sig.matches(pos));
 
         pos.setup(Constants.EMPTY_POSITION);
         sig.setBoard(pos);
-        System.out.println(sig.toHexString());
         System.out.println(sig.toString());
+        assertEquals("[0-0]",sig.toHexString());
+        assertEquals("[8/8/8/8/8/8 ? - 8/8/8/8/8/8 ?]",sig.toString());
+        assertTrue(sig.matches(pos));
     }
 
     @Test
@@ -101,5 +105,8 @@ class MatSignatureV2Test {
     private void test1Game(PositionFilter pf, String initFen, byte[] bin, MatSignatureV2 endSig)
     {
         PositionFilter.Result res = pf.accept(initFen,bin,endSig);
+        //  for each position
+        //  - compare MatSignature against actual position
+        //  - check reachability (backward,forward?)
     }
 }
