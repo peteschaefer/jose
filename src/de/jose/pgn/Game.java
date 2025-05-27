@@ -1406,8 +1406,8 @@ public class Game
         stm.setString(i++,     (String)getTagValue(TAG_FEN));
         stm.setString(i++,     getMoreInfo());
 		if (writer != null) {
-			stm.setLong(i++,    writer.pos.getMatSig().wsig);	//	right?
-			stm.setLong(i++, 	writer.pos.getMatSig().bsig);
+			stm.setLong(i++,    writer.pos.getMatSig().getWhiteSignature());	//	right?
+			stm.setLong(i++, 	writer.pos.getMatSig().getBlackSignature());
 			stm.setBytes(i++,      writer.getText());
 			stm.setBytes(i++,      writer.getComments());
 

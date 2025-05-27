@@ -12,9 +12,7 @@
 
 package de.jose.pgn;
 
-import de.jose.chess.MatSignature;
-import de.jose.chess.Move;
-import de.jose.chess.Position;
+import de.jose.chess.*;
 import de.jose.util.concurrent.BatchThreadPool;
 import de.jose.util.concurrent.QueueThreadPool;
 
@@ -66,7 +64,7 @@ public class PositionFilter
 
 	public PositionFilter()
 	{
-		super(new Position());
+		super(new Position(JoseHashKey.class, MatSignatureV2.class));
 
 //		searchKey = pos.getHashKey();
 //		searchKeyReversed = pos.getReversedHashKey();

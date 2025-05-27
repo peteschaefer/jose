@@ -87,15 +87,15 @@ public class Position
 
 	public Position()
 	{
-		this(JoseHashKey.class);
+		this(JoseHashKey.class,MatSignature.class);
 	}
 
-	public Position (Class hashKeyClass)
+	public Position (Class hashKeyClass, Class matSigClass)
 	{
 		super();
 		theHashKey = HashKey.newHashKey(hashKeyClass,false);
 		theReversedHashKey = HashKey.newHashKey(hashKeyClass,true);
-		theMatSignature = new MatSignature();
+		theMatSignature = MatSignature.newMatSignature(matSigClass);
 		theMoveStack = new StackFrame[STACK_SIZE];
 		hashCount = new LongIntMap();
 		option = CHECK+/*STALEMATE+*/INCREMENT_HASH+EXPOSED_CHECK;
@@ -423,7 +423,7 @@ public class Position
 		}
 
 		if (hasOption(INCREMENT_SIGNATURE)) {
-			theMatSignature.update(move);
+			theMatSignature.update(this,move);
 		}
 	}
 
@@ -492,8 +492,7 @@ public class Position
 		theSilentPlies = frame.silentPlies;
 		theHashKey.setValue(frame.hashValue);
 		theReversedHashKey.setValue(frame.reversedHashValue);
-		theMatSignature.wsig = frame.whiteSignature;
-		theMatSignature.bsig = frame.blackSignature;
+		theMatSignature.init(frame.whiteSignature,frame.blackSignature);
 
 		option = oldOption;
 

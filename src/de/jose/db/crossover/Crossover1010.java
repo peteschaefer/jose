@@ -95,8 +95,8 @@ public class Crossover1010
 				System.err.println("[dropped mat signature "+GId+"]");
 			}
 
-			res.updateLong(4, matsig.wsig);
-			res.updateLong(5, matsig.bsig);
+			res.updateLong(4, matsig.getWhiteSignature());
+			res.updateLong(5, matsig.getBlackSignature());
 			res.updateRow();
 			/*	not sure if updatable result set is really efficient.
 				Maybe use a temporary (memory) table and update en gros:

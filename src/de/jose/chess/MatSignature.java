@@ -13,7 +13,9 @@
 package de.jose.chess;
 
 import de.jose.Util;
+import org.apache.fop.pdf.PDFFilterList;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 import static de.jose.util.BitUtil.*;
@@ -63,7 +65,10 @@ public class MatSignature
 	 * =======
 	 * 	54 bits
 	 */
-    public long wsig, bsig;
+    protected long wsig, bsig;
+
+	public final long getWhiteSignature() { return wsig; }
+	public final long getBlackSignature() { return bsig; }
 
     // --------------------------------------
     //      Constants
@@ -93,6 +98,20 @@ public class MatSignature
 	 *  only when a position is setup manually, we need to check lower and upper bounds
 	 */
 
+	/**
+	 * factory method
+	 * @return
+	 */
+	public static MatSignature newMatSignature(Class clazz)
+	{
+		try {
+			Constructor ctor = clazz.getConstructor();
+			return (MatSignature)ctor.newInstance();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
     // --------------------------------------
     //      Constructors
     // --------------------------------------
@@ -100,23 +119,24 @@ public class MatSignature
     public MatSignature()
     { }
 
-	public MatSignature(long wsig, long bsig)
+	public MatSignature(long wsig, long bsig) {
+		init(wsig, bsig);
+	}
+
+	public MatSignature(MatSignature that) {
+		init(that.wsig, that.bsig);
+	}
+
+    public MatSignature(Board board) {
+		setBoard(board);
+    }
+
+	public void init(long wsig, long bsig)
 	{
 		this.wsig = wsig;
 		this.bsig = bsig;
 	}
 
-	public MatSignature(MatSignature that)
-    {
-		this.wsig = that.wsig;
-		this.bsig = that.bsig;
-	}
-
-    public MatSignature(Board board)
-    {
-        setBoard(board);
-    }
-    
     // --------------------------------------
     //      Basic Methods
     // --------------------------------------
@@ -258,12 +278,12 @@ public class MatSignature
 	    bsig = swap;
     }
 
-    public final boolean isReachableFrom(MatSignature from)
+    public boolean isReachableFrom(MatSignature from)
     {
         return is_reachable(from,this);
     }
 
-	public final boolean canReach(MatSignature to)
+	public boolean canReach(MatSignature to)
 	{
 		return is_reachable(this,to);
 	}
@@ -277,7 +297,7 @@ public class MatSignature
 	//      Incremental Methods
 	// --------------------------------------
 
-	public void update(Move mv)
+	public void update(Board board, Move mv)
 	{
 		if (mv.isCapture()) {
 			//  decrease piece count
