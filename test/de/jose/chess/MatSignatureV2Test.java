@@ -15,10 +15,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.jose.chess.Constants.START_POSITION;
+import static de.jose.chess.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
+
+    MatSignatureV2 sig;
+    Position pos;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -54,26 +57,26 @@ class MatSignatureV2Test {
         assertNotNull(JoConnection.getAdapter(true));
     }
 
-    @Test
-    void testEmpty()
+    void test1(String fen, String hexExpected, String stringExpected) throws Exception
     {
-        MatSignatureV2 sig = new MatSignatureV2();
-        Position pos = new Position();
+        pos.setup(fen);
+        sig.setBoard(pos);
+        System.out.println(sig.toString());
+
+        assertEquals(hexExpected,sig.toHexString());
+        assertEquals(stringExpected,sig.toString());
+        assertTrue(sig.matches(pos));
+    }
+
+    @Test
+    void testEmpty() throws Exception {
+        sig = new MatSignatureV2();
+        pos = new Position();
         pos.setOption(Position.INCREMENT_SIGNATURE,true);
 
-        pos.setup(START_POSITION);
-        sig.setBoard(pos);
-        System.out.println(sig.toString());
-        assertEquals("[5960000000000ff-5960000000000ff]",sig.toHexString());
-        assertEquals("[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - 8/8/8/8/8/pppppppp 2n 1+1b 2r 1q 0]",sig.toString());
-        assertTrue(sig.matches(pos));
-
-        pos.setup(Constants.EMPTY_POSITION);
-        sig.setBoard(pos);
-        System.out.println(sig.toString());
-        assertEquals("[0-0]",sig.toHexString());
-        assertEquals("[8/8/8/8/8/8 ? - 8/8/8/8/8/8 ?]",sig.toString());
-        assertTrue(sig.matches(pos));
+        test1(START_POSITION, "[5960000000000ff-5960000000000ff]", "[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - 8/8/8/8/8/pppppppp 2n 1+1b 2r 1q 0]");
+        test1(EMPTY_POSITION, "[0-0]", "[8/8/8/8/8/8 ? - 8/8/8/8/8/8 ?]");
+        test1("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", "[d960000001000ef-d960000000800f7]", "[8/8/8/4P3/8/PPPP1PPP 2N 1+1B 2R 1Q 2 - 8/8/8/3p4/8/ppp1pppp 2n 1+1b 2r 1q 2]");
     }
 
     @Test
