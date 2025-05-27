@@ -7,8 +7,7 @@ import de.jose.view.MoveGesture;
 import java.util.List;
 
 import static de.jose.chess.Constants.*;
-import static de.jose.chess.EngUtil.fileOf;
-import static de.jose.chess.EngUtil.rowOf;
+import static de.jose.chess.EngUtil.*;
 import static de.jose.util.BitUtil.*;
 
 /**
@@ -50,7 +49,7 @@ import static de.jose.util.BitUtil.*;
  * 	- good bishop = pawns on different color
  * 	- bad bihsop = pawns on same color
  */
-public class MatSignatureV2
+public class MatSignatureV2 extends MatSignature
 {
     private Features wfeat = new Features();
     private Features bfeat = new Features();
@@ -62,16 +61,13 @@ public class MatSignatureV2
     public MatSignatureV2()
     { }
 
-    public MatSignatureV2(long wsig, long bsig)
-    {
-        wfeat.sig = wsig;
-        bfeat.sig = bsig;
-        wfeat.compute();
-        bfeat.compute();
+    public MatSignatureV2(long wsig, long bsig) {
+        init(wsig, bsig);
     }
 
     public MatSignatureV2(MatSignatureV2 that)
     {
+        super(that);
         wfeat.copyFrom(that.wfeat);
         bfeat.copyFrom(that.bfeat);
     }
@@ -80,11 +76,19 @@ public class MatSignatureV2
         setBoard(board);
     }
 
+    public void init(long wsig, long bsig) {
+        super.init(wsig, bsig);
+        wfeat.sig = wsig;
+        bfeat.sig = bsig;
+        wfeat.compute();
+        bfeat.compute();
+    }
+
     public void setBoard(Board board)
     {
         clear();
-        wfeat.setBoard(board,WHITE);
-        bfeat.setBoard(board,BLACK);
+        wsig = wfeat.setBoard(board,WHITE);
+        bsig = bfeat.setBoard(board,BLACK);
     }
 
     // --------------------------------------
@@ -93,12 +97,14 @@ public class MatSignatureV2
 
 
     public void clear()  {
+        super.clear();
         wfeat.clear();
         bfeat.clear();
     }
 
     public void reverse()
     {
+        super.reverse();
         Features swapf = wfeat;
         wfeat = bfeat;
         bfeat = swapf;
@@ -128,6 +134,12 @@ public class MatSignatureV2
         return bad_bishop(EngUtil.isWhite(color) ? wfeat.sig : bfeat.sig);
     }
 
+    public boolean isReachableFrom(MatSignature from) {return is_reachable((MatSignatureV2)from,this);
+    }
+
+    public boolean canReach(MatSignature to) { return is_reachable(this,(MatSignatureV2)to);
+    }
+
     /**
      * incremental update
      * @param board
@@ -154,6 +166,8 @@ public class MatSignatureV2
             if (mv.isPromotion())
                 fthis.add_piece(mv.getPromotionPiece(),mv.to,board);
         }
+        super.wsig = wfeat.sig;
+        super.bsig = bfeat.sig;
     }
 
     // --------------------------------------
@@ -195,7 +209,7 @@ public class MatSignatureV2
             return 48-computePawnAdvance(sig);
         }
 
-        private void setBoard(Board board, int color)
+        protected long setBoard(Board board, int color)
         {
             /** copy pawn structure */
             sig = 0;
@@ -221,6 +235,7 @@ public class MatSignatureV2
 
             /**  is the pawn advance exact, by coincidence ? */
             this.compute();
+            return this.sig;
         }
 
         private void compute()
@@ -245,7 +260,7 @@ public class MatSignatureV2
             if (qcnt>=3)    promo_lower++;
             //  todo get a second promo_lower bound from Board
 
-            int stored_padv = get6(sig,ADV_OFFSET)-1;
+            int stored_padv = pawnAdvance(sig);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
                         padv_base = computePawnAdvance(sig) + promo_lower*6;
@@ -285,6 +300,72 @@ public class MatSignatureV2
             padv_upper = Math.max(padv_upper,padv_base);
         }
     }
+
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append('[');
+        print1Sig(buf,wfeat,WHITE);
+        buf.append(" - ");
+        print1Sig(buf,wfeat,BLACK);
+        buf.append(']');
+        return buf.toString();
+    }
+
+    public String toHexString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append('[');
+        buf.append(Long.toHexString(wfeat.sig));
+        buf.append('-');
+        buf.append(Long.toHexString(bfeat.sig));
+        buf.append(']');
+        return buf.toString();
+    }
+
+    private void print1Sig(StringBuffer buf, Features feat, int color)
+    {
+        for(int row=ROW_6; row >= ROW_2; row--) {
+            printPawnRow(buf, pawnRow(feat.sig, row), color);
+            if (row>ROW_2) buf.append("/");
+        }
+        buf.append(' ');
+        buf.append(EngUtil.pieceCharacter(KNIGHT|color));
+        buf.append(knightCount(feat.sig));
+        buf.append(' ');
+        buf.append(EngUtil.pieceCharacter(BISHOP|color));
+        buf.append(lightBishopCount(feat.sig));
+        buf.append('+');
+        buf.append(darkBishopCount(feat.sig));
+        buf.append(' ');
+        buf.append(EngUtil.pieceCharacter(ROOK|color));
+        buf.append(rookCount(feat.sig));
+        buf.append(' ');
+        buf.append(EngUtil.pieceCharacter(QUEEN|color));
+        buf.append(queenCount(feat.sig));
+        buf.append(' ');
+        int i = pawnAdvance(feat.sig);
+        switch(i) {
+            case -1:    buf.append("?"); break;
+            case 46:    buf.append(">=46"); break;
+            default:    buf.append(i); break;
+        }
+    }
+
+    private void printPawnRow(StringBuffer buf, long bits, int color) {
+        int empty=0;
+        for(int bit=1; bit <= 0x80; bit <<= 1)
+            if ((bits&bit) != 0) {
+                if (empty > 0) buf.append(empty);
+                buf.append(EngUtil.pieceCharacter(PAWN|color));
+                empty=0;
+            }
+            else {
+                empty++;
+            }
+        if (empty > 0) buf.append(empty);
+    }
+
 
     //  lower 48 bits = 6 bytes hold the pawn structure
     private static long PAWN_MASK = 0x0ffffffffffffL;
@@ -356,9 +437,7 @@ public class MatSignatureV2
     private static int bishopCount(long sig)        { return lightBishopCount(sig)+darkBishopCount(sig); }
     private static int rookCount(long sig)          { return BitUtil.get2(sig,ROOK_OFFSET); }
     private static int queenCount(long sig)         { return BitUtil.get2(sig,QUEEN_OFFSET); }
-
-
-
+    private static int pawnAdvance(long sig)        { return get6(sig,ADV_OFFSET)-1; }
 
     private static boolean is_reachable(Features from, Features to)
     {

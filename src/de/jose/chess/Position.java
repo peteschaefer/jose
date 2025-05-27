@@ -87,15 +87,15 @@ public class Position
 
 	public Position()
 	{
-		this(JoseHashKey.class);
+		this(JoseHashKey.class,MatSignature.class);
 	}
 
-	public Position (Class hashKeyClass)
+	public Position (Class hashKeyClass, Class matSigClass)
 	{
 		super();
 		theHashKey = HashKey.newHashKey(hashKeyClass,false);
 		theReversedHashKey = HashKey.newHashKey(hashKeyClass,true);
-		theMatSignature = new MatSignature();
+		theMatSignature = MatSignature.newMatSignature(matSigClass);
 		theMoveStack = new StackFrame[STACK_SIZE];
 		hashCount = new LongIntMap();
 		option = CHECK+/*STALEMATE+*/INCREMENT_HASH+EXPOSED_CHECK;
@@ -320,16 +320,17 @@ public class Position
 		frame.whiteSignature = theMatSignature.wsig;
 		frame.blackSignature = theMatSignature.bsig;
 
-		Piece piece = piece(move.from);
-		boolean silent = !piece.isPawn();
-		//	pawn moves and captures are considered not silent
-
 		if (move.isNullMove()) {
 			//  NULLMOVE
 			theFlags = Util.minus(theFlags,EN_PASSANT_FILE);
 			theSilentPlies++;
 		}
 		else {
+			Piece piece = piece(move.from);
+
+			boolean silent = !piece.isPawn();
+			//	pawn moves and captures are considered not silent
+
 			if (move.captured!=null) {
 				silent = false;
 				deletePiece(move.captured);
@@ -421,9 +422,8 @@ public class Position
 			theReversedHashKey.set(theFlags);
 		}
 
-		if (hasOption(INCREMENT_SIGNATURE) && !silent) {
-			//	note: only noisy moves modify the MatSignature
-			theMatSignature.update(move);
+		if (hasOption(INCREMENT_SIGNATURE)) {
+			theMatSignature.update(this,move);
 		}
 	}
 
@@ -492,8 +492,7 @@ public class Position
 		theSilentPlies = frame.silentPlies;
 		theHashKey.setValue(frame.hashValue);
 		theReversedHashKey.setValue(frame.reversedHashValue);
-		theMatSignature.wsig = frame.whiteSignature;
-		theMatSignature.bsig = frame.blackSignature;
+		theMatSignature.init(frame.whiteSignature,frame.blackSignature);
 
 		option = oldOption;
 
@@ -781,12 +780,6 @@ public class Position
 			return underAttack(blackKing().square(), theWhitePieces);
 		else
 			return underAttack(whiteKing().square(), theBlackPieces);
-	}
-
-	/** was the last move a silent move? (i.e. not a capture, not a pawn move)
-	 */
-	public boolean wasSilent() {
-		return theSilentPlies > 0;
 	}
 
 	protected boolean wasExposed(Move mv)

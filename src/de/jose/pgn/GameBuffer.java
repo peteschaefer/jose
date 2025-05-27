@@ -430,8 +430,8 @@ public class GameBuffer
         pstm2.setString			(p2++, r.Board);
         pstm2.setString			(p2++, r.FEN);
 		pstm2.setString			(p2++, r.More);
-		pstm2.setLong			(p2++, r.signature.wsig);
-		pstm2.setLong			(p2++, r.signature.bsig);
+		pstm2.setLong			(p2++, r.signature.getWhiteSignature());
+		pstm2.setLong			(p2++, r.signature.getBlackSignature());
 
         if (r.binLen==0)
             pstm2.setNull           (p2++, Types.LONGVARBINARY);
