@@ -4,6 +4,7 @@ import de.jose.Application;
 import de.jose.Config;
 import de.jose.Version;
 import de.jose.db.*;
+import de.jose.pgn.BinReader;
 import de.jose.pgn.PositionFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,17 +12,48 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static de.jose.chess.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
 
+    class TestBinReader extends BinReader
+    {
+        public ArrayList<MatSignatureV2> sigs = new ArrayList<>();
+
+        public TestBinReader(Position position) {
+            super(position);
+        }
+
+        @Override
+        public void afterMove(Move mv, int ply) {
+
+        }
+
+        @Override public void beforeMove(Move mv, int ply, boolean displayHint) { }
+        @Override public void annotation(int nagCode) { }
+        @Override public void comment(StringBuffer text) { }
+        @Override public void startOfLine(int nestLevel) { }
+        @Override public void endOfLine(int nestLevel) { }
+        @Override public void result(int resultCode) { }
+    }
+
     MatSignatureV2 sig;
     Position pos;
+    TestBinReader reader;
+
+    public MatSignatureV2Test() {
+        sig = new MatSignatureV2();
+        pos = new Position(JoseHashKey.class,MatSignatureV2.class);
+        pos.setOption(Position.INCREMENT_SIGNATURE,true);
+        reader = new TestBinReader(pos);
+    }
 
     @BeforeEach
     void setUp() throws Exception {
@@ -110,9 +142,15 @@ class MatSignatureV2Test {
 
     private void test1Game(PositionFilter pf, String initFen, byte[] bin, MatSignatureV2 endSig)
     {
-        PositionFilter.Result res = pf.accept(initFen,bin,endSig);
-        //  for each position
-        //  - compare MatSignature against actual position
-        //  - check reachability (backward,forward?)
+        reader.sigs.clear();
+        reader.read(bin,0, null,0, initFen, true,true);
+        //  reachability:
+        for(int i=1; i < reader.sigs.size(); i++) {
+            MatSignatureV2 sigi = (MatSignatureV2) reader.sigs.get(i);
+            for (int j = 0; j <= i; ++i) {
+                MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
+                assertTrue(sigj.canReach(sigi));
+            }
+        }
     }
 }
