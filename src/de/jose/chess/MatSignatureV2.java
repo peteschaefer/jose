@@ -49,8 +49,8 @@ import static de.jose.util.BitUtil.*;
  */
 public class MatSignatureV2 implements MatSignature
 {
-    private Features wfeat = new Features();
-    private Features bfeat = new Features();
+    private Features wfeat = new Features(WHITE);
+    private Features bfeat = new Features(BLACK);
 
     // --------------------------------------
     //      Constructors
@@ -82,15 +82,15 @@ public class MatSignatureV2 implements MatSignature
     }
 
     public void init(long wsig, long bsig) {
-        wfeat.setSignature(wsig,WHITE);
-        bfeat.setSignature(bsig,BLACK);
+        wfeat.setSignature(wsig);
+        bfeat.setSignature(bsig);
     }
 
     public void setBoard(Board board)
     {
         clear();
-        wfeat.setBoard(board,WHITE);
-        bfeat.setBoard(board,BLACK);
+        wfeat.setBoard(board);
+        bfeat.setBoard(board);
     }
 
     public void setInitial()
@@ -100,7 +100,7 @@ public class MatSignatureV2 implements MatSignature
 
     public boolean matches(Board board)
     {
-        return wfeat.matches(board,WHITE) && bfeat.matches(board,BLACK);
+        return wfeat.matches(board) && bfeat.matches(board);
     }
 
     // --------------------------------------
@@ -168,7 +168,7 @@ public class MatSignatureV2 implements MatSignature
             if (mv.captured.isPawn() && EngUtil.isWhite(mv.captured.piece))
                 fthat.del_pawn(mv.captured.square);
             else if (mv.captured.isPawn())
-                fthat.del_pawn(EngUtil.rotateSquare(mv.captured.square)); // black pawns are rotated
+                fthat.del_pawn(mv.captured.square);
             else
                 fthat.del_piece(mv.captured.piece,mv.captured.square);   //  decrease piece count
         }
@@ -199,6 +199,11 @@ public class MatSignatureV2 implements MatSignature
 
     private class Features
     {
+        public Features(int color) {
+            this.color = color;
+        }
+
+        int color;
         long pawns;
         int count[] = new int[6];          //  number of officers on the board; lower bound, including known promotions
         int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
@@ -252,7 +257,7 @@ public class MatSignatureV2 implements MatSignature
         }
 
         int pawnAdvanceRemaining() {
-            return ADV_TOP- MatSignatureV2.computePawnAdvance(pawns);
+            return ADV_TOP- MatSignatureV2.computePawnAdvance(pawns,color);
         }
 
         protected long assemble()
@@ -270,7 +275,7 @@ public class MatSignatureV2 implements MatSignature
             return sig;
         }
 
-        protected void setBoard(Board board, int color)
+        protected void setBoard(Board board)
         {
             /** copy pawn structure */
             pawns = 0;
@@ -278,7 +283,6 @@ public class MatSignatureV2 implements MatSignature
             for(Piece p : pawnList) {
                 if (p.isVacant()) continue;
                 int sq = p.square();
-                if (color==BLACK) sq = EngUtil.rotateSquare(sq);
                 pawns |= pawnAt(sq);
             }
 
@@ -294,7 +298,7 @@ public class MatSignatureV2 implements MatSignature
             this.computePawnAdvanceBounds();
         }
 
-        protected void setSignature(long sig, int color)
+        protected void setSignature(long sig)
         {
             /** copy pawn structure */
             pawns = sig & PAWN_MASK;
@@ -329,7 +333,7 @@ public class MatSignatureV2 implements MatSignature
             int stored_padv = pawnAdvance(pawns);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = MatSignatureV2.computePawnAdvance(pawns) + promo_lower*6;
+                        padv_base = MatSignatureV2.computePawnAdvance(pawns,color) + promo_lower*6;
                         padv_upper = padv_base+promo_upper*6;
                         break;
                 case ADV_MAX: // [46..48] rare case
@@ -342,7 +346,7 @@ public class MatSignatureV2 implements MatSignature
             }
         }
 
-        public boolean matches(Board board, int color)
+        public boolean matches(Board board)
         {
             if (pawnCount() != board.countPieces(PAWN | color)) return false;
             if (count[0] != board.countPieces(KNIGHT | color)) return false;
@@ -355,7 +359,6 @@ public class MatSignatureV2 implements MatSignature
             for(Piece p : pawnList) {
                 if (p.isVacant()) continue;
                 int sq = p.square();
-                if (color==BLACK) sq = EngUtil.rotateSquare(sq);
                 if (! BitUtil.get1(pawns,pawnOffset(sq))) return false;
             }
             return true;
@@ -441,7 +444,7 @@ public class MatSignatureV2 implements MatSignature
         public void advance_pawn(int from, int to) {
             pawns = clear1(pawns,pawnOffset(from));
             pawns |= set1(1,pawnOffset(to));
-            padv_base += (rowOf(to)-rowOf(from));
+            padv_base += Math.abs(rowOf(to)-rowOf(from));
             padv_upper = Math.max(padv_upper,padv_base);
         }
     }
@@ -535,11 +538,17 @@ public class MatSignatureV2 implements MatSignature
         return Long.bitCount(sig & rowMask(row));
     }
 
-    static int computePawnAdvance(long sig)
+    static int computePawnAdvance(long sig, int color)
     {
         int adv = 0;
-        for (int row=ROW_3; row<=ROW_7; ++row)  //  jit compiler: unroll :)
-            adv += (row-ROW_2)*pawnCount(sig,row);
+        if (EngUtil.isWhite(color)) {
+            for (int row = ROW_3; row <= ROW_7; ++row)  //  jit compiler: unroll :)
+                adv += (row - ROW_2) * pawnCount(sig, row);
+        }
+        else {
+            for (int row = ROW_6; row >= ROW_2; --row)  //  jit compiler: unroll :)
+                adv += (ROW_7-row) * pawnCount(sig, row);
+        }
         return adv;
     }
 
