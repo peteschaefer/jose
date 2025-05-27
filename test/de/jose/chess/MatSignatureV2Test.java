@@ -77,9 +77,9 @@ class MatSignatureV2Test {
         pos = new Position();
         pos.setOption(Position.INCREMENT_SIGNATURE,true);
 
-        test1(START_POSITION, "[5960000000000ff-5960000000000ff]", "[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - 8/8/8/8/8/pppppppp 2n 1+1b 2r 1q 0]");
+        test1(START_POSITION, "[5960000000000ff-596ff0000000000]", "[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - pppppppp/8/8/8/8/8 2n 1+1b 2r 1q 0]");
         test1(EMPTY_POSITION, "[0-0]", "[8/8/8/8/8/8 ? - 8/8/8/8/8/8 ?]");
-        test1("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", "[d960000001000ef-d960000000800f7]", "[8/8/8/4P3/8/PPPP1PPP 2N 1+1B 2R 1Q 2 - 8/8/8/3p4/8/ppp1pppp 2n 1+1b 2r 1q 2]");
+        test1("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", "[d960000001000ef-d96ef0010000000]", "[8/8/8/4P3/8/PPPP1PPP 2N 1+1B 2R 1Q 2 - pppp1ppp/8/4p3/8/8/8 2n 1+1b 2r 1q 2]");
     }
 
     @Test
