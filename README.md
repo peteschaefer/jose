@@ -62,7 +62,7 @@ Features:
 
 ---
 
-#### **<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.7.</a>**
+#### **<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.2 and Patch 1.5.11.</a>**
 
 <br>
 <a href="https://github.com/peteschaefer/jose/wiki/Installation-Notes">Installation Notes</a><br>
