@@ -2,6 +2,7 @@ package de.jose.chess;
 
 import de.jose.util.BitUtil;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static de.jose.chess.EngUtil.*;
@@ -62,8 +63,7 @@ public class MatSignatureV2 implements MatSignature
         init(wsig, bsig);
     }
 
-    public MatSignatureV2(MatSignatureV2 that)
-    {
+    public MatSignatureV2(MatSignatureV2 that) {
         wfeat.copyFrom(that.wfeat);
         bfeat.copyFrom(that.bfeat);
     }
@@ -73,7 +73,7 @@ public class MatSignatureV2 implements MatSignature
     }
 
     public MatSignature cloneReversed() {
-        return new MatSignatureV2(bfeat.sig,wfeat.sig);
+        return new MatSignatureV2(getBlackSignature(), getWhiteSignature());
     }
 
 
@@ -82,10 +82,8 @@ public class MatSignatureV2 implements MatSignature
     }
 
     public void init(long wsig, long bsig) {
-        wfeat.sig = wsig;
-        bfeat.sig = bsig;
-        wfeat.compute();
-        bfeat.compute();
+        wfeat.setSignature(wsig,WHITE);
+        bfeat.setSignature(bsig,BLACK);
     }
 
     public void setBoard(Board board)
@@ -109,8 +107,8 @@ public class MatSignatureV2 implements MatSignature
     //      Methods
     // --------------------------------------
 
-    public long getWhiteSignature() { return wfeat.sig; }
-    public long getBlackSignature() { return bfeat.sig; }
+    public long getWhiteSignature() { return wfeat.assemble(); }
+    public long getBlackSignature() { return bfeat.assemble(); }
 
 
     public void clear()  {
@@ -127,26 +125,26 @@ public class MatSignatureV2 implements MatSignature
 
     public boolean oppositeColouredBishops()
     {
-        return      bishopCount(wfeat.sig)==1
-                &&  bishopCount(bfeat.sig)==1
-                &&  lightBishopCount(wfeat.sig)!=lightBishopCount(bfeat.sig);
+        return      wfeat.bishopCount()==1
+                &&  bfeat.bishopCount()==1
+                &&  wfeat.lightBishopCount() != bfeat.lightBishopCount();
     }
 
     public boolean evenColouredBishops()
     {
-        return      bishopCount(wfeat.sig)==1
-                &&  bishopCount(bfeat.sig)==1
-                &&  lightBishopCount(wfeat.sig)==lightBishopCount(bfeat.sig);
+        return      wfeat.bishopCount()==1
+                &&  bfeat.bishopCount()==1
+                &&  wfeat.lightBishopCount() == bfeat.lightBishopCount();
     }
 
     public boolean goodBishop(int color)
     {
-        return good_bishop(EngUtil.isWhite(color) ? wfeat.sig : bfeat.sig);
+        return EngUtil.isWhite(color) ? wfeat.good_bishop() : bfeat.good_bishop();
     }
 
     public boolean badBishop(int color)
     {
-        return bad_bishop(EngUtil.isWhite(color) ? wfeat.sig : bfeat.sig);
+        return EngUtil.isWhite(color) ? wfeat.bad_bishop() : bfeat.bad_bishop();
     }
 
     public boolean isReachableFrom(MatSignature from) {
@@ -159,10 +157,9 @@ public class MatSignatureV2 implements MatSignature
 
     /**
      * incremental update
-     * @param board
      * @param mv
      */
-    public void update(Board board, Move mv)
+    public void update(Move mv)
     {
         //  notify "loud" moves: captures and pawn moves
         if (mv.isCapture())
@@ -173,7 +170,7 @@ public class MatSignatureV2 implements MatSignature
             else if (mv.captured.isPawn())
                 fthat.del_pawn(EngUtil.rotateSquare(mv.captured.square)); // black pawns are rotated
             else
-                fthat.del_piece(mv.captured.piece,mv.captured.square,board);   //  decrease piece count
+                fthat.del_piece(mv.captured.piece,mv.captured.square);   //  decrease piece count
         }
         if (mv.moving!=null && mv.moving.isPawn())
         {
@@ -181,7 +178,7 @@ public class MatSignatureV2 implements MatSignature
             int color = mv.moving.color();
             fthis.advance_pawn(mv.from,mv.to);
             if (mv.isPromotion())
-                fthis.add_piece(mv.getPromotionPiece(),mv.to,board);
+                fthis.add_piece(mv.getPromotionPiece(),mv.to);
         }
     }
 
@@ -202,84 +199,137 @@ public class MatSignatureV2 implements MatSignature
 
     private class Features
     {
-        long sig;
-        int count_officers = 0;          //  number of officers on the board; lower bound, including known promotions
+        long pawns;
+        int count[] = new int[6];          //  number of officers on the board; lower bound, including known promotions
         int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
         void clear() {
-            sig = 0;
-            count_officers = 0;
+            pawns = 0;
+            Arrays.fill(count,0);
             padv_base = 0;
             padv_upper = 0;
         }
         void copyFrom(Features that) {
-            sig = that.sig;
-            count_officers = that.count_officers;
+            pawns = that.pawns;
+            System.arraycopy(that.count,0, this.count,0,this.count.length);
             padv_base = that.padv_base;
             padv_upper = that.padv_upper;
         }
 
-        int pawnAdvanceRemaining() {
-            return ADV_TOP-computePawnAdvance(sig);
+        int knightCount() { return count[0]; }
+        int lightBishopCount() { return count[1]; }
+        int darkBishopCount() { return count[2]; }
+        int bishopCount() { return lightBishopCount()+darkBishopCount(); }
+        int rookCount() { return count[3]; }
+        int queenCount() { return count[4]; }
+        int officersCount() { return count[5]; }
+
+        int pawnCount() { return MatSignatureV2.pawnCount(pawns); }
+        int lightPawnCount() { return MatSignatureV2.lightPawnCount(pawns); }
+        int darkPawnCount() { return MatSignatureV2.darkPawnCount(pawns); }
+
+        boolean good_bishop()
+        {
+            return     (lightBishopCount()==1
+                    &&  darkBishopCount()==0
+                    &&  lightPawnCount() < darkPawnCount())
+                    ||
+                    (lightBishopCount()==0
+                    &&  darkBishopCount()==1
+                    &&  lightPawnCount() > darkPawnCount());
         }
 
-        protected long setBoard(Board board, int color)
+        boolean bad_bishop()
+        {
+            return     (lightBishopCount()==1
+                    &&  darkBishopCount()==0
+                    &&  lightPawnCount() > darkPawnCount())
+                    ||
+                    (lightBishopCount()==0
+                    &&  darkBishopCount()==1
+                    &&  lightPawnCount() < darkPawnCount());
+        }
+
+        int pawnAdvanceRemaining() {
+            return ADV_TOP- MatSignatureV2.computePawnAdvance(pawns);
+        }
+
+        protected long assemble()
+        {
+            long sig = this.pawns & PAWN_MASK;
+            sig |= clip2(knightCount(),KNIGHT_OFFSET);
+            sig |= clip2(lightBishopCount(),LIGHT_BISHOP_OFFSET);
+            sig |= clip2(darkBishopCount(),DARK_BISHOP_OFFSET);
+            sig |= clip2(rookCount(),ROOK_OFFSET);
+            sig |= clip2(queenCount(),QUEEN_OFFSET);
+
+            if (padv_base==padv_upper)
+                sig |= BitUtil.set6(Math.min(ADV_MAX,padv_base+1),ADV_OFFSET);
+            // else: unknown = 0
+            return sig;
+        }
+
+        protected void setBoard(Board board, int color)
         {
             /** copy pawn structure */
-            sig = 0;
-            List<Piece> pawns = board.pieceList(EngUtil.PAWN|color);
-            for(Piece p : pawns) {
+            pawns = 0;
+            List<Piece> pawnList = board.pieceList(EngUtil.PAWN|color);
+            for(Piece p : pawnList) {
                 if (p.isVacant()) continue;
                 int sq = p.square();
                 if (color==BLACK) sq = EngUtil.rotateSquare(sq);
-                sig |= pawnAt(sq);
+                pawns |= pawnAt(sq);
             }
 
             /** count officers; clip at 3 */
-            int ncnt = board.countPieces(EngUtil.KNIGHT|color);
-            int lbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()));
-            int dbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()));
-            int rcnt = board.countPieces(EngUtil.ROOK|color);
-            int qcnt = board.countPieces(EngUtil.QUEEN|color);
-
-            sig |= clip2(ncnt,KNIGHT_OFFSET);
-            sig |= clip2(lbcnt,LIGHT_BISHOP_OFFSET);
-            sig |= clip2(dbcnt,DARK_BISHOP_OFFSET);
-            sig |= clip2(rcnt,ROOK_OFFSET);
-            sig |= clip2(qcnt,QUEEN_OFFSET);
+            count[5] = 0;
+            count[5] += count[0] = board.countPieces(EngUtil.KNIGHT|color);
+            count[5] += count[1] = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()));
+            count[5] += count[2] = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()));
+            count[5] += count[3] = board.countPieces(EngUtil.ROOK|color);
+            count[5] += count[4] = board.countPieces(EngUtil.QUEEN|color);
 
             /**  is the pawn advance exact, by coincidence ? */
-            this.compute();
-            return this.sig;
+            this.computePawnAdvanceBounds();
         }
 
-        private void compute()
+        protected void setSignature(long sig, int color)
         {
-            int ncnt = knightCount(sig);
-            int lbcnt = lightBishopCount(sig);
-            int dbcnt = darkBishopCount(sig);
-            int rcnt = rookCount(sig);
-            int qcnt = queenCount(sig);
-            count_officers = ncnt+lbcnt+dbcnt+rcnt+qcnt;
+            /** copy pawn structure */
+            pawns = sig & PAWN_MASK;
 
+            /** count officers; clip at 3 */
+            count[5] = 0;
+            count[5] += count[0] = MatSignatureV2.knightCount(sig);
+            count[5] += count[1] = MatSignatureV2.lightBishopCount(sig);
+            count[5] += count[2] = MatSignatureV2.darkBishopCount(sig);
+            count[5] += count[3] = MatSignatureV2.rookCount(sig);
+            count[5] += count[4] = MatSignatureV2.queenCount(sig);
+
+            /**  is the pawn advance exact, by coincidence ? */
+            this.computePawnAdvanceBounds();
+        }
+
+        private void computePawnAdvanceBounds()
+        {
             int promo_lower = 0;
-            int promo_upper = 8-pawnCount(sig);
+            int promo_upper = 8-pawnCount();
             boolean more_promos=false;
-            if (ncnt>=3)    promo_lower++;
-            if (lbcnt==2)   promo_lower++;
-            if (lbcnt>=3)   promo_lower++;
-            if (dbcnt==2)   promo_lower++;
-            if (dbcnt>=3)   promo_lower++;
-            if (rcnt>=3)    promo_lower++;
-            if (qcnt==2)    promo_lower++;
-            if (qcnt>=3)    promo_lower++;
+            if (count[0]>=3)   promo_lower++;
+            if (count[1]==2)   promo_lower++;
+            if (count[1]>=3)   promo_lower++;
+            if (count[2]==2)   promo_lower++;
+            if (count[2]>=3)   promo_lower++;
+            if (count[3]>=3)   promo_lower++;
+            if (count[4]==2)   promo_lower++;
+            if (count[4]>=3)   promo_lower++;
             //  todo get a second promo_lower bound from Board
 
-            int stored_padv = pawnAdvance(sig);
+            int stored_padv = pawnAdvance(pawns);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = computePawnAdvance(sig) + promo_lower*6;
+                        padv_base = MatSignatureV2.computePawnAdvance(pawns) + promo_lower*6;
                         padv_upper = padv_base+promo_upper*6;
                         break;
                 case ADV_MAX: // [46..48] rare case
@@ -290,46 +340,107 @@ public class MatSignatureV2 implements MatSignature
                         padv_upper = padv_base = stored_padv;
                         break;
             }
-
-            if (padv_base==padv_upper)
-                sig |= BitUtil.set6(Math.min(ADV_MAX,padv_base+1),ADV_OFFSET);
-            // else: unknown = 0
         }
 
         public boolean matches(Board board, int color)
         {
-            if (board.countPieces(PAWN|color) != pawnCount(sig)) return false;
-            if (board.countPieces(KNIGHT|color) != knightCount(sig)) return false;
-            if (board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()) ) != lightBishopCount(sig)) return false;
-            if (board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()) ) != darkBishopCount(sig)) return false;
-            if (board.countPieces(ROOK|color) != rookCount(sig)) return false;
-            if (board.countPieces(QUEEN|color) != queenCount(sig)) return false;
+            if (pawnCount() != board.countPieces(PAWN | color)) return false;
+            if (count[0] != board.countPieces(KNIGHT | color)) return false;
+            if (count[1] != board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isLightSquare(p.square()))) return false;
+            if (count[2] != board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isDarkSquare(p.square()))) return false;
+            if (count[3] != board.countPieces(ROOK | color)) return false;
+            if (count[4] != board.countPieces(QUEEN | color)) return false;
 
-            List<Piece> pawns = board.pieceList(EngUtil.PAWN|color);
-            for(Piece p : pawns) {
+            List<Piece> pawnList = board.pieceList(EngUtil.PAWN|color);
+            for(Piece p : pawnList) {
                 if (p.isVacant()) continue;
                 int sq = p.square();
                 if (color==BLACK) sq = EngUtil.rotateSquare(sq);
-                if (! BitUtil.get1(sig,pawnOffset(sq))) return false;
+                if (! BitUtil.get1(pawns,pawnOffset(sq))) return false;
             }
             return true;
         }
 
+        void print(StringBuffer buf, int color)
+        {
+            for(int row=ROW_7; row >= ROW_2; row--) {
+                printPawnRow(buf, pawnRow(pawns, row), color);
+                if (row>ROW_2) buf.append("/");
+            }
+
+            if (knightCount() > 0) {
+                buf.append(' ');
+                buf.append(knightCount());
+                buf.append(EngUtil.coloredPieceCharacter(KNIGHT|color));
+            }
+            if (bishopCount() > 0) {
+                buf.append(' ');
+                buf.append(lightBishopCount());
+                buf.append('+');
+                buf.append(darkBishopCount());
+                buf.append(EngUtil.coloredPieceCharacter(BISHOP|color));
+            }
+            if (rookCount() > 0) {
+                buf.append(' ');
+                buf.append(rookCount());
+                buf.append(EngUtil.coloredPieceCharacter(ROOK|color));
+            }
+            if (queenCount() > 0) {
+                buf.append(' ');
+                buf.append(queenCount());
+                buf.append(EngUtil.coloredPieceCharacter(QUEEN|color));
+            }
+
+            buf.append(' ');
+            if (padv_base==0 && padv_upper==ADV_TOP) {
+                buf.append('?');
+            }
+            else {
+                buf.append(padv_base);
+                if (padv_base != padv_upper) {
+                    buf.append("..");
+                    buf.append(padv_upper);
+                }
+            }
+        }
+
         public void del_pawn(int square) {
-            sig = BitUtil.clear1(sig,pawnOffset(square));
+            pawns = BitUtil.clear1(pawns,pawnOffset(square));
         }
 
-        public void del_piece(int piece, int square, Board board) {
-            // todo decrement piece counter; watch out for unknown promotions
+        public void del_piece(int piece, int square) {
+            switch(EngUtil.uncolored(piece)) {
+                case KNIGHT:    count[0]--; break;
+                case BISHOP:
+                    if (EngUtil.isLightSquare(square))
+                        count[1]--;
+                    else
+                        count[2]--;
+                    break;
+                case ROOK:      count[3]--; break;
+                case QUEEN:     count[4]--; break;
+            }
+            count[5]--;
         }
 
-        public void add_piece(int piece, int square, Board board) {
-            // todo decrement piece counter; watch out for unknown promotions
+        public void add_piece(int piece, int square) {
+            switch(EngUtil.uncolored(piece)) {
+                case KNIGHT:    count[0]++; break;
+                case BISHOP:
+                    if (EngUtil.isLightSquare(square))
+                        count[1]++;
+                    else
+                        count[2]++;
+                    break;
+                case ROOK:      count[3]++; break;
+                case QUEEN:     count[4]++; break;
+            }
+            count[5]++;
         }
 
         public void advance_pawn(int from, int to) {
-            sig = clear1(sig,pawnOffset(from));
-            sig |= set1(1,pawnOffset(to));
+            pawns = clear1(pawns,pawnOffset(from));
+            pawns |= set1(1,pawnOffset(to));
             padv_base += (rowOf(to)-rowOf(from));
             padv_upper = Math.max(padv_upper,padv_base);
         }
@@ -339,9 +450,9 @@ public class MatSignatureV2 implements MatSignature
     {
         StringBuffer buf = new StringBuffer();
         buf.append('[');
-        print1Sig(buf,wfeat,WHITE);
+        wfeat.print(buf,WHITE);
         buf.append(" - ");
-        print1Sig(buf,bfeat,BLACK);
+        bfeat.print(buf,BLACK);
         buf.append(']');
         return buf.toString();
     }
@@ -350,49 +461,11 @@ public class MatSignatureV2 implements MatSignature
     {
         StringBuffer buf = new StringBuffer();
         buf.append('[');
-        buf.append(Long.toHexString(wfeat.sig));
+        buf.append(Long.toHexString(getWhiteSignature()));
         buf.append('-');
-        buf.append(Long.toHexString(bfeat.sig));
+        buf.append(Long.toHexString(getBlackSignature()));
         buf.append(']');
         return buf.toString();
-    }
-
-    private void print1Sig(StringBuffer buf, Features feat, int color)
-    {
-        for(int row=ROW_7; row >= ROW_2; row--) {
-            printPawnRow(buf, pawnRow(feat.sig, row), color);
-            if (row>ROW_2) buf.append("/");
-        }
-        if (knightCount(feat.sig) > 0) {
-            buf.append(' ');
-            buf.append(knightCount(feat.sig));
-            buf.append(EngUtil.coloredPieceCharacter(KNIGHT|color));
-        }
-        if (bishopCount(feat.sig) > 0) {
-            buf.append(' ');
-            buf.append(lightBishopCount(feat.sig));
-            buf.append('+');
-            buf.append(darkBishopCount(feat.sig));
-            buf.append(EngUtil.coloredPieceCharacter(BISHOP|color));
-        }
-        if (rookCount(feat.sig) > 0) {
-            buf.append(' ');
-            buf.append(rookCount(feat.sig));
-            buf.append(EngUtil.coloredPieceCharacter(ROOK|color));
-        }
-        if (queenCount(feat.sig) > 0) {
-            buf.append(' ');
-            buf.append(queenCount(feat.sig));
-            buf.append(EngUtil.coloredPieceCharacter(QUEEN|color));
-        }
-
-        buf.append(' ');
-        int i = pawnAdvance(feat.sig);
-        switch(i) {
-            case -1:         buf.append("?"); break;
-            case ADV_MAX:    buf.append(">="); buf.append(ADV_MAX); break;
-            default:         buf.append(i); break;
-        }
     }
 
     private void printPawnRow(StringBuffer buf, long bits, int color) {
@@ -411,58 +484,58 @@ public class MatSignatureV2 implements MatSignature
 
 
     //  lower 48 bits = 6 bytes hold the pawn structure
-    private static long PAWN_MASK = 0x0ffffffffffffL;
+    static long PAWN_MASK = 0x0ffffffffffffL;
     //  just the light-colored square (from a2-h2-a7-h7)
-    private static long LIGHT_PAWN_MASK = 0x055aa55aa55aaL;
-    private static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
+    static long LIGHT_PAWN_MASK = 0x055aa55aa55aaL;
+    static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
 
     //  next 10 bits encode piece count, 2 bits each
-    private static final int KNIGHT_OFFSET        = 48;
-    private static final int LIGHT_BISHOP_OFFSET  = 50;
-    private static final int DARK_BISHOP_OFFSET   = 52;
-    private static final int ROOK_OFFSET          = 54;
-    private static final int QUEEN_OFFSET         = 56;
+    static final int KNIGHT_OFFSET        = 48;
+    static final int LIGHT_BISHOP_OFFSET  = 50;
+    static final int DARK_BISHOP_OFFSET   = 52;
+    static final int ROOK_OFFSET          = 54;
+    static final int QUEEN_OFFSET         = 56;
     //  pawn advance count (bits, may be unknown)
-    private static final int ADV_OFFSET             = 58;
+    static final int ADV_OFFSET             = 58;
 
-    private static final int ADV_TOP              = 48;
-    private static final int ADV_MAX              = ADV_TOP-2;
+    static final int ADV_TOP              = 48;
+    static final int ADV_MAX              = ADV_TOP-2;
 
-    private static int rowOffset(int row) {
+    static int rowOffset(int row) {
         return (row-ROW_2)*8;
     }
-    private static int fileOffset(int file) {
+    static int fileOffset(int file) {
         return file-FILE_A;
     }
-    private static long rowMask(int row) {
+    static long rowMask(int row) {
         return 0x0ffL << rowOffset(row);
     }
 
-    private static int pawnOffset(int file, int row) {
+    static int pawnOffset(int file, int row) {
         return rowOffset(row) + fileOffset(file);
     }
 
-    private static int pawnOffset(int square) {
+    static int pawnOffset(int square) {
         return pawnOffset(fileOf(square), rowOf(square));
     }
 
-    private static long pawnAt(int file, int row) {
+    static long pawnAt(int file, int row) {
         return 1L << pawnOffset(file,row);
     }
-    private static long pawnAt(int sq)       { return pawnAt(fileOf(sq), rowOf(sq)); }
+    static long pawnAt(int sq)       { return pawnAt(fileOf(sq), rowOf(sq)); }
 
-    private static int pawnRow(long sig, int row) {
+    static int pawnRow(long sig, int row) {
         return get8(sig, (row-ROW_2)*8);
     }
 
-    private static int pawnCount(long sig) {
+    static int pawnCount(long sig) {
         return Long.bitCount(sig & PAWN_MASK);
     }
-    private static int pawnCount(long sig, int row) {
+    static int pawnCount(long sig, int row) {
         return Long.bitCount(sig & rowMask(row));
     }
 
-    private static int computePawnAdvance(long sig)
+    static int computePawnAdvance(long sig)
     {
         int adv = 0;
         for (int row=ROW_3; row<=ROW_7; ++row)  //  jit compiler: unroll :)
@@ -470,39 +543,40 @@ public class MatSignatureV2 implements MatSignature
         return adv;
     }
 
-    private static int ligthPawnCount(long sig) {
+    static int lightPawnCount(long sig) {
         return Long.bitCount(sig & LIGHT_PAWN_MASK);
     }
-    private static int darkPawnCount(long sig) {
+    static int darkPawnCount(long sig) {
         return Long.bitCount(sig & DARK_PAWN_MASK);
     }
 
-    private static int knightCount(long sig)        { return BitUtil.get2(sig,KNIGHT_OFFSET); }
-    private static int lightBishopCount(long sig)   { return BitUtil.get2(sig,LIGHT_BISHOP_OFFSET); }
-    private static int darkBishopCount(long sig)    { return BitUtil.get2(sig,DARK_BISHOP_OFFSET); }
-    private static int bishopCount(long sig)        { return lightBishopCount(sig)+darkBishopCount(sig); }
-    private static int rookCount(long sig)          { return BitUtil.get2(sig,ROOK_OFFSET); }
-    private static int queenCount(long sig)         { return BitUtil.get2(sig,QUEEN_OFFSET); }
-    private static int pawnAdvance(long sig)        { return get6(sig,ADV_OFFSET)-1; }
+    static int knightCount(long sig)        { return BitUtil.get2(sig,KNIGHT_OFFSET); }
+    static int lightBishopCount(long sig)   { return BitUtil.get2(sig,LIGHT_BISHOP_OFFSET); }
+    static int darkBishopCount(long sig)    { return BitUtil.get2(sig,DARK_BISHOP_OFFSET); }
+    static int bishopCount(long sig)        { return lightBishopCount(sig)+darkBishopCount(sig); }
+    static int rookCount(long sig)          { return BitUtil.get2(sig,ROOK_OFFSET); }
+    static int queenCount(long sig)         { return BitUtil.get2(sig,QUEEN_OFFSET); }
+    static int pawnAdvance(long sig)        { return get6(sig,ADV_OFFSET)-1; }
 
-    private static boolean is_reachable(Features from, Features to)
+    static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcfrom = pawnCount(from.sig);
-        int pcto = pawnCount(to.sig);
+        int pcfrom = from.pawnCount();
+        int pcto = to.pawnCount();
         if (pcto > pcfrom) return false;    //  not enough pawns
 
         /** check officers count    */
-        if (to.count_officers > (from.count_officers+pcfrom)) return false; //  not enough officers
-        //  todo for each officer in detail
+        for(int i=0; i < 6; ++i)
+            if (to.count[i] > (from.count[i]+pcfrom))
+                return false; //  not enough officers
 
         /** check pawn advance (lower/upper bounds) */
         if (from.padv_base > to.padv_upper) return false;  //  pawns are too advanced
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
 
         /** check pawn home row */
-        long homefrom = pawnRow(from.sig,ROW_2);
-        long hometo = pawnRow(to.sig,ROW_2);
+        long homefrom = pawnRow(from.pawns,ROW_2);
+        long hometo = pawnRow(to.pawns,ROW_2);
 
         if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
 
@@ -512,26 +586,5 @@ public class MatSignatureV2 implements MatSignature
         return true;
     }
 
-    private static boolean good_bishop(long sig)
-    {
-        return     (lightBishopCount(sig)==1
-                &&  darkBishopCount(sig)==0
-                &&  ligthPawnCount(sig) < darkPawnCount(sig))
-                ||
-                   (lightBishopCount(sig)==0
-                &&  darkBishopCount(sig)==1
-                &&  ligthPawnCount(sig) > darkPawnCount(sig));
-    }
-
-    private static boolean bad_bishop(long sig)
-    {
-        return     (lightBishopCount(sig)==1
-                &&  darkBishopCount(sig)==0
-                &&  ligthPawnCount(sig) > darkPawnCount(sig))
-                ||
-                   (lightBishopCount(sig)==0
-                &&  darkBishopCount(sig)==1
-                &&  ligthPawnCount(sig) < darkPawnCount(sig));
-    }
 
 }

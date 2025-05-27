@@ -276,7 +276,7 @@ public class MatSignatureV1
 	//      Incremental Methods
 	// --------------------------------------
 
-	public void update(Board board, Move mv)
+	public void update(Move mv)
 	{
 		if (mv.isCapture()) {
 			//  decrease piece count
