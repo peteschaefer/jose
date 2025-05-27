@@ -320,17 +320,16 @@ public class Position
 		frame.whiteSignature = theMatSignature.wsig;
 		frame.blackSignature = theMatSignature.bsig;
 
+		Piece piece = piece(move.from);
+		boolean silent = !piece.isPawn();
+		//	pawn moves and captures are considered not silent
+
 		if (move.isNullMove()) {
 			//  NULLMOVE
 			theFlags = Util.minus(theFlags,EN_PASSANT_FILE);
 			theSilentPlies++;
 		}
 		else {
-			Piece piece = piece(move.from);
-
-			boolean silent = !piece.isPawn();
-			//	pawn moves and captures are considered not silent
-
 			if (move.captured!=null) {
 				silent = false;
 				deletePiece(move.captured);
@@ -422,7 +421,8 @@ public class Position
 			theReversedHashKey.set(theFlags);
 		}
 
-		if (hasOption(INCREMENT_SIGNATURE)) {
+		if (hasOption(INCREMENT_SIGNATURE) && !silent) {
+			//	note: only noisy moves modify the MatSignature
 			theMatSignature.update(move);
 		}
 	}
@@ -781,6 +781,12 @@ public class Position
 			return underAttack(blackKing().square(), theWhitePieces);
 		else
 			return underAttack(whiteKing().square(), theBlackPieces);
+	}
+
+	/** was the last move a silent move? (i.e. not a capture, not a pawn move)
+	 */
+	public boolean wasSilent() {
+		return theSilentPlies > 0;
 	}
 
 	protected boolean wasExposed(Move mv)

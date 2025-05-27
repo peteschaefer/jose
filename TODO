@@ -75,13 +75,9 @@ Maintenance:
 [ ] insert diagram *before* move
 [ ] order by Round: numeric instead of alpha
 
-[.] PosFilter + CId is slow.
-    - full-table scan on MoreGame is more effective than indexing
-    - use MoreGame STRAIGHT_JOIN Game if the expected result is large
-        SIMPLE,MoreGame,ALL,PRIMARY,,,,15835553
-        SIMPLE,Game,eq_ref,Using where
-    which means, roughly: full-table scan on MoreGame, then lookup Game
-    i.e. a nested loop join; instead of a hash join :(
+[x] PosFilter + CId is slow.
+    heuristic hack: search for GId BETWEEN. Inaccurate but fast.
+[x] update Matsig only after noisy moves
 
 [ ] Matsig V2
     [ ] pawn bitset, piece counts, bishop colors
@@ -93,9 +89,31 @@ Maintenance:
     [ ] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
     [ ] cross-over (faster this time, batched pll + temp table?)
+
+
 [ ] search pawn structure
 [ ] search material balance
 [ ] search NAGs
+[ ] animate search button
+
+=== Native Position Search
+
+[x] move chess++ to github
+[ ] build mariadb, or mysql5 from source
+[ ] debug myisamchk
+[ ] full-table-scan on one myisam file
+[-] replay: bin coding (Generator)
+	[ ] Board piece ordering is not suited for finding pieces by index
+	    -> use fixed order (must be compatible with Java)
+[ ] use Polyglot Hash key for query
+[ ] store results in queue
+[ ] JNI interface:
+	java.sql.ResultSet query(String FEN) (later more)
+	ResultSet.next() blocks/polls on queue.
+[ ] parallelize
+    [ ] find task bounds by index
+    [ ] results stored in tbb::concurrent_queue
+[ ] MatSignature in c++
 
 ==== Interesting New Features
 
@@ -110,18 +128,6 @@ Maintenance:
 * Search ELO >=
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
-
-
-* Store MatSignature in DB
-    - speeds up Position search
-    - for 10, 20, end position ?
-        test whether it improves selectivity:
-        `reachable(query,sig10) or reachable(sig10,query)
-         and reachable(query,sigend)`
-    - requires cross-over & re-built archive files !
-    - next: custom MySQL function pos_reachable(), pawn_reachable()
-    - benchmark?
-
 
 * RTF export? currently possible via copy/paste.
   - fop 0.20 does not support it
@@ -200,12 +206,13 @@ Maintenance:
 [x] easylink: 64 bit, use latest hidapi
     [x] Windows: (-) fixes BLE
     [-] Linux builds but don't work
-[ ] give mariadb a chance
-    [ ] can run w/out authentication?
-    [ ] supports MyIsam
-    [ ] better query planner?
-    [ ] up-to-date releases
-
+[ ] mariadb 8.3
+    [-] ok, but no performance improvement
+    [-] setup complicated, but ok
+[ ] mysql 11
+    [-] ok, but no performance improvement
+    [-] setup more complicated, but ok
+    [-] switch when it becomes useful
 
 Alternative JREs:
 * JBR 21: better hidpi support, but touch&drag bug (which is a showstopper for me).

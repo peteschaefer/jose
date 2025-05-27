@@ -268,10 +268,11 @@ public class MatSignature
 		return is_reachable(this,to);
 	}
 
-    public static boolean isReachable(MatSignature from, MatSignature to)
-    {
-        return to.isReachableFrom(from);
-    }
+	public final boolean canReachReversed(MatSignature to)
+	{
+		return is_reachable_reversed(this,to);
+	}
+
 
 	// --------------------------------------
 	//      Incremental Methods
@@ -417,6 +418,12 @@ public class MatSignature
         return  is_reachable(from.wsig, to.wsig) &&
                 is_reachable(from.bsig, to.bsig);
     }
+
+	public static boolean is_reachable_reversed(MatSignature from, MatSignature to)
+	{
+		return  is_reachable(from.wsig, to.bsig) &&
+				is_reachable(from.bsig, to.wsig);
+	}
 
 	/**
 	 * @return true if position "to" can be reached from position "from"

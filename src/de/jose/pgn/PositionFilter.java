@@ -225,11 +225,15 @@ public class PositionFilter
 
 	private void checkCutOff()
 	{
-		/** check material signature for early cut-off */
-		if (!getMatSig().canReach(querySig) &&
-		    (querySigReversed ==null || !pos.getMatSig().canReach(querySig))) {
-			eof = true; //  signature cut-off
-			result = Result.REJECT;
+		/** check material signature for early cut-off
+		 * 	note: only noisy moves modify the MatSignature */
+		if (!pos.wasSilent()) {
+			pos.updateMatSig();
+			if (!pos.getMatSig().canReach(querySig) &&
+				(querySigReversed == null || !pos.getMatSig().canReachReversed(querySigReversed))) {
+				eof = true; //  signature cut-off
+				result = Result.REJECT;
+			}
 		}
 	}
 
