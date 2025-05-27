@@ -267,7 +267,12 @@ public class MatSignatureV1
 		return (to instanceof MatSignatureV1) && is_reachable(this, (MatSignatureV1)to);
 	}
 
-    public static boolean isReachable(MatSignatureV1 from, MatSignatureV1 to)
+	@Override
+	public boolean canReachReversed(MatSignature to) {
+		return (to instanceof MatSignatureV1) && is_reverse_reachable(this, (MatSignatureV1)to);
+	}
+
+	public static boolean isReachable(MatSignatureV1 from, MatSignatureV1 to)
     {
         return to.isReachableFrom(from);
     }
@@ -416,6 +421,12 @@ public class MatSignatureV1
         return  is_reachable(from.wsig, to.wsig) &&
                 is_reachable(from.bsig, to.bsig);
     }
+
+	public static boolean is_reverse_reachable(MatSignatureV1 from, MatSignatureV1 to)
+	{
+		return  is_reachable(from.wsig, to.bsig) &&
+				is_reachable(from.bsig, to.wsig);
+	}
 
 	/**
 	 * @return true if position "to" can be reached from position "from"

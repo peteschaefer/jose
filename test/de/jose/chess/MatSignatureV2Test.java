@@ -33,7 +33,12 @@ class MatSignatureV2Test {
 
         @Override
         public void afterMove(Move mv, int ply) {
-
+            if (!pos.wasSilent()) {
+                //  silent moves do not modify the signature
+                MatSignatureV2 matSig = (MatSignatureV2) pos.getMatSig();
+                sigs.add((MatSignatureV2) matSig.clone());
+                assertTrue(matSig.matches(pos), () -> mv+": "+pos+" != "+matSig);
+            }
         }
 
         @Override public void beforeMove(Move mv, int ply, boolean displayHint) { }
@@ -72,12 +77,18 @@ class MatSignatureV2Test {
 
     void launchDBServer() throws Exception {
         if (Version.linux)
-            System.setProperty("java.library.path","java.library.path=lib/Linux_amd64");
+            System.setProperty("java.library.path","lib/Linux_amd64");
         if (Version.windows)
-            System.setProperty("java.library.path","java.library.path=.;lib/Windows");
+            System.setProperty("java.library.path",".;lib/Windows");
         System.setProperty("jose.splash","off");
         System.setProperty("jose.console.output","true");
         System.setProperty("java.awt.headless","true");
+
+        System.setProperty("jose.db","MySQL-standalone");
+        System.setProperty("jose.db.port","3306");
+        System.setProperty("jose.datadir","C:\\dev\\jose\\packages\\jose-152-windows\\jose\\database");
+        System.setProperty("jose.splash","false");
+        System.setProperty("jose.console.output","true");
         Application app = new Application();
 
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
@@ -119,8 +130,7 @@ class MatSignatureV2Test {
     {
         withDBServer();
         JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = conn.getPreparedStatement("select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame limit 10");
-        pstm.setMaxRows(10);
+        JoPreparedStatement pstm = conn.getPreparedStatement("select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame limit 40");
         pstm.execute();
 
         String queryFen = START_POSITION;
@@ -134,6 +144,7 @@ class MatSignatureV2Test {
             byte[] bin = rs.getBytes(3);
             long whiteSignature = rs.getLong(4);
             long blackSignature = rs.getLong(5);
+
             System.out.println(GId);
             MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
             test1Game(pf, FEN,bin,endSig);
@@ -147,9 +158,9 @@ class MatSignatureV2Test {
         //  reachability:
         for(int i=1; i < reader.sigs.size(); i++) {
             MatSignatureV2 sigi = (MatSignatureV2) reader.sigs.get(i);
-            for (int j = 0; j <= i; ++i) {
+            for (int j = 0; j <= i; ++j) {
                 MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
-                assertTrue(sigj.canReach(sigi));
+                assertTrue(sigj.canReach(sigi), sigj+" !-> "+sigi);
             }
         }
     }

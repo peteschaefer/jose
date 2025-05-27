@@ -780,6 +780,12 @@ public class Position
 			return underAttack(whiteKing().square(), theBlackPieces);
 	}
 
+	/** was the last move a silent move? (i.e. not a capture, not a pawn move)
+	 */
+	public boolean wasSilent() {
+		return theSilentPlies > 0;
+	}
+
 	protected boolean wasExposed(Move mv)
 	{
 		/*	detect if own king is checked, if so return true	*/

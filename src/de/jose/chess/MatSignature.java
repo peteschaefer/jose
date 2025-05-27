@@ -8,6 +8,7 @@ public interface MatSignature extends Cloneable
     MatSignature cloneReversed();
 
     boolean canReach(MatSignature sig);
+    boolean canReachReversed(MatSignature sig);
 
     void init(long wshiteSignature, long blackSignature);
     void clear();

@@ -95,7 +95,7 @@ public class MatSignatureV2 implements MatSignature
 
     public void setInitial()
     {
-        init(0,0);
+        init(0x5960000000000ffL,0x596ff0000000000L);
     }
 
     public boolean matches(Board board)
@@ -109,7 +109,6 @@ public class MatSignatureV2 implements MatSignature
 
     public long getWhiteSignature() { return wfeat.assemble(); }
     public long getBlackSignature() { return bfeat.assemble(); }
-
 
     public void clear()  {
         wfeat.clear();
@@ -155,6 +154,11 @@ public class MatSignatureV2 implements MatSignature
         return (to instanceof MatSignatureV2) && is_reachable(this,(MatSignatureV2)to);
     }
 
+    @Override
+    public boolean canReachReversed(MatSignature to) {
+        return (to instanceof MatSignatureV2) && is_reverse_reachable(this,(MatSignatureV2)to);
+    }
+
     /**
      * incremental update
      * @param mv
@@ -165,20 +169,18 @@ public class MatSignatureV2 implements MatSignature
         if (mv.isCapture())
         {
             Features fthat = EngUtil.isWhite(mv.moving.piece) ? bfeat:wfeat;
-            if (mv.captured.isPawn() && EngUtil.isWhite(mv.captured.piece))
-                fthat.del_pawn(mv.captured.square);
-            else if (mv.captured.isPawn())
-                fthat.del_pawn(mv.captured.square);
+            if (mv.captured.isPawn())
+                fthat.del_pawn(mv.getCapturedSquare());
             else
-                fthat.del_piece(mv.captured.piece,mv.captured.square);   //  decrease piece count
+                fthat.del_piece(mv.getCapturedPiece(),mv.getCapturedSquare());   //  decrease piece count
         }
         if (mv.moving!=null && mv.moving.isPawn())
         {
             Features fthis = EngUtil.isWhite(mv.moving.piece) ? wfeat:bfeat;
-            int color = mv.moving.color();
-            fthis.advance_pawn(mv.from,mv.to);
             if (mv.isPromotion())
-                fthis.add_piece(mv.getPromotionPiece(),mv.to);
+                fthis.promote(mv.from,mv.to,mv.getPromotionPiece());
+            else
+                fthis.advance_pawn(mv.from,mv.to);
         }
     }
 
@@ -190,6 +192,12 @@ public class MatSignatureV2 implements MatSignature
     {
         return  is_reachable(from.wfeat, to.wfeat) &&
                 is_reachable(from.bfeat, to.bfeat);
+    }
+
+    public static boolean is_reverse_reachable(MatSignatureV2 from, MatSignatureV2 to)
+    {
+        return  is_reachable(from.wfeat, to.bfeat) &&
+                is_reachable(from.bfeat, to.wfeat);
     }
 
     // --------------------------------------
@@ -442,11 +450,18 @@ public class MatSignatureV2 implements MatSignature
         }
 
         public void advance_pawn(int from, int to) {
-            pawns = clear1(pawns,pawnOffset(from));
+            del_pawn(from);
             pawns |= set1(1,pawnOffset(to));
             padv_base += Math.abs(rowOf(to)-rowOf(from));
             padv_upper = Math.max(padv_upper,padv_base);
-        }
+       }
+
+       public void promote(int from, int to, int promoted) {
+           del_pawn(from);
+           add_piece(promoted, to);
+           padv_base++;
+           padv_upper = Math.max(padv_upper,padv_base);
+       }
     }
 
     public String toString()
