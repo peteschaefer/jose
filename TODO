@@ -84,8 +84,11 @@ Maintenance:
     i.e. a nested loop join; instead of a hash join :(
 
 [ ] Matsig V2
-    [ ] pawn bitset, piece counts, bishop colors
+    [x] pawn bitset, piece counts, bishop colors
+    [ ] turn around black pawns. from head to feet
+    [x] clean up MatSignature hierarchy. No need to store replicated data (sig, Features.sig, Features fields)
     [ ] unit tests
+        [x] simple cases
         [ ] hard cases
         [ ] random games (incremental mode)
         [ ] db games (incremental mode)

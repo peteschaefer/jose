@@ -39,7 +39,10 @@ class MatSignatureV2Test {
     }
 
     void launchDBServer() throws Exception {
-        System.setProperty("java.library.path","java.library.path=lib/Linux_amd64");
+        if (Version.linux)
+            System.setProperty("java.library.path","java.library.path=lib/Linux_amd64");
+        if (Version.windows)
+            System.setProperty("java.library.path","java.library.path=.;lib/Windows");
         System.setProperty("jose.splash","off");
         System.setProperty("jose.console.output","true");
         System.setProperty("java.awt.headless","true");

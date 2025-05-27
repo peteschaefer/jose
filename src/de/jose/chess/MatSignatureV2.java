@@ -1,12 +1,9 @@
 package de.jose.chess;
 
-import de.jose.Util;
 import de.jose.util.BitUtil;
-import de.jose.view.MoveGesture;
 
 import java.util.List;
 
-import static de.jose.chess.Constants.*;
 import static de.jose.chess.EngUtil.*;
 import static de.jose.util.BitUtil.*;
 
@@ -49,7 +46,7 @@ import static de.jose.util.BitUtil.*;
  * 	- good bishop = pawns on different color
  * 	- bad bihsop = pawns on same color
  */
-public class MatSignatureV2 extends MatSignature
+public class MatSignatureV2 implements MatSignature
 {
     private Features wfeat = new Features();
     private Features bfeat = new Features();
@@ -67,17 +64,24 @@ public class MatSignatureV2 extends MatSignature
 
     public MatSignatureV2(MatSignatureV2 that)
     {
-        super(that);
         wfeat.copyFrom(that.wfeat);
         bfeat.copyFrom(that.bfeat);
     }
+
+    public Object clone() {
+        return new MatSignatureV2(this);
+    }
+
+    public MatSignature cloneReversed() {
+        return new MatSignatureV2(bfeat.sig,wfeat.sig);
+    }
+
 
     public MatSignatureV2(Board board) {
         setBoard(board);
     }
 
     public void init(long wsig, long bsig) {
-        super.init(wsig, bsig);
         wfeat.sig = wsig;
         bfeat.sig = bsig;
         wfeat.compute();
@@ -87,8 +91,13 @@ public class MatSignatureV2 extends MatSignature
     public void setBoard(Board board)
     {
         clear();
-        wsig = wfeat.setBoard(board,WHITE);
-        bsig = bfeat.setBoard(board,BLACK);
+        wfeat.setBoard(board,WHITE);
+        bfeat.setBoard(board,BLACK);
+    }
+
+    public void setInitial()
+    {
+        init(0,0);
     }
 
     public boolean matches(Board board)
@@ -100,16 +109,17 @@ public class MatSignatureV2 extends MatSignature
     //      Methods
     // --------------------------------------
 
+    public long getWhiteSignature() { return wfeat.sig; }
+    public long getBlackSignature() { return bfeat.sig; }
+
 
     public void clear()  {
-        super.clear();
         wfeat.clear();
         bfeat.clear();
     }
 
     public void reverse()
     {
-        super.reverse();
         Features swapf = wfeat;
         wfeat = bfeat;
         bfeat = swapf;
@@ -139,10 +149,12 @@ public class MatSignatureV2 extends MatSignature
         return bad_bishop(EngUtil.isWhite(color) ? wfeat.sig : bfeat.sig);
     }
 
-    public boolean isReachableFrom(MatSignature from) {return is_reachable((MatSignatureV2)from,this);
+    public boolean isReachableFrom(MatSignature from) {
+        return (from instanceof MatSignatureV2) && is_reachable((MatSignatureV2)from,this);
     }
 
-    public boolean canReach(MatSignature to) { return is_reachable(this,(MatSignatureV2)to);
+    public boolean canReach(MatSignature to) {
+        return (to instanceof MatSignatureV2) && is_reachable(this,(MatSignatureV2)to);
     }
 
     /**
@@ -171,8 +183,6 @@ public class MatSignatureV2 extends MatSignature
             if (mv.isPromotion())
                 fthis.add_piece(mv.getPromotionPiece(),mv.to,board);
         }
-        super.wsig = wfeat.sig;
-        super.bsig = bfeat.sig;
     }
 
     // --------------------------------------

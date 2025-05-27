@@ -14,6 +14,7 @@ package de.jose.db.crossover;
 
 import de.jose.Config;
 import de.jose.chess.MatSignature;
+import de.jose.chess.MatSignatureV1;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.*;
@@ -91,7 +92,7 @@ public class Crossover1010
 			try {
 				matsig = computeMatSignature(fen, bin);
 			} catch(Throwable e) {
-				matsig = new MatSignature(0,0);
+				matsig = new MatSignatureV1(0,0);
 				System.err.println("[dropped mat signature "+GId+"]");
 			}
 

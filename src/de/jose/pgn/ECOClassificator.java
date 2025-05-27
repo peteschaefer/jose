@@ -14,10 +14,7 @@ package de.jose.pgn;
 
 import de.jose.Language;
 import de.jose.Util;
-import de.jose.chess.HashKey;
-import de.jose.chess.MatSignature;
-import de.jose.chess.Position;
-import de.jose.chess.Move;
+import de.jose.chess.*;
 import de.jose.util.map.IntIntMap;
 import de.jose.util.map.LongIntMap;
 import de.jose.util.map.IntHashMap;
@@ -64,7 +61,7 @@ public class ECOClassificator
 	protected LongIntMap keys;
 	/** terminal matsig
 	 */
-    protected MatSignature terminal;
+    protected MatSignatureV1 terminal;
 
 	/**	translated names	*/
 	protected Language language;
@@ -77,7 +74,7 @@ public class ECOClassificator
     public ECOClassificator(boolean forUpdate)
     {
         keys = new LongIntMap();
-        terminal = new MatSignature();
+        terminal = new MatSignatureV1();
         terminal.setInitial();
 
         if (forUpdate) {
@@ -129,7 +126,7 @@ public class ECOClassificator
             /** read terminal matsig  */
             long wsig = in.readLong();
             long bsig = in.readLong();
-            terminal = new MatSignature(wsig,bsig);
+            terminal = new MatSignatureV1(wsig,bsig);
 
         } finally {
             in.close();
@@ -182,7 +179,7 @@ public class ECOClassificator
             //  read-only copy
             this.keys = that.keys;   //  keys can be shared - not a problem at all
             this.language = that.language;
-            this.terminal = that.terminal.cloneSig();
+            this.terminal = (MatSignatureV1) that.terminal.clone();
             this.counter = null;
         }
 	}
@@ -274,7 +271,7 @@ public class ECOClassificator
 		return NOT_FOUND;
 	}
 
-    public int add(String eco, HashKey key, MatSignature sig)
+    public int add(String eco, HashKey key, MatSignatureV1 sig)
     {
         long hash = key.value();
         int code = newCode(eco,hash);
