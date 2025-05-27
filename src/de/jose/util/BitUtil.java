@@ -9,6 +9,7 @@ public class BitUtil
 
     public static boolean is(long mat, long flag)    { return (mat&flag) != 0L; }
 
+    public static boolean get1(long mat, int offset) { return is(mat, 1L<<offset); }
     public static int get2(long mat, int offset)     { return (int)(mat >> offset) & 0x0003; }
     public static int get3(long mat, int offset)     { return (int)(mat >> offset) & 0x0007; }
     public static int get4(long mat, int offset)     { return (int)(mat >> offset) & 0x000f; }
