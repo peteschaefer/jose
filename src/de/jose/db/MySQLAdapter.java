@@ -13,7 +13,6 @@
 package de.jose.db;
 
 //import com.mysql.embedded.jdbc.MyConnection;
-import com.mysql.jdbc.MiniAdmin;
 import de.jose.*;
 import de.jose.comm.Command;
 import de.jose.plugin.InputListener;
@@ -23,7 +22,6 @@ import de.jose.util.KillProcess;
 import de.jose.util.StringUtil;
 import de.jose.util.file.FileUtil;
 import de.jose.window.JoDialog;
-import de.jose.window.JoFrame;
 
 import javax.swing.*;
 import java.io.*;
@@ -803,8 +801,8 @@ public class MySQLAdapter
 		return false;
 	}
 
-	protected void shutdown(Connection conn) throws Exception {
-		//	(1) com.mysql.jdbc.MiniAdmin.shutdown()
+	public void shutDown(Connection conn) throws Exception {
+		//	(1) com.mysql.jdbc.MiniAdmin.shutDown1()
 		//	(2) com.mysql.jdbc.Connection.shutdownServer()
 
 		//	note however, that both classes are not in the system classpath
@@ -834,7 +832,7 @@ public class MySQLAdapter
 				//mysqladmin("shutdown");
 				if (conn==null)	conn = JoConnection.get();
 				if (conn.jdbcConnection==null) conn = JoConnection.theConnections.create(MySQLAdapter.this);
-				shutdown(conn.jdbcConnection);
+				shutDown(conn.jdbcConnection);
 				//	driver version 8 has a similar function.
 				//	but we stick with version 5 for the standalone case, don't we?
 				done = true;

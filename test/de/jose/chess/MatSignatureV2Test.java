@@ -25,7 +25,14 @@ class MatSignatureV2Test {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws Exception {
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(false);
+        if (adapter != null) {
+            JoConnection conn = JoConnection.get();
+            //adapter.shutDown(conn.getJdbcConnection());
+            adapter.shutDown(conn);
+
+        }
     }
 
     void launchDBServer() throws Exception {
