@@ -34,11 +34,14 @@ abstract public class BinReader
 	protected int result;
 	protected boolean eof; 
 	protected boolean wasMove;
+    protected int nestLevel;
 
     public BinReader(Position position)
     {
         pos = position;
     }
+
+    public int getNestLevel() { return nestLevel; }
 
 
     abstract public void beforeMove(Move mv, int ply, boolean displayHint);
@@ -89,7 +92,7 @@ abstract public class BinReader
         offset = startOffset;
 
         wasMove = false;
-        int nestLevel = 0;
+        nestLevel = 0;
 
         pos.setup(fen);
 		startOfLine(0);

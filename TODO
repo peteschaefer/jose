@@ -81,13 +81,15 @@ Maintenance:
 
 [ ] Matsig V2
     [x] pawn bitset, piece counts, bishop colors
-    [ ] turn around black pawns. from head to feet
+    [x] turn around black pawns. from head to feet
     [x] clean up MatSignature hierarchy. No need to store replicated data (sig, Features.sig, Features fields)
     [ ] unit tests
         [x] simple cases
         [ ] hard cases
         [ ] random games (incremental mode)
-        [ ] db games (incremental mode)
+        [x] db games (incremental mode)
+    [ ] store padv_base = computePawnAdvance(sig), padv_lower = base+promo_lower, padv_upper = base+promo_upper
+    [ ] extended pawn structure test
     [ ] opposite bishop, even bishop
     [ ] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway

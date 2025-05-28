@@ -264,6 +264,7 @@ public class MatSignatureV2 implements MatSignature
 
         int pawnAdvanceRemaining() {
             return ADV_TOP- MatSignatureV2.computePawnAdvance(sig,color);
+            //  todo don't compute. store in Features
         }
 
         protected void setBoard(Board board)
@@ -279,14 +280,14 @@ public class MatSignatureV2 implements MatSignature
 
             /** count officers; clip at 3 */
             int ncnt = board.countPieces(EngUtil.KNIGHT|color);
-            int lbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isLightSquare(p.square()));
-            int dbcnt = board.countPieces(EngUtil.BISHOP|color, (Piece p) -> EngUtil.isDarkSquare(p.square()));
+            int lbcnt = countLightSquaredBishops(board,color);
+            int dbcnt = countDarktSquaredBishops(board,color);
             int rcnt = board.countPieces(EngUtil.ROOK|color);
             int qcnt = board.countPieces(EngUtil.QUEEN|color);
 
             sig |= clip2(ncnt,KNIGHT_OFFSET);
             sig |= clip2(lbcnt,LIGHT_BISHOP_OFFSET);
-            sig |= clip2(lbcnt,DARK_BISHOP_OFFSET);
+            sig |= clip2(dbcnt,DARK_BISHOP_OFFSET);
             sig |= clip2(rcnt,ROOK_OFFSET);
             sig |= clip2(qcnt,QUEEN_OFFSET);
 
@@ -309,12 +310,12 @@ public class MatSignatureV2 implements MatSignature
             int promo_upper = 8-pawnCount();
             boolean more_promos=false;
             if (knightCount()>=3)       promo_lower++;
-            if (lightBishopCount()==2)  promo_lower++;
+            if (lightBishopCount()>=2)  promo_lower++;
             if (lightBishopCount()>=3)  promo_lower++;
-            if (darkBishopCount()==2)   promo_lower++;
+            if (darkBishopCount()>=2)   promo_lower++;
             if (darkBishopCount()>=3)   promo_lower++;
             if (rookCount()>=3)         promo_lower++;
-            if (queenCount()==2)        promo_lower++;
+            if (queenCount()>=2)        promo_lower++;
             if (queenCount()>=3)        promo_lower++;
             //  todo get a second promo_lower bound from Board
 
@@ -322,7 +323,7 @@ public class MatSignatureV2 implements MatSignature
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
                         padv_base = MatSignatureV2.computePawnAdvance(sig,color) + promo_lower*6;
-                        padv_upper = padv_base+promo_upper*6;
+                        padv_upper = Math.min(ADV_TOP,padv_base+promo_upper*6);
                         break;
                 case ADV_MAX: // [46..48] rare case
                         padv_base = ADV_MAX;
@@ -338,11 +339,11 @@ public class MatSignatureV2 implements MatSignature
         public boolean matches(Board board)
         {
             if (pawnCount() != board.countPieces(PAWN | color)) return false;
-            if (knightCount() != board.countPieces(KNIGHT | color)) return false;
-            if (lightBishopCount() != board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isLightSquare(p.square()))) return false;
-            if (darkBishopCount() != board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isDarkSquare(p.square()))) return false;
-            if (rookCount() != board.countPieces(ROOK | color)) return false;
-            if (queenCount() != board.countPieces(QUEEN | color)) return false;
+            if (!comparePieceCount(knightCount(), board.countPieces(KNIGHT | color))) return false;
+            if (!comparePieceCount(lightBishopCount(), countLightSquaredBishops(board,color))) return false;
+            if (!comparePieceCount(darkBishopCount(), countDarktSquaredBishops(board,color))) return false;
+            if (!comparePieceCount(rookCount(), board.countPieces(ROOK | color))) return false;
+            if (!comparePieceCount(queenCount(), board.countPieces(QUEEN | color))) return false;
 
             List<Piece> pawnList = board.pieceList(EngUtil.PAWN|color);
             for(Piece p : pawnList) {
@@ -567,6 +568,21 @@ public class MatSignatureV2 implements MatSignature
     static int queenCount(long sig)         { return BitUtil.get2(sig,QUEEN_OFFSET); }
     static int pawnAdvance(long sig)        { return get6(sig,ADV_OFFSET)-1; }
 
+    static int countLightSquaredBishops(Board board, int color) {
+        return board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isLightSquare(p.square()));
+    }
+    static int countDarktSquaredBishops(Board board, int color) {
+        return board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isDarkSquare(p.square()));
+    }
+
+    static boolean comparePieceCount(int stored, int actual)
+    {
+        if (stored >= 3)
+            return actual >= 3;
+        else
+            return stored == actual;
+    }
+
     static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
@@ -595,8 +611,10 @@ public class MatSignatureV2 implements MatSignature
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
 
         /** check pawn home row */
-        long homefrom = pawnRow(from.sig,ROW_2);
-        long hometo = pawnRow(to.sig,ROW_2);
+        assert from.color == to.color;
+        int homerow = EngUtil.isWhite(from.color) ? ROW_2:ROW_7;
+        long homefrom = pawnRow(from.sig,homerow);
+        long hometo = pawnRow(to.sig,homerow);
 
         if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
 

@@ -26,6 +26,7 @@ class MatSignatureV2Test {
     class TestBinReader extends BinReader
     {
         public ArrayList<MatSignatureV2> sigs = new ArrayList<>();
+        public ArrayList<String> fens = new ArrayList<>();
 
         public TestBinReader(Position position) {
             super(position);
@@ -36,8 +37,11 @@ class MatSignatureV2Test {
             if (!pos.wasSilent()) {
                 //  silent moves do not modify the signature
                 MatSignatureV2 matSig = (MatSignatureV2) pos.getMatSig();
-                sigs.add((MatSignatureV2) matSig.clone());
                 assertTrue(matSig.matches(pos), () -> mv+": "+pos+" != "+matSig);
+                if (getNestLevel()==0) {    //  don't record variations; our list is flat
+                    sigs.add((MatSignatureV2) matSig.clone());
+                    fens.add(pos.toString());
+                }
             }
         }
 
@@ -116,13 +120,32 @@ class MatSignatureV2Test {
 
     @Test
     void testEmpty() throws Exception {
-        sig = new MatSignatureV2();
-        pos = new Position();
-        pos.setOption(Position.INCREMENT_SIGNATURE,true);
-
         test1(START_POSITION, "[5960000000000ff-596ff0000000000]", "[8/8/8/8/8/PPPPPPPP 2N 1+1B 2R 1Q 0 - pppppppp/8/8/8/8/8 2n 1+1b 2r 1q 0]");
         test1(EMPTY_POSITION, "[0-0]", "[8/8/8/8/8/8 ? - 8/8/8/8/8/8 ?]");
         test1("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", "[d960000001000ef-d96ef0010000000]", "[8/8/8/4P3/8/PPPP1PPP 2N 1+1B 2R 1Q 2 - pppp1ppp/8/4p3/8/8/8 2n 1+1b 2r 1q 2]");
+    }
+
+    @Test
+    void testBlackHomerow() throws Exception {
+        String fen1 = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1";
+        String fen2 = "2r2rk1/p5pp/1q3n2/3N1p2/3p4/5PP1/P1p1P1BP/4RR1K w - - 0 26";
+
+        pos.setup(fen1);
+        MatSignatureV2 sig1 = (MatSignatureV2) pos.getMatSig().clone();
+
+        pos.setup(fen2);
+        MatSignatureV2 sig2 = (MatSignatureV2) pos.getMatSig().clone();
+
+        assertTrue(sig1.canReach(sig2), () -> fen1+"="+sig1+" -> "+fen2+"="+sig2);
+    }
+
+    @Test
+    void testExcessivePromotions() throws Exception {
+        String fen = "QQ3QQ1/8/8/5K2/3k4/8/8/8 b - - 0 81";
+        pos.setup(fen);
+        MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig();
+
+        assertTrue(sig.matches(pos), () -> fen+" != "+sig);
     }
 
     @Test
@@ -130,37 +153,42 @@ class MatSignatureV2Test {
     {
         withDBServer();
         JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = conn.getPreparedStatement("select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame limit 40");
+        JoPreparedStatement pstm = conn.getPreparedStatement(
+                "select GId,FEN,Bin,WhiteSignature,BlackSignature" +
+                    " from MoreGame" +
+                    " limit 15000000,80000");
         pstm.execute();
 
-        String queryFen = START_POSITION;
-        PositionFilter pf = new PositionFilter();
-        pf.setTargetPosition(queryFen,true);
-
         ResultSet rs = pstm.getResultSet();
-        while (rs.next()) {
+        int i;
+        for (i=0; rs.next(); ++i) {
             int GId = rs.getInt(1);
             String FEN = rs.getString(2);
             byte[] bin = rs.getBytes(3);
             long whiteSignature = rs.getLong(4);
             long blackSignature = rs.getLong(5);
 
-            System.out.println(GId);
+            //System.out.println(GId);
             MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
-            test1Game(pf, FEN,bin,endSig);
+            test1Game(FEN,bin,endSig);
         }
+        System.out.println("["+i+" games replayed]");
     }
 
-    private void test1Game(PositionFilter pf, String initFen, byte[] bin, MatSignatureV2 endSig)
+    private void test1Game(String initFen, byte[] bin, MatSignatureV2 endSig)
     {
         reader.sigs.clear();
+        reader.fens.clear();
         reader.read(bin,0, null,0, initFen, true,true);
         //  reachability:
         for(int i=1; i < reader.sigs.size(); i++) {
-            MatSignatureV2 sigi = (MatSignatureV2) reader.sigs.get(i);
+            MatSignatureV2 sigi = reader.sigs.get(i);
+            String feni= reader.fens.get(i);
             for (int j = 0; j <= i; ++j) {
                 MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
-                assertTrue(sigj.canReach(sigi), sigj+" !-> "+sigi);
+                String fenj = reader.fens.get(j);
+                assertTrue(sigj.canReach(sigi),
+                        () -> "["+fenj+"]\n"+sigj+"\n->\n["+feni+"]\n"+sigi);
             }
         }
     }
