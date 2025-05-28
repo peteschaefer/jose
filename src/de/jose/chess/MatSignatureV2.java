@@ -240,8 +240,8 @@ public class MatSignatureV2 implements MatSignature
             if (strict)
                 return that.sig==this.sig;
             else
-                return (that.sig&PAWN_MASK) == (this.sig&PAWN_MASK)
-                    && (that.sig&OFFICER_MASK) == (this.sig&OFFICER_MASK)
+                return ((that.sig&PAWN_MASK) == (this.sig&PAWN_MASK))
+                    && ((that.sig&OFFICER_MASK) == (this.sig&OFFICER_MASK))
                     && (this.padv_upper >= that.padv_lower) //  intervals overlap
                     && (this.padv_lower <= that.padv_upper);
         }
