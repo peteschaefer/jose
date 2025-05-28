@@ -71,6 +71,13 @@ public class MatSignatureV2 implements MatSignature
         return new MatSignatureV2(this);
     }
 
+    @Override
+    public boolean equals(Object that) {
+        return that instanceof MatSignatureV2
+                && ((MatSignatureV2) that).wfeat.equals(wfeat)
+                && ((MatSignatureV2) that).bfeat.equals(bfeat);
+    }
+
     public MatSignature cloneReversed() {
         return new MatSignatureV2(getBlackSignature(), getWhiteSignature());
     }
@@ -217,6 +224,10 @@ public class MatSignatureV2 implements MatSignature
         int padv_lower = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
+        public boolean equals(Object that) {
+            return (that instanceof Features) && ((Features)that).sig==this.sig;
+        }
+
         void clear() {
             sig = 0;
             padv_base = padv_lower = padv_upper = 0;
@@ -320,19 +331,18 @@ public class MatSignatureV2 implements MatSignature
             //  todo get a second promo_lower bound from Board
 
             int stored_padv = pawnAdvance(sig);
+            padv_base = MatSignatureV2.computePawnAdvance(sig,color);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = MatSignatureV2.computePawnAdvance(sig,color);
                         padv_lower = padv_base + promo_lower*6;
                         padv_upper = Math.min(ADV_TOP, padv_lower +promo_upper*6);
                         break;
                 case ADV_MAX: // [46..48] rare case
-                        padv_base = MatSignatureV2.computePawnAdvance(sig,color);
                         padv_lower = ADV_MAX;
                         padv_upper = ADV_TOP;
                         break;
                 default:// exact value was stored
-                        padv_upper = padv_lower = padv_base = stored_padv;
+                        padv_upper = padv_lower = stored_padv;
                         break;
             }
             updatePawnAdvance();
@@ -606,8 +616,9 @@ public class MatSignatureV2 implements MatSignature
             from_total += from_cnt;
             to_total += to_cnt;
         }
-        if (to_total > (from_total+pcfrom))
-            return false; //  not enough officers
+        if ((to_total+pcto) > (from_total+pcfrom))
+            return false; //  not enough pieces
+
 
         if (to_total > from_total) {
             // todo pawns need to advance to create new officers

@@ -149,6 +149,14 @@ class MatSignatureV2Test {
     }
 
     @Test
+    void testOfficerCapture() {
+        MatSignatureV2 sig1 = new MatSignatureV2(0x3196000008800063L,0x2196334080000000L);
+        MatSignatureV2 sig2 = new MatSignatureV2(0x3196000008800063L,0x2195334080000000L);
+        //  a black officer was captured. replacing it with a promoted piece would exceed the pawn advance
+        assertFalse(sig2.canReach(sig1));
+    }
+
+    @Test
     void testDB() throws Exception
     {
         withDBServer();
@@ -189,6 +197,10 @@ class MatSignatureV2Test {
                 String fenj = reader.fens.get(j);
                 assertTrue(sigj.canReach(sigi),
                         () -> "["+fenj+"]\n"+sigj+"\n->\n["+feni+"]\n"+sigi);
+                //  previous positions can not be reached if we have an exact advance count
+                //  (sigi!=sigj) => !sigi.canReach(sigj)
+                assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),
+                        () -> "["+fenj+"]\n"+sigj+"\n"+sigj.toHexString()+"\n->\n["+feni+"]\n"+sigi+"\n"+sigi.toHexString());
             }
         }
     }

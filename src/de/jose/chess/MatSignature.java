@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 
 public interface MatSignature extends Cloneable
 {
+    boolean equals(Object sig);
     Object clone();
     MatSignature cloneReversed();
 

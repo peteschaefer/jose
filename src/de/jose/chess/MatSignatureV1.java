@@ -160,6 +160,12 @@ public class MatSignatureV1
 	//      Default Methods
 	// --------------------------------------
 
+	public boolean equals(Object that) {
+		return (that instanceof MatSignatureV1)
+				&& ((MatSignatureV1)that).wsig==this.wsig
+				&& ((MatSignatureV1)that).bsig==this.bsig;
+	}
+
 	public Object clone() {
 		return new MatSignatureV1(this);
 	}
@@ -168,10 +174,6 @@ public class MatSignatureV1
 		return new MatSignatureV1(bsig,wsig);
 	}
 
-	public boolean equals(Object obj) {
-		MatSignatureV1 that = (MatSignatureV1)obj;
-		return (this.wsig==that.wsig) && (this.wsig==that.wsig);
-	}
 
 	public int hashCode() {
 		return (int)wsig ^ (int)bsig ^ (int)(wsig>>32) ^ (int)(bsig>>32);
