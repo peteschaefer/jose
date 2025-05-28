@@ -45,6 +45,34 @@ import static de.jose.util.BitUtil.*;
  * 	- opposite bishops / even bishops
  * 	- good bishop = pawns on different color
  * 	- bad bihsop = pawns on same color
+ *
+ * 	---------------
+ * 	is_reachable(a,b) establishes a relation that is:
+ *
+ *  + transitive
+ *      is_reachable(a,b) AND is_reachable(b,c) ==> is_reachable(a,c);
+ *
+ *  + reflexive
+ *      is_reachable(a,a) is always true
+ *
+ *  + anti-symmetric if pawn advance counts are exact (not estimated from a FEN)
+ *
+ *    is_reachable(a,b) AND (matsig(a) != matsig(b)) ==>  ! is_reachable(b,a)
+ *
+ *    intuitively, MatSignaure records noisy moves (captures, pawn moves) that can't be undone.
+ *    Provided that the pawn move count is exact (which is not always the case if derived from a FEN).
+ *    With pawn advances estimated (lower, upper bounds), it is:
+ *
+ *  + not symmetric
+ *      is_reachable(a,b) DOES NOT IMPLY is_reachable(b,a)
+ *
+ *      however, there might be symmetric pairs (a,b) such that
+ *      is_reachable(a,b) AND is_reachable(b,a)
+ *      as a result, this relation can not be ordered
+ *      (and can, sadly, not be used for indexing)
+ *
+ *      we try hard to reduce the number of symmetric pairs to a minimum
+ *      (e.g. by not only counting moves, but by detailed pawn structure analysis)
  */
 public class MatSignatureV2 implements MatSignature
 {

@@ -205,8 +205,19 @@ class MatSignatureV2Test {
             //System.out.println(GId);
             MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
             test1Game(FEN,bin,endSig);
+            /*  note that test1Game() test only MatSignatures from the same game (with monotonous pawn advance, etc.)
+                a better test would use an arbitrary query (see below)
+             */
         }
         System.out.println("["+i+" games replayed]");
+    }
+
+    @Test
+    void testDBQuery()
+    {
+        //  use a query MatSignature with estimated pawn advance
+        //  apply to many games. What is the number of early cut-offs?
+        //  Can it be improved by more detailed pawn analysis?
     }
 
     private static String print(String fen, MatSignatureV2 sig) {
