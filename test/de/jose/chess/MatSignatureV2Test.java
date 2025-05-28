@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -149,11 +150,24 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testOfficerCapture() {
+    void testPieceCount() {
         MatSignatureV2 sig1 = new MatSignatureV2(0x3196000008800063L,0x2196334080000000L);
         MatSignatureV2 sig2 = new MatSignatureV2(0x3196000008800063L,0x2195334080000000L);
-        //  a black officer was captured. replacing it with a promoted piece would exceed the pawn advance
+        //  a black officer was captured. not enough pieces
         assertFalse(sig2.canReach(sig1));
+    }
+
+    @Test
+    void testPawnAdvance() {
+        //  r1bqkb1r/pp1ppp2/2n3p1/4P2p/2Bp2nP/2P2N2/PP3PP1/RNBQK2R w KQkq - 0 8
+        MatSignatureV2 goal = new MatSignatureV2(0x2d96000000880063L,0x2196334080000000L);
+        assertTrue(goal.isExact());
+        //  the very same position, but with estimated
+        MatSignatureV2 from = new MatSignatureV2(0x196000008800063L,0x196334080000000L);
+        assertFalse(from.isExact());
+        //  a pawn has advanced. We can deduce that it can't move back.
+        //  (if the pawn counts are equal)
+        assertFalse(from.canReach(goal));
     }
 
     @Test
@@ -183,6 +197,10 @@ class MatSignatureV2Test {
         System.out.println("["+i+" games replayed]");
     }
 
+    private static String print(String fen, MatSignatureV2 sig) {
+        return "[" + fen + "]\n" + sig + "\n" + sig.toHexString();
+    }
+
     private void test1Game(String initFen, byte[] bin, MatSignatureV2 endSig)
     {
         reader.sigs.clear();
@@ -192,15 +210,21 @@ class MatSignatureV2Test {
         for(int i=1; i < reader.sigs.size(); i++) {
             MatSignatureV2 sigi = reader.sigs.get(i);
             String feni= reader.fens.get(i);
+            pos.setup(feni);
+            MatSignatureV2 sigq = new MatSignatureV2(pos);
+
             for (int j = 0; j <= i; ++j) {
                 MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
                 String fenj = reader.fens.get(j);
-                assertTrue(sigj.canReach(sigi),
-                        () -> "["+fenj+"]\n"+sigj+"\n->\n["+feni+"]\n"+sigi);
-                //  previous positions can not be reached if we have an exact advance count
+                Supplier<String> printInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigi);
+                Supplier<String> printQInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigq);
+
+                assertTrue(sigj.canReach(sigi),printInfo);
+                //  previous positions can not be reached (if we have an exact advance count!)
                 //  (sigi!=sigj) => !sigi.canReach(sigj)
-                assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),
-                        () -> "["+fenj+"]\n"+sigj+"\n"+sigj.toHexString()+"\n->\n["+feni+"]\n"+sigi+"\n"+sigi.toHexString());
+                assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),printInfo);
+                //  this is not necessarily true, if the advance count is estimated
+                assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj),printQInfo);
             }
         }
     }

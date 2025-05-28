@@ -73,13 +73,21 @@ public class MatSignatureV2 implements MatSignature
 
     @Override
     public boolean equals(Object that) {
-        return that instanceof MatSignatureV2
-                && ((MatSignatureV2) that).wfeat.equals(wfeat)
-                && ((MatSignatureV2) that).bfeat.equals(bfeat);
+        return (that instanceof MatSignatureV2)
+                && ((MatSignatureV2) that).wfeat.equals(wfeat,true)
+                && ((MatSignatureV2) that).bfeat.equals(bfeat,true);
     }
 
     public MatSignature cloneReversed() {
         return new MatSignatureV2(getBlackSignature(), getWhiteSignature());
+    }
+
+    public boolean isExact() {
+        return wfeat.isExact() && bfeat.isExact();
+    }
+
+    public boolean similar(MatSignatureV2 that) {
+        return  that.wfeat.equals(wfeat,false) && that.bfeat.equals(bfeat,false);
     }
 
 
@@ -224,8 +232,18 @@ public class MatSignatureV2 implements MatSignature
         int padv_lower = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
-        public boolean equals(Object that) {
-            return (that instanceof Features) && ((Features)that).sig==this.sig;
+        public boolean isExact() {
+            return padv_lower==padv_upper;
+        }
+
+        public boolean equals(Features that,boolean strict) {
+            if (strict)
+                return that.sig==this.sig;
+            else
+                return (that.sig&PAWN_MASK) == (this.sig&PAWN_MASK)
+                    && (that.sig&OFFICER_MASK) == (this.sig&OFFICER_MASK)
+                    && (this.padv_upper >= that.padv_lower) //  intervals overlap
+                    && (this.padv_lower <= that.padv_upper);
         }
 
         void clear() {
@@ -452,7 +470,7 @@ public class MatSignatureV2 implements MatSignature
        protected void updatePawnAdvance()
        {
            sig = BitUtil.clear6(sig,ADV_OFFSET);
-           if (padv_lower==padv_upper)
+           if (isExact())
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
     }
@@ -616,6 +634,8 @@ public class MatSignatureV2 implements MatSignature
             from_total += from_cnt;
             to_total += to_cnt;
         }
+//        if (to_total > (from_total+pcfrom))
+//            return false; //  not enough officers
         if ((to_total+pcto) > (from_total+pcfrom))
             return false; //  not enough pieces
 
@@ -625,6 +645,9 @@ public class MatSignatureV2 implements MatSignature
         }
 
         /** check pawn advance (lower/upper bounds) */
+        assert pcto <= pcfrom;
+        if ((pcfrom==pcto) && (from.padv_base > to.padv_base)) return false;    //  pawns can't move backwards
+
         if (from.padv_lower > to.padv_upper) return false;  //  pawns are too advanced
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower) return false; //  target is too advanced
 
