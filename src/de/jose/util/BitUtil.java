@@ -29,10 +29,16 @@ public class BitUtil
     }
 
     public static long clear1(long value, int offset) {
-        return (value & ~(1L<<offset));
+        return (value & ~(0x01L<<offset));
+    }
+    public static long clear2(long value, int offset) {
+        return (value & ~(0x03L<<offset));
     }
     public static long clear3(long value, int offset) {
-        return (value & ~(7L<<offset));
+        return (value & ~(0x07L<<offset));
+    }
+    public static long clear6(long value, int offset) {
+        return (value & ~(0x3fL<<offset));
     }
 
     public static long clear(long value, long mask) {
