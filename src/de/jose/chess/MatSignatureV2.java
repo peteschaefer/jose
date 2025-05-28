@@ -2,7 +2,6 @@ package de.jose.chess;
 
 import de.jose.util.BitUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static de.jose.chess.EngUtil.*;
@@ -214,17 +213,18 @@ public class MatSignatureV2 implements MatSignature
         int color;
         long sig;
         //int count[] = new int[6];          //  number of officers on the board; lower bound, including known promotions
-        int padv_base = 0; //  pawn moves lower bound (including already captured and promoted pawns)
+        int padv_base = 0;
+        int padv_lower = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
 
         void clear() {
             sig = 0;
-            padv_base = 0;
-            padv_upper = 0;
+            padv_base = padv_lower = padv_upper = 0;
         }
         void copyFrom(Features that) {
             sig = that.sig;
             padv_base = that.padv_base;
+            padv_lower = that.padv_lower;
             padv_upper = that.padv_upper;
         }
 
@@ -263,8 +263,8 @@ public class MatSignatureV2 implements MatSignature
         }
 
         int pawnAdvanceRemaining() {
-            return ADV_TOP- MatSignatureV2.computePawnAdvance(sig,color);
-            //  todo don't compute. store in Features
+            assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
+            return ADV_TOP - padv_base;
         }
 
         protected void setBoard(Board board)
@@ -322,15 +322,17 @@ public class MatSignatureV2 implements MatSignature
             int stored_padv = pawnAdvance(sig);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_base = MatSignatureV2.computePawnAdvance(sig,color) + promo_lower*6;
-                        padv_upper = Math.min(ADV_TOP,padv_base+promo_upper*6);
+                        padv_base = MatSignatureV2.computePawnAdvance(sig,color);
+                        padv_lower = padv_base + promo_lower*6;
+                        padv_upper = Math.min(ADV_TOP, padv_lower +promo_upper*6);
                         break;
                 case ADV_MAX: // [46..48] rare case
-                        padv_base = ADV_MAX;
+                        padv_base = MatSignatureV2.computePawnAdvance(sig,color);
+                        padv_lower = ADV_MAX;
                         padv_upper = ADV_TOP;
                         break;
                 default:// exact value was stored
-                        padv_upper = padv_base = stored_padv;
+                        padv_upper = padv_lower = padv_base = stored_padv;
                         break;
             }
             updatePawnAdvance();
@@ -385,12 +387,12 @@ public class MatSignatureV2 implements MatSignature
             }
 
             buf.append(' ');
-            if (padv_base==0 && padv_upper==ADV_TOP) {
+            if (padv_lower==0 && padv_upper==ADV_TOP) {
                 buf.append('?');
             }
             else {
-                buf.append(padv_base);
-                if (padv_base != padv_upper) {
+                buf.append(padv_lower);
+                if (padv_lower != padv_upper) {
                     buf.append("..");
                     buf.append(padv_upper);
                 }
@@ -399,43 +401,49 @@ public class MatSignatureV2 implements MatSignature
 
         public void del_pawn(int square) {
             sig = BitUtil.clear1(sig,pawnOffset(square));
+            padv_base -= Math.abs(rowOf(square)-EngUtil.homeRow(color));
+            assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
         }
 
         public void del_piece(int piece, int square) {
             int offset = pieceOffset(piece,square);
             int cnt = get2(sig,offset);
             cnt = Math.max(0,cnt-1);
-            sig = BitUtil.clear2(sig,offset) | BitUtil.clip2(cnt,offset);
+            sig = clear2(sig,offset) | clip2(cnt,offset);
         }
 
         public void add_piece(int piece, int square) {
             int offset = pieceOffset(piece,square);
             int cnt = get2(sig,offset);
             cnt = Math.min(3,cnt+1);
-            sig = BitUtil.clear2(sig,offset) | BitUtil.clip2(cnt,offset);
+            sig = clear2(sig,offset) | clip2(cnt,offset);
         }
 
         public void advance_pawn(int from, int to) {
-            del_pawn(from);
-            sig |= set1(1,pawnOffset(to));
-            padv_base += Math.abs(rowOf(to)-rowOf(from));
-            padv_upper = Math.max(padv_upper,padv_base);
+            assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
+            sig = clear1(sig,pawnOffset(from)) | set1(1,pawnOffset(to));
+            int adv = Math.abs(rowOf(to)-rowOf(from));
+            padv_base += adv;
+            assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
+            padv_lower += adv;
+            padv_upper = Math.max(padv_upper, padv_lower);
             updatePawnAdvance();
        }
 
        public void promote(int from, int to, int promoted) {
            del_pawn(from);
            add_piece(promoted, to);
-           padv_base++;
-           padv_upper = Math.max(padv_upper,padv_base);
+           assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
+           padv_lower++;
+           padv_upper = Math.max(padv_upper, padv_lower);
            updatePawnAdvance();
        }
 
        protected void updatePawnAdvance()
        {
            sig = BitUtil.clear6(sig,ADV_OFFSET);
-           if (padv_base==padv_upper)
-               sig |= BitUtil.set6(Math.min(ADV_MAX,padv_base+1),ADV_OFFSET);
+           if (padv_lower==padv_upper)
+               sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
     }
 
@@ -542,14 +550,9 @@ public class MatSignatureV2 implements MatSignature
     static int computePawnAdvance(long sig, int color)
     {
         int adv = 0;
-        if (EngUtil.isWhite(color)) {
-            for (int row = ROW_3; row <= ROW_7; ++row)  //  jit compiler: unroll :)
-                adv += (row - ROW_2) * pawnCount(sig, row);
-        }
-        else {
-            for (int row = ROW_6; row >= ROW_2; --row)  //  jit compiler: unroll :)
-                adv += (ROW_7-row) * pawnCount(sig, row);
-        }
+        int homeRow = EngUtil.homeRow(color);
+        for (int row = ROW_2; row <= ROW_7; ++row)  //  jit compiler: unroll :)
+            adv += Math.abs(row-homeRow) * pawnCount(sig, row);
         return adv;
     }
 
@@ -606,13 +609,17 @@ public class MatSignatureV2 implements MatSignature
         if (to_total > (from_total+pcfrom))
             return false; //  not enough officers
 
+        if (to_total > from_total) {
+            // todo pawns need to advance to create new officers
+        }
+
         /** check pawn advance (lower/upper bounds) */
-        if (from.padv_base > to.padv_upper) return false;  //  pawns are too advanced
-        if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_base) return false; //  target is too advanced
+        if (from.padv_lower > to.padv_upper) return false;  //  pawns are too advanced
+        if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower) return false; //  target is too advanced
 
         /** check pawn home row */
         assert from.color == to.color;
-        int homerow = EngUtil.isWhite(from.color) ? ROW_2:ROW_7;
+        int homerow = EngUtil.homeRow(from.color);
         long homefrom = pawnRow(from.sig,homerow);
         long hometo = pawnRow(to.sig,homerow);
 

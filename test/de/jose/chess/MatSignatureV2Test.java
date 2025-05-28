@@ -156,7 +156,7 @@ class MatSignatureV2Test {
         JoPreparedStatement pstm = conn.getPreparedStatement(
                 "select GId,FEN,Bin,WhiteSignature,BlackSignature" +
                     " from MoreGame" +
-                    " limit 15000000,80000");
+                    " limit 15600000,80000");
         pstm.execute();
 
         ResultSet rs = pstm.getResultSet();
