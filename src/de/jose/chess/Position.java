@@ -319,17 +319,15 @@ public class Position
 		frame.whiteSignature = theMatSignature.getWhiteSignature();
 		frame.blackSignature = theMatSignature.getBlackSignature();
 
+		Piece piece = piece(move.from);
+		boolean silent = !piece.isPawn();
+		//	pawn moves and captures are considered not silent
 		if (move.isNullMove()) {
 			//  NULLMOVE
 			theFlags = Util.minus(theFlags,EN_PASSANT_FILE);
 			theSilentPlies++;
 		}
 		else {
-			Piece piece = piece(move.from);
-
-			boolean silent = !piece.isPawn();
-			//	pawn moves and captures are considered not silent
-
 			if (move.captured!=null) {
 				silent = false;
 				deletePiece(move.captured);
@@ -421,8 +419,8 @@ public class Position
 			theReversedHashKey.set(theFlags);
 		}
 
-		if (hasOption(INCREMENT_SIGNATURE)) {
-			theMatSignature.update(move);
+		if (hasOption(INCREMENT_SIGNATURE) && !silent) {
+			theMatSignature.update(this,move);
 		}
 	}
 

@@ -38,7 +38,7 @@ class MatSignatureV2Test {
             if (!pos.wasSilent()) {
                 //  silent moves do not modify the signature
                 MatSignatureV2 matSig = (MatSignatureV2) pos.getMatSig();
-                assertTrue(matSig.matches(pos), () -> mv+": "+pos+" != "+matSig);
+                assertTrue(matSig.matches(pos), () -> mv+": "+pos+" != "+matSig+" "+matSig.toHexString());
                 if (getNestLevel()==0) {    //  don't record variations; our list is flat
                     sigs.add((MatSignatureV2) matSig.clone());
                     fens.add(pos.toString());
@@ -158,6 +158,18 @@ class MatSignatureV2Test {
     }
 
     @Test
+    void test4Queens() {
+        String fen = "Q4Q2/3B4/6Q1/3K4/8/8/7Q/7k b - - 0 96"; // [8/8/8/8/8/8 1+0B 2Q 35 - 8/8/8/8/8/8 17]
+        pos.setup(fen);
+        //  four queens (recorded as 3Q)
+        //  one gets captured
+        MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig();
+        assertTrue(pos.tryMove(new Move(H1,H2)));
+        //  3-1=3 :)
+        assertTrue(sig.matches(pos));
+    }
+
+    @Test
     void testPawnAdvance() {
         //  r1bqkb1r/pp1ppp2/2n3p1/4P2p/2Bp2nP/2P2N2/PP3PP1/RNBQK2R w KQkq - 0 8
         MatSignatureV2 goal = new MatSignatureV2(0x2d96000000880063L,0x2196334080000000L);
@@ -178,7 +190,7 @@ class MatSignatureV2Test {
         JoPreparedStatement pstm = conn.getPreparedStatement(
                 "select GId,FEN,Bin,WhiteSignature,BlackSignature" +
                     " from MoreGame" +
-                    " limit 15600000,80000");
+                    " limit 15800000,80000");
         pstm.execute();
 
         ResultSet rs = pstm.getResultSet();
@@ -223,7 +235,8 @@ class MatSignatureV2Test {
                 //  previous positions can not be reached (if we have an exact advance count!)
                 //  (sigi!=sigj) => !sigi.canReach(sigj)
                 assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),printInfo);
-                //  this is not necessarily true, if the advance count is estimated
+                //  this is not necessarily true, if the advance count is estimated.
+                //  try this to find border cases that might be solvable:
                 assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj),printQInfo);
             }
         }

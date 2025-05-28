@@ -15,7 +15,7 @@ public interface MatSignature extends Cloneable
     void clear();
 
     void setBoard(Board board);
-    void update(Move move);
+    void update(Board board, Move move);
     void setInitial();
 
     long getWhiteSignature();

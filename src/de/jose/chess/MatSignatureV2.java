@@ -177,16 +177,19 @@ public class MatSignatureV2 implements MatSignature
      * incremental update
      * @param mv
      */
-    public void update(Move mv)
+    public void update(Board board, Move mv)
     {
         //  notify "loud" moves: captures and pawn moves
         if (mv.isCapture())
         {
             Features fthat = EngUtil.isWhite(mv.moving.piece) ? bfeat:wfeat;
+            int capturedSquare = mv.getCapturedSquare();
             if (mv.captured.isPawn())
-                fthat.del_pawn(mv.getCapturedSquare());
-            else
-                fthat.del_piece(mv.getCapturedPiece(),mv.getCapturedSquare());   //  decrease piece count
+                fthat.del_pawn(capturedSquare);
+            else {
+                int capturedPiece = mv.getCapturedPiece();
+                fthat.del_piece(capturedPiece, capturedSquare, board);   //  decrease piece count
+            }
         }
         if (mv.moving!=null && mv.moving.isPawn())
         {
@@ -433,10 +436,27 @@ public class MatSignatureV2 implements MatSignature
             assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
         }
 
-        public void del_piece(int piece, int square) {
+        private int countPieces(Board board, int piece, boolean is_light_square)
+        {
+            if (EngUtil.uncolored(piece)!=BISHOP)
+                return board.countPieces(piece);
+            else if (is_light_square)
+                return countLightSquaredBishops(board,EngUtil.colorOf(piece));
+            else
+                return countDarktSquaredBishops(board,EngUtil.colorOf(piece));
+        }
+
+        public void del_piece(int piece, int square, Board board) {
             int offset = pieceOffset(piece,square);
             int cnt = get2(sig,offset);
-            cnt = Math.max(0,cnt-1);
+            if (cnt==3) {
+                //  note: cnt==3 means >=3
+                //  we need to query the board for the new exact value
+                cnt = countPieces(board,piece,EngUtil.isLightSquare(square));
+            }
+            else {
+                cnt = Math.max(0, cnt - 1);
+            }
             sig = clear2(sig,offset) | clip2(cnt,offset);
         }
 
