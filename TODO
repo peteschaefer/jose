@@ -78,6 +78,7 @@ Maintenance:
 [x] PosFilter + CId is slow.
     heuristic hack: search for GId BETWEEN. Inaccurate but fast.
 [x] update Matsig only after noisy moves
+[ ] Easylink: RelWithDeb
 
 [ ] Matsig V2
     [x] pawn bitset, piece counts, bishop colors
@@ -90,6 +91,8 @@ Maintenance:
         [x] db games (incremental mode)
     [x] store padv_base = computePawnAdvance(sig), padv_lower = base+promo_lower, padv_upper = base+promo_upper
     [ ] extended pawn structure test
+        - eliminate pawns, find pairs of source/target, recurse
+        - track remaining advances, captures
     [ ] opposite bishop, even bishop
     [ ] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway

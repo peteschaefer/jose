@@ -150,6 +150,11 @@ public class Position
 			computeHashCount();
 	}
 
+	public MatSignature useMatSignature(Class matSigClass) {
+		theMatSignature = MatSignature.newMatSignature(matSigClass);
+		return computeMatSig();
+	}
+
 
 	public void computeHashKeys()
 	{

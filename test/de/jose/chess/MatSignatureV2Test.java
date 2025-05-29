@@ -54,15 +54,52 @@ class MatSignatureV2Test {
         @Override public void result(int resultCode) { }
     }
 
+    class CountingBinReader extends BinReader
+    {
+        public int moves, noisy;
+        public MatSignature cutoff;
+
+        public CountingBinReader(Position position) {
+            super(position);
+        }
+
+        @Override
+        public void afterMove(Move mv, int ply) {
+            moves++;
+            if (!pos.wasSilent()) {
+                noisy++;
+                if (cutoff!=null) {
+                    MatSignature matSig = pos.getMatSig();
+                    if (!matSig.canReach(cutoff)) eof=true;
+                }
+            }
+        }
+
+        @Override public void beforeMove(Move mv, int ply, boolean displayHint) { }
+        @Override public void annotation(int nagCode) { }
+        @Override public void comment(StringBuffer text) { }
+        @Override public void startOfLine(int nestLevel) { }
+        @Override public void endOfLine(int nestLevel) { }
+        @Override public void result(int resultCode) { }
+    }
+
     MatSignatureV2 sig;
     Position pos;
     TestBinReader reader;
+    CountingBinReader counter;
 
     public MatSignatureV2Test() {
         sig = new MatSignatureV2();
         pos = new Position(JoseHashKey.class,MatSignatureV2.class);
+        pos.setOption(Position.CHECK,false);
+        pos.setOption(Position.STALEMATE,false);
+        pos.setOption(Position.DRAW_3,false);
+        pos.setOption(Position.INCREMENT_HASH,false);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
+        pos.setOption(Position.EXPOSED_CHECK,false);
         pos.setOption(Position.INCREMENT_SIGNATURE,true);
         reader = new TestBinReader(pos);
+        counter = new CountingBinReader(pos);
     }
 
     @BeforeEach
@@ -183,17 +220,10 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testDB() throws Exception
+    void testDBGames() throws Exception
     {
         withDBServer();
-        JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = conn.getPreparedStatement(
-                "select GId,FEN,Bin,WhiteSignature,BlackSignature" +
-                    " from MoreGame" +
-                    " limit 15800000,80000");
-        pstm.execute();
-
-        ResultSet rs = pstm.getResultSet();
+        ResultSet rs = selectGames(15800000,80000);
         int i;
         for (i=0; rs.next(); ++i) {
             int GId = rs.getInt(1);
@@ -210,6 +240,79 @@ class MatSignatureV2Test {
              */
         }
         System.out.println("["+i+" games replayed]");
+    }
+
+    @Test
+    void testCutoffCount() throws Exception
+    {
+        String initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        String opening = "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/5NP1/PP2PP1P/RNBQKB1R b KQkq - 0 4";
+        String middle1 = "2r1r1n1/p2b1p1k/2nq3p/1pp1pPbB/3pP3/PP1P3P/1BPN1PQK/R5R1 w - - 3 23";
+        String middle2 = "2rqr1k1/pb3pp1/7p/1p1pN2n/4P3/1B5P/P4PPQ/3RR1K1 w - - 0 21";
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        String endgame2 = "8/8/R1bkp3/3p1rKp/3B4/2P5/8/8 w - - 10 67";
+
+        int offset = 14800000;
+        int limit = 1000000;
+        withDBServer();
+//        System.out.println("[unfiltered - all games]");
+//        testCutoff(null,null, 0,0);
+//        System.out.println("[unfiltered - 1M games]");
+//        testCutoff(null,null, 14800000,1000000);
+//        System.out.println("[initial - V1]");
+//        testCutoff(initial,MatSignatureV1.class, offset,limit);
+//        System.out.println("[initial - V2]");
+//        testCutoff(initial,MatSignatureV2.class, offset,limit);
+//        System.out.println("[middle game - V1]");
+//        testCutoff(middle1,MatSignatureV1.class, offset,limit);
+        System.out.println("[middle game - V2]");
+        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+//        System.out.println("[end game - V1]");
+//        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
+        System.out.println("[end game - V2]");
+        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+    }
+
+    void testCutoff(String queryFen, Class matsigClass, int offset, int limit) throws SQLException {
+        counter.moves = counter.noisy = 0;
+        if (queryFen != null && matsigClass!=null) {
+            pos.setup(queryFen);
+            pos.useMatSignature(matsigClass);
+            counter.cutoff = (MatSignature) pos.getMatSig().clone();
+        }
+        long startTime = System.currentTimeMillis();
+        int games=0;
+        ResultSet res = selectGames(offset,limit);
+        while(res.next()) {
+            games++;
+            //int GId = res.getInt(1);
+            String FEN = res.getString(2);
+            byte[] bin = res.getBytes(3);
+            //long whiteSignature = rs.getLong(4);
+            //long blackSignature = rs.getLong(5);
+            counter.read(bin,0, null,0, FEN,true,true);
+        }
+        long time = System.currentTimeMillis()-startTime;
+        System.out.println("["+games+" games replayed]");
+        System.out.println("["+counter.moves+" moves]");
+        System.out.println("["+counter.noisy+" noisy moves]");
+        System.out.println("["+time/1000.0+" secs]");
+    }
+
+    private static ResultSet selectGames(int offset, int limit) throws SQLException
+    {
+        JoConnection conn = JoConnection.get();
+        String sql = "select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame";
+        if (offset > 0 || limit > 0) {
+            sql += " limit ";
+            if (offset > 0) sql += (offset+", ");
+            sql += limit;
+        }
+        JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+        pstm.execute();
+
+        ResultSet rs = pstm.getResultSet();
+        return rs;
     }
 
     @Test
