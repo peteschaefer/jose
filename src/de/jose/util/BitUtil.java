@@ -44,4 +44,17 @@ public class BitUtil
     public static long clear(long value, long mask) {
         return value & ~mask;
     }
+
+    public static long least(long f) { return Long.lowestOneBit(f); }
+
+    public static long next(long f, long f0) {
+    //todo no, rather find next *in file*
+        f &= ~(f0-1);
+        f &= ~f0;
+        return least(f);
+    }
+
+    public static long prev(long f, long f0) {
+        //todo no, find previous *in file*
+    }
 }

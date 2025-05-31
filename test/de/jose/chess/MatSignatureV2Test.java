@@ -219,6 +219,39 @@ class MatSignatureV2Test {
         assertFalse(from.canReach(goal));
     }
 
+    boolean canReach(String from, String to) {
+        pos.setup(from);
+        MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
+        pos.setup(to);
+        MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
+
+        sig1.print(System.out,WHITE,true);
+        System.out.println("\n-->");
+        sig2.print(System.out,WHITE,true);
+        System.out.println("\n\n");
+        return sig1.canReach(sig2);
+    }
+
+    @Test
+    void testPawnCapture() {
+        //  note: h-pawn compensates for advance counting,
+        //  s.t. we walk into the resolve_capture() branch
+
+        //  a backward pawn
+        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1"));
+        //  an extra pawn
+        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/3P4/3P4/8/7P/7K w - - 0 1"));
+        //  a less obvious backward pawn
+        assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1"));
+
+        //  ...with an explanation by capture
+        assertTrue(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","r6k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1"));
+
+        //  with a more difficult explanation
+        //  explanation fails b/cause of missing victims
+        //  another explanation appears
+    }
+
     @Test
     void testDBGames() throws Exception
     {

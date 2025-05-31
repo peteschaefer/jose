@@ -2,6 +2,9 @@ package de.jose.chess;
 
 import de.jose.util.BitUtil;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 import static de.jose.chess.EngUtil.*;
@@ -236,7 +239,17 @@ public class MatSignatureV2 implements MatSignature
     public static boolean is_reachable(MatSignatureV2 from, MatSignatureV2 to)
     {
         return  is_reachable(from.wfeat, to.wfeat) &&
-                is_reachable(from.bfeat, to.bfeat);
+                is_reachable(from.bfeat, to.bfeat) &&
+                from.wfeat.resolve_file(
+                        from.wfeat.sig&PAWN_MASK,
+                        to.wfeat.sig&PAWN_MASK,
+                        FILE_A,
+                        from.bfeat.piece_cnt-to.bfeat.piece_cnt) &&
+                from.bfeat.resolve_file(    //  todo rotate for black
+                        from.bfeat.sig&PAWN_MASK,
+                        to.bfeat.sig&PAWN_MASK,
+                        FILE_A,
+                        from.wfeat.piece_cnt-to.wfeat.piece_cnt);
     }
 
     public static boolean is_reverse_reachable(MatSignatureV2 from, MatSignatureV2 to)
@@ -262,6 +275,8 @@ public class MatSignatureV2 implements MatSignature
         int padv_base = 0;
         int padv_lower = 0; //  pawn moves lower bound (including already captured and promoted pawns)
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
+        //  total piece_cnt. computed by is_reachable on demand!
+        int piece_cnt = 0;
 
         public boolean isExact() {
             return padv_lower==padv_upper;
@@ -324,7 +339,7 @@ public class MatSignatureV2 implements MatSignature
 
         int pawnAdvanceRemaining() {
             assert padv_base==MatSignatureV2.computePawnAdvance(sig,color);
-            return ADV_TOP - padv_base;
+            return 6*pawnCount() - padv_base;
         }
 
         protected void setBoard(Board board)
@@ -415,45 +430,50 @@ public class MatSignatureV2 implements MatSignature
             return true;
         }
 
-        void print(StringBuffer buf, int color)
+        void print(PrintWriter buf, boolean withBoard)
         {
             for(int row=ROW_7; row >= ROW_2; row--) {
-                printPawnRow(buf, pawnRow(sig, row), color);
-                if (row>ROW_2) buf.append("/");
+                printPawnRow(buf, pawnRow(sig, row), row, color, withBoard);
+                if (withBoard)
+                    buf.append("\n");
+                else if (row > ROW_2)
+                    buf.append("/");
             }
+            if (withBoard)
+                buf.println(" abcdefgh");
 
             if (knightCount() > 0) {
-                buf.append(' ');
-                buf.append(knightCount());
-                buf.append(EngUtil.coloredPieceCharacter(KNIGHT|color));
+                buf.print(' ');
+                buf.print(knightCount());
+                buf.print(EngUtil.coloredPieceCharacter(KNIGHT|color));
             }
             if (bishopCount() > 0) {
-                buf.append(' ');
-                buf.append(lightBishopCount());
-                buf.append('+');
-                buf.append(darkBishopCount());
-                buf.append(EngUtil.coloredPieceCharacter(BISHOP|color));
+                buf.print(' ');
+                buf.print(lightBishopCount());
+                buf.print('+');
+                buf.print(darkBishopCount());
+                buf.print(EngUtil.coloredPieceCharacter(BISHOP|color));
             }
             if (rookCount() > 0) {
-                buf.append(' ');
-                buf.append(rookCount());
-                buf.append(EngUtil.coloredPieceCharacter(ROOK|color));
+                buf.print(' ');
+                buf.print(rookCount());
+                buf.print(EngUtil.coloredPieceCharacter(ROOK|color));
             }
             if (queenCount() > 0) {
-                buf.append(' ');
-                buf.append(queenCount());
-                buf.append(EngUtil.coloredPieceCharacter(QUEEN|color));
+                buf.print(' ');
+                buf.print(queenCount());
+                buf.print(EngUtil.coloredPieceCharacter(QUEEN|color));
             }
 
-            buf.append(' ');
+            buf.print(' ');
             if (padv_lower==0 && padv_upper==ADV_TOP) {
-                buf.append('?');
+                buf.print('?');
             }
             else {
-                buf.append(padv_lower);
+                buf.print(padv_lower);
                 if (padv_lower != padv_upper) {
-                    buf.append("..");
-                    buf.append(padv_upper);
+                    buf.print("..");
+                    buf.print(padv_upper);
                 }
             }
         }
@@ -521,42 +541,144 @@ public class MatSignatureV2 implements MatSignature
            if (isExact())
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
+
+       boolean resolve_file(long from, long to,
+                                int file,
+                                int avail_captures)
+       {
+           //   for each file: pawns that need resolution
+           //   - backward pawns that are behind the origin
+           //   - double pawns
+           if (avail_captures < 0) return false;
+
+           for( ; file <= FILE_H; ++file) {
+               long t = to & fileMask(file);
+               if (t==0) continue;
+               //   compare bottom-up
+               long t0 = BitUtil.least(t);
+               long f = from & fileMask(file);
+               long f0 = BitUtil.least(f);
+               while(t0!=0) {
+                   if (f0!=0 && f0 <= t0) {
+                       //   advanced pawn; ok, already tested by advance counting
+                       f0 = BitUtil.next(f,f0);
+                       t0 = BitUtil.next(t,t0);
+                   }
+                   else {
+                       //   backward pawn, or extra pawn; captures need to be accounted for
+                       return  resolve_one(from,to, t0, avail_captures);
+                   }
+               }
+           }
+           return true;
+       }
+
+        boolean resolve_one(long from, long to,
+                                 long square,
+                                 int avail_captures)
+        {
+            if (avail_captures < 0) return false;
+            if (square==0) return false;
+
+            int file0 = (int)(square%8)+FILE_A;
+            //int row = (int)(square/8)+ROW_2;
+            long square2,to2;
+            for (int file1=file0+1; file1 <= FILE_H; ++file1)
+            {   // to the right
+                int fd = (file1-file0);
+                square2 = square >> fd*9;
+                if ((to&square2)==0) {
+                    //  try it
+                    to2 = to &~square | square2;
+                    if (resolve_file(from,to2,file0,avail_captures-fd))
+                        return true;
+                    break;
+                }
+                else {
+                    //  find prev free square
+                    square2 = BitUtil.prev(fileMask(file1),square2);
+                    to2 = to &~square | square2;
+                    if (square2!=0) {
+                        if (resolve_file(from,to2,file0,avail_captures-fd))
+                            return true;
+                    }
+                }
+            }
+            for (int file1=file0+1; file1 <= FILE_H; ++file1)
+            {   //  same to the left
+            //  todo
+            }
+            return false;
+        }
+
+        public int mostAdvancedPawn() {
+            if (EngUtil.isWhite(color)) {
+                for(int row=ROW_7; row > ROW_2; --row)
+                    if (MatSignatureV2.pawnCount(sig,row) > 0)
+                        return row-ROW_2;
+            }
+            else {
+                for(int row=ROW_2; row < ROW_7; ++row)
+                    if (MatSignatureV2.pawnCount(sig,row) > 0)
+                        return ROW_7-row;
+            }
+            return 0;
+        }
+    }
+
+    public void print(PrintStream out, int color, boolean longFormat) {
+        PrintWriter outw = new PrintWriter(out);
+        print(outw, color, longFormat);
+        outw.flush();
+    }
+
+    public void print(PrintWriter out, int color, boolean longFormat) {
+        if (EngUtil.isWhite(color))
+            wfeat.print(out,longFormat);
+        else
+            bfeat.print(out,longFormat);
     }
 
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
-        buf.append('[');
-        wfeat.print(buf,WHITE);
-        buf.append(" - ");
-        bfeat.print(buf,BLACK);
-        buf.append(']');
+        StringWriter buf = new StringWriter();
+        PrintWriter pw = new PrintWriter(buf);
+        pw.print('[');
+        print(pw,WHITE,false);
+        pw.print(" - ");
+        print(pw,BLACK,false);
+        pw.print(']');
         return buf.toString();
     }
 
     public String toHexString()
     {
-        StringBuffer buf = new StringBuffer();
-        buf.append('[');
-        buf.append(Long.toHexString(getWhiteSignature()));
-        buf.append('-');
-        buf.append(Long.toHexString(getBlackSignature()));
-        buf.append(']');
-        return buf.toString();
+        StringWriter sw = new StringWriter();
+        sw.append('[');
+        sw.append(Long.toHexString(getWhiteSignature()));
+        sw.append('-');
+        sw.append(Long.toHexString(getBlackSignature()));
+        sw.append(']');
+        return sw.toString();
     }
 
-    private void printPawnRow(StringBuffer buf, long bits, int color) {
+    private void printPawnRow(PrintWriter buf, long bits, int row, int color, boolean longFormat) {
         int empty=0;
-        for(int bit=1; bit <= 0x80; bit <<= 1)
+        if (longFormat)
+            buf.print(EngUtil.rowChar(row));
+        for(int bit=1,file=FILE_A; bit <= 0x80; bit <<= 1,++file)
             if ((bits&bit) != 0) {
-                if (empty > 0) buf.append(empty);
-                buf.append(EngUtil.coloredPieceCharacter(PAWN|color));
-                empty=0;
+                if (!longFormat) {
+                    if (empty > 0) buf.print(empty);
+                    empty=0;
+                }
+                buf.print(EngUtil.coloredPieceCharacter(PAWN|color));
             }
-            else {
+            else if (longFormat)
+                buf.print(EngUtil.isLightSquare(square(file,row)) ? ' ':'.');
+            else
                 empty++;
-            }
-        if (empty > 0) buf.append(empty);
+        if (empty > 0) buf.print(empty);
     }
 
     int pieceOffset(int piece, int square)
@@ -571,7 +693,8 @@ public class MatSignatureV2 implements MatSignature
     }
 
     //  lower 48 bits = 6 bytes hold the pawn structure
-    static long PAWN_MASK = 0x0ffffffffffffL;
+    static long PAWN_MASK   = 0x0ffffffffffffL;
+    static long PAWN_FILE   = 0x0101010101010101L;
     //  just the light-colored square (from a2-h2-a7-h7)
     static long LIGHT_PAWN_MASK = 0x055aa55aa55aaL;
     static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
@@ -597,6 +720,10 @@ public class MatSignatureV2 implements MatSignature
     }
     static long rowMask(int row) {
         return 0x0ffL << rowOffset(row);
+    }
+
+    static long fileMask(int file) {
+        return PAWN_FILE << fileOffset(file);
     }
 
     static int pawnOffset(int file, int row) {
@@ -667,37 +794,45 @@ public class MatSignatureV2 implements MatSignature
         /** check pawn count */
         int pcfrom = from.pawnCount();
         int pcto = to.pawnCount();
-        if (pcto > pcfrom) return false;    //  not enough pawns
+        if (pcto > pcfrom)
+            return false;    //  not enough pawns
 
         /** check officers count    */
         int offset = KNIGHT_OFFSET;
-        int from_total=0;
-        int to_total=0;
+        from.piece_cnt=0;
+        to.piece_cnt=0;
 
         for( ; offset <= QUEEN_OFFSET; offset += 2) {
             int from_cnt = BitUtil.get2(from.sig,offset);
             int to_cnt = BitUtil.get2(to.sig,offset);
             if (to_cnt > (from_cnt+pcfrom))
-                return false; //  not enough officers
-            from_total += from_cnt;
-            to_total += to_cnt;
+                return false; //  not enough officers   todo never reached?
+            from.piece_cnt += from_cnt;
+            to.piece_cnt += to_cnt;
         }
 //        if (to_total > (from_total+pcfrom))
 //            return false; //  not enough officers
-        if ((to_total+pcto) > (from_total+pcfrom))
+        if ((to.piece_cnt+pcto) > (from.piece_cnt+pcfrom))
             return false; //  not enough pieces
 
-
-        if (to_total > from_total) {
-            // todo pawns need to advance to create new officers
+        int padv_promo=0;
+        if (to.piece_cnt > from.piece_cnt) {
+            //  pawns need to advance to create new officers
+            //  we already checked that there is a sufficient number of pawns
+            //  compute the number of needed advances to promote (to-piece_cnt-from.piece_cnt) times
+            //  since positions with 2 promotions are rare, we only look for the most advanced pawn
+            padv_promo = (to.piece_cnt-from.piece_cnt)*(6-from.mostAdvancedPawn());
         }
 
         /** check pawn advance (lower/upper bounds) */
         assert pcto <= pcfrom;
-        if ((pcfrom==pcto) && (from.padv_base > to.padv_base)) return false;    //  pawns can't move backwards
+        if ((pcfrom==pcto) && (from.padv_base > to.padv_base))
+            return false;    //  pawns can't move backwards
 
-        if (from.padv_lower > to.padv_upper) return false;  //  pawns are too advanced
-        if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower) return false; //  target is too advanced
+        if ((from.padv_lower+padv_promo) > to.padv_upper)
+            return false;  //  pawns are too advanced
+        if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower)
+            return false; //  target is too advanced     todo never reached?
 
         /** check pawn home row */
         assert from.color == to.color;
@@ -705,10 +840,9 @@ public class MatSignatureV2 implements MatSignature
         long homefrom = pawnRow(from.sig,homerow);
         long hometo = pawnRow(to.sig,homerow);
 
-        if (minus8(hometo,homefrom) != 0) return false; //  pawns must not return to the home row
-
-        //  todo more detailed pawn reachability by looking at the potential origin squares
-        //  can be done by bit shifting and or-ing.
+        if (minus8(hometo,homefrom) != 0)
+            return false; //  pawns must not return to the home row
+        //  more detailed pawn reachability is done in resolve_captures()
 
         return true;
     }
