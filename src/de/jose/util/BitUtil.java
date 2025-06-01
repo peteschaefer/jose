@@ -45,16 +45,54 @@ public class BitUtil
         return value & ~mask;
     }
 
-    public static long least(long f) { return Long.lowestOneBit(f); }
+    public static long least(long f) {
+        return Long.lowestOneBit(f);
+    }
 
     public static long next(long f, long f0) {
-    //todo no, rather find next *in file*
-        f &= ~(f0-1);
-        f &= ~f0;
+        f &= -(f0 << 1);
         return least(f);
     }
 
     public static long prev(long f, long f0) {
-        //todo no, find previous *in file*
+        f &= f0-1;
+        return Long.highestOneBit(f);
     }
+
+    public static int indexOf(long bit) {
+        return Long.numberOfTrailingZeros(bit);
+    }
+
+    public static long reverse32(long x) {
+        return    ((x & 0xffffffff00000000L) >> 32)
+                | ((x & 0x00000000ffffffffL) << 32);
+    }
+    public static long reverse16(long x) {
+        return    ((x & 0xffff0000ffff0000L) >> 16)
+                | ((x & 0x0000ffff0000ffffL) << 16);
+    }
+    public static long reverse8(long x) {
+        return    ((x & 0xff00ff00ff00ff00L) >> 8)
+                | ((x & 0x00ff00ff00ff00ffL) << 8);
+    }
+    public static long reverse4(long x) {
+        return    ((x & 0xf0f0f0f0f0f0f0f0L) >> 4)
+                | ((x & 0x0f0f0f0f0f0f0f0fL) << 4);
+    }
+    public static long reverse2(long x) {
+        return    ((x & 0xccccccccccccccccL) >> 2)
+                | ((x & 0x3333333333333333L) << 2);
+    }
+    public static long reverse1(long x) {
+        return    ((x & 0xaaaaaaaaaaaaaaaaL) >> 1)
+                | ((x & 0x5555555555555555L) << 1);
+    }
+    public static long reverseBits(long x) {
+        return reverse1(reverse2(reverse4(reverse8(reverse16(reverse32(x))))));
+    }
+    public static long reverseBits(long x, int bits) {
+        long mask = (1L << bits) - 1;
+        return reverseBits(x & mask) >> bits;
+    }
+
 }

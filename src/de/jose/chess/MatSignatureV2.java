@@ -240,16 +240,15 @@ public class MatSignatureV2 implements MatSignature
     {
         return  is_reachable(from.wfeat, to.wfeat) &&
                 is_reachable(from.bfeat, to.bfeat) &&
-                from.wfeat.resolve_file(
+                from.wfeat.resolve_captures(
                         from.wfeat.sig&PAWN_MASK,
                         to.wfeat.sig&PAWN_MASK,
-                        FILE_A,
                         from.bfeat.piece_cnt-to.bfeat.piece_cnt) &&
-                from.bfeat.resolve_file(    //  todo rotate for black
-                        from.bfeat.sig&PAWN_MASK,
-                        to.bfeat.sig&PAWN_MASK,
-                        FILE_A,
+                from.bfeat.resolve_captures(
+                        BitUtil.reverseBits(from.bfeat.sig,48),
+                        BitUtil.reverseBits(to.bfeat.sig,48),
                         from.wfeat.piece_cnt-to.wfeat.piece_cnt);
+        //  reverse (mirror) bits for black
     }
 
     public static boolean is_reverse_reachable(MatSignatureV2 from, MatSignatureV2 to)
@@ -430,17 +429,9 @@ public class MatSignatureV2 implements MatSignature
             return true;
         }
 
-        void print(PrintWriter buf, boolean withBoard)
+        void print(PrintWriter buf, boolean longFormat)
         {
-            for(int row=ROW_7; row >= ROW_2; row--) {
-                printPawnRow(buf, pawnRow(sig, row), row, color, withBoard);
-                if (withBoard)
-                    buf.append("\n");
-                else if (row > ROW_2)
-                    buf.append("/");
-            }
-            if (withBoard)
-                buf.println(" abcdefgh");
+            printboard(buf,sig&PAWN_MASK, EngUtil.coloredPieceCharacter(PAWN|color), longFormat);
 
             if (knightCount() > 0) {
                 buf.print(' ');
@@ -542,74 +533,66 @@ public class MatSignatureV2 implements MatSignature
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
 
-       boolean resolve_file(long from, long to,
-                                int file,
-                                int avail_captures)
+       boolean resolve_captures(long from, long to, int avail_captures)
        {
-           //   for each file: pawns that need resolution
-           //   - backward pawns that are behind the origin
-           //   - double pawns
+           //   find critical pawns (backward, double)
            if (avail_captures < 0) return false;
 
-           for( ; file <= FILE_H; ++file) {
+           for(int file = FILE_A ; file <= FILE_H; ++file) {
                long t = to & fileMask(file);
                if (t==0) continue;
+               long f = from & fileMask(file);
                //   compare bottom-up
                long t0 = BitUtil.least(t);
-               long f = from & fileMask(file);
                long f0 = BitUtil.least(f);
                while(t0!=0) {
                    if (f0!=0 && f0 <= t0) {
                        //   advanced pawn; ok, already tested by advance counting
                        f0 = BitUtil.next(f,f0);
                        t0 = BitUtil.next(t,t0);
+                       from &= ~f0;
+                       to &= ~t0;
                    }
-                   else {
+//                   else {
                        //   backward pawn, or extra pawn; captures need to be accounted for
-                       return  resolve_one(from,to, t0, avail_captures);
-                   }
+//                   }
                }
            }
-           return true;
+           // now: 'to' contains only the critical pawns, 'from' their origin candidates
+           if (Long.bitCount(to) > avail_captures) return false;
+           if (Long.bitCount(to) > Long.bitCount(from)) return false;
+
+           //   resolve critical pawns by backtracking
+           return resolve_next(from,to,avail_captures);
        }
 
-        boolean resolve_one(long from, long to,
-                                 long square,
-                                 int avail_captures)
-        {
-            if (avail_captures < 0) return false;
-            if (square==0) return false;
+       boolean resolve_next(long from, long to, int avail_captures)
+       {
+            if (to==0) return true;
+            if (avail_captures <= 0) return false;
+            long t0 = BitUtil.least(to);
 
-            int file0 = (int)(square%8)+FILE_A;
-            //int row = (int)(square/8)+ROW_2;
-            long square2,to2;
-            for (int file1=file0+1; file1 <= FILE_H; ++file1)
-            {   // to the right
-                int fd = (file1-file0);
-                square2 = square >> fd*9;
-                if ((to&square2)==0) {
-                    //  try it
-                    to2 = to &~square | square2;
-                    if (resolve_file(from,to2,file0,avail_captures-fd))
+            // compute funnel mask
+            int file = BitUtil.indexOf(t0)%8;
+            int row = BitUtil.indexOf(t0)/8;
+            long row_mask = t0 >> (row*8);
+            //  find origin candidates
+            for(int row1=row-1; row1>=0 && (row-row1 <= avail_captures); row1--) {
+                //  widen mask by one
+                row_mask |= (row_mask << 1) & 0x00ffL;
+                row_mask |= (row_mask >> 1) & 0x00ffL;
+                // find candidates
+                long candidates = from & (row_mask << row1*8);
+                for(long c0=BitUtil.least(candidates); c0!=0; c0=BitUtil.next(c0,candidates)) {
+                    //  backtrack
+                    int cfile = BitUtil.indexOf(c0)%8;
+                    int dist = Math.abs(cfile-file);
+                    if (resolve_next(from&~c0, to&~t0,avail_captures-dist))
                         return true;
-                    break;
                 }
-                else {
-                    //  find prev free square
-                    square2 = BitUtil.prev(fileMask(file1),square2);
-                    to2 = to &~square | square2;
-                    if (square2!=0) {
-                        if (resolve_file(from,to2,file0,avail_captures-fd))
-                            return true;
-                    }
-                }
-            }
-            for (int file1=file0+1; file1 <= FILE_H; ++file1)
-            {   //  same to the left
-            //  todo
             }
             return false;
-        }
+       }
 
         public int mostAdvancedPawn() {
             if (EngUtil.isWhite(color)) {
@@ -662,7 +645,29 @@ public class MatSignatureV2 implements MatSignature
         return sw.toString();
     }
 
-    private void printPawnRow(PrintWriter buf, long bits, int row, int color, boolean longFormat) {
+    public static String longBoard(long board, char chr)
+    {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        printboard(pw,board,chr,true);
+        pw.flush();
+        return sw.toString();
+    }
+
+    public static void printboard(PrintWriter buf, long board, char chr, boolean longFormat)
+    {
+        for(int row=ROW_7; row >= ROW_2; row--) {
+            printPawnRow(buf, pawnRow(board, row), row, chr, longFormat);
+            if (longFormat)
+                buf.append("\n");
+            else if (row > ROW_2)
+                buf.append("/");
+        }
+        if (longFormat)
+            buf.println(" abcdefgh");
+    }
+
+    private static void printPawnRow(PrintWriter buf, long bits, int row, char chr, boolean longFormat) {
         int empty=0;
         if (longFormat)
             buf.print(EngUtil.rowChar(row));
@@ -672,7 +677,7 @@ public class MatSignatureV2 implements MatSignature
                     if (empty > 0) buf.print(empty);
                     empty=0;
                 }
-                buf.print(EngUtil.coloredPieceCharacter(PAWN|color));
+                buf.print(chr);
             }
             else if (longFormat)
                 buf.print(EngUtil.isLightSquare(square(file,row)) ? ' ':'.');
