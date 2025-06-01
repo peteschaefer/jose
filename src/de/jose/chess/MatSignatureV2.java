@@ -535,7 +535,9 @@ public class MatSignatureV2 implements MatSignature
 
        boolean resolve_captures(long from, long to, int avail_captures)
        {
+/*
            //   find critical pawns (backward, double)
+           if (to==0) return true;  //  nothing to be done
            if (avail_captures < 0) return false;
 
            for(int file = FILE_A ; file <= FILE_H; ++file) {
@@ -559,11 +561,12 @@ public class MatSignatureV2 implements MatSignature
                }
            }
            // now: 'to' contains only the critical pawns, 'from' their origin candidates
+ */
            if (Long.bitCount(to) > avail_captures) return false;
            if (Long.bitCount(to) > Long.bitCount(from)) return false;
 
            //   resolve critical pawns by backtracking
-           return resolve_next(from,to,avail_captures);
+           return resolve_next(from&~to,to&~from, avail_captures);
        }
 
        boolean resolve_next(long from, long to, int avail_captures)
@@ -577,14 +580,14 @@ public class MatSignatureV2 implements MatSignature
             int row = BitUtil.indexOf(t0)/8;
             long row_mask = t0 >> (row*8);
             //  find origin candidates
-            for(int row1=row-1; row1>=0 && (row-row1 <= avail_captures); row1--) {
+            for(int row1=row-1; row1>=0; row1--) {
                 //  widen mask by one
                 row_mask |= (row_mask << 1) & 0x00ffL;
                 row_mask |= (row_mask >> 1) & 0x00ffL;
                 // find candidates
                 long candidates = from & (row_mask << row1*8);
                 for(long c0=BitUtil.least(candidates); c0!=0; c0=BitUtil.next(c0,candidates)) {
-                    //  backtrack
+                    //  backtrack (todo try dist=0 first?)
                     int cfile = BitUtil.indexOf(c0)%8;
                     int dist = Math.abs(cfile-file);
                     if (resolve_next(from&~c0, to&~t0,avail_captures-dist))
