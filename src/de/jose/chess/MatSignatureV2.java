@@ -571,30 +571,35 @@ public class MatSignatureV2 implements MatSignature
 
        boolean resolve_next(long from, long to, int avail_captures)
        {
-            if (to==0) return true;
-            if (avail_captures <= 0) return false;
-            long t0 = BitUtil.least(to);
+           if (avail_captures < 0) return false;
+           if (to==0) return true;
+           if ((to&rowMask(ROW_2))!=0) return false;
+           //  pawns can not return to their home row; already checked above
+           //   pick next pawn for resolving; choose lowest rank (=least fan-out)
+           long sq = BitUtil.least(to);
+           to &= ~sq;
+           int file = FILE_A+BitUtil.indexOf(sq)%8;
+           int row = ROW_2+BitUtil.indexOf(sq)/8;
 
-            // compute funnel mask
-            int file = BitUtil.indexOf(t0)%8;
-            int row = BitUtil.indexOf(t0)/8;
-            long row_mask = t0 >> (row*8);
-            //  find origin candidates
-            for(int row1=row-1; row1>=0; row1--) {
-                //  widen mask by one
-                row_mask |= (row_mask << 1) & 0x00ffL;
-                row_mask |= (row_mask >> 1) & 0x00ffL;
-                // find candidates
-                long candidates = from & (row_mask << row1*8);
-                for(long c0=BitUtil.least(candidates); c0!=0; c0=BitUtil.next(c0,candidates)) {
-                    //  backtrack (todo try dist=0 first?)
-                    int cfile = BitUtil.indexOf(c0)%8;
-                    int dist = Math.abs(cfile-file);
-                    if (resolve_next(from&~c0, to&~t0,avail_captures-dist))
-                        return true;
-                }
-            }
-            return false;
+           //  try to resolve from current file
+           if (resolve_one(from,to, file, row-1, avail_captures))
+               return true;
+           //  try to resolve from nearby files
+           for(int d=1; ((row-d) >= ROW_2) && (d <= avail_captures); ++d) {
+               if (resolve_one(from,to, file+d, row-d, avail_captures-d))
+                   return true;
+               if (resolve_one(from,to,file-d,row-d,avail_captures-d))
+                   return true;
+           }
+           return false;
+       }
+
+       boolean resolve_one(long from, long to, int file, int row, int avail_captures) {
+            if (file<FILE_A || file>FILE_H) return false;
+            if (row<ROW_2) return false;
+            if (avail_captures < 0) return false;
+            long candidate = Long.highestOneBit(from & fileMask(file) & rowsMask(row));
+            return (candidate!=0) && resolve_next(from&~candidate,to,avail_captures);
        }
 
         public int mostAdvancedPawn() {
@@ -728,6 +733,9 @@ public class MatSignatureV2 implements MatSignature
     }
     static long rowMask(int row) {
         return 0x0ffL << rowOffset(row);
+    }
+    static long rowsMask(int row) {
+        return (0x1L << rowOffset(row+1)) - 1;
     }
 
     static long fileMask(int file) {
