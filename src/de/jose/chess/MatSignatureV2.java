@@ -240,11 +240,11 @@ public class MatSignatureV2 implements MatSignature
     {
         return  is_reachable(from.wfeat, to.wfeat) &&
                 is_reachable(from.bfeat, to.bfeat) &&
-                from.wfeat.resolve_captures(
+                from.wfeat.resolve_pawns(
                         from.wfeat.sig&PAWN_MASK,
                         to.wfeat.sig&PAWN_MASK,
                         from.bfeat.piece_cnt-to.bfeat.piece_cnt) &&
-                from.bfeat.resolve_captures(
+                from.bfeat.resolve_pawns(
                         BitUtil.reverseBits(from.bfeat.sig,48),
                         BitUtil.reverseBits(to.bfeat.sig,48),
                         from.wfeat.piece_cnt-to.wfeat.piece_cnt);
@@ -533,7 +533,7 @@ public class MatSignatureV2 implements MatSignature
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
 
-       boolean resolve_captures(long from, long to, int avail_captures)
+       boolean resolve_pawns(long from, long to, int avail_captures)
        {
 /*
            //   find critical pawns (backward, double)
@@ -591,6 +591,12 @@ public class MatSignatureV2 implements MatSignature
                if (resolve_one(from,to,file-d,row-d,avail_captures-d))
                    return true;
            }
+           /* todo if backtracking becomes too expensive, revert to counting
+                i.e. estimate lower bound on captures for remaining pawns
+                and find pawns that can not be resolved at all
+
+                this gives us false positives, but reduces computation
+            */
            return false;
        }
 

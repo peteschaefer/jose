@@ -235,7 +235,7 @@ class MatSignatureV2Test {
     @Test
     void testPawnCapture() {
         //  note: h-pawn compensates for advance counting,
-        //  s.t. we walk into the resolve_capture() branch
+        //  s.t. we walk into the resolve_pawns() branch
 
         //  a backward pawn
         assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1"));
@@ -250,6 +250,9 @@ class MatSignatureV2Test {
         //  with a more difficult explanation
         //  explanation fails b/cause of missing victims
         //  another explanation appears
+
+        //  two captures required
+        //  15(?) captures required
     }
 
     @Test
