@@ -436,6 +436,24 @@ class MatSignatureV2Test {
         assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2","rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",0));
     }
 
+    MatSignatureV2 getMatSignatureV2(String fen) {
+        pos.setup(fen);
+        return (MatSignatureV2) pos.computeMatSig();
+    }
+
+    @Test
+    void testBishops()
+    {
+        //  good, bad, ugly
+        assertTrue(getMatSignatureV2("rnbqk1nr/pppppppp/8/8/8/8/PPPPPPPP/RN1QKBNR w KQkq - 0 1").evenColouredBishops());
+        assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN1QKBNR w KQkq - 0 1").oppositeColouredBishops());
+
+        assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/4P3/P2P4/2P2PP1/1P5P/RN1QKBNR w KQkq - 0 1").goodBishop(WHITE));
+        assertTrue(getMatSignatureV2("rn1qkbnr/p3pppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(BLACK));
+        assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/4P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(WHITE));
+        assertTrue(getMatSignatureV2("rn1qk1nr/p2bpppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").goodBishop(BLACK));
+    }
+
     private static String print(String fen, MatSignatureV2 sig) {
         return "[" + fen + "]\n" + sig + "\n" + sig.toHexString();
     }

@@ -729,8 +729,8 @@ public class MatSignatureV2 implements MatSignature
     static long PAWN_MASK   = 0x0ffffffffffffL;
     static long PAWN_FILE   = 0x0101010101010101L;
     //  just the light-colored square (from a2-h2-a7-h7)
-    static long LIGHT_PAWN_MASK = 0x055aa55aa55aaL;
-    static long DARK_PAWN_MASK  = 0x0aa55aa55aa55L;
+    static long LIGHT_PAWN_MASK = 0x0aa55aa55aa55L;
+    static long DARK_PAWN_MASK  = 0x055aa55aa55aaL;
 
     //  next 10 bits encode piece count, 2 bits each
     static final int KNIGHT_OFFSET        = 48;
