@@ -6,6 +6,7 @@ import de.jose.Version;
 import de.jose.db.*;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PositionFilter;
+import de.jose.util.BitUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
+import static de.jose.chess.MatSignatureV2.PAWN_MASK;
+import static de.jose.chess.MatSignatureV2.longBoard;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
@@ -59,9 +62,16 @@ class MatSignatureV2Test {
     {
         public int moves, noisy;
         public MatSignature cutoff;
+        public long backtrackSum;
+        public int backtrackWatermark;
 
         public CountingBinReader(Position position) {
             super(position);
+        }
+
+        public void reset() {
+            moves = noisy = 0;
+            backtrackSum = backtrackWatermark = 0;
         }
 
         @Override
@@ -72,6 +82,11 @@ class MatSignatureV2Test {
                 if (cutoff!=null) {
                     MatSignature matSig = pos.getMatSig();
                     if (!matSig.canReach(cutoff)) eof=true;
+                    if (matSig instanceof MatSignatureV2) {
+                        int backtrackCount = ((MatSignatureV2) matSig).getBacktrackCount();
+                        backtrackWatermark = Math.max(backtrackWatermark, backtrackCount);
+                        backtrackSum += backtrackCount;
+                    }
                 }
             }
         }
@@ -119,17 +134,20 @@ class MatSignatureV2Test {
     }
 
     void launchDBServer() throws Exception {
-        if (Version.linux)
-            System.setProperty("java.library.path","lib/Linux_amd64");
-        if (Version.windows)
-            System.setProperty("java.library.path",".;lib/Windows");
+        if (Version.linux) {
+            System.setProperty("java.library.path", "lib/Linux_amd64");
+            System.setProperty("jose.datadir","/home/schaefer/src/jose/database");
+        }
+        if (Version.windows) {
+            System.setProperty("java.library.path", ".;lib/Windows");
+            System.setProperty("jose.datadir","C:\\dev\\jose\\packages\\jose-152-windows\\jose\\database");
+        }
         System.setProperty("jose.splash","off");
         System.setProperty("jose.console.output","true");
         System.setProperty("java.awt.headless","true");
 
         System.setProperty("jose.db","MySQL-standalone");
         System.setProperty("jose.db.port","3306");
-        System.setProperty("jose.datadir","C:\\dev\\jose\\packages\\jose-152-windows\\jose\\database");
         System.setProperty("jose.splash","false");
         System.setProperty("jose.console.output","true");
         Application app = new Application();
@@ -179,6 +197,46 @@ class MatSignatureV2Test {
     }
 
     @Test
+    void testPrint() {
+        String fen = "2r1r1n1/p2b1p1k/2nq3p/1pp1pPbB/3pP3/PP1P3P/1BPN1PQK/R5R1 w - - 3 23";
+        pos.setup(fen);
+        MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig().clone();
+
+        long wsig = sig.getWhiteSignature()&PAWN_MASK;
+        long bsig = sig.getBlackSignature()&PAWN_MASK;
+        System.out.println(longBoard(wsig,'P'));
+        System.out.println(longBoard(bsig,'p'));
+
+        assertEquals("7. . . . \n" +
+                "6 . . . .\n" +
+                "5. . .P. \n" +
+                "4 . .P. .\n" +
+                "3PP.P. .P\n" +
+                "2 .P. P .\n" +
+                " abcdefgh\n",longBoard(wsig,'P'));
+        assertEquals("7p . .p. \n" +
+                "6 . . . p\n" +
+                "5.pp p . \n" +
+                "4 . p . .\n" +
+                "3. . . . \n" +
+                "2 . . . .\n" +
+                " abcdefgh\n", longBoard(bsig,'p'));
+
+        //  black rotated
+        long brotsig = (BitUtil.reverseBits(bsig)>>16)&PAWN_MASK;
+        assertTrue((brotsig&~PAWN_MASK) == 0);
+        assertEquals(Long.bitCount(bsig),Long.bitCount(brotsig));
+        System.out.println(longBoard(brotsig,'p'));
+        assertEquals("7. . . . \n" +
+                "6 . . . .\n" +
+                "5. . p . \n" +
+                "4 . p pp.\n" +
+                "3p . . . \n" +
+                "2 .p. . p\n" +
+                " abcdefgh\n",longBoard(brotsig,'p'));
+    }
+
+    @Test
     void testExcessivePromotions() throws Exception {
         String fen = "QQ3QQ1/8/8/5K2/3k4/8/8/8 b - - 0 81";
         pos.setup(fen);
@@ -220,7 +278,7 @@ class MatSignatureV2Test {
         assertFalse(from.canReach(goal));
     }
 
-    boolean canReach(String from, String to) {
+    boolean canReach(String from, String to, int backtracks) {
         pos.setup(from);
         MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
         pos.setup(to);
@@ -232,8 +290,7 @@ class MatSignatureV2Test {
         System.out.println("\n");
         boolean result = sig1.canReach(sig2);
         System.out.println("[backtracks="+sig1.backtrack+"]");
-        //  we want that the conclusion was derived by backtracking (not by a counting argument)
-        assertTrue(sig1.backtrack > 0);
+        assertEquals(backtracks,sig1.backtrack);
         System.out.println("\n\n");
         return result;
     }
@@ -244,30 +301,25 @@ class MatSignatureV2Test {
         //  s.t. we walk into the resolve_pawns() branch
 
         //  a backward pawn
-        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1"));
+        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1", 2));
         //  an extra pawn
-        assertFalse(canReach("7k/8/8/3P4/8/7P/7P/7K w - - 0 1","6rk/8/8/3P4/3P4/8/7P/7K w - - 0 1"));
+        assertFalse(canReach("6rk/8/8/3P4/8/7P/7P/7K w - - 0 1","7k/8/8/3P4/3P4/8/7P/7K w - - 0 1", 1));
         //  a less obvious backward pawn
-        assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1"));
-
+        assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
         //  ...with an explanation by capture
-        assertTrue(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","r6k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1"));
-
-        //  with a more difficult explanation
-        //  explanation fails b/cause of missing victims
-        //  another explanation appears
-
+        assertTrue(canReach("r6k/3P4/3P4/8/3P4/8/2P4P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
         //  two captures required
-        assertTrue(canReach("7k/8/8/8/8/8/2PP4/7K w - - 0 1","7k/8/8/8/8/3PP3/8/7K w - - 0 1"));
+        assertTrue(canReach("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1","7k/8/8/8/8/3PP3/8/7K w - - 0 1", 3));
 
         //  15 captures on a-file. can be resolved unambiguously
-        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1"));
-        //  same, but fails by counting victims
-        assertTrue(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1"));
-        //  9 captures on d-file; fails by capture count, but only after exhausting backtracking ?
-        assertTrue(canReach("rnbqkb1r/pppppppp/8/8/8/7P/PPPPPP1P/7K w - - 0 1", "r1bq1b1r/3P4/3P1k2/3P4/3P4/3P3P/3P3P/7K w - - 0 1"));
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
+        //  mirrored
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/2PPPPPP/7K w - - 0 1",   "4k3/7P/7P/7P/7P/7P/7P/7K w - - 0 1", 5));
+        //  same, but fails by counting victims -> we need no backtracking at all
+        assertFalse(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 0));
 
-        //  15(?) captures required
+        //  9 captures on d-file; fails by capture count, but only after exhaustive backtracking !
+        assertFalse(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/7K w - - 0 1", "r1bq1bnr/3P4/P2P1kP1/3P4/3P4/3P4/3P4/7K w - - 0 1", 245));
     }
 
     @Disabled("requires a Gigabase")
@@ -294,7 +346,7 @@ class MatSignatureV2Test {
         System.out.println("["+i+" games replayed]");
     }
 
-    @Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
+    //@Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
     @Test
     void testCutoffCount() throws Exception
     {
@@ -305,29 +357,29 @@ class MatSignatureV2Test {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
         String endgame2 = "8/8/R1bkp3/3p1rKp/3B4/2P5/8/8 w - - 10 67";
 
-        int offset = 14800000;
+        int offset = 0;//14800000;
         int limit = 1000000;
         withDBServer();
-//        System.out.println("[unfiltered - all games]");
-//        testCutoff(null,null, 0,0);
-//        System.out.println("[unfiltered - 1M games]");
-//        testCutoff(null,null, 14800000,1000000);
-//        System.out.println("[initial - V1]");
-//        testCutoff(initial,MatSignatureV1.class, offset,limit);
-//        System.out.println("[initial - V2]");
-//        testCutoff(initial,MatSignatureV2.class, offset,limit);
-//        System.out.println("[middle game - V1]");
-//        testCutoff(middle1,MatSignatureV1.class, offset,limit);
+        System.out.println("[unfiltered - all games]");
+        testCutoff(null,null, 0,0);
+        System.out.println("[unfiltered - 1M games]");
+        testCutoff(null,null, 14800000,1000000);
+        System.out.println("[initial - V1]");
+        testCutoff(initial,MatSignatureV1.class, offset,limit);
+        System.out.println("[initial - V2]");
+        testCutoff(initial,MatSignatureV2.class, offset,limit);
+        System.out.println("[middle game - V1]");
+        testCutoff(middle1,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
         testCutoff(middle1,MatSignatureV2.class, offset,limit);
-//        System.out.println("[end game - V1]");
-//        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
+        System.out.println("[end game - V1]");
+        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
         testCutoff(endgame1,MatSignatureV2.class, offset,limit);
     }
 
     void testCutoff(String queryFen, Class matsigClass, int offset, int limit) throws SQLException {
-        counter.moves = counter.noisy = 0;
+        counter.reset();
         if (queryFen != null && matsigClass!=null) {
             pos.setup(queryFen);
             pos.useMatSignature(matsigClass);
@@ -350,6 +402,9 @@ class MatSignatureV2Test {
         System.out.println("["+counter.moves+" moves]");
         System.out.println("["+counter.noisy+" noisy moves]");
         System.out.println("["+time/1000.0+" secs]");
+        System.out.println("["+ counter.backtrackWatermark+" max. backtrack]");
+        System.out.println("["+ ((double)counter.backtrackSum/counter.noisy)+" avg. backtrack]");
+        System.out.println("\n");
     }
 
     private static ResultSet selectGames(int offset, int limit) throws SQLException

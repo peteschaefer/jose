@@ -88,11 +88,12 @@ public class BitUtil
                 | ((x & 0x5555555555555555L) << 1);
     }
     public static long reverseBits(long x) {
-        return reverse1(reverse2(reverse4(reverse8(reverse16(reverse32(x))))));
+        x = reverse32(x);
+        x = reverse16(x);
+        x = reverse8(x);
+        x = reverse4(x);
+        x = reverse2(x);
+        x = reverse1(x);
+        return x;
     }
-    public static long reverseBits(long x, int bits) {
-        long mask = (1L << bits) - 1;
-        return reverseBits(x & mask) >> bits;
-    }
-
 }

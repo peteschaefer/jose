@@ -156,6 +156,7 @@ public class MatSignatureV2 implements MatSignature
 
     public long getWhiteSignature() { return wfeat.sig; }
     public long getBlackSignature() { return bfeat.sig; }
+    public int getBacktrackCount() { return backtrack; }
 
     public void clear()  {
         wfeat.clear();
@@ -246,11 +247,11 @@ public class MatSignatureV2 implements MatSignature
                 from.wfeat.resolve_pawns(
                         from.wfeat.sig&PAWN_MASK,
                         to.wfeat.sig&PAWN_MASK,
-                        from.bfeat.piece_cnt-to.bfeat.piece_cnt) &&
+                        (from.bfeat.piece_cnt+from.bfeat.pawnCount()) - (to.bfeat.piece_cnt+to.bfeat.pawnCount())) &&
                 from.bfeat.resolve_pawns(
-                        BitUtil.reverseBits(from.bfeat.sig,48),
-                        BitUtil.reverseBits(to.bfeat.sig,48),
-                        from.wfeat.piece_cnt-to.wfeat.piece_cnt);
+                        (BitUtil.reverseBits(from.bfeat.sig)>>16) &PAWN_MASK,
+                        (BitUtil.reverseBits(to.bfeat.sig)>>16)&PAWN_MASK,
+                        (from.wfeat.piece_cnt+from.wfeat.pawnCount()) - (to.wfeat.piece_cnt+to.wfeat.pawnCount()));
         //  reverse (mirror) bits for black
     }
 
