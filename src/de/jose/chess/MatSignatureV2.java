@@ -81,6 +81,8 @@ public class MatSignatureV2 implements MatSignature
 {
     private Features wfeat = new Features(WHITE);
     private Features bfeat = new Features(BLACK);
+    //  for debuggin
+    public int backtrack=0;
 
     // --------------------------------------
     //      Constructors
@@ -238,6 +240,7 @@ public class MatSignatureV2 implements MatSignature
 
     public static boolean is_reachable(MatSignatureV2 from, MatSignatureV2 to)
     {
+        from.backtrack=0;
         return  is_reachable(from.wfeat, to.wfeat) &&
                 is_reachable(from.bfeat, to.bfeat) &&
                 from.wfeat.resolve_pawns(
@@ -533,37 +536,35 @@ public class MatSignatureV2 implements MatSignature
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
 
+       int PAWN_CAPTURES[][] = new int[][] {
+               /*a-file*/ {0,0,1,3,6,10,15},
+               /*b-file*/ {0,0,1,2,4,7,11},
+               /*c-file*/ {0,0,1,2,4,6,9},
+               /*d-file*/ {0,0,1,2,4,6,9}
+       };
+
+       int min_captures(int file, int pawns)
+       {
+           //   symmetrical around d/e filea
+           assert(pawns>=0 && pawns<=6);
+           if (file>=FILE_E)
+               file = FILE_H-file;
+           else
+               file = file-FILE_A;
+           return PAWN_CAPTURES[file][pawns];
+       }
+
        boolean resolve_pawns(long from, long to, int avail_captures)
        {
-/*
-           //   find critical pawns (backward, double)
-           if (to==0) return true;  //  nothing to be done
-           if (avail_captures < 0) return false;
-
-           for(int file = FILE_A ; file <= FILE_H; ++file) {
-               long t = to & fileMask(file);
-               if (t==0) continue;
-               long f = from & fileMask(file);
-               //   compare bottom-up
-               long t0 = BitUtil.least(t);
-               long f0 = BitUtil.least(f);
-               while(t0!=0) {
-                   if (f0!=0 && f0 <= t0) {
-                       //   advanced pawn; ok, already tested by advance counting
-                       f0 = BitUtil.next(f,f0);
-                       t0 = BitUtil.next(t,t0);
-                       from &= ~f0;
-                       to &= ~t0;
-                   }
-//                   else {
-                       //   backward pawn, or extra pawn; captures need to be accounted for
-//                   }
-               }
-           }
-           // now: 'to' contains only the critical pawns, 'from' their origin candidates
- */
-           if (Long.bitCount(to) > avail_captures) return false;
            if (Long.bitCount(to) > Long.bitCount(from)) return false;
+
+           //   do a counting on files for captures that occurred between 'from' and 'to'
+           int add_caps = 0;
+           for(int file=FILE_A; file <= FILE_H; ++file) {
+               add_caps += Math.max(0,  min_captures(file, Long.bitCount(to&fileMask(file)))
+                                      - min_captures(file, Long.bitCount(from&fileMask(file))));
+           }
+           if (add_caps > avail_captures) return false;
 
            //   resolve critical pawns by backtracking
            return resolve_next(from&~to,to&~from, avail_captures);
@@ -580,6 +581,7 @@ public class MatSignatureV2 implements MatSignature
            to &= ~sq;
            int file = FILE_A+BitUtil.indexOf(sq)%8;
            int row = ROW_2+BitUtil.indexOf(sq)/8;
+           backtrack++;
 
            //  try to resolve from current file
            if (resolve_one(from,to, file, row-1, avail_captures))
@@ -605,7 +607,8 @@ public class MatSignatureV2 implements MatSignature
             if (row<ROW_2) return false;
             if (avail_captures < 0) return false;
             long candidate = Long.highestOneBit(from & fileMask(file) & rowsMask(row));
-            return (candidate!=0) && resolve_next(from&~candidate,to,avail_captures);
+            if (candidate==0) return false;
+            return resolve_next(from&~candidate,to,avail_captures);
        }
 
         public int mostAdvancedPawn() {

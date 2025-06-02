@@ -40,7 +40,6 @@ public class BitUtil
     public static long clear6(long value, int offset) {
         return (value & ~(0x3fL<<offset));
     }
-    public static long clear6(long value, int offset) { return (value & ~(0x3fL<<offset)); }
 
     public static long clear(long value, long mask) {
         return value & ~mask;

@@ -8,6 +8,7 @@ import de.jose.pgn.BinReader;
 import de.jose.pgn.PositionFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -228,8 +229,13 @@ class MatSignatureV2Test {
         sig1.print(System.out,WHITE,true);
         System.out.println("\n-->");
         sig2.print(System.out,WHITE,true);
+        System.out.println("\n");
+        boolean result = sig1.canReach(sig2);
+        System.out.println("[backtracks="+sig1.backtrack+"]");
+        //  we want that the conclusion was derived by backtracking (not by a counting argument)
+        assertTrue(sig1.backtrack > 0);
         System.out.println("\n\n");
-        return sig1.canReach(sig2);
+        return result;
     }
 
     @Test
@@ -240,7 +246,7 @@ class MatSignatureV2Test {
         //  a backward pawn
         assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1"));
         //  an extra pawn
-        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/3P4/3P4/8/7P/7K w - - 0 1"));
+        assertFalse(canReach("7k/8/8/3P4/8/7P/7P/7K w - - 0 1","6rk/8/8/3P4/3P4/8/7P/7K w - - 0 1"));
         //  a less obvious backward pawn
         assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1"));
 
@@ -252,9 +258,19 @@ class MatSignatureV2Test {
         //  another explanation appears
 
         //  two captures required
+        assertTrue(canReach("7k/8/8/8/8/8/2PP4/7K w - - 0 1","7k/8/8/8/8/3PP3/8/7K w - - 0 1"));
+
+        //  15 captures on a-file. can be resolved unambiguously
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1"));
+        //  same, but fails by counting victims
+        assertTrue(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1"));
+        //  9 captures on d-file; fails by capture count, but only after exhausting backtracking ?
+        assertTrue(canReach("rnbqkb1r/pppppppp/8/8/8/7P/PPPPPP1P/7K w - - 0 1", "r1bq1b1r/3P4/3P1k2/3P4/3P4/3P3P/3P3P/7K w - - 0 1"));
+
         //  15(?) captures required
     }
 
+    @Disabled("requires a Gigabase")
     @Test
     void testDBGames() throws Exception
     {
@@ -278,6 +294,7 @@ class MatSignatureV2Test {
         System.out.println("["+i+" games replayed]");
     }
 
+    @Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
     @Test
     void testCutoffCount() throws Exception
     {
