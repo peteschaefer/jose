@@ -17,7 +17,10 @@ import de.jose.chess.MatSignature;
 import de.jose.chess.MatSignatureV1;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
-import de.jose.db.*;
+import de.jose.db.DBAdapter;
+import de.jose.db.JoConnection;
+import de.jose.db.JoStatement;
+import de.jose.db.Setup;
 import de.jose.pgn.PositionFilter;
 import de.jose.window.JoDialog;
 
@@ -33,14 +36,14 @@ import java.sql.SQLException;
  * @author Peter Sch�fer
  */
 
-public class Crossover1010
+public class Crossover1011
 {
 	public static int crossOver(int version, JoConnection conn, Config config) throws Exception
 	{
 		Dialog dlg = null;
 		try {
 			Setup setup = new Setup(config,"MAIN",conn);
-			if (version < 1010) {
+			if (version < 1011) {
 
 
 				// ----------------------------------------------------
@@ -56,20 +59,12 @@ public class Crossover1010
 				dlg.setVisible(true);
 				dlg.paint(dlg.getGraphics());
 
-				String sql1 = "ALTER TABLE MoreGame ADD COLUMN WhiteSignature BIGINT NOT NULL DEFAULT 0 AFTER INFO";
-				String sql2 = "ALTER TABLE MoreGame ADD COLUMN BlackSignature BIGINT NOT NULL DEFAULT 0 AFTER WhiteSignature";
-
-				DBAdapter adapter = JoConnection.getAdapter();
-				if (!adapter.existsColumn("MAIN","MoreGame","WhiteSignature"))
-					conn.executeUpdate(sql1);
-				if (!adapter.existsColumn("MAIN","MoreGame","BlackSignature"))
-					conn.executeUpdate(sql2);
-				//	fill it - superseded by Crossover1011
-				//fillMatSignatures(conn);
 			}
 
-			setup.setTableVersion(conn,"MAIN","MoreGame",103);
-			setup.setSchemaVersion(conn,"MAIN",version=1010);
+			updateMatSignatureV2(conn,"jose.MoreGame");
+
+			setup.setTableVersion(conn,"MAIN","MoreGame",104);
+			setup.setSchemaVersion(conn,"MAIN",version=1011);
 			return version;
 
 		} finally {
@@ -77,39 +72,12 @@ public class Crossover1010
 		}
 	}
 
-	public static void fillMatSignatures(JoConnection conn) throws SQLException {
-		String select = "SELECT GId, FEN, Bin, WhiteSignature, BlackSignature from MoreGame"
-						+" WHERE WhiteSignature=0 OR BlackSignature=0 "
-						+" FOR UPDATE";
-		JoStatement stm = new JoStatement(conn,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);
-		ResultSet res = stm.executeQuery(select);
-		while (res.next()) {
-			int GId = res.getInt(1);
-			String fen = res.getString(2);
-			byte[] bin = res.getBytes(3);
-
-			MatSignature matsig;
-			try {
-				matsig = computeMatSignature(fen, bin);
-			} catch(Throwable e) {
-				matsig = new MatSignatureV1(0,0);
-				System.err.println("[dropped mat signature "+GId+"]");
-			}
-
-			res.updateLong(4, matsig.getWhiteSignature());
-			res.updateLong(5, matsig.getBlackSignature());
-			res.updateRow();
-			/*	not sure if updatable result set is really efficient.
-				Maybe use a temporary (memory) table and update en gros:
-
-				UPDATE MoreGame JOIN Temp_NewMatSig as T ON MoreGame.GId=T.GId
-				SET MoreGame.WhiteSignature = T.WhiteSignature,
-					MoreGame.BlackSignature = T.BlackSignature
-
-				(for future changes on MatSignature, maybe)
-			 */
-		}
+	public static void updateMatSignatureV2(JoConnection conn, String tableName)
+	{
+		String getall = "SELECT GId, FEN,Bin FROM "+tableName+" LIMIT 1000";	// todo no limit
+		//	todo store results in memory temp table; update bulk at last
 	}
+
 
 	private static PositionFilter posf = new PositionFilter() {
 		@Override
@@ -128,10 +96,8 @@ public class Crossover1010
 			//  no need for hash keys
 			pos.setOption(Position.INCREMENT_HASH,false);
 			pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
-			//	no need for incremental signature
-			pos.setOption(Position.INCREMENT_SIGNATURE,false);
-			//	TODO Pawn Hash
-			//  don't calculate castling & ep privileges (cause they are not known in the target position)
+			//	need for incremental signature
+			pos.setOption(Position.INCREMENT_SIGNATURE,true);
 		}
 	};
 

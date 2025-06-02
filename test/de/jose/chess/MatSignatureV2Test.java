@@ -395,7 +395,7 @@ class MatSignatureV2Test {
             byte[] bin = res.getBytes(3);
             //long whiteSignature = rs.getLong(4);
             //long blackSignature = rs.getLong(5);
-            counter.read(bin,0, null,0, FEN,true,true);
+            counter.read(bin,0, null,0, FEN,true,false);
         }
         long time = System.currentTimeMillis()-startTime;
         System.out.println("["+games+" games replayed]");
@@ -462,7 +462,7 @@ class MatSignatureV2Test {
     {
         reader.sigs.clear();
         reader.fens.clear();
-        reader.read(bin,0, null,0, initFen, true,true);
+        reader.read(bin,0, null,0, initFen, true,false);
         //  reachability:
         for(int i=1; i < reader.sigs.size(); i++) {
             MatSignatureV2 sigi = reader.sigs.get(i);

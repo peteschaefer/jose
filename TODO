@@ -91,10 +91,6 @@ Maintenance:
         [x] db games (incremental mode)
     [x] store padv_base = computePawnAdvance(sig), padv_lower = base+promo_lower, padv_upper = base+promo_upper
     [x] extended pawn structure test
-        - find backward and double pawsn
-        - track capture sequence: left, or right, backtrace.
-        (-advances alreay checked by counting
-        [x] test cases
     [x] opposite bishop, even bishop
     [x] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
@@ -123,6 +119,8 @@ Maintenance:
 [ ] parallelize
     [ ] find task bounds by index
     [ ] results stored in tbb::concurrent_queue
+[ ] unit test
+[ ] sanitizers
 [ ] MatSignature in c++
 
 ==== Interesting New Features
