@@ -94,7 +94,8 @@ Maintenance:
     [x] opposite bishop, even bishop
     [x] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [ ] cross-over (faster this time, batched pll + temp table?)
+    [x] cross-over (faster this time, batched pll + temp table)
+    [ ] cross-over .jose files
 
 
 [ ] search pawn structure
