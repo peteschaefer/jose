@@ -186,6 +186,10 @@ Maintenance:
 
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode
+[ ] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
+             causes easylink.dll to crash when called from jre/bin/java.exe.
+             *Fortunately* not from jose.exe b/c it pulls the system-supplied msvcp140.dll.
+
 
 [ ] package stockfish network files
     seems like stockfish can run withouth; but not arm version?
