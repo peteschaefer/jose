@@ -64,27 +64,27 @@ public class BitUtil
     }
 
     public static long reverse32(long x) {
-        return    ((x & 0xffffffff00000000L) >> 32)
+        return    ((x >> 32) & 0x00000000ffffffffL)
                 | ((x & 0x00000000ffffffffL) << 32);
     }
     public static long reverse16(long x) {
-        return    ((x & 0xffff0000ffff0000L) >> 16)
+        return    ((x >> 16) & 0x0000ffff0000ffffL)
                 | ((x & 0x0000ffff0000ffffL) << 16);
     }
     public static long reverse8(long x) {
-        return    ((x & 0xff00ff00ff00ff00L) >> 8)
+        return    ((x >> 8) & 0x00ff00ff00ff00ffL)
                 | ((x & 0x00ff00ff00ff00ffL) << 8);
     }
     public static long reverse4(long x) {
-        return    ((x & 0xf0f0f0f0f0f0f0f0L) >> 4)
+        return    ((x >> 4) & 0x0f0f0f0f0f0f0f0fL)
                 | ((x & 0x0f0f0f0f0f0f0f0fL) << 4);
     }
     public static long reverse2(long x) {
-        return    ((x & 0xccccccccccccccccL) >> 2)
+        return    ((x >> 2) & 0x3333333333333333L)
                 | ((x & 0x3333333333333333L) << 2);
     }
     public static long reverse1(long x) {
-        return    ((x & 0xaaaaaaaaaaaaaaaaL) >> 1)
+        return    ((x >> 1) & 0x5555555555555555L)
                 | ((x & 0x5555555555555555L) << 1);
     }
     public static long reverseBits(long x) {

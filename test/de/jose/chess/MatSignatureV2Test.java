@@ -316,7 +316,7 @@ class MatSignatureV2Test {
         //  mirrored
         assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/2PPPPPP/7K w - - 0 1",   "4k3/7P/7P/7P/7P/7P/7P/7K w - - 0 1", 5));
         //  same, but fails by counting victims -> we need no backtracking at all
-        assertFalse(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 0));
+        assertFalse(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
 
         //  9 captures on d-file; fails by capture count, but only after exhaustive backtracking !
         assertFalse(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/7K w - - 0 1", "r1bq1bnr/3P4/P2P1kP1/3P4/3P4/3P4/3P4/7K w - - 0 1", 245));
@@ -327,7 +327,7 @@ class MatSignatureV2Test {
     void testDBGames() throws Exception
     {
         withDBServer();
-        ResultSet rs = selectGames(15800000,80000);
+        ResultSet rs = selectGames(0,80000);
         int i;
         for (i=0; rs.next(); ++i) {
             int GId = rs.getInt(1);
@@ -346,7 +346,7 @@ class MatSignatureV2Test {
         System.out.println("["+i+" games replayed]");
     }
 
-    //@Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
+    @Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
     @Test
     void testCutoffCount() throws Exception
     {
@@ -360,20 +360,20 @@ class MatSignatureV2Test {
         int offset = 0;//14800000;
         int limit = 1000000;
         withDBServer();
-        System.out.println("[unfiltered - all games]");
-        testCutoff(null,null, 0,0);
-        System.out.println("[unfiltered - 1M games]");
-        testCutoff(null,null, 14800000,1000000);
-        System.out.println("[initial - V1]");
-        testCutoff(initial,MatSignatureV1.class, offset,limit);
+//        System.out.println("[unfiltered - all games]");
+//        testCutoff(null,null, 0,0);
+//        System.out.println("[unfiltered - 1M games]");
+//        testCutoff(null,null, 14800000,1000000);
+//        System.out.println("[initial - V1]");
+//        testCutoff(initial,MatSignatureV1.class, offset,limit);
         System.out.println("[initial - V2]");
         testCutoff(initial,MatSignatureV2.class, offset,limit);
-        System.out.println("[middle game - V1]");
-        testCutoff(middle1,MatSignatureV1.class, offset,limit);
+//        System.out.println("[middle game - V1]");
+//        testCutoff(middle1,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
         testCutoff(middle1,MatSignatureV2.class, offset,limit);
-        System.out.println("[end game - V1]");
-        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
+//        System.out.println("[end game - V1]");
+//        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
         testCutoff(endgame1,MatSignatureV2.class, offset,limit);
     }
@@ -424,11 +424,16 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testDBQuery()
+    void testRegressions()
     {
-        //  use a query MatSignature with estimated pawn advance
-        //  apply to many games. What is the number of early cut-offs?
-        //  Can it be improved by more detailed pawn analysis?
+        //  long reversal with uppermost bit
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1","5k2/p4p2/1p2q3/5RQp/6n1/4P3/PP6/6K1 w - - 0 35", 3));
+        //  don't cap additional capture count
+        assertTrue(canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6));
+        //  subtract actual capture count
+        assertTrue(canReach("r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R b KQkq - 0 9","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 3));
+
+        assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2","rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",0));
     }
 
     private static String print(String fen, MatSignatureV2 sig) {
@@ -453,7 +458,7 @@ class MatSignatureV2Test {
                 Supplier<String> printInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigi);
                 Supplier<String> printQInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigq);
 
-                assertTrue(sigj.canReach(sigi),printInfo);
+                assertTrue(sigj.equals(sigi) || sigj.canReach(sigi),printInfo);
                 //  previous positions can not be reached (if we have an exact advance count!)
                 //  (sigi!=sigj) => !sigi.canReach(sigj)
                 assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),printInfo);

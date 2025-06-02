@@ -242,17 +242,23 @@ public class MatSignatureV2 implements MatSignature
     public static boolean is_reachable(MatSignatureV2 from, MatSignatureV2 to)
     {
         from.backtrack=0;
-        return  is_reachable(from.wfeat, to.wfeat) &&
-                is_reachable(from.bfeat, to.bfeat) &&
-                from.wfeat.resolve_pawns(
+        boolean wreach = is_reachable(from.wfeat, to.wfeat);
+        if (!wreach) return false;
+        boolean breach = is_reachable(from.bfeat, to.bfeat);
+        if (!breach) return false;
+        wreach = from.wfeat.resolve_pawns(
                         from.wfeat.sig&PAWN_MASK,
                         to.wfeat.sig&PAWN_MASK,
-                        (from.bfeat.piece_cnt+from.bfeat.pawnCount()) - (to.bfeat.piece_cnt+to.bfeat.pawnCount())) &&
-                from.bfeat.resolve_pawns(
+                        15-(from.bfeat.piece_cnt+from.bfeat.pawnCount()),
+        (from.bfeat.piece_cnt+from.bfeat.pawnCount()) - (to.bfeat.piece_cnt+to.bfeat.pawnCount()));
+        if (!wreach) return false;
+        breach = from.bfeat.resolve_pawns(
                         (BitUtil.reverseBits(from.bfeat.sig)>>16) &PAWN_MASK,
                         (BitUtil.reverseBits(to.bfeat.sig)>>16)&PAWN_MASK,
+                        15-(from.wfeat.piece_cnt+from.wfeat.pawnCount()),
                         (from.wfeat.piece_cnt+from.wfeat.pawnCount()) - (to.wfeat.piece_cnt+to.wfeat.pawnCount()));
-        //  reverse (mirror) bits for black
+        return breach;
+        /** of course, the above could be placed in a single statement; split it just for better debuggability */
     }
 
     public static boolean is_reverse_reachable(MatSignatureV2 from, MatSignatureV2 to)
@@ -539,14 +545,13 @@ public class MatSignatureV2 implements MatSignature
 
        int PAWN_CAPTURES[][] = new int[][] {
                /*a-file*/ {0,0,1,3,6,10,15},
-               /*b-file*/ {0,0,1,2,4,7,11},
-               /*c-file*/ {0,0,1,2,4,6,9},
-               /*d-file*/ {0,0,1,2,4,6,9}
+               /*b-file*/ {0,0,1,2,4, 7,11},
+               /*c-file*/ {0,0,1,2,4, 6, 9},
+               /*d-file*/ {0,0,1,2,4, 6, 9}
        };
 
        int min_captures(int file, int pawns)
-       {
-           //   symmetrical around d/e filea
+       {   //   symmetrical around d/e filea
            assert(pawns>=0 && pawns<=6);
            if (file>=FILE_E)
                file = FILE_H-file;
@@ -555,17 +560,19 @@ public class MatSignatureV2 implements MatSignature
            return PAWN_CAPTURES[file][pawns];
        }
 
-       boolean resolve_pawns(long from, long to, int avail_captures)
+       boolean resolve_pawns(long from, long to, int prev_captures, int avail_captures)
        {
            if (Long.bitCount(to) > Long.bitCount(from)) return false;
 
            //   do a counting on files for captures that occurred between 'from' and 'to'
            int add_caps = 0;
            for(int file=FILE_A; file <= FILE_H; ++file) {
-               add_caps += Math.max(0,  min_captures(file, Long.bitCount(to&fileMask(file)))
-                                      - min_captures(file, Long.bitCount(from&fileMask(file))));
+               add_caps += min_captures(file, Long.bitCount(to&fileMask(file)));
+                           //- min_captures(file, Long.bitCount(from&fileMask(file)));
            }
-           if (add_caps > avail_captures) return false;
+           add_caps -= prev_captures;
+           if (add_caps > avail_captures)
+               return false;
 
            //   resolve critical pawns by backtracking
            return resolve_next(from&~to,to&~from, avail_captures);
@@ -598,7 +605,7 @@ public class MatSignatureV2 implements MatSignature
                 i.e. estimate lower bound on captures for remaining pawns
                 and find pawns that can not be resolved at all
 
-                this gives us false positives, but reduces computation
+                this would give us false positives, but reduces computation
             */
            return false;
        }
@@ -867,7 +874,7 @@ public class MatSignatureV2 implements MatSignature
         long hometo = pawnRow(to.sig,homerow);
 
         if (minus8(hometo,homefrom) != 0)
-            return false; //  pawns must not return to the home row
+            return false; //  pawns must not return to the home row; never reached ?
         //  more detailed pawn reachability is done in resolve_captures()
 
         return true;
