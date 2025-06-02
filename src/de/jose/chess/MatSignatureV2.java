@@ -246,17 +246,18 @@ public class MatSignatureV2 implements MatSignature
         if (!wreach) return false;
         boolean breach = is_reachable(from.bfeat, to.bfeat);
         if (!breach) return false;
+        //  post-conditiion: all .piece_cnt are up to date. and will be used below.
         wreach = from.wfeat.resolve_pawns(
                         from.wfeat.sig&PAWN_MASK,
                         to.wfeat.sig&PAWN_MASK,
-                        15-(from.bfeat.piece_cnt+from.bfeat.pawnCount()),
-        (from.bfeat.piece_cnt+from.bfeat.pawnCount()) - (to.bfeat.piece_cnt+to.bfeat.pawnCount()));
+                        15-from.bfeat.totalPieceCount(),
+            from.bfeat.totalPieceCount() - to.bfeat.totalPieceCount());
         if (!wreach) return false;
         breach = from.bfeat.resolve_pawns(
                         (BitUtil.reverseBits(from.bfeat.sig)>>16) &PAWN_MASK,
                         (BitUtil.reverseBits(to.bfeat.sig)>>16)&PAWN_MASK,
-                        15-(from.wfeat.piece_cnt+from.wfeat.pawnCount()),
-                        (from.wfeat.piece_cnt+from.wfeat.pawnCount()) - (to.wfeat.piece_cnt+to.wfeat.pawnCount()));
+                        15-from.wfeat.totalPieceCount(),
+                        from.wfeat.totalPieceCount() - to.wfeat.totalPieceCount());
         return breach;
         /** of course, the above could be placed in a single statement; split it just for better debuggability */
     }
@@ -323,6 +324,10 @@ public class MatSignatureV2 implements MatSignature
         int pawnCount()         { return MatSignatureV2.pawnCount(sig); }
         int lightPawnCount()    { return MatSignatureV2.lightPawnCount(sig); }
         int darkPawnCount()     { return MatSignatureV2.darkPawnCount(sig); }
+
+        int totalPieceCount() {
+            return piece_cnt+pawnCount();
+        }
 
         boolean good_bishop()
         {
@@ -564,12 +569,10 @@ public class MatSignatureV2 implements MatSignature
        {
            if (Long.bitCount(to) > Long.bitCount(from)) return false;
 
-           //   do a counting on files for captures that occurred between 'from' and 'to'
+           //   do a counting on files for captures that must occur between 'from' and 'to'
            int add_caps = 0;
-           for(int file=FILE_A; file <= FILE_H; ++file) {
+           for(int file=FILE_A; file <= FILE_H; ++file)
                add_caps += min_captures(file, Long.bitCount(to&fileMask(file)));
-                           //- min_captures(file, Long.bitCount(from&fileMask(file)));
-           }
            add_caps -= prev_captures;
            if (add_caps > avail_captures)
                return false;
