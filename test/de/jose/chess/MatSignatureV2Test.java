@@ -4,6 +4,7 @@ import de.jose.Application;
 import de.jose.Config;
 import de.jose.Version;
 import de.jose.db.*;
+import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PositionFilter;
 import de.jose.util.BitUtil;
@@ -357,7 +358,7 @@ class MatSignatureV2Test {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
         String endgame2 = "8/8/R1bkp3/3p1rKp/3B4/2P5/8/8 w - - 10 67";
 
-        int offset = 0;//14800000;
+        int offset = 14800000;
         int limit = 1000000;
         withDBServer();
 //        System.out.println("[unfiltered - all games]");
@@ -366,16 +367,28 @@ class MatSignatureV2Test {
 //        testCutoff(null,null, 14800000,1000000);
 //        System.out.println("[initial - V1]");
 //        testCutoff(initial,MatSignatureV1.class, offset,limit);
-        System.out.println("[initial - V2]");
-        testCutoff(initial,MatSignatureV2.class, offset,limit);
+//        System.out.println("[initial - V2]");
+//        testCutoff(initial,MatSignatureV2.class, offset,limit);
+//        System.out.println("[opening - V1]");
+//        testCutoff(opening,MatSignatureV1.class, offset,limit);
+//        System.out.println("[opening - V2]");
+//        testCutoff(opening,MatSignatureV2.class, offset,limit);
 //        System.out.println("[middle game - V1]");
 //        testCutoff(middle1,MatSignatureV1.class, offset,limit);
+//        System.out.println("[middle game - V2]");
+//        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+        System.out.println("[middle game - V1]");
+        testCutoff(middle2,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
-        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+        testCutoff(middle2,MatSignatureV2.class, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
+//        System.out.println("[end game - V2]");
+//        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+        System.out.println("[end game - V1]");
+        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+        testCutoff(endgame2,MatSignatureV2.class, offset,limit);
     }
 
     void testCutoff(String queryFen, Class matsigClass, int offset, int limit) throws SQLException {
@@ -452,6 +465,14 @@ class MatSignatureV2Test {
         assertTrue(getMatSignatureV2("rn1qkbnr/p3pppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(BLACK));
         assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/4P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(WHITE));
         assertTrue(getMatSignatureV2("rn1qk1nr/p2bpppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").goodBishop(BLACK));
+    }
+
+    @Test
+    void testCrossover() throws Exception {
+        withDBServer();
+        JoConnection conn = JoConnection.get();
+        int rows = Crossover1011.updateMatSignatureV2(conn,"jose.MoreGame",-1/*2_000_000*/);
+        System.out.println("["+rows+" rows updated]");
     }
 
     private static String print(String fen, MatSignatureV2 sig) {

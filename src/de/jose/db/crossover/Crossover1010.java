@@ -64,7 +64,7 @@ public class Crossover1010
 					conn.executeUpdate(sql1);
 				if (!adapter.existsColumn("MAIN","MoreGame","BlackSignature"))
 					conn.executeUpdate(sql2);
-				//	fill it - superseded by Crossover1011
+				//	fill it - superseded by Crossover1011.updateMatSignatureV2()
 				//fillMatSignatures(conn);
 			}
 
@@ -99,14 +99,12 @@ public class Crossover1010
 			res.updateLong(4, matsig.getWhiteSignature());
 			res.updateLong(5, matsig.getBlackSignature());
 			res.updateRow();
-			/*	not sure if updatable result set is really efficient.
-				Maybe use a temporary (memory) table and update en gros:
-
-				UPDATE MoreGame JOIN Temp_NewMatSig as T ON MoreGame.GId=T.GId
-				SET MoreGame.WhiteSignature = T.WhiteSignature,
-					MoreGame.BlackSignature = T.BlackSignature
-
-				(for future changes on MatSignature, maybe)
+			/*	updatable result set is not really efficient.
+				see Crossover1011 how this can be done better:
+				1. use BatchedThreadPool to replay games in parallel
+				2. use temporary memory table to store results
+				3. use insert values (),(),... with 200 rows per statement
+				4. use bulk update to copy results into MoreGame
 			 */
 		}
 	}

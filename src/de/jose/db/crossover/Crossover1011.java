@@ -13,20 +13,18 @@
 package de.jose.db.crossover;
 
 import de.jose.Config;
-import de.jose.chess.MatSignature;
-import de.jose.chess.MatSignatureV1;
-import de.jose.chess.Move;
-import de.jose.chess.Position;
-import de.jose.db.DBAdapter;
-import de.jose.db.JoConnection;
-import de.jose.db.JoStatement;
-import de.jose.db.Setup;
+import de.jose.chess.*;
+import de.jose.db.*;
 import de.jose.pgn.PositionFilter;
+import de.jose.util.concurrent.BatchThreadPool;
+import de.jose.util.concurrent.QueueThreadPool;
 import de.jose.window.JoDialog;
 
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Database cross-over for Meta Version 1009
@@ -61,7 +59,8 @@ public class Crossover1011
 
 			}
 
-			updateMatSignatureV2(conn,"jose.MoreGame");
+			int rows = updateMatSignatureV2(conn,"jose.MoreGame",0);
+			System.out.println("["+rows+" rows updated]");
 
 			setup.setTableVersion(conn,"MAIN","MoreGame",104);
 			setup.setSchemaVersion(conn,"MAIN",version=1011);
@@ -72,12 +71,108 @@ public class Crossover1011
 		}
 	}
 
-	public static void updateMatSignatureV2(JoConnection conn, String tableName)
+	private static BatchThreadPool<UpdateMatSignatureJob> executorPool =
+			new BatchThreadPool<UpdateMatSignatureJob>(8,2_000_000,200);
+
+	static class UpdateMatSignatureJob implements Runnable
 	{
-		String getall = "SELECT GId, FEN,Bin FROM "+tableName+" LIMIT 1000";	// todo no limit
-		//	todo store results in memory temp table; update bulk at last
+		int GId;
+		String fen;
+		byte[] bin;
+		long whiteSignature, blackSignature;
+
+		public UpdateMatSignatureJob(int GId, String fen, byte[] bin) {
+			this.GId = GId;
+			this.fen = fen;
+			this.bin = bin;
+		}
+
+		@Override
+		public void run() {
+			MatSignature matSignature = computeMatSignature(fen,bin);
+            whiteSignature = matSignature.getWhiteSignature();
+			blackSignature = matSignature.getBlackSignature();
+			fen = null;
+			bin = null;	// release memory
+		}
+	};
+
+	static void updateMap(JoConnection conn, ArrayList<UpdateMatSignatureJob> batch)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("INSERT INTO MapMatSignature " +
+				" (GId,WhiteSignature,BlackSignature)" +
+				" VALUES ");
+		for (int i=0; i<batch.size(); i++) {
+			if(i>0) sb.append(",");
+			sb.append("(?,?,?)");
+		}
+
+		synchronized(conn) {
+			try {
+				JoPreparedStatement pstm = conn.getPreparedStatement(sb.toString());
+				for (int i = 0; i < batch.size(); i++) {
+					pstm.setInt(3 * i + 1, batch.get(i).GId);
+					pstm.setLong(3 * i + 2, batch.get(i).whiteSignature);
+					pstm.setLong(3 * i + 3, batch.get(i).blackSignature);
+				}
+				pstm.execute();
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
+	public static int updateMatSignatureV2(JoConnection readConn, String tableName, int limit) throws SQLException, InterruptedException {
+		String getAll = "SELECT GId, FEN,Bin FROM "+tableName;
+		if (limit > 0) getAll += " LIMIT "+limit;
+		//	store results in memory temp table; update bulk at last
+		String createTemp = "CREATE TEMPORARY TABLE IF NOT EXISTS MapMatSignature " +
+				" (GId INT NOT NULL, WhiteSignature BIGINT NOT NULL, BlackSignature BIGINT NOT NULL)" +
+				" ENGINE=MEMORY";
+
+		long startTime = System.currentTimeMillis();
+		JoConnection insertConn = JoConnection.get();
+		insertConn.executeUpdate(createTemp);
+
+		executorPool.setOnBatchFinished(
+				(ArrayList<UpdateMatSignatureJob> batch) -> updateMap(insertConn,batch));
+		JoPreparedStatement readAll = readConn.getPreparedStatement(getAll);
+
+		if (!readAll.execute()) throw new SQLException();
+		ResultSet rs = readAll.getResultSet();
+		int rows = 0;
+		while (rs.next()) {
+			rows++;
+			int GId = rs.getInt(1);
+			String fen = rs.getString(2);
+			byte[] bin = rs.getBytes(3);
+
+			executorPool.submit(new UpdateMatSignatureJob(GId,fen,bin));
+		}
+		rs.close();
+		System.out.println("["+rows+" rows read]");
+		executorPool.finish();
+
+		long time = System.currentTimeMillis() - startTime;
+		System.out.println("["+time/1000+" s]");
+
+		insertConn.executeUpdate("LOCK TABLES "+tableName+" WRITE, MapMatSignature READ");
+		String copyAll =
+				"UPDATE "+tableName+
+				" JOIN MapMatSignature ON "+tableName+".GId = MapMatSignature.GId " +
+				" SET "+tableName+".WhiteSignature = MapMatSignature.WhiteSignature," +
+				"     "+tableName+".BlackSignature = MapMatSignature.BlackSignature";
+		rows = insertConn.executeUpdate(copyAll);
+		System.out.println("["+rows+" rows updated]");
+		insertConn.executeUpdate("UNLOCK TABLES ");
+		insertConn.executeUpdate("DROP TABLE IF EXISTS MapMatSignature");
+		insertConn.release();
+
+		time = System.currentTimeMillis() - startTime;
+		System.out.println("["+time/1000+" s]");
+		return rows;
+	}
 
 	private static PositionFilter posf = new PositionFilter() {
 		@Override
@@ -103,7 +198,8 @@ public class Crossover1011
 
 	private static MatSignature computeMatSignature(String fen, byte[] bin)
 	{
-		posf.read(bin,0, null,0, fen,true,false);
-		return posf.getMatSig();
+		PositionFilter pf = posf.getFilterLike();	//	get a thread-local copy, b/c we want to be thread-safe
+		pf.read(bin,0, null,0, fen,true,false);
+		return pf.getMatSig();
 	}
 }

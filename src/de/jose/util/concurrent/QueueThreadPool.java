@@ -26,7 +26,10 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
 
     private Thread closingThread = null;
     private int queueWatermark = 0;
+    //  number of submitted jobs
     public long jobCount = 0;
+    //  numer of completed jobs
+    public long completedCount = 0;
 
     @Override
     public Future<?> submit(Runnable task) {
@@ -41,6 +44,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
         getQueue().clear();
         queueWatermark = 0;
         jobCount = 0;
+        completedCount = 0;
     }
 
     public int getQueueWatermark() {
@@ -62,7 +66,8 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
      *
      */
     public void finish() {
-        while(getActiveCount() > 0) {
+        //while(getActiveCount() > 0 && getQueue().size() > 0) {
+        while(completedCount < jobCount) {
             closingThread = Thread.currentThread();
             try {
                 synchronized(this) {
@@ -77,7 +82,8 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
 
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
+        completedCount++;
         super.afterExecute(r, t);
-        if (closingThread != null) closingThread.interrupt();
+        if (closingThread != null && completedCount >= jobCount) closingThread.interrupt();
     }
 }
