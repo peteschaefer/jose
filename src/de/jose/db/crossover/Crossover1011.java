@@ -50,10 +50,9 @@ public class Crossover1011
 
 				dlg = JoDialog.createMessageDialog("Database Update",
 						"jose will now update the database structure for \n"+
-						"improved performance.\n" +
-				        "This may take 30 minutes or more. \n"+
-						"Please be patient. Don't kill this process.",
-				        false);
+								"new features.\n" +
+								"This may take some minutes.",
+						false);
 				dlg.setVisible(true);
 				dlg.paint(dlg.getGraphics());
 
