@@ -494,6 +494,8 @@ class MatSignatureV2Test {
             pos.setup(feni);
             MatSignatureV2 sigq = new MatSignatureV2(pos);
 
+            assertTrue(sigi.canReach(endSig));
+
             for (int j = 0; j <= i; ++j) {
                 MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
                 String fenj = reader.fens.get(j);

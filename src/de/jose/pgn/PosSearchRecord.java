@@ -145,8 +145,8 @@ public class PosSearchRecord
             assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
             assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
 
-            return pos.getHashKey().equals(key)
-                    || reversedColor && pos.getReversedHashKey().equals(keyReversed);
+            if (pos.getHashKey().equals(key) || reversedColor && pos.getReversedHashKey().equals(keyReversed))
+                return true;
         }
         //  pawn structure and mat features are only checked after *noisy* moves
         //  (i.e. after changes in pawn structure, mat count, ...)

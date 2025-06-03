@@ -219,13 +219,16 @@ public class PositionFilter
 
 	public void afterMove (Move mv, int ply)
 	{
-		if (query.matches(pos,!pos.wasSilent())) {
+		if ((nestLevel == 0 || query.variations)
+				&& query.matches(pos, !pos.wasSilent())) {
 			eof = true; //  this will terminate the read() method
 			result = Result.ACCEPT;
 		}
-		if (query.cutOff(pos,!pos.wasSilent())) {
+		if ((nestLevel==0) && query.cutOff(pos,!pos.wasSilent())) {
 			eof = true; //  this will terminate the read() method
 			result = Result.REJECT;
+			//	note: if the search position is not reachable from the main line
+			//	it won't from one of the following variations
 		}
 //		if (!inLine && (ply%10==0)) checkCutOff();
 //		if (eof && !result) System.err.println("cut-off after "+ply);
