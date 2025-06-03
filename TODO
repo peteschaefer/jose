@@ -88,6 +88,9 @@ Maintenance:
     [ ] no early cut-off if query.variations && (Game.Attributes & HAS_VARIATIONS)
         -> might miss found positions in variations
         note that in-game cut-off already takes care of variations
+    [ ] LOCATE(0xf0,MoreGame.Bin) AS HasVariations
+        (Game.Attributes & 1) AS HasVariations
+    [ ] QueueThreadPool: collect Futures
     [ ] cross-over .jose files
     [ ] test Ecofy (still uses MatSignatureV1 !)
 
