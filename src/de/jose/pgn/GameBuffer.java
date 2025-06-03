@@ -80,7 +80,7 @@ public class GameBuffer
 		public String ECO;
 		/** MoreGame Fields     */
 		public StringBuffer More;
-		public MatSignature signature = new MatSignatureV2();	// ?
+		public MatSignature signature = new MatSignatureV2();
 		public int binLen;
         public int commentsLen;
 		//	two buffers for GameText: one used by preparedStatement, one by reader thread
@@ -266,7 +266,7 @@ public class GameBuffer
 
         r.binLen = parser.getBinLength();
         r.commentsLen = parser.getCommentsLength();
-		r.signature = (MatSignature) parser.pos.computeMatSig().clone();
+		r.signature = (MatSignature) parser.matSignature;
 		//	todo use incremental MatSig from end of parser
 
         r.Bin[r.binLen++] = (byte)SHORT_END_OF_DATA;
