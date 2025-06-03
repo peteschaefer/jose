@@ -34,9 +34,6 @@ public class PositionFilter
 
 	public MatSignature querySig;
 
-//	protected HashKey searchKey, searchKeyReversed;
-//	protected MatSignature searchSig;
-
 	protected boolean inLine,ignoreLine;
 	protected Result result;
 
@@ -265,10 +262,7 @@ public class PositionFilter
 
 
 	public void result (int resultCode)                                 { /* ignored  */ }
-
 	public void beforeMove (Move mv, int ply, boolean displayHint)      { /* ignored  */ }
-
 	public void comment (StringBuffer text)                  { /* ignored  */ }
-
 	public void annotation (int nagCode)                                { /* ignored  */ }
 }

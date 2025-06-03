@@ -21,6 +21,9 @@ public interface MatSignature extends Cloneable
     long getWhiteSignature();
     long getBlackSignature();
 
+    default boolean isEmpty() {
+        return getBlackSignature()==0 && getWhiteSignature()==0;
+    }
 
     /**
      * factory method

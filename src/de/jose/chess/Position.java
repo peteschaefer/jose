@@ -204,11 +204,12 @@ public class Position
 		//  otherwise: the Hash Keys are incrementally kept up to date
 	}
 
-	public void updateMatSig()
+	public MatSignature updateMatSig()
 	{
 		if (!hasOption(INCREMENT_SIGNATURE))
 			computeMatSig();
 		//  otherwise: the Mat Sig is incrementally kept up to date
+		return getMatSig();
 	}
 
 	public final boolean hasOption(int anOption)
