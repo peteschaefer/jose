@@ -55,6 +55,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
      * drop waiting tasks, waiting for executing tasks to finish
      */
     public void abort() {
+        jobCount -= getQueue().size();
         getQueue().clear();
         finish();
     }
@@ -67,6 +68,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
      */
     public void finish() {
         //while(getActiveCount() > 0 && getQueue().size() > 0) {
+        //  note: getActiveCount() is unreliable. May return too early, leaving jobs not done.
         while(completedCount < jobCount) {
             closingThread = Thread.currentThread();
             try {
