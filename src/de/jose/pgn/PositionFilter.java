@@ -27,24 +27,19 @@ import java.util.function.IntConsumer;
  */
 public class PositionFilter
         extends BinReader
-        implements Cloneable
 {
-	public long queryKey, queryKeyReversed;
-	public boolean searchVariations;
-
-	public MatSignature querySig;
-
+	protected PosSearchRecord query;
 	protected boolean inLine,ignoreLine;
 	protected Result result;
 
 	public enum Result  {
 		REJECT, ACCEPT, WAIT
 	};
-
+/*
 	public static PositionFilter PASS_FILTER = new PositionFilter(true) {
 		public Result accept(ResultSet res, IntConsumer callback) throws SQLException		{ return Result.ACCEPT; }
 	};
-
+*/
 	public static QueueThreadPool executorPool = new BatchThreadPool<PosFilterJob>(200000,80);
 	//	note: using a batched pool drastically increases throughtput and reduces thread pool overhead
 	//	we assume that tasks (PosFilterJob) are small and run quickly. Batching 80 of them into one is ok.
@@ -56,17 +51,17 @@ public class PositionFilter
 
 
 	private PositionFilter(boolean privateCtor) {
-		super(null);
+		super(new Position(JoseHashKey.class, MatSignatureV2.class));
 	}
 
-	public PositionFilter()
+	public PositionFilter() {
+		this(new PosSearchRecord());
+	}
+
+	public PositionFilter(PosSearchRecord q)
 	{
-		super(new Position(JoseHashKey.class, MatSignatureV2.class));
-
-//		searchKey = pos.getHashKey();
-//		searchKeyReversed = pos.getReversedHashKey();
-//		searchSig = pos.getMatSig();
-
+		this(true);
+		this.query = q;
 		setPosOptions();
 	}
 
@@ -76,8 +71,6 @@ public class PositionFilter
 		pos.setOption(Position.INCREMENT_HASH,true);
 		pos.setOption(Position.INCREMENT_REVERSED_HASH,true);
 		pos.setOption(Position.INCREMENT_SIGNATURE,true);
-		//	TODO Pawn Hash
-		//  don't calculate castling & ep privileges (cause they are not known in the target position)
 		pos.setOption(Position.IGNORE_FLAGS_ON_HASH, true);
 
 		//  don't calculate checks etc.
@@ -89,7 +82,7 @@ public class PositionFilter
 		pos.setOption(Position.CHECK, false);
 	}
 
-
+/*
 	public Object clone()
     {
         PositionFilter that = new PositionFilter(false);
@@ -97,21 +90,22 @@ public class PositionFilter
 		this.copySearchParams(that);
 		return that;
     }
-
+*/
 	public void copySearchParams(PositionFilter that)
 	{
-		that.querySig = this.querySig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.queryKey = this.queryKey;
-		that.queryKeyReversed = this.queryKeyReversed;
-		that.searchVariations = this.searchVariations;
+		that.query= this.query; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
 		that.inLine = this.inLine;
 		that.ignoreLine = this.ignoreLine;
 		that.result = this.result;
 	}
 
+	public void setSearchParams(PosSearchRecord query)
+	{
+		this.query = query;
+	}
+
 	public void clear() {
-		queryKey = queryKeyReversed = 0L;
-		searchVariations = false;
+		query.clear();
 	}
 
 	public PositionFilter getFilterLike()
@@ -123,9 +117,9 @@ public class PositionFilter
 
 	public boolean isEmpty()
 	{
-		return (queryKey ==0L) && (queryKeyReversed ==0L);
+		return query.isEmpty();
 	}
-
+/*
 	public void setTargetPosition(String fen, boolean calcReversed)
 	{
 		clear();
@@ -141,10 +135,10 @@ public class PositionFilter
             queryKeyReversed = pos.getReversedHashKey().value();
         }
 	}
+*/
+	public void setVariations(boolean on)       { query.variations = on; }
 
-	public void setVariations(boolean on)       { searchVariations = on; }
-
-	public boolean hasVariations()              { return searchVariations; }
+	public boolean hasVariations()              { return query.variations; }
 
 	private static class PosFilterJob implements Runnable
 	{
@@ -174,7 +168,8 @@ public class PositionFilter
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
 		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
-		if (!querySig.canReach(gameEndSig)) return Result.REJECT;
+		if (query.earlyCutOff(gameEndSig))
+			return Result.REJECT;
 
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
@@ -197,7 +192,7 @@ public class PositionFilter
 	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-		if (gameEndSig!=null && !querySig.canReach(gameEndSig)) return Result.REJECT;
+		if (gameEndSig!=null && query.earlyCutOff(gameEndSig)) return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
 		ignoreLine = inLine = false;
@@ -205,29 +200,6 @@ public class PositionFilter
 		//  read will call back to (BinReader)this
 		//	note: reset==false keeps the final position
 		return result;
-	}
-
-	private void compareKeys()
-	{
-		/** check hash key  */
-        if (pos.getHashKey().equals(queryKey) || pos.getReversedHashKey().equals(queryKeyReversed)) {
-			eof = true; //  this will terminate the read() method
-            result = Result.ACCEPT;
-		}
-	}
-
-	private void checkCutOff()
-	{
-		/** check material signature for early cut-off
-		 * 	note: only noisy moves modify the MatSignature */
-		if (!pos.wasSilent()) {
-			pos.updateMatSig();
-			if (!pos.getMatSig().canReach(querySig) &&
-				(queryKeyReversed == 0L || !pos.getMatSig().canReachReversed(querySig))) {
-				eof = true; //  signature cut-off
-				result = Result.REJECT;
-			}
-		}
 	}
 
 	public MatSignature getMatSig()
@@ -241,16 +213,24 @@ public class PositionFilter
 
 	public void afterMove (Move mv, int ply)
 	{
-		if (!ignoreLine) compareKeys();
-		if (!inLine) checkCutOff();
+		if (query.matches(pos,!pos.wasSilent())) {
+			eof = true; //  this will terminate the read() method
+			result = Result.ACCEPT;
+		}
+		if (query.cutOff(pos,!pos.wasSilent())) {
+			eof = true; //  this will terminate the read() method
+			result = Result.REJECT;
+		}
 //		if (!inLine && (ply%10==0)) checkCutOff();
 //		if (eof && !result) System.err.println("cut-off after "+ply);
 	}
 
 	public void startOfLine (int nestLevel) 	{
-		if (nestLevel==0)
-			compareKeys();		//	start of game
-		else if (!searchVariations)
+		if (nestLevel==0 && query.matches(pos,!pos.wasSilent())) {
+			eof = true;
+			result = Result.ACCEPT;
+		}
+		else if (!query.variations)
 			ignoreLine = true;
 		inLine = nestLevel >= 1;
 	}

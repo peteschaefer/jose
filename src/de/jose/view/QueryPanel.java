@@ -655,13 +655,13 @@ public class QueryPanel
 		Position pos = posEditor.board.getPosition();
 		if (!pos.isEmpty())
 		{
-			rec.posFilter.setTargetPosition(pos.toString(), reversePosition.isSelected());
-
-			rec.posFilter.setVariations(searchVariations.isSelected());
+			rec.pos.setExact(pos);
+			rec.pos.reversedColor = reversePosition.isSelected();
+			rec.pos.variations = searchVariations.isSelected();
 		}
-		else
-			rec.posFilter.clear();
-
+		else {
+			rec.pos.clear();
+		}
 		rec.finish(errors);	//	check plausability
 	}
 

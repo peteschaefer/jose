@@ -16,7 +16,7 @@ import de.jose.Application;
 import de.jose.Version;
 import de.jose.chess.BinaryConstants;
 import de.jose.chess.MatSignature;
-import de.jose.chess.MatSignatureV1;
+import de.jose.chess.MatSignatureV2;
 import de.jose.chess.Position;
 import de.jose.db.DBAdapter;
 import de.jose.db.JoConnection;
@@ -80,7 +80,7 @@ public class GameBuffer
 		public String ECO;
 		/** MoreGame Fields     */
 		public StringBuffer More;
-		public MatSignature signature = new MatSignatureV1();	// ?
+		public MatSignature signature = new MatSignatureV2();	// ?
 		public int binLen;
         public int commentsLen;
 		//	two buffers for GameText: one used by preparedStatement, one by reader thread
@@ -267,6 +267,7 @@ public class GameBuffer
         r.binLen = parser.getBinLength();
         r.commentsLen = parser.getCommentsLength();
 		r.signature = (MatSignature) parser.pos.computeMatSig().clone();
+		//	todo use incremental MatSig from end of parser
 
         r.Bin[r.binLen++] = (byte)SHORT_END_OF_DATA;
         r.PlyCount = parser.pos.ply();

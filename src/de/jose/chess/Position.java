@@ -84,9 +84,8 @@ public class Position
 	/**	variaton stack size	 */
 	protected static final int VAR_STACK_SIZE = 128;
 
-	public Position()
-	{
-		this(JoseHashKey.class, MatSignatureV1.class);
+	public Position() {
+		this(JoseHashKey.class, MatSignatureV2.class);
 	}
 
 	public Position (Class hashKeyClass, Class matSigClass)
@@ -112,9 +111,7 @@ public class Position
 		setup(initial);
 	}
 
-
-	public void setOption(int newOption, boolean on)
-	{
+	public void setOption(int newOption, boolean on) {
 		setOptions(Util.set(option, newOption, on));
 	}
 

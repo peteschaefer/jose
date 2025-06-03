@@ -1109,31 +1109,27 @@ public class Game
 
 	public boolean gotoMove(PositionFilter filter)
 	{
-		if (filter==null || filter.queryKey ==0L)
+		if (filter==null || filter.query==null || filter.query.isEmpty())
 			return false;
 		else
-			return gotoMove(filter.queryKey, filter.queryKeyReversed, filter.searchVariations);
+			return gotoMove(filter.query);
 	}
 
-	public boolean gotoMove(long targetKey, long targetKeyReversed,
-	                         boolean searchVariations)
+	public boolean gotoMove(PosSearchRecord query)
 	{
 		position.reset();
 		position.setOption(Position.INCREMENT_HASH,true);
 		position.setOption(Position.INCREMENT_REVERSED_HASH,true);
 		position.setOption(Position.IGNORE_FLAGS_ON_HASH,true);
 
-		boolean result = gotoMove(mainLine, targetKey,targetKeyReversed, searchVariations);
+		boolean result = gotoMove(mainLine, query);
 
 		position.setOption(Position.IGNORE_FLAGS_ON_HASH,false);
 
 		return result;
 	}
 
-	private boolean gotoMove(LineNode line,
-	                      long targetKey,
-	                      long targetKeyReversed,
-	                      boolean searchVariations)
+	private boolean gotoMove(LineNode line, PosSearchRecord query)
 	{
 		for (Node node = line.first(); node != null; node = node.next())
 		{
@@ -1141,19 +1137,18 @@ public class Game
 			{
 				MoveNode mnode = (MoveNode)node;
 				mnode.play(position);
-				if (position.getHashKey().equals(targetKey) ||
-				    position.getReversedHashKey().equals(targetKeyReversed))
+				if (query.matches(position, !position.wasSilent()))
 				{
 					currentMove=mnode;
 					return true;
 				}
 			}
-			else if (node.is(LINE_NODE) && searchVariations)
+			else if (node.is(LINE_NODE) && query.variations)
 			{
 				Move mv = position.undoMove();
 				position.startVariation();
 
-				if (gotoMove((LineNode)node,targetKey, targetKeyReversed, searchVariations))
+				if (gotoMove((LineNode)node,query))
 					return true;
 				else {
 					position.undoVariation();

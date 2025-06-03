@@ -15,6 +15,7 @@ package de.jose.view.list;
 import de.jose.Application;
 import de.jose.Util;
 import de.jose.db.*;
+import de.jose.pgn.PosSearchRecord;
 import de.jose.pgn.PositionFilter;
 import de.jose.store.IntBuffer;
 import de.jose.util.StringUtil;
@@ -32,8 +33,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.function.IntConsumer;
-
-import static de.jose.pgn.PositionFilter.PASS_FILTER;
 
 //import com.mysql.embedded.jdbc.MySqlError;
 
@@ -407,7 +406,9 @@ abstract public class IntervalCacheModel
 		                        if (res.next())
 		                        {
 		                            chunk++;
-									switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
+									if (posFilter==null || posFilter.isEmpty())
+										addResult(res.getInt(1));
+									else switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
 									{
 										case REJECT:	break;
 										case WAIT:		/*will call back asynchroneously*/ break;
@@ -500,7 +501,7 @@ abstract public class IntervalCacheModel
     protected ParamStatement pkStatement;
 	protected long startTime;
 	/** position search filter  */
-	protected PositionFilter posFilter;
+	protected PositionFilter posFilter = new PositionFilter();
 
     /** the statement used to retrieve actual data  */
     protected String dataSql1;
@@ -548,7 +549,7 @@ abstract public class IntervalCacheModel
         reader.start(); //  will go to sleep immediately and wait for reset()
     }
 
-    public void reset(ParamStatement pkStm, PositionFilter filter,
+    public void reset(ParamStatement pkStm, PosSearchRecord posQuery,
                       int size, boolean accurate) throws Exception
     {
 		clear(true);
@@ -556,7 +557,7 @@ abstract public class IntervalCacheModel
 		pkStore.ensureCapacity(size);
 		pkStatement = pkStm;
 
-		posFilter = filter;
+		posFilter.setSearchParams(posQuery);
 		parallelPosSearch = true;
 
 		rowCount = size;
@@ -579,7 +580,7 @@ abstract public class IntervalCacheModel
 			//  (b) don't require too many expensive queries
 			reader.fired = 0;
 
-			if (posFilter==null || posFilter== PASS_FILTER)
+			if (posFilter==null)
 				reader.reset(1,intvalSize+1,true); //  fetch some rows, then all the rest
 			else
 				reader.reset(1,Integer.MAX_VALUE/2,true); //  fetch all rows
