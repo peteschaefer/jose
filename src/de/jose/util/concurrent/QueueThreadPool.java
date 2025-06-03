@@ -80,6 +80,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
                 //  todo that's a bit unsatisfactory.
                 //   We don't know yet, why jobs have gone missing.
                 //  infinite loop? uncaught exception?
+                //  todo collect Futures (it's not that many) and wait for them
                 continue;
             } catch (InterruptedException e) {
                 continue;
