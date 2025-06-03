@@ -176,7 +176,7 @@ public class PositionFilter
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
-		MatSignatureV1 gameEndSig = new MatSignatureV1(res.getLong(4),res.getLong(5));
+		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
 		if (!querySig.canReach(gameEndSig)) return Result.REJECT;
 
 		int GId = res.getInt(1);
