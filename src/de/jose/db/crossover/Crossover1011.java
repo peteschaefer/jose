@@ -126,8 +126,11 @@ public class Crossover1011
 		String getAll = "SELECT GId, FEN,Bin FROM "+tableName;
 		if (limit > 0) getAll += " LIMIT "+limit;
 		//	store results in memory temp table; update bulk at last
-		String createTemp = "CREATE TEMPORARY TABLE IF NOT EXISTS MapMatSignature " +
-				" (GId INT NOT NULL, WhiteSignature BIGINT NOT NULL, BlackSignature BIGINT NOT NULL)" +
+		String createTemp =
+				"CREATE TEMPORARY TABLE IF NOT EXISTS MapMatSignature " +
+				" (GId INT PRIMARY KEY NOT NULL," +
+				"  WhiteSignature BIGINT NOT NULL," +
+				"  BlackSignature BIGINT NOT NULL)" +
 				" ENGINE=MEMORY";
 
 		long startTime = System.currentTimeMillis();
@@ -173,7 +176,7 @@ public class Crossover1011
 		return rows;
 	}
 
-	private static PositionFilter posf = new PositionFilter() {
+	static class ReplayFilter extends PositionFilter {
 		@Override
 		public void afterMove(Move mv, int ply) {
 			//	don't look for hash keys
@@ -188,6 +191,7 @@ public class Crossover1011
 		@Override
 		protected void setPosOptions() {
 			//  no need for hash keys
+			super.setPosOptions();
 			pos.setOption(Position.INCREMENT_HASH,false);
 			pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
 			//	need for incremental signature
@@ -195,10 +199,16 @@ public class Crossover1011
 		}
 	};
 
+	private static ThreadLocal<ReplayFilter> pooledFilter = new ThreadLocal<ReplayFilter>() {
+		@Override
+		protected ReplayFilter initialValue() { return new ReplayFilter(); }
+	};
+
 	private static MatSignature computeMatSignature(String fen, byte[] bin)
 	{
-		PositionFilter pf = posf.getFilterLike();	//	get a thread-local copy, b/c we want to be thread-safe
+		PositionFilter pf = pooledFilter.get();
 		pf.read(bin,0, null,0, fen,true,false);
-		return pf.getMatSig();
+		MatSignature mat = pf.getMatSig();
+		return mat;
 	}
 }

@@ -123,6 +123,7 @@ public class Crossover1010
 
 		@Override
 		protected void setPosOptions() {
+			super.setPosOptions();
 			//  no need for hash keys
 			pos.setOption(Position.INCREMENT_HASH,false);
 			pos.setOption(Position.INCREMENT_REVERSED_HASH,false);

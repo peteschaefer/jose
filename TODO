@@ -97,6 +97,10 @@ Maintenance:
     [x] cross-over (faster this time, batched pll + temp table)
     [ ] cross-over .jose files
 
+[ ] Q: use primary keys for IO_Map: Map_Collection,Event,Site,Play,Opening
+    to speed up joins during Archive Import ?
+[ ] Q: use concurrent insert for Archive Export ?
+    https://dev.mysql.com/doc/refman/8.4/en/concurrent-inserts.html
 
 [ ] search pawn structure
 [ ] search material balance
