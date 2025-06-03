@@ -166,6 +166,8 @@ public class PosSearchRecord
         if (exactPosition()) {
             if (!sig.canReach(endSignature) && (!reversedColor || !sig.canReachReversed(endSignature)))
                 return true;
+            // todo except if we can find it in variations
+            //  this.variations && Game.Attributes & HAS_VARIATIONS
         }
         if (pawnStructure()) {
             //  ignore officers during canReach()

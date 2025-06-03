@@ -81,23 +81,12 @@ Maintenance:
 [ ] Easylink: RelWithDeb
 
 [ ] Matsig V2
-    [x] pawn bitset, piece counts, bishop colors
-    [x] turn around black pawns. from head to feet
-    [x] clean up MatSignature hierarchy. No need to store replicated data (sig, Features.sig, Features fields)
-    [ ] unit tests
-        [x] simple cases
-        [x] hard cases
-        [ ] random games (incremental mode)
-        [x] db games (incremental mode)
-    [x] store padv_base = computePawnAdvance(sig), padv_lower = base+promo_lower, padv_upper = base+promo_upper
-    [x] extended pawn structure test
-    [x] opposite bishop, even bishop
-    [x] good bishop, bad bishop
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [x] cross-over (faster this time, batched pll + temp table)
     [x] Pgn import: use incremental MatSignatureV2 after parsing
-    [x] pos search buggy; endSig ok?
     [x] skip/include variations
+    [ ] no early cut-off if query.variations && (Game.Attributes & HAS_VARIATIONS)
+        -> might miss found positions in variations
+        note that in-game cut-off already takes care of variations
     [ ] cross-over .jose files
     [ ] test Ecofy (still uses MatSignatureV1 !)
 
