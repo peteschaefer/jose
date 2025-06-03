@@ -24,15 +24,24 @@ public class PosSearchRecord
     public int min[] = null;
     public int max[] = null;
 
-    //  bishop features
+    //  Bishop features
     public enum BishopColors { ANY, EVEN_COLORED, OPPOSITE_COLORED }
     public enum BishopQuality { ANY, GOOD, BAD }
     public BishopColors bishopColors;
     public BishopQuality whiteBishop, blackBishop;
-    //  pawn features
-    public boolean doublePawns,triplePawns;
-    public boolean freePawns,backwardPawns,isolatedPawns;
-    public int pawnsOnRank;
+    /*  lots of other position features spring to mind: */
+    //  Pawn features (color-agnostic?)
+//    public boolean doublePawns,triplePawns;
+//    public boolean freePawns,backwardPawns,isolatedPawns;
+//    public int pawnsOnRank;
+    //  File features
+//    public int openFiles,semiOpenFiles;
+    //  King features
+//    public enum KingQuality { ANY, PROTECTED, VULNERABLE }
+//  public KingQuality whiteKing, blackKing;
+    //  Game features
+//    public boolean mate,stalemate, check,exposedCheck;
+//    public boolean shortCastling,longCastling;
 
     //
     //      Setup Query Conditions
