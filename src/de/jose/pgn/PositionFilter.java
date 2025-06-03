@@ -192,13 +192,19 @@ public class PositionFilter
 	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-		if (gameEndSig!=null && query.earlyCutOff(gameEndSig)) return Result.REJECT;
+		if (gameEndSig!=null && query.earlyCutOff(gameEndSig))
+			return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
 		ignoreLine = inLine = false;
+
+		int oldOptions = pos.getOptions();
+		query.setPositionOptions(pos);
+
 		read(bin,0, null,0, fen,true,true);
 		//  read will call back to (BinReader)this
 		//	note: reset==false keeps the final position
+		pos.setOptions(oldOptions);
 		return result;
 	}
 

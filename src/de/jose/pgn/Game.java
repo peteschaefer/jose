@@ -1401,8 +1401,8 @@ public class Game
         stm.setString(i++,     (String)getTagValue(TAG_FEN));
         stm.setString(i++,     getMoreInfo());
 		if (writer != null) {
-			stm.setLong(i++,    writer.pos.getMatSig().getWhiteSignature());	//	right?
-			stm.setLong(i++, 	writer.pos.getMatSig().getBlackSignature());
+			stm.setLong(i++,    writer.endMatSig.getWhiteSignature());	//	right?
+			stm.setLong(i++, 	writer.endMatSig.getBlackSignature());
 			stm.setBytes(i++,      writer.getText());
 			stm.setBytes(i++,      writer.getComments());
 
@@ -1486,7 +1486,8 @@ public class Game
 
 		BinWriter writer = null;
 		String fen = (String)getTagValue(TAG_FEN);
-		if (withData) writer = getBinaryData(fen);
+		if (withData)
+			writer = getBinaryData(fen);
 
 		String white = (String)getTagValue(TAG_WHITE);
 		String black = (String)getTagValue(TAG_BLACK);

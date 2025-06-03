@@ -12,10 +12,8 @@
 
 package de.jose.pgn;
 
-import de.jose.chess.BinaryConstants;
-import de.jose.chess.Constants;
-import de.jose.chess.Move;
-import de.jose.chess.Board;
+import de.jose.chess.*;
+import de.jose.chess.Position;
 import de.jose.plugin.Score;
 import de.jose.util.ListUtil;
 import de.jose.sax.JoContentHandler;
@@ -617,8 +615,14 @@ public class LineNode
     /** write binary data   */
     void writeBinaryContents(BinWriter writer)
     {
+		boolean wasIncrementMatsig = writer.pos.hasOption(Position.INCREMENT_SIGNATURE);
+		writer.pos.setOption(Position.INCREMENT_SIGNATURE, true);
+
 		for (Node nd = first(); nd != null; nd = nd.next())
 			nd.writeBinary(writer);
+
+		writer.endMatSig = (MatSignature) writer.pos.getMatSig().clone();
+		writer.pos.setOption(Position.INCREMENT_SIGNATURE, wasIncrementMatsig);
 	}
 
 	public Style getDefaultStyle(StyledDocument doc)

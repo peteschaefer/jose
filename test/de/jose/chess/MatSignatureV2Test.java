@@ -284,7 +284,10 @@ class MatSignatureV2Test {
         MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
         pos.setup(to);
         MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
+        return canReach(sig1, sig2, backtracks);
+    }
 
+    boolean canReach(MatSignatureV2 sig1, MatSignatureV2 sig2, int backtracks) {
         sig1.print(System.out,WHITE,true);
         System.out.println("\n-->");
         sig2.print(System.out,WHITE,true);

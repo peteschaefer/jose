@@ -90,6 +90,8 @@ public class PosSearchRecord
         boolean wasIgnoreFlags = pos.hasOption(Position.IGNORE_FLAGS_ON_HASH);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH,true);
 
+        assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
+
         key = (HashKey) pos.getHashKey().clone();
         keyReversed = (HashKey) pos.getReversedHashKey().clone();
 
@@ -139,6 +141,10 @@ public class PosSearchRecord
     public boolean matches(Position pos, boolean wasNoisy) {
         if (exactPosition()) {
             //  hash key is checked with every position
+            assert(pos.hasOption(Position.INCREMENT_HASH));
+            assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
+            assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
+
             return pos.getHashKey().equals(key)
                     || reversedColor && pos.getReversedHashKey().equals(keyReversed);
         }
@@ -158,8 +164,8 @@ public class PosSearchRecord
     //  early cut-off if query can not be reached from end
     public boolean earlyCutOff(MatSignature endSignature) {
         if (exactPosition()) {
-            return !sig.canReach(endSignature)
-                    && !(reversedColor && sig.canReachReversed(endSignature));
+            if (!sig.canReach(endSignature) && (!reversedColor || !sig.canReachReversed(endSignature)))
+                return true;
         }
         if (pawnStructure()) {
             //  ignore officers during canReach()
@@ -177,7 +183,8 @@ public class PosSearchRecord
         if (!wasNoisy) return false;
         MatSignature matSig = pos.getMatSig();
         if (exactPosition()) {
-            return !matSig.canReach(sig) && !(reversedColor && matSig.canReachReversed(sig));
+            if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReachReversed(sig)))
+                return true;
         }
         if (pawnStructure()) {
             //  ignore officers during canReach()
