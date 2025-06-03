@@ -165,7 +165,8 @@ public class PosSearchRecord
     public boolean earlyCutOff(MatSignature endSignature) {
         if (exactPosition()) {
             if (!sig.canReach(endSignature) && (!reversedColor || !sig.canReachReversed(endSignature)))
-                return true;
+                return !variations;
+            //    return true;
             // todo except if we can find it in variations
             //  this.variations && Game.Attributes & HAS_VARIATIONS
         }

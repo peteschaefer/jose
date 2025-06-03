@@ -1145,15 +1145,12 @@ public class Game
 			}
 			else if (node.is(LINE_NODE) && query.variations)
 			{
-				Move mv = position.undoMove();
 				position.startVariation();
 
 				if (gotoMove((LineNode)node,query))
 					return true;
-				else {
+				else
 					position.undoVariation();
-					position.doMove(mv);
-				}
 			}
 		}
 		return false;

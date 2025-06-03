@@ -84,6 +84,7 @@ Maintenance:
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
     [x] Pgn import: use incremental MatSignatureV2 after parsing
     [x] skip/include variations
+    [x] bug: open found position in variation
     [ ] no early cut-off if query.variations && (Game.Attributes & HAS_VARIATIONS)
         -> might miss found positions in variations
         note that in-game cut-off already takes care of variations
