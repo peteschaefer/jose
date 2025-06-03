@@ -28,7 +28,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
     private int queueWatermark = 0;
     //  number of submitted jobs
     public long jobCount = 0;
-    //  numer of completed jobs
+    //  number of completed jobs
     public long completedCount = 0;
 
     @Override
@@ -73,8 +73,14 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
             closingThread = Thread.currentThread();
             try {
                 synchronized(this) {
-                    wait();
+                    wait(500);
                 }
+                System.out.println("[bored of waiting: "+completedCount+" < "+jobCount+"]");
+                completedCount = jobCount;
+                //  todo that's a bit unsatisfactory.
+                //   We don't know yet, why jobs have gone missing.
+                //  infinite loop? uncaught exception?
+                continue;
             } catch (InterruptedException e) {
                 continue;
             }
@@ -83,9 +89,23 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
     }
 
     @Override
-    protected void afterExecute(Runnable r, Throwable t) {
+    protected void afterExecute(Runnable r, Throwable t)
+    {
         completedCount++;
         super.afterExecute(r, t);
+        if (t == null
+                && r instanceof Future<?>
+                && ((Future<?>) r).isDone())
+        {
+            try {
+                Object result = ((Future<?>) r).get();
+            }
+            catch (CancellationException ce) { t = ce; }
+            catch (ExecutionException ee) { t = ee.getCause(); }
+            catch (InterruptedException ie) { /*Thread.currentThread().interrupt();*/ }
+        }
+        if (t!=null)
+            t.printStackTrace();
         if (closingThread != null && completedCount >= jobCount) closingThread.interrupt();
     }
 }

@@ -75,8 +75,9 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 
         @Override
         public void run() {
-            for (Runnable r : this) r.run();
-            if (onBatchFinished!=null)
+            for (Runnable r : this)
+                r.run();
+            if (onBatchFinished != null)
                 onBatchFinished.accept(this);
         }
     }

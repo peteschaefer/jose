@@ -172,6 +172,9 @@ public class PositionFilter
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
 		byte[] bin = res.getBytes(3);
+		// todo
+		//int gameAttributes = res.getInt(6);
+		//boolean hasVariations = (gameAttributes & Game.HAS_VARIATIONS) != 0;
 
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
 
