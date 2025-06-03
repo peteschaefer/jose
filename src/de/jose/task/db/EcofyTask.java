@@ -42,6 +42,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import static de.jose.pgn.BinReader.*;
+
 /**
  *  Classifies ECO opening codes & names
  *
@@ -443,7 +445,7 @@ public class EcofyTask
 				UpdateRow row = (UpdateRow)updateBuffer.get(GId);
 
 				currentCode = ECOClassificator.NOT_FOUND;
-                reader.read(bin,0, null,0, fen,true,true);
+                reader.read(bin,0, null,0, fen,REPLAY|RESET); // SKIP_VARS ?
 
 	            if (currentCode==ECOClassificator.NOT_FOUND)
 	                updateBuffer.remove(GId);   //  no use updating

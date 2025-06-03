@@ -25,6 +25,9 @@ import de.jose.util.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
+
 
 /**
 
@@ -182,7 +185,7 @@ public class CreatePositionIndex2
                 mainOut.setLength(0);
                 varOut.setLength(0);
 
-                reader.read(bin,0, null,0, fen,true,true);
+                reader.read(bin,0, null,0, fen,REPLAY|RESET);
 
                 Game.updatePositionIndex(getConnection(), GId,
                         mainOut.getValue(),mainOut.length(),

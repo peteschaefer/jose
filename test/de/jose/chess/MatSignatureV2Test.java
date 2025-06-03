@@ -25,6 +25,8 @@ import java.util.function.Supplier;
 import static de.jose.chess.Constants.*;
 import static de.jose.chess.MatSignatureV2.PAWN_MASK;
 import static de.jose.chess.MatSignatureV2.longBoard;
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
@@ -411,7 +413,7 @@ class MatSignatureV2Test {
             byte[] bin = res.getBytes(3);
             //long whiteSignature = rs.getLong(4);
             //long blackSignature = rs.getLong(5);
-            counter.read(bin,0, null,0, FEN,true,false);
+            counter.read(bin,0, null,0, FEN,REPLAY);
         }
         long time = System.currentTimeMillis()-startTime;
         System.out.println("["+games+" games replayed]");
@@ -486,7 +488,7 @@ class MatSignatureV2Test {
     {
         reader.sigs.clear();
         reader.fens.clear();
-        reader.read(bin,0, null,0, initFen, true,false);
+        reader.read(bin,0, null,0, initFen, REPLAY);
         //  reachability:
         for(int i=1; i < reader.sigs.size(); i++) {
             MatSignatureV2 sigi = reader.sigs.get(i);

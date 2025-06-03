@@ -189,7 +189,8 @@ public class PosSearchRecord
         if (pawnStructure()) {
             //  ignore officers during canReach()
             //  todo remove all officers from sig?
-            return !matSig.canReach(sig) && !(reversedColor && matSig.canReachReversed(sig));
+            if (!matSig.canReach(sig) && !(reversedColor && matSig.canReachReversed(sig)))
+                return true;
         }
         //  todo check mat balance
         return false;

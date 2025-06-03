@@ -39,6 +39,9 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
+
 /**
  *
  * @author Peter Sch�fer
@@ -504,7 +507,7 @@ public class PGNExport
 	    byte[] comments = res.getBytes(i++);
 
 	    try {
-			binReader.read(bin,0, comments,0, fen,true,true);
+			binReader.read(bin,0, comments,0, fen,REPLAY|RESET);
 	    } catch (RuntimeException rex) {
 			//	replay error
 		    out.println();
@@ -643,7 +646,7 @@ public class PGNExport
 	    byte[] comments = writer.getComments();
 
 	    try {
-			binReader.read(bin,0, comments,0, fen,true,true);
+			binReader.read(bin,0, comments,0, fen,REPLAY|RESET);
 	    } catch (RuntimeException rex) {
 			//	replay error
 		    out.println();

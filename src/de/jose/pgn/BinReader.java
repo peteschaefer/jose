@@ -84,10 +84,22 @@ abstract public class BinReader
 		eof = true;
 	}
 
+    /** options to read() */
+    //  replay moves on board while scanning
+    public static final int REPLAY  = 0x01;
+    //  reset board at end
+    public static final int RESET   = 0x02;
+    //  skip nested variations
+    public static final int SKIP_VARS   = 0x04;
+
     public void read(byte[] binary, int startOffset,
                      byte[] comments, int coffset,
-                     String fen, boolean replay, boolean reset)
+                     String fen, int options)
     {
+        boolean replay = (options&REPLAY) != 0;
+        boolean reset = (options&RESET) != 0;
+        boolean skipVars = (options&SKIP_VARS) != 0;
+
         bin = binary;
         offset = startOffset;
 
@@ -116,6 +128,8 @@ abstract public class BinReader
             {
             case SHORT_ANNOTATION:
                 short nagCode = (short)((short)bin[offset++] & 0x00ff);
+                if (skipVars && nestLevel>0) continue;
+
 	            if (nagCode==PgnConstants.NAG_DIAGRAM || nagCode==PgnConstants.NAG_DIAGRAM_DEPRECATED)
 	                wasMove=false;
 		        hasComments = true;
@@ -141,7 +155,10 @@ abstract public class BinReader
 
             case SHORT_START_OF_LINE:
 		        hasVariations = true;
-                startOfLine(++nestLevel);
+                ++nestLevel;
+                if (skipVars && nestLevel>0) continue;
+
+                startOfLine(nestLevel);
 
                 if (replay)
                     pos.startVariation();
@@ -149,7 +166,10 @@ abstract public class BinReader
                 continue;
 
             case SHORT_END_OF_LINE:
-                endOfLine(nestLevel--);
+                if (!skipVars)
+                    endOfLine(nestLevel);
+                nestLevel--;
+                if (skipVars && (nestLevel+1)>0) continue;
 
                 if (replay)
                     pos.undoVariation();
@@ -166,6 +186,7 @@ abstract public class BinReader
             {
                 if (code >= SHORT_A_PROMOTION)
                     code |= ((short)bin[offset++] << 8);
+                if (skipVars && nestLevel>0) continue;
 
                 //	 a move
                 int ply = pos.gamePly();
@@ -203,6 +224,8 @@ abstract public class BinReader
 
             if (code <= SHORT_ANNOTATION_MAX)
             {
+                if (skipVars && nestLevel>0) continue;
+
 	            hasComments = true;
 	            int nagCode = code-SHORT_ANNOTATION;
 	            if (nagCode==PgnConstants.NAG_DIAGRAM || nagCode==PgnConstants.NAG_DIAGRAM_DEPRECATED)

@@ -26,6 +26,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
+
 /**
  * Database cross-over for Meta Version 1009
  *
@@ -183,10 +186,7 @@ public class Crossover1011
 		}
 
 		@Override
-		public void startOfLine(int nestLevel) {
-			ignoreLine = true;
-			inLine = nestLevel >= 1;
-		}
+		public void startOfLine(int nestLevel) { }
 
 		@Override
 		protected void setPosOptions() {
@@ -207,7 +207,7 @@ public class Crossover1011
 	private static MatSignature computeMatSignature(String fen, byte[] bin)
 	{
 		PositionFilter pf = pooledFilter.get();
-		pf.read(bin,0, null,0, fen,true,false);
+		pf.read(bin,0, null,0, fen,REPLAY);
 		MatSignature mat = pf.getMatSig();
 		return mat;
 	}

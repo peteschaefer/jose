@@ -29,11 +29,11 @@ public class PositionFilter
         extends BinReader
 {
 	protected PosSearchRecord query;
-	protected boolean inLine,ignoreLine;
 	protected Result result;
 
 	public enum Result  {
-		REJECT, ACCEPT, WAIT
+		REJECT, ACCEPT, WAIT,
+		REJECT_NEXT //	used during replay
 	};
 /*
 	public static PositionFilter PASS_FILTER = new PositionFilter(true) {
@@ -94,8 +94,6 @@ public class PositionFilter
 	public void copySearchParams(PositionFilter that)
 	{
 		that.query= this.query; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.inLine = this.inLine;
-		that.ignoreLine = this.ignoreLine;
 		that.result = this.result;
 	}
 
@@ -196,12 +194,14 @@ public class PositionFilter
 			return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
-		ignoreLine = inLine = false;
 
 		int oldOptions = pos.getOptions();
 		query.setPositionOptions(pos);
 
-		read(bin,0, null,0, fen,true,true);
+		int readOptions = REPLAY|RESET;
+		if (!query.variations) readOptions |= SKIP_VARS;
+
+		read(bin,0, null,0, fen, readOptions);
 		//  read will call back to (BinReader)this
 		//	note: reset==false keeps the final position
 		pos.setOptions(oldOptions);
@@ -219,35 +219,33 @@ public class PositionFilter
 
 	public void afterMove (Move mv, int ply)
 	{
-		if ((nestLevel == 0 || query.variations)
+		if (result== Result.REJECT_NEXT) {
+			//	cut-off was detected one move before; finalize it:
+			eof = true; //  this will terminate the read() method
+			result = Result.REJECT;
+		}
+		else if ((nestLevel == 0 || query.variations)
 				&& query.matches(pos, !pos.wasSilent())) {
 			eof = true; //  this will terminate the read() method
 			result = Result.ACCEPT;
 		}
-		if ((nestLevel==0) && query.cutOff(pos,!pos.wasSilent())) {
-			eof = true; //  this will terminate the read() method
-			result = Result.REJECT;
+		else if ((nestLevel==0) && query.cutOff(pos,!pos.wasSilent())) {
 			//	note: if the search position is not reachable from the main line
-			//	it won't from one of the following variations
+			//	it won't from one of the later variations
+			//	EXCEPT: in the variation *immediately* following this move (which will undo 'mv')
+			//	in other words: don't cut-off if there is a variation following
+			result = Result.REJECT_NEXT;
 		}
 //		if (!inLine && (ply%10==0)) checkCutOff();
 //		if (eof && !result) System.err.println("cut-off after "+ply);
 	}
 
-	public void startOfLine (int nestLevel) 	{
-		if (nestLevel==0 && query.matches(pos,!pos.wasSilent())) {
-			eof = true;
-			result = Result.ACCEPT;
-		}
-		else if (!query.variations)
-			ignoreLine = true;
-		inLine = nestLevel >= 1;
+	public void startOfLine (int nestLevel) {
+		if (result == Result.REJECT_NEXT)
+			result = Result.REJECT;
+		//	undo reject; see above
 	}
-
-	public void endOfLine (int nestLevel) {
-		inLine = nestLevel < 1;
-		if (!inLine) ignoreLine = false;
-	}
+	public void endOfLine (int nestLevel) { }
 
 
 	public void result (int resultCode)                                 { /* ignored  */ }

@@ -23,6 +23,8 @@ import java.io.*;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
 import static de.jose.pgn.INodeConstants.*;
 
 public class LineNode
@@ -522,7 +524,9 @@ public class LineNode
         reader.pos.setOption(Board.CHECK, true);
 	    reader.pos.setOption(Board.STALEMATE, true);
 
-	    reader.read(bin,boffset, comments,coffset, fen,replay,true);
+		int readOptions = RESET;
+		if (replay) readOptions |= REPLAY;
+	    reader.read(bin,boffset, comments,coffset, fen,readOptions);
 
 	    reader.pos.setOptions(oldOptions);
     }
@@ -598,7 +602,7 @@ public class LineNode
 	    pos.setOption(Board.CHECK, true);
 		pos.setOption(Board.STALEMATE, true);
 
-		reader.read(bin,boffset, comments,coffset, fen,true,true);
+		reader.read(bin,boffset, comments,coffset, fen,REPLAY|RESET);
 
 		pos.setOptions(oldOptions);
 	}
