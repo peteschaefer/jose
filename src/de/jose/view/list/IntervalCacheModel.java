@@ -118,7 +118,11 @@ abstract public class IntervalCacheModel
 					 * must happen within the same thread
 					 * that's why we create the prepared statement HERE
 					 */
-					preparedStatement = paramStm.toPreparedStatement(conn);
+					//preparedStatement = paramStm.toPreparedStatement(conn);
+					conn.executeUpdate("HANDLER MoreGame OPEN AS PosSearch");
+					String sql = "HANDLER PosSearch READ `PRIMARY` FIRST LIMIT "+Integer.MAX_VALUE;
+					preparedStatement = conn.getPreparedStatement(sql);
+
 					if (conn.isConnectorJ())
 						this.preparedStatement.setFetchSize(Integer.MIN_VALUE);	//	hint to Connector/J driver: fetch row by row
 

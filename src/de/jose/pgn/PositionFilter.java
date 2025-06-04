@@ -13,6 +13,7 @@
 package de.jose.pgn;
 
 import de.jose.chess.*;
+import de.jose.util.ListUtil;
 import de.jose.util.concurrent.BatchThreadPool;
 import de.jose.util.concurrent.QueueThreadPool;
 
@@ -168,15 +169,18 @@ public class PositionFilter
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
-		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
-		boolean hasVariations = res.getInt(6) > 0;
+		MatSignatureV2 gameEndSig = new MatSignatureV2(
+				res.getLong("WhiteSignature"),
+				res.getLong("BlackSignature"));
+
+		byte[] bin = res.getBytes("Bin");
+		boolean hasVariations = ListUtil.indexOf(bin, (byte) 0xf0) >= 0;
 
 		if (query.earlyCutOff(gameEndSig,hasVariations))
 			return Result.REJECT;
 
-		int GId = res.getInt(1);
-		String fen = res.getString(2);
-		byte[] bin = res.getBytes(3);
+		int GId = res.getInt("GId");
+		String fen = res.getString("FEN");
 
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
 

@@ -256,6 +256,14 @@ public class ListUtil
 		return -1;
 	}
 
+	public static int indexOf(byte[] array, byte value)
+	{
+		for(int i=0; i<array.length; i++)
+			if (value==array[i])
+				return i;
+		return -1;
+	}
+
 	public static void sort(List coll, Comparator comp)
 	{
 		Object[] values = coll.toArray();
