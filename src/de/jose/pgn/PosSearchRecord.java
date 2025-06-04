@@ -162,12 +162,13 @@ public class PosSearchRecord
     }
 
     //  early cut-off if query can not be reached from end
-    public boolean earlyCutOff(MatSignature endSignature) {
+    public boolean earlyCutOff(MatSignature endSignature, boolean hasVariations) {
         if (exactPosition()) {
-            if (!sig.canReach(endSignature) && (!reversedColor || !sig.canReachReversed(endSignature)))
-                return !variations;
-            //    return true;
-            // todo except if we can find it in variations
+            if (!(variations && hasVariations)
+                    && !sig.canReach(endSignature)
+                    && (!reversedColor || !sig.canReachReversed(endSignature)))
+                return true;
+            //  except if we could find it in variations
             //  this.variations && Game.Attributes & HAS_VARIATIONS
         }
         if (pawnStructure()) {

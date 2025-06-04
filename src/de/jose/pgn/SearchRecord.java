@@ -478,6 +478,14 @@ public class SearchRecord implements Cloneable
 		if (!pos.isEmpty()) {
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+			//	Has Variations can be queried from Game.Attribute
+			//	or from MoreGame.Bin (more expensive but needs no extra join)
+			if (!pos.variations)
+				sql.select.append(", 0 AS HasVariations");
+			else if ((joins & JOIN_GAME) != 0)
+				sql.select.append(", (Game.Attributes & 1) AS HasVariations");
+			else
+				sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
 		}
 
 		return sql;

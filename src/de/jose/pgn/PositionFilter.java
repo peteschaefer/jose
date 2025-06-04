@@ -144,12 +144,15 @@ public class PositionFilter
 		int GId;
 		String fen;
 		byte[] bin;
+		boolean hasVariations;
 		IntConsumer callback;
 
-		public PosFilterJob(PositionFilter query, int GId, String fen, byte[] bin, IntConsumer callback) {
+		public PosFilterJob(PositionFilter query, int GId, String fen, byte[] bin, boolean hasVariations,
+							IntConsumer callback) {
 			this.query = query;
 			this.bin = bin;
 			this.fen = fen;
+			this.hasVariations = hasVariations;
 			this.GId = GId;
 			this.callback = callback;
 		}
@@ -157,7 +160,7 @@ public class PositionFilter
 		@Override
 		public void run() {
 			PositionFilter pf = query.getFilterLike();
-			Result rs = pf.accept(fen, bin, null);	//	note MatSignature already checked
+			Result rs = pf.accept(fen, bin, null, hasVariations);	//	note MatSignature already checked
 			if (rs == Result.ACCEPT) callback.accept(GId);
 		}
 	}
@@ -166,34 +169,33 @@ public class PositionFilter
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
 		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
-		if (query.earlyCutOff(gameEndSig))
+		boolean hasVariations = res.getInt(6) > 0;
+
+		if (query.earlyCutOff(gameEndSig,hasVariations))
 			return Result.REJECT;
 
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
 		byte[] bin = res.getBytes(3);
-		// todo
-		//int gameAttributes = res.getInt(6);
-		//boolean hasVariations = (gameAttributes & Game.HAS_VARIATIONS) != 0;
 
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
 
 		if (asyncCallback!=null) {
 			//	submit job to executor pool
-			PosFilterJob job = new PosFilterJob(this,GId,fen,bin,asyncCallback);
+			PosFilterJob job = new PosFilterJob(this,GId,fen,bin, hasVariations, asyncCallback);
 			executorPool.submit(job);
 			return Result.WAIT;
 		}
 		else {
 			//	do it now
-			return accept(fen, bin, null);	//	note: MatSignature already checked synchroneously, above
+			return accept(fen, bin, null, hasVariations);	//	note: MatSignature already checked synchroneously, above
 		}
  	}
 
-	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
+	public Result accept(String fen, byte[] bin, MatSignature gameEndSig, boolean hasVariations)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-		if (gameEndSig!=null && query.earlyCutOff(gameEndSig))
+		if ((gameEndSig!=null) && query.earlyCutOff(gameEndSig,hasVariations))
 			return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
@@ -202,7 +204,7 @@ public class PositionFilter
 		query.setPositionOptions(pos);
 
 		int readOptions = REPLAY|RESET;
-		if (!query.variations) readOptions |= SKIP_VARS;
+		if (!query.variations && hasVariations) readOptions |= SKIP_VARS;
 
 		read(bin,0, null,0, fen, readOptions);
 		//  read will call back to (BinReader)this
