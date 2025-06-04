@@ -141,9 +141,9 @@ public class PosSearchRecord
     public boolean matches(Position pos, boolean wasNoisy) {
         if (exactPosition()) {
             //  hash key is checked with every position
-            assert(pos.hasOption(Position.INCREMENT_HASH));
-            assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
-            assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
+            assert(!exactPosition() || pos.hasOption(Position.INCREMENT_HASH));
+            assert(!reversedColor || pos.hasOption(Position.INCREMENT_REVERSED_HASH));
+            assert(!exactPosition() || pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
 
             if (pos.getHashKey().equals(key) || reversedColor && pos.getReversedHashKey().equals(keyReversed))
                 return true;

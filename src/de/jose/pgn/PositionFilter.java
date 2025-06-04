@@ -66,7 +66,7 @@ public class PositionFilter
 		setPosOptions();
 	}
 
-	protected void setPosOptions()
+	public void setPosOptions()
 	{
 		//  calculate hash keys & material signature
 		pos.setOption(Position.INCREMENT_HASH,true);

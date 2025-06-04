@@ -189,7 +189,7 @@ public class Crossover1011
 		public void startOfLine(int nestLevel) { }
 
 		@Override
-		protected void setPosOptions() {
+        public void setPosOptions() {
 			//  no need for hash keys
 			super.setPosOptions();
 			pos.setOption(Position.INCREMENT_HASH,false);

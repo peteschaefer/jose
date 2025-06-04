@@ -6,6 +6,7 @@ import de.jose.Version;
 import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
+import de.jose.pgn.PosSearchRecord;
 import de.jose.pgn.PositionFilter;
 import de.jose.util.BitUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +21,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
@@ -513,5 +517,99 @@ class MatSignatureV2Test {
                 assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj),printQInfo);
             }
         }
+    }
+
+    class ParallelSearchJob implements Runnable
+    {
+        int name;
+        PositionFilter filter;
+        JoConnection conn;
+        int offset,limit;
+
+        public ParallelSearchJob(int name, PositionFilter afilter, int offset, int limit) {
+            this.name = name;
+            this.offset = offset;
+            this.limit = limit;
+            this.filter = afilter;
+        }
+
+        @Override
+        public void run() {
+            try {
+                this.filter = filter.getFilterLike();  //  thread-local copy
+                filter.setPosOptions();
+
+                System.out.println("[worker starting]");
+                this.conn = JoConnection.get();
+                conn.executeUpdate("HANDLER MoreGame OPEN AS PosSearch"+name);
+
+                String sql = "HANDLER PosSearch"+name+" READ `PRIMARY` FIRST LIMIT "+offset+","+limit;
+                JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+                pstm.execute();
+
+                ResultSet rs = pstm.getResultSet();
+                int rows = 0;
+                while (rs.next()) {
+                    rows++;
+                    PositionFilter.Result acc = filter.accept(rs,null);
+                    if (acc==PositionFilter.Result.ACCEPT)
+                        System.out.println("[Result "+rs.getInt("GId")+"]");
+                }
+
+                rs.close();
+                pstm.close();
+                System.out.println("["+rows+" rows read]");
+
+                conn.executeUpdate("HANDLER PosSearch"+name+" CLOSE");
+
+            } catch (Throwable e) {
+                e.printStackTrace();
+            } finally {
+                if (conn!=null) conn.release();
+            }
+        }
+    }
+
+
+    @Test
+    void testParallelHandlers() throws Exception
+    {
+        withDBServer();
+        /*
+         *  run a parallel position search using n HANDLERs
+         */
+        pos.setOption(Position.INCREMENT_HASH,true);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH,true);
+        pos.setOption(Position.INCREMENT_SIGNATURE,true);
+        pos.setOption(Position.IGNORE_FLAGS_ON_HASH, true);
+
+        //  query position
+        PosSearchRecord query = new PosSearchRecord();
+        pos.setup("6k1/P7/4p2p/4p1p1/1B1nP1P1/5P1P/5K2/8 b - - 0 39");
+        query.setExact(pos);
+        query.variations=true;
+
+        PositionFilter filter = new PositionFilter(query);
+
+        JoConnection conn = JoConnection.get();
+        int rows = conn.selectInt("SELECT COUNT(*) FROM MoreGame");
+
+        //  setup a number of parallel workers
+        long startTime = System.currentTimeMillis();
+        int n=7;
+        int blockSize = rows/n;
+        ExecutorService pool = Executors.newFixedThreadPool(n);
+        for(int i=0; i < n; i++) {
+            if ((i + 1) == n)
+                pool.submit(new ParallelSearchJob((i+1), filter, i * blockSize, blockSize));
+            else
+                pool.submit(new ParallelSearchJob((i+1), filter, i * blockSize, Integer.MAX_VALUE/2));
+        }
+
+        pool.shutdown();
+        pool.awaitTermination(5, TimeUnit.MINUTES);
+
+        long time = System.currentTimeMillis() - startTime;
+        System.out.println("["+(time/1000.0)+" s]");
     }
 }

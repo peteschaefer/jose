@@ -105,7 +105,8 @@ Maintenance:
 [ ] search mate, stalemate, check (double check?)
 [ ] animate search button
 [ ] checkout HANDLER for Position Search
-    [ ] partition into parallel parcels (less thread-pool worries)
+    [x] unit-test: partition into parallel parcels (less thread-pool worries).
+        one HANDLER for each worker thread?
 
 === Native Position Search
 

@@ -122,7 +122,7 @@ public class Crossover1010
 		public void startOfLine(int nestLevel) { }
 
 		@Override
-		protected void setPosOptions() {
+        public void setPosOptions() {
 			super.setPosOptions();
 			//  no need for hash keys
 			pos.setOption(Position.INCREMENT_HASH,false);
