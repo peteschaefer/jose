@@ -327,7 +327,13 @@ public class ECOClassificator
 
 	public boolean isReachable(MatSignature sig)
 	{
-		return terminal.isReachableFrom(sig);
+        if (sig instanceof MatSignatureV2) {
+            MatSignatureV1 sig1 = ((MatSignatureV2)sig).toMatSignatureV1();
+            return terminal.isReachableFrom(sig1);
+        }
+        else {
+            return terminal.isReachableFrom(sig);
+        }
 		/** is terminal signature still reachable ? */
 	}
 }

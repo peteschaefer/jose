@@ -14,6 +14,8 @@ package de.jose.task.db;
 
 import de.jose.Application;
 import de.jose.Language;
+import de.jose.chess.JoseHashKey;
+import de.jose.chess.MatSignatureV1;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.JoConnection;
@@ -236,7 +238,7 @@ public class EcofyTask
 
     public void prepare() throws Exception
     {
-        pos = new Position();
+        pos = new Position(JoseHashKey.class, MatSignatureV1.class);
         pos.setOption(Position.INCREMENT_HASH,          true);
         pos.setOption(Position.INCREMENT_REVERSED_HASH, true);
 	    pos.setOption(Position.INCREMENT_SIGNATURE,     true);
@@ -332,7 +334,7 @@ public class EcofyTask
 
 		    JoStatement stm = new JoStatement(getConnection());
 		    StringBuffer buf = new StringBuffer("HANDLER "+handlerName+" ");
-		    buf.append("READ Game_15 = ("+CId+") ");
+		    buf.append("READ Game_16 = ("+CId+") ");
 		    buf.append(" WHERE CId = "+CId+" ");
 		    appendCondition(buf,handlerName,true);
 			buf.append(" LIMIT "+HANDLER_LIMIT);
@@ -341,7 +343,7 @@ public class EcofyTask
 			//  INDEX Game_15 ON Game(CId,Id)
 
 		    buf.setLength(0);
-		    buf.append("HANDLER "+handlerName+" READ Game_15 NEXT ");
+		    buf.append("HANDLER "+handlerName+" READ Game_16 NEXT ");
 		    buf.append(" WHERE CId = "+CId+" ");
 		    appendCondition(buf,handlerName,true);
 		    buf.append(" LIMIT "+HANDLER_LIMIT);

@@ -92,7 +92,7 @@ Maintenance:
         (Game.Attributes & 1) AS HasVariations
     [x] QueueThreadPool: collect Futures
     [ ] cross-over .jose files
-    [ ] test Ecofy (still uses MatSignatureV1 !)
+    [x] test Ecofy (still uses MatSignatureV1 !)
 
 [ ] Q: use concurrent insert for Archive Export ?
     https://dev.mysql.com/doc/refman/8.4/en/concurrent-inserts.html
@@ -104,6 +104,8 @@ Maintenance:
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
 [ ] search mate, stalemate, check (double check?)
 [ ] animate search button
+[ ] checkout HANDLER for Position Search
+    [ ] partition into parallel parcels (less thread-pool worries)
 
 === Native Position Search
 

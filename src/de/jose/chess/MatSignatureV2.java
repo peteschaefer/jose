@@ -268,6 +268,13 @@ public class MatSignatureV2 implements MatSignature
                 is_reachable(from.bfeat, to.wfeat);
     }
 
+    public MatSignatureV1 toMatSignatureV1()
+    {
+        long wsig1 = wfeat.toMatSignatureV1();
+        long wsig2 = bfeat.toMatSignatureV1();
+        return new MatSignatureV1(wsig1,wsig2);
+    }
+
     // --------------------------------------
     //      Private Parts
     // --------------------------------------
@@ -393,11 +400,9 @@ public class MatSignatureV2 implements MatSignature
             this.computePawnAdvanceBounds();
         }
 
-        private void computePawnAdvanceBounds()
+        private int computePromotionLowerBound()
         {
             int promo_lower = 0;
-            int promo_upper = 8-pawnCount();
-            boolean more_promos=false;
             if (knightCount()>=3)       promo_lower++;
             if (lightBishopCount()>=2)  promo_lower++;
             if (lightBishopCount()>=3)  promo_lower++;
@@ -406,6 +411,14 @@ public class MatSignatureV2 implements MatSignature
             if (rookCount()>=3)         promo_lower++;
             if (queenCount()>=2)        promo_lower++;
             if (queenCount()>=3)        promo_lower++;
+            return promo_lower;
+        }
+
+        private void computePawnAdvanceBounds()
+        {
+            int promo_lower = computePromotionLowerBound();
+            int promo_upper = 8-pawnCount();
+            boolean more_promos=false;
             //  todo get a second promo_lower bound from Board
 
             int stored_padv = pawnAdvance(sig);
@@ -634,6 +647,34 @@ public class MatSignatureV2 implements MatSignature
                         return ROW_7-row;
             }
             return 0;
+        }
+
+        public long toMatSignatureV1() {
+           long sig1 = 0;
+           sig1 |= BitUtil.set4(pawnCount(),                MatSignatureV1.OFF_PAWN);
+           sig1 |= BitUtil.set4(knightCount(),              MatSignatureV1.OFF_KNIGHT);
+           sig1 |= BitUtil.set4(bishopCount(),              MatSignatureV1.OFF_BISHOP);
+           sig1 |= BitUtil.set4(rookCount(),                MatSignatureV1.OFF_ROOK);
+           sig1 |= BitUtil.set4(queenCount(),               MatSignatureV1.OFF_QUEEN);
+           sig1 |= BitUtil.set4(pawnCount()+officersCount(),MatSignatureV1.OFF_TOTAL);
+
+           int homeRow = EngUtil.homeRow(color);
+           long homePawns = (this.sig >> rowOffset(homeRow)) & 0x00ffL;
+           sig1 |= (homePawns << MatSignatureV1.OFF_PAWN_HOME);
+
+           int promo_lower = computePromotionLowerBound();
+           int promo_upper = 8-pawnCount();
+           sig1 |= BitUtil.set4(promo_lower, MatSignatureV1.OFF_MIN_PROMO);
+           sig1 |= BitUtil.set4(Math.max(promo_upper,promo_lower), MatSignatureV1.OFF_MAX_PROMO);
+
+           sig1 |= BitUtil.set6(padv_lower, MatSignatureV1.OFF_MIN_ADVANCE);
+           sig1 |= BitUtil.set6(padv_upper, MatSignatureV1.OFF_MAX_ADVANCE);
+
+           if (promo_lower==promo_upper)
+               sig1 |= MatSignatureV1.FLAG_PROMO_EXACT;
+           if (padv_lower==padv_upper)
+               sig1 |= MatSignatureV1.FLAG_PAWN_ADV_EXACT;
+           return sig1;
         }
     }
 

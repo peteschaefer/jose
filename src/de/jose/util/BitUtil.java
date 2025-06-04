@@ -20,6 +20,7 @@ public class BitUtil
     public static long set1(int value, int offset)     { return ((long)(value & 0x001)) << offset; }
     public static long set2(int value, int offset)     { return ((long)(value & 0x003)) << offset; }
     public static long set3(int value, int offset)     { return ((long)(value & 0x007)) << offset; }
+    public static long set4(int value, int offset)     { return ((long)(value & 0x007)) << offset; }
     public static long set6(int value, int offset)     { return ((long)(value & 0x03f)) << offset; }
 
     public static long clip2(int value, int offset)     { return set2(Math.min(value,3),offset); }
