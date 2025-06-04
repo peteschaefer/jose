@@ -59,7 +59,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
      * drop waiting tasks, waiting for executing tasks to finish
      */
     public void abort() {
-        System.out.println("[thread pool aborting... "+futures.size());
+        //System.out.println("[thread pool aborting... "+futures.size());
         getQueue().clear();
         Iterator<Future<R>> i = futures.keySet().iterator();
         while(i.hasNext()) {
@@ -68,7 +68,7 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
                 f.cancel(true);
         }
         futures.clear();
-        System.out.println("...thread pool aborted]");
+        //System.out.println("...thread pool aborted]");
     }
 
     /**

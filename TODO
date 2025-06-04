@@ -78,7 +78,7 @@ Maintenance:
 [x] PosFilter + CId is slow.
     heuristic hack: search for GId BETWEEN. Inaccurate but fast.
 [x] update Matsig only after noisy moves
-[ ] Easylink: RelWithDeb
+[x] Easylink: replace Oracle's msvcp140.dll
 
 [ ] Matsig V2
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
@@ -104,8 +104,8 @@ Maintenance:
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
 [ ] search mate, stalemate, check (double check?)
 [ ] animate search button
-[ ] checkout HANDLER for Position Search
-    [ ] partition into parallel parcels (less thread-pool worries)
+[-] checkout HANDLER for Position Search
+    [-] partition into parallel parcels (less thread-pool worries)
 
 === Native Position Search
 

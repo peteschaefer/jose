@@ -476,6 +476,7 @@ public class SearchRecord implements Cloneable
 //		System.out.println(sql.toString());
 
 		if (!pos.isEmpty()) {
+			//	Position Search
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
 			//	Has Variations can be queried from Game.Attribute
