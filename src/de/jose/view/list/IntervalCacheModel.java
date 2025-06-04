@@ -75,7 +75,7 @@ abstract public class IntervalCacheModel
 			this.status = EXECUTING;
 
 			setPriority(NORM_PRIORITY);
-			interrupt();
+			this.interrupt();
 		}
 
 		public void halt() throws SQLException
@@ -282,8 +282,14 @@ abstract public class IntervalCacheModel
                     switch (status) {
                     case HALTED:
 						PositionFilter.executorPool.abort();
-
-                        min = max = current = -1;
+						if (status!=HALTED) {
+							// System.out.println("surprise status: "+status);
+							// status change has overlapped with lengthy abort()
+							// never mind...
+							break;
+						}
+						// usually: continue waiting...
+						min = max = current = -1;
                         status = WAITING;
 //	                    System.out.println("WAITING (7)");
                         if (rowCount > fired)
@@ -296,7 +302,7 @@ abstract public class IntervalCacheModel
 							if (e.getErrorCode()!=MySQLAdapter.ER_QUERY_INTERRUPTED)
                             	throw e;
                         }
-                        //  fall-through intended
+						//  fall-through intended
 
                     case WAITING:
 	                case WAITING_FOR_EXECUTE:
