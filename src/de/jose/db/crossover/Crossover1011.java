@@ -12,15 +12,20 @@
 
 package de.jose.db.crossover;
 
+import de.jose.Application;
 import de.jose.Config;
+import de.jose.Version;
 import de.jose.chess.*;
 import de.jose.db.*;
+import de.jose.db.io.ArchiveFile;
 import de.jose.pgn.PositionFilter;
 import de.jose.util.concurrent.BatchThreadPool;
 import de.jose.util.concurrent.QueueThreadPool;
 import de.jose.window.JoDialog;
 
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -169,8 +174,10 @@ public class Crossover1011
 				" SET "+tableName+".WhiteSignature = MapMatSignature.WhiteSignature," +
 				"     "+tableName+".BlackSignature = MapMatSignature.BlackSignature";
 		rows = insertConn.executeUpdate(copyAll);
+
 		System.out.println("["+rows+" rows updated]");
 		insertConn.executeUpdate("UNLOCK TABLES ");
+		insertConn.executeUpdate("FLUSH TABLES");
 		insertConn.executeUpdate("DROP TABLE IF EXISTS MapMatSignature");
 		insertConn.release();
 
@@ -211,4 +218,31 @@ public class Crossover1011
 		MatSignature mat = pf.getMatSig();
 		return mat;
 	}
+
+
+	public static void launchDBServer() throws Exception {
+		if (Version.linux) {
+			System.setProperty("java.library.path", "lib/Linux_amd64");
+			System.setProperty("jose.datadir","/home/schaefer/src/jose/database");
+		}
+		if (Version.windows) {
+			System.setProperty("java.library.path", ".;lib/Windows");
+			System.setProperty("jose.datadir","C:\\dev\\jose\\work\\database");
+		}
+		System.setProperty("jose.splash","off");
+		System.setProperty("jose.console.output","true");
+		System.setProperty("java.awt.headless","true");
+
+		System.setProperty("jose.db","MySQL-standalone");
+		System.setProperty("jose.db.port","3306");
+		System.setProperty("jose.splash","false");
+		System.setProperty("jose.console.output","true");
+		Application app = new Application();
+
+		MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+		Thread launcher = adapter.launchProcess();
+		launcher.join();
+		//adapter.waitForStandaloneServer();
+	}
+
 }

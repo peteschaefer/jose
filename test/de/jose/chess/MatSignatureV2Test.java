@@ -131,34 +131,10 @@ class MatSignatureV2Test {
         }
     }
 
-    void launchDBServer() throws Exception {
-        if (Version.linux) {
-            System.setProperty("java.library.path", "lib/Linux_amd64");
-            System.setProperty("jose.datadir","/home/schaefer/src/jose/database");
-        }
-        if (Version.windows) {
-            System.setProperty("java.library.path", ".;lib/Windows");
-            System.setProperty("jose.datadir","C:\\dev\\jose\\work\\database");
-        }
-        System.setProperty("jose.splash","off");
-        System.setProperty("jose.console.output","true");
-        System.setProperty("java.awt.headless","true");
-
-        System.setProperty("jose.db","MySQL-standalone");
-        System.setProperty("jose.db.port","3306");
-        System.setProperty("jose.splash","false");
-        System.setProperty("jose.console.output","true");
-        Application app = new Application();
-
-        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        Thread launcher = adapter.launchProcess();
-        launcher.join();
-        //adapter.waitForStandaloneServer();
-    }
 
     void withDBServer() throws Exception {
         if (JoConnection.getAdapter(false)==null)
-            launchDBServer();
+            Crossover1011.launchDBServer();
         assertNotNull(JoConnection.getAdapter(true));
     }
 

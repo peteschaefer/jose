@@ -82,7 +82,7 @@ Maintenance:
 
 [ ] Matsig V2
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [ ] cross-over .jose files
+    [x] cross-over .jose files
     [x] test Ecofy (still uses MatSignatureV1 !)
     [x] reversed color search. MatSignatureV2: mirror pawns
         [x] unit test

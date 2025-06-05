@@ -380,14 +380,6 @@ public class ArchiveExport
 				"frm","MYI","MYD",
 		};
 
-		if (archive.getTableFormat()==ArchiveFile.TABLE_MYISAM_PACKED)
-		{
-			getConnection().close();
-			shared=true;    // = don't release this connection to the pool
-			connection = null;
-			myisampack(dataDir,tableNames);
-		}
-
 		//  ZIP
 		store(tableNames,extensions);
 		setProgress(0.98);
