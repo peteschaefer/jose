@@ -392,7 +392,7 @@ abstract public class IntervalCacheModel
 
 	                case EXECUTED:
                         if (pstm==null) pstm = executor.preparedStatement;
-	                    res = pstm.getResultSet();
+	                    res = (pstm==null) ? null : pstm.getResultSet();
 		                if (res==null) {
 			                status = HALTED;
 //			                System.out.println("HALTED (9)");

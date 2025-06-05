@@ -82,17 +82,13 @@ Maintenance:
 
 [ ] Matsig V2
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [x] Pgn import: use incremental MatSignatureV2 after parsing
-    [x] skip/include variations
-    [x] bug: open found position in variation
-    [x] no early cut-off if query.variations && (Game.Attributes & HAS_VARIATIONS)
-        -> might miss found positions in variations
-        note that in-game cut-off already takes care of variations
-    [x] LOCATE(0xf0,MoreGame.Bin) AS HasVariations
-        (Game.Attributes & 1) AS HasVariations
-    [x] QueueThreadPool: collect Futures
     [ ] cross-over .jose files
     [x] test Ecofy (still uses MatSignatureV1 !)
+    [ ] reversed color search. MatSignatureV2: mirror pawns
+        [ ] unit test
+    [ ] click&drag in Search Panel
+    [ ] paste FEN in Search Panel (w/out moving color?)
+    [ ] store SearchRecord in preferences
 
 [ ] Q: use concurrent insert for Archive Export ?
     https://dev.mysql.com/doc/refman/8.4/en/concurrent-inserts.html
@@ -104,8 +100,10 @@ Maintenance:
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
 [ ] search mate, stalemate, check (double check?)
 [ ] animate search button
-[-] checkout HANDLER for Position Search
-    [-] partition into parallel parcels (less thread-pool worries)
+
+[-] HANDLER for Position Search
+[-] partition into parallel parcels (less thread-pool worries)
+    Handler is very slow indeed.
 
 === Native Position Search
 

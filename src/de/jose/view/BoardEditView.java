@@ -68,6 +68,7 @@ public class BoardEditView
 	public BoardEditView(IBoardAdapter board)
 	{
 		super(board,false);
+		this.hasOneClickMoves = false;
 		Color bgColor 	= UIManager.getColor("Panel.background");
 		BACKGROUND 		= Surface.newColor(bgColor);
 

@@ -112,7 +112,9 @@ public class MatSignatureV2 implements MatSignature
     }
 
     public MatSignature cloneReversed() {
-        return new MatSignatureV2(getBlackSignature(), getWhiteSignature());
+        MatSignatureV2 result = new MatSignatureV2(this);
+        result.reverse();
+        return result;
     }
 
     public boolean isExact() {
@@ -165,6 +167,9 @@ public class MatSignatureV2 implements MatSignature
 
     public void reverse()
     {
+        wfeat.reverse();
+        bfeat.reverse();
+
         Features swapf = wfeat;
         wfeat = bfeat;
         bfeat = swapf;
@@ -203,8 +208,14 @@ public class MatSignatureV2 implements MatSignature
     }
 
     @Override
-    public boolean canReachReversed(MatSignature to) {
-        return (to instanceof MatSignatureV2) && is_reverse_reachable(this,(MatSignatureV2)to);
+    public boolean canReachReversed(MatSignature ato) {
+        if (!(ato instanceof MatSignatureV2)) return false;
+        //  todo expensive. better use reversed()
+        MatSignatureV2 to =(MatSignatureV2) ato;
+        to.reverse();
+        boolean result = is_reachable(this,to);
+        to.reverse();
+        return result;
     }
 
     /**
@@ -258,14 +269,9 @@ public class MatSignatureV2 implements MatSignature
                         (BitUtil.reverseBits(to.bfeat.sig)>>16)&PAWN_MASK,
                         15-from.wfeat.totalPieceCount(),
                         from.wfeat.totalPieceCount() - to.wfeat.totalPieceCount());
+        //  todo should work for mirrored pawns just the same !?
         return breach;
         /** of course, the above could be placed in a single statement; split it just for better debuggability */
-    }
-
-    public static boolean is_reverse_reachable(MatSignatureV2 from, MatSignatureV2 to)
-    {
-        return  is_reachable(from.wfeat, to.bfeat) &&
-                is_reachable(from.bfeat, to.wfeat);
     }
 
     public MatSignatureV1 toMatSignatureV1()
@@ -334,6 +340,25 @@ public class MatSignatureV2 implements MatSignature
 
         int totalPieceCount() {
             return piece_cnt+pawnCount();
+        }
+
+        void reverse()
+        {
+            color = EngUtil.oppositeColor(color);
+            long mirroredPawns =
+                        ((long)pawnRow(sig,ROW_7))
+                    |   ((long)pawnRow(sig,ROW_6)) << 8
+                    |   ((long)pawnRow(sig,ROW_5)) << 16
+                    |   ((long)pawnRow(sig,ROW_4)) << 24
+                    |   ((long)pawnRow(sig,ROW_3)) << 32
+                    |   ((long)pawnRow(sig,ROW_2)) << 40;
+
+            sig = (sig & ~PAWN_MASK) | mirroredPawns;
+            //  mirror bishops
+            sig = (sig & ~BISHOPS_MASK)
+                    | BitUtil.clip2(lightBishopCount(),DARK_BISHOP_OFFSET)
+                    | BitUtil.clip2(darkBishopCount(),LIGHT_BISHOP_OFFSET);
+            //  note that all computed values (padv_ etc.) remain valid
         }
 
         boolean good_bishop()
@@ -779,7 +804,8 @@ public class MatSignatureV2 implements MatSignature
     static final int DARK_BISHOP_OFFSET   = 52;
     static final int ROOK_OFFSET          = 54;
     static final int QUEEN_OFFSET         = 56;
-    static final long OFFICER_MASK         = 0x03ff000000000000L;
+    static final long OFFICER_MASK        = 0x03ff000000000000L;
+    static final long BISHOPS_MASK        = 0x00fL << LIGHT_BISHOP_OFFSET;
     //  pawn advance count (bits, may be unknown)
     static final int ADV_OFFSET             = 58;
 

@@ -9,6 +9,7 @@ public interface MatSignature extends Cloneable
     MatSignature cloneReversed();
 
     boolean canReach(MatSignature sig);
+    //@deprecated might be too epensive
     boolean canReachReversed(MatSignature sig);
 
     void init(long wshiteSignature, long blackSignature);

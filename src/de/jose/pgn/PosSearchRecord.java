@@ -18,7 +18,7 @@ public class PosSearchRecord
 
     //  if key!=0: signature of search position
     //  if key==0: pawn structure to search for
-    public MatSignature sig;
+    public MatSignature sig, sigReversed;
 
     //  material balance
     public int min[] = null;
@@ -74,7 +74,7 @@ public class PosSearchRecord
     public void clear() {
         key = null;
         keyReversed = null;
-        sig = null;
+        sig = sigReversed = null;
         reversedColor = false;
         variations = false;
         min = max = null;
@@ -98,6 +98,7 @@ public class PosSearchRecord
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, wasIgnoreFlags);
 
         sig = (MatSignature) pos.updateMatSig().clone();
+        sigReversed = sig.cloneReversed();
         // note: can not search for exact position and mat balance at the same time
         // min = max = null;
     }
@@ -109,6 +110,7 @@ public class PosSearchRecord
             sig = (MatSignature) pos.updateMatSig().clone();
         else
             sig.clear();
+        sigReversed = sig.cloneReversed();
     }
 
     public void clearMatBalance() {
@@ -166,7 +168,7 @@ public class PosSearchRecord
         if (exactPosition()) {
             if (!(variations && hasVariations)
                     && !sig.canReach(endSignature)
-                    && (!reversedColor || !sig.canReachReversed(endSignature)))
+                    && (!reversedColor || !sigReversed.canReach(endSignature)))
                 return true;
             //  except if we could find it in variations
             //  this.variations && Game.Attributes & HAS_VARIATIONS
@@ -187,13 +189,13 @@ public class PosSearchRecord
         if (!wasNoisy) return false;
         MatSignature matSig = pos.getMatSig();
         if (exactPosition()) {
-            if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReachReversed(sig)))
+            if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReach(sigReversed)))
                 return true;
         }
         if (pawnStructure()) {
             //  ignore officers during canReach()
             //  todo remove all officers from sig?
-            if (!matSig.canReach(sig) && !(reversedColor && matSig.canReachReversed(sig)))
+            if (!matSig.canReach(sig) && !(reversedColor && matSig.canReach(sigReversed)))
                 return true;
         }
         //  todo check mat balance

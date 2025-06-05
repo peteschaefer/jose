@@ -143,7 +143,7 @@ class MatSignatureV2Test {
         }
         if (Version.windows) {
             System.setProperty("java.library.path", ".;lib/Windows");
-            System.setProperty("jose.datadir","C:\\dev\\jose\\packages\\jose-152-windows\\jose\\database");
+            System.setProperty("jose.datadir","C:\\dev\\jose\\work\\database");
         }
         System.setProperty("jose.splash","off");
         System.setProperty("jose.console.output","true");
@@ -279,6 +279,29 @@ class MatSignatureV2Test {
         //  a pawn has advanced. We can deduce that it can't move back.
         //  (if the pawn counts are equal)
         assertFalse(from.canReach(goal));
+    }
+
+    @Test
+    void testReversed()
+    {
+        String fen1             = "3r2k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 w - - 0 33";
+        String fen2             = "6k1/6p1/4p2p/P3p3/1B1nP1P1/5P1P/5K2/8 b - - 0 37";
+        String fen2_reversed    = "8/5k2/5p1p/1b1Np1p1/p3P3/4P2P/6P1/6K1 b - - 0 37";
+
+        pos.setup(fen1);
+        MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
+        pos.setup(fen2);
+        MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
+        pos.setup(fen2_reversed);
+        MatSignatureV2 sig2rev = (MatSignatureV2) pos.computeMatSig().clone();
+
+        assertTrue(canReach(sig1,sig2,1));
+
+        assertEquals(sig2rev,sig2.cloneReversed());
+        assertEquals(sig2,sig2rev.cloneReversed());
+
+        assertTrue(sig1.canReach(sig2));
+        assertTrue(sig1.canReachReversed(sig2rev));
     }
 
     boolean canReach(String from, String to, int backtracks) {
