@@ -312,48 +312,28 @@ public class EcofyTask
         processCollectionContents(CId);
     }
 
-    public void processCollectionContents(int CId) throws Exception
-    {
-	    /**
-	     * use MySQL HANDLER to traverse the Game table
-	     * it is vastly more efficient with large tables
-	     *
-	     * we could use a SELECT with LIMIT but, unfortunately, the LIMIT clause
-	     * causes a full index scan that gets more and more expensive.
-	     * (working with large result sets in MySQL is a pain in the ass !!)
-	     *
-	     * the drawback is now, that we have to fetch data from MoreGame manually
-	     */
-	    try {
-		    handlerName = "EcofyRead"+(gHandlerCount++);
-	        getConnection().executeUpdate("HANDLER Game OPEN AS "+handlerName);
+	public void processCollectionContents(int CId) throws Exception
+	{
+		/**
+		 * use MySQL HANDLER to traverse the Game table
+		 */
+		try {
+			handlerName = "EcofyRead"+(gHandlerCount++);
+			getConnection().executeUpdate("HANDLER Game OPEN AS "+handlerName);
 
-		    JoStatement stm = new JoStatement(getConnection());
-		    StringBuffer buf = new StringBuffer("HANDLER "+handlerName+" ");
-		    buf.append("READ Game_15 = ("+CId+") ");
-		    buf.append(" WHERE CId = "+CId+" ");
-		    appendCondition(buf,handlerName,true);
-			buf.append(" LIMIT "+HANDLER_LIMIT);
+			JoStatement stm = new JoStatement(connection);
+			StringBuffer buf = new StringBuffer("HANDLER "+handlerName+" ");
+			buf.append("READ Game_16 = ("+CId+") ");
+			buf.append(" WHERE CId = "+CId+" ");
+			appendCondition(buf,handlerName,true);
+			buf.append(" LIMIT "+Integer.MAX_VALUE/2);
 
-		    stm.executeQuery(buf.toString());
+			stm.executeQuery(buf.toString());
 			//  INDEX Game_15 ON Game(CId,Id)
-
-		    buf.setLength(0);
-		    buf.append("HANDLER "+handlerName+" READ Game_15 NEXT ");
-		    buf.append(" WHERE CId = "+CId+" ");
-		    appendCondition(buf,handlerName,true);
-		    buf.append(" LIMIT "+HANDLER_LIMIT);
-		    String sql = buf.toString();
-
-		    while (processGames(stm.getResultSet()))
-		    {
-			    stm.executeQuery(sql);
-			    if (isAbortRequested()) break;
-		    }
-
-	    } finally {
-		    getConnection().executeUpdate("HANDLER "+handlerName+" CLOSE");
-	    }
+			processGames(stm.getResultSet());
+		} finally {
+			getConnection().executeUpdate("HANDLER "+handlerName+" CLOSE");
+		}
 
     }
 
@@ -385,9 +365,13 @@ public class EcofyTask
 				updateBuffer.put(row.Id, row);
 			//  else: skip that row
 			processedGames++;
-			if (updateBuffer.size() >= BUFFER_LIMIT) flushUpdate();
+			if (updateBuffer.size() >= BUFFER_LIMIT) {
+				flushUpdate();
+				if (isAbortRequested()) break;
+			}
 		}
 
+		res.close();
 		return any;
 	}
 
