@@ -253,20 +253,28 @@ public class MatSignatureV2 implements MatSignature
     public static boolean is_reachable(MatSignatureV2 from, MatSignatureV2 to)
     {
         from.backtrack=0;
+        //  (1) check counting arguments
         boolean wreach = is_reachable(from.wfeat, to.wfeat);
         if (!wreach) return false;
         boolean breach = is_reachable(from.bfeat, to.bfeat);
         if (!breach) return false;
         //  post-conditiion: all .piece_cnt are up to date. and will be used below.
-        wreach = from.wfeat.resolve_pawns(
-                        from.wfeat.sig&PAWN_MASK,
-                        to.wfeat.sig&PAWN_MASK,
-                        15-from.bfeat.totalPieceCount(),
-            from.bfeat.totalPieceCount() - to.bfeat.totalPieceCount());
+
+        //  (2) backtrack pawn position
+        long frompawns = from.wfeat.sig&PAWN_MASK;
+        long topawns = to.wfeat.sig&PAWN_MASK;
+        wreach = from.wfeat.resolve_pawns(frompawns,topawns,
+                15-from.bfeat.totalPieceCount(),
+                from.bfeat.totalPieceCount() - to.bfeat.totalPieceCount());
         if (!wreach) return false;
-        breach = from.bfeat.resolve_pawns(
-                        (BitUtil.reverseBits(from.bfeat.sig)>>16) &PAWN_MASK,
-                        (BitUtil.reverseBits(to.bfeat.sig)>>16)&PAWN_MASK,
+
+        frompawns = from.bfeat.sig&PAWN_MASK;
+        topawns = to.bfeat.sig&PAWN_MASK;
+        if (frompawns==topawns) return true;
+
+        frompawns = (BitUtil.reverseBits(frompawns)>>16) &PAWN_MASK;
+        topawns = (BitUtil.reverseBits(topawns)>>16)&PAWN_MASK;
+        breach = from.bfeat.resolve_pawns(frompawns,topawns,
                         15-from.wfeat.totalPieceCount(),
                         from.wfeat.totalPieceCount() - to.wfeat.totalPieceCount());
         //  todo should work for mirrored pawns just the same !?
@@ -605,6 +613,7 @@ public class MatSignatureV2 implements MatSignature
 
        boolean resolve_pawns(long from, long to, int prev_captures, int avail_captures)
        {
+           if (from==to) return (avail_captures>=0);    // that was easy
            if (Long.bitCount(to) > Long.bitCount(from)) return false;
 
            //   do a counting on files for captures that must occur between 'from' and 'to'

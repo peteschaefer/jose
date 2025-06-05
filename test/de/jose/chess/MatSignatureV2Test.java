@@ -6,17 +6,12 @@ import de.jose.Version;
 import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
-import de.jose.pgn.PositionFilter;
 import de.jose.util.BitUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Array;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

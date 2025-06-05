@@ -87,14 +87,23 @@ public class PosSearchRecord
     }
 */
     public void setExact(Position pos) {
+        boolean wasHash = pos.hasOption(Position.INCREMENT_HASH);
+        boolean wasRevHash = pos.hasOption(Position.INCREMENT_REVERSED_HASH);
         boolean wasIgnoreFlags = pos.hasOption(Position.IGNORE_FLAGS_ON_HASH);
+
+        pos.setOption(Position.INCREMENT_HASH,true);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH,true);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH,true);
 
+        assert(pos.hasOption(Position.INCREMENT_HASH));
+        assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
         assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
 
         key = (HashKey) pos.getHashKey().clone();
         keyReversed = (HashKey) pos.getReversedHashKey().clone();
 
+        pos.setOption(Position.INCREMENT_HASH,wasHash);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH,wasRevHash);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, wasIgnoreFlags);
 
         sig = (MatSignature) pos.updateMatSig().clone();
@@ -134,7 +143,7 @@ public class PosSearchRecord
     public void setPositionOptions(Position pos)
     {
         pos.setOption(Position.INCREMENT_HASH, exactPosition());
-        pos.setOption(Position.INCREMENT_REVERSED_HASH, exactPosition() && reversedColor);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
         pos.setOption(Position.INCREMENT_SIGNATURE,exactPosition()||pawnStructure());
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, exactPosition());
     }
@@ -144,10 +153,10 @@ public class PosSearchRecord
         if (exactPosition()) {
             //  hash key is checked with every position
             assert(pos.hasOption(Position.INCREMENT_HASH));
-            assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
+//            assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
             assert(pos.hasOption(Position.IGNORE_FLAGS_ON_HASH));
 
-            if (pos.getHashKey().equals(key) || reversedColor && pos.getReversedHashKey().equals(keyReversed))
+            if (pos.getHashKey().equals(key) || reversedColor && pos.getHashKey().equals(keyReversed))
                 return true;
         }
         //  pawn structure and mat features are only checked after *noisy* moves

@@ -84,11 +84,11 @@ Maintenance:
     [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
     [ ] cross-over .jose files
     [x] test Ecofy (still uses MatSignatureV1 !)
-    [ ] reversed color search. MatSignatureV2: mirror pawns
-        [ ] unit test
+    [x] reversed color search. MatSignatureV2: mirror pawns
+        [x] unit test
+    [ ] store SearchRecord in Preferences
     [ ] click&drag in Search Panel
     [ ] paste FEN in Search Panel (w/out moving color?)
-    [ ] store SearchRecord in preferences
 
 [ ] Q: use concurrent insert for Archive Export ?
     https://dev.mysql.com/doc/refman/8.4/en/concurrent-inserts.html
