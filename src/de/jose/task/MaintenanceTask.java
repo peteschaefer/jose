@@ -196,8 +196,10 @@ abstract public class MaintenanceTask
 			finishCollection();
 		else if (source.isObject())
 			finishObject();
+		else if (source.isList())
+			finishObjectList();
 		else
-			throw new IllegalStateException();
+			throw new IllegalStateException("unexpected flavor: "+source.getDataFlavor().toString());
 
 		return finish();
 	}
@@ -233,6 +235,8 @@ abstract public class MaintenanceTask
 	public void finishContents() throws Exception					{	/* override */ }
 
 	public void finishObject() throws Exception                     {   /* override */ }
+
+	public void finishObjectList() throws Exception                 {   /* override */ }
 
 	public int finish() throws Exception							{ return SUCCESS; }
 

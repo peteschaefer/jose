@@ -153,6 +153,7 @@ public class GameSource
 	public final boolean isResultSet()		        { return flavor.equals(RESULT_SET); }
 
 
+	public DataFlavor getDataFlavor()	{ return flavor; }
 	public DataFlavor[] getTransferDataFlavors() {
 		return new DataFlavor[] { flavor, DataFlavor.stringFlavor };
 	}
