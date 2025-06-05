@@ -36,9 +36,7 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Collection;
+import java.util.*;
 
 public class QueryPanel
 		extends JoPanel
@@ -144,6 +142,9 @@ public class QueryPanel
 	//	Fields
 	//-------------------------------------------------------------------------------
 
+	/**	contains all active elements	 */
+	protected Set<JComponent> elements = new HashSet<>();
+
 	/**	tabbed panel	*/
 	protected JTabbedPane cardPanel;
 	/**	button panel	*/
@@ -234,8 +235,42 @@ public class QueryPanel
 
 		JoMenuBar.assignMnemonics(buttonPanel);
 		setInitialValues();
+		loadProfile(Application.theUserProfile);
 
 		JoDialog.rescaleFonts(this);
+	}
+
+
+	protected void reg(JComponent comp, String name) {
+		comp.setName(name);
+		elements.add(comp);
+	}
+
+	private void loadProfile(UserProfile prf) {
+		for(JComponent comp : elements) {
+			String name = comp.getName();
+			Object value = prf.get(name);
+			JoDialog.setComponentValue(comp, value);
+		}
+
+		String fen = prf.getString("query.fen");
+		if (fen!=null) posEditor.setup(fen);
+	}
+
+	private void storeProfile(UserProfile prf) {
+		for(JComponent comp : elements) {
+			String name = comp.getName();
+			Object value = JoDialog.getComponentValue(comp);
+			prf.set(name,value);
+		}
+
+		String fen = posEditor.getFen();
+		prf.set("query.fen",fen);
+	}
+
+	@Override
+	public void closing() {
+		storeProfile(Application.theUserProfile);
 	}
 
 	protected void setInitialValues()
@@ -267,6 +302,8 @@ public class QueryPanel
 
 		p2.add(whiteName = JoDialog.newTextField(this));
 		p2.add(blackName = JoDialog.newTextField(this));
+		reg(whiteName,"query.white");
+		reg(blackName,"query.black");
 
 		p1.add(p2,BorderLayout.CENTER);
 
@@ -287,6 +324,10 @@ public class QueryPanel
 		//	"Opening"
 		p1.add(JoDialog.newLabel("dialog.query.opening"), LABEL_ONE);
 		p1.add(openingName = JoDialog.newTextField(this), JoDialog.gridConstraint(ELEMENT_ROW,1,2,1));
+		reg(eventName,"query.event");
+		reg(siteName,"query.site");
+		reg(openingName,"query.opening");
+
 		//	"ECO"
 		p1.add(JoDialog.newLabel("dialog.query.eco"), LABEL_ONE);
 		box1 = Box.createHorizontalBox();
@@ -296,6 +337,8 @@ public class QueryPanel
 		p1.add(box1, JoDialog.gridConstraint(ELEMENT_ROW,1,3,1));
 		eco1.setColumns(3);
 		eco2.setColumns(3);
+		reg(eco1,"query.eco");
+		reg(eco2,"query.eco.to");
 		//	"Move" count
 		p1.add(JoDialog.newLabel("dialog.query.movecount"), LABEL_ONE);
 		box1 = Box.createHorizontalBox();
@@ -303,6 +346,8 @@ public class QueryPanel
 		box1.add(JoDialog.newLabel("dialog.query.to",null,JLabel.CENTER,INSETS_TO));
 		box1.add(count2 = JoDialog.newTextField(ECO_FIELD_SIZE,this));
 		p1.add(box1, JoDialog.gridConstraint(ELEMENT_ROW,1,4,1));
+		reg(count1,"query.movecount");
+		reg(count2,"query.movecount.to");
 		//	"Date"
 		p1.add(JoDialog.newLabel("dialog.query.date"), LABEL_ONE);
 		box1 = Box.createHorizontalBox();
@@ -311,6 +356,8 @@ public class QueryPanel
 		box1.add(date2 = JoDialog.newTextField(DATE_FIELD_SIZE,this));
 		p1.add(box1, JoDialog.gridConstraint(ELEMENT_ROW,1,5,1));
         infoPanel.add(p1, JoDialog.gridConstraint(BOX0_CONSTRAINTS,0,1,1));
+		reg(date1,"query.date");
+		reg(date2,"query.date.to");
 
 		//	"Result"
         p1 = new JPanel(new GridLayout(4,1));
@@ -321,6 +368,10 @@ public class QueryPanel
 		p1.add(unknown=JoDialog.newCheckBox("Result.*",this));
 //		box1.add(Box.createVerticalGlue());
         infoPanel.add(p1, JoDialog.gridConstraint(BOX1_CONSTRAINTS,1,1,1));
+		reg(win,"query.result=win");
+		reg(draw,"query.result=draw");
+		reg(lose,"query.result=lose");
+		reg(unknown,"query.result=unknown");
 
 		//	"Flags"
         p1 = new JPanel(new GridLayout(4,1));
@@ -331,6 +382,9 @@ public class QueryPanel
 		p1.add(soundSens = JoDialog.newCheckBox("dialog.query.soundex",this));
 //		box2.add(Box.createVerticalGlue());
 		infoPanel.add(p1, JoDialog.gridConstraint(BOX2_CONSTRAINTS,2,1,1));
+		reg(colorSens,"query.color.sensitive");
+		reg(caseSens,"query.case.sensitive");
+		reg(soundSens,"query.soundex");
 
 		infoPanel.add(new JLabel(""), JoDialog.gridConstraint(JoDialog.ELEMENT_REMAINDER,0,2,3));
 
@@ -348,6 +402,8 @@ public class QueryPanel
 		box.add(flagComments = JoDialog.newCheckBox("dialog.query.com.flag",this));
 		box.add(flagVars = JoDialog.newCheckBox("dialog.query.var.flag",this));
 		commentPanel.add(box, JoDialog.ELEMENT_ONE);
+		reg(flagComments,"query.com.flag");
+		reg(flagVars,"query.var.flag");
 
 		//	"Annotator"
 		commentPanel.add(JoDialog.newLabel("dialog.query.annotator",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
@@ -356,6 +412,8 @@ public class QueryPanel
 		commentPanel.add(JoDialog.newLabel("dialog.query.commenttext",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
 		commentPanel.add(commentText = JoDialog.newTextArea(this), JoDialog.ELEMENT_NEXTROW_REMAINDER);
 		commentText.setBorder(new LineBorder(Color.black));
+		reg(annotatorName,"query.annotator");
+		reg(commentText,"query.commenttext");
 
 		//	add comments panel to tabbed pane
 		addTab("dialog.query.comments", commentPanel, tabIcon[1], true);
@@ -374,6 +432,8 @@ public class QueryPanel
 
         controls.add(searchVariations = JoDialog.newCheckBox("query.setup.var",this));
 		controls.add(reversePosition = JoDialog.newCheckBox("query.setup.reversed",this));
+		reg(searchVariations,"query.setup.var");
+		reg(reversePosition,"query.setup.reversed");
 
         controls.add(Box.createVerticalStrut(10));
 
@@ -482,7 +542,8 @@ public class QueryPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-                search();
+				if (askLegality(posEditor.board.getPosition()))
+                	search();
 			}
 		};
 		map.put("dialog.query.search",action);
@@ -553,6 +614,27 @@ public class QueryPanel
 			}
 		};
 		map.put("update.ui", action);
+	}
+
+	protected boolean askLegality(Position pos)
+	{
+		String[] errors = pos.checkLegality();
+		String[] warnings = pos.checkPlausibility();
+
+		if (errors != null || warnings != null)
+		{
+			StringBuffer message = new StringBuffer();
+			if (errors != null) Language.append(message,errors,"\n");
+			if (warnings != null) Language.append(message,warnings,"\n");
+			message.append("\n\n");
+			message.append(Language.get("pos.error.anyway"));
+
+			int option = JoDialog.showYesNoDialog(message.toString(),"pos.error.title",
+					"pos.error.search", "dialog.button.cancel", 1);
+			return (option==0);
+		}
+
+		return true;
 	}
 
     protected void search()

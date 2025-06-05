@@ -1052,6 +1052,12 @@ public class Position
 	{
 		checkPlausibility(WHITE,"white",collect);
 		checkPlausibility(BLACK,"black",collect);
+		//	pawn structure
+		//	position must be reachable from Initial
+		MatSignature j = updateMatSig();
+		if (!j.isLegal())
+			collect.add("pos.error.unreachable");
+
 	}
 
 	protected void checkPlausibility(int color, String key, List collect)
@@ -1079,9 +1085,6 @@ public class Position
         //	strange colored bishops ?
         if (!super.checkBishopColors(color))
             collect.add("pos.warning.strange."+key+".bishops");
-
-        //	pawn structure
-        //	TODO
-    }
+	}
 
 }

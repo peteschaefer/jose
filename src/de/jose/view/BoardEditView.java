@@ -122,6 +122,10 @@ public class BoardEditView
 		setup(AbstractApplication.theAbstractApplication.theGame.getPosition());
 	}
 
+	public String getFen() {
+		return board.getPosition().toString();
+	}
+
 	public void setup(String fen)
 	{
 		board.getPosition().setup(fen);

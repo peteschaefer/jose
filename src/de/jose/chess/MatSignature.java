@@ -26,6 +26,8 @@ public interface MatSignature extends Cloneable
         return getBlackSignature()==0 && getWhiteSignature()==0;
     }
 
+	boolean isLegal();
+
     /**
      * factory method
      * @return

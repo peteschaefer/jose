@@ -737,6 +737,7 @@ public class Board
 		/*	who moves next	*/
 		if (tokens.hasMoreTokens())
 			switch(tokens.nextToken().charAt(0)) {
+			default:	theFlags = oldFlags & COLORS;	//	keep old flags
 			case 'w':	theFlags = EngUtil.plus(theFlags,WHITE); break;
 			case 'b':	theFlags = EngUtil.plus(theFlags,BLACK); break;
 			}

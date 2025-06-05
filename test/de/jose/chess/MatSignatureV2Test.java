@@ -275,12 +275,31 @@ class MatSignatureV2Test {
         assertTrue(sig1.canReachReversed(sig2rev));
     }
 
+    @Test
+    void testIllegal()
+    {
+        //  illegal positions that can not be reached from the initial setup
+        //  dense block of pawns
+        assertFalse(isLegal("7k/8/8/8/8/P7/PP6/7K b - - 0 1"));
+        //  too many promoted pieces
+        assertFalse(isLegal("3qq2k/8/8/8/8/8/PPPPPPPP/7K b - - 0 1"));
+        assertFalse(isLegal("4b2k/3b4/8/8/8/8/PPPPPPPP/7K b - - 0 1"));
+        //  more captures than possible victims
+        assertFalse(isLegal("rbnk1bnr/3P4/3P4/3P4/3P4/3P3P/3P3P/7K b - - 0 1"));
+    }
+
     boolean canReach(String from, String to, int backtracks) {
         pos.setup(from);
         MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
         pos.setup(to);
         MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
         return canReach(sig1, sig2, backtracks);
+    }
+
+    boolean isLegal(String to) {
+        pos.setup(to);
+        MatSignatureV2 sig = (MatSignatureV2) pos.computeMatSig();
+        return sig.isLegal();
     }
 
     boolean canReach(MatSignatureV2 sig1, MatSignatureV2 sig2, int backtracks) {
@@ -290,7 +309,8 @@ class MatSignatureV2Test {
         System.out.println("\n");
         boolean result = sig1.canReach(sig2);
         System.out.println("[backtracks="+sig1.backtrack+"]");
-        assertEquals(backtracks,sig1.backtrack);
+        if (backtracks >= 0)
+            assertEquals(backtracks,sig1.backtrack);
         System.out.println("\n\n");
         return result;
     }

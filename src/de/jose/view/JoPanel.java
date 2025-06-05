@@ -158,6 +158,10 @@ public class JoPanel
 		}
 	}
 
+	public void closing() {
+		/*no-op*/
+	}
+
 	public void doInit() throws Exception {
 		if (!inited) {
 			init();

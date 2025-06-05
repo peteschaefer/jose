@@ -218,6 +218,28 @@ public class MatSignatureV2 implements MatSignature
         return result;
     }
 
+    public boolean isLegal()
+    {
+        //  position must be reachable from the initial position
+        MatSignatureV2 i = new MatSignatureV2();
+        i.setInitial();
+        if (!i.canReach(this))
+            return false;
+
+        //  additional checks that are not part of canReach()
+        //  (b/c canReach() assumes that both arguments *are* legal)
+
+        int promo_lower = wfeat.computePromotionLowerBound();
+        if (promo_lower > (8-bfeat.pawnCount()))
+            return false; //  more promoted pieces that missing pawns
+
+        promo_lower = bfeat.computePromotionLowerBound();
+        if (promo_lower > (8-wfeat.pawnCount()))
+            return false;  //  more promoted pieces that missing pawns
+
+        return true;
+    }
+
     /**
      * incremental update
      * @param mv

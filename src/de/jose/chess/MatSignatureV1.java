@@ -69,7 +69,8 @@ public class MatSignatureV1
 	public final long getWhiteSignature() { return wsig; }
 	public final long getBlackSignature() { return bsig; }
 
-    // --------------------------------------
+
+	// --------------------------------------
     //      Constants
     // --------------------------------------
 
@@ -278,6 +279,13 @@ public class MatSignatureV1
     {
         return to.isReachableFrom(from);
     }
+
+	@Override
+	public boolean isLegal() {
+		//	check whether this position is reachable from the initial position
+		MatSignatureV1 init = new MatSignatureV1(INITIAL_SIG,INITIAL_SIG);
+		return init.canReach(this);
+	}
 
 	// --------------------------------------
 	//      Incremental Methods
