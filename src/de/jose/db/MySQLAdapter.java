@@ -536,6 +536,7 @@ public class MySQLAdapter
 		//command.add("--myisam-use-mmap=ON");	//	since 5.1 !
 		//	default table size for tmp and memory tables is 16MB. Not enough.
 		//	huge database have around 3GB, or more.
+		command.add("--concurrent-insert=2");	//2=ALWAYS
 		command.add("--tmp-table-size=16G");
 		command.add("--max-heap-table-size=16G");
 		//command.add("--default-time-zone='+00:00'"); does not work

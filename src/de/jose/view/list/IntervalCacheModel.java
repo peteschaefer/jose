@@ -180,6 +180,8 @@ abstract public class IntervalCacheModel
         protected int status;
         /** number of returned rows in one chunk    */
         protected int chunk;
+		//	number of early cut-offs in positional search
+		protected int cnt_early;
 
         /** database connection for synchroneous queries */
         protected JoConnection synch_conn;
@@ -400,6 +402,7 @@ abstract public class IntervalCacheModel
 		                else {
 	//	                    Util.printTime("got result set",startTime);
 							chunk = 0;
+							cnt_early = 0;
 							if (status!=HALTED) {
 								status = READING;
 //								System.out.println("READING (8)");
@@ -416,7 +419,7 @@ abstract public class IntervalCacheModel
 										addResult(res.getInt(1));
 									else switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
 									{
-										case REJECT:	break;
+										case REJECT:	cnt_early++; break;
 										case WAIT:		/*will call back asynchroneously*/ break;
 										case ACCEPT:
 											addResult(res.getInt(1));
@@ -445,6 +448,7 @@ abstract public class IntervalCacheModel
 										long time = System.currentTimeMillis() - startTime;
 										System.err.println(time/1000.0+"s"
 															+"; result rows="+rowCount
+															+"; early cut-offs="+cnt_early
 															+"; result set size="+chunk
 															+"; pll jobs="+PositionFilter.executorPool.jobCount
 															+"; queue watermark="+PositionFilter.executorPool.getQueueWatermark()+"]");

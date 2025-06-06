@@ -30,6 +30,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 
 public class ArchiveImport
         extends DBTask
@@ -180,7 +181,6 @@ public class ArchiveImport
 	    setProgress(0.35);
 
 	    gameCount = copyGame(inputVersion);
-
 
 	    //  enable keys; we can do it safely since here we are in a separate thread
 	    if (disableKeys) {
@@ -375,65 +375,97 @@ public class ArchiveImport
 		return count;
 	}
 
+	protected int copyGameTable(JoConnection conn, int nextId) throws SQLException {
+		/**	copy values	*/
+		String sql =
+				"INSERT INTO Game (Id,CId, Idx,Attributes,PlyCount," +
+						"      Result,WhiteId,BlackId, WhiteELO,BlackELO, EventId,SiteId," +
+						"      GameDate,EventDate,DateFlags, OpeningId,ECO, AnnotatorId) "+
+						" SELECT @NextId:=(@NextId+1) AS Id,"+
+						"        CMap.NId AS CId,"+
+						"        Idx,Attributes,PlyCount, " +
+						"        Result, "+
+						"        WMap.NId AS WhiteId,"+
+						"        BMap.NId AS BlackId,"+
+						"        WhiteELO,BlackELO, "+
+						"        EMap.NId AS EventId, "+
+						"        SMap.NId AS SiteId, "+
+						"        GameDate,EventDate,DateFlags,"+
+						"        OMap.NId AS OpeningId,"+
+						"        ECO, "+
+						"        AMap.NId AS AnnotatorId "+
+						" FROM "+tempdb+".IO_Game AS Game" +
+						"  JOIN "+tempdb+".Map_Collection AS CMap ON Game.CId=CMap.OId" +
+						"  JOIN "+tempdb+".Map_Player AS WMap ON Game.WhiteId=WMap.OId" +
+						"  JOIN "+tempdb+".Map_Player AS BMap ON Game.BlackId=BMap.OId" +
+						"  JOIN "+tempdb+".Map_Event AS EMap ON Game.eventId=EMap.OId" +
+						"  JOIN "+tempdb+".Map_Site AS SMap ON Game.SiteId=SMap.OId" +
+						"  JOIN "+tempdb+".Map_Opening AS OMap ON Game.OpeningId=OMap.OId" +
+						"  JOIN "+tempdb+".Map_Player AS AMap ON Game.AnnotatorId=AMap.OId";
+
+		conn.executeUpdate("SET @NextId="+(nextId-1));
+		int count = conn.executeUpdate(sql);
+
+		Game.getSequence(conn, count);    //  reserve sequence
+		return count;
+	}
+
+	protected int copyMoreGameTable(JoConnection conn, int nextId, int inputVersion) throws SQLException {
+		String withSignature="";
+		if (inputVersion >= 1010)
+			withSignature = "WhiteSignature, BlackSignature, ";
+		String sql =
+				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
+						"     Bin, Comments,PosMain,PosVar,Eval) "+
+						" SELECT @NextId:=(@NextId+1) AS GId," +
+						"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
+						"        Bin,Comments, PosMain,PosVar,Eval"+
+						" FROM "+tempdb+".IO_Game ";
+
+		conn.executeUpdate("SET @NextId="+(nextId-1));
+		int count = conn.executeUpdate(sql);
+		return count;
+	}
+
 	protected int copyGame(int inputVersion) throws Exception
     {
 //	    System.out.print("[Game ");
 
-	    int count = 0;
-	    try {
-			/**	copy values	*/
-			String sql =
-				"INSERT INTO Game (Id,CId, Idx,Attributes,PlyCount," +
-				"      Result,WhiteId,BlackId, WhiteELO,BlackELO, EventId,SiteId," +
-				"      GameDate,EventDate,DateFlags, OpeningId,ECO, AnnotatorId) "+
-				" SELECT @NextId:=(@NextId+1) AS Id,"+
-				"        CMap.NId AS CId,"+
-				"        Idx,Attributes,PlyCount, " +
-				"        Result, "+
-				"        WMap.NId AS WhiteId,"+
-				"        BMap.NId AS BlackId,"+
-				"        WhiteELO,BlackELO, "+
-				"        EMap.NId AS EventId, "+
-				"        SMap.NId AS SiteId, "+
-				"        GameDate,EventDate,DateFlags,"+
-				"        OMap.NId AS OpeningId,"+
-				"        ECO, "+
-				"        AMap.NId AS AnnotatorId "+
-				" FROM "+tempdb+".IO_Game AS Game" +
-				"  JOIN "+tempdb+".Map_Collection AS CMap ON Game.CId=CMap.OId" +
-				"  JOIN "+tempdb+".Map_Player AS WMap ON Game.WhiteId=WMap.OId" +
-				"  JOIN "+tempdb+".Map_Player AS BMap ON Game.BlackId=BMap.OId" +
-				"  JOIN "+tempdb+".Map_Event AS EMap ON Game.eventId=EMap.OId" +
-				"  JOIN "+tempdb+".Map_Site AS SMap ON Game.SiteId=SMap.OId" +
-				"  JOIN "+tempdb+".Map_Opening AS OMap ON Game.OpeningId=OMap.OId" +
-				"  JOIN "+tempdb+".Map_Player AS AMap ON Game.AnnotatorId=AMap.OId";
-
+		int count1,count2;
+		JoConnection conn2=null;
+		try {
 			int nextId = Game.getSequence(connection);
-			connection.executeUpdate("SET @NextId="+(nextId-1));
-			count = connection.executeUpdate(sql);
 
-			Game.getSequence(connection, count);    //  reserve sequence
+			/*	copy games into Game and MoreGame
+				since both tables are independent, we can run the statements
+				in parallel, using a new connection
+			 */
+			Future<Integer> task1 = Application.theExecutorService.submit(
+					()->copyGameTable(connection, nextId));
+
+			conn2 = JoConnection.get();
+			final JoConnection conn2final = conn2;
+			Future<Integer> task2 = Application.theExecutorService.submit(
+					()->copyMoreGameTable(conn2final, nextId, inputVersion));
 
 			throwAborted();
 			setProgress(0.50);
 
-			String withSignature="";
-			if (inputVersion >= 1010)
-				withSignature = "WhiteSignature, BlackSignature, ";
-			sql =
-				"INSERT INTO MoreGame (GId,WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
-				"     Bin, Comments,PosMain,PosVar,Eval) "+
-				" SELECT @NextId:=(@NextId+1) AS GId," +
-				"        WhiteTitle,BlackTitle, Round,Board,FEN, Info, "+withSignature+
-				"        Bin,Comments, PosMain,PosVar,Eval"+
-				" FROM "+tempdb+".IO_Game ";
+			count1 = task1.get();
+			setProgress(0.65);
+			count2 = task2.get();
+			conn2.release();
 
-			connection.executeUpdate("SET @NextId="+(nextId-1));
-			connection.executeUpdate(sql);
-		    throwAborted();
+			if (count1!=count2)
+				throw new SQLException("missing data");
+
+			throwAborted();
+			setProgress(0.80);
 
 			if (inputVersion < 1011)
 				Crossover1011.updateMatSignatureV2(connection,"MoreGame",-1);
+
+			throwAborted();
 
 	    } catch (SQLException e)
 	    {
@@ -441,14 +473,15 @@ public class ArchiveImport
 		    rollBackGames();
 		    throw e;
 		} catch (TaskAbortedException e)
-	    {
-			//  roll back dangling games
+	    {	//  roll back dangling games
 		    rollBackGames();
 		    throw e;
+		} finally {
+			JoConnection.release(conn2);
 		}
 
 //        setup.dropTable("IO_Game");
-        return count;
+        return count1;
     }
 
 	private static final String DELETE_GAME =
