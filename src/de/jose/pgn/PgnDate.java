@@ -151,26 +151,38 @@ public class PgnDate
 	public PgnDate calcUpperBound()
 	{
 		//  offset for upper bound
-		int upper_offset;
+		int upper_add,upper_sub;
 		if (isYearUnknown())
 			return MAX_VALUE;
-		else if (isMonthUnknown())
-			upper_offset = Calendar.YEAR;
-		else if (isDayUnknown())
-			upper_offset = Calendar.MONTH;
-		else if (isHourUnknown())
-			upper_offset = Calendar.DATE;
-		else if (isMinuteUnknown())
-			upper_offset = Calendar.HOUR;
-		else if (isSecondUnknown())
-			upper_offset = Calendar.MINUTE;
+		else if (isMonthUnknown()) {
+			upper_add = Calendar.YEAR;
+			upper_sub = Calendar.DATE;
+		}
+		else if (isDayUnknown()) {
+			upper_add = Calendar.MONTH;
+			upper_sub = Calendar.DATE;
+		}
+		else if (isHourUnknown()) {
+			upper_add  = Calendar.DATE;
+			upper_sub = Calendar.HOUR;
+		}
+		else if (isMinuteUnknown()) {
+			upper_add = Calendar.HOUR;
+			upper_sub = Calendar.MINUTE;
+		}
+		else if (isSecondUnknown()) {
+			upper_add = Calendar.MINUTE;
+			upper_sub = Calendar.SECOND;
+		}
 		else
 			return new PgnDate(this, this.dateFlags);
 
 		//	add offset for upper bound
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this);
-		cal.add(upper_offset, +1);
+		cal.add(upper_add, +1);
+		//	upper bound is meant *inclusive*
+		cal.add(upper_sub, -1);
 		return new PgnDate(cal.getTime(), this.dateFlags);
 	}
 

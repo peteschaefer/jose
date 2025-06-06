@@ -492,6 +492,8 @@ abstract public class IntervalCacheModel
 		}
 
 		private void fireRowsInserted() {
+			if (rowCount < 0)
+				return;	// when exactly does this happen?
 			if (rowCount < 30)
 				fireTableRowsInserted(fired, fired=rowCount);
 			else if (rowCount < 1000) {

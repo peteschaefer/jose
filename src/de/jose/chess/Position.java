@@ -1050,14 +1050,14 @@ public class Position
 
 	public void checkPlausibility(List collect)
 	{
-		checkPlausibility(WHITE,"white",collect);
-		checkPlausibility(BLACK,"black",collect);
 		//	pawn structure
 		//	position must be reachable from Initial
 		MatSignature j = updateMatSig();
 		if (!j.isLegal())
 			collect.add("pos.error.unreachable");
-
+		//	smelly positions (too many promoted pieces)
+		checkPlausibility(WHITE,"white",collect);
+		checkPlausibility(BLACK,"black",collect);
 	}
 
 	protected void checkPlausibility(int color, String key, List collect)

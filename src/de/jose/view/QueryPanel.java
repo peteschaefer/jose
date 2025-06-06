@@ -264,7 +264,7 @@ public class QueryPanel
 			prf.set(name,value);
 		}
 
-		String fen = posEditor.getFen();
+		String fen = (posEditor==null) ? null : posEditor.getFen();
 		prf.set("query.fen",fen);
 	}
 
@@ -542,8 +542,7 @@ public class QueryPanel
 
 		action = new CommandAction() {
 			public void Do(Command cmd) throws Exception {
-				if (askLegality(posEditor.board.getPosition()))
-                	search();
+				search();
 			}
 		};
 		map.put("dialog.query.search",action);
@@ -645,10 +644,10 @@ public class QueryPanel
         SearchRecord search = lpanel.getSearchRecord();
         if (search==null) return;   //  invalid state, actually
 
-        java.util.List errors = setSearchFields(search);
-        if (errors==null || errors.isEmpty())
+        java.util.List<String> errors = new ArrayList<String>();
+        if (setSearchFields(search,errors))
             lpanel.model.refresh(true);
-        else
+        else if (!errors.isEmpty())
             showErrors(errors);
 	    activate(null);
     }
@@ -691,19 +690,7 @@ public class QueryPanel
 		posEditor.clearPosition();
 	}
 
-	public java.util.List setSearchFields(SearchRecord rec)
-	{
-		java.util.List errors = new ArrayList();
-
-		setSearchFields(rec,errors);
-
-		if (errors.isEmpty())
-			return null;
-		else
-			return errors;
-	}
-
-	protected void setSearchFields(SearchRecord rec, java.util.List errors)
+	protected boolean setSearchFields(SearchRecord rec, java.util.List<String> errors)
 	{
 		rec.firstPlayerName = whiteName.getText();
 		rec.secondPlayerName = blackName.getText();
@@ -740,24 +727,22 @@ public class QueryPanel
 			rec.pos.setExact(pos);
 			rec.pos.reversedColor = reversePosition.isSelected();
 			rec.pos.variations = searchVariations.isSelected();
+
+			if (errors!=null && !askLegality(pos))
+				return false;
 		}
 		else {
 			rec.pos.clear();
 		}
 		rec.finish(errors);	//	check plausability
+		return (errors!=null) && errors.isEmpty();
 	}
 
 	public void showErrors(java.util.List errors)
 	{
 		StringBuffer text = new StringBuffer(Language.get("dialog.query.errors"));
 
-		for (int i=0; i < errors.size(); i++)
-		{
-			text.append("\n");
-			String key = errors.get(i).toString();
-			text.append(Language.get(key));
-		}
-
+		Language.append(text, errors.toArray(),"\n");
 		JoDialog.showErrorDialog(text.toString());
 	}
 

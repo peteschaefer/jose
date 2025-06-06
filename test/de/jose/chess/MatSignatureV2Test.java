@@ -58,7 +58,7 @@ class MatSignatureV2Test {
 
     class CountingBinReader extends BinReader
     {
-        public int moves, noisy;
+        public int moves, noisy, early;
         public MatSignature cutoff;
         public long backtrackSum;
         public int backtrackWatermark;
@@ -68,7 +68,7 @@ class MatSignatureV2Test {
         }
 
         public void reset() {
-            moves = noisy = 0;
+            moves = noisy = early = 0;
             backtrackSum = backtrackWatermark = 0;
         }
 
@@ -390,22 +390,22 @@ class MatSignatureV2Test {
 //        testCutoff(initial,MatSignatureV2.class, offset,limit);
 //        System.out.println("[opening - V1]");
 //        testCutoff(opening,MatSignatureV1.class, offset,limit);
-//        System.out.println("[opening - V2]");
-//        testCutoff(opening,MatSignatureV2.class, offset,limit);
+        System.out.println("[opening - V2]");
+        testCutoff(opening,MatSignatureV2.class, offset,limit);
 //        System.out.println("[middle game - V1]");
 //        testCutoff(middle1,MatSignatureV1.class, offset,limit);
-//        System.out.println("[middle game - V2]");
-//        testCutoff(middle1,MatSignatureV2.class, offset,limit);
-        System.out.println("[middle game - V1]");
-        testCutoff(middle2,MatSignatureV1.class, offset,limit);
+       System.out.println("[middle game - V2]");
+        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+//        System.out.println("[middle game - V1]");
+ //       testCutoff(middle2,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
         testCutoff(middle2,MatSignatureV2.class, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
-//        System.out.println("[end game - V2]");
-//        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
-        System.out.println("[end game - V1]");
-        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
+        System.out.println("[end game - V2]");
+        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+//        System.out.println("[end game - V1]");
+//        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
         testCutoff(endgame2,MatSignatureV2.class, offset,limit);
     }
@@ -425,12 +425,19 @@ class MatSignatureV2Test {
             //int GId = res.getInt(1);
             String FEN = res.getString(2);
             byte[] bin = res.getBytes(3);
-            //long whiteSignature = rs.getLong(4);
-            //long blackSignature = rs.getLong(5);
+            long whiteSignature = res.getLong(4);
+            long blackSignature = res.getLong(5);
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
+            if (! counter.cutoff.canReach(endSig)) {
+                counter.early++;
+                continue;
+            }
+
             counter.read(bin,0, null,0, FEN,REPLAY);
         }
         long time = System.currentTimeMillis()-startTime;
         System.out.println("["+games+" games replayed]");
+        System.out.println("["+counter.early+" early cutoffs]");
         System.out.println("["+counter.moves+" moves]");
         System.out.println("["+counter.noisy+" noisy moves]");
         System.out.println("["+time/1000.0+" secs]");
