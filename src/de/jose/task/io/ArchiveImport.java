@@ -13,7 +13,7 @@
 package de.jose.task.io;
 
 import de.jose.Application;
-import de.jose.db.crossover.Crossover1010;
+import de.jose.db.crossover.Crossover1011;
 import de.jose.task.TaskAbortedException;
 import de.jose.task.db.CheckDBTask;
 import de.jose.util.Metaphone;
@@ -432,8 +432,8 @@ public class ArchiveImport
 			connection.executeUpdate(sql);
 		    throwAborted();
 
-			if (inputVersion < 1010)
-				Crossover1010.fillMatSignatures(connection);
+			if (inputVersion < 1011)
+				Crossover1011.updateMatSignatureV2(connection,"MoreGame",-1);
 
 	    } catch (SQLException e)
 	    {

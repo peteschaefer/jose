@@ -186,6 +186,7 @@ public interface Constants
 
 	public static final int A2						= ROW_2 * OUTER_BOARD_WIDTH + FILE_A;
 	public static final int A7						= ROW_7 * OUTER_BOARD_WIDTH + FILE_A;
+	public static final int H2						= ROW_2 * OUTER_BOARD_WIDTH + FILE_H;
 
 	public static final int A8						= ROW_8 * OUTER_BOARD_WIDTH + FILE_A;
 	public static final int B8						= ROW_8 * OUTER_BOARD_WIDTH + FILE_B;

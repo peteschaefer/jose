@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,7 @@ package de.jose.pgn;
 
 import de.jose.Language;
 import de.jose.Util;
-import de.jose.chess.HashKey;
-import de.jose.chess.MatSignature;
-import de.jose.chess.Position;
-import de.jose.chess.Move;
+import de.jose.chess.*;
 import de.jose.util.map.IntIntMap;
 import de.jose.util.map.LongIntMap;
 import de.jose.util.map.IntHashMap;
@@ -43,7 +40,7 @@ import java.util.Iterator;
  * to obtain the 3-letter eco code, use
  *     code >> 8;
  *
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 
@@ -64,7 +61,7 @@ public class ECOClassificator
 	protected LongIntMap keys;
 	/** terminal matsig
 	 */
-    protected MatSignature terminal;
+    protected MatSignatureV1 terminal;
 
 	/**	translated names	*/
 	protected Language language;
@@ -77,7 +74,7 @@ public class ECOClassificator
     public ECOClassificator(boolean forUpdate)
     {
         keys = new LongIntMap();
-        terminal = new MatSignature();
+        terminal = new MatSignatureV1();
         terminal.setInitial();
 
         if (forUpdate) {
@@ -129,7 +126,7 @@ public class ECOClassificator
             /** read terminal matsig  */
             long wsig = in.readLong();
             long bsig = in.readLong();
-            terminal = new MatSignature(wsig,bsig);
+            terminal = new MatSignatureV1(wsig,bsig);
 
         } finally {
             in.close();
@@ -161,8 +158,8 @@ public class ECOClassificator
             out.writeLong(0L);
 
             /** terminal matsig */
-            out.writeLong(terminal.wsig);
-            out.writeLong(terminal.bsig);
+            out.writeLong(terminal.getWhiteSignature());
+            out.writeLong(terminal.getBlackSignature());
 
         } finally {
             out.close();
@@ -182,7 +179,7 @@ public class ECOClassificator
             //  read-only copy
             this.keys = that.keys;   //  keys can be shared - not a problem at all
             this.language = that.language;
-            this.terminal = that.terminal.cloneSig();
+            this.terminal = (MatSignatureV1) that.terminal.clone();
             this.counter = null;
         }
 	}
@@ -274,7 +271,7 @@ public class ECOClassificator
 		return NOT_FOUND;
 	}
 
-    public int add(String eco, HashKey key, MatSignature sig)
+    public int add(String eco, HashKey key, MatSignatureV1 sig)
     {
         long hash = key.value();
         int code = newCode(eco,hash);
@@ -330,7 +327,13 @@ public class ECOClassificator
 
 	public boolean isReachable(MatSignature sig)
 	{
-		return terminal.isReachableFrom(sig);
+        if (sig instanceof MatSignatureV2) {
+            MatSignatureV1 sig1 = ((MatSignatureV2)sig).toMatSignatureV1();
+            return terminal.isReachableFrom(sig1);
+        }
+        else {
+            return terminal.isReachableFrom(sig);
+        }
 		/** is terminal signature still reachable ? */
 	}
 }

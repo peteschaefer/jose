@@ -4,7 +4,7 @@
 		<!--	Database Definition	-->
 		<!-- - - - - - - - - - - -  -->
 		<NAME> MAIN </NAME>
-		<VERSION> 1010 </VERSION>
+		<VERSION> 1011 </VERSION>
 		<TABLE>
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!--	Opening Index (maps positions to opening codes and names)  -->
@@ -464,7 +464,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<TABLE>
 			<NAME> MoreGame </NAME>
-			<VERSION> 103 </VERSION>
+			<VERSION> 104 </VERSION>
 			<COLUMN>
 				<NAME> GId </NAME>
 				<TYPE> INTEGER </TYPE>

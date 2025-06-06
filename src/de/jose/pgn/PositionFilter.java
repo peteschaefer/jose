@@ -12,9 +12,7 @@
 
 package de.jose.pgn;
 
-import de.jose.chess.MatSignature;
-import de.jose.chess.Move;
-import de.jose.chess.Position;
+import de.jose.chess.*;
 import de.jose.util.concurrent.BatchThreadPool;
 import de.jose.util.concurrent.QueueThreadPool;
 
@@ -29,27 +27,19 @@ import java.util.function.IntConsumer;
  */
 public class PositionFilter
         extends BinReader
-        implements Cloneable
 {
-	public long queryKey, queryKeyReversed;
-	public boolean searchVariations;
-
-	public MatSignature querySig;
-
-//	protected HashKey searchKey, searchKeyReversed;
-//	protected MatSignature searchSig;
-
-	protected boolean inLine,ignoreLine;
+	protected PosSearchRecord query;
 	protected Result result;
 
 	public enum Result  {
-		REJECT, ACCEPT, WAIT
+		REJECT, ACCEPT, WAIT,
+		REJECT_NEXT //	used during replay
 	};
-
+/*
 	public static PositionFilter PASS_FILTER = new PositionFilter(true) {
 		public Result accept(ResultSet res, IntConsumer callback) throws SQLException		{ return Result.ACCEPT; }
 	};
-
+*/
 	public static QueueThreadPool executorPool = new BatchThreadPool<PosFilterJob>(200000,80);
 	//	note: using a batched pool drastically increases throughtput and reduces thread pool overhead
 	//	we assume that tasks (PosFilterJob) are small and run quickly. Batching 80 of them into one is ok.
@@ -61,17 +51,17 @@ public class PositionFilter
 
 
 	private PositionFilter(boolean privateCtor) {
-		super(null);
+		super(new Position(JoseHashKey.class, MatSignatureV2.class));
 	}
 
-	public PositionFilter()
+	public PositionFilter() {
+		this(new PosSearchRecord());
+	}
+
+	public PositionFilter(PosSearchRecord q)
 	{
-		super(new Position());
-
-//		searchKey = pos.getHashKey();
-//		searchKeyReversed = pos.getReversedHashKey();
-//		searchSig = pos.getMatSig();
-
+		this(true);
+		this.query = q;
 		setPosOptions();
 	}
 
@@ -81,8 +71,6 @@ public class PositionFilter
 		pos.setOption(Position.INCREMENT_HASH,true);
 		pos.setOption(Position.INCREMENT_REVERSED_HASH,true);
 		pos.setOption(Position.INCREMENT_SIGNATURE,true);
-		//	TODO Pawn Hash
-		//  don't calculate castling & ep privileges (cause they are not known in the target position)
 		pos.setOption(Position.IGNORE_FLAGS_ON_HASH, true);
 
 		//  don't calculate checks etc.
@@ -94,7 +82,7 @@ public class PositionFilter
 		pos.setOption(Position.CHECK, false);
 	}
 
-
+/*
 	public Object clone()
     {
         PositionFilter that = new PositionFilter(false);
@@ -102,21 +90,20 @@ public class PositionFilter
 		this.copySearchParams(that);
 		return that;
     }
-
+*/
 	public void copySearchParams(PositionFilter that)
 	{
-		that.querySig = this.querySig; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
-		that.queryKey = this.queryKey;
-		that.queryKeyReversed = this.queryKeyReversed;
-		that.searchVariations = this.searchVariations;
-		that.inLine = this.inLine;
-		that.ignoreLine = this.ignoreLine;
+		that.query= this.query; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
 		that.result = this.result;
 	}
 
+	public void setSearchParams(PosSearchRecord query)
+	{
+		this.query = query;
+	}
+
 	public void clear() {
-		queryKey = queryKeyReversed = 0L;
-		searchVariations = false;
+		query.clear();
 	}
 
 	public PositionFilter getFilterLike()
@@ -128,9 +115,9 @@ public class PositionFilter
 
 	public boolean isEmpty()
 	{
-		return (queryKey ==0L) && (queryKeyReversed ==0L);
+		return query.isEmpty();
 	}
-
+/*
 	public void setTargetPosition(String fen, boolean calcReversed)
 	{
 		clear();
@@ -140,16 +127,16 @@ public class PositionFilter
 		pos.computeMatSig();
 
         queryKey = pos.getHashKey().value();
-		querySig = pos.getMatSig().cloneSig();
+		querySig = (MatSignature) pos.getMatSig().clone();
 
         if (calcReversed) {
             queryKeyReversed = pos.getReversedHashKey().value();
         }
 	}
+*/
+	public void setVariations(boolean on)       { query.variations = on; }
 
-	public void setVariations(boolean on)       { searchVariations = on; }
-
-	public boolean hasVariations()              { return searchVariations; }
+	public boolean hasVariations()              { return query.variations; }
 
 	private static class PosFilterJob implements Runnable
 	{
@@ -157,12 +144,15 @@ public class PositionFilter
 		int GId;
 		String fen;
 		byte[] bin;
+		boolean hasVariations;
 		IntConsumer callback;
 
-		public PosFilterJob(PositionFilter query, int GId, String fen, byte[] bin, IntConsumer callback) {
+		public PosFilterJob(PositionFilter query, int GId, String fen, byte[] bin, boolean hasVariations,
+							IntConsumer callback) {
 			this.query = query;
 			this.bin = bin;
 			this.fen = fen;
+			this.hasVariations = hasVariations;
 			this.GId = GId;
 			this.callback = callback;
 		}
@@ -170,7 +160,7 @@ public class PositionFilter
 		@Override
 		public void run() {
 			PositionFilter pf = query.getFilterLike();
-			Result rs = pf.accept(fen, bin, null);	//	note MatSignature already checked
+			Result rs = pf.accept(fen, bin, null, hasVariations);	//	note MatSignature already checked
 			if (rs == Result.ACCEPT) callback.accept(GId);
 		}
 	}
@@ -178,8 +168,11 @@ public class PositionFilter
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
-		MatSignature gameEndSig = new MatSignature(res.getLong(4),res.getLong(5));
-		if (!querySig.canReach(gameEndSig)) return Result.REJECT;
+		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
+		boolean hasVariations = res.getInt(6) > 0;
+
+		if (query.earlyCutOff(gameEndSig,hasVariations))
+			return Result.REJECT;
 
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
@@ -189,50 +182,35 @@ public class PositionFilter
 
 		if (asyncCallback!=null) {
 			//	submit job to executor pool
-			PosFilterJob job = new PosFilterJob(this,GId,fen,bin,asyncCallback);
+			PosFilterJob job = new PosFilterJob(this,GId,fen,bin, hasVariations, asyncCallback);
 			executorPool.submit(job);
 			return Result.WAIT;
 		}
 		else {
 			//	do it now
-			return accept(fen, bin, null);	//	note: MatSignature already checked synchroneously, above
+			return accept(fen, bin, null, hasVariations);	//	note: MatSignature already checked synchroneously, above
 		}
  	}
 
-	public Result accept(String fen, byte[] bin, MatSignature gameEndSig)
+	public Result accept(String fen, byte[] bin, MatSignature gameEndSig, boolean hasVariations)
 	{
 		if (bin == null) return Result.REJECT;    //	todo why can this happen at all?
-		if (gameEndSig!=null && !querySig.canReach(gameEndSig)) return Result.REJECT;
+		if ((gameEndSig!=null) && query.earlyCutOff(gameEndSig,hasVariations))
+			return Result.REJECT;
 
 		result = Result.REJECT;	// unless...
-		ignoreLine = inLine = false;
-		read(bin,0, null,0, fen,true,true);
+
+		int oldOptions = pos.getOptions();
+		query.setPositionOptions(pos);
+
+		int readOptions = REPLAY|RESET;
+		if (!query.variations && hasVariations) readOptions |= SKIP_VARS;
+
+		read(bin,0, null,0, fen, readOptions);
 		//  read will call back to (BinReader)this
 		//	note: reset==false keeps the final position
+		pos.setOptions(oldOptions);
 		return result;
-	}
-
-	private void compareKeys()
-	{
-		/** check hash key  */
-        if (pos.getHashKey().equals(queryKey) || pos.getReversedHashKey().equals(queryKeyReversed)) {
-			eof = true; //  this will terminate the read() method
-            result = Result.ACCEPT;
-		}
-	}
-
-	private void checkCutOff()
-	{
-		/** check material signature for early cut-off
-		 * 	note: only noisy moves modify the MatSignature */
-		if (!pos.wasSilent()) {
-			pos.updateMatSig();
-			if (!pos.getMatSig().canReach(querySig) &&
-				(queryKeyReversed == 0L || !pos.getMatSig().canReachReversed(querySig))) {
-				eof = true; //  signature cut-off
-				result = Result.REJECT;
-			}
-		}
 	}
 
 	public MatSignature getMatSig()
@@ -246,31 +224,37 @@ public class PositionFilter
 
 	public void afterMove (Move mv, int ply)
 	{
-		if (!ignoreLine) compareKeys();
-		if (!inLine) checkCutOff();
+		if (result== Result.REJECT_NEXT) {
+			//	cut-off was detected one move before; finalize it:
+			eof = true; //  this will terminate the read() method
+			result = Result.REJECT;
+		}
+		else if ((nestLevel == 0 || query.variations)
+				&& query.matches(pos, !pos.wasSilent())) {
+			eof = true; //  this will terminate the read() method
+			result = Result.ACCEPT;
+		}
+		else if ((nestLevel==0) && query.cutOff(pos,!pos.wasSilent())) {
+			//	note: if the search position is not reachable from the main line
+			//	it won't from one of the later variations
+			//	EXCEPT: in the variation *immediately* following this move (which will undo 'mv')
+			//	in other words: don't cut-off if there is a variation following
+			result = Result.REJECT_NEXT;
+		}
 //		if (!inLine && (ply%10==0)) checkCutOff();
 //		if (eof && !result) System.err.println("cut-off after "+ply);
 	}
 
-	public void startOfLine (int nestLevel) 	{
-		if (nestLevel==0)
-			compareKeys();		//	start of game
-		else if (!searchVariations)
-			ignoreLine = true;
-		inLine = nestLevel >= 1;
+	public void startOfLine (int nestLevel) {
+		if (result == Result.REJECT_NEXT)
+			result = Result.REJECT;
+		//	undo reject; see above
 	}
-
-	public void endOfLine (int nestLevel) {
-		inLine = nestLevel < 1;
-		if (!inLine) ignoreLine = false;
-	}
+	public void endOfLine (int nestLevel) { }
 
 
 	public void result (int resultCode)                                 { /* ignored  */ }
-
 	public void beforeMove (Move mv, int ply, boolean displayHint)      { /* ignored  */ }
-
 	public void comment (StringBuffer text)                  { /* ignored  */ }
-
 	public void annotation (int nagCode)                                { /* ignored  */ }
 }

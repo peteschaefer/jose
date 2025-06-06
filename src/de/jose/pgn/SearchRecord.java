@@ -129,7 +129,7 @@ public class SearchRecord implements Cloneable
 	/**	bit flags	*/
 	public int		options;
 	/** hash keys for positional search */
-	public PositionFilter posFilter = new PositionFilter();
+	public PosSearchRecord pos = new PosSearchRecord();
 
 	/**	*/
 	private int		joins;
@@ -227,7 +227,7 @@ public class SearchRecord implements Cloneable
         that.moveCount1 = this.moveCount1;
         that.moveCount2 = this.moveCount2;
         that.openingName = this.openingName;
-        that.posFilter = (this.posFilter==null) ? null : (PositionFilter)this.posFilter.clone();
+        that.pos = this.pos;
         that.siteName = this.siteName;
         that.secondPlayerName = this.secondPlayerName;
 
@@ -268,7 +268,7 @@ public class SearchRecord implements Cloneable
 		setCaseSensitive(false);
 		setSoundex(false);
 
-		posFilter.clear();
+		pos.clear();
 	}
 
 	public void finish(List errors)
@@ -332,10 +332,10 @@ public class SearchRecord implements Cloneable
 		if (firstPlayerName==null && secondPlayerName==null && !isResult())	options = Util.minus(options,SEARCH_COLOR_SENS);
 		//	no use for color sensitive search
 
-		if (!posFilter.isEmpty() && errors != null) {
+		if (!pos.isEmpty() && errors != null) {
 			//	check position for plausibility
-			posFilter.pos.checkLegality(errors);
-			posFilter.pos.checkPlausibility(errors);
+			// todo pos.checkLegality(errors);
+			// todo pos.checkPlausibility(errors);
 		}
 	}
 
@@ -379,7 +379,7 @@ public class SearchRecord implements Cloneable
 
 	public boolean hasPositionFilter()
 	{
-		return 	!posFilter.isEmpty();
+		return 	!pos.isEmpty();
 	}
 
 	private boolean hasUnion()
@@ -475,9 +475,18 @@ public class SearchRecord implements Cloneable
 		}
 //		System.out.println(sql.toString());
 
-		if (!posFilter.isEmpty()) {
+		if (!pos.isEmpty()) {
+			//	Position Search
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+			//	Has Variations can be queried from Game.Attribute
+			//	or from MoreGame.Bin (more expensive but needs no extra join)
+			if (!pos.variations)
+				sql.select.append(", 0 AS HasVariations");
+			else if ((joins & JOIN_GAME) != 0)
+				sql.select.append(", (Game.Attributes & 1) AS HasVariations");
+			else
+				sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
 		}
 
 		return sql;
@@ -515,7 +524,7 @@ public class SearchRecord implements Cloneable
 		if ((Math.abs(sortOrder)-1)==ListPanel.COL_IDX)
 			joins |= JOIN_STRAIGHT;
 
-		if (!posFilter.isEmpty())
+		if (!pos.isEmpty())
 			joins |= JOIN_MORE;
 		/**	STRAIGHT_JOIN is a hint to the MySQL "optimiser"	*/
 
@@ -529,7 +538,7 @@ public class SearchRecord implements Cloneable
 		}
 //		System.out.println(sql.toString());
 
-		if (!posFilter.isEmpty())
+		if (!pos.isEmpty())
 			sql.select.append(", MoreGame.FEN, MoreGame.Bin");
 
 		sql.setLimit(offset,len);
@@ -540,14 +549,14 @@ public class SearchRecord implements Cloneable
 
 	public PositionFilter makePositionFilter() throws SQLException
 	{
-		if (posFilter.isEmpty())
-			return PositionFilter.PASS_FILTER;
+		if (pos.isEmpty())
+			return null;
 		else
-			return posFilter;
+			return new PositionFilter(pos);
 	}
 
 	public void makePositionConditions(ParamStatement sql) throws SQLException {
-		if (posFilter.isEmpty()) return;
+		if (pos.isEmpty()) return;
 
 		joins |= JOIN_MORE;
 		if ((joins & JOIN_GAME) != 0

@@ -14,6 +14,7 @@ package de.jose.db.crossover;
 
 import de.jose.Config;
 import de.jose.chess.MatSignature;
+import de.jose.chess.MatSignatureV1;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.*;
@@ -23,6 +24,9 @@ import de.jose.window.JoDialog;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
 
 /**
  * Database cross-over for Meta Version 1009
@@ -63,8 +67,8 @@ public class Crossover1010
 					conn.executeUpdate(sql1);
 				if (!adapter.existsColumn("MAIN","MoreGame","BlackSignature"))
 					conn.executeUpdate(sql2);
-				//	fill it
-				fillMatSignatures(conn);
+				//	fill it - superseded by Crossover1011.updateMatSignatureV2()
+				//fillMatSignatures(conn);
 			}
 
 			setup.setTableVersion(conn,"MAIN","MoreGame",103);
@@ -91,21 +95,19 @@ public class Crossover1010
 			try {
 				matsig = computeMatSignature(fen, bin);
 			} catch(Throwable e) {
-				matsig = new MatSignature(0,0);
+				matsig = new MatSignatureV1(0,0);
 				System.err.println("[dropped mat signature "+GId+"]");
 			}
 
-			res.updateLong(4, matsig.wsig);
-			res.updateLong(5, matsig.bsig);
+			res.updateLong(4, matsig.getWhiteSignature());
+			res.updateLong(5, matsig.getBlackSignature());
 			res.updateRow();
-			/*	not sure if updatable result set is really efficient.
-				Maybe use a temporary (memory) table and update en gros:
-
-				UPDATE MoreGame JOIN Temp_NewMatSig as T ON MoreGame.GId=T.GId
-				SET MoreGame.WhiteSignature = T.WhiteSignature,
-					MoreGame.BlackSignature = T.BlackSignature
-
-				(for future changes on MatSignature, maybe)
+			/*	updatable result set is not really efficient.
+				see Crossover1011 how this can be done better:
+				1. use BatchedThreadPool to replay games in parallel
+				2. use temporary memory table to store results
+				3. use insert values (),(),... with 200 rows per statement
+				4. use bulk update to copy results into MoreGame
 			 */
 		}
 	}
@@ -117,13 +119,11 @@ public class Crossover1010
 		}
 
 		@Override
-		public void startOfLine(int nestLevel) {
-			ignoreLine = true;
-			inLine = nestLevel >= 1;
-		}
+		public void startOfLine(int nestLevel) { }
 
 		@Override
 		protected void setPosOptions() {
+			super.setPosOptions();
 			//  no need for hash keys
 			pos.setOption(Position.INCREMENT_HASH,false);
 			pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
@@ -136,7 +136,7 @@ public class Crossover1010
 
 	private static MatSignature computeMatSignature(String fen, byte[] bin)
 	{
-		posf.read(bin,0, null,0, fen,true,false);
+		posf.read(bin,0, null,0, fen,REPLAY);
 		return posf.getMatSig();
 	}
 }

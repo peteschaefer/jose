@@ -13,7 +13,6 @@
 package de.jose.chess;
 
 import de.jose.Util;
-import de.jose.util.map.ObjIntMap;
 import de.jose.util.map.LongIntMap;
 
 import java.util.ArrayList;
@@ -85,17 +84,16 @@ public class Position
 	/**	variaton stack size	 */
 	protected static final int VAR_STACK_SIZE = 128;
 
-	public Position()
-	{
-		this(JoseHashKey.class);
+	public Position() {
+		this(JoseHashKey.class, MatSignatureV2.class);
 	}
 
-	public Position (Class hashKeyClass)
+	public Position (Class hashKeyClass, Class matSigClass)
 	{
 		super();
 		theHashKey = HashKey.newHashKey(hashKeyClass,false);
 		theReversedHashKey = HashKey.newHashKey(hashKeyClass,true);
-		theMatSignature = new MatSignature();
+		theMatSignature = MatSignature.newMatSignature(matSigClass);
 		theMoveStack = new StackFrame[STACK_SIZE];
 		hashCount = new LongIntMap();
 		option = CHECK+/*STALEMATE+*/INCREMENT_HASH+EXPOSED_CHECK;
@@ -113,9 +111,7 @@ public class Position
 		setup(initial);
 	}
 
-
-	public void setOption(int newOption, boolean on)
-	{
+	public void setOption(int newOption, boolean on) {
 		setOptions(Util.set(option, newOption, on));
 	}
 
@@ -149,6 +145,11 @@ public class Position
 				computeMatSig();
 		if (hasOption(DRAW_3) && !was3Rep)
 			computeHashCount();
+	}
+
+	public MatSignature useMatSignature(Class matSigClass) {
+		theMatSignature = MatSignature.newMatSignature(matSigClass);
+		return computeMatSig();
 	}
 
 
@@ -200,11 +201,12 @@ public class Position
 		//  otherwise: the Hash Keys are incrementally kept up to date
 	}
 
-	public void updateMatSig()
+	public MatSignature updateMatSig()
 	{
 		if (!hasOption(INCREMENT_SIGNATURE))
 			computeMatSig();
 		//  otherwise: the Mat Sig is incrementally kept up to date
+		return getMatSig();
 	}
 
 	public final boolean hasOption(int anOption)
@@ -317,13 +319,12 @@ public class Position
 		frame.silentPlies = theSilentPlies;
 		frame.hashValue = theHashKey.value();
 		frame.reversedHashValue = theReversedHashKey.value();
-		frame.whiteSignature = theMatSignature.wsig;
-		frame.blackSignature = theMatSignature.bsig;
+		frame.whiteSignature = theMatSignature.getWhiteSignature();
+		frame.blackSignature = theMatSignature.getBlackSignature();
 
 		Piece piece = piece(move.from);
 		boolean silent = !piece.isPawn();
 		//	pawn moves and captures are considered not silent
-
 		if (move.isNullMove()) {
 			//  NULLMOVE
 			theFlags = Util.minus(theFlags,EN_PASSANT_FILE);
@@ -422,8 +423,7 @@ public class Position
 		}
 
 		if (hasOption(INCREMENT_SIGNATURE) && !silent) {
-			//	note: only noisy moves modify the MatSignature
-			theMatSignature.update(move);
+			theMatSignature.update(this,move);
 		}
 	}
 
@@ -492,8 +492,7 @@ public class Position
 		theSilentPlies = frame.silentPlies;
 		theHashKey.setValue(frame.hashValue);
 		theReversedHashKey.setValue(frame.reversedHashValue);
-		theMatSignature.wsig = frame.whiteSignature;
-		theMatSignature.bsig = frame.blackSignature;
+		theMatSignature.init(frame.whiteSignature,frame.blackSignature);
 
 		option = oldOption;
 
@@ -658,8 +657,7 @@ public class Position
 		return theReversedHashKey;
 	}
 
-	public final MatSignature getMatSig()
-	{
+	public final MatSignature getMatSig() {
 		return theMatSignature;
 	}
 
@@ -1052,6 +1050,12 @@ public class Position
 
 	public void checkPlausibility(List collect)
 	{
+		//	pawn structure
+		//	position must be reachable from Initial
+		MatSignature j = updateMatSig();
+		if (!j.isLegal())
+			collect.add("pos.error.unreachable");
+		//	smelly positions (too many promoted pieces)
 		checkPlausibility(WHITE,"white",collect);
 		checkPlausibility(BLACK,"black",collect);
 	}
@@ -1081,9 +1085,6 @@ public class Position
         //	strange colored bishops ?
         if (!super.checkBishopColors(color))
             collect.add("pos.warning.strange."+key+".bishops");
-
-        //	pawn structure
-        //	TODO
-    }
+	}
 
 }

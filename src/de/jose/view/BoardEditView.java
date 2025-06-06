@@ -68,6 +68,7 @@ public class BoardEditView
 	public BoardEditView(IBoardAdapter board)
 	{
 		super(board,false);
+		this.hasOneClickMoves = false;
 		Color bgColor 	= UIManager.getColor("Panel.background");
 		BACKGROUND 		= Surface.newColor(bgColor);
 
@@ -119,6 +120,10 @@ public class BoardEditView
 	/*	copy from main board */
 	public void defaultPosition()       {
 		setup(AbstractApplication.theAbstractApplication.theGame.getPosition());
+	}
+
+	public String getFen() {
+		return board.getPosition().toString();
 	}
 
 	public void setup(String fen)

@@ -171,6 +171,11 @@
 			<!-- add JRE -->
 			<zipfileset src="${dist-dir}/windows_x64/jdk-21_windows-x64.zip"
 						prefix="${appldir}/jre"/>
+			<!-- replace msvcp140.dll - Oracle bug -->
+			<zipfileset dir="${dist-dir}/windows_x64"
+						prefix="${appldir}/jre/bin">
+				<include name="msvcp140.dll"/>
+			</zipfileset>
 		</zip>
 
 	</target>

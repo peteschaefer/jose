@@ -12,10 +12,8 @@
 
 package de.jose.pgn;
 
-import de.jose.chess.BinaryConstants;
-import de.jose.chess.Constants;
-import de.jose.chess.Move;
-import de.jose.chess.Board;
+import de.jose.chess.*;
+import de.jose.chess.Position;
 import de.jose.plugin.Score;
 import de.jose.util.ListUtil;
 import de.jose.sax.JoContentHandler;
@@ -25,6 +23,8 @@ import java.io.*;
 
 import org.xml.sax.SAXException;
 
+import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.BinReader.RESET;
 import static de.jose.pgn.INodeConstants.*;
 
 public class LineNode
@@ -524,7 +524,9 @@ public class LineNode
         reader.pos.setOption(Board.CHECK, true);
 	    reader.pos.setOption(Board.STALEMATE, true);
 
-	    reader.read(bin,boffset, comments,coffset, fen,replay,true);
+		int readOptions = RESET;
+		if (replay) readOptions |= REPLAY;
+	    reader.read(bin,boffset, comments,coffset, fen,readOptions);
 
 	    reader.pos.setOptions(oldOptions);
     }
@@ -600,7 +602,7 @@ public class LineNode
 	    pos.setOption(Board.CHECK, true);
 		pos.setOption(Board.STALEMATE, true);
 
-		reader.read(bin,boffset, comments,coffset, fen,true,true);
+		reader.read(bin,boffset, comments,coffset, fen,REPLAY|RESET);
 
 		pos.setOptions(oldOptions);
 	}
@@ -617,8 +619,14 @@ public class LineNode
     /** write binary data   */
     void writeBinaryContents(BinWriter writer)
     {
+		boolean wasIncrementMatsig = writer.pos.hasOption(Position.INCREMENT_SIGNATURE);
+		writer.pos.setOption(Position.INCREMENT_SIGNATURE, true);
+
 		for (Node nd = first(); nd != null; nd = nd.next())
 			nd.writeBinary(writer);
+
+		writer.endMatSig = (MatSignature) writer.pos.getMatSig().clone();
+		writer.pos.setOption(Position.INCREMENT_SIGNATURE, wasIncrementMatsig);
 	}
 
 	public Style getDefaultStyle(StyledDocument doc)

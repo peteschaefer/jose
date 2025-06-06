@@ -1,7 +1,7 @@
 /*
  * This file is part of the Jose Project
  * see http://jose-chess.sourceforge.net/
- * (c) 2002-2006 Peter Schäfer
+ * (c) 2002-2006 Peter Schï¿½fer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@ package de.jose.pgn;
 import de.jose.Util;
 import de.jose.Version;
 import de.jose.chess.BinaryConstants;
+import de.jose.chess.MatSignature;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.util.CharUtil;
@@ -36,6 +37,8 @@ public class BinWriter
     /** stores variation hash keys  */
     protected ByteArrayOutputStream posVar;
     protected ByteArrayOutputStream posOut;
+    /** MatSignature at end of game */
+    public MatSignature endMatSig;
 
     protected int flags;
 

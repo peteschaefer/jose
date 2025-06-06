@@ -243,7 +243,7 @@ public class JoDialog
 	protected JPanel buttonPane;
 
 	/**	contains all active elements	 */
-	protected HashMap elements;
+	protected HashMap<String,Object> elements;
 	/**	contains all active buttons	 */
 	protected HashMap buttons;
 
@@ -1121,7 +1121,7 @@ public class JoDialog
 	}
 
 
-	public Object getValue(Object comp)
+	public static Object getComponentValue(Object comp)
 	{
 		if (comp instanceof ValueHolder)
 			return ((ValueHolder)comp).getValue();
@@ -1145,10 +1145,16 @@ public class JoDialog
 			return ((JTimeField)comp).getValue();
 		else if (comp instanceof JIntegerField)
 			return ((JIntegerField)comp).getValue();
-		else if (comp instanceof String)
-			return getValueByName((String)comp);
 		else
 			return null;
+	}
+
+	public Object getValue(Object comp)
+	{
+		if (comp instanceof String)
+			return getValueByName((String)comp);
+		else
+			return getComponentValue(comp);
 	}
 
 	public final Object getValueByName(String name)
@@ -1173,7 +1179,7 @@ public class JoDialog
 		throw new IllegalArgumentException();
 	}
 
-	public void setValue(Object comp, Object value)
+	public static void setComponentValue(Object comp, Object value)
 	{
 		if (comp instanceof ValueHolder)
 			((ValueHolder)comp).setValue(value);
@@ -1193,8 +1199,16 @@ public class JoDialog
 			((JSpinner)comp).setValue(Util.toNumber(value));
 		else if (comp instanceof JSlider)
 			((JSlider)comp).setValue(Util.toint(value));
-		else if (comp instanceof String)
+		else
+			throw new IllegalArgumentException();
+	}
+
+	public void setValue(Object comp, Object value)
+	{
+		if (comp instanceof String)
 			setValueByName((String)comp, value);
+		else
+			setComponentValue(comp, value);
 	}
 
 	public final void setValueByName(String name, Object value)

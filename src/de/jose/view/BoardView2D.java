@@ -119,6 +119,8 @@ public class BoardView2D
 	protected Border evalBorder = new SoftBevelBorder(BevelBorder.RAISED);
 	/**	lock cached images (i.e. prevent them from Garbage collection)	*/
 	protected boolean lockImgCache;
+	/** support move input by single mouse clicks */
+	protected boolean hasOneClickMoves;
 
 	public BoardView2D(IBoardAdapter board, boolean lockImgCache)
 	{
@@ -130,6 +132,7 @@ public class BoardView2D
 		addMouseMotionListener(this);
 
 		this.lockImgCache = lockImgCache;
+		this.hasOneClickMoves = true;
 		recalcSize(getGraphics2D());
 	}
 
@@ -1477,7 +1480,7 @@ public class BoardView2D
 			//if (guessMove1(square,board.getPosition()))
 			//	return 0;
 		}
-		else {
+		else if (hasOneClickMoves) {
 			if (guessMove2(new int[]{mouseClickSquare,square}))
 				return 0;
 			if ((Application.theApplication.theMode==USER_INPUT || Application.theApplication.theMode==ANALYSIS))

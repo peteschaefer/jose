@@ -90,7 +90,16 @@ public class Language
 		return str;
 	}
 
-	private void init(File file, String code, File fallBackFile) throws IOException
+    public static void append(StringBuffer buffer, Object[] keys, String separator)
+	{
+		for(int i=0; i<keys.length; i++) {
+			if (buffer.length() > 0) buffer.append(separator);
+			String key = keys[i].toString();
+			buffer.append(Language.get(key));
+		}
+    }
+
+    private void init(File file, String code, File fallBackFile) throws IOException
 	{
 		if (file!=null && file.exists()) {
 			loadFile(file);

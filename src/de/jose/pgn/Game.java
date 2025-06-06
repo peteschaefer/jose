@@ -1109,31 +1109,27 @@ public class Game
 
 	public boolean gotoMove(PositionFilter filter)
 	{
-		if (filter==null || filter.queryKey ==0L)
+		if (filter==null || filter.query==null || filter.query.isEmpty())
 			return false;
 		else
-			return gotoMove(filter.queryKey, filter.queryKeyReversed, filter.searchVariations);
+			return gotoMove(filter.query);
 	}
 
-	public boolean gotoMove(long targetKey, long targetKeyReversed,
-	                         boolean searchVariations)
+	public boolean gotoMove(PosSearchRecord query)
 	{
 		position.reset();
 		position.setOption(Position.INCREMENT_HASH,true);
 		position.setOption(Position.INCREMENT_REVERSED_HASH,true);
 		position.setOption(Position.IGNORE_FLAGS_ON_HASH,true);
 
-		boolean result = gotoMove(mainLine, targetKey,targetKeyReversed, searchVariations);
+		boolean result = gotoMove(mainLine, query);
 
 		position.setOption(Position.IGNORE_FLAGS_ON_HASH,false);
 
 		return result;
 	}
 
-	private boolean gotoMove(LineNode line,
-	                      long targetKey,
-	                      long targetKeyReversed,
-	                      boolean searchVariations)
+	private boolean gotoMove(LineNode line, PosSearchRecord query)
 	{
 		for (Node node = line.first(); node != null; node = node.next())
 		{
@@ -1141,24 +1137,20 @@ public class Game
 			{
 				MoveNode mnode = (MoveNode)node;
 				mnode.play(position);
-				if (position.getHashKey().equals(targetKey) ||
-				    position.getReversedHashKey().equals(targetKeyReversed))
+				if (query.matches(position, !position.wasSilent()))
 				{
 					currentMove=mnode;
 					return true;
 				}
 			}
-			else if (node.is(LINE_NODE) && searchVariations)
+			else if (node.is(LINE_NODE) && query.variations)
 			{
-				Move mv = position.undoMove();
 				position.startVariation();
 
-				if (gotoMove((LineNode)node,targetKey, targetKeyReversed, searchVariations))
+				if (gotoMove((LineNode)node,query))
 					return true;
-				else {
+				else
 					position.undoVariation();
-					position.doMove(mv);
-				}
 			}
 		}
 		return false;
@@ -1406,8 +1398,8 @@ public class Game
         stm.setString(i++,     (String)getTagValue(TAG_FEN));
         stm.setString(i++,     getMoreInfo());
 		if (writer != null) {
-			stm.setLong(i++,    writer.pos.getMatSig().wsig);	//	right?
-			stm.setLong(i++, 	writer.pos.getMatSig().bsig);
+			stm.setLong(i++,    writer.endMatSig.getWhiteSignature());	//	right?
+			stm.setLong(i++, 	writer.endMatSig.getBlackSignature());
 			stm.setBytes(i++,      writer.getText());
 			stm.setBytes(i++,      writer.getComments());
 
@@ -1491,7 +1483,8 @@ public class Game
 
 		BinWriter writer = null;
 		String fen = (String)getTagValue(TAG_FEN);
-		if (withData) writer = getBinaryData(fen);
+		if (withData)
+			writer = getBinaryData(fen);
 
 		String white = (String)getTagValue(TAG_WHITE);
 		String black = (String)getTagValue(TAG_BLACK);

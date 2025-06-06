@@ -709,6 +709,12 @@ abstract public class DBAdapter
 				} catch (Exception e) {
 					Application.error(e);
 				}
+			if (version < 1011)
+				try {
+					version = Crossover1011.crossOver(version,connection,config);
+				} catch (Exception e) {
+					Application.error(e);
+				}
         }
 
 	    if (schema.equalsIgnoreCase("META"))

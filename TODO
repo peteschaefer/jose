@@ -70,7 +70,7 @@ Maintenance:
 [x] Paste text from Clipboad
     [x] check resource: /de/jose/util/rtf/charsets/ansi.txt
 
-[ ] search for Year (fill in 1.1.xxxx automatically)
+[x] search for Year (fill in 1.1.xxxx automatically)
 [x] smarter date input. time zone jump on input ?
 [ ] insert diagram *before* move
 [ ] order by Round: numeric instead of alpha
@@ -78,25 +78,47 @@ Maintenance:
 [x] PosFilter + CId is slow.
     heuristic hack: search for GId BETWEEN. Inaccurate but fast.
 [x] update Matsig only after noisy moves
+[x] Easylink: replace Oracle's msvcp140.dll
 
 [ ] Matsig V2
-    [ ] pawn bitset, piece counts, bishop colors
-    [ ] unit tests
-        [ ] hard cases
-        [ ] random games (incremental mode)
-        [ ] db games (incremental mode)
-    [ ] opposite bishop, even bishop
-    [ ] good bishop, bad bishop
-    [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway
-    [ ] cross-over (faster this time, batched pll + temp table?)
+    [x] cross-over .jose files
+    [x] test Ecofy (still uses MatSignatureV1 !)
+    [x] reversed color search. MatSignatureV2: mirror pawns
+    [x] store SearchRecord in Preferences
+    [?] click&drag in Search Panel
+    [x] paste FEN in Search Panel (w/out moving color?)
 
+[ ] Q: use concurrent insert for Archive Import / Export ?
+    https://dev.mysql.com/doc/refman/8.4/en/concurrent-inserts.html
+
+=== Position Search Features
 
 [ ] search pawn structure
+    [ ] MatSigV2 comparison:
+[ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs
+[ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
+[ ] search mate, stalemate, check (double check?)
 [ ] animate search button
 
+[-] HANDLER for Position Search
+[-] partition into parallel parcels (less thread-pool worries)
+    Handler is very slow indeed.
+
 === Native Position Search
+
+[ ] user-defined-function
+    matsig_reachable(wsig,bsig, wsig,bsig)
+
+    matsig_reachable(handle, wsig,bsig)
+    matsig_reachable(wsig,bsig, handle)
+
+    let_matsig(wsig,bsig) -> bigint (= &MatSignature)
+    free_matsig(handle)
+
+    [ ] unit tests
+    [ ] sanitizer. we don't want to crash the server.
 
 [x] move chess++ to github
 [ ] build mariadb, or mysql5 from source
@@ -113,6 +135,8 @@ Maintenance:
 [ ] parallelize
     [ ] find task bounds by index
     [ ] results stored in tbb::concurrent_queue
+[ ] unit test
+[ ] sanitizers
 [ ] MatSignature in c++
 
 ==== Interesting New Features

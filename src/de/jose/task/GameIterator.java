@@ -14,26 +14,19 @@ package de.jose.task;
 
 import de.jose.pgn.Game;
 import de.jose.db.JoConnection;
-import de.jose.db.JoStatement;
 import de.jose.db.JoPreparedStatement;
-import de.jose.view.style.JoStyleContext;
 import de.jose.view.list.IntervalCacheModel;
-import de.jose.chess.Position;
-import de.jose.Application;
 import de.jose.util.ListUtil;
-import de.jose.util.IntArray;
 
 import java.util.Iterator;
 import java.sql.SQLException;
-
-import org.xml.sax.SAXException;
 
 /**
  * GameIterator
  *
  * provides methods for iterating all Games in a GameSource
  * 
- * @author Peter Schäfer
+ * @author Peter Schï¿½fer
  */
 
 abstract public class GameIterator

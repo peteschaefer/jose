@@ -154,7 +154,11 @@ public class EngUtil
 	 *	@return its row (0 .. OUTER_BOARD_HEIGHT-1)
 	 */
 	public static final int rowOf(int square)			{ return square / OUTER_BOARD_WIDTH; }
-	
+
+	public static final int homeRow(int color) {
+		return isWhite(color) ? ROW_2 : ROW_7;
+	}
+
 	/**
 	 * @return a square index
 	 */

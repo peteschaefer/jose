@@ -4463,6 +4463,9 @@ public class Application
 
 		broadcast(cmd);
 
+		for(JoPanel panel : JoPanel.getAllPanels())
+			panel.closing();
+
 		try {
 			if (applListener!=null) applListener.close();
 		} catch (Throwable e) {

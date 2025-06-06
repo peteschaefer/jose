@@ -2,6 +2,7 @@ package de.jose.util.concurrent;
 
 import java.util.ArrayList;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /**
  * A thread pool that collects small tasks into batches.
@@ -15,6 +16,7 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 {
     private int batchSize;
     private BatchJob batch=null;
+    private Consumer<ArrayList<R>> onBatchFinished;
 
     public BatchThreadPool(int poolSize, int queueCapacity, int batchSize) {
         super(poolSize, queueCapacity);
@@ -29,7 +31,7 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 
     public Future submit(Runnable task) {
         if (batch == null) batch = new BatchJob(batchSize);
-        batch.add(task);
+        batch.add((R)task);
         if (batch.size() >= batchSize) flush();
         return null;
     }
@@ -61,7 +63,11 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
         }
     }
 
-    private static class BatchJob extends ArrayList<Runnable> implements Runnable
+    public void setOnBatchFinished(Consumer<ArrayList<R>> onBatchFinished) {
+        this.onBatchFinished = onBatchFinished;
+    }
+
+    private class BatchJob extends ArrayList<R> implements Runnable
     {
         public BatchJob(int initialCapacity) {
             super(initialCapacity);
@@ -69,7 +75,10 @@ public class BatchThreadPool<R extends Runnable> extends QueueThreadPool<R>
 
         @Override
         public void run() {
-            for (Runnable r : this) r.run();
+            for (Runnable r : this)
+                r.run();
+            if (onBatchFinished != null)
+                onBatchFinished.accept(this);
         }
     }
 }

@@ -14,6 +14,8 @@ package de.jose.task.db;
 
 import de.jose.Application;
 import de.jose.Language;
+import de.jose.chess.JoseHashKey;
+import de.jose.chess.MatSignatureV1;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.db.JoConnection;
@@ -41,6 +43,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+
+import static de.jose.pgn.BinReader.*;
 
 /**
  *  Classifies ECO opening codes & names
@@ -234,7 +238,7 @@ public class EcofyTask
 
     public void prepare() throws Exception
     {
-        pos = new Position();
+        pos = new Position(JoseHashKey.class, MatSignatureV1.class);
         pos.setOption(Position.INCREMENT_HASH,          true);
         pos.setOption(Position.INCREMENT_REVERSED_HASH, true);
 	    pos.setOption(Position.INCREMENT_SIGNATURE,     true);
@@ -312,28 +316,28 @@ public class EcofyTask
         processCollectionContents(CId);
     }
 
-	public void processCollectionContents(int CId) throws Exception
-	{
-		/**
-		 * use MySQL HANDLER to traverse the Game table
-		 */
-		try {
-			handlerName = "EcofyRead"+(gHandlerCount++);
-			getConnection().executeUpdate("HANDLER Game OPEN AS "+handlerName);
+    public void processCollectionContents(int CId) throws Exception
+    {
+	    /**
+	     * use MySQL HANDLER to traverse the Game table
+	     */
+	    try {
+		    handlerName = "EcofyRead"+(gHandlerCount++);
+	        getConnection().executeUpdate("HANDLER Game OPEN AS "+handlerName);
 
-			JoStatement stm = new JoStatement(connection);
-			StringBuffer buf = new StringBuffer("HANDLER "+handlerName+" ");
-			buf.append("READ Game_16 = ("+CId+") ");
-			buf.append(" WHERE CId = "+CId+" ");
-			appendCondition(buf,handlerName,true);
+		    JoStatement stm = new JoStatement(connection);
+		    StringBuffer buf = new StringBuffer("HANDLER "+handlerName+" ");
+		    buf.append("READ Game_16 = ("+CId+") ");
+		    buf.append(" WHERE CId = "+CId+" ");
+		    appendCondition(buf,handlerName,true);
 			buf.append(" LIMIT "+Integer.MAX_VALUE/2);
 
-			stm.executeQuery(buf.toString());
+		    stm.executeQuery(buf.toString());
 			//  INDEX Game_15 ON Game(CId,Id)
 			processGames(stm.getResultSet());
-		} finally {
-			getConnection().executeUpdate("HANDLER "+handlerName+" CLOSE");
-		}
+	    } finally {
+		    getConnection().executeUpdate("HANDLER "+handlerName+" CLOSE");
+	    }
 
     }
 
@@ -427,7 +431,7 @@ public class EcofyTask
 				UpdateRow row = (UpdateRow)updateBuffer.get(GId);
 
 				currentCode = ECOClassificator.NOT_FOUND;
-                reader.read(bin,0, null,0, fen,true,true);
+                reader.read(bin,0, null,0, fen,REPLAY|RESET); // SKIP_VARS ?
 
 	            if (currentCode==ECOClassificator.NOT_FOUND)
 	                updateBuffer.remove(GId);   //  no use updating

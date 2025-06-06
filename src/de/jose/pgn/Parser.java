@@ -95,6 +95,7 @@ public class Parser
 	/**	set if a result element is present	*/
 	public boolean hasResult;
 	public int result;
+	public MatSignature matSignature = null;
 
 	/**	check legal moves strictly ?	 */
 	public boolean strictlyLegal;
@@ -192,6 +193,9 @@ public class Parser
 		hasResult = false;
 		result = PgnConstants.RESULT_UNKNOWN;
 
+		boolean wasIncrementSig = pos.hasOption(Position.INCREMENT_SIGNATURE);
+		pos.setOption(Position.INCREMENT_SIGNATURE,true);
+
 		while (offset < max) {
 			parseToken();
 			
@@ -277,6 +281,9 @@ public class Parser
 			
 			offset += len;
 		}
+
+		matSignature = (MatSignature) pos.getMatSig().clone();
+		pos.setOption(Position.INCREMENT_SIGNATURE,wasIncrementSig);
 	}
 
     /** @return true if the recent call to parse() detected variation lines */

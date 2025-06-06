@@ -37,7 +37,7 @@ public class ArchiveFile
 	// MySQL table format
 	public static final int TABLE_MYISAM            = 11;
 	/** @deprecated needs myisampack.exe, yields no significant advantage */
-	public static final int TABLE_MYISAM_PACKED     = 12;
+	//public static final int TABLE_MYISAM_PACKED     = 12;
 	/** @deprecated needs embedded library with Archive engine enabled; yields no significant advantage */
 	public static final int TABLE_ARCHIVE           = 13;
 
@@ -385,7 +385,11 @@ public class ArchiveFile
     public void storeFiles(File tableDir, String[] tableNames)
             throws IOException
     {
-		File[] dataFiles = tableDir.listFiles(new PrefixFilter(tableNames));
+		File[] dataFiles;
+		if (tableNames!=null)
+			dataFiles = tableDir.listFiles(new PrefixFilter(tableNames));
+		else
+			dataFiles = tableDir.listFiles();
 	    for (int i=0; i < dataFiles.length; i++)
 	        storeFile(dataFiles[i]);
     }

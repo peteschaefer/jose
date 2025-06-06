@@ -140,11 +140,21 @@ public class Move
 		int co = moving.color();
 		return pc+co;
 	}
+
 	public final int getCapturedPiece() {
 		if (captured==null)
 			return EMPTY;
 		else
 			return captured.piece;
+	}
+
+	public final int getCapturedSquare() {
+		if (captured==null)
+			return 0;
+		else if (isEnPassant())
+			return getEnPassantSquare();
+		else
+			return to;
 	}
 
 	public final void setPromotionPiece(int p) 	{ flags = EngUtil.setPromotionPiece(flags,p); }
