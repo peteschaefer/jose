@@ -246,7 +246,7 @@ public class MatSignatureV2 implements MatSignature
      */
     public void update(Board board, Move mv)
     {
-        //  notify "loud" moves: captures and pawn moves
+        //  notify "noisy" moves: captures and pawn moves
         if (mv.isCapture())
         {
             Features fthat = EngUtil.isWhite(mv.moving.piece) ? bfeat:wfeat;
@@ -350,6 +350,7 @@ public class MatSignatureV2 implements MatSignature
             padv_base = padv_lower = padv_upper = 0;
         }
         void copyFrom(Features that) {
+            assert this.color==that.color;
             sig = that.sig;
             padv_base = that.padv_base;
             padv_lower = that.padv_lower;
@@ -616,13 +617,6 @@ public class MatSignatureV2 implements MatSignature
                sig |= BitUtil.set6(Math.min(ADV_MAX, padv_lower +1),ADV_OFFSET);
        }
 
-       int PAWN_CAPTURES[][] = new int[][] {
-               /*a-file*/ {0,0,1,3,6,10,15},
-               /*b-file*/ {0,0,1,2,4, 7,11},
-               /*c-file*/ {0,0,1,2,4, 6, 9},
-               /*d-file*/ {0,0,1,2,4, 6, 9}
-       };
-
        int min_captures(int file, int pawns)
        {   //   symmetrical around d/e filea
            assert(pawns>=0 && pawns<=6);
@@ -811,7 +805,7 @@ public class MatSignatureV2 implements MatSignature
         if (empty > 0) buf.print(empty);
     }
 
-    int pieceOffset(int piece, int square)
+    static int pieceOffset(int piece, int square)
     {
         switch(EngUtil.uncolored(piece)) {
             case KNIGHT:    return KNIGHT_OFFSET;
@@ -842,6 +836,13 @@ public class MatSignatureV2 implements MatSignature
 
     static final int ADV_TOP              = 48;
     static final int ADV_MAX              = ADV_TOP-2;
+
+    static final int PAWN_CAPTURES[][] = new int[][] {
+            /*a-file*/ {0,0,1,3,6,10,15},
+            /*b-file*/ {0,0,1,2,4, 7,11},
+            /*c-file*/ {0,0,1,2,4, 6, 9},
+            /*d-file*/ {0,0,1,2,4, 6, 9}
+    };
 
     static int rowOffset(int row) {
         return (row-ROW_2)*8;
