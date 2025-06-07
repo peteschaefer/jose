@@ -13,15 +13,16 @@ Files for Download
 
 * jose-152-windows.zip              zip archive for Windows
 * jose-152-linux.zip                zip archive for Linux with Intel processors
+* jose-152-linux-arm.zip            zip archive for Linux with ARM 64 processors
 * jose-152-mac-intel.zip            zip archive for macOS with Intel processors
 * jose-152-mac-arm.zip              zip archive for macOS wiht Apple Silicon (ARM 64) processors
 
-* jose-153-patch.zip                patch to be applied on top of 1.5.2
+* jose-1512-patch.zip              patch to be applied on top of 1.5.2
 
 * database-10k.jose                Database containing 10.000 grandmaster games
 * database-500k.jose               Database containing more than 500.000 games
 * database-1700k.jose              Database containing more than 1.7 million games
-
+* Lubras Gigabase.jose             Database containing 16 million games
 
 
 ============
@@ -29,9 +30,9 @@ Requirements
 ============
 
 * Operating Systems: 
-   - Windows 98 or later
-   - Linux with Intel processors
-   - macOS with Intel or Apple Silicon (since?)
+   - Windows
+   - Linux with Intel or Arm processors
+   - macOS with Intel or Apple Silicon processors
 
 ==================
 Patch Installation

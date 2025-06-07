@@ -172,7 +172,14 @@ the first production release.
 
 === 1.5.8 (2025-05)
 === 1.5.9 (2025-05)
+=== 1.5.10 (2025-05)
 * load /huge/ database files
 * read 7zip compressed input files
+
+== 1.5.11
+* upgrade to Apache FOP 2.11 (pdf printing)
+
+== 1.5.12
+* revised position search
 
 ==========================
