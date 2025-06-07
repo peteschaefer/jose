@@ -244,7 +244,7 @@ class MatSignatureV2Test {
         //  r1bqkb1r/pp1ppp2/2n3p1/4P2p/2Bp2nP/2P2N2/PP3PP1/RNBQK2R w KQkq - 0 8
         MatSignatureV2 goal = new MatSignatureV2(0x2d96000000880063L,0x2196334080000000L);
         assertTrue(goal.isExact());
-        //  the very same position, but with estimated
+        //  the very same position, but with estimated advance
         MatSignatureV2 from = new MatSignatureV2(0x196000008800063L,0x196334080000000L);
         assertFalse(from.isExact());
         //  a pawn has advanced. We can deduce that it can't move back.
