@@ -266,6 +266,13 @@ class MatSignatureV2Test {
         pos.setup(fen2_reversed);
         MatSignatureV2 sig2rev = (MatSignatureV2) pos.computeMatSig().clone();
 
+        assertTrue(sig1.canReach(sig2));
+
+        assertEquals(sig2,sig2.reverse().reverse());
+
+        assertEquals(sig2.getWhiteSignature(), sig2.reverse().reverse().getWhiteSignature());
+        assertEquals(sig2.getBlackSignature(), sig2.reverse().reverse().getBlackSignature());
+
         assertTrue(canReach(sig1,sig2,1));
 
         assertEquals(sig2rev,sig2.cloneReversed());
@@ -534,5 +541,34 @@ class MatSignatureV2Test {
                 assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj),printQInfo);
             }
         }
+    }
+
+    //
+    // MySQL user-defined-function
+    //
+    @Test
+    void testMysqlUdf() throws Exception
+    {
+        String dllPath = "C:\\dev\\jose-cpp\\cmake-build-debug\\udf.dll";
+
+        withDBServer();
+
+        JoConnection conn = JoConnection.get();
+        //  register "udf.dll"
+        conn.executeUpdate(
+                "CREATE FUNCTION can_reach RETURNS INT\n" +
+                "  SONAME '"+dllPath+"';");
+
+        pos.setup("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5");
+        MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();
+        pos.setup("r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16");
+        MatSignatureV2 sig2 = (MatSignatureV2) pos.updateMatSig().clone();
+
+        int ok = conn.selectInt("SELECT can_reach("+
+                sig1.getWhiteSignature()+","+sig1.getBlackSignature() +
+                sig2.getWhiteSignature()+","+sig2.getBlackSignature() +")");
+        assertTrue(ok > 0);
+
+        // canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6)
     }
 }

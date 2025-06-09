@@ -516,7 +516,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		command.add("--skip-grant-tables");
+		//command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");

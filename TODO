@@ -112,28 +112,29 @@ Maintenance:
 [ ] (1) port MatSignature(V2) from Java to C++
     not too hard because it involves mainly bit-twiddling
     [x] chess::MatSignature class
-    [ ] unit tests
+    [x] unit tests
     [ ] unit test with real games (pgn?)
-    [ ] get rid of unnecesary dependencies in chess::Board (unistring,etc)
+    [.] get rid of unnecesary dependencies in chess::Board (unistring,text,units)
     [ ] sanitizer. we don't want to crash the server.
     [ ] mysql user-defined-functions
-        new_matsig(fen)     -- allocates a MatSignature object
+        new_matsig(fen) -> BIGINT    -- allocates a MatSignature object
         new_matsig(wsig,bsig)
         free_matsig(handle)
 
-        reachable(handle, wsig,bsig)    -- replicates MatSignature::canReach()
+        reachable(handle, wsig,bsig) -> BOOL    -- replicates MatSignature::canReach()
         reachable(wsig,bsig, handle)
         ...
-        [ ] unit test udf functions
+      [ ] unit test udf functions
 
 [ ] (2) port replay logic from Java to C++
+    postpone until more search features are implemented?
     [x] rule engine: chess::Board already there
     [ ] binary decoder
         [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
             sort by PieceListEntry.index ?
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [ ] mysql udf's
-        zobrist_key(fen)
+        zobrist_key(fen) -> BIGINT
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
         [ ] unit test udf functions
 
@@ -143,6 +144,7 @@ Maintenance:
     [ ] index-range scan
     [ ] in parallel (OpenMP or TBB?)
     [ ] Java interface (JNI): java.sql.ResultSet
+        [ ] what about FFM api?
         [ ] thread-safe queue for results
         [ ] ResultSet.next() blocks/polls until new results arrive in queue
 
