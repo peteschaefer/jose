@@ -83,6 +83,12 @@ Maintenance:
 [x] Easylink: replace Oracle's msvcp140.dll
 
 [x] Matsig V2
+    [x] cross-over .jose files
+    [x] test Ecofy (still uses MatSignatureV1 !)
+    [x] reversed color search. MatSignatureV2: mirror pawns
+    [x] store SearchRecord in Preferences
+    [?] click&drag in Search Panel
+    [x] paste FEN in Search Panel (w/out moving color?)
 
 [x] use concurrent insert for Archive Import
 [ ] Export ?
