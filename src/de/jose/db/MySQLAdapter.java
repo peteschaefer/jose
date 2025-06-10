@@ -530,6 +530,7 @@ public class MySQLAdapter
 		Vector env = new Vector();
 		String binPath = Application.theWorkingDirectory.getAbsolutePath()+File.separator+"bin";
 		String execPath = binPath+File.separator+Version.osDir+File.separator+"mysqld";
+		String pluginPath = Application.theWorkingDirectory.getAbsolutePath()+File.separator+"lib"+File.separator+Version.osDir;
 //		String defaultsPath = Application.theWorkingDirectory.getAbsolutePath()+
 //		                    File.separator+"config"+File.separator+"mysql.ini";
 
@@ -542,7 +543,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		//command.add("--skip-grant-tables");
+		if (!Version.MYSQL_UDF)  command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
@@ -595,6 +596,7 @@ public class MySQLAdapter
 		}
 
 		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
+		if ( Version.MYSQL_UDF) command.add("--plugin_dir="+pluginPath);
 		command.add("--skip-locking");
 
 		// only connect to local host; skip DNS name resolve

@@ -5,11 +5,13 @@ import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PosSearchRecord;
 import de.jose.util.BitUtil;
+import de.jose.util.file.FileUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -700,15 +702,29 @@ class MatSignatureV2Test {
     @Test
     void testMysqlUdf() throws Exception
     {
-        String dllPath = "C:\\dev\\jose-cpp\\cmake-build-debug\\udf.dll";
+        String libPath="";
+        String libName="";
+        if (Version.windows) {
+            libName = "udf.dll";
+            libPath = "C:\\\\dev\\\\jose-cpp\\\\cmake-build-debug";
+            // two \ escapes needed for: c++ preprocessor, mysql parser
+        }
+        if (Version.linux) {
+            libName = "libudf.so";
+            libPath = "/home/schaefer/src/jose-cpp/cmake-build-relwithdebinfo";
+        }
+        //  library needs to be copied to the plugin_dir (=lib/os)
+        FileUtil.copyFile(new File(libPath,libName), new File("lib/"+Version.osDir,libName));
 
         withDBServer();
 
         JoConnection conn = JoConnection.get();
         //  register "udf.dll"
         conn.executeUpdate(
-                "CREATE FUNCTION can_reach RETURNS INT\n" +
-                "  SONAME '"+dllPath+"';");
+                "CREATE FUNCTION" +
+                    //" IF NOT EXISTS" +
+                    " can_reach RETURNS INTEGER" +
+                    " SONAME 'libudf.so'");
 
         pos.setup("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5");
         MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();
