@@ -768,6 +768,22 @@ class MatSignatureV2Test {
         pstm.setString(2,fen2);
         assertEquals(1,pstm.selectInt());
 
+        pstm = new JoPreparedStatement(conn,
+                "SELECT WhiteSignature, BlackSignature, " +
+                    " can_reach(?,WhiteSignature,BlackSignature) " +
+                    " FROM MoreGame WHERE GId BETWEEN 1000 AND 1020");
+        pstm.setString(1,fen2);
+        pstm.execute();
+        ResultSet res = pstm.getResultSet();
+        while (res.next()) {
+            long wsig = res.getLong(1);
+            long bsig = res.getLong(2);
+            boolean can_reach = res.getBoolean(3);
+
+            MatSignatureV2 sigr = new MatSignatureV2(wsig,bsig);
+            assertEquals(sig2.canReach(sigr), can_reach);
+        }
+
         // canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6)
     }
 }
