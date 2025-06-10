@@ -50,7 +50,7 @@ public class Version
 	 * do we need MySQL UDFs ? currently not.
 	 * if so, we must enable the grant tables.
 	 */
-	public static final boolean MYSQL_UDF = false;
+	public static final boolean MYSQL_UDF = true;
 
 	/**	Java Runtime Version
 	 */
