@@ -135,6 +135,7 @@ class MatSignatureV2Test {
 
 
     void withDBServer() throws Exception {
+        Version.MYSQL_UDF = true;
         if (JoConnection.getAdapter(false)==null)
             Crossover1011.launchDBServer();
         assertNotNull(JoConnection.getAdapter(true));

@@ -743,7 +743,7 @@ abstract public class DBAdapter
 	 * Launch process
 	 * @return
 	 */
-	protected java.util.List<Command> deferredActions = new ArrayList<>();
+	protected java.util.List<Command> deferredActions = new Vector<>();
 
 	public Thread launchProcess() {
 		return null;
