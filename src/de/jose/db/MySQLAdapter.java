@@ -675,6 +675,8 @@ public class MySQLAdapter
 		command.add("--basedir");
 		command.add(binPath);
 
+		command.add("--log-error="+mysqldir.getAbsolutePath()+File.separator+"error.log");
+
 		String[] commandArray = StringUtil.toArray(command);
 		String[] envArray = StringUtil.toArray(env);
 

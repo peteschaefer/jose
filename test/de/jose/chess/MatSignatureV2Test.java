@@ -560,7 +560,7 @@ class MatSignatureV2Test {
         }
         if (Version.linux) {
             libName = "libudf.so";
-            libPath = "/home/schaefer/src/jose-cpp/cmake-build-relwithdebinfo";
+            libPath = "/home/schaefer/src/jose-cpp/cmake-build-debug";
         }
         //  library needs to be copied to the plugin_dir (=lib/os)
         FileUtil.copyFile(new File(libPath,libName), new File("lib/"+Version.osDir,libName));
@@ -569,6 +569,7 @@ class MatSignatureV2Test {
 
         JoConnection conn = JoConnection.get();
         //  register "udf.dll"
+        conn.executeUpdate("DROP FUNCTION IF EXISTS can_reach");
         conn.executeUpdate(
                 "CREATE FUNCTION" +
                     //" IF NOT EXISTS" +
@@ -579,11 +580,16 @@ class MatSignatureV2Test {
         MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();
         pos.setup("r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16");
         MatSignatureV2 sig2 = (MatSignatureV2) pos.updateMatSig().clone();
+        assertTrue(sig1.canReach(sig2));
+
+        System.err.println(sig1.toHexString());
+        System.err.println(sig2.toHexString());
 
         int ok = conn.selectInt("SELECT can_reach("+
-                sig1.getWhiteSignature()+","+sig1.getBlackSignature() +
+                sig1.getWhiteSignature()+","+sig1.getBlackSignature()+"," +
                 sig2.getWhiteSignature()+","+sig2.getBlackSignature() +")");
-        assertTrue(ok > 0);
+
+        assertEquals(1,ok);
 
         // canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6)
     }
