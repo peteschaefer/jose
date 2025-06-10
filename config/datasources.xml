@@ -25,6 +25,11 @@
 		<class-path>mysql.jar</class-path>
 		<jdbc-url> jdbc:mysql://127.0.0.1/jose </jdbc-url>
 		<!-- this argument is ignored by MySQLAdapter when running as embedded server -->
+		<!-- insert user name -->
+		<connection-param>
+			<param-name> user </param-name>
+			<param-value> root </param-value>
+		</connection-param>
 
 		<connection-param>
 			<param-name>useServerPrepStmts</param-name>
