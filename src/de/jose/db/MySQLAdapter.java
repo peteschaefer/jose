@@ -134,8 +134,8 @@ public class MySQLAdapter
 
             switch(getServerMode()) {
 				case MODE_STANDALONE:
-					props.put("user","");
-					props.put("password","");
+					//props.put("user","");
+					//props.put("password","");
 					props.put("characterEncoding","UTF8");
 					String portno = Version.getSystemProperty("jose.db.port");
 					if (portno!=null)
