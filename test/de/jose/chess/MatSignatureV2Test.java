@@ -125,11 +125,13 @@ class MatSignatureV2Test {
     @AfterEach
     void tearDown() throws Exception {
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(false);
-        if (adapter != null) {
+        if (adapter != null)
+        try {
             JoConnection conn = JoConnection.get();
             //adapter.shutDown(conn.getJdbcConnection());
-            adapter.shutDown(conn);
-
+           // adapter.shutDown(conn);
+        } catch (Throwable e) {
+            //  can't help it.
         }
     }
 
@@ -139,6 +141,14 @@ class MatSignatureV2Test {
         if (JoConnection.getAdapter(false)==null)
             Crossover1011.launchDBServer();
         assertNotNull(JoConnection.getAdapter(true));
+/*
+        String log_file = new File(Application.theDatabaseDirectory,
+                                    "mysql"+File.separator+"error.log").getAbsolutePath();
+        JoConnection conn = JoConnection.get();
+        conn.executeUpdate("SET GLOBAL log_error = '"+log_file+"'");
+        conn.release();
+        //  "unknown variable log_error" Why ??
+ */
     }
 
     void test1(String fen, String hexExpected, String stringExpected) throws Exception
@@ -575,7 +585,7 @@ class MatSignatureV2Test {
                 "CREATE FUNCTION" +
                     //" IF NOT EXISTS" +
                     " can_reach RETURNS INTEGER" +
-                    " SONAME 'libudf.so'");
+                    " SONAME '"+libName+"'");
 
         pos.setup("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5");
         MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();
