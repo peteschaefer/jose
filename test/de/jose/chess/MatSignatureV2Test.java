@@ -764,6 +764,10 @@ class MatSignatureV2Test {
         pstm.setString(2,fen2);
         assertEquals(1,pstm.selectInt());
 
+        //
+        //  read stuff from DB
+        //
+         // with FEN argument
         pstm = new JoPreparedStatement(conn,
                 "SELECT WhiteSignature, BlackSignature, " +
                     " can_reach(?,WhiteSignature,BlackSignature) " +
@@ -776,8 +780,52 @@ class MatSignatureV2Test {
             long bsig = res.getLong(2);
             boolean can_reach = res.getBoolean(3);
 
-            MatSignatureV2 sigr = new MatSignatureV2(wsig,bsig);
-            assertEquals(sig2.canReach(sigr), can_reach);
+            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            assertEquals(sig2.canReach(sigres), can_reach);
+        }
+
+        //  with long arguments
+        pos.setup(fen2);
+        sig = (MatSignatureV2) pos.updateMatSig();
+        pstm = new JoPreparedStatement(conn,
+                "SELECT WhiteSignature, BlackSignature, " +
+                        " can_reach(?,?,WhiteSignature,BlackSignature) " +
+                        " FROM MoreGame WHERE GId BETWEEN 1010 AND 1200");
+        pstm.setLong(1,sig.getWhiteSignature());
+        pstm.setLong(2,sig.getBlackSignature());
+        pstm.execute();
+        res = pstm.getResultSet();
+        while (res.next()) {
+            long wsig = res.getLong(1);
+            long bsig = res.getLong(2);
+            boolean can_reach = res.getBoolean(3);
+
+            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            assertEquals(sig2.canReach(sigres), can_reach);
+        }
+
+        //  with reversed matsig
+        pos.setup(fen2);
+        sig = (MatSignatureV2) pos.updateMatSig().clone();
+        MatSignatureV2 sigrev = (MatSignatureV2) sig.cloneReversed();
+        pstm = new JoPreparedStatement(conn,
+                "SELECT WhiteSignature, BlackSignature " +
+                        " FROM MoreGame " +
+                        " WHERE GId BETWEEN 1010 AND 1200" +
+                        "   AND (can_reach(?,?,WhiteSignature,BlackSignature)" +
+                        "     OR can_reach(?,?,WhiteSignature,BlackSignature))");
+        pstm.setLong(1,sig.getWhiteSignature());
+        pstm.setLong(2,sig.getBlackSignature());
+        pstm.setLong(3,sigrev.getWhiteSignature());
+        pstm.setLong(4,sigrev.getBlackSignature());
+        pstm.execute();
+        res = pstm.getResultSet();
+        while (res.next()) {
+            long wsig = res.getLong(1);
+            long bsig = res.getLong(2);
+
+            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            assertTrue(sig.canReach(sigres) || sigrev.canReach(sigres));
         }
 
         // canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6)
