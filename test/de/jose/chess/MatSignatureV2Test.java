@@ -717,7 +717,7 @@ class MatSignatureV2Test {
         String libName="";
         if (Version.windows) {
             libName = "udf.dll";
-            libPath = "C:\\\\dev\\\\jose-cpp\\\\cmake-build-debug";
+            libPath = "C:\\\\dev\\\\jose-cpp\\\\cmake-build-relwithdebinfo";
             // two \ escapes needed for: c++ preprocessor, mysql parser
         }
         if (Version.linux) {
@@ -771,7 +771,7 @@ class MatSignatureV2Test {
         pstm = new JoPreparedStatement(conn,
                 "SELECT WhiteSignature, BlackSignature, " +
                     " can_reach(?,WhiteSignature,BlackSignature) " +
-                    " FROM MoreGame WHERE GId BETWEEN 1000 AND 1020");
+                    " FROM MoreGame WHERE GId BETWEEN 1010 AND 1200");
         pstm.setString(1,fen2);
         pstm.execute();
         ResultSet res = pstm.getResultSet();
