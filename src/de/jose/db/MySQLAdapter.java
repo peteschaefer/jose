@@ -106,7 +106,13 @@ public class MySQLAdapter
 		try {
 			conn = JoConnection.get();
 			//  register "udf.dll"
+			conn.executeUpdate("DROP FUNCTION IF EXISTS udf_version");
 			conn.executeUpdate("DROP FUNCTION IF EXISTS can_reach");
+			conn.executeUpdate(
+					"CREATE FUNCTION" +
+							//" IF NOT EXISTS" +
+							" udf_version RETURNS INTEGER" +
+							" SONAME '" + libName + "'");
 			conn.executeUpdate(
 					"CREATE FUNCTION" +
 							//" IF NOT EXISTS" +

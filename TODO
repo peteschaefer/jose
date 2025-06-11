@@ -112,7 +112,10 @@ Maintenance:
     [x] unit test udf functions
     [x] integrate with SeachRecord
     [x] launch MySQL with Grant Table (we have to)
+    [x] udf_version()
     [ ] Q: why are there still early cutoffs in Java ??
+    [ ] speed: result set is reduced significantly,
+        but speedup is moderate (no pll?)
 
 [ ] (2) port replay logic from Java to C++
     postpone until more search features are implemented?
