@@ -54,6 +54,12 @@ public class MySQLAdapter
 
 	public static final int ER_QUERY_INTERRUPTED = 1317;
 	public static final int ER_SORT_ABORTED = 1028;
+	/**
+	 * do we support MySQL UDFs ?
+	 * if so, we must enable the grant tables.
+	 */
+	public static boolean HAS_GRANT_TABLES = true;
+	public static boolean HAS_UDF = false;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -82,6 +88,36 @@ public class MySQLAdapter
     {
         return (StringUtil.compareVersion(getDatabaseProductVersion(jdbcConnection),"4.1") >= 0);
     }
+
+	public static boolean loadUDF() throws SQLException {
+		if (HAS_UDF) return true;	//	already done
+
+		String libName="";
+		if (Version.windows)
+			libName = "udf.dll";
+		else
+			libName = "libudf.so";
+
+		File libFile = new File(Application.theWorkingDirectory, "lib/"+Version.osDir+"/"+libName);
+		if (!libFile.exists())
+			return false;
+
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			//  register "udf.dll"
+			conn.executeUpdate("DROP FUNCTION IF EXISTS can_reach");
+			conn.executeUpdate(
+					"CREATE FUNCTION" +
+							//" IF NOT EXISTS" +
+							" can_reach RETURNS INTEGER" +
+							" SONAME '" + libName + "'");
+			HAS_UDF = true;
+		} finally {
+			JoConnection.release(conn);
+		}
+		return HAS_UDF;
+	}
 
 	@Override
 	public Thread launchProcess() {
@@ -517,7 +553,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		if (!Version.MYSQL_UDF)
+		if (!HAS_GRANT_TABLES)
 			command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
@@ -570,8 +606,8 @@ public class MySQLAdapter
 			 */
 		}
 
-		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
-		if ( Version.MYSQL_UDF) command.add("--plugin_dir="+pluginPath);
+		if (!HAS_GRANT_TABLES) command.add("--skip-external-locking");
+		if ( HAS_GRANT_TABLES) command.add("--plugin_dir="+pluginPath);	//	path to UDF libs; requires Grant Tables, too
 		command.add("--skip-locking");
 
 		// only connect to local host; skip DNS name resolve
@@ -597,8 +633,8 @@ public class MySQLAdapter
 
 		boolean tcpConnect = false;
 
-		if (Version.unix && Version.MYSQL_UDF) {
-			//	set library path fo UDF
+		if (Version.unix && HAS_GRANT_TABLES) {
+			//	set library path for UDF
 			String libPath = Application.theWorkingDirectory.getAbsolutePath()+
 							"/lib/"+Version.osDir;
 			env.add("LD_LIBRARY_PATH="+libPath);
