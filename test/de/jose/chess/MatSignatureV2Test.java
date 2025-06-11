@@ -134,9 +134,9 @@ class MatSignatureV2Test {
 
 
     void withDBServer() throws Exception {
-        Version.MYSQL_UDF = true;
         if (JoConnection.getAdapter(false)==null)
             Crossover1011.launchDBServer();
+        MySQLAdapter.loadUDF();
         assertNotNull(JoConnection.getAdapter(true));
 /*
         String log_file = new File(Application.theDatabaseDirectory,
@@ -722,22 +722,18 @@ class MatSignatureV2Test {
         }
         if (Version.linux) {
             libName = "libudf.so";
-            libPath = "/home/schaefer/src/jose-cpp/cmake-build-debug";
+            libPath = "/home/schaefer/src/jose-cpp/cmake-build-relwithdebinfo";
         }
         //  library needs to be copied to the plugin_dir (=lib/os)
         FileUtil.copyFile(new File(libPath,libName), new File("lib/"+Version.osDir,libName));
 
+        MySQLAdapter.HAS_GRANT_TABLES = true;
         withDBServer();
 
-        JoConnection conn = JoConnection.get();
-        //  register "udf.dll"
-        conn.executeUpdate("DROP FUNCTION IF EXISTS can_reach");
-        conn.executeUpdate(
-                "CREATE FUNCTION" +
-                    //" IF NOT EXISTS" +
-                    " can_reach RETURNS INTEGER" +
-                    " SONAME '"+libName+"'");
+        assertTrue( MySQLAdapter.loadUDF() );
+        assertTrue( MySQLAdapter.HAS_UDF );
 
+        JoConnection conn = JoConnection.get();
         String fen1 = "r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5";
         pos.setup(fen1);
         MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();

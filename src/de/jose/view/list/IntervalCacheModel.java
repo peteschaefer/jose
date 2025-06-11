@@ -559,6 +559,10 @@ abstract public class IntervalCacheModel
         pkStore = new IntBuffer(Math.min(intervalSz,4096), 0);  //  so that one interval fits neatly into a block
         reader = new ResultSetReader();
         reader.start(); //  will go to sleep immediately and wait for reset()
+
+		//	initialize MySQL UDF for native matsig filter
+		//	todo are there better places to do this?
+		MySQLAdapter.loadUDF();	//	may fail, if not supported on a platform
     }
 
     public void reset(ParamStatement pkStm, PosSearchRecord posQuery,

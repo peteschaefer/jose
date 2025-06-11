@@ -446,6 +446,16 @@ public class SearchRecord implements Cloneable
 		return pstm;
 	}
 
+	private String hasVariations()
+	{
+		if (!pos.variations)
+			return "0";	//	never
+		else if ((joins & JOIN_GAME) != 0)
+			return ("(Game.Attributes & 1)");	//	Game flags
+		else
+			return("LOCATE(0xf0,MoreGame.Bin)");	//	scan Bin
+	}
+
 	private ParamStatement makeIdStatement(boolean reversedColors) throws SQLException
 	{
 		ParamStatement sql = new ParamStatement();
@@ -478,12 +488,34 @@ public class SearchRecord implements Cloneable
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
 			//	Has Variations can be queried from Game.Attribute
 			//	or from MoreGame.Bin (more expensive but needs no extra join)
-			if (!pos.variations)
-				sql.select.append(", 0 AS HasVariations");
-			else if ((joins & JOIN_GAME) != 0)
-				sql.select.append(", (Game.Attributes & 1) AS HasVariations");
-			else
-				sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
+			sql.select.append(", ");
+			sql.select.append(hasVariations());
+			sql.select.append(" AS HasVariations");
+
+			if (MySQLAdapter.HAS_UDF) {
+				//	native early cut-off
+				/*
+					((pos.variations && hasVariations)
+						|| sig.canReach(endSignature)
+						|| (reversedColor && sigReversed.canReach(endSignature)))
+				*/
+				boolean needs_and = sql.where.length() > 0;
+				if (needs_and) sql.where.append(" AND (");
+				if (pos.variations) {
+					sql.where.append(hasVariations());
+					sql.where.append(" OR ");	//	skip early cutoff if there are variations
+				}
+				sql.where.append("can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");
+				sql.addLongParameter(pos.sig.getWhiteSignature());
+				sql.addLongParameter(pos.sig.getBlackSignature());
+
+				if (pos.reversedColor) {
+					sql.where.append(" OR can_reach(?,?,MoreGame.BlackSignature)");	//	reversed Signature
+					sql.addLongParameter(pos.sigReversed.getWhiteSignature());
+					sql.addLongParameter(pos.sigReversed.getBlackSignature());
+				}
+				if (needs_and) sql.where.append(")");
+			}
 		}
 
 		return sql;

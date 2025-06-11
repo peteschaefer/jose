@@ -568,7 +568,7 @@ public class MySQLAdapter
 		command.add("--tmp-table-size=16G");
 		command.add("--max-heap-table-size=16G");
 		//command.add("--default-time-zone='+00:00'"); does not work
-		command.add("--max_allowed_packet=32M");	//blobs can be up to 16M in size, !?
+
 
 		//	for server-side operation: set connection timeout as high as possible:
 		String infTimeout = Version.windows ? "2147483" : "31536000";
