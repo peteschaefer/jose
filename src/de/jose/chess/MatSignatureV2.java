@@ -165,7 +165,7 @@ public class MatSignatureV2 implements MatSignature
         bfeat.clear();
     }
 
-    public void reverse()
+    public MatSignatureV2 reverse()
     {
         wfeat.reverse();
         bfeat.reverse();
@@ -173,6 +173,7 @@ public class MatSignatureV2 implements MatSignature
         Features swapf = wfeat;
         wfeat = bfeat;
         bfeat = swapf;
+        return this;
     }
 
     public boolean oppositeColouredBishops()
@@ -347,7 +348,7 @@ public class MatSignatureV2 implements MatSignature
 
         void clear() {
             sig = 0;
-            padv_base = padv_lower = padv_upper = 0;
+            padv_base = padv_lower = padv_upper = piece_cnt = 0;
         }
         void copyFrom(Features that) {
             assert this.color==that.color;
@@ -355,6 +356,7 @@ public class MatSignatureV2 implements MatSignature
             padv_base = that.padv_base;
             padv_lower = that.padv_lower;
             padv_upper = that.padv_upper;
+            piece_cnt = that.piece_cnt;
         }
 
         int knightCount()       { return MatSignatureV2.knightCount(sig); }
@@ -783,7 +785,7 @@ public class MatSignatureV2 implements MatSignature
                 buf.append("/");
         }
         if (longFormat)
-            buf.println(" abcdefgh");
+            buf.append(" abcdefgh\n");
     }
 
     private static void printPawnRow(PrintWriter buf, long bits, int row, char chr, boolean longFormat) {

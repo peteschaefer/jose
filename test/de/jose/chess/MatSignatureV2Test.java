@@ -181,14 +181,16 @@ class MatSignatureV2Test {
         System.out.println(longBoard(wsig,'P'));
         System.out.println(longBoard(bsig,'p'));
 
-        assertEquals("7. . . . \n" +
+        assertEquals(
+                "7. . . . \n" +
                 "6 . . . .\n" +
                 "5. . .P. \n" +
                 "4 . .P. .\n" +
                 "3PP.P. .P\n" +
                 "2 .P. P .\n" +
                 " abcdefgh\n",longBoard(wsig,'P'));
-        assertEquals("7p . .p. \n" +
+        assertEquals(
+                "7p . .p. \n" +
                 "6 . . . p\n" +
                 "5.pp p . \n" +
                 "4 . p . .\n" +
@@ -265,6 +267,13 @@ class MatSignatureV2Test {
         MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
         pos.setup(fen2_reversed);
         MatSignatureV2 sig2rev = (MatSignatureV2) pos.computeMatSig().clone();
+
+        assertTrue(sig1.canReach(sig2));
+
+        assertEquals(sig2,sig2.reverse().reverse());
+
+        assertEquals(sig2.getWhiteSignature(), sig2.reverse().reverse().getWhiteSignature());
+        assertEquals(sig2.getBlackSignature(), sig2.reverse().reverse().getBlackSignature());
 
         assertTrue(canReach(sig1,sig2,1));
 
@@ -493,6 +502,7 @@ class MatSignatureV2Test {
         assertTrue(getMatSignatureV2("rn1qk1nr/p2bpppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").goodBishop(BLACK));
     }
 
+    @Disabled
     @Test
     void testCrossover() throws Exception {
         withDBServer();
