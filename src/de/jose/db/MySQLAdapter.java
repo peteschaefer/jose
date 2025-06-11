@@ -543,8 +543,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		if (!Version.MYSQL_UDF)
-			command.add("--skip-grant-tables");
+		//	command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
@@ -596,8 +595,6 @@ public class MySQLAdapter
 			 */
 		}
 
-		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
-		if ( Version.MYSQL_UDF) command.add("--plugin_dir="+pluginPath);
 		command.add("--skip-locking");
 
 		// only connect to local host; skip DNS name resolve

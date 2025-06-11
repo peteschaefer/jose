@@ -734,6 +734,8 @@ class MatSignatureV2Test {
         assertTrue( MySQLAdapter.HAS_UDF );
 
         JoConnection conn = JoConnection.get();
+        assertEquals( 1012, conn.selectInt("SELECT udf_version()") );
+
         String fen1 = "r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5";
         pos.setup(fen1);
         MatSignatureV2 sig1 = (MatSignatureV2) pos.updateMatSig().clone();
