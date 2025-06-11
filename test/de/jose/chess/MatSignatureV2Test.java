@@ -717,7 +717,7 @@ class MatSignatureV2Test {
         String libName="";
         if (Version.windows) {
             libName = "udf.dll";
-            libPath = "C:\\\\dev\\\\jose-cpp\\\\cmake-build-relwithdebinfo";
+            libPath = "C:\\\\dev\\\\jose-cpp\\\\cmake-build-release";
             // two \ escapes needed for: c++ preprocessor, mysql parser
         }
         if (Version.linux) {
@@ -730,8 +730,7 @@ class MatSignatureV2Test {
         MySQLAdapter.HAS_GRANT_TABLES = true;
         withDBServer();
 
-        assertTrue( MySQLAdapter.loadUDF() );
-        assertTrue( MySQLAdapter.HAS_UDF );
+        assertEquals( 1012, MySQLAdapter.loadUDF() );
 
         JoConnection conn = JoConnection.get();
         assertEquals( 1012, conn.selectInt("SELECT udf_version()") );

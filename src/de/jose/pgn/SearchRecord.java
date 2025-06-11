@@ -492,7 +492,7 @@ public class SearchRecord implements Cloneable
 			sql.select.append(hasVariations());
 			sql.select.append(" AS HasVariations");
 
-			if (MySQLAdapter.HAS_UDF) {
+			if (MySQLAdapter.UDF_VERSION >= 1012) {
 				//	native early cut-off
 				/*
 					((pos.variations && hasVariations)
