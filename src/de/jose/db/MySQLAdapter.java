@@ -59,7 +59,7 @@ public class MySQLAdapter
 	 * if so, we must enable the grant tables.
 	 */
 	public static boolean HAS_GRANT_TABLES = true;
-	public static boolean HAS_UDF = false;
+	public static int UDF_VERSION = 0;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -89,8 +89,8 @@ public class MySQLAdapter
         return (StringUtil.compareVersion(getDatabaseProductVersion(jdbcConnection),"4.1") >= 0);
     }
 
-	public static boolean loadUDF() throws SQLException {
-		if (HAS_UDF) return true;	//	already done
+	public static int loadUDF() throws SQLException {
+		if (UDF_VERSION > 0) return UDF_VERSION;	//	already done
 
 		String libName="";
 		if (Version.windows)
@@ -100,7 +100,7 @@ public class MySQLAdapter
 
 		File libFile = new File(Application.theWorkingDirectory, "lib/"+Version.osDir+"/"+libName);
 		if (!libFile.exists())
-			return false;
+			return (UDF_VERSION=0);
 
 		JoConnection conn = null;
 		try {
@@ -118,11 +118,11 @@ public class MySQLAdapter
 							//" IF NOT EXISTS" +
 							" can_reach RETURNS INTEGER" +
 							" SONAME '" + libName + "'");
-			HAS_UDF = true;
+			UDF_VERSION = conn.selectInt("SELECT udf_version()");
 		} finally {
 			JoConnection.release(conn);
 		}
-		return HAS_UDF;
+		return UDF_VERSION;
 	}
 
 	@Override

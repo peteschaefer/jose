@@ -114,15 +114,17 @@ Maintenance:
     [x] launch MySQL with Grant Table (we have to)
     [x] udf_version()
     [ ] Q: why are there still early cutoffs in Java ??
-    [ ] speed: result set is reduced significantly,
-        but speedup is moderate (no pll?)
+    [ ] conclusion: result set size is reduced significantly,
+        but speedup is *moderate*, if not to say disappointing.
+        Unfortunately, mysql (and mariadb) have no multi-threading.
+        Splitting the query among multiple connections is complicated; not a promising option.
+        (3) will be our best bet
 
 [ ] (2) port replay logic from Java to C++
-    postpone until more search features are implemented?
     [x] rule engine: chess::Board already there
     [ ] binary decoder
         [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-            sort by PieceListEntry.index ?
+            sort by PieceListEntry.index, PiecListEntry.originFile ?
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [ ] mysql udf's
         zobrist_key(fen) -> BIGINT
