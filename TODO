@@ -80,14 +80,6 @@ Maintenance:
 [x] update Matsig only after noisy moves
 [x] Easylink: replace Oracle's msvcp140.dll
 
-[x] Matsig V2
-    [x] cross-over .jose files
-    [x] test Ecofy (still uses MatSignatureV1 !)
-    [x] reversed color search. MatSignatureV2: mirror pawns
-    [x] store SearchRecord in Preferences
-    [?] click&drag in Search Panel
-    [x] paste FEN in Search Panel (w/out moving color?)
-
 [x] use concurrent insert for Archive Import
 [ ] Export ?
 
@@ -114,17 +106,13 @@ Maintenance:
     [x] chess::MatSignature class
     [x] unit tests
     [ ] unit test with real games (pgn?)
-    [.] get rid of unnecesary dependencies in chess::Board (unistring,text,units)
+    [x] get rid of unnecesary dependencies in chess::Board (unistring,text,units)
     [ ] sanitizer. we don't want to crash the server.
-    [ ] mysql user-defined-functions
-        new_matsig(fen) -> BIGINT    -- allocates a MatSignature object
-        new_matsig(wsig,bsig)
-        free_matsig(handle)
-
-        reachable(handle, wsig,bsig) -> BOOL    -- replicates MatSignature::canReach()
-        reachable(wsig,bsig, handle)
-        ...
-      [ ] unit test udf functions
+    [x] mysql user-defined-functions
+    [x] unit test udf functions
+    [x] integrate with SeachRecord
+    [x] launch MySQL with Grant Table (we have to)
+    [ ] Q: why are there still early cutoffs in Java ??
 
 [ ] (2) port replay logic from Java to C++
     postpone until more search features are implemented?
@@ -219,6 +207,13 @@ Maintenance:
 
 
 ==== Project
+
+[ ] combine native MatSig with mariadb migration
+    because both need Grant Tables
+    [ ] new major release 1.6
+    [ ] compile libudf for all platforms
+    [ ] get mariadb for all platforms
+[ ] postpone pawn search, mat balance search to 1.6.1
 
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode

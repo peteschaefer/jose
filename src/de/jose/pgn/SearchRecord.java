@@ -510,7 +510,7 @@ public class SearchRecord implements Cloneable
 				sql.addLongParameter(pos.sig.getBlackSignature());
 
 				if (pos.reversedColor) {
-					sql.where.append(" OR can_reach(?,?,MoreGame.BlackSignature)");	//	reversed Signature
+					sql.where.append(" OR can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");	//	reversed Signature
 					sql.addLongParameter(pos.sigReversed.getWhiteSignature());
 					sql.addLongParameter(pos.sigReversed.getBlackSignature());
 				}
