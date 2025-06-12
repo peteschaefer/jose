@@ -18,7 +18,9 @@ public class PosSearchRecord
 
     //  if key!=0: signature of search position
     //  if key==0: pawn structure to search for
-    public MatSignature sig, sigReversed;
+    public MatSignatureV2 sig, sigReversed;
+    //  for pawn structure search: signature with max. officers
+    protected MatSignatureV2 sigMax, sigMaxReversed;
 
     //  material balance
     public int min[] = null;
@@ -44,20 +46,6 @@ public class PosSearchRecord
 //    public boolean shortCastling,longCastling;
 
     public PosSearchRecord() { }
-/*
-    public PosSearchRecord(PosSearchRecord that) {
-        this.key = (that.key==null) ? null : (HashKey) that.key.clone();
-        this.keyReversed = (that.keyReversed==null) ? null : (HashKey) that.keyReversed.clone();
-        this.reversedColor = that.reversedColor;
-        this.variations = that.variations;
-        this.sig = (that.sig==null) ? null : (MatSignature) that.sig.clone();
-        this.min = (that.min==null) ? null : that.min.clone();
-        this.max = (that.max==null) ? null : that.max.clone();
-        this.bishopColors = that.bishopColors;
-        this.whiteBishop = that.whiteBishop;
-        this.blackBishop = that.blackBishop;
-    }
-*/
 
     //
     //      Setup Query Conditions
@@ -75,6 +63,7 @@ public class PosSearchRecord
         key = null;
         keyReversed = null;
         sig = sigReversed = null;
+        sigMax = sigMaxReversed = null;
         reversedColor = false;
         variations = false;
         min = max = null;
@@ -106,8 +95,9 @@ public class PosSearchRecord
         pos.setOption(Position.INCREMENT_REVERSED_HASH,wasRevHash);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, wasIgnoreFlags);
 
-        sig = (MatSignature) pos.updateMatSig().clone();
-        sigReversed = sig.cloneReversed();
+        sig = (MatSignatureV2) pos.updateMatSig().clone();
+        sigReversed = (MatSignatureV2) sig.cloneReversed();
+        sigMax = sigMaxReversed = null;
         // note: can not search for exact position and mat balance at the same time
         // min = max = null;
     }
@@ -115,11 +105,17 @@ public class PosSearchRecord
     public void setPawnStructure(Position pos, boolean on) {
         key = null;
         keyReversed = null;
-        if (on)
-            sig = (MatSignature) pos.updateMatSig().clone();
+        if (on) {
+            sig = (MatSignatureV2) pos.updateMatSig().clone();
+            sig.clearOfficers();    //  search w/o officers
+        }
         else
             sig.clear();
-        sigReversed = sig.cloneReversed();
+        sigReversed = (MatSignatureV2) sig.cloneReversed();
+        //  for early cutoffs: compare with all officers present
+        sigMax = (MatSignatureV2) sig.clone();
+        sigMax.addMaxOfficers();
+        sigMaxReversed = (MatSignatureV2) sigMax.cloneReversed();
     }
 
     public void clearMatBalance() {
@@ -144,8 +140,8 @@ public class PosSearchRecord
     {
         pos.setOption(Position.INCREMENT_HASH, exactPosition());
         pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
-        pos.setOption(Position.INCREMENT_SIGNATURE,exactPosition()||pawnStructure());
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, exactPosition());
+        pos.setOption(Position.INCREMENT_SIGNATURE,exactPosition()||pawnStructure());
     }
 
     //  @return true if we have found a position
@@ -164,8 +160,11 @@ public class PosSearchRecord
         if (!wasNoisy) return false; // -> keep on searching
 
         if (pawnStructure()) {
-// todo            return sig.isPawnSubsetOf(pos.getMatSig())
-//                    || reversedColor && sig.isReversedPawnSubsetOf(pos.getMatSig());
+            return sig.pawnsEqual((MatSignatureV2)pos.getMatSig()) ||
+                   reversedColor && sigReversed.pawnsEqual((MatSignatureV2)pos.getMatSig());
+            //  todo currently, we compare exact pawn structures.
+            //   we could compare subsets. with upcoming mat balance search, subsets can be specified more accurately
+            //  (search structure + 3 more pawns, e.g.)
         }
         //  todo compare mat balance
         //  todo compare bishop features
@@ -183,8 +182,11 @@ public class PosSearchRecord
             //  this.variations && Game.Attributes & HAS_VARIATIONS
         }
         if (pawnStructure()) {
-            //  ignore officers during canReach()
-            //  todo add all(?) officers to sig. Or have an additional flag for canReach()
+            //  check with max. number of officers
+            if (!(variations && hasVariations)
+                    && !sigMax.canReach(endSignature)
+                    && (!reversedColor || !sigMaxReversed.canReach(endSignature)))
+                return true;
         }
         //  todo does it make sense to test mat balance against endSignature?
         //  officers can vanish an re-appear through promotion?
@@ -197,14 +199,8 @@ public class PosSearchRecord
         //  matsig is only checked in noisy positions
         if (!wasNoisy) return false;
         MatSignature matSig = pos.getMatSig();
-        if (exactPosition()) {
+        if (exactPosition() || pawnStructure()) {
             if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReach(sigReversed)))
-                return true;
-        }
-        if (pawnStructure()) {
-            //  ignore officers during canReach()
-            //  todo remove all officers from sig?
-            if (!matSig.canReach(sig) && !(reversedColor && matSig.canReach(sigReversed)))
                 return true;
         }
         //  todo check mat balance

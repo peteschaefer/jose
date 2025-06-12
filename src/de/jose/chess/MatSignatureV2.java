@@ -312,6 +312,33 @@ public class MatSignatureV2 implements MatSignature
         return new MatSignatureV1(wsig1,wsig2);
     }
 
+    public boolean pawnsEqual(MatSignatureV2 that) {
+        return      (wfeat.sig&PAWN_MASK) == (that.wfeat.sig&PAWN_MASK)
+                &&  (bfeat.sig&PAWN_MASK) == (that.bfeat.sig&PAWN_MASK);
+    }
+
+    public void clearOfficers() {
+        wfeat.sig &= ~OFFICER_MASK;
+        wfeat.piece_cnt=0;
+        bfeat.sig &= ~OFFICER_MASK;
+        bfeat.piece_cnt=0;
+    }
+
+    public void addMaxOfficers() {
+        //  we could do 'sig |= OFFICER_MASK', but that would create illegal positions
+        //  we could use backtracking to determine the min. amount of captured pieces
+        //
+        //  instead, we simply add pieces while the position is legal.
+        //  It's not the most efficient solution, but ok.
+        clearOfficers();
+        for(int i=1; i<=3; ++i) {
+            //  todo
+            //  i x knight,rook,bishop,queen
+            //  black, white
+            //  if !isLegal() break
+        }
+    }
+
     // --------------------------------------
     //      Private Parts
     // --------------------------------------

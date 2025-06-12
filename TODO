@@ -95,7 +95,21 @@ Maintenance:
 === Position Search Features
 
 [ ] search pawn structure
-    [ ] MatSigV2 comparison:
+    sigMax = pawns with Max. officers (1,2,>=3) (barring illegality)
+    sig0 = pawns with 0 officers
+
+    accept = (sig0 & current & PAWNMASK) == sig0 & PAWNMASK
+    early cutoff = sigM can not reach endSig
+    in-game cutoff = current pos can not reach sig0
+
+    [ ] search pawn subset?
+        * it's just a matter of bits, but early cutoffs don't work:
+        -we would need to add pawns to sigMax
+        -adding max., legal amount of pawns is ill-defined (may resolutions possible)
+        -adding 8 pawns is pointless (creates the initial position)
+        * in-game cutoffs still work
+
+
 [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs
