@@ -486,7 +486,7 @@ class MatSignatureV2Test {
 
     MatSignatureV2 getMatSignatureV2(String fen) {
         pos.setup(fen);
-        return (MatSignatureV2) pos.computeMatSig();
+        return (MatSignatureV2) pos.computeMatSig().clone();
     }
 
     @Test
@@ -500,6 +500,30 @@ class MatSignatureV2Test {
         assertTrue(getMatSignatureV2("rn1qkbnr/p3pppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(BLACK));
         assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/4P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").badBishop(WHITE));
         assertTrue(getMatSignatureV2("rn1qk1nr/p2bpppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").goodBishop(BLACK));
+    }
+
+    @Test
+    void testJokers()
+    {
+        MatSignatureV2 from = getMatSignatureV2("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1");
+        MatSignatureV2 to = getMatSignatureV2(  "7k/8/8/8/8/3PP3/8/R6K w - - 0 1");
+
+        // can not create a piece from thin air
+        assertFalse(from.canReach(to));
+        //  joker pieces validates the counting argument
+        from.addJokerPieces();  //  used when searching pawn structures only
+        assertTrue(from.canReach(to));
+
+        // unresolvable pawn structure
+        from = getMatSignatureV2("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1");
+        to = getMatSignatureV2("7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1");
+        assertFalse(from.canReach(to));
+        // joker pieces make no difference
+        from.addJokerPieces();
+        assertFalse(from.canReach(to));
+        //  but joker pawns do
+        from.addJokerPawns();
+        assertTrue(from.canReach(to));
     }
 
     @Disabled

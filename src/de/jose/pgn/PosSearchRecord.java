@@ -7,6 +7,13 @@ import static de.jose.chess.Constants.KING;
 
 public class PosSearchRecord
 {
+    public static int POS_EXACT     = 0x01;      //  search for exact position
+    public static int PAWNS_EXACT   = 0x02;  //  search for exact pawn structure
+    public static int PAWNS_SUBSET  = 0x04;   //  search for pawn subset
+        //  material balance can be combined with PAWNS_*, but not with POS_EXACT
+    public static int MAT_BALANCE   = 0x08;
+
+    public int what;
     //  if!=0: search for exact position
     public HashKey key;
     //  if!=0: search for exact position with reversed colors
@@ -75,7 +82,18 @@ public class PosSearchRecord
         return new PosSearchRecord(this);
     }
 */
-    public void setExact(Position pos) {
+    public void setExact(Position pos)
+    {
+        what = POS_EXACT;
+        setHashKey(pos);
+
+        sigMax = sig = (MatSignatureV2) pos.updateMatSig().clone();
+        sigMaxReversed = sigReversed = (MatSignatureV2) sig.cloneReversed();
+        // note: can not search for exact position and mat balance at the same time
+        // min = max = null;
+    }
+
+    private void setHashKey(Position pos) {
         boolean wasHash = pos.hasOption(Position.INCREMENT_HASH);
         boolean wasRevHash = pos.hasOption(Position.INCREMENT_REVERSED_HASH);
         boolean wasIgnoreFlags = pos.hasOption(Position.IGNORE_FLAGS_ON_HASH);
@@ -94,27 +112,26 @@ public class PosSearchRecord
         pos.setOption(Position.INCREMENT_HASH,wasHash);
         pos.setOption(Position.INCREMENT_REVERSED_HASH,wasRevHash);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, wasIgnoreFlags);
-
-        sig = (MatSignatureV2) pos.updateMatSig().clone();
-        sigReversed = (MatSignatureV2) sig.cloneReversed();
-        sigMax = sigMaxReversed = null;
-        // note: can not search for exact position and mat balance at the same time
-        // min = max = null;
     }
 
-    public void setPawnStructure(Position pos, boolean on) {
+    public void setPawnStructure(Position pos, boolean exact)
+    {
+        what = exact ? PAWNS_EXACT : PAWNS_SUBSET;
         key = null;
         keyReversed = null;
-        if (on) {
-            sig = (MatSignatureV2) pos.updateMatSig().clone();
-            sig.clearOfficers();    //  search w/o officers
-        }
-        else
-            sig.clear();
+
+        sig = (MatSignatureV2) pos.updateMatSig().clone();
+        sig.clearOfficers();    //  search w/o officers
         sigReversed = (MatSignatureV2) sig.cloneReversed();
+
         //  for early cutoffs: compare with all officers present
         sigMax = (MatSignatureV2) sig.clone();
-        sigMax.addMaxOfficers();
+        if (!exact) {
+            //  pawn subset search. add Jokers for early cutoff
+            sigMax.addJokerPawns();
+        }
+        //  add Jokers for early cutoff
+        sigMax.addJokerPieces();
         sigMaxReversed = (MatSignatureV2) sigMax.cloneReversed();
     }
 

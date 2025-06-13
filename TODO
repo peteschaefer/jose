@@ -107,7 +107,14 @@ Maintenance:
         -we would need to add pawns to sigMax
         -adding max., legal amount of pawns is ill-defined (may resolutions possible)
         -adding 8 pawns is pointless (creates the initial position)
+        [ ] idea: add "joker" pawns that have no specific place but add to pawncount(),
+            and can be used as fallback in resolve_pawns()
         * in-game cutoffs still work
+        -> pawn subset search should be released together with mat-balance,
+            s.t. early cutoffs don't fall off the cliff
+        [ ] unit test selectivity of early cutoffs with
+            [ ] pawn structure exact
+            [ ] pawn structure subset
 
 
 [ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway. Or maybe not.
