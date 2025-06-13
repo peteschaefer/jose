@@ -3,7 +3,7 @@
 jose would not launch at all and present an error dialog instead. 
 This bug has been around for a while.
 
-Please apply the latest [patch 1.5.11](https://github.com/peteschaefer/jose/releases/download/1.5.11rc2/jose-1511-patch.zip)
+Please apply the latest [patch 1.5.12](https://github.com/peteschaefer/jose/releases/download/1.5.12/jose-1512-patch.zip)
 
 ---
 
