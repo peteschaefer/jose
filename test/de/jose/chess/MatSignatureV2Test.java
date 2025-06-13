@@ -389,6 +389,7 @@ class MatSignatureV2Test {
 
         int offset = 14800000;
         int limit = 1000000;
+        int searchFlags = PosSearchRecord.POS_EXACT;
         withDBServer();
 //        System.out.println("[unfiltered - all games]");
 //        testCutoff(null,null, 0,0);
@@ -401,32 +402,61 @@ class MatSignatureV2Test {
 //        System.out.println("[opening - V1]");
 //        testCutoff(opening,MatSignatureV1.class, offset,limit);
         System.out.println("[opening - V2]");
-        testCutoff(opening,MatSignatureV2.class, offset,limit);
+        testCutoff(opening,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[middle game - V1]");
 //        testCutoff(middle1,MatSignatureV1.class, offset,limit);
        System.out.println("[middle game - V2]");
-        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+        testCutoff(middle1,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[middle game - V1]");
  //       testCutoff(middle2,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
-        testCutoff(middle2,MatSignatureV2.class, offset,limit);
+        testCutoff(middle2,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+        testCutoff(endgame1,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame2,MatSignatureV2.class, offset,limit);
+        testCutoff(endgame2,MatSignatureV2.class,searchFlags, offset,limit);
     }
 
-    void testCutoff(String queryFen, Class matsigClass, int offset, int limit) throws SQLException {
+    @Test
+    void testPawnSearchCutoff() throws Exception {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        //  test effectiveness of early cutoffs.
+        //  compare:
+        //  - exact position search (expected to have best selectivity)
+        //  - exact pawn search (expected to have less selectivity)
+        //  - subset pawn search (expected to have least selectivity)
+        withDBServer();
+
+        int offset = 14800000;
+        int limit = 1000000;
+
+        System.out.println("[exact position search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.POS_EXACT, offset,limit);
+        int early1 = counter.early;
+
+        System.out.println("[pawn search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_EXACT, offset,limit);
+        int early2 = counter.early;
+
+        System.out.println("[pawn subset search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_SUBSET, offset,limit);
+        int early3 = counter.early;
+
+        assertTrue(early1 > early2);
+        assertTrue(early2 > early3); // todo early2 < early3 has to be explained
+    }
+
+    void testCutoff(String queryFen, Class matsigClass, int searchFlags, int offset, int limit) throws SQLException {
         counter.reset();
         if (queryFen != null && matsigClass!=null) {
             pos.setup(queryFen);
             pos.useMatSignature(matsigClass);
             counter.cutoff = new PosSearchRecord ();
-            counter.cutoff.setExactSearch(pos);
+            counter.cutoff.setSearch(pos,searchFlags);
         }
         long startTime = System.currentTimeMillis();
         int games=0;

@@ -776,7 +776,7 @@ public class MatSignatureV2 implements MatSignature
         }
 
         public void addJokerPieces() {
-            this.joker_pieces = 7 - MatSignatureV2.officersCount(sig);
+            this.joker_pieces = Math.max(0, 15 - MatSignatureV2.pawnCount(sig) - this.joker_pawns - MatSignatureV2.officersCount(sig));
         }
     }
 

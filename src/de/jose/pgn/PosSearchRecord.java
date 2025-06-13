@@ -8,10 +8,10 @@ import static de.jose.chess.Constants.KING;
 
 public class PosSearchRecord
 {
-    public static int POS_EXACT     = 0x01;     //  search for exact position
-    public static int PAWNS_EXACT   = 0x02;     //  search for exact pawn structure
-    public static int PAWNS_SUBSET  = 0x04;     //  search for pawn subset
-    public static int POS_MASK  = 0x07;
+    public static final int POS_EXACT     = 0x01;     //  search for exact position
+    public static final int PAWNS_EXACT   = 0x02;     //  search for exact pawn structure
+    public static final int PAWNS_SUBSET  = 0x04;     //  search for pawn subset
+    public static final int POS_MASK      = 0x07;
         //  material balance can be combined with PAWNS_*, but not with POS_EXACT
     public static int MAT_BALANCE   = 0x08;
 
@@ -85,6 +85,21 @@ public class PosSearchRecord
         return new PosSearchRecord(this);
     }
 */
+public void setSearch(Position pos, int flags) {
+    switch (flags) {
+        case POS_EXACT:
+            setExactSearch(pos);
+            return;
+        case PAWNS_EXACT:
+            setPawnSearch(pos, true);
+            return;
+        case PAWNS_SUBSET:
+            setPawnSearch(pos, false);
+            return;
+    }
+    assert false;
+}
+
     public void setExactSearch(Position pos)
     {
         what = (what&~POS_MASK) | POS_EXACT;
@@ -130,7 +145,7 @@ public class PosSearchRecord
 
         //  for early cutoffs: compare with all officers present
         sigMax = (MatSignatureV2) sig.clone();
-        if (!exact) {
+        if (!isPawnSubsetSearch()) {
             //  pawn subset search. add Joker pawns for early cutoff
             sigMax.addJokerPawns();
         }
