@@ -6,6 +6,7 @@ import de.jose.Version;
 import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
+import de.jose.pgn.PosSearchRecord;
 import de.jose.util.BitUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +60,7 @@ class MatSignatureV2Test {
     class CountingBinReader extends BinReader
     {
         public int moves, noisy, early;
-        public MatSignature cutoff;
+        public PosSearchRecord cutoff;
         public long backtrackSum;
         public int backtrackWatermark;
 
@@ -78,8 +79,8 @@ class MatSignatureV2Test {
             if (!pos.wasSilent()) {
                 noisy++;
                 if (cutoff!=null) {
+                    if (cutoff.cutOff(pos,!pos.wasSilent())) eof=true;
                     MatSignature matSig = pos.getMatSig();
-                    if (!matSig.canReach(cutoff)) eof=true;
                     if (matSig instanceof MatSignatureV2) {
                         int backtrackCount = ((MatSignatureV2) matSig).getBacktrackCount();
                         backtrackWatermark = Math.max(backtrackWatermark, backtrackCount);
@@ -424,7 +425,8 @@ class MatSignatureV2Test {
         if (queryFen != null && matsigClass!=null) {
             pos.setup(queryFen);
             pos.useMatSignature(matsigClass);
-            counter.cutoff = (MatSignature) pos.getMatSig().clone();
+            counter.cutoff = new PosSearchRecord ();
+            counter.cutoff.setExactSearch(pos);
         }
         long startTime = System.currentTimeMillis();
         int games=0;
@@ -437,7 +439,7 @@ class MatSignatureV2Test {
             long whiteSignature = res.getLong(4);
             long blackSignature = res.getLong(5);
             MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
-            if (! counter.cutoff.canReach(endSig)) {
+            if (counter.cutoff.earlyCutOff(endSig,false)) {
                 counter.early++;
                 continue;
             }
@@ -482,6 +484,8 @@ class MatSignatureV2Test {
         assertTrue(canReach("r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R b KQkq - 0 9","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 3));
 
         assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2","rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",0));
+
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1","1Q3Q2/5b2/6k1/q3bN2/4p2P/5pP1/5P1K/8 b - - 0 40",4));
     }
 
     MatSignatureV2 getMatSignatureV2(String fen) {

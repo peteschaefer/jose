@@ -314,9 +314,17 @@ public class MatSignatureV2 implements MatSignature
         return new MatSignatureV1(wsig1,wsig2);
     }
 
-    public boolean pawnsEqual(MatSignatureV2 that) {
-        return      (wfeat.sig&PAWN_MASK) == (that.wfeat.sig&PAWN_MASK)
-                &&  (bfeat.sig&PAWN_MASK) == (that.bfeat.sig&PAWN_MASK);
+    public boolean pawnsEqual(MatSignatureV2 that, boolean exact) {
+        long this_wpawns = this.wfeat.sig & PAWN_MASK;
+        long this_bpawns = this.bfeat.sig & PAWN_MASK;
+        long that_wpawns = that.wfeat.sig & PAWN_MASK;
+        long that_bpawns = that.bfeat.sig & PAWN_MASK;
+        if (exact) {
+            return      this_wpawns == that_wpawns
+                    &&  this_bpawns == that_bpawns;
+        } else
+            return      (this_wpawns&that_wpawns) == this_wpawns
+                    &&  (this_bpawns&that_bpawns) == this_bpawns;
     }
 
     public void clearOfficers() {
@@ -985,13 +993,11 @@ public class MatSignatureV2 implements MatSignature
         for( ; offset <= QUEEN_OFFSET; offset += 2) {
             int from_cnt = BitUtil.get2(from.sig,offset);
             int to_cnt = BitUtil.get2(to.sig,offset);
-            if (to_cnt > (from_cnt+from.joker_pieces))
+            if ((to_cnt+pcto) > (from_cnt+pcfrom+from.joker_pieces))
                 return false; //  not enough officers   todo never reached?
             from.piece_cnt += from_cnt;
             to.piece_cnt += to_cnt;
         }
-//        if (to_total > (from_total+pcfrom))
-//            return false; //  not enough officers
         if ((to.piece_cnt+pcto) > (from.piece_cnt+pcfrom+ from.joker_pieces))
             return false; //  not enough pieces
 

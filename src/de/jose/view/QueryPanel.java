@@ -188,6 +188,8 @@ public class QueryPanel
 	/**		Position Panel	*/
 	/** position editor */
 	protected PosEditor posEditor;
+	protected JComboBox exactCombo, pawnCombo, subsetCombo;
+	protected Container posComboGroup;
 	/** checkbox for searching positions with reversed color    */
 	protected JCheckBox reversePosition;
 	/** search variations ? */
@@ -724,7 +726,8 @@ public class QueryPanel
 		Position pos = posEditor.board.getPosition();
 		if (!pos.isEmpty())
 		{
-			rec.pos.setExact(pos);
+			//	todo pawn searches
+			rec.pos.setExactSearch(pos);
 			rec.pos.reversedColor = reversePosition.isSelected();
 			rec.pos.variations = searchVariations.isSelected();
 
