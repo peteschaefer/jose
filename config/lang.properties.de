@@ -998,8 +998,8 @@ query.setup.reversed = Vertauschte Farben
 query.setup.reversed.tip = findet identische Stellungen mit vertauschten Farben
 
 query.pos.exact = Position exakt
-query.pos.pawns = Bauern exakt
-query.pos.pawn-subset = Bauern Teilmenge
+query.pos.pawns = Bauern (exakt)
+query.pos.pawn-subset = Bauern-Muster
 
 query.setup.var = Variante
 query.setup.var.tip = sucht auch in Varianten
