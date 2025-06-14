@@ -675,8 +675,9 @@ public class QueryPanel
 		map.put("update.ui", action);
 	}
 
-	protected boolean askLegality(Position pos)
+	protected boolean askLegality(Position pos, boolean pawnsOnly)
 	{
+	// todo pawn searches: check only legality of pawn structure
 		String[] errors = pos.checkLegality();
 		String[] warnings = pos.checkPlausibility();
 
@@ -784,12 +785,20 @@ public class QueryPanel
 		Position pos = posEditor.board.getPosition();
 		if (!pos.isEmpty())
 		{
-			//	todo pawn searches
-			rec.pos.setExactSearch(pos);
+			//	position, or pawn searches
+			if (exactRadio.isSelected())
+				rec.pos.setExactSearch(pos);
+			else if (pawnRadio.isSelected())
+				rec.pos.setPawnSearch(pos,true);
+			else if (subsetRadio.isSelected())
+				rec.pos.setPawnSearch(pos,false);
+			else
+				rec.pos.clear();
+
 			rec.pos.reversedColor = reversePosition.isSelected();
 			rec.pos.variations = searchVariations.isSelected();
 
-			if (errors!=null && !askLegality(pos))
+			if (errors!=null && !askLegality(pos, rec.pos.isPawnSearch()))
 				return false;
 		}
 		else {
