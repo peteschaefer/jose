@@ -145,12 +145,12 @@ public void setSearch(Position pos, int flags) {
 
         //  for early cutoffs: compare with all officers present
         sigMax = (MatSignatureV2) sig.clone();
-        if (!isPawnSubsetSearch()) {
+        sigMax.addJokerPieces();
+        if (isPawnSubsetSearch()) {
             //  pawn subset search. add Joker pawns for early cutoff
             sigMax.addJokerPawns();
         }
         //  add Joker pieces for early cutoff
-        sigMax.addJokerPieces();
         sigMaxReversed = (MatSignatureV2) sigMax.cloneReversed();
     }
 

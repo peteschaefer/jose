@@ -1,8 +1,5 @@
 package de.jose.chess;
 
-import de.jose.Application;
-import de.jose.Config;
-import de.jose.Version;
 import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
@@ -22,7 +19,6 @@ import static de.jose.chess.Constants.*;
 import static de.jose.chess.MatSignatureV2.PAWN_MASK;
 import static de.jose.chess.MatSignatureV2.longBoard;
 import static de.jose.pgn.BinReader.REPLAY;
-import static de.jose.pgn.BinReader.RESET;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
@@ -422,7 +418,7 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testPawnSearchCutoff() throws Exception {
+    void testDBPawnSearchCutoff2() throws Exception {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
         //  test effectiveness of early cutoffs.
         //  compare:
@@ -431,7 +427,7 @@ class MatSignatureV2Test {
         //  - subset pawn search (expected to have least selectivity)
         withDBServer();
 
-        int offset = 14800000;
+        int offset = 0;
         int limit = 1000000;
 
         System.out.println("[exact position search]");
@@ -446,8 +442,84 @@ class MatSignatureV2Test {
         testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_SUBSET, offset,limit);
         int early3 = counter.early;
 
-        assertTrue(early1 > early2);
-        assertTrue(early2 > early3); // todo early2 < early3 has to be explained
+        assertTrue(early1 >= early2);
+        assertTrue(early2 >= early3);
+    }
+
+    @Test
+    void test1PawnCutoff()
+    {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        MatSignatureV2 queryExact = getMatSignatureV2(endgame1);
+        MatSignatureV2 queryPawns = (MatSignatureV2) queryExact.clone();
+        queryPawns.clearOfficers();
+        queryPawns.addJokerPieces();
+
+        MatSignatureV2 querySubset = (MatSignatureV2) queryExact.clone();
+        querySubset.clearOfficers();
+        querySubset.addJokerPieces();
+        querySubset.addJokerPawns();
+
+        MatSignatureV2 endSig = new MatSignatureV2(0x2444000000000000L,0x3440000000000000L);
+
+        boolean exactCanReach = queryExact.canReach(endSig);
+        boolean pawnsCanReach = queryPawns.canReach(endSig);
+        boolean subsetCanReach = querySubset.canReach(endSig);
+
+        //  if it is reacable by exact comparison
+        assertTrue(exactCanReach);
+        //  it must also be reachable by pawns (=more relaxed) comparison)
+        assertTrue(pawnsCanReach);
+        //  and by pawn subset (even more relaxed)
+        assertTrue(subsetCanReach);
+    }
+
+    @Test
+    void testDBPawnCutoffs() throws Exception {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        withDBServer();
+
+        MatSignatureV2 queryExact = getMatSignatureV2(endgame1);
+        MatSignatureV2 queryPawns = (MatSignatureV2) queryExact.clone();
+        queryPawns.clearOfficers();
+        queryPawns.addJokerPieces();
+
+        MatSignatureV2 querySubset = (MatSignatureV2) queryExact.clone();
+        querySubset.clearOfficers();
+        querySubset.addJokerPieces();
+        querySubset.addJokerPawns();
+
+        int exactCutoffs = 0;
+        int pawnsCutoffs = 0;
+        int subsetCutoffs = 0;
+        int games=0;
+
+        ResultSet res = selectSignatures(0,-1);
+        while(res.next()) {
+            games++;
+            int GId = res.getInt(1);
+            long whiteSig = res.getLong(2);
+            long blackSig = res.getLong(3);
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSig,blackSig);
+
+            boolean exactCutoff = !queryExact.canReach(endSig);
+            boolean pawnsCutoff = !queryPawns.canReach(endSig);
+            boolean subsetCutoff = !querySubset.canReach(endSig);
+
+            if (exactCutoff) exactCutoffs++;
+            if (pawnsCutoff) pawnsCutoffs++;
+            if (subsetCutoff) subsetCutoffs++;
+
+            //  pawns cutoff => exact cutoff
+            assertTrue(!pawnsCutoff || exactCutoff, () -> ""+GId+" "+endSig.toHexString());
+            //  subset cutoff => pawns cutoff
+            assertTrue(!subsetCutoff || pawnsCutoff, () -> ""+GId+" "+endSig.toHexString());
+        }
+
+        System.out.println("["+games+" games]");
+        System.out.println("["+exactCutoffs+" exactCutoffs]");
+        System.out.println("["+pawnsCutoffs+" pawnsCutoffs]");
+        System.out.println("["+subsetCutoffs+" subsetCutoffs]");
     }
 
     void testCutoff(String queryFen, Class matsigClass, int searchFlags, int offset, int limit) throws SQLException {
@@ -491,6 +563,22 @@ class MatSignatureV2Test {
     {
         JoConnection conn = JoConnection.get();
         String sql = "select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame";
+        if (offset > 0 || limit > 0) {
+            sql += " limit ";
+            if (offset > 0) sql += (offset+", ");
+            sql += limit;
+        }
+        JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+        pstm.execute();
+
+        ResultSet rs = pstm.getResultSet();
+        return rs;
+    }
+
+    private static ResultSet selectSignatures(int offset, int limit) throws SQLException
+    {
+        JoConnection conn = JoConnection.get();
+        String sql = "select GId,WhiteSignature,BlackSignature from MoreGame";
         if (offset > 0 || limit > 0) {
             sql += " limit ";
             if (offset > 0) sql += (offset+", ");

@@ -1004,7 +1004,7 @@ public class MatSignatureV2 implements MatSignature
             return false; //  not enough pieces
 
         int padv_promo=0;
-        if (to.piece_cnt > from.piece_cnt) {
+        if (to.piece_cnt > (from.piece_cnt+from.joker_pieces)) {
             //  pawns need to advance to create new officers
             //  we already checked that there is a sufficient number of pawns
             //  compute the number of needed advances to promote (to-piece_cnt-from.piece_cnt) times
