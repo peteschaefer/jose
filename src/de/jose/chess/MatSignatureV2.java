@@ -980,9 +980,9 @@ public class MatSignatureV2 implements MatSignature
     static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcfrom = from.pawnCount();
-        int pcto = to.pawnCount();
-        if (pcto > pcfrom)
+        int from_pawns = from.pawnCount();
+        int to_pawns = to.pawnCount();
+        if (to_pawns > from_pawns)
             return false;    //  not enough pawns
 
         /** check officers count    */
@@ -990,15 +990,17 @@ public class MatSignatureV2 implements MatSignature
         from.piece_cnt=0;
         to.piece_cnt=0;
 
+        /* check for each officcer */
         for( ; offset <= QUEEN_OFFSET; offset += 2) {
             int from_cnt = BitUtil.get2(from.sig,offset);
             int to_cnt = BitUtil.get2(to.sig,offset);
-            if ((to_cnt+pcto) > (from_cnt+pcfrom+from.joker_pieces))
+            if ((to_cnt+to_pawns) > (from_cnt+from_pawns+from.joker_pieces))
                 return false; //  not enough officers   todo never reached?
             from.piece_cnt += from_cnt;
             to.piece_cnt += to_cnt;
         }
-        if ((to.piece_cnt+pcto) > (from.piece_cnt+pcfrom+ from.joker_pieces))
+        /* check total piece count */
+        if ((to.piece_cnt+to_pawns) > (from.piece_cnt+from_pawns+ from.joker_pieces))
             return false; //  not enough pieces
 
         int padv_promo=0;
@@ -1011,8 +1013,8 @@ public class MatSignatureV2 implements MatSignature
         }
 
         /** check pawn advance (lower/upper bounds) */
-        assert pcto <= pcfrom;
-        if ((pcfrom==pcto) && (from.padv_base > to.padv_base))
+        assert to_pawns <= from_pawns;
+        if ((from_pawns==to_pawns) && (from.padv_base > to.padv_base))
             return false;    //  pawns can't move backwards
 
         if ((from.padv_lower+padv_promo) > to.padv_upper)
@@ -1020,7 +1022,7 @@ public class MatSignatureV2 implements MatSignature
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower)
             return false; //  target is too advanced     todo never reached?
 
-        /** check pawn home row */
+        /** check pawns on home row */
         assert from.color == to.color;
         int homerow = EngUtil.homeRow(from.color);
         long homefrom = pawnRow(from.sig,homerow);

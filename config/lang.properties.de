@@ -996,6 +996,11 @@ query.setup.next.any = Weiß oder Schwarz
 query.setup.next.any.tip = findet Stellungen mit Weiß oder Schwarz am Zug
 query.setup.reversed = Vertauschte Farben
 query.setup.reversed.tip = findet identische Stellungen mit vertauschten Farben
+
+query.pos.exact = Position exakt
+query.pos.pawns = Bauern exakt
+query.pos.pawn-subset = Bauern Teilmenge
+
 query.setup.var = Variante
 query.setup.var.tip = sucht auch in Varianten
 
