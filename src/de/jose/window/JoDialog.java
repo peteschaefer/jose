@@ -1199,6 +1199,8 @@ public class JoDialog
 			((JSpinner)comp).setValue(Util.toNumber(value));
 		else if (comp instanceof JSlider)
 			((JSlider)comp).setValue(Util.toint(value));
+		else if (comp instanceof JButton)
+			((JButton)comp).setSelected(Util.toboolean(value));
 		else
 			throw new IllegalArgumentException();
 	}

@@ -320,15 +320,15 @@ public class SetupDialog
 		adjustControls();
 	}
 
-	private boolean checkLegality(Position pos)
+	private boolean checkLegality(Position pos, boolean pawnsOnly)
 	{
-		String[] error = pos.checkLegality();
+		String[] error = pos.checkLegality(false);
 		if (error != null) {
 			JoDialog.showErrorDialog(error);
 			return false;
 		}
 
-		String[] warning = pos.checkPlausibility();
+		String[] warning = pos.checkPlausibility(pawnsOnly);
 		if ((warning != null) &&
 				(JoDialog.showOKCancelDialog(warning)==JOptionPane.CANCEL_OPTION))
 			return false;
@@ -345,7 +345,7 @@ public class SetupDialog
 		setup.pos.setFirstMove(moveNo,nextColor);
 		adjustCastling();
 
-		if (!checkLegality(setup.pos))
+		if (!checkLegality(setup.pos,false))
 			return false;
 
 		String fen = setup.pos.toString();

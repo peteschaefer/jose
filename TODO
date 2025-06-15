@@ -89,20 +89,17 @@ Maintenance:
 
 === Position Search Features
 
-[ ] search pawn structure
+[x] search pawn structure
     [x] search pawn subset?
         [x] idea: add "joker" pawns that have no specific place but add to pawncount(),
         [x] unit test selectivity of early cutoffs with
-            [x] pawn structure exact
-            [x] pawn structure subset
+[ ] button: reverse
+[x] legality check with pawns only
+
 [ ] search pawns on files:
     * compare number of pawns by file
     * early cutoff sig: pull pawns back to homerow
     * late cutoff sig: push pawns forth to 7th row
-[ ] layout box
-[ ] button: reverse
-[ ] legality check with pawns only
-
 [ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs

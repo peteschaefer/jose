@@ -130,11 +130,11 @@ public class QueryPanel
 			//	fix colors
 			currentWhite = Surface.newColor(Color.white);
 			currentBlack = Surface.newColor(Color.black);
-			currentLight = Surface.newColor(Color.decode("#c0c060"));
-			currentDark = Surface.newColor(Color.decode("#608060"));
+			currentLight = Surface.newColor(Color.decode("#FFFFCC"));
+			currentDark = Surface.newColor(Color.decode("#336600"));
 
-			dimmedWhite = Surface.newColor(Color.decode("#b0b0b0"));
-			dimmedBlack = Surface.newColor(Color.decode("#505050"));
+			dimmedWhite = Surface.newColor(new Color(0xcc,0xcc,0xcc,0x60));//Color.decode("#CCCCCC"));
+			dimmedBlack = Surface.newColor(new Color(0x99,0x99,0x99,0x60));//Color.decode("#999999"));
 		}
 
 		public Dimension getMaximumSize()
@@ -467,6 +467,9 @@ public class QueryPanel
 		posEditor.init();
 
 		Box controls = Box.createVerticalBox();
+		controls.setBorder(new CompoundBorder(
+					new EmptyBorder(4,4,4,4),
+					new TitledBorder("")));
 		/** editor controls */
 
 		controls.add(exactRadio = JoDialog.newRadioButton("query.pos.exact"));
@@ -678,8 +681,8 @@ public class QueryPanel
 	protected boolean askLegality(Position pos, boolean pawnsOnly)
 	{
 	// todo pawn searches: check only legality of pawn structure
-		String[] errors = pos.checkLegality();
-		String[] warnings = pos.checkPlausibility();
+		String[] errors = pos.checkLegality(pawnsOnly);
+		String[] warnings = pos.checkPlausibility(pawnsOnly);
 
 		if (errors != null || warnings != null)
 		{

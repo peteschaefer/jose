@@ -220,6 +220,9 @@ public class FontCapture
 			g.setColor(Color.WHITE);
 			g.fillRect(0,0,width,height);
 		}
+		else {
+			g.setComposite(AlphaComposite.Src);
+		}
 
 		ImgUtil.setRenderingHints(g);
 
