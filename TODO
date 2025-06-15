@@ -98,8 +98,12 @@ Maintenance:
 
 [ ] search pawns on files:
     * compare number of pawns by file
-    * early cutoff sig: pull pawns back to homerow
+    * (early cutoff sig: pull pawns back to homerow)
     * late cutoff sig: push pawns forth to 7th row
+    * can be combined with subset search
+        (o) pawn search
+            [ ] subset
+            [ ] per file
 [ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs
