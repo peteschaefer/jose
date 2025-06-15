@@ -12,6 +12,7 @@ import static de.jose.util.BitUtil.*;
 
 /**
  * MatSignature is a compressed representation of a Position (2x64 bits).
+ * It records all *irreversible* changes, like in the 50-moves rule.
  * It helps to determine position features quickly (using only bit arithmetics).
  * If can estimate the number of pawn moves (exact, or lower/upper bound)
  *
@@ -39,10 +40,18 @@ import static de.jose.util.BitUtil.*;
  * 	            [1..46] number of pawn moves +1
  * 	            47 = [46..48] pawn moves (very rare)
  *
- *  (2 bits)	castling rights
+ *  (3 bits)	castling rights
+ *              ks castling, qs casling, both avaialable
+ *              ks castling, qs castling, happende
+ *              wildcard (don`t care)
+ *              = 6 states
  *
  * 	======
- * 	61 (63) bits
+ * 	61 (64) bits
+ *
+ *  castling rights are not yet computed and stored.
+ *  would make sense if they are part of the query.
+ *  would improve cut-off selectivity !?
  *
  * 	more things to detect
  * 	- opposite bishops / even bishops
@@ -888,6 +897,14 @@ public class MatSignatureV2 implements MatSignature
 
     static final int ADV_TOP              = 48;
     static final int ADV_MAX              = ADV_TOP-2;
+
+    //  todo castling flags not yet in use
+    //  makes only sense if the query supports it
+    static final long CASTlING_MASK       = 0x07L << 61;
+    static final long CASTlING_KINGSIDE   = 0x01L << 61L;
+    static final long CASTlING_QUEENSIDE  = 0x02L << 61L;
+    static final long CASTlING_DONE       = 0x04L << 61L;
+    static final long CASTlING_ANY        = 0x07L << 61L;
 
     static final int PAWN_CAPTURES[][] = new int[][] {
             /*a-file*/ {0,0,1,3,6,10,15},

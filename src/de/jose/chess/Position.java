@@ -122,6 +122,8 @@ public class Position
 
 	public void setOptions(int newOption)
 	{
+		if (option==newOption) return;
+
 		boolean wasIncrementHash = hasOption(INCREMENT_HASH);
 		boolean wasIncrementReversedHash = hasOption(INCREMENT_REVERSED_HASH);
 		boolean wasIgnoreFlags = hasOption(IGNORE_FLAGS_ON_HASH);

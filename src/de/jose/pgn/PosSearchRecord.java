@@ -216,9 +216,9 @@ public void setSearch(Position pos, int flags) {
 
         if (isPawnSearch()) {
             //  compare pawn structure (exact, or subset)
-            if ( !sig.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch()) &&
-               ( !reversedColor || !sigReversed.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch() )) )
-                return false;
+            if ( sig.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch()) ||
+               ( reversedColor && sigReversed.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch() )) )
+                return true;
         }
 
         //  todo compare mat balance
