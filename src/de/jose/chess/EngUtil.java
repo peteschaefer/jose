@@ -463,4 +463,13 @@ public class EngUtil
 		return builder.toString();
 	}
 
+    public static String reverseFen(String fen)
+	{
+		String[] rows = fen.split("/");
+		for(int i=0; i < rows.length/2; ++i)
+			Util.swap(rows,i,rows.length-1-i);
+		for(int i=0; i < rows.length; ++i)
+			rows[i] = StringUtil.swapCase(rows[i]);
+		return String.join("/",rows);
+    }
 }

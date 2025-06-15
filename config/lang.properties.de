@@ -1059,6 +1059,7 @@ dialog.setup.castling.bq		= Schwarz 0-0-0
 dialog.setup.castling.bq.tip	= Schwarze lange Rochade
 dialog.setup.castling.frc       = FRC-Rochade
 dialog.setup.castling.frc.tip   = FRC Rochade erlauben
+dialog.setup.reverse            = Farben tauschen
 
 dialog.setup.invalid.fen = Ungültige FEN
 dialog.setup.shuffle.title  = Shuffle

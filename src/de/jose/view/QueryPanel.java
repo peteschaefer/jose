@@ -516,6 +516,7 @@ public class QueryPanel
 		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", list) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.reverse",        "menu.game.flip", list) );
 
 		if (dark)
 			JoToolBar.makeDarkIcons(controls);
@@ -651,6 +652,13 @@ public class QueryPanel
             }
         };
         map.put("dialog.setup.copy",action);
+
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				posEditor.reversePosition();
+			}
+		};
+		map.put("dialog.setup.reverse",action);
 
 		action = new CommandAction() {
 			public void Do(Command cmd) {

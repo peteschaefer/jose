@@ -93,7 +93,7 @@ Maintenance:
     [x] search pawn subset?
         [x] idea: add "joker" pawns that have no specific place but add to pawncount(),
         [x] unit test selectivity of early cutoffs with
-[ ] button: reverse
+[x] button: reverse
 [x] legality check with pawns only
 
 [ ] search pawns on files:

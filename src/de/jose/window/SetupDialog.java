@@ -110,6 +110,14 @@ public class SetupDialog
         };
         map.put("dialog.setup.copy",action);
 
+		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				view.reversePosition();
+				eboardCtrl.follow();
+			}
+		};
+		map.put("dialog.setup.reverse",action);
+
         action = new CommandAction() {
             public void Do(Command cmd) throws Exception
             {
