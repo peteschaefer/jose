@@ -477,6 +477,7 @@ public class SearchRecord implements Cloneable
 
 		if (!pos.isEmpty()) {
 			//	Position Search
+			sql.select.insert(0,"/*+ BNL()*/ ");
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
 					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
 			//	Has Variations can be queried from Game.Attribute
@@ -581,12 +582,15 @@ public class SearchRecord implements Cloneable
 			int result2 = estimateCollectionSizes(null);
 			//	and Collection is large (compared to the whole db)
 			if (result1 >= result2*0.5) {
+				//sql.select.insert(0,"/*+ BNL()*/ ");
+				/*
 				int[] minmax = findMinMaxGameIds(this.collections);
 				//driving = JOIN_MORE;
 				//joins |= JOIN_STRAIGHT;
 				joins &= ~JOIN_GAME;
 				sql.where.setLength(0);	// undo join Game; todo find a nicer solution
 				sql.where.append("MoreGame.GId BETWEEN "+minmax[0]+" AND "+minmax[1]);
+				 */
 			}
 		}
 	}

@@ -80,9 +80,9 @@ public class MariaDBAdapter extends MySQLAdapter
         // Turn on Batched Key Access (BKA)
         command.add("--join-cache-level=8");
         // Size limit for the whole join
-        command.add("--join-buffer-space-limit=300M");
+        command.add("--join-buffer-space-limit=2G");
         // Limit for each individual table
-        command.add("--join_buffer_size=100M");
+        command.add("--join_buffer_size=2G");
         command.add("--optimizer_switch=index_merge_sort_intersection=on");
 
 
