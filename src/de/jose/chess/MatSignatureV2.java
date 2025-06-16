@@ -47,7 +47,7 @@ import static de.jose.util.BitUtil.*;
  *              = 6 states
  *
  * 	======
- * 	61 (64) bits
+ * 	64 bits
  *
  *  castling rights are not yet computed and stored.
  *  would make sense if they are part of the query.
