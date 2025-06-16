@@ -41,43 +41,48 @@ describe MetaInfo;
 9, 'GameCount'   , 'int(11)'      , ''   , ''   , '0'    , ''   
 
 <
-	Game
+	Game holds fixed-size Game Meta-Data
 >
 0 ,     Field    ,     Type     , Null ,  Key , Default, Extra
-1 , 'Id'         , 'int(11)'    , ''   , 'PRI', '0'    , ''   
-2 , 'CId'        , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-3 , 'Idx'        , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-4 , 'Attributes' , 'tinyint(4)' , ''   , 'MUL', '0'    , ''   
-5 , 'OCId'       , 'int(11)'    , 'YES', ''   , null   , ''   
-6 , 'OIdx'       , 'int(11)'    , 'YES', ''   , null   , ''   
-7 , 'PlyCount'   , 'int(11)'    , ''   , ''   , '0'    , ''   
-8 , 'Result'     , 'tinyint(4)' , ''   , 'MUL', '0'    , ''   
-9 , 'WhiteId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-10, 'BlackId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-11, 'WhiteELO'   , 'int(11)'    , 'YES', 'MUL', null   , ''   
-12, 'BlackELO'   , 'int(11)'    , 'YES', 'MUL', null   , ''   
-13, 'EventId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-14, 'SiteId'     , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-15, 'GameDate'   , 'date'       , 'YES', 'MUL', null   , ''   
-16, 'EventDate'  , 'date'       , 'YES', 'MUL', null   , ''   
-17, 'DateFlags'  , 'smallint(6)', ''   , ''   , '0'    , ''   
-18, 'OpeningId'  , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-19, 'ECO'        , 'char(3)'    , 'YES', 'MUL', null   , ''   
-20, 'AnnotatorId', 'int(11)'    , ''   , 'MUL', '0'    , ''   
+1 , 'Id'         , 'int(11)'    , ''   , 'PRI', '0'    , Primary Key for a Game
+2 , 'CId'        , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to owning Collection
+3 , 'Idx'        , 'int(11)'    , ''   , 'MUL', '0'    , Sort Index within a Collection
+4 , 'Attributes' , 'tinyint(4)' , ''   , 'MUL', '0'    , Flags: has variations, has comments, ...
+5 , 'OCId'       , 'int(11)'    , 'YES', ''   , null   , For deleted Games: foreign key to original Collection
+6 , 'OIdx'       , 'int(11)'    , 'YES', ''   , null   , For deleted Games: foreign key to original Index
+7 , 'PlyCount'   , 'int(11)'    , ''   , ''   , '0'    , Number of Plies
+8 , 'Result'     , 'tinyint(4)' , ''   , 'MUL', '0'    , Result (0,1,1/2,*)
+9 , 'WhiteId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to White Player
+10, 'BlackId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Black Player
+11, 'WhiteELO'   , 'int(11)'    , 'YES', 'MUL', null   , White ELO
+12, 'BlackELO'   , 'int(11)'    , 'YES', 'MUL', null   , Black ELO
+13, 'EventId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Event
+14, 'SiteId'     , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Site
+15, 'GameDate'   , 'date'       , 'YES', 'MUL', null   , Game Date
+16, 'EventDate'  , 'date'       , 'YES', 'MUL', null   , Event Date
+17, 'DateFlags'  , 'smallint(6)', ''   , ''   , '0'    , Flags: has month, day, ...
+18, 'OpeningId'  , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Opening
+19, 'ECO'        , 'char(3)'    , 'YES', 'MUL', null   , ECO code (three chars)
+20, 'AnnotatorId', 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Annotator
 
 <
-	MoreGame
+	MoreGame holds variable-sized Game data
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
-1, 'GId'       , 'int(11)'     , ''   , 'PRI', '0'    , ''   
-2, 'WhiteTitle', 'varchar(32)' , 'YES', 'MUL', null   , ''   
-3, 'BlackTitle', 'varchar(32)' , 'YES', 'MUL', null   , ''   
-4, 'Round'     , 'varchar(32)' , 'YES', 'MUL', null   , ''   
-5, 'Board'     , 'varchar(32)' , 'YES', 'MUL', null   , ''   
-6, 'FEN'       , 'varchar(128)', 'YES', ''   , null   , ''   
-7, 'Info'      , 'varchar(255)', 'YES', 'MUL', null   , ''   
-8, 'Bin'       , 'mediumblob'  , 'YES', ''   , null   , ''   
-9, 'Comments'  , 'mediumtext'  , 'YES', 'MUL', null   , ''   
+1, 'GId'       , 'int(11)'     , ''   , 'PRI', '0'    , Foreign key to Game
+2, 'WhiteTitle', 'varchar(32)' , 'YES', 'MUL', null   , White Title
+3, 'BlackTitle', 'varchar(32)' , 'YES', 'MUL', null   , Black Title
+4, 'Round'     , 'varchar(32)' , 'YES', 'MUL', null   , Round
+5, 'Board'     , 'varchar(32)' , 'YES', 'MUL', null   , Board
+6, 'FEN'       , 'varchar(128)', 'YES', ''   , null   , Start FEN (optional)
+7, 'Info'      , 'varchar(255)', 'YES', 'MUL', null   , More PGN tags as csv, key=value
+8, 'WhiteSignature', bigint(20), NO                   , Material Signature for White Pieces
+9, 'BlackSignature', bigint(20), NO                   , Material Signature for Black Pieces
+10, 'Bin'       , 'mediumblob', 'YES'                 , Game Moves (binary sequence)
+11, 'Comments'  , 'mediumtext', 'YES', 'MUL'          , Comments (0-terminated strings)
+12, 'PosMain',     mediumtext,   YES,MUL              , Position Index (deprecated, not used at all)
+13, 'PosVar',      mediumtext,   YES,MUL              , Position Index (deprecated, not used at all)
+14,  Eval,         mediumblob,   YES                  , Evaluation History (populates the Eval Graph)
 
 <
 	Player
