@@ -33,6 +33,9 @@ Exhaustive Search
     - exact position search finds positions by comparing Zobrist keys
     - pawn structure search compares the lower 48 bits of the MatSignature (and only after "noisy" moves)
 
+    More position comparison features are conceivable (pawns on files, good/bad bishops, castling status, etc.).
+    Take care that those features play together with MatSig cut-offs (e.g. castling status is not (yet) part of MatSig).
+
 "Benchmarks"
 ------------
 * Lumbra's Gigabase: 16 million games, 1.3 billion positions
