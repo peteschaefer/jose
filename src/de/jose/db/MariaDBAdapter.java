@@ -218,7 +218,7 @@ public class MariaDBAdapter extends MySQLAdapter
     }
 
     public File getDataDir() {
-        return new File(Application.theDatabaseDirectory, "mariadb" + File.separator + "data");
+        return new File(Application.theDatabaseDirectory, "mariadb");
     }
 
     @Override
