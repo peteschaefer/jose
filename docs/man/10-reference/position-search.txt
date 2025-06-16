@@ -47,21 +47,23 @@ MySQL Woes
 Exhaustive search performs a full-table scan on MoreGame. Sounds scary, but is, in fact, decently fast.
 Trouble starts when a position query is combined with a meta-data query (say, for player's name, tournament date, etc.)
 
-The SQL query now joins two tables, Game and MoreGame by an equi-join (Game.Id=MoreGame.GId).
+Now, the SQL query joins two tables, Game and MoreGame by a straightforward equi-join (Game.Id=MoreGame.GId).
 One would expect that MySQL can handle equi-joins efficiently (by using a hash join), but unfortunately
 that is not the case. Instead, MySQL does an index scan on Game and looks up each MoreGame row separately.
 Which is *very* slow.
 
 We are looking into ways to ameliorate this:
 
-1. Quick & (a little bit) dirty:
+1. Quick & (a little) dirty:
     Queries for a single Collection (which are frequent if the user selects a collection in the DB panel)
     are translated into MoreGame.GId BETWEEN .. AND .. Assuming that Collections cover a consecutive range of Ids.
     This assumption is unfounded in general, but it makes sense for huge databases like Lubra's that are mostly used in a read-only fashion.
     In the worst of cases, a query returns too many results, from different collections.
+
 2. Smarten up MySQL
     Try new versions of MariaDB (11,12?) or MySQL (8,9?). Both work well, but no significant performance improvement has been observed :(
     We keep on investigating; once I find a MariaDB version that can do efficient equi-joins, I will be happy to upgrade.
+
 3. Access database files directly, bypassing the server.
     Means: port the search routines to C++.
     This is work in progress (see https://github.com/peteschaefer/jose-cpp. oh, wait. it's a private repo :).
@@ -73,3 +75,6 @@ We are looking into ways to ameliorate this:
     What's currently missing is a processor for MyISAM disk files.
     Is there an OSS project that does such a thing already?
     Do we have to lift source code from MariaDB? (myisamcheck, for example)
+
+    Then again: investing work into a very old data format may be not the smartest thing to do.
+    Better wait for MariaDB, or MySQL to do their job well...
