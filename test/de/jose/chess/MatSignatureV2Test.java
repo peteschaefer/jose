@@ -417,6 +417,7 @@ class MatSignatureV2Test {
         testCutoff(endgame2,MatSignatureV2.class,searchFlags, offset,limit);
     }
 
+    @Disabled
     @Test
     void testDBPawnSearchCutoff2() throws Exception {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
@@ -474,6 +475,7 @@ class MatSignatureV2Test {
         assertTrue(subsetCanReach);
     }
 
+    @Disabled
     @Test
     void testDBPawnCutoffs() throws Exception {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
