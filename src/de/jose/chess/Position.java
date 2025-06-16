@@ -624,7 +624,6 @@ public class Position
 			if (hasOption(INCREMENT_SIGNATURE))
 				computeMatSig();
         }
-
 		if (that instanceof Position) {
 			System.arraycopy(((Position)that).startFEN,0, this.startFEN,0, this.startFEN.length);
 		}
