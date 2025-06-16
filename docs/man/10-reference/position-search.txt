@@ -6,13 +6,13 @@ How does jose perform position searches on the database?
 Wait, use an Index!
 -------------------
 First thing that springs to mind is an *index*. Lichess Opening Explorer(*) uses an index to deliver fast position queries, why don't we do the same?
-Unfortunately, such an index would have to be *huge*. It would need hundreds of gigabytes of disk space, as wells as many hours to create it.
+Unfortunately, such an index would have to be *huge*. It would need hundreds of gigabytes of disk space, as well as many hours to create it.
 
-While this is not a big deal for the people at Lichess, I don't want to bother PC users with such a monstrous contraption.
+While this is small fish for the people at Lichess, I don't want to bother PC users with such a monstrous contraption.
 For that reason, jose does the next-best thing: an exhaustive, O(n), scan over all games.
 A let-down for database experts, but Scid and ChessBase are doing it no differently.
 
-(*) btw, jose can query the Lichess Opening Explorer online: see Options / Opening Books.
+(*) btw, jose can query the Lichess Opening Explorer online: see Edit / Options / Opening Books.
 
 Exhaustive Search
 -----------------
@@ -57,14 +57,14 @@ We are looking into ways to ameliorate this:
 1. Quick & (a little bit) dirty:
     Queries for a single Collection (which are frequent if the user selects a collection in the DB panel)
     are translated into MoreGame.GId BETWEEN .. AND .. Assuming that Collections cover a consecutive range of Ids.
-    This assumption is, of course, unfounded, but it makes sense for huge databases like Lubra's that are mostly used in a read-only fashion.
-    In the worst of cases, a queriy returns too many results, from different collections.
+    This assumption is unfounded in general, but it makes sense for huge databases like Lubra's that are mostly used in a read-only fashion.
+    In the worst of cases, a query returns too many results, from different collections.
 2. Smarten up MySQL
-    Try new versions of MariaDB (8,9) or MySQL (11,12). Both work well, but no significant performance improvement has been noticed :(
+    Try new versions of MariaDB (11,12?) or MySQL (8,9?). Both work well, but no significant performance improvement has been observed :(
     We keep on investigating; once I find a MariaDB version that can do efficient equi-joins, I will be happy to upgrade.
 3. Access database files directly, bypassing the server.
-    - port the search routines to C++.
-    This is work in progress (see https://github.com/peteschaefer/jose-cpp. ah, wait. it's a private repo :).
+    Means: port the search routines to C++.
+    This is work in progress (see https://github.com/peteschaefer/jose-cpp. oh, wait. it's a private repo :).
     Fortunately, some components are already implemented in C++
     - a chess rules engine
     - the MatSignature
