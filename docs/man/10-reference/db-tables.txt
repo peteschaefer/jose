@@ -27,18 +27,19 @@ describe MetaInfo;
 
 
 <
-	Collection
+	Collection keeps together a set of Games.
+	Can be nested recursively, like file folders.
 >
 0,     Field     ,      Type      , Null ,  Key , Default, Extra
-1, 'Id'          , 'int(11)'      , ''   , 'PRI', '0'    , ''   
-2, 'PId'         , 'int(11)'      , ''   , 'MUL', '0'    , ''   
-3, 'OPId'        , 'int(11)'      , 'YES', ''   , null   , ''   
-4, 'Name'        , 'varchar(255)' , ''   , 'MUL', ''     , ''   
-5, 'Path'        , 'varchar(255)' , 'YES', 'MUL', null   , ''   
-6, 'Attributes'  , 'tinyint(4)'   , ''   , ''   , '0'    , ''   
-7, 'SourceURL'   , 'varchar(255)' , 'YES', 'MUL', null   , ''   
-8, 'LastModified', 'timestamp(14)', 'YES', 'MUL', null   , ''   
-9, 'GameCount'   , 'int(11)'      , ''   , ''   , '0'    , ''   
+1, 'Id'          , 'int(11)'      , ''   , 'PRI', '0'    , Primate Key
+2, 'PId'         , 'int(11)'      , ''   , 'MUL', '0'    , Foreign key to Parent Collection (think: folder)
+3, 'OPId'        , 'int(11)'      , 'YES', ''   , null   , For deleted entries: place to restore the original state
+4, 'Name'        , 'varchar(255)' , ''   , 'MUL', ''     , Display name
+5, 'Path'        , 'varchar(255)' , 'YES', 'MUL', null   , Folder Path (just like a file path)
+6, 'Attributes'  , 'tinyint(4)'   , ''   , ''   , '0'    , Flags for system folders, ...
+7, 'SourceURL'   , 'varchar(255)' , 'YES', 'MUL', null   , Where this came from (not yet used)
+8, 'LastModified', 'timestamp(14)', 'YES', 'MUL', null   , Last Modified Flag
+9, 'GameCount'   , 'int(11)'      , ''   , ''   , '0'    , Number of contained Games (redundant but quicker than select count(*))
 
 <
 	Game holds fixed-size Game Meta-Data
@@ -85,16 +86,16 @@ describe MetaInfo;
 14,  Eval,         mediumblob,   YES                  , Evaluation History (populates the Eval Graph)
 
 <
-	Player
+	Player (speaks for itself)
 >
 0,    Field   ,      Type     , Null,  Key , Default, Extra
-1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , ''   
-2, 'Name'     , 'varchar(255)', ''  , 'MUL', ''     , ''   
-3, 'UpperName', 'varchar(255)', ''  , 'MUL', ''     , ''   
-4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , ''   
+1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , Primary Key
+2, 'Name'     , 'varchar(255)', ''  , 'MUL', ''     , Name
+3, 'UpperName', 'varchar(255)', ''  , 'MUL', ''     , Name in Upper Case (meant to speed up queries, it's probably useless)
+4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , Soundex (useful for soundex queries)
 
 <	
-	Event
+	Event (you guessed it)
 >
 0,    Field   ,      Type     , Null,  Key , Default, Extra
 1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , ''   
@@ -112,19 +113,22 @@ describe MetaInfo;
 4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , ''   
 
 <
-	Opening
+	Opening (name and ECO)
 >
 0,    Field   ,      Type     , Null ,  Key , Default, Extra
-1, 'Id'       , 'int(11)'     , ''   , 'PRI', '0'    , ''   
-2, 'HashKey'  , 'bigint(20)'  , ''   , 'MUL', '0'    , ''   
-3, 'Ply'      , 'int(11)'     , 'YES', ''   , null   , ''   
-4, 'ECO'      , 'char(3)'     , ''   , 'MUL', '-'    , ''   
-5, 'Name'     , 'varchar(255)', ''   , 'MUL', ''     , ''   
+1, 'Id'       , 'int(11)'     , ''   , 'PRI', '0'    , Primary Key
+2, 'HashKey'  , 'bigint(20)'  , ''   , 'MUL', '0'    , Zobrist key for querying an opening book (of the ECO index?)
+3, 'Ply'      , 'int(11)'     , 'YES', ''   , null   , Ply where the eco code was found
+4, 'ECO'      , 'char(3)'     , ''   , 'MUL', '-'    , three-letter eco code
+5, 'Name'     , 'varchar(255)', ''   , 'MUL', ''     , Name (in any language)
 6, 'UpperName', 'varchar(255)', ''   , 'MUL', ''     , ''   
 7, 'Soundex'  , 'varchar(6)'  , ''   , 'MUL', '-'    , ''   
 
 <
 	IO_Collection
+	IO schema is stored inside *.jose files.
+	Used to transfer a set of games to another database.
+	Very similar to the Main schema above, except for the Game table.
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
 1, 'Id'        , 'int(11)'     , ''   , 'PRI', '0'    , ''   
@@ -137,6 +141,7 @@ describe MetaInfo;
 
 <
 	IO_Game
+	stores info from Game and MoreGame in one table
 >
 0 ,     Field    ,      Type     , Null ,  Key , Default, Extra
 1 , 'Id'         , 'int(11)'     , ''   , 'PRI', '0'    , ''   
@@ -162,9 +167,11 @@ describe MetaInfo;
 21, 'Round'      , 'varchar(32)' , 'YES', 'MUL', null   , ''   
 22, 'Board'      , 'varchar(32)' , 'YES', ''   , null   , ''   
 23, 'FEN'        , 'varchar(128)', 'YES', ''   , null   , ''   
-24, 'Info'       , 'varchar(255)', 'YES', ''   , null   , ''   
-25, 'Bin'        , 'mediumblob'  , 'YES', ''   , null   , ''   
-26, 'Comments'   , 'mediumtext'  , 'YES', ''   , null   , ''   
+24, 'Info'       , 'varchar(255)', 'YES', ''   , null   , ''
+25, 'WhiteSignature', bigint(20), NO                   , Material Signature for White Pieces
+26, 'BlackSignature', bigint(20), NO                   , Material Signature for Black Pieces
+27, 'Bin'        , 'mediumblob'  , 'YES', ''   , null   , ''
+28, 'Comments'   , 'mediumtext'  , 'YES', ''   , null   , ''
 
 <
 	IO_Player
@@ -199,6 +206,7 @@ describe MetaInfo;
 
 <
 	Map_Game
+	used during import to re-map keys
 >
 0, Field,   Type   , Null ,  Key , Default, Extra
 1, 'OId', 'int(11)', 'YES', 'MUL', null   , ''   
@@ -241,6 +249,8 @@ describe MetaInfo;
 
 <
 	MetaInfo
+	stores info about the current schema version.
+	essential for automatic schema updates (see CrossOver classes).
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
 1, 'Property'  , 'varchar(64)' , ''   , 'MUL', ''     , ''   
