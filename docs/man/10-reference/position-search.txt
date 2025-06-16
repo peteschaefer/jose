@@ -42,8 +42,8 @@ Exhaustive Search
 * on a powerful notebook, an exhaustive search takes abt 10 seconds, rarely 15 seconds
 * on a really powerful workstation, exhaustive searches take abt 5 to 8 seconds
 
-MySQL Worries
--------------
+MySQL Woes
+----------
 Exhaustive search performs a full-table scan on MoreGame. Sounds scary, but is, in fact, decently fast.
 Trouble starts when a position query is combined with a meta-data query (say, for player's name, tournament date, etc.)
 

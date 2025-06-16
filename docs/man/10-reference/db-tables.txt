@@ -206,7 +206,7 @@ describe MetaInfo;
 
 <
 	Map_Game
-	used during import to re-map keys
+	used during import and export to re-map keys
 >
 0, Field,   Type   , Null ,  Key , Default, Extra
 1, 'OId', 'int(11)', 'YES', 'MUL', null   , ''   
