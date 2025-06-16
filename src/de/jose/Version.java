@@ -248,7 +248,7 @@ public class Version
     public static boolean useDoubleBuffer()
     {
         boolean defaultValue=false;
-        if (mac) defaultValue=true; //  do enable it on Macs!
+        if (mac) defaultValue=true; //  do enable it on Macs! why, really?
         return getSystemProperty("jose.2d.double.buffer",defaultValue);
     }
 

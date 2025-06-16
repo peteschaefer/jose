@@ -13,11 +13,12 @@
 package de.jose.view;
 
 import de.jose.*;
+import de.jose.chess.Constants;
+import de.jose.chess.EngUtil;
 import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
-import de.jose.image.ImgUtil;
 import de.jose.image.Surface;
 import de.jose.pgn.SearchRecord;
 import de.jose.profile.LayoutProfile;
@@ -25,7 +26,6 @@ import de.jose.profile.UserProfile;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.icon.TextIcon;
-import de.jose.util.icon.TextShapeIcon;
 import de.jose.view.list.IDBTableModel;
 import de.jose.window.JoDialog;
 import de.jose.window.JoMenuBar;
@@ -36,6 +36,8 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class QueryPanel
@@ -117,6 +119,9 @@ public class QueryPanel
 
 	class PosEditor extends BoardEditView
 	{
+		private boolean dimPawns=false, dimPieces=false;
+		private Surface dimmedWhite,dimmedBlack;
+
 		PosEditor(Position pos) { super(new PosAdapter(pos)); }
 
 		public void updateProfile(UserProfile prf)
@@ -125,8 +130,11 @@ public class QueryPanel
 			//	fix colors
 			currentWhite = Surface.newColor(Color.white);
 			currentBlack = Surface.newColor(Color.black);
-			currentLight = Surface.newColor(Color.lightGray);
-			currentDark = Surface.newColor(Color.lightGray.darker());
+			currentLight = Surface.newColor(Color.decode("#FFFFCC"));
+			currentDark = Surface.newColor(Color.decode("#336600"));
+
+			dimmedWhite = Surface.newColor(new Color(0xcc,0xcc,0xcc,0x60));//Color.decode("#CCCCCC"));
+			dimmedBlack = Surface.newColor(new Color(0x99,0x99,0x99,0x60));//Color.decode("#999999"));
 		}
 
 		public Dimension getMaximumSize()
@@ -135,6 +143,31 @@ public class QueryPanel
 			if (sz.width > sz.height*PREFERRED_RATIO) sz.width = (int)Math.round(sz.height*PREFERRED_RATIO);
 			if (sz.height > sz.width/PREFERRED_RATIO) sz.height = (int)Math.round(sz.width/PREFERRED_RATIO);
 			return sz;
+		}
+
+		public void dimPieces(boolean pawns, boolean officers) {
+			if(pawns==dimPawns && officers==dimPieces) return;
+			dimPawns = pawns;
+			dimPieces = officers;
+			forceRedraw = true;
+			repaint();
+		}
+
+		@Override
+		public BufferedImage getPieceImage(int piece, Rectangle bounds, boolean userSpace)
+		{
+			Surface white = currentWhite;
+			Surface black = currentBlack;
+			boolean is_pawn = EngUtil.uncolored(piece)==Constants.PAWN;
+			if (dimPawns && is_pawn || dimPieces && !is_pawn) {
+				white = dimmedWhite;
+				black = dimmedBlack;
+			}
+
+			return getPieceImage(currentFont,
+					userSpace ? (int)userSquareSize : devSquareSize,
+					piece, white, black,
+					bounds,lockImgCache);
 		}
 	}
 
@@ -188,6 +221,8 @@ public class QueryPanel
 	/**		Position Panel	*/
 	/** position editor */
 	protected PosEditor posEditor;
+	protected JRadioButton exactRadio, pawnRadio, subsetRadio;
+	protected ButtonGroup posRadioGroup;
 	/** checkbox for searching positions with reversed color    */
 	protected JCheckBox reversePosition;
 	/** search variations ? */
@@ -243,6 +278,10 @@ public class QueryPanel
 
 	protected void reg(JComponent comp, String name) {
 		comp.setName(name);
+		reg(comp);
+	}
+	protected void reg(JComponent comp) {
+		assert comp.getName() != null && !comp.getName().isEmpty();
 		elements.add(comp);
 	}
 
@@ -428,12 +467,36 @@ public class QueryPanel
 		posEditor.init();
 
 		Box controls = Box.createVerticalBox();
+		controls.setBorder(new CompoundBorder(
+					new EmptyBorder(4,4,4,4),
+					new TitledBorder("")));
 		/** editor controls */
+
+		controls.add(exactRadio = JoDialog.newRadioButton("query.pos.exact"));
+		controls.add(pawnRadio = JoDialog.newRadioButton("query.pos.pawns"));
+		controls.add(subsetRadio = JoDialog.newRadioButton("query.pos.pawn-subset"));
+
+		posRadioGroup = new ButtonGroup();
+		posRadioGroup.add(exactRadio);
+		posRadioGroup.add(pawnRadio);
+		posRadioGroup.add(subsetRadio);
+		exactRadio.setSelected(true);
+
+		//	careful: listeners must not be triggered, yet
+		exactRadio.addChangeListener(this);
+		pawnRadio.addChangeListener(this);
+		subsetRadio.addChangeListener(this);
+
+		controls.add(Box.createVerticalStrut(10));
 
         controls.add(searchVariations = JoDialog.newCheckBox("query.setup.var",this));
 		controls.add(reversePosition = JoDialog.newCheckBox("query.setup.reversed",this));
-		reg(searchVariations,"query.setup.var");
-		reg(reversePosition,"query.setup.reversed");
+
+		reg(exactRadio);
+		reg(pawnRadio);
+		reg(subsetRadio);
+		reg(searchVariations);
+		reg(reversePosition);
 
         controls.add(Box.createVerticalStrut(10));
 
@@ -453,6 +516,7 @@ public class QueryPanel
 		controls.add( JoDialog.newLinkButton("dialog.setup.copy",      "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.copy.fen",     "menu.edit.copy", list) );
 		controls.add( JoDialog.newLinkButton("menu.edit.paste",        "menu.edit.paste", list) );
+		controls.add( JoDialog.newLinkButton("dialog.setup.reverse",        "menu.game.flip", list) );
 
 		if (dark)
 			JoToolBar.makeDarkIcons(controls);
@@ -590,6 +654,13 @@ public class QueryPanel
         map.put("dialog.setup.copy",action);
 
 		action = new CommandAction() {
+			public void Do(Command cmd) throws Exception {
+				posEditor.reversePosition();
+			}
+		};
+		map.put("dialog.setup.reverse",action);
+
+		action = new CommandAction() {
 			public void Do(Command cmd) {
 				posEditor.copyToClipboard();
 			}
@@ -615,10 +686,11 @@ public class QueryPanel
 		map.put("update.ui", action);
 	}
 
-	protected boolean askLegality(Position pos)
+	protected boolean askLegality(Position pos, boolean pawnsOnly)
 	{
-		String[] errors = pos.checkLegality();
-		String[] warnings = pos.checkPlausibility();
+	// todo pawn searches: check only legality of pawn structure
+		String[] errors = pos.checkLegality(pawnsOnly);
+		String[] warnings = pos.checkPlausibility(pawnsOnly);
 
 		if (errors != null || warnings != null)
 		{
@@ -724,11 +796,20 @@ public class QueryPanel
 		Position pos = posEditor.board.getPosition();
 		if (!pos.isEmpty())
 		{
-			rec.pos.setExact(pos);
+			//	position, or pawn searches
+			if (exactRadio.isSelected())
+				rec.pos.setExactSearch(pos);
+			else if (pawnRadio.isSelected())
+				rec.pos.setPawnSearch(pos,true);
+			else if (subsetRadio.isSelected())
+				rec.pos.setPawnSearch(pos,false);
+			else
+				rec.pos.clear();
+
 			rec.pos.reversedColor = reversePosition.isSelected();
 			rec.pos.variations = searchVariations.isSelected();
 
-			if (errors!=null && !askLegality(pos))
+			if (errors!=null && !askLegality(pos, rec.pos.isPawnSearch()))
 				return false;
 		}
 		else {
@@ -796,6 +877,9 @@ public class QueryPanel
 
         searchButton.setEnabled((lpanel!=null) && (t0||t1||t2));
         clearButton.setEnabled(t0||t1||t2|| !isEmptySearch());
+
+		//	adjust board view to search radio buttons
+		posEditor.dimPieces( false, pawnRadio.isSelected() || subsetRadio.isSelected() );
 	}
 
 	protected void activateTab(int idx, boolean on)

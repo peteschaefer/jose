@@ -122,6 +122,12 @@ public class BoardEditView
 		setup(AbstractApplication.theAbstractApplication.theGame.getPosition());
 	}
 
+	public void reversePosition() {
+		String fen = board.getPosition().toString(Board.SIMPLE_FEN);
+		fen = EngUtil.reverseFen(fen);
+		setup(fen.toString());
+	}
+
 	public String getFen() {
 		return board.getPosition().toString();
 	}

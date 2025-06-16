@@ -996,6 +996,11 @@ query.setup.next.any = Weiß oder Schwarz
 query.setup.next.any.tip = findet Stellungen mit Weiß oder Schwarz am Zug
 query.setup.reversed = Vertauschte Farben
 query.setup.reversed.tip = findet identische Stellungen mit vertauschten Farben
+
+query.pos.exact = Position exakt
+query.pos.pawns = Bauern (exakt)
+query.pos.pawn-subset = Bauern-Muster
+
 query.setup.var = Variante
 query.setup.var.tip = sucht auch in Varianten
 
@@ -1054,6 +1059,7 @@ dialog.setup.castling.bq		= Schwarz 0-0-0
 dialog.setup.castling.bq.tip	= Schwarze lange Rochade
 dialog.setup.castling.frc       = FRC-Rochade
 dialog.setup.castling.frc.tip   = FRC Rochade erlauben
+dialog.setup.reverse            = Farben tauschen
 
 dialog.setup.invalid.fen = Ungültige FEN
 dialog.setup.shuffle.title  = Shuffle

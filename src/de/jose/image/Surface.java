@@ -76,7 +76,7 @@ public class Surface
     public static Surface newColor(Color color, String texture)               { return new Surface(COLOR,color,texture); }
 
 
-    public static Surface newColor(int r, int g, int b)                       { return new Surface(COLOR,new Color(r,g,b),null); }
+    public static Surface newColor(int r, int g, int b, int a)                       { return new Surface(COLOR,new Color(r,g,b,a),null); }
 
     public static Surface newColor(int r, int g, int b, String texture)       { return new Surface(COLOR,new Color(r,g,b),texture); }
 

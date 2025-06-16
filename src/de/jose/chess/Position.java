@@ -122,6 +122,8 @@ public class Position
 
 	public void setOptions(int newOption)
 	{
+		if (option==newOption) return;
+
 		boolean wasIncrementHash = hasOption(INCREMENT_HASH);
 		boolean wasIncrementReversedHash = hasOption(INCREMENT_REVERSED_HASH);
 		boolean wasIgnoreFlags = hasOption(IGNORE_FLAGS_ON_HASH);
@@ -953,11 +955,11 @@ public class Position
 	}
 
 
-	public String[] checkLegality()
+	public String[] checkLegality(boolean pawnsOnly)
 	{
 		Vector collect = new Vector();
 
-		checkLegality(collect);
+		checkLegality(collect,pawnsOnly);
 
 		if (collect.isEmpty())
 			return null;	//	allright
@@ -968,27 +970,30 @@ public class Position
 		}
 	}
 
-	public void checkLegality(List collect)
+	public void checkLegality(List collect,boolean pawnsOnly)
 	{
-		checkLegality(WHITE,"white",collect);
-		checkLegality(BLACK,"black",collect);
-		checkCastlingLegality(collect);
+		checkLegality(WHITE,"white",collect,pawnsOnly);
+		checkLegality(BLACK,"black",collect,pawnsOnly);
+		if (!pawnsOnly)
+			checkCastlingLegality(collect);
 	}
 
-	protected void checkLegality(int color, String key, List collect)
+	protected void checkLegality(int color, String key, List collect, boolean pawnsOnly)
 	{
 		//	exactly one king
-		int kc = countValid(pieceList(color+KING));
-		if (kc==0)
-			collect.add("pos.error."+key+".king.missing");
-		else if (kc >= 2)
-			collect.add("pos.error.too.many."+key+".kings");
-
+		int kc = countValid(pieceList(color + KING));
+		if (!pawnsOnly) {
+			if (kc == 0)
+				collect.add("pos.error." + key + ".king.missing");
+			else if (kc >= 2)
+				collect.add("pos.error.too.many." + key + ".kings");
+		}
 		//	moving king must not be checked
-		if (movedLast(color) && (kc >= 1) &&
-			underAttack(king(color).square(), allOppositePieces(color)))
-			collect.add("pos.error."+key+".king.checked");
-
+		if (!pawnsOnly) {
+			if (movedLast(color) && (kc >= 1) &&
+					underAttack(king(color).square(), allOppositePieces(color)))
+				collect.add("pos.error." + key + ".king.checked");
+		}
 		//	no pawns on bad rows
 		List pl = pieceList(color+PAWN);
 		for (int i=pl.size()-1; i>=0; i--) {
@@ -1033,11 +1038,11 @@ public class Position
 		}
 	}
 
-	public String[] checkPlausibility()
+	public String[] checkPlausibility(boolean pawnsOnly)
 	{
 		Vector collect = new Vector();
 
-		checkPlausibility(collect);
+		checkPlausibility(collect,pawnsOnly);
 
 		if (collect.isEmpty())
 			return null;	//	allright
@@ -1048,7 +1053,7 @@ public class Position
 		}
 	}
 
-	public void checkPlausibility(List collect)
+	public void checkPlausibility(List collect,boolean pawnsOnly)
 	{
 		//	pawn structure
 		//	position must be reachable from Initial
@@ -1056,11 +1061,11 @@ public class Position
 		if (!j.isLegal())
 			collect.add("pos.error.unreachable");
 		//	smelly positions (too many promoted pieces)
-		checkPlausibility(WHITE,"white",collect);
-		checkPlausibility(BLACK,"black",collect);
+		checkPlausibility(WHITE,"white",collect,pawnsOnly);
+		checkPlausibility(BLACK,"black",collect,pawnsOnly);
 	}
 
-	protected void checkPlausibility(int color, String key, List collect)
+	protected void checkPlausibility(int color, String key, List collect,boolean pawnsOnly)
 	{
 		//	no more than 8 pawns + promo piece
 		int pc = countValid(pieceList(color+PAWN));
@@ -1071,11 +1076,11 @@ public class Position
 		int qc = countValid(pieceList(color+QUEEN));
 		int kc = countValid(pieceList(color+KING));
 
-		if ((pc+nc+bc+rc+qc+kc) > 16)
+		if (!pawnsOnly && (pc+nc+bc+rc+qc+kc) > 16)
 			collect.add("pos.warning.too.many."+key+".pieces");
 		else if (pc > 8)
 			collect.add("pos.warning.too.many."+key+".pawns");
-		else {
+		else if (!pawnsOnly) {
 			if ((pc+nc) > 10) collect.add("pos.warning.too.many."+key+".knights");
 			if ((pc+bc) > 10) collect.add("pos.warning.too.many."+key+".bishops");
 			if ((pc+rc) > 10) collect.add("pos.warning.too.many."+key+".rooks");
@@ -1083,7 +1088,7 @@ public class Position
 		}
 
         //	strange colored bishops ?
-        if (!super.checkBishopColors(color))
+        if (!pawnsOnly && !super.checkBishopColors(color))
             collect.add("pos.warning.strange."+key+".bishops");
 	}
 

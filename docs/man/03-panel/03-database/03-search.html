@@ -106,6 +106,7 @@ For example, searching for "Kasparov" and "Karpov" would return all games "Kaspa
 <!--@toc3:dialog.query.date--><a name="dialog.query.date">
 <h3>Date:</h3><!--/@toc3-->
 <p>Enter a date, or a range of dates. </p>
+    <P>Year is sufficient, but month and day are also accepted.</P>
 </a>
 
 <!--@toc3:dialog.query.result--><a name="dialog.query.result">
@@ -218,11 +219,29 @@ which can not be found with a "sounds like" search.
 
 <h2>The Position Tab</h2>
 
-<p><img src="shot0011.jpg" width="621" height="380" alt="" border="0"></p>
+<p><img src="shot0011.png" width="609" height="397" alt="" border="0"></p>
 
-<p>Lets you search for games that contain a certain position.
+<p>Lets you search for games that contain a certain position, or pawn structure.
 
-<p>Use the board to set up the position.</p>
+<p>Use the board to set up a position.</p>
+
+<!--@toc3:query.pos.exact--><a name="query.pos.exact">
+<h3>Exact Position</h3><!--/@toc3-->
+    <p>Searches for the exact position in the database.</p>
+
+<!--@toc3:query.pos.exact--><a name="query.pos.pawns">
+<h3>Pawns (exact)</h3><!--/@toc3-->
+    <p>Searches for the exact pawn structure. Additional pieces can be placed anywhere.</p>
+
+<!--@toc3:query.pos.pawn-subset--><a name="query.pos.pawn-subset">
+<h3>Pawn Pattern</h3><!--/@toc3-->
+    <p>Searches for a pawn pattern in the databsae. Additional pawns, and pieces can be placed anywhere.</p>
+
+<h3></h3>Example:</h3>
+
+    <p><img src="shot0022.png" width="335" height="181" alt="" border="0"></p>
+
+<p>Searches for all games that have that specific pawn pattern (a "Maroczy bind").</p>
 
 <!--@toc3:query.setup.var--><a name="query.setup.var">
 <h3>Search Variations</h3><!--/@toc3-->
@@ -234,6 +253,7 @@ which can not be found with a "sounds like" search.
 <h3>Search Reversed Colors</h3><!--/@toc3-->
 
 <p>If checked, search for similar positions with reversed colors.</p>
+    <p>Applies to both, exact searches and pawn patterns.</p>
 </a>
 
 <!--@toc3:dialog.setup.clear.ref1:dialog.setup.clear--><a name="dialog.setup.clear.ref1">
@@ -269,8 +289,11 @@ For example, a FEN string might look like this: <br>
 You should take care that the system clipboard contains a valid FEN string, otherwise it will not produce a useful result.
 </p>
 
-<p>Please note that positional searches are considerably slower than other types of searches. 
-With large databases, you should try to constrain the search conditions as much as possible.
+<!--@toc3:dialog.setup.reverse--><a name="dialog.setup.reverse">
+<h3>Reverse Colors</h3><!--/@toc3-->
+<p>Flip the board, reversing piece colors (from white to black, from black to white). </p>
+
+<p>Please note that positional searches are slower than other types of searches.
 
 <p>For example, if you are searching for a position from the "Spanish" Opening, you could enter its
 ECO code "C66" as an additional search constraint. 

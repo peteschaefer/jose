@@ -12,6 +12,7 @@ import static de.jose.util.BitUtil.*;
 
 /**
  * MatSignature is a compressed representation of a Position (2x64 bits).
+ * It records all *irreversible* changes, like in the 50-moves rule.
  * It helps to determine position features quickly (using only bit arithmetics).
  * If can estimate the number of pawn moves (exact, or lower/upper bound)
  *
@@ -39,10 +40,18 @@ import static de.jose.util.BitUtil.*;
  * 	            [1..46] number of pawn moves +1
  * 	            47 = [46..48] pawn moves (very rare)
  *
- *  (2 bits)	castling rights
+ *  (3 bits)	castling rights
+ *              ks castling, qs casling, both avaialable
+ *              ks castling, qs castling, happende
+ *              wildcard (don`t care)
+ *              = 6 states
  *
  * 	======
- * 	61 (63) bits
+ * 	64 bits
+ *
+ *  castling rights are not yet computed and stored.
+ *  would make sense if they are part of the query.
+ *  would improve cut-off selectivity !?
  *
  * 	more things to detect
  * 	- opposite bishops / even bishops
@@ -165,7 +174,7 @@ public class MatSignatureV2 implements MatSignature
         bfeat.clear();
     }
 
-    public void reverse()
+    public MatSignatureV2 reverse()
     {
         wfeat.reverse();
         bfeat.reverse();
@@ -173,6 +182,7 @@ public class MatSignatureV2 implements MatSignature
         Features swapf = wfeat;
         wfeat = bfeat;
         bfeat = swapf;
+        return this;
     }
 
     public boolean oppositeColouredBishops()
@@ -287,7 +297,8 @@ public class MatSignatureV2 implements MatSignature
         long topawns = to.wfeat.sig&PAWN_MASK;
         wreach = from.wfeat.resolve_pawns(frompawns,topawns,
                 15-from.bfeat.totalPieceCount(),
-                from.bfeat.totalPieceCount() - to.bfeat.totalPieceCount());
+                from.bfeat.totalPieceCount() - to.bfeat.totalPieceCount(),
+                from.wfeat.joker_pawns);
         if (!wreach) return false;
 
         frompawns = from.bfeat.sig&PAWN_MASK;
@@ -298,7 +309,8 @@ public class MatSignatureV2 implements MatSignature
         topawns = (BitUtil.reverseBits(topawns)>>16)&PAWN_MASK;
         breach = from.bfeat.resolve_pawns(frompawns,topawns,
                         15-from.wfeat.totalPieceCount(),
-                        from.wfeat.totalPieceCount() - to.wfeat.totalPieceCount());
+                        from.wfeat.totalPieceCount() - to.wfeat.totalPieceCount(),
+                from.bfeat.joker_pawns);
         //  todo should work for mirrored pawns just the same !?
         return breach;
         /** of course, the above could be placed in a single statement; split it just for better debuggability */
@@ -309,6 +321,35 @@ public class MatSignatureV2 implements MatSignature
         long wsig1 = wfeat.toMatSignatureV1();
         long wsig2 = bfeat.toMatSignatureV1();
         return new MatSignatureV1(wsig1,wsig2);
+    }
+
+    public boolean pawnsEqual(MatSignatureV2 that, boolean exact) {
+        long this_wpawns = this.wfeat.sig & PAWN_MASK;
+        long this_bpawns = this.bfeat.sig & PAWN_MASK;
+        long that_wpawns = that.wfeat.sig & PAWN_MASK;
+        long that_bpawns = that.bfeat.sig & PAWN_MASK;
+        if (exact) {
+            return      this_wpawns == that_wpawns
+                    &&  this_bpawns == that_bpawns;
+        } else
+            return      (this_wpawns&that_wpawns) == this_wpawns
+                    &&  (this_bpawns&that_bpawns) == this_bpawns;
+    }
+
+    public void clearOfficers() {
+        wfeat.sig &= ~OFFICER_MASK;
+        wfeat.piece_cnt=0;
+        bfeat.sig &= ~OFFICER_MASK;
+        bfeat.piece_cnt=0;
+    }
+
+    public void addJokerPawns() {
+        wfeat.addJokerPawns();
+        bfeat.addJokerPawns();
+    }
+    public void addJokerPieces() {
+        wfeat.addJokerPieces();
+        bfeat.addJokerPieces();
     }
 
     // --------------------------------------
@@ -330,6 +371,10 @@ public class MatSignatureV2 implements MatSignature
         int padv_upper = 0; //  pawn moves upper bound (including unknown promotions)
         //  total piece_cnt. computed by is_reachable on demand!
         int piece_cnt = 0;
+        //  for early cutoff calculation: pawns and pieces with unspecified location
+        //  (but used in counting arguments)
+        int joker_pawns = 0;
+        int joker_pieces = 0;
 
         public boolean isExact() {
             return padv_lower==padv_upper;
@@ -342,12 +387,15 @@ public class MatSignatureV2 implements MatSignature
                 return ((that.sig&PAWN_MASK) == (this.sig&PAWN_MASK))
                     && ((that.sig&OFFICER_MASK) == (this.sig&OFFICER_MASK))
                     && (this.padv_upper >= that.padv_lower) //  intervals overlap
-                    && (this.padv_lower <= that.padv_upper);
+                    && (this.padv_lower <= that.padv_upper)
+                    && (this.joker_pawns >= that.joker_pawns)
+                    && (this.joker_pieces <= that.joker_pieces);
         }
 
         void clear() {
             sig = 0;
-            padv_base = padv_lower = padv_upper = 0;
+            padv_base = padv_lower = padv_upper = piece_cnt = 0;
+            joker_pawns = joker_pieces = 0;
         }
         void copyFrom(Features that) {
             assert this.color==that.color;
@@ -355,6 +403,9 @@ public class MatSignatureV2 implements MatSignature
             padv_base = that.padv_base;
             padv_lower = that.padv_lower;
             padv_upper = that.padv_upper;
+            piece_cnt = that.piece_cnt;
+            joker_pawns = that.joker_pawns;
+            joker_pieces = that.joker_pieces;
         }
 
         int knightCount()       { return MatSignatureV2.knightCount(sig); }
@@ -365,12 +416,12 @@ public class MatSignatureV2 implements MatSignature
         int queenCount()        { return MatSignatureV2.queenCount(sig); }
         int officersCount()     { return knightCount()+bishopCount()+rookCount()+queenCount(); }
 
-        int pawnCount()         { return MatSignatureV2.pawnCount(sig); }
+        int pawnCount()         { return MatSignatureV2.pawnCount(sig) + joker_pawns; }
         int lightPawnCount()    { return MatSignatureV2.lightPawnCount(sig); }
         int darkPawnCount()     { return MatSignatureV2.darkPawnCount(sig); }
 
         int totalPieceCount() {
-            return piece_cnt+pawnCount();
+            return piece_cnt+joker_pieces + pawnCount();
         }
 
         void reverse()
@@ -627,10 +678,10 @@ public class MatSignatureV2 implements MatSignature
            return PAWN_CAPTURES[file][pawns];
        }
 
-       boolean resolve_pawns(long from, long to, int prev_captures, int avail_captures)
+       boolean resolve_pawns(long from, long to, int prev_captures, int avail_captures, int joker_pawns)
        {
            if (from==to) return (avail_captures>=0);    // that was easy
-           if (Long.bitCount(to) > Long.bitCount(from)) return false;
+           if (Long.bitCount(to) > (Long.bitCount(from)+joker_pawns)) return false;
 
            //   do a counting on files for captures that must occur between 'from' and 'to'
            int add_caps = 0;
@@ -641,10 +692,10 @@ public class MatSignatureV2 implements MatSignature
                return false;
 
            //   resolve critical pawns by backtracking
-           return resolve_next(from&~to,to&~from, avail_captures);
+           return resolve_next(from&~to,to&~from, avail_captures, joker_pawns);
        }
 
-       boolean resolve_next(long from, long to, int avail_captures)
+       boolean resolve_next(long from, long to, int avail_captures, int joker_pawns)
        {
            if (avail_captures < 0) return false;
            if (to==0) return true;
@@ -658,14 +709,16 @@ public class MatSignatureV2 implements MatSignature
            backtrack++;
 
            //  try to resolve from current file
-           if (resolve_one(from,to, file, row-1, avail_captures))
+           if (resolve_one(from,to, file, row-1, avail_captures,joker_pawns))
                return true;
            //  try to resolve from nearby files
            for(int d=1; ((row-d) >= ROW_2) && (d <= avail_captures); ++d) {
-               if (resolve_one(from,to, file+d, row-d, avail_captures-d))
+               if (resolve_one(from,to, file+d, row-d, avail_captures-d,joker_pawns))
                    return true;
-               if (resolve_one(from,to,file-d,row-d,avail_captures-d))
+               if (resolve_one(from,to,file-d,row-d,avail_captures-d,joker_pawns))
                    return true;
+               if (joker_pawns > 0) //  pull a Joker
+                   return resolve_next(from,to, avail_captures, joker_pawns-1);
            }
            /* todo if backtracking becomes too expensive, revert to counting
                 i.e. estimate lower bound on captures for remaining pawns
@@ -676,13 +729,13 @@ public class MatSignatureV2 implements MatSignature
            return false;
        }
 
-       boolean resolve_one(long from, long to, int file, int row, int avail_captures) {
+       boolean resolve_one(long from, long to, int file, int row, int avail_captures, int joker_pawns) {
             if (file<FILE_A || file>FILE_H) return false;
             if (row<ROW_2) return false;
             if (avail_captures < 0) return false;
             long candidate = Long.highestOneBit(from & fileMask(file) & rowsMask(row));
             if (candidate==0) return false;
-            return resolve_next(from&~candidate,to,avail_captures);
+            return resolve_next(from&~candidate,to,avail_captures,joker_pawns);
        }
 
         public int mostAdvancedPawn() {
@@ -725,6 +778,14 @@ public class MatSignatureV2 implements MatSignature
            if (padv_lower==padv_upper)
                sig1 |= MatSignatureV1.FLAG_PAWN_ADV_EXACT;
            return sig1;
+        }
+
+        public void addJokerPawns() {
+            this.joker_pawns = 8 - MatSignatureV2.pawnCount(sig);
+        }
+
+        public void addJokerPieces() {
+            this.joker_pieces = Math.max(0, 15 - MatSignatureV2.pawnCount(sig) - this.joker_pawns - MatSignatureV2.officersCount(sig));
         }
     }
 
@@ -783,7 +844,7 @@ public class MatSignatureV2 implements MatSignature
                 buf.append("/");
         }
         if (longFormat)
-            buf.println(" abcdefgh");
+            buf.append(" abcdefgh\n");
     }
 
     private static void printPawnRow(PrintWriter buf, long bits, int row, char chr, boolean longFormat) {
@@ -836,6 +897,14 @@ public class MatSignatureV2 implements MatSignature
 
     static final int ADV_TOP              = 48;
     static final int ADV_MAX              = ADV_TOP-2;
+
+    //  todo castling flags not yet in use
+    //  makes only sense if the query supports it
+    static final long CASTlING_MASK       = 0x07L << 61;
+    static final long CASTlING_KINGSIDE   = 0x01L << 61L;
+    static final long CASTlING_QUEENSIDE  = 0x02L << 61L;
+    static final long CASTlING_DONE       = 0x04L << 61L;
+    static final long CASTlING_ANY        = 0x07L << 61L;
 
     static final int PAWN_CAPTURES[][] = new int[][] {
             /*a-file*/ {0,0,1,3,6,10,15},
@@ -908,6 +977,7 @@ public class MatSignatureV2 implements MatSignature
     static int rookCount(long sig)          { return BitUtil.get2(sig,ROOK_OFFSET); }
     static int queenCount(long sig)         { return BitUtil.get2(sig,QUEEN_OFFSET); }
     static int pawnAdvance(long sig)        { return get6(sig,ADV_OFFSET)-1; }
+    static int officersCount(long sig)      { return knightCount(sig)+bishopCount(sig)+rookCount(sig)+queenCount(sig); }
 
     static int countLightSquaredBishops(Board board, int color) {
         return board.countPieces(EngUtil.BISHOP | color, (Piece p) -> EngUtil.isLightSquare(p.square()));
@@ -927,9 +997,9 @@ public class MatSignatureV2 implements MatSignature
     static boolean is_reachable(Features from, Features to)
     {
         /** check pawn count */
-        int pcfrom = from.pawnCount();
-        int pcto = to.pawnCount();
-        if (pcto > pcfrom)
+        int from_pawns = from.pawnCount();
+        int to_pawns = to.pawnCount();
+        if (to_pawns > from_pawns)
             return false;    //  not enough pawns
 
         /** check officers count    */
@@ -937,21 +1007,21 @@ public class MatSignatureV2 implements MatSignature
         from.piece_cnt=0;
         to.piece_cnt=0;
 
+        /* check for each officcer */
         for( ; offset <= QUEEN_OFFSET; offset += 2) {
             int from_cnt = BitUtil.get2(from.sig,offset);
             int to_cnt = BitUtil.get2(to.sig,offset);
-            if (to_cnt > (from_cnt+pcfrom))
+            if ((to_cnt+to_pawns) > (from_cnt+from_pawns+from.joker_pieces))
                 return false; //  not enough officers   todo never reached?
             from.piece_cnt += from_cnt;
             to.piece_cnt += to_cnt;
         }
-//        if (to_total > (from_total+pcfrom))
-//            return false; //  not enough officers
-        if ((to.piece_cnt+pcto) > (from.piece_cnt+pcfrom))
+        /* check total piece count */
+        if ((to.piece_cnt+to_pawns) > (from.piece_cnt+from_pawns+ from.joker_pieces))
             return false; //  not enough pieces
 
         int padv_promo=0;
-        if (to.piece_cnt > from.piece_cnt) {
+        if (to.piece_cnt > (from.piece_cnt+from.joker_pieces)) {
             //  pawns need to advance to create new officers
             //  we already checked that there is a sufficient number of pawns
             //  compute the number of needed advances to promote (to-piece_cnt-from.piece_cnt) times
@@ -960,8 +1030,8 @@ public class MatSignatureV2 implements MatSignature
         }
 
         /** check pawn advance (lower/upper bounds) */
-        assert pcto <= pcfrom;
-        if ((pcfrom==pcto) && (from.padv_base > to.padv_base))
+        assert to_pawns <= from_pawns;
+        if ((from_pawns==to_pawns) && (from.padv_base > to.padv_base))
             return false;    //  pawns can't move backwards
 
         if ((from.padv_lower+padv_promo) > to.padv_upper)
@@ -969,7 +1039,7 @@ public class MatSignatureV2 implements MatSignature
         if ((from.padv_upper+from.pawnAdvanceRemaining()) < to.padv_lower)
             return false; //  target is too advanced     todo never reached?
 
-        /** check pawn home row */
+        /** check pawns on home row */
         assert from.color == to.color;
         int homerow = EngUtil.homeRow(from.color);
         long homefrom = pawnRow(from.sig,homerow);

@@ -77,16 +77,11 @@ Maintenance:
 
 [x] PosFilter + CId is slow.
     heuristic hack: search for GId BETWEEN. Inaccurate but fast.
+    [ ] long-time goal: have MySQL handle equi-joins better
 [x] update Matsig only after noisy moves
 [x] Easylink: replace Oracle's msvcp140.dll
 
 [x] Matsig V2
-    [x] cross-over .jose files
-    [x] test Ecofy (still uses MatSignatureV1 !)
-    [x] reversed color search. MatSignatureV2: mirror pawns
-    [x] store SearchRecord in Preferences
-    [?] click&drag in Search Panel
-    [x] paste FEN in Search Panel (w/out moving color?)
 
 [x] use concurrent insert for Archive Import
 [ ] Export ?
@@ -94,9 +89,22 @@ Maintenance:
 
 === Position Search Features
 
-[ ] search pawn structure
-    [ ] MatSigV2 comparison:
-[ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway. Or maybe not.
+[x] search pawn structure
+    [x] search pawn subset?
+        [x] idea: add "joker" pawns that have no specific place but add to pawncount(),
+        [x] unit test selectivity of early cutoffs with
+[x] button: reverse
+[x] legality check with pawns only
+
+[ ] search pawns on files:
+    * compare number of pawns by file
+    * (early cutoff sig: pull pawns back to homerow)
+    * late cutoff sig: push pawns forth to 7th row
+    * can be combined with subset search
+        (o) pawn search
+            [ ] subset
+            [ ] per file
+[ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
@@ -110,32 +118,8 @@ Maintenance:
 === Native Position Search
 
 [ ] (1) port MatSignature(V2) from Java to C++
-    not too hard because it involves mainly bit-twiddling
-    [x] chess::MatSignature class
-    [ ] unit tests
-    [ ] unit test with real games (pgn?)
-    [ ] get rid of unnecesary dependencies in chess::Board (unistring,etc)
-    [ ] sanitizer. we don't want to crash the server.
-    [ ] mysql user-defined-functions
-        new_matsig(fen)     -- allocates a MatSignature object
-        new_matsig(wsig,bsig)
-        free_matsig(handle)
-
-        reachable(handle, wsig,bsig)    -- replicates MatSignature::canReach()
-        reachable(wsig,bsig, handle)
-        ...
-        [ ] unit test udf functions
-
-[ ] (2) port replay logic from Java to C++
-    [x] rule engine: chess::Board already there
-    [ ] binary decoder
-        [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-            sort by PieceListEntry.index ?
-    [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-    [ ] mysql udf's
-        zobrist_key(fen)
-        find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
-        [ ] unit test udf functions
+    * branch experimental/native-matsig
+    * on hold b/c speedup is not overwhelming (nice but no reason to rush a release
 
 [ ] (3) read MyISAM files natively
     [ ] lift code from MySQL sources (myisamchk e.g.)
@@ -145,6 +129,17 @@ Maintenance:
     [ ] Java interface (JNI): java.sql.ResultSet
         [ ] thread-safe queue for results
         [ ] ResultSet.next() blocks/polls until new results arrive in queue
+
+[ ] (2) port replay logic from Java to C++
+    [x] rule engine: chess::Board already there
+    [ ] binary decoder
+        [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
+            sort by PieceListEntry.index, promotedFile ?
+    [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
+    [ ] mysql udf's
+        zobrist_key(fen)
+        find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
+        [ ] unit test udf functions
 
 [x] move chess++ to github
 [ ] build mariadb, or mysql5 from source

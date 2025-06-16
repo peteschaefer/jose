@@ -1,12 +1,21 @@
 package de.jose.pgn;
 
 import de.jose.chess.*;
+import de.jose.util.BitUtil;
 
 import static de.jose.chess.Constants.BLACK_KING;
 import static de.jose.chess.Constants.KING;
 
 public class PosSearchRecord
 {
+    public static final int POS_EXACT     = 0x01;     //  search for exact position
+    public static final int PAWNS_EXACT   = 0x02;     //  search for exact pawn structure
+    public static final int PAWNS_SUBSET  = 0x04;     //  search for pawn subset
+    public static final int POS_MASK      = 0x07;
+        //  material balance can be combined with PAWNS_*, but not with POS_EXACT
+    public static int MAT_BALANCE   = 0x08;
+
+    public int what=0;
     //  if!=0: search for exact position
     public HashKey key;
     //  if!=0: search for exact position with reversed colors
@@ -18,7 +27,9 @@ public class PosSearchRecord
 
     //  if key!=0: signature of search position
     //  if key==0: pawn structure to search for
-    public MatSignature sig, sigReversed;
+    public MatSignatureV2 sig, sigReversed;
+    //  for pawn structure search: signature with max. officers
+    protected MatSignatureV2 sigMax, sigMaxReversed;
 
     //  material balance
     public int min[] = null;
@@ -44,20 +55,6 @@ public class PosSearchRecord
 //    public boolean shortCastling,longCastling;
 
     public PosSearchRecord() { }
-/*
-    public PosSearchRecord(PosSearchRecord that) {
-        this.key = (that.key==null) ? null : (HashKey) that.key.clone();
-        this.keyReversed = (that.keyReversed==null) ? null : (HashKey) that.keyReversed.clone();
-        this.reversedColor = that.reversedColor;
-        this.variations = that.variations;
-        this.sig = (that.sig==null) ? null : (MatSignature) that.sig.clone();
-        this.min = (that.min==null) ? null : that.min.clone();
-        this.max = (that.max==null) ? null : that.max.clone();
-        this.bishopColors = that.bishopColors;
-        this.whiteBishop = that.whiteBishop;
-        this.blackBishop = that.blackBishop;
-    }
-*/
 
     //
     //      Setup Query Conditions
@@ -72,9 +69,11 @@ public class PosSearchRecord
     }
 
     public void clear() {
+        what = 0;
         key = null;
         keyReversed = null;
         sig = sigReversed = null;
+        sigMax = sigMaxReversed = null;
         reversedColor = false;
         variations = false;
         min = max = null;
@@ -86,7 +85,34 @@ public class PosSearchRecord
         return new PosSearchRecord(this);
     }
 */
-    public void setExact(Position pos) {
+public void setSearch(Position pos, int flags) {
+    switch (flags) {
+        case POS_EXACT:
+            setExactSearch(pos);
+            return;
+        case PAWNS_EXACT:
+            setPawnSearch(pos, true);
+            return;
+        case PAWNS_SUBSET:
+            setPawnSearch(pos, false);
+            return;
+    }
+    assert false;
+}
+
+    public void setExactSearch(Position pos)
+    {
+        what = (what&~POS_MASK) | POS_EXACT;
+        setHashKey(pos);
+
+        sigMax = sig = (MatSignatureV2) pos.updateMatSig().clone();
+        sigMaxReversed = sigReversed = (MatSignatureV2) sig.cloneReversed();
+        //  sig = sigMax used for both types of cut-offs
+        // note: can not search for exact position and mat balance at the same time
+        // min = max = null;
+    }
+
+    private void setHashKey(Position pos) {
         boolean wasHash = pos.hasOption(Position.INCREMENT_HASH);
         boolean wasRevHash = pos.hasOption(Position.INCREMENT_REVERSED_HASH);
         boolean wasIgnoreFlags = pos.hasOption(Position.IGNORE_FLAGS_ON_HASH);
@@ -105,36 +131,60 @@ public class PosSearchRecord
         pos.setOption(Position.INCREMENT_HASH,wasHash);
         pos.setOption(Position.INCREMENT_REVERSED_HASH,wasRevHash);
         pos.setOption(Position.IGNORE_FLAGS_ON_HASH, wasIgnoreFlags);
-
-        sig = (MatSignature) pos.updateMatSig().clone();
-        sigReversed = sig.cloneReversed();
-        // note: can not search for exact position and mat balance at the same time
-        // min = max = null;
     }
 
-    public void setPawnStructure(Position pos, boolean on) {
+    public void setPawnSearch(Position pos, boolean exact)
+    {
+        what = (what&~POS_MASK) | (exact ? PAWNS_EXACT : PAWNS_SUBSET);
         key = null;
         keyReversed = null;
-        if (on)
-            sig = (MatSignature) pos.updateMatSig().clone();
-        else
-            sig.clear();
-        sigReversed = sig.cloneReversed();
+
+        sig = (MatSignatureV2) pos.updateMatSig().clone();
+        sig.clearOfficers();    //  search w/o officers
+        sigReversed = (MatSignatureV2) sig.cloneReversed();
+
+        //  for early cutoffs: compare with all officers present
+        sigMax = (MatSignatureV2) sig.clone();
+        sigMax.addJokerPieces();
+        if (isPawnSubsetSearch()) {
+            //  pawn subset search. add Joker pawns for early cutoff
+            sigMax.addJokerPawns();
+        }
+        //  add Joker pieces for early cutoff
+        sigMaxReversed = (MatSignatureV2) sigMax.cloneReversed();
     }
 
     public void clearMatBalance() {
+        what = what & ~MAT_BALANCE;
         min = max = null;
     }
 
-    public void setMatBalance(int piece, int min_cnt, int max_cnt) {
+    public void setMatBalanceSearch(int piece, int min_cnt, int max_cnt) {
+        what |= MAT_BALANCE;
         if (min==null) min = new int[BLACK_KING];
         if (max==null) max = new int[BLACK_KING];
         min[piece] = min_cnt;
         max[piece] = max_cnt;
     }
 
-    public boolean exactPosition() { return key!=null; }
-    public boolean pawnStructure() { return key==null && sig!=null; }
+    public boolean isExactPositionSearch() {
+        return (what&POS_MASK)==POS_EXACT;
+    }
+    public boolean isExactPawnSearch() {
+        return (what&POS_MASK)==PAWNS_EXACT;
+    }
+    public boolean isPawnSubsetSearch() {
+        return (what&POS_MASK)==PAWNS_SUBSET;
+    }
+    public boolean isPawnSearch() {
+        return (what&(PAWNS_EXACT|PAWNS_SUBSET))!=0;
+    }
+    public boolean isPositionSearch() {
+        return (what&POS_MASK)!=0;
+    }
+    public boolean isMatBalanceSearch() {
+        return (what&MAT_BALANCE)==MAT_BALANCE;
+    }
 
     //
     //      Test Query Conditions
@@ -142,15 +192,16 @@ public class PosSearchRecord
 
     public void setPositionOptions(Position pos)
     {
-        pos.setOption(Position.INCREMENT_HASH, exactPosition());
+        pos.setOption(Position.INCREMENT_HASH, isExactPositionSearch());
         pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
-        pos.setOption(Position.INCREMENT_SIGNATURE,exactPosition()||pawnStructure());
-        pos.setOption(Position.IGNORE_FLAGS_ON_HASH, exactPosition());
+        pos.setOption(Position.IGNORE_FLAGS_ON_HASH, isExactPositionSearch());
+        pos.setOption(Position.INCREMENT_SIGNATURE,isPositionSearch());
+        //  mat-signature cutoffs are used for both, exact search and pawn searches
     }
 
     //  @return true if we have found a position
     public boolean matches(Position pos, boolean wasNoisy) {
-        if (exactPosition()) {
+        if (isExactPositionSearch()) {
             //  hash key is checked with every position
             assert(pos.hasOption(Position.INCREMENT_HASH));
 //            assert(pos.hasOption(Position.INCREMENT_REVERSED_HASH));
@@ -163,10 +214,13 @@ public class PosSearchRecord
         //  (i.e. after changes in pawn structure, mat count, ...)
         if (!wasNoisy) return false; // -> keep on searching
 
-        if (pawnStructure()) {
-// todo            return sig.isPawnSubsetOf(pos.getMatSig())
-//                    || reversedColor && sig.isReversedPawnSubsetOf(pos.getMatSig());
+        if (isPawnSearch()) {
+            //  compare pawn structure (exact, or subset)
+            if ( sig.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch()) ||
+               ( reversedColor && sigReversed.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch() )) )
+                return true;
         }
+
         //  todo compare mat balance
         //  todo compare bishop features
         return false;
@@ -174,18 +228,17 @@ public class PosSearchRecord
 
     //  early cut-off if query can not be reached from end
     public boolean earlyCutOff(MatSignature endSignature, boolean hasVariations) {
-        if (exactPosition()) {
+        if (isPositionSearch()) {
             if (!(variations && hasVariations)
-                    && !sig.canReach(endSignature)
-                    && (!reversedColor || !sigReversed.canReach(endSignature)))
+                    && !sigMax.canReach(endSignature)
+                    && (!reversedColor || !sigMaxReversed.canReach(endSignature)))
                 return true;
+            //  note: sigMax is used for early cutoffs. For exact searches it is identical to 'sig'.
+            //  For pawn searches it has "jokers" that allow to compare signatures regardless of officers
             //  except if we could find it in variations
             //  this.variations && Game.Attributes & HAS_VARIATIONS
         }
-        if (pawnStructure()) {
-            //  ignore officers during canReach()
-            //  todo add all(?) officers to sig. Or have an additional flag for canReach()
-        }
+
         //  todo does it make sense to test mat balance against endSignature?
         //  officers can vanish an re-appear through promotion?
         return false;
@@ -197,14 +250,8 @@ public class PosSearchRecord
         //  matsig is only checked in noisy positions
         if (!wasNoisy) return false;
         MatSignature matSig = pos.getMatSig();
-        if (exactPosition()) {
+        if (isPositionSearch()) {
             if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReach(sigReversed)))
-                return true;
-        }
-        if (pawnStructure()) {
-            //  ignore officers during canReach()
-            //  todo remove all officers from sig?
-            if (!matSig.canReach(sig) && !(reversedColor && matSig.canReach(sigReversed)))
                 return true;
         }
         //  todo check mat balance

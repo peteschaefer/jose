@@ -1,0 +1,104 @@
+Material Signature
+==================
+
+A Material Signature (short: MatSig) stores irreversible position features in a compact form:
+- pawn structure
+- number of pieces
+(- castling status)
+
+These are the same things that are used by the 50-moves rule and they change only after noisy moves.
+For each color (white and black) the MatSig is stored in 64 bits:
+
+Pawn Structure
+--------------
+bits        0..47  hold the pawn structure from 2nd to 7th rank, one byte for each rank
+    bits    0..7   pawns on 2nd rank
+    bits    8..15  pawns on 3rd rank
+    ...
+    bits    40..17 pawns on 7th rank
+
+Piece count
+-----------
+bits        48..57  piece counts. 2 bits for each piece, where the value 3 means >= 3 pieces.
+                    (note that there are very few positions with 3 equal pieces)
+
+    bits    48..49  number of knights
+    bits    50..51  number of light squared bishops
+    bits    52..53  number of dark squared bishops
+    bits    54..55  number of rooks
+    bits    56..57  number of queens
+
+Pawn Moves
+----------
+bits        58..63  holds the number of pawn moves (or pawn advances). Double moves are counted as 2.
+            0 = number of pawns moves is not known; lower and upper bounds can be deduced from the pawn structure
+            1..47 = number of pawn moves +1, if it is known exactly
+            48 = number of pawn moves is 47, or 48 (rare case)
+
+(Castling Status)
+is currently not stored, since we have run out of bits :)
+
+Computation
+===========
+* can be computed from any Position
+* can be computed incremmentally, if the option is set
+* MatSig updates happen only at "noisy" moves (pawn moves, captures, castling),
+    exactly those moves that reset the 50-moves-rule counter
+* if the game history is known, the number of pawns can be computed precisely;
+    otherwise lower and upper bounds will be deduced
+
+* MatSignatureV2.canReach(A,B) tells us whether B *can be reached* by legal moves from A.
+    - canReach() errs on the positive side,
+        i.e. if canReach(A,B)==true, B still be unreachable by legal moves
+        but we assume that these cases are rare
+    - canReach(A,B)==false is definite
+* canReach(A,B) establishes are relation that is
+    [reflexive]     canReach(A,A)
+    [transitive]    canReach(A,B) and canReach(B,C) implies canReach(A,C)
+  but neither symmetric: canReach(A,B) does not imply canReach(B,A)
+  nor anti-symmetric: canReach(A,B) and canReach(B,A) does not imply A=B
+* the Initial Position is a kind of "neutral" element,
+    canReach(I,A)==true for each position.
+* thus, canReach() is not an equivalence relation,
+    but we assert its usefulness, below
+
+Storage
+=======
+* For each game, the signature of the final position is stored in the database,
+    columns MoreGame.WhiteSignature and MoreGame.BlackSignature.
+* with exact pawn moves count
+
+Purpose
+=======
+The main purpose of the Material Signatures is to be used as a heuristic during
+exhaustive position search (@see position-search.txt).
+
+Example: let's say we are searching for a position with 3 white pawns
+- if the MatSig stored in the DB tells us that the final position has 4 white pawns, we can skip the game completely
+    (b/c the queried position can never be reached).
+    Let's call that condition an *early cut-off*
+- if, while replaying the game, the number of white pawns drops to 2, we can skip the rest of the game
+    (b/c the queries position can not be reached in the rest of the game.
+    Let's call that condition a *in-game cut-off*
+
+The canReach() relation performs more sophisticated tests (counting the number of pieces, promotions, tracking pawn captures),
+but this gives you the idea.
+
+The effectiveness of cut-offs hinges on the query position.
+* if we search for a position that is close to the initial position (i.e. an opening position),
+    we expect few early-cutoffs, but many in-game cutoffs
+* if we search for an endgame position (whith few pawns and pieces),
+    we can expeact many early-cutoffs
+In any case, cut-offs are effective.
+
+E.g. Lumbra's Gigabase holds more than 1.3 billion positions. Cut-offs by MatSignature can reduce the search effort
+by more than 90% !
+
+Searching
+=========
+Secondly, MatSigs can be used for finding position features. E.g. if we search pawn structures, we can do this by examining
+bits [0..47] of the Signature. We need not access the Position data structure directly. Thus speeding up exhaustive searches.
+
+
+
+
