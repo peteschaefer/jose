@@ -90,11 +90,15 @@ Maintenance:
 === Position Search Features
 
 [x] search pawn structure
-    [x] search pawn subset?
-        [x] idea: add "joker" pawns that have no specific place but add to pawncount(),
-        [x] unit test selectivity of early cutoffs with
-[x] button: reverse
-[x] legality check with pawns only
+[ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[ ] cache MoreGame in memory
+    [ ] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
+    [x] read-through ResultSet cache
+        works great!
+        caches 16M rows ~= 3GB
+        speedup from 11 to 4.2 s !
+    [ ] disable if not enough memory available
+    [ ] integrate with (Pos)SearchRecord, ParamStatement
 
 [ ] search pawns on files:
     * compare number of pawns by file

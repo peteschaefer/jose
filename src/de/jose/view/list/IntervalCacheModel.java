@@ -186,7 +186,7 @@ abstract public class IntervalCacheModel
         /** database connection for synchroneous queries */
         protected JoConnection synch_conn;
         /** current result set  */
-        protected ResultSet res;
+        protected ResultSetAdapter res;
 	    protected StatementExecutor executor;
 		protected IntConsumer acceptCallback = (int GId) -> addResult(GId);
 
@@ -394,7 +394,7 @@ abstract public class IntervalCacheModel
 
 	                case EXECUTED:
                         if (pstm==null) pstm = executor.preparedStatement;
-	                    res = (pstm==null) ? null : pstm.getResultSet();
+	                    res = (pstm==null) ? null : new ResultSetAdapter(pstm.getResultSet());
 		                if (res==null) {
 			                status = HALTED;
 //			                System.out.println("HALTED (9)");
