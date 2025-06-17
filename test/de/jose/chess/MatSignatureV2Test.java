@@ -4,15 +4,15 @@ import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PosSearchRecord;
+import de.jose.pgn.PositionFilter;
+import de.jose.pgn.SearchRecord;
 import de.jose.util.BitUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
@@ -117,8 +117,8 @@ class MatSignatureV2Test {
     void setUp() throws Exception {
     }
 
-    @AfterEach
-    void tearDown() throws Exception {
+    @AfterAll
+    static void tearDown() throws Exception {
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(false);
         if (adapter != null) {
             JoConnection conn = JoConnection.get();
@@ -657,6 +657,68 @@ class MatSignatureV2Test {
         JoConnection conn = JoConnection.get();
         int rows = Crossover1011.updateMatSignatureV2(conn,"jose.MoreGame",-1/*2_000_000*/);
         System.out.println("["+rows+" rows updated]");
+    }
+
+    @Test
+    void testMoreGameCache() throws Exception
+    {
+        withDBServer();
+
+        String fen = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        MoreGameCache cache = new MoreGameCache();
+
+        //  (1) read-through query
+        System.out.println("\n\n[read through]");
+        moreGameScan(fen, cache);
+
+        System.out.println("\n\n[cached read]");
+        moreGameScan(fen, cache);
+    }
+
+    private void moreGameScan(String fen, MoreGameCache cache) throws SQLException
+    {
+        long time = System.currentTimeMillis();
+        long memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+        PosSearchRecord query = new PosSearchRecord();
+        pos.setup(fen);
+        query.setExactSearch(pos);
+        PositionFilter posFilter = new PositionFilter(query);
+        boolean readThrough = !cache.hasFullTable();
+
+        ParamStatement paramstm = new ParamStatement();
+        paramstm.from.append("MoreGame");
+        paramstm.select.append("MoreGame.GId");
+        if (readThrough)
+            paramstm.select.append("," +
+                                    " MoreGame.FEN, MoreGame.Bin," +
+                                    " MoreGame.WhiteSignature, MoreGame.BlackSignature," +
+                                    " 0 AS HasVariations");
+        paramstm.limit.append(Integer.MAX_VALUE/2);
+
+        JoConnection connection = JoConnection.get();
+        JoPreparedStatement prepstm = paramstm.toPreparedStatement(connection);
+        prepstm.setFetchSize(Integer.MIN_VALUE);	//	hint to Connector/J driver: fetch row by row
+        prepstm.execute();
+        System.out.println("[executed: "+ (System.currentTimeMillis()-time) /1e3+" s]");
+
+        ResultSet res0 = prepstm.getResultSet();
+        IntConsumer asyncCallback = (int GId) -> System.out.println("[found a result "+GId+"]");
+        ResultSetAdapter resa;
+        if (readThrough)
+            resa = cache.beginFullTableScan(res0);
+        else
+            resa = cache.beginCachedScan(res0);
+        while(resa.next()) {
+            posFilter.accept(resa,asyncCallback);   //  schedules parallel jobs; calls back
+        }
+        resa.close();
+        PositionFilter.executorPool.finish();
+
+        System.out.println("[scanned: "+ (System.currentTimeMillis()-time) /1e3+" s]");
+        System.out.println("[cache "+ cache.size()+" rows]");
+        memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() - memory;
+        System.out.println("[memory "+ memory /1e6+" MB]");
     }
 
     private static String print(String fen, MatSignatureV2 sig) {
