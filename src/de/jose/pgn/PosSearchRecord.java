@@ -27,9 +27,10 @@ public class PosSearchRecord
 
     //  if key!=0: signature of search position
     //  if key==0: pawn structure to search for
-    public MatSignatureV2 sig, sigReversed;
+    public MatSignatureV2 sigEarly, sigEarlyReversed;
+    public MatSignatureV2 sigMatch, sigMatchReversed;
     //  for pawn structure search: signature with max. officers
-    protected MatSignatureV2 sigMax, sigMaxReversed;
+    protected MatSignatureV2 sigLate, sigLateReversed;
 
     //  material balance
     public int min[] = null;
@@ -61,7 +62,7 @@ public class PosSearchRecord
     //
 
     public boolean isEmpty() {
-        return key == null && sig == null
+        return key == null && sigMatch == null
                 && min == null && max == null
                 && bishopColors == null
                 && whiteBishop == null
@@ -72,8 +73,9 @@ public class PosSearchRecord
         what = 0;
         key = null;
         keyReversed = null;
-        sig = sigReversed = null;
-        sigMax = sigMaxReversed = null;
+        sigEarly = sigEarlyReversed = null;
+        sigLate = sigLateReversed = null;
+        sigMatch = sigMatchReversed = null;
         reversedColor = false;
         variations = false;
         min = max = null;
@@ -105,8 +107,8 @@ public void setSearch(Position pos, int flags) {
         what = (what&~POS_MASK) | POS_EXACT;
         setHashKey(pos);
 
-        sigMax = sig = (MatSignatureV2) pos.updateMatSig().clone();
-        sigMaxReversed = sigReversed = (MatSignatureV2) sig.cloneReversed();
+        sigEarly = sigMatch = sigLate = (MatSignatureV2) pos.updateMatSig().clone();
+        sigEarlyReversed = sigMatchReversed = sigLateReversed = (MatSignatureV2) sigMatch.cloneReversed();
         //  sig = sigMax used for both types of cut-offs
         // note: can not search for exact position and mat balance at the same time
         // min = max = null;
@@ -139,19 +141,19 @@ public void setSearch(Position pos, int flags) {
         key = null;
         keyReversed = null;
 
-        sig = (MatSignatureV2) pos.updateMatSig().clone();
-        sig.clearOfficers();    //  search w/o officers
-        sigReversed = (MatSignatureV2) sig.cloneReversed();
+        sigMatch = sigLate = (MatSignatureV2) pos.updateMatSig().clone();
+        sigMatch.clearOfficers();    //  search w/o officers
+        sigMatchReversed = sigLateReversed = (MatSignatureV2) sigMatch.cloneReversed();
 
         //  for early cutoffs: compare with all officers present
-        sigMax = (MatSignatureV2) sig.clone();
-        sigMax.addJokerPieces();
+        sigEarly = (MatSignatureV2) sigMatch.clone();
+        sigEarly.addJokerPieces();
         if (isPawnSubsetSearch()) {
             //  pawn subset search. add Joker pawns for early cutoff
-            sigMax.addJokerPawns();
+            sigEarly.addJokerPawns();
         }
         //  add Joker pieces for early cutoff
-        sigMaxReversed = (MatSignatureV2) sigMax.cloneReversed();
+        sigEarlyReversed = (MatSignatureV2) sigEarly.cloneReversed();
     }
 
     public void clearMatBalance() {
@@ -216,8 +218,8 @@ public void setSearch(Position pos, int flags) {
 
         if (isPawnSearch()) {
             //  compare pawn structure (exact, or subset)
-            if ( sig.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch()) ||
-               ( reversedColor && sigReversed.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch() )) )
+            if ( sigMatch.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch()) ||
+               ( reversedColor && sigMatchReversed.pawnsEqual((MatSignatureV2)pos.getMatSig(),isExactPawnSearch() )) )
                 return true;
         }
 
@@ -230,8 +232,8 @@ public void setSearch(Position pos, int flags) {
     public boolean earlyCutOff(MatSignature endSignature, boolean hasVariations) {
         if (isPositionSearch()) {
             if (!(variations && hasVariations)
-                    && !sigMax.canReach(endSignature)
-                    && (!reversedColor || !sigMaxReversed.canReach(endSignature)))
+                    && !sigEarly.canReach(endSignature)
+                    && (!reversedColor || !sigEarlyReversed.canReach(endSignature)))
                 return true;
             //  note: sigMax is used for early cutoffs. For exact searches it is identical to 'sig'.
             //  For pawn searches it has "jokers" that allow to compare signatures regardless of officers
@@ -251,7 +253,7 @@ public void setSearch(Position pos, int flags) {
         if (!wasNoisy) return false;
         MatSignature matSig = pos.getMatSig();
         if (isPositionSearch()) {
-            if (!matSig.canReach(sig) && (!reversedColor || !matSig.canReach(sigReversed)))
+            if (!matSig.canReach(sigLate) && (!reversedColor || !matSig.canReach(sigLateReversed)))
                 return true;
         }
         //  todo check mat balance
