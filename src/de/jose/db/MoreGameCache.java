@@ -49,7 +49,7 @@ public class MoreGameCache
         try {
             conn = JoConnection.get();
             JoPreparedStatement pstm = sql.execute(conn);
-            ResultSet scan = beginFullTableScan(pstm.getResultSet());
+            ResultSet scan = beginReadThroughScan(pstm.getResultSet(),null);
             while(scan.next())
                 /* copies data into cache */ ;
             scan.close();
@@ -66,9 +66,14 @@ public class MoreGameCache
         pstm.select.append("MoreGame.FEN, MoreGame.Bin, MoreGame.WhiteSignature, MoreGame.BlackSignature");
     }
 
-    public ResultSet beginFullTableScan(ResultSet delegate) {
-        collections.clear();
-        collections.add(0);  //  indicates a full-table scan
+    public ResultSet beginReadThroughScan(ResultSet delegate, IntHashSet coll) {
+        if (coll==null || coll.size()==0) {
+            collections.clear();
+            collections.add(0);
+        }
+        else if (!hasFullTable()) {
+            collections.addAll(collections);  //  indicates a full-table scan
+        }
         return new ReadThroughResultSet(delegate);
     }
 
@@ -84,11 +89,6 @@ public class MoreGameCache
         pstm.addIntParameter(gameRange[1]);
     }
 
-    public ResultSet beginCollectionScan(ResultSet delegate, IntHashSet collections) {
-        collections.addAll(collections);  //  indicates a full-table scan
-        return new ReadThroughResultSet(delegate);
-    }
-
     public ResultSetAdapter beginCachedScan(ResultSet delegate) {
         return new CachedResultSet(delegate);
     }
@@ -97,8 +97,11 @@ public class MoreGameCache
         return collections.contains(0);
     }
 
-    public boolean hasCollection(int CId) {
-        return collections.contains(CId);
+    public boolean hasCollections(IntHashSet coll) {
+        if (coll==null || coll.size()==0)
+            return hasFullTable();
+        else
+            return collections.containsAll(coll);
     }
 
     /**

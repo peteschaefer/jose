@@ -15,10 +15,7 @@ package de.jose.pgn;
 import de.jose.Util;
 import de.jose.Version;
 import de.jose.Application;
-import de.jose.db.DBAdapter;
-import de.jose.db.JoConnection;
-import de.jose.db.JoPreparedStatement;
-import de.jose.db.ParamStatement;
+import de.jose.db.*;
 import de.jose.util.Metaphone;
 import de.jose.util.StringUtil;
 import de.jose.util.map.IntHashSet;
@@ -469,15 +466,16 @@ public class SearchRecord implements Cloneable
 
 		makeCollectionFilter(sql,"Game.CId",this.collections);
 
+		MoreGameCache cache = JoConnection.getMoreGameCache();
 		if (!pos.isEmpty()) {
 			joins |= JOIN_MORE;
-			if ((joins & JOIN_GAME) != 0
-					&& !collections.isEmpty()
-					&& !hasInfoFilter() && !hasCommentFilter())
+			if (!hasInfoFilter() && !hasCommentFilter())
 			{
-				//	todo if CId is in moreGameCache: find, retrieve GID only
-				//	todo if can be cached: retrieve MoreGame, store in cache (read-through)
-				//	todo otherwise: ordinary
+				joins &= ~JOIN_GAME;
+				if (cache.hasCollections(collections))
+					resultSource = ResultMode.CACHED;
+				else
+					resultSource = ResultMode.READ_THROUGH;
 			/*	Problem:
 				posFilter without CId condition performs a full-table scan on MoreGame. not bad at all.
 				with Game.CId conditions we get an extra join on Game, which MySQL can't handle efficiently.
@@ -492,16 +490,18 @@ public class SearchRecord implements Cloneable
 				We decide that this sloppy behavior is better than slow queries .. well ;)
 			 */
 				//	join Game,MoreGame
-				int result1 = estimateCollectionSizes(this.collections);
-				int result2 = estimateCollectionSizes(null);
-				//	and Collection is large (compared to the whole db)
-				if (result1 >= result2 * 0.5) {
-					int[] minmax = findMinMaxGameIds(this.collections);
-					//driving = JOIN_MORE;
-					//joins |= JOIN_STRAIGHT;
-					joins &= ~JOIN_GAME;
-					sql.where.setLength(0);    // undo join Game; todo find a nicer solution
-					sql.where.append("MoreGame.GId BETWEEN " + minmax[0] + " AND " + minmax[1]);
+				if (collections!=null && !collections.isEmpty()) {
+					int result1 = estimateCollectionSizes(this.collections);
+					int result2 = estimateCollectionSizes(null);
+					//	and Collection is large (compared to the whole db)
+					if (result1 >= result2 * 0.5) {
+						int[] minmax = findMinMaxGameIds(this.collections);
+						//driving = JOIN_MORE;
+						//joins |= JOIN_STRAIGHT;
+						joins &= ~JOIN_GAME;
+						sql.where.setLength(0);    // undo join Game; todo find a nicer solution
+						sql.where.append("MoreGame.GId BETWEEN " + minmax[0] + " AND " + minmax[1]);
+					}
 				}
 			}
 		}
@@ -522,16 +522,24 @@ public class SearchRecord implements Cloneable
 
 		if (!pos.isEmpty()) {
 			//	Position Search
-			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
-					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
-			//	Has Variations can be queried from Game.Attribute
-			//	or from MoreGame.Bin (more expensive but needs no extra join)
-			if (!pos.variations)
-				sql.select.append(", 0 AS HasVariations");
-			else if ((joins & JOIN_GAME) != 0)
-				sql.select.append(", (Game.Attributes & 1) AS HasVariations");
-			else
-				sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
+			switch(resultSource) {
+				case RESULT_SET:
+				case READ_THROUGH:
+					sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
+							" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+					//	Has Variations can be queried from Game.Attribute
+					//	or from MoreGame.Bin (more expensive but needs no extra join)
+					if (!pos.variations)
+						sql.select.append(", 0 AS HasVariations");
+					else if ((joins & JOIN_GAME) != 0)
+						sql.select.append(", (Game.Attributes & 1) AS HasVariations");
+					else
+						sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
+					break;
+				case CACHED:
+					//	GId only
+					break;
+			}
 		}
 
 		return sql;

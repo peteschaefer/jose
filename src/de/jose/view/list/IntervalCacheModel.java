@@ -401,9 +401,8 @@ abstract public class IntervalCacheModel
 							res = pstm.getResultSet();
 							switch(pkQuery.resultSource) {
 								//	read-through cache
-								//	todo dinstinguish full-table and CId
 								case READ_THROUGH:
-									res = JoConnection.getMoreGameCache().beginFullTableScan(res);
+									res = JoConnection.getMoreGameCache().beginReadThroughScan(res,pkQuery.collections);
 									break;
 								case CACHED:
 									res = JoConnection.getMoreGameCache().beginCachedScan(res);
@@ -578,14 +577,14 @@ abstract public class IntervalCacheModel
         reader.start(); //  will go to sleep immediately and wait for reset()
     }
 
-    public void reset(ParamStatement pkStm, SearchRecord query,
+    public void reset(SearchRecord query,
                       int size, boolean accurate) throws Exception
     {
 		clear(true);
 
 		pkStore.ensureCapacity(size);
-		pkStatement = pkStm;
 		pkQuery = query;
+		pkStatement = query.makeIdStatement();
 
 		posFilter.setSearchParams(query.pos);
 		parallelPosSearch = true;

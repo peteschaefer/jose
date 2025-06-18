@@ -93,17 +93,18 @@ Maintenance:
 [ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
 [ ] cache MoreGame in memory
     [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
-    [ ] -Xmx64G
+    [x] -Xmx64G
     [x] read-through ResultSet cache
         works great!
         caches 16M rows ~= 3GB
         speedup from 11 to 4.2 s !
     [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
     [x] HANDLER is useless
-    [ ] try MariaDB shared memory
+    [-] try MariaDB shared memory
     [ ] or MyISAM file reader
     [ ] disable if not enough memory available?
-    [ ] integrate with (Pos)SearchRecord, ParamStatement
+    [x] integrate with (Pos)SearchRecord, ParamStatement
+        [ ] test with, w/out CId, Comments, Info, Variations, Reversed
 
 [ ] search pawns on files:
     * compare number of pawns by file
