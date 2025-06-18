@@ -97,7 +97,9 @@ Maintenance:
         works great!
         caches 16M rows ~= 3GB
         speedup from 11 to 4.2 s !
-    [ ] disable if not enough memory available
+    [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
+        -> need for direct file scan
+    [ ] disable if not enough memory available?
     [ ] integrate with (Pos)SearchRecord, ParamStatement
 
 [ ] search pawns on files:
