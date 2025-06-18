@@ -49,7 +49,7 @@ public class MoreGameCache
         try {
             conn = JoConnection.get();
             JoPreparedStatement pstm = sql.execute(conn);
-            ResultSetAdapter scan = beginFullTableScan(pstm.getResultSet());
+            ResultSet scan = beginFullTableScan(pstm.getResultSet());
             while(scan.next())
                 /* copies data into cache */ ;
             scan.close();
@@ -66,7 +66,7 @@ public class MoreGameCache
         pstm.select.append("MoreGame.FEN, MoreGame.Bin, MoreGame.WhiteSignature, MoreGame.BlackSignature");
     }
 
-    public ResultSetAdapter beginFullTableScan(ResultSet delegate) {
+    public ResultSet beginFullTableScan(ResultSet delegate) {
         collections.clear();
         collections.add(0);  //  indicates a full-table scan
         return new ReadThroughResultSet(delegate);
@@ -84,7 +84,7 @@ public class MoreGameCache
         pstm.addIntParameter(gameRange[1]);
     }
 
-    public ResultSetAdapter beginCollectionScan(ResultSet delegate, IntHashSet collections) {
+    public ResultSet beginCollectionScan(ResultSet delegate, IntHashSet collections) {
         collections.addAll(collections);  //  indicates a full-table scan
         return new ReadThroughResultSet(delegate);
     }
@@ -135,7 +135,7 @@ public class MoreGameCache
                 nextRow = null;
                 return false;
             }
-            int GId = delegate.getInt(1);
+            int GId = super.getInt(1);
             nextRow = (Row) rows.get(GId);
             return true;
         }
