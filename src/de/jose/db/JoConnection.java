@@ -56,6 +56,9 @@ public class JoConnection
 	/**	Map of sequences (maps String to Util.IntHandle)	 */
 	protected static HashMap 		theSequences;
 
+	/** cache for MoreGame */
+	protected static MoreGameCache	theMoreGameCache;
+
     /** Prepared Statements must be private to a thread */
     static class PStatementHashKey
     {
@@ -182,6 +185,12 @@ public class JoConnection
 	}
 
 	public static ConnectionPool getPool()                 { return theConnections; }
+
+	public static MoreGameCache getMoreGameCache() {
+		if (theMoreGameCache==null)
+			theMoreGameCache = new MoreGameCache();
+		return theMoreGameCache;
+	}
 
 	/**
 	 * release the connection

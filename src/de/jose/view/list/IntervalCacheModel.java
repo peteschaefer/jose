@@ -17,6 +17,7 @@ import de.jose.Util;
 import de.jose.db.*;
 import de.jose.pgn.PosSearchRecord;
 import de.jose.pgn.PositionFilter;
+import de.jose.pgn.SearchRecord;
 import de.jose.store.IntBuffer;
 import de.jose.util.StringUtil;
 import de.jose.util.map.IntIntMap;
@@ -186,7 +187,7 @@ abstract public class IntervalCacheModel
         /** database connection for synchroneous queries */
         protected JoConnection synch_conn;
         /** current result set  */
-        protected ResultSetAdapter res;
+        protected ResultSet res;
 	    protected StatementExecutor executor;
 		protected IntConsumer acceptCallback = (int GId) -> addResult(GId);
 
@@ -394,7 +395,22 @@ abstract public class IntervalCacheModel
 
 	                case EXECUTED:
                         if (pstm==null) pstm = executor.preparedStatement;
-	                    res = (pstm==null) ? null : new ResultSetAdapter(pstm.getResultSet());
+						if (pstm==null) res = null;
+						else {
+							//	normal query & result
+							res = pstm.getResultSet();
+							switch(pkQuery.resultSource) {
+								//	read-through cache
+								//	todo dinstinguish full-table and CId
+								case READ_THROUGH:
+									res = JoConnection.getMoreGameCache().beginFullTableScan(res);
+									break;
+								case CACHED:
+									res = JoConnection.getMoreGameCache().beginCachedScan(res);
+									break;
+							}
+						}
+
 		                if (res==null) {
 			                status = HALTED;
 //			                System.out.println("HALTED (9)");
@@ -511,6 +527,7 @@ abstract public class IntervalCacheModel
 
     /** the statement used to retrieve primary keys */
     protected ParamStatement pkStatement;
+	protected SearchRecord pkQuery;
 	protected long startTime;
 	/** position search filter  */
 	protected PositionFilter posFilter = new PositionFilter();
@@ -561,15 +578,16 @@ abstract public class IntervalCacheModel
         reader.start(); //  will go to sleep immediately and wait for reset()
     }
 
-    public void reset(ParamStatement pkStm, PosSearchRecord posQuery,
+    public void reset(ParamStatement pkStm, SearchRecord query,
                       int size, boolean accurate) throws Exception
     {
 		clear(true);
 
 		pkStore.ensureCapacity(size);
 		pkStatement = pkStm;
+		pkQuery = query;
 
-		posFilter.setSearchParams(posQuery);
+		posFilter.setSearchParams(query.pos);
 		parallelPosSearch = true;
 
 		rowCount = size;

@@ -242,7 +242,7 @@ public class ListPanel
 	            if (scrollTop)
                     AWTUtil.scrollRectLater(ListPanel.this.getTable(), new Rectangle(0,0,0,0));
 
-                reset(search.makeIdStatement(), search.pos, rows, accurate);
+                reset(search.makeIdStatement(), search, rows, accurate);
 
                 fireTableDataChanged();
 

@@ -25,7 +25,6 @@ import de.jose.util.map.IntHashSet;
 import de.jose.view.ListPanel;
 import de.jose.view.input.JDateField;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -130,6 +129,16 @@ public class SearchRecord implements Cloneable
 	public int		options;
 	/** hash keys for positional search */
 	public PosSearchRecord pos = new PosSearchRecord();
+
+	public enum ResultMode {
+		//	ordinary result Set
+		RESULT_SET,
+		//	read-through MoreGameCache
+		READ_THROUGH,
+		//	cached from MoreGameCache
+		CACHED
+	};
+	public ResultMode resultSource = ResultMode.RESULT_SET;
 
 	/**	*/
 	private int		joins;
@@ -456,10 +465,46 @@ public class SearchRecord implements Cloneable
 
         joins = 0;  //  JOIN_STRAIGHT; not needed if tables are analyzed regularly !
 	    driving = 0;
+		resultSource = ResultMode.RESULT_SET;	//	except for positional searches
 
 		makeCollectionFilter(sql,"Game.CId",this.collections);
 
-		makePositionConditions(sql);
+		if (!pos.isEmpty()) {
+			joins |= JOIN_MORE;
+			if ((joins & JOIN_GAME) != 0
+					&& !collections.isEmpty()
+					&& !hasInfoFilter() && !hasCommentFilter())
+			{
+				//	todo if CId is in moreGameCache: find, retrieve GID only
+				//	todo if can be cached: retrieve MoreGame, store in cache (read-through)
+				//	todo otherwise: ordinary
+			/*	Problem:
+				posFilter without CId condition performs a full-table scan on MoreGame. not bad at all.
+				with Game.CId conditions we get an extra join on Game, which MySQL can't handle efficiently.
+				Doing a hash-join on Game, MoreGame would be a solution, but MySQL can't find it.
+				For a 16M database it's 12s (full-table-scan) vs. 40s (extra join).
+
+				Heuristic:
+				instead of searching CId, we search for min/max GId within a Collection.
+				works fine as long as the Collection contains consecutive Ids, which is usually
+				the case with large, imported Game collection.
+				May returns too many results, if Game IDs are not consecutive.
+				We decide that this sloppy behavior is better than slow queries .. well ;)
+			 */
+				//	join Game,MoreGame
+				int result1 = estimateCollectionSizes(this.collections);
+				int result2 = estimateCollectionSizes(null);
+				//	and Collection is large (compared to the whole db)
+				if (result1 >= result2 * 0.5) {
+					int[] minmax = findMinMaxGameIds(this.collections);
+					//driving = JOIN_MORE;
+					//joins |= JOIN_STRAIGHT;
+					joins &= ~JOIN_GAME;
+					sql.where.setLength(0);    // undo join Game; todo find a nicer solution
+					sql.where.append("MoreGame.GId BETWEEN " + minmax[0] + " AND " + minmax[1]);
+				}
+			}
+		}
 
 		makeSearchFilter(sql,reversedColors);
 
@@ -553,42 +598,6 @@ public class SearchRecord implements Cloneable
 			return null;
 		else
 			return new PositionFilter(pos);
-	}
-
-	public void makePositionConditions(ParamStatement sql) throws SQLException {
-		if (pos.isEmpty()) return;
-
-		joins |= JOIN_MORE;
-		if ((joins & JOIN_GAME) != 0
-				&& !collections.isEmpty()
-				&& !hasInfoFilter() && !hasCommentFilter())
-		{
-			/*	Problem:
-				posFilter without CId condition performs a full-table scan on MoreGame. not bad at all.
-				with Game.CId conditions we get an extra join on Game, which MySQL can't handle efficiently.
-				Doing a hash-join on Game, MoreGame would be a solution, but MySQL can't find it.
-				For a 16M database it's 12s (full-table-scan) vs. 40s (extra join).
-
-				Heuristic:
-				instead of searching CId, we search for min/max GId within a Collection.
-				works fine as long as the Collection contains consecutive Ids, which is usually
-				the case with large, imported Game collection.
-				May returns too many results, if Game IDs are not consecutive.
-				We decide that this sloppy behavior is better than slow queries .. well ;)
-			 */
-			//	join Game,MoreGame
-			int result1 = estimateCollectionSizes(this.collections);
-			int result2 = estimateCollectionSizes(null);
-			//	and Collection is large (compared to the whole db)
-			if (result1 >= result2*0.5) {
-				int[] minmax = findMinMaxGameIds(this.collections);
-				//driving = JOIN_MORE;
-				//joins |= JOIN_STRAIGHT;
-				joins &= ~JOIN_GAME;
-				sql.where.setLength(0);	// undo join Game; todo find a nicer solution
-				sql.where.append("MoreGame.GId BETWEEN "+minmax[0]+" AND "+minmax[1]);
-			}
-		}
 	}
 
 	public static String trimEcoLike(String eco, java.util.List errors)
