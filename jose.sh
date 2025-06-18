@@ -54,6 +54,6 @@ localJava="jre/bin/java"
 lp="-Djava.library.path=lib/Linux_amd64"
 
 # exports needed for Java3D integration:
-vmargs="--add-exports=java.desktop/sun.awt=ALL-UNNAMED $lp $scale_args" 
+vmargs="--add-exports=java.desktop/sun.awt=ALL-UNNAMED $lp $scale_args"  -Xmx64G
 
 $localJava $vmargs -jar jose.jar $*

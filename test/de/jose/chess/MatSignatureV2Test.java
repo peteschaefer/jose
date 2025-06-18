@@ -5,7 +5,6 @@ import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PosSearchRecord;
 import de.jose.pgn.PositionFilter;
-import de.jose.pgn.SearchRecord;
 import de.jose.util.BitUtil;
 import org.junit.jupiter.api.*;
 
@@ -670,9 +669,50 @@ class MatSignatureV2Test {
         //  (1) read-through query
         System.out.println("\n\n[read through]");
         moreGameScan(fen, cache);
-
+        //  (2) repeat with cached results
         System.out.println("\n\n[cached read]");
         moreGameScan(fen, cache);
+    }
+
+    @Test
+    void testMoreGameCacheWarmup() throws Exception
+    {
+        withDBServer();
+
+        MoreGameCache cache = new MoreGameCache();
+
+        //  full-table scan and store in cache
+        System.out.println("\n\n[warmup]");
+        long time = System.currentTimeMillis();
+        long memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+        assertTrue(!cache.hasFullTable());
+
+        StringBuffer paramstm = new StringBuffer();
+        paramstm.append("SELECT MoreGame.GId");
+        paramstm.append("," +
+                    " MoreGame.FEN, MoreGame.Bin," +
+                    " MoreGame.WhiteSignature, MoreGame.BlackSignature," +
+                    " 0 AS HasVariations");
+        paramstm.append(" FROM MoreGame LIMIT "+Integer.MAX_VALUE/2);
+
+        JoConnection connection = JoConnection.get();
+        JoPreparedStatement prepstm = connection.getPreparedStatement(paramstm.toString());
+        //  vvvv important vvvv
+        prepstm.setFetchSize(Integer.MIN_VALUE);	//	hint to Connector/J driver: fetch row by row
+        prepstm.execute();
+        System.out.println("[executed: "+ (System.currentTimeMillis()-time) /1e3+" s]");
+
+        ResultSet res0 = prepstm.getResultSet();
+        ResultSetAdapter resa = cache.beginFullTableScan(res0);
+        while(resa.next())
+            ;
+        resa.close();
+
+        System.out.println("[scanned: "+ (System.currentTimeMillis()-time) /1e3+" s]");
+        System.out.println("[cache "+ cache.size()+" rows]");
+        memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() - memory;
+        System.out.println("[memory "+ memory /1e6+" MB]");
     }
 
     private void moreGameScan(String fen, MoreGameCache cache) throws SQLException
@@ -686,18 +726,17 @@ class MatSignatureV2Test {
         PositionFilter posFilter = new PositionFilter(query);
         boolean readThrough = !cache.hasFullTable();
 
-        ParamStatement paramstm = new ParamStatement();
-        paramstm.from.append("MoreGame");
-        paramstm.select.append("MoreGame.GId");
+        StringBuffer paramstm = new StringBuffer();
+        paramstm.append("SELECT MoreGame.GId");
         if (readThrough)
-            paramstm.select.append("," +
-                                    " MoreGame.FEN, MoreGame.Bin," +
-                                    " MoreGame.WhiteSignature, MoreGame.BlackSignature," +
-                                    " 0 AS HasVariations");
-        paramstm.limit.append(Integer.MAX_VALUE/2);
+            paramstm.append("," +
+                    " MoreGame.FEN, MoreGame.Bin," +
+                    " MoreGame.WhiteSignature, MoreGame.BlackSignature," +
+                    " 0 AS HasVariations");
+        paramstm.append(" FROM MoreGame LIMIT "+Integer.MAX_VALUE/2);
 
         JoConnection connection = JoConnection.get();
-        JoPreparedStatement prepstm = paramstm.toPreparedStatement(connection);
+        JoPreparedStatement prepstm = connection.getPreparedStatement(paramstm.toString());
         prepstm.setFetchSize(Integer.MIN_VALUE);	//	hint to Connector/J driver: fetch row by row
         prepstm.execute();
         System.out.println("[executed: "+ (System.currentTimeMillis()-time) /1e3+" s]");
