@@ -101,8 +101,7 @@ Maintenance:
     [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
     [x] HANDLER is useless
     [-] try MariaDB shared memory
-    [ ] or MyISAM file reader
-    [ ] disable if not enough memory available?
+    [ ] disable if not enough memory available
     [x] integrate with (Pos)SearchRecord, ParamStatement
         [ ] test with, w/out CId, Comments, Info, Variations, Reversed
 

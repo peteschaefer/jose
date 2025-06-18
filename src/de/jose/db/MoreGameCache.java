@@ -2,9 +2,12 @@ package de.jose.db;
 
 import de.jose.util.map.IntHashMap;
 import de.jose.util.map.IntHashSet;
+import de.jose.view.style.StyleRun;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static java.lang.Runtime.getRuntime;
 
 public class MoreGameCache
 {
@@ -98,10 +101,15 @@ public class MoreGameCache
     }
 
     public boolean hasCollections(IntHashSet coll) {
-        if (coll==null || coll.size()==0)
-            return hasFullTable();
-        else
-            return collections.containsAll(coll);
+        return hasFullTable()
+                || coll!=null && coll.size()>0 && collections.containsAll(coll);
+    }
+
+    public boolean memoryAvailable(int rows) {
+        //  16M rows ~= 4GB
+        double estimatedMemory = rows * 4e9 / 16e6;
+        double availMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory();
+        return estimatedMemory < availMemory;
     }
 
     /**

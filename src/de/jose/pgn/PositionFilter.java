@@ -167,7 +167,7 @@ public class PositionFilter
 	}
 
 
-	public Result accept(ResultSetAdapter res, IntConsumer asyncCallback) throws SQLException
+	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
 		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
 		boolean hasVariations = res.getInt(6) > 0;

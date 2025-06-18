@@ -472,9 +472,11 @@ public class SearchRecord implements Cloneable
 			if (!hasInfoFilter() && !hasCommentFilter())
 			{
 				joins &= ~JOIN_GAME;
+				int result1 = estimateCollectionSizes(collections);
+
 				if (cache.hasCollections(collections))
 					resultSource = ResultMode.CACHED;
-				else
+				else if (cache.memoryAvailable(result1))
 					resultSource = ResultMode.READ_THROUGH;
 			/*	Problem:
 				posFilter without CId condition performs a full-table scan on MoreGame. not bad at all.
@@ -490,14 +492,13 @@ public class SearchRecord implements Cloneable
 				We decide that this sloppy behavior is better than slow queries .. well ;)
 			 */
 				//	join Game,MoreGame
-				if (collections!=null && !collections.isEmpty()) {
-					int result1 = estimateCollectionSizes(this.collections);
+				if (collections!=null && !collections.isEmpty()
+						&& resultSource!=ResultMode.CACHED)
+				{
 					int result2 = estimateCollectionSizes(null);
 					//	and Collection is large (compared to the whole db)
 					if (result1 >= result2 * 0.5) {
 						int[] minmax = findMinMaxGameIds(this.collections);
-						//driving = JOIN_MORE;
-						//joins |= JOIN_STRAIGHT;
 						joins &= ~JOIN_GAME;
 						sql.where.setLength(0);    // undo join Game; todo find a nicer solution
 						sql.where.append("MoreGame.GId BETWEEN " + minmax[0] + " AND " + minmax[1]);

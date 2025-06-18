@@ -743,9 +743,9 @@ class MatSignatureV2Test {
 
         ResultSet res0 = prepstm.getResultSet();
         IntConsumer asyncCallback = (int GId) -> System.out.println("[found a result "+GId+"]");
-        ResultSetAdapter resa;
+        ResultSet resa;
         if (readThrough)
-            resa = cache.beginFullTableScan(res0);
+            resa = cache.beginReadThroughScan(res0,null);
         else
             resa = cache.beginCachedScan(res0);
         while(resa.next()) {
