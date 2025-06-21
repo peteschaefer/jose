@@ -174,6 +174,7 @@ public class Game
 
     /** this attribute indicates that there is a position index for this game
      *  (see MoreGame.PosMain and MoreGame.PosVar)
+	 * @deprecated
      * */
     public static final int POS_INDEX           = 0x0100;
 
