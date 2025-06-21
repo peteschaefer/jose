@@ -91,7 +91,7 @@ Maintenance:
 
 [x] search pawn structure
 [ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
-[ ] cache MoreGame in memory
+[?] cache MoreGame in memory
     [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
     [x] -Xmx64G
     [x] read-through ResultSet cache
@@ -129,11 +129,15 @@ Maintenance:
 [ ] (1) port MatSignature(V2) from Java to C++
     * branch experimental/native-matsig
     * on hold b/c speedup is not overwhelming (nice but no reason to rush a release
+    [ ] jokers
 
 [ ] (3) read MyISAM files natively
-    [ ] lift code from MySQL sources (myisamchk e.g.)
+    [ ] lift code from MariaDB sources (mi_test)
     [ ] full-table scan
     [ ] index-range scan
+    [ ] equi-join Game->MoreGame
+    [ ] in-memory index:
+        CId, WhiteSig,BlackSig,Attributes, <pointer to MoreGame row>
     [ ] in parallel (OpenMP or TBB?)
     [ ] Java interface (JNI): java.sql.ResultSet
         [ ] thread-safe queue for results
@@ -145,13 +149,13 @@ Maintenance:
         [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
             sort by PieceListEntry.index, promotedFile ?
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-    [ ] mysql udf's
+    [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
         [ ] unit test udf functions
 
 [x] move chess++ to github
-[ ] build mariadb, or mysql5 from source
+[x] build mariadb, or mysql5 from source
 
 ==== Interesting New Features
 
