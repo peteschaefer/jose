@@ -138,6 +138,8 @@ Maintenance:
     [ ] equi-join Game->MoreGame
     [ ] in-memory index:
         CId, WhiteSig,BlackSig,Attributes, <pointer to MoreGame row>
+    [ ] pull out CId -> [row..row[
+    [ ] Interval, IntervalSet
     [ ] in parallel (OpenMP or TBB?)
     [ ] Java interface (JNI): java.sql.ResultSet
         [ ] thread-safe queue for results
@@ -226,9 +228,15 @@ Maintenance:
 
 ==== Project
 
+[ ] Version 1.6
+    [ ] MariaDB from sources
+        [ ] with w/out grant tables
+    [ ] jose-cpp native position search (share server.dll)
+        [ ] no udf's (yet)
+
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode
-[ ] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
+[x] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
              causes easylink.dll to crash when called from jre/bin/java.exe.
              *Fortunately* not from jose.exe b/c it pulls the system-supplied msvcp140.dll.
 
