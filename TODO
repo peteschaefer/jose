@@ -137,9 +137,10 @@ Maintenance:
         [-] link dynamic (not on Linux)
     [x] full-table scan
     [ ] index-range scan
-    [ ] equi-join Game->MoreGame
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
+    [ ] equi-join Game->MoreGame
+        no need for a hash table if both indexes are sorted identically
     [ ] pull out CId -> [row..row[
         [ ] Interval, IntervalSet
     [ ] union { uint64_t row_pointer; char* blob_pointer; char[] fen }
