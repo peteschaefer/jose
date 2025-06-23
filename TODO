@@ -132,16 +132,17 @@ Maintenance:
     [ ] jokers
 
 [ ] (3) read MyISAM files natively
-    [ ] lift code from MariaDB sources (mi_test)
-        [ ] link static
-        [ ] link dynamic (server.dll shared with mariadbd)
-    [ ] full-table scan
+    [x] lift code from MariaDB sources (mi_test)
+        [x] link static
+        [-] link dynamic (not on Linux)
+    [x] full-table scan
     [ ] index-range scan
     [ ] equi-join Game->MoreGame
     [ ] in-memory index:
-        CId, WhiteSig,BlackSig,Attributes, <pointer to MoreGame row>
+        GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
     [ ] pull out CId -> [row..row[
-    [ ] Interval, IntervalSet
+        [ ] Interval, IntervalSet
+    [ ] union { uint64_t row_pointer; char* blob_pointer; char[] fen }
     [ ] in parallel (OpenMP?)
     [ ] Java interface (JNI): java.sql.ResultSet
         [ ] thread-safe queue for results
