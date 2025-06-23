@@ -133,6 +133,8 @@ Maintenance:
 
 [ ] (3) read MyISAM files natively
     [ ] lift code from MariaDB sources (mi_test)
+        [ ] link static
+        [ ] link dynamic (server.dll shared with mariadbd)
     [ ] full-table scan
     [ ] index-range scan
     [ ] equi-join Game->MoreGame
@@ -140,9 +142,10 @@ Maintenance:
         CId, WhiteSig,BlackSig,Attributes, <pointer to MoreGame row>
     [ ] pull out CId -> [row..row[
     [ ] Interval, IntervalSet
-    [ ] in parallel (OpenMP or TBB?)
+    [ ] in parallel (OpenMP?)
     [ ] Java interface (JNI): java.sql.ResultSet
         [ ] thread-safe queue for results
+        [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
         [ ] ResultSet.next() blocks/polls until new results arrive in queue
 
 [ ] (2) port replay logic from Java to C++
@@ -181,6 +184,8 @@ Maintenance:
 
 * Logos: User
     [ ] document? (would have to be stored in db :(
+
+* Labels for Games: Tournament, Stars, Colors, ...
 
 * Foldable variations.
     - Use LineLabelNode as buttons
