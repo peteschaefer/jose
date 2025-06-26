@@ -136,26 +136,36 @@ Maintenance:
         [x] link static
         [-] link dynamic (not on Linux)
     [x] full-table scan
-    [ ] index-range scan
+    [x] index-range scan
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
     [ ] equi-join Game->MoreGame
         no need for a hash table if both indexes are sorted identically
     [ ] pull out CId -> [row..row[
         [ ] Interval, IntervalSet
-    [ ] union { uint64_t row_pointer; char* blob_pointer; char[] fen }
+    [ ] GId can retrieved late from MoreGame
+        [ ] union { uint64_t row_pointer; char* blob_pointer; char[] fen }
     [ ] in parallel (OpenMP?)
-    [ ] Java interface (JNI): java.sql.ResultSet
-        [ ] thread-safe queue for results
+    [-] Java interface (JNI): java.sql.ResultSet
+        [-] thread-safe queue for results
         [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
-        [ ] ResultSet.next() blocks/polls until new results arrive in queue
+        [-] ResultSet.next() blocks/polls until new results arrive in queue
+    [ ] simpler & better JNI interface:
+        [ ] build index, invalidate, check version
+        [ ] start, cancel pos query
+        [ ] callback resultsFound(int[]) posts into event loop.
+            No need for ResultSet and Queue.
 
 [ ] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
     [ ] binary decoder
         [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
             sort by PieceListEntry.index, promotedFile ?
+        [ ] test on DB games
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
+    [x] incremental hash keys
+    [ ] incremental matsig
+        [x] update jokers
     [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
