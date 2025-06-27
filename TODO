@@ -163,12 +163,13 @@ Maintenance:
     [ ] binary decoder
         [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
         [x] test on DB games
-        [ ] test on many DB games
+        [x] test on many DB games
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [x] incremental hash keys
     [ ] incremental matsig
         [x] update jokers
-    [ ] switchable hash keys (not needed for pawn search)
+    [ ] Engine: optional transpo_table, hash, matsig
+    [x] switchable hash keys (not needed for pawn search)
     [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
