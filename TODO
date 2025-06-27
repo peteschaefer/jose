@@ -159,9 +159,10 @@ Maintenance:
 [ ] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
     [ ] binary decoder
-        [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
+        [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
             sort by PieceListEntry.index, promotedFile ?
-        [ ] test on DB games
+        [x] test on DB games
+        [ ] test on many DB games
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [x] incremental hash keys
     [ ] incremental matsig
