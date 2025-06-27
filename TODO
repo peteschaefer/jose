@@ -143,8 +143,10 @@ Maintenance:
         no need for a hash table if both indexes are sorted identically
     [ ] pull out CId -> [row..row[
         [ ] Interval, IntervalSet
-    [ ] GId can retrieved late from MoreGame
-        [ ] union { uint64_t row_pointer; char* blob_pointer; char[] fen }
+    [ ] GId can be retrieved late from MoreGame
+    [ ] squeeze hasVariations into msb of pointer
+        [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+        24 * 16M = 384 MB
     [ ] in parallel (OpenMP?)
     [-] Java interface (JNI): java.sql.ResultSet
         [-] thread-safe queue for results
@@ -160,13 +162,13 @@ Maintenance:
     [x] rule engine: chess::Board already there
     [ ] binary decoder
         [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-            sort by PieceListEntry.index, promotedFile ?
         [x] test on DB games
         [ ] test on many DB games
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [x] incremental hash keys
     [ ] incremental matsig
         [x] update jokers
+    [ ] switchable hash keys (not needed for pawn search)
     [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
