@@ -137,6 +137,7 @@ Maintenance:
         [-] link dynamic (not on Linux)
     [x] full-table scan
     [x] index-range scan
+        [ ] index skip ? index search ?
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
     [ ] equi-join Game->MoreGame
@@ -145,14 +146,18 @@ Maintenance:
         [ ] Interval, IntervalSet
     [ ] GId can be retrieved late from MoreGame
     [ ] squeeze hasVariations into msb of pointer
-        [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+     -> [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
         24 * 16M = 384 MB
-    [ ] in parallel (OpenMP?)
+    [ ] fill in parallel (OpenMP?)
+    [ ] port PosSearchRecord, PosFilter
+        [ ] search pos,pawns
+        [ ] unit tests
+        [ ] parallelize
     [-] Java interface (JNI): java.sql.ResultSet
         [-] thread-safe queue for results
         [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
         [-] ResultSet.next() blocks/polls until new results arrive in queue
-    [ ] simpler & better JNI interface:
+    [ ] simpler JNI interface:
         [ ] build index, invalidate, check version
         [ ] start, cancel pos query
         [ ] callback resultsFound(int[]) posts into event loop.
@@ -160,16 +165,13 @@ Maintenance:
 
 [ ] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
-    [ ] binary decoder
-        [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-        [x] test on DB games
-        [x] test on many DB games
+    [x] binary decoder
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [x] incremental hash keys
-    [ ] incremental matsig
+    [x] incremental matsig
         [x] update jokers
-    [ ] Engine: optional transpo_table, hash, matsig
-    [x] switchable hash keys (not needed for pawn search)
+        [ ] port unit tests
+    [x] Engine: optional transpo_table, hash, matsig
     [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
