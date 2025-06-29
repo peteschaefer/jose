@@ -126,10 +126,7 @@ Maintenance:
 
 === Native Position Search
 
-[ ] (1) port MatSignature(V2) from Java to C++
-    * branch experimental/native-matsig
-    * on hold b/c speedup is not overwhelming (nice but no reason to rush a release
-    [ ] jokers
+[x] (1) port MatSignature(V2) from Java to C++
 
 [ ] (3) read MyISAM files natively
     [x] lift code from MariaDB sources (mi_test)
@@ -138,40 +135,54 @@ Maintenance:
     [x] full-table scan
     [x] index-range scan
         [ ] index skip ? index search ?
+    [ ] port PosSearchRecord, PosFilter
+        [x] search pos,pawns
+        [x] unit tests
+        [ ] parallelize
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
-    [ ] equi-join Game->MoreGame
-        no need for a hash table if both indexes are sorted identically
-    [ ] pull out CId -> [row..row[
-        [ ] Interval, IntervalSet
-    [ ] GId can be retrieved late from MoreGame
-    [ ] squeeze hasVariations into msb of pointer
-     -> [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
-        24 * 16M = 384 MB
-    [ ] fill in parallel (OpenMP?)
-    [ ] port PosSearchRecord, PosFilter
-        [ ] search pos,pawns
-        [ ] unit tests
-        [ ] parallelize
+        [ ] equi-join Game->MoreGame
+            no need for a hash table if both indexes are sorted identically
+        [ ] pull out CId -> [row..row[
+            [ ] Interval, IntervalSet
+        [ ] GId can be retrieved late from MoreGame
+        [ ] squeeze hasVariations into msb of pointer
+         -> [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+            24 * 16M = 384 MB
+        [ ] fill in parallel (OpenMP?)
     [-] Java interface (JNI): java.sql.ResultSet
         [-] thread-safe queue for results
         [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
         [-] ResultSet.next() blocks/polls until new results arrive in queue
-    [ ] simpler JNI interface:
+    [-] simpler JNI interface:
         [ ] build index, invalidate, check version
         [ ] start, cancel pos query
         [ ] callback resultsFound(int[]) posts into event loop.
             No need for ResultSet and Queue.
+    [ ] command-line interface
+        - a little communication overhead, but much less than jdbc
+        + crashed process can be restarted
+        + no JNI, no Xmx restriction, no dll loading
 
-[ ] (2) port replay logic from Java to C++
+        "josemi <path> game moregame [--version]"
+        >>"query <fen> [exact|pawns|sub] [variations] [reversed color]"
+        >>"stop" (query)
+        >>"build" (index)
+        >>"discard" (index)
+        <<"1001-1017,1018"
+        <<"1019,..."
+        <<"done"
+
+[x] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
     [x] binary decoder
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
     [x] incremental hash keys
     [x] incremental matsig
         [x] update jokers
-        [ ] port unit tests
+        [x] port unit tests
     [x] Engine: optional transpo_table, hash, matsig
+    [x] Engine: disable undo stack if !HasVariations
     [-] mysql udf's
         zobrist_key(fen)
         find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()

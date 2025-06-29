@@ -15,6 +15,9 @@ public class PosSearchRecord
         //  material balance can be combined with PAWNS_*, but not with POS_EXACT
     public static int MAT_BALANCE   = 0x08;
 
+    public static int VARS	= 0x10;
+    public static int REVERSED= 0x10;
+
     public int what=0;
     //  if!=0: search for exact position
     public HashKey key;
@@ -87,8 +90,11 @@ public class PosSearchRecord
         return new PosSearchRecord(this);
     }
 */
-public void setSearch(Position pos, int flags) {
-    switch (flags) {
+public void setSearch(Position pos, int flags)
+{
+    variations = (flags & VARS) != 0;
+    reversedColor = (flags & REVERSED) != 0;
+    switch (flags & POS_MASK) {
         case POS_EXACT:
             setExactSearch(pos);
             return;

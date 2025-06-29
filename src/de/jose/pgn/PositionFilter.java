@@ -73,6 +73,9 @@ public class PositionFilter
 		pos.setOption(Position.INCREMENT_SIGNATURE,true);
 		pos.setOption(Position.IGNORE_FLAGS_ON_HASH, true);
 
+		//	todo disable undo stack if there are no variations
+//		pos.setOption(Position.UNDO_STACK, hasVariations);
+
 		//  don't calculate checks etc.
 		pos.setOption(Position.EXPOSED_CHECK, false);
 		pos.setOption(Position.STALEMATE, false);
