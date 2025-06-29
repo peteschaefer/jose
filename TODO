@@ -141,14 +141,15 @@ Maintenance:
         [ ] parallelize
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
-        [ ] equi-join Game->MoreGame
+        [x] equi-join Game->MoreGame
             no need for a hash table if both indexes are sorted identically
-        [ ] pull out CId -> [row..row[
-            [ ] Interval, IntervalSet
-        [ ] GId can be retrieved late from MoreGame
-        [ ] squeeze hasVariations into msb of pointer
-         -> [ ] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+        [x] pull out CId -> [row..row[
+            [x] Interval, IntervalSet
+        [x] GId can be retrieved late from MoreGame
+        [x] squeeze hasVariations into msb of pointer
+         -> [x] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
             24 * 16M = 384 MB
+        [ ] unit test (small, huge)
         [ ] fill in parallel (OpenMP?)
     [-] Java interface (JNI): java.sql.ResultSet
         [-] thread-safe queue for results
