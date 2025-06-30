@@ -167,10 +167,10 @@ Maintenance:
         + no JNI, no Xmx restriction, no dll loading
 
         "josemi <path> game moregame [--version]"
-        >>collections 1001 1002...
+        >>collections [all] 1001 1002...
         >>fen <fen> (with, w/out flags?)
-        >>variations true
-        >>reversed true
+        >>variations [false true]
+        >>reversed [false true]
         >>"query [exact|pawns|sub]"
         >>"stop" (query)
         >>"build" (index)
