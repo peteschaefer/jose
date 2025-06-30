@@ -139,6 +139,7 @@ Maintenance:
         [x] search pos,pawns
         [x] unit tests
         [ ] parallelize
+    [ ] hash flags ???
     [ ] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
         [x] equi-join Game->MoreGame
@@ -166,7 +167,7 @@ Maintenance:
         + no JNI, no Xmx restriction, no dll loading
 
         "josemi <path> game moregame [--version]"
-        >>"query <fen> [exact|pawns|sub] [variations] [reversed color]"
+        >>"query <fen> [exact|pawns|sub] [variations] [reversed color] [coll 1001 1002 ]"
         >>"stop" (query)
         >>"build" (index)
         >>"discard" (index)
