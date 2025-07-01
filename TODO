@@ -161,6 +161,7 @@ Maintenance:
                 -> queue of rows to load
                 [ ] omp for (static, dynamic?)
                 [ ] put rowptrs in a separate vector (for better cache layout)
+                [ ] put HasVariations into a std::bitset, or hash set of int ?
             [ ] (2) loading blobs from file
                 [ ] examine _mi_read_dynamic_record
                     [ ] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
