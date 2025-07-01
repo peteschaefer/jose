@@ -156,14 +156,22 @@ Maintenance:
         [x] my_thread_init. Table is not thread-safe
         [x] works in principle but doing index scan, file read, replay
             all at once is too much (for the caches)
+            - scanning the index is fast (1s) single-threaded is best
+            - reading rows (mi_rrnd) takes abt 10 seconds for 5M rows
+            - replaying (BinReader::read) takes abt 8 seconds for 5M rows,
+                on a warmed up cache
+            -> 20 s on a cold cache
+            >  10 s on a warm cache
+            compare to 14 s with TCP+Java !?!?!
+
             we need more insights on:
-            [ ] (1) early-cut-off scan in parallel
-                -> queue of rows to load
-                [ ] omp for (static, dynamic?)
+            [-] (1) early-cut-off scan in parallel
+                [x] omp for (static, dynamic?)
+                [x] single-threaded is fastest
                 [ ] put rowptrs in a separate vector (for better cache layout)
                 [ ] put HasVariations into a std::bitset, or hash set of int ?
             [ ] (2) loading blobs from file
-                [ ] examine _mi_read_dynamic_record
+                [ ] re-create _mi_read_dynamic_record
                     [ ] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
                     [ ] how many 'block's are needed for one record?
                     -> can we get our hands at the mmapped memory? (instead of copying it)
@@ -173,7 +181,7 @@ Maintenance:
                         "info->s->file_map + offset, Count" points to mmapped memory
                     [ ] get rid of _mi_unpack ?
                         don't memcpy, just compute offsets of some columns
-            [ ] (3) replay in parallel
+            [x] (3) replay in parallel
                 -> don't overstress caches (L2?,L3?)
                 - how many cache memory is actually consumed?
 
