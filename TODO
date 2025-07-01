@@ -150,8 +150,31 @@ Maintenance:
         [x] squeeze hasVariations into msb of pointer
          -> [x] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
             24 * 16M = 384 MB
-        [ ] unit test (small, huge)
-        [ ] fill in parallel (OpenMP?)
+        [x] unit test (small, huge)
+    [ ] Parallelistion
+        [x] omp (for Windows)
+        [x] my_thread_init. Table is not thread-safe
+        [x] works in principle but doing index scan, file read, replay
+            all at once is too much (for the caches)
+            we need more insights on:
+            [ ] (1) early-cut-off scan in parallel
+                -> queue of rows to load
+                [ ] omp for (static, dynamic?)
+                [ ] put rowptrs in a separate vector (for better cache layout)
+            [ ] (2) loading blobs from file
+                [ ] examine _mi_read_dynamic_record
+                    [ ] reads from mmap, copies to recbuf, "unpacks" to output buf. Too much copies.
+                    [ ] how many 'block's are needed for on record?
+                    -> can we get our hands at the mmapped memory? (instead of copying it)
+                        _mi_get_block_info(&block_info, file, filepos))
+                        block_info.rec_len, block_info.data_len,
+                        block_info.next_filepos chains blocks
+                        "info->s->file_map + offset, Count" points to mmapped memory
+                    [ ] get rid of _mi_unpack ?
+            [ ] (3) replay in parallel
+                -> don't overstress caches (L2?,L3?)
+                - how many cache memory is actually consumed?
+
     [-] Java interface (JNI): java.sql.ResultSet
         [-] thread-safe queue for results
         [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
@@ -161,41 +184,10 @@ Maintenance:
         [ ] start, cancel pos query
         [ ] callback resultsFound(int[]) posts into event loop.
             No need for ResultSet and Queue.
-    [ ] command-line interface
-        - a little communication overhead, but much less than jdbc
-        + crashed process can be restarted
-        + no JNI, no Xmx restriction, no dll loading
-
-        "josemi <path> game moregame [--version]"
-        >>collections [all] 1001 1002...
-        >>fen <fen> (with, w/out flags?)
-        >>variations [false true]
-        >>reversed [false true]
-        >>"query [exact|pawns|sub]"
-        >>"stop" (query)
-        >>"build" (index)
-        >>"discard" (index)
-        <<"1001-1017,1018"
-        <<"1019,..."
-        <<"done"
+    [x] command-line interface
 
 [x] (2) port replay logic from Java to C++
-    [x] rule engine: chess::Board already there
-    [x] binary decoder
-    [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-    [x] incremental hash keys
-    [x] incremental matsig
-        [x] update jokers
-        [x] port unit tests
-    [x] Engine: optional transpo_table, hash, matsig
-    [x] Engine: disable undo stack if !HasVariations
-    [-] mysql udf's
-        zobrist_key(fen)
-        find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
-        [ ] unit test udf functions
-
-[x] move chess++ to github
-[x] build mariadb, or mysql5 from source
+[-] mysql udf's
 
 ==== Interesting New Features
 
