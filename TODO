@@ -163,14 +163,15 @@ Maintenance:
                 [ ] put rowptrs in a separate vector (for better cache layout)
             [ ] (2) loading blobs from file
                 [ ] examine _mi_read_dynamic_record
-                    [ ] reads from mmap, copies to recbuf, "unpacks" to output buf. Too much copies.
-                    [ ] how many 'block's are needed for on record?
+                    [ ] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
+                    [ ] how many 'block's are needed for one record?
                     -> can we get our hands at the mmapped memory? (instead of copying it)
                         _mi_get_block_info(&block_info, file, filepos))
                         block_info.rec_len, block_info.data_len,
                         block_info.next_filepos chains blocks
                         "info->s->file_map + offset, Count" points to mmapped memory
                     [ ] get rid of _mi_unpack ?
+                        don't memcpy, just compute offsets of some columns
             [ ] (3) replay in parallel
                 -> don't overstress caches (L2?,L3?)
                 - how many cache memory is actually consumed?
