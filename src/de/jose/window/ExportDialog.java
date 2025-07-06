@@ -583,9 +583,9 @@ public class ExportDialog
 
         context.config = context.theConfig.getConfig(transform);
 
-        setValueByName("transform",transform);
-        setValueByName("xsl.html.screenres",context.profile.getInt("xsl.html.screenres",72));
-        setValueByName("xsl.pdf.embed",context.profile.get("xsl.pdf.embed",Boolean.TRUE));
+    //    setValueByName("transform",transform);
+    //    setValueByName("xsl.html.screenres",context.profile.getInt("xsl.html.screenres",72));
+    //    setValueByName("xsl.pdf.embed",context.profile.get("xsl.pdf.embed",Boolean.TRUE));
         setOutputFormat(context.getOutput(),false); //  don't commit data
         exportList.setValue(transform);
 
