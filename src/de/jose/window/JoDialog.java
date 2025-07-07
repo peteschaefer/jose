@@ -1205,6 +1205,12 @@ public class JoDialog
 			((JToggleButton)comp).setSelected(Util.toboolean(value));
 		else if (comp instanceof AbstractButton)
 			((AbstractButton)comp).setSelected(Util.toboolean(value));
+		else if (comp instanceof JPanel)
+			;
+		else if (comp instanceof Box)
+			;
+		else if (comp instanceof JScrollPane)
+			;
 		else
 			throw new IllegalArgumentException();
 	}
