@@ -154,11 +154,17 @@ Maintenance:
 * FOP printing: subtitles for Events and Rounds
     Q: sort by Collection, or by Event name (needs to be curated accurately) ?
     - drop info from Game header
+
 * Bulk edit with F4
-    - GameDetailsDialog uses GameSource. Two modes:
-        GameSource(object) refers to an opened document. ID==0 = new, or ID > 0 = existing
-        GemsSource(...) refers to a set of games. Write to DB directly.
-* Autocompletion for database fields (Event, Player, ...)
+    [ ] Autocomplete/suggest for Player, Event, Site (more?)
+        [ ] suggest = grey suffix
+        [ ] complete = popup list
+        -> derive from styled JTextArea
+    [ ] auto-complete in Search Panel
+    [ ] re-use Search Panel for Bulk Edit
+    [ ] re-use Search Panel for Single Game Edit
+        [ ] GameSource is the abstraction
+
 * Search ELO >=
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
