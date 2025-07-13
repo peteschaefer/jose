@@ -27,69 +27,75 @@ describe MetaInfo;
 
 
 <
-	Collection
+	Collection keeps together a set of Games.
+	Can be nested recursively, like file folders.
 >
 0,     Field     ,      Type      , Null ,  Key , Default, Extra
-1, 'Id'          , 'int(11)'      , ''   , 'PRI', '0'    , ''   
-2, 'PId'         , 'int(11)'      , ''   , 'MUL', '0'    , ''   
-3, 'OPId'        , 'int(11)'      , 'YES', ''   , null   , ''   
-4, 'Name'        , 'varchar(255)' , ''   , 'MUL', ''     , ''   
-5, 'Path'        , 'varchar(255)' , 'YES', 'MUL', null   , ''   
-6, 'Attributes'  , 'tinyint(4)'   , ''   , ''   , '0'    , ''   
-7, 'SourceURL'   , 'varchar(255)' , 'YES', 'MUL', null   , ''   
-8, 'LastModified', 'timestamp(14)', 'YES', 'MUL', null   , ''   
-9, 'GameCount'   , 'int(11)'      , ''   , ''   , '0'    , ''   
+1, 'Id'          , 'int(11)'      , ''   , 'PRI', '0'    , Primate Key
+2, 'PId'         , 'int(11)'      , ''   , 'MUL', '0'    , Foreign key to Parent Collection (think: folder)
+3, 'OPId'        , 'int(11)'      , 'YES', ''   , null   , For deleted entries: place to restore the original state
+4, 'Name'        , 'varchar(255)' , ''   , 'MUL', ''     , Display name
+5, 'Path'        , 'varchar(255)' , 'YES', 'MUL', null   , Folder Path (just like a file path)
+6, 'Attributes'  , 'tinyint(4)'   , ''   , ''   , '0'    , Flags for system folders, ...
+7, 'SourceURL'   , 'varchar(255)' , 'YES', 'MUL', null   , Where this came from (not yet used)
+8, 'LastModified', 'timestamp(14)', 'YES', 'MUL', null   , Last Modified Flag
+9, 'GameCount'   , 'int(11)'      , ''   , ''   , '0'    , Number of contained Games (redundant but quicker than select count(*))
 
 <
-	Game
+	Game holds fixed-size Game Meta-Data
 >
 0 ,     Field    ,     Type     , Null ,  Key , Default, Extra
-1 , 'Id'         , 'int(11)'    , ''   , 'PRI', '0'    , ''   
-2 , 'CId'        , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-3 , 'Idx'        , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-4 , 'Attributes' , 'tinyint(4)' , ''   , 'MUL', '0'    , ''   
-5 , 'OCId'       , 'int(11)'    , 'YES', ''   , null   , ''   
-6 , 'OIdx'       , 'int(11)'    , 'YES', ''   , null   , ''   
-7 , 'PlyCount'   , 'int(11)'    , ''   , ''   , '0'    , ''   
-8 , 'Result'     , 'tinyint(4)' , ''   , 'MUL', '0'    , ''   
-9 , 'WhiteId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-10, 'BlackId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-11, 'WhiteELO'   , 'int(11)'    , 'YES', 'MUL', null   , ''   
-12, 'BlackELO'   , 'int(11)'    , 'YES', 'MUL', null   , ''   
-13, 'EventId'    , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-14, 'SiteId'     , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-15, 'GameDate'   , 'date'       , 'YES', 'MUL', null   , ''   
-16, 'EventDate'  , 'date'       , 'YES', 'MUL', null   , ''   
-17, 'DateFlags'  , 'smallint(6)', ''   , ''   , '0'    , ''   
-18, 'OpeningId'  , 'int(11)'    , ''   , 'MUL', '0'    , ''   
-19, 'ECO'        , 'char(3)'    , 'YES', 'MUL', null   , ''   
-20, 'AnnotatorId', 'int(11)'    , ''   , 'MUL', '0'    , ''   
+1 , 'Id'         , 'int(11)'    , ''   , 'PRI', '0'    , Primary Key for a Game
+2 , 'CId'        , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to owning Collection
+3 , 'Idx'        , 'int(11)'    , ''   , 'MUL', '0'    , Sort Index within a Collection
+4 , 'Attributes' , 'tinyint(4)' , ''   , 'MUL', '0'    , Flags: has variations, has comments, ...
+5 , 'OCId'       , 'int(11)'    , 'YES', ''   , null   , For deleted Games: foreign key to original Collection
+6 , 'OIdx'       , 'int(11)'    , 'YES', ''   , null   , For deleted Games: foreign key to original Index
+7 , 'PlyCount'   , 'int(11)'    , ''   , ''   , '0'    , Number of Plies
+8 , 'Result'     , 'tinyint(4)' , ''   , 'MUL', '0'    , Result (0,1,1/2,*)
+9 , 'WhiteId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to White Player
+10, 'BlackId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Black Player
+11, 'WhiteELO'   , 'int(11)'    , 'YES', 'MUL', null   , White ELO
+12, 'BlackELO'   , 'int(11)'    , 'YES', 'MUL', null   , Black ELO
+13, 'EventId'    , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Event
+14, 'SiteId'     , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Site
+15, 'GameDate'   , 'date'       , 'YES', 'MUL', null   , Game Date
+16, 'EventDate'  , 'date'       , 'YES', 'MUL', null   , Event Date
+17, 'DateFlags'  , 'smallint(6)', ''   , ''   , '0'    , Flags: has month, day, ...
+18, 'OpeningId'  , 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Opening
+19, 'ECO'        , 'char(3)'    , 'YES', 'MUL', null   , ECO code (three chars)
+20, 'AnnotatorId', 'int(11)'    , ''   , 'MUL', '0'    , Foreign key to Annotator
 
 <
-	MoreGame
+	MoreGame holds variable-sized Game data
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
-1, 'GId'       , 'int(11)'     , ''   , 'PRI', '0'    , ''   
-2, 'WhiteTitle', 'varchar(32)' , 'YES', 'MUL', null   , ''   
-3, 'BlackTitle', 'varchar(32)' , 'YES', 'MUL', null   , ''   
-4, 'Round'     , 'varchar(32)' , 'YES', 'MUL', null   , ''   
-5, 'Board'     , 'varchar(32)' , 'YES', 'MUL', null   , ''   
-6, 'FEN'       , 'varchar(128)', 'YES', ''   , null   , ''   
-7, 'Info'      , 'varchar(255)', 'YES', 'MUL', null   , ''   
-8, 'Bin'       , 'mediumblob'  , 'YES', ''   , null   , ''   
-9, 'Comments'  , 'mediumtext'  , 'YES', 'MUL', null   , ''   
+1, 'GId'       , 'int(11)'     , ''   , 'PRI', '0'    , Foreign key to Game
+2, 'WhiteTitle', 'varchar(32)' , 'YES', 'MUL', null   , White Title
+3, 'BlackTitle', 'varchar(32)' , 'YES', 'MUL', null   , Black Title
+4, 'Round'     , 'varchar(32)' , 'YES', 'MUL', null   , Round
+5, 'Board'     , 'varchar(32)' , 'YES', 'MUL', null   , Board
+6, 'FEN'       , 'varchar(128)', 'YES', ''   , null   , Start FEN (optional)
+7, 'Info'      , 'varchar(255)', 'YES', 'MUL', null   , More PGN tags as csv, key=value
+8, 'WhiteSignature', bigint(20), NO                   , Material Signature for White Pieces
+9, 'BlackSignature', bigint(20), NO                   , Material Signature for Black Pieces
+10, 'Bin'       , 'mediumblob', 'YES'                 , Game Moves (binary sequence)
+11, 'Comments'  , 'mediumtext', 'YES', 'MUL'          , Comments (0-terminated strings)
+12, 'PosMain',     mediumtext,   YES,MUL              , Position Index (deprecated, not used at all)
+13, 'PosVar',      mediumtext,   YES,MUL              , Position Index (deprecated, not used at all)
+14,  Eval,         mediumblob,   YES                  , Evaluation History (populates the Eval Graph)
 
 <
-	Player
+	Player (speaks for itself)
 >
 0,    Field   ,      Type     , Null,  Key , Default, Extra
-1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , ''   
-2, 'Name'     , 'varchar(255)', ''  , 'MUL', ''     , ''   
-3, 'UpperName', 'varchar(255)', ''  , 'MUL', ''     , ''   
-4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , ''   
+1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , Primary Key
+2, 'Name'     , 'varchar(255)', ''  , 'MUL', ''     , Name
+3, 'UpperName', 'varchar(255)', ''  , 'MUL', ''     , Name in Upper Case (meant to speed up queries, it's probably useless)
+4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , Soundex (useful for soundex queries)
 
 <	
-	Event
+	Event (you guessed it)
 >
 0,    Field   ,      Type     , Null,  Key , Default, Extra
 1, 'Id'       , 'int(11)'     , ''  , 'PRI', '0'    , ''   
@@ -107,19 +113,22 @@ describe MetaInfo;
 4, 'Soundex'  , 'varchar(6)'  , ''  , 'MUL', '-'    , ''   
 
 <
-	Opening
+	Opening (name and ECO)
 >
 0,    Field   ,      Type     , Null ,  Key , Default, Extra
-1, 'Id'       , 'int(11)'     , ''   , 'PRI', '0'    , ''   
-2, 'HashKey'  , 'bigint(20)'  , ''   , 'MUL', '0'    , ''   
-3, 'Ply'      , 'int(11)'     , 'YES', ''   , null   , ''   
-4, 'ECO'      , 'char(3)'     , ''   , 'MUL', '-'    , ''   
-5, 'Name'     , 'varchar(255)', ''   , 'MUL', ''     , ''   
+1, 'Id'       , 'int(11)'     , ''   , 'PRI', '0'    , Primary Key
+2, 'HashKey'  , 'bigint(20)'  , ''   , 'MUL', '0'    , Zobrist key for querying an opening book (of the ECO index?)
+3, 'Ply'      , 'int(11)'     , 'YES', ''   , null   , Ply where the eco code was found
+4, 'ECO'      , 'char(3)'     , ''   , 'MUL', '-'    , three-letter eco code
+5, 'Name'     , 'varchar(255)', ''   , 'MUL', ''     , Name (in any language)
 6, 'UpperName', 'varchar(255)', ''   , 'MUL', ''     , ''   
 7, 'Soundex'  , 'varchar(6)'  , ''   , 'MUL', '-'    , ''   
 
 <
 	IO_Collection
+	IO schema is stored inside *.jose files.
+	Used to transfer a set of games to another database.
+	Very similar to the Main schema above, except for the Game table.
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
 1, 'Id'        , 'int(11)'     , ''   , 'PRI', '0'    , ''   
@@ -132,6 +141,7 @@ describe MetaInfo;
 
 <
 	IO_Game
+	stores info from Game and MoreGame in one table
 >
 0 ,     Field    ,      Type     , Null ,  Key , Default, Extra
 1 , 'Id'         , 'int(11)'     , ''   , 'PRI', '0'    , ''   
@@ -157,9 +167,11 @@ describe MetaInfo;
 21, 'Round'      , 'varchar(32)' , 'YES', 'MUL', null   , ''   
 22, 'Board'      , 'varchar(32)' , 'YES', ''   , null   , ''   
 23, 'FEN'        , 'varchar(128)', 'YES', ''   , null   , ''   
-24, 'Info'       , 'varchar(255)', 'YES', ''   , null   , ''   
-25, 'Bin'        , 'mediumblob'  , 'YES', ''   , null   , ''   
-26, 'Comments'   , 'mediumtext'  , 'YES', ''   , null   , ''   
+24, 'Info'       , 'varchar(255)', 'YES', ''   , null   , ''
+25, 'WhiteSignature', bigint(20), NO                   , Material Signature for White Pieces
+26, 'BlackSignature', bigint(20), NO                   , Material Signature for Black Pieces
+27, 'Bin'        , 'mediumblob'  , 'YES', ''   , null   , ''
+28, 'Comments'   , 'mediumtext'  , 'YES', ''   , null   , ''
 
 <
 	IO_Player
@@ -194,6 +206,7 @@ describe MetaInfo;
 
 <
 	Map_Game
+	used during import and export to re-map keys
 >
 0, Field,   Type   , Null ,  Key , Default, Extra
 1, 'OId', 'int(11)', 'YES', 'MUL', null   , ''   
@@ -236,6 +249,8 @@ describe MetaInfo;
 
 <
 	MetaInfo
+	stores info about the current schema version.
+	essential for automatic schema updates (see CrossOver classes).
 >
 0,    Field    ,      Type     , Null ,  Key , Default, Extra
 1, 'Property'  , 'varchar(64)' , ''   , 'MUL', ''     , ''   

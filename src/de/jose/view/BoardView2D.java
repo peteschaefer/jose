@@ -1294,7 +1294,7 @@ public class BoardView2D
 
 
 
-	public final BufferedImage getPieceImage(int piece, Rectangle bounds, boolean userSpace)
+	public BufferedImage getPieceImage(int piece, Rectangle bounds, boolean userSpace)
 	{
 		return getPieceImage(currentFont,
 							userSpace ? (int)userSquareSize : devSquareSize,
@@ -1339,9 +1339,13 @@ public class BoardView2D
 		if (piece != EMPTY) {
 			Point2D p = origin(square,false);
 			Rectangle imgBounds = new Rectangle();
-			Image img = getPieceImage(piece,imgBounds,false);
-			g.drawImage(img, (int)(p.getX()+imgBounds.x), (int)(p.getY()+imgBounds.y), null);
+			paint1Piece(g, piece, imgBounds, p);
 		}
+	}
+
+	protected void paint1Piece(Graphics2D g, int piece, Rectangle bounds, Point2D at) {
+		Image img = getPieceImage(piece, bounds,false);
+		g.drawImage(img, (int)(at.getX()+ bounds.x), (int)(at.getY()+ bounds.y), null);
 	}
 
 	protected Surface getBackground(int square)

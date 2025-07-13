@@ -212,19 +212,19 @@ public class AboutDialog
 
 	public void initTab2(Component comp3)
 	{
-		JPanel tab3 = (JPanel)comp3;
+		JPanel tab2 = (JPanel)comp3;
 
 		String imageDir = Application.theWorkingDirectory.getAbsolutePath()
 						  +File.separator+"images"+File.separator;
-		tab3.add(new JLabel(new ImageIcon(imageDir+"font_logo.gif")),
+		tab2.add(new JLabel(new ImageIcon(imageDir+"font_logo.gif")),
 		        JoDialog.gridConstraint(LABEL_ONE, 0,0,1));
 
 		JoStyledLabel label = new JoStyledLabel("dialog.about.3");
-		tab3.add(reg(label), JoDialog.gridConstraint(ELEMENT_REMAINDER, 1,0,3));
+		tab2.add(reg(label), JoDialog.gridConstraint(ELEMENT_REMAINDER, 1,0,3));
 
 		label.setBackground(Color.white);
-		tab3.setBackground(Color.white);
-		activateTab3(comp3);
+		tab2.setBackground(Color.white);
+		activateTab2(comp3);
 	}
 
 	protected void activateTab2(Component tab3)

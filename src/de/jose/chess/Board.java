@@ -1774,16 +1774,16 @@ public class Board
 		case 0x0020:	//	knight
 			p = getPiece(KNIGHT+movesNext(), (code>>3) & 0x0001);
 			break;
-		case 0x0030:	//	king's bishop
+		case 0x0030:	//	queen's bishop
 			p = getPiece(BISHOP+movesNext(), 0);
 			break;
-		case 0x0040:	//	queen's bishop
+		case 0x0040:	//	king's bishop
 			p = getPiece(BISHOP+movesNext(), 1);
 			break;
-		case 0x0050:	//	king's rook
+		case 0x0050:	//	queen's rook
 			p = getPiece(ROOK+movesNext(), 0);
 			break;
-		case 0x0060:	//	queen's rook
+		case 0x0060:	//	king's rook
 			p = getPiece(ROOK+movesNext(), 1);
 			break;
 		case 0x0070:

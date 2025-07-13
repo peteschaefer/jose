@@ -21,7 +21,6 @@ abstract public class BinReader
             implements BinaryConstants
 {
     public byte[] bin;
-
     public int offset;
 
     protected Position pos;
@@ -263,7 +262,7 @@ abstract public class BinReader
                 wasMove = false;
                 continue;
             }
-        }
+        }   //  while(!eof)
 
 		endOfLine(0);
         if (reset)

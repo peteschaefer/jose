@@ -1045,7 +1045,8 @@ public class OptionDialog
 		read(1,profile.settings);
 
 		setValueByName("font.diagram", profile.getString("font.diagram"));
-		setValueByName("eboard.chessnut", profile.getBoolean("eboard.chessnut",false));
+		if (getElement("eboard.chessnut")!=null)
+			setValueByName("eboard.chessnut", profile.getBoolean("eboard.chessnut",false));
 		//eboardCtrl.eboard.readProfile(profile);
 	}
 

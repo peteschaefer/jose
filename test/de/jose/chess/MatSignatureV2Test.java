@@ -1,11 +1,9 @@
 package de.jose.chess;
 
-import de.jose.Application;
-import de.jose.Config;
-import de.jose.Version;
 import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
+import de.jose.pgn.PosSearchRecord;
 import de.jose.util.BitUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +19,6 @@ import static de.jose.chess.Constants.*;
 import static de.jose.chess.MatSignatureV2.PAWN_MASK;
 import static de.jose.chess.MatSignatureV2.longBoard;
 import static de.jose.pgn.BinReader.REPLAY;
-import static de.jose.pgn.BinReader.RESET;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
@@ -59,7 +56,7 @@ class MatSignatureV2Test {
     class CountingBinReader extends BinReader
     {
         public int moves, noisy, early;
-        public MatSignature cutoff;
+        public PosSearchRecord cutoff;
         public long backtrackSum;
         public int backtrackWatermark;
 
@@ -78,8 +75,8 @@ class MatSignatureV2Test {
             if (!pos.wasSilent()) {
                 noisy++;
                 if (cutoff!=null) {
+                    if (cutoff.cutOff(pos,!pos.wasSilent())) eof=true;
                     MatSignature matSig = pos.getMatSig();
-                    if (!matSig.canReach(cutoff)) eof=true;
                     if (matSig instanceof MatSignatureV2) {
                         int backtrackCount = ((MatSignatureV2) matSig).getBacktrackCount();
                         backtrackWatermark = Math.max(backtrackWatermark, backtrackCount);
@@ -181,14 +178,16 @@ class MatSignatureV2Test {
         System.out.println(longBoard(wsig,'P'));
         System.out.println(longBoard(bsig,'p'));
 
-        assertEquals("7. . . . \n" +
+        assertEquals(
+                "7. . . . \n" +
                 "6 . . . .\n" +
                 "5. . .P. \n" +
                 "4 . .P. .\n" +
                 "3PP.P. .P\n" +
                 "2 .P. P .\n" +
                 " abcdefgh\n",longBoard(wsig,'P'));
-        assertEquals("7p . .p. \n" +
+        assertEquals(
+                "7p . .p. \n" +
                 "6 . . . p\n" +
                 "5.pp p . \n" +
                 "4 . p . .\n" +
@@ -265,6 +264,13 @@ class MatSignatureV2Test {
         MatSignatureV2 sig2 = (MatSignatureV2) pos.computeMatSig().clone();
         pos.setup(fen2_reversed);
         MatSignatureV2 sig2rev = (MatSignatureV2) pos.computeMatSig().clone();
+
+        assertTrue(sig1.canReach(sig2));
+
+        assertEquals(sig2,sig2.reverse().reverse());
+
+        assertEquals(sig2.getWhiteSignature(), sig2.reverse().reverse().getWhiteSignature());
+        assertEquals(sig2.getBlackSignature(), sig2.reverse().reverse().getBlackSignature());
 
         assertTrue(canReach(sig1,sig2,1));
 
@@ -379,6 +385,7 @@ class MatSignatureV2Test {
 
         int offset = 14800000;
         int limit = 1000000;
+        int searchFlags = PosSearchRecord.POS_EXACT;
         withDBServer();
 //        System.out.println("[unfiltered - all games]");
 //        testCutoff(null,null, 0,0);
@@ -391,31 +398,139 @@ class MatSignatureV2Test {
 //        System.out.println("[opening - V1]");
 //        testCutoff(opening,MatSignatureV1.class, offset,limit);
         System.out.println("[opening - V2]");
-        testCutoff(opening,MatSignatureV2.class, offset,limit);
+        testCutoff(opening,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[middle game - V1]");
 //        testCutoff(middle1,MatSignatureV1.class, offset,limit);
        System.out.println("[middle game - V2]");
-        testCutoff(middle1,MatSignatureV2.class, offset,limit);
+        testCutoff(middle1,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[middle game - V1]");
  //       testCutoff(middle2,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
-        testCutoff(middle2,MatSignatureV2.class, offset,limit);
+        testCutoff(middle2,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame1,MatSignatureV2.class, offset,limit);
+        testCutoff(endgame1,MatSignatureV2.class,searchFlags, offset,limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame2,MatSignatureV2.class, offset,limit);
+        testCutoff(endgame2,MatSignatureV2.class,searchFlags, offset,limit);
     }
 
-    void testCutoff(String queryFen, Class matsigClass, int offset, int limit) throws SQLException {
+    @Disabled
+    @Test
+    void testDBPawnSearchCutoff2() throws Exception {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        //  test effectiveness of early cutoffs.
+        //  compare:
+        //  - exact position search (expected to have best selectivity)
+        //  - exact pawn search (expected to have less selectivity)
+        //  - subset pawn search (expected to have least selectivity)
+        withDBServer();
+
+        int offset = 0;
+        int limit = 1000000;
+
+        System.out.println("[exact position search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.POS_EXACT, offset,limit);
+        int early1 = counter.early;
+
+        System.out.println("[pawn search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_EXACT, offset,limit);
+        int early2 = counter.early;
+
+        System.out.println("[pawn subset search]");
+        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_SUBSET, offset,limit);
+        int early3 = counter.early;
+
+        assertTrue(early1 >= early2);
+        assertTrue(early2 >= early3);
+    }
+
+    @Test
+    void test1PawnCutoff()
+    {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        MatSignatureV2 queryExact = getMatSignatureV2(endgame1);
+        MatSignatureV2 queryPawns = (MatSignatureV2) queryExact.clone();
+        queryPawns.clearOfficers();
+        queryPawns.addJokerPieces();
+
+        MatSignatureV2 querySubset = (MatSignatureV2) queryExact.clone();
+        querySubset.clearOfficers();
+        querySubset.addJokerPieces();
+        querySubset.addJokerPawns();
+
+        MatSignatureV2 endSig = new MatSignatureV2(0x2444000000000000L,0x3440000000000000L);
+
+        boolean exactCanReach = queryExact.canReach(endSig);
+        boolean pawnsCanReach = queryPawns.canReach(endSig);
+        boolean subsetCanReach = querySubset.canReach(endSig);
+
+        //  if it is reacable by exact comparison
+        assertTrue(exactCanReach);
+        //  it must also be reachable by pawns (=more relaxed) comparison)
+        assertTrue(pawnsCanReach);
+        //  and by pawn subset (even more relaxed)
+        assertTrue(subsetCanReach);
+    }
+
+    @Disabled
+    @Test
+    void testDBPawnCutoffs() throws Exception {
+        String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
+        withDBServer();
+
+        MatSignatureV2 queryExact = getMatSignatureV2(endgame1);
+        MatSignatureV2 queryPawns = (MatSignatureV2) queryExact.clone();
+        queryPawns.clearOfficers();
+        queryPawns.addJokerPieces();
+
+        MatSignatureV2 querySubset = (MatSignatureV2) queryExact.clone();
+        querySubset.clearOfficers();
+        querySubset.addJokerPieces();
+        querySubset.addJokerPawns();
+
+        int exactCutoffs = 0;
+        int pawnsCutoffs = 0;
+        int subsetCutoffs = 0;
+        int games=0;
+
+        ResultSet res = selectSignatures(0,-1);
+        while(res.next()) {
+            games++;
+            int GId = res.getInt(1);
+            long whiteSig = res.getLong(2);
+            long blackSig = res.getLong(3);
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSig,blackSig);
+
+            boolean exactCutoff = !queryExact.canReach(endSig);
+            boolean pawnsCutoff = !queryPawns.canReach(endSig);
+            boolean subsetCutoff = !querySubset.canReach(endSig);
+
+            if (exactCutoff) exactCutoffs++;
+            if (pawnsCutoff) pawnsCutoffs++;
+            if (subsetCutoff) subsetCutoffs++;
+
+            //  pawns cutoff => exact cutoff
+            assertTrue(!pawnsCutoff || exactCutoff, () -> ""+GId+" "+endSig.toHexString());
+            //  subset cutoff => pawns cutoff
+            assertTrue(!subsetCutoff || pawnsCutoff, () -> ""+GId+" "+endSig.toHexString());
+        }
+
+        System.out.println("["+games+" games]");
+        System.out.println("["+exactCutoffs+" exactCutoffs]");
+        System.out.println("["+pawnsCutoffs+" pawnsCutoffs]");
+        System.out.println("["+subsetCutoffs+" subsetCutoffs]");
+    }
+
+    void testCutoff(String queryFen, Class matsigClass, int searchFlags, int offset, int limit) throws SQLException {
         counter.reset();
         if (queryFen != null && matsigClass!=null) {
             pos.setup(queryFen);
             pos.useMatSignature(matsigClass);
-            counter.cutoff = (MatSignature) pos.getMatSig().clone();
+            counter.cutoff = new PosSearchRecord ();
+            counter.cutoff.setSearch(pos,searchFlags);
         }
         long startTime = System.currentTimeMillis();
         int games=0;
@@ -428,7 +543,7 @@ class MatSignatureV2Test {
             long whiteSignature = res.getLong(4);
             long blackSignature = res.getLong(5);
             MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
-            if (! counter.cutoff.canReach(endSig)) {
+            if (counter.cutoff.earlyCutOff(endSig,false)) {
                 counter.early++;
                 continue;
             }
@@ -462,6 +577,22 @@ class MatSignatureV2Test {
         return rs;
     }
 
+    private static ResultSet selectSignatures(int offset, int limit) throws SQLException
+    {
+        JoConnection conn = JoConnection.get();
+        String sql = "select GId,WhiteSignature,BlackSignature from MoreGame";
+        if (offset > 0 || limit > 0) {
+            sql += " limit ";
+            if (offset > 0) sql += (offset+", ");
+            sql += limit;
+        }
+        JoPreparedStatement pstm = conn.getPreparedStatement(sql);
+        pstm.execute();
+
+        ResultSet rs = pstm.getResultSet();
+        return rs;
+    }
+
     @Test
     void testRegressions()
     {
@@ -473,11 +604,13 @@ class MatSignatureV2Test {
         assertTrue(canReach("r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R b KQkq - 0 9","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 3));
 
         assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2","rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",0));
+
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1","1Q3Q2/5b2/6k1/q3bN2/4p2P/5pP1/5P1K/8 b - - 0 40",4));
     }
 
     MatSignatureV2 getMatSignatureV2(String fen) {
         pos.setup(fen);
-        return (MatSignatureV2) pos.computeMatSig();
+        return (MatSignatureV2) pos.computeMatSig().clone();
     }
 
     @Test
@@ -493,6 +626,31 @@ class MatSignatureV2Test {
         assertTrue(getMatSignatureV2("rn1qk1nr/p2bpppp/1p1p4/2p1P3/P2P4/2P1BPP1/1P5P/RN1QK1NR w KQkq - 0 1").goodBishop(BLACK));
     }
 
+    @Test
+    void testJokers()
+    {
+        MatSignatureV2 from = getMatSignatureV2("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1");
+        MatSignatureV2 to = getMatSignatureV2(  "7k/8/8/8/8/3PP3/8/R6K w - - 0 1");
+
+        // can not create a piece from thin air
+        assertFalse(from.canReach(to));
+        //  joker pieces validates the counting argument
+        from.addJokerPieces();  //  used when searching pawn structures only
+        assertTrue(from.canReach(to));
+
+        // unresolvable pawn structure
+        from = getMatSignatureV2("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1");
+        to = getMatSignatureV2("7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1");
+        assertFalse(from.canReach(to));
+        // joker pieces make no difference
+        from.addJokerPieces();
+        assertFalse(from.canReach(to));
+        //  but joker pawns do
+        from.addJokerPawns();
+        assertTrue(from.canReach(to));
+    }
+
+    @Disabled
     @Test
     void testCrossover() throws Exception {
         withDBServer();

@@ -1,5 +1,6 @@
 ==== Bugs
 
+[ ]] select games, Save As, Dialog component "transform" missing
 * double click insert variant; trying to delete it
 
 [ ] Context Help
@@ -77,16 +78,11 @@ Maintenance:
 
 [x] PosFilter + CId is slow.
     heuristic hack: search for GId BETWEEN. Inaccurate but fast.
+    [ ] long-time goal: have MySQL handle equi-joins better
 [x] update Matsig only after noisy moves
 [x] Easylink: replace Oracle's msvcp140.dll
 
 [x] Matsig V2
-    [x] cross-over .jose files
-    [x] test Ecofy (still uses MatSignatureV1 !)
-    [x] reversed color search. MatSignatureV2: mirror pawns
-    [x] store SearchRecord in Preferences
-    [?] click&drag in Search Panel
-    [x] paste FEN in Search Panel (w/out moving color?)
 
 [x] use concurrent insert for Archive Import
 [ ] Export ?
@@ -94,9 +90,31 @@ Maintenance:
 
 === Position Search Features
 
-[ ] search pawn structure
-    [ ] MatSigV2 comparison:
-[ ] check castling rights PosFilter. no stored in MatSig, but can be checked anyway. Or maybe not.
+[x] search pawn structure
+[ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[?] cache MoreGame in memory
+    [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
+    [x] -Xmx64G
+    [x] read-through ResultSet cache
+        works great!
+        caches 16M rows ~= 3GB
+        speedup from 11 to 4.2 s !
+    [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
+    [x] HANDLER is useless
+    [-] try MariaDB shared memory
+    [ ] disable if not enough memory available
+    [x] integrate with (Pos)SearchRecord, ParamStatement
+        [ ] test with, w/out CId, Comments, Info, Variations, Reversed
+
+[ ] search pawns on files:
+    * compare number of pawns by file
+    * (early cutoff sig: pull pawns back to homerow)
+    * late cutoff sig: push pawns forth to 7th row
+    * can be combined with subset search
+        (o) pawn search
+            [ ] subset
+            [ ] per file
+[ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
 [ ] search NAGs
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
@@ -109,45 +127,77 @@ Maintenance:
 
 === Native Position Search
 
-[ ] (1) port MatSignature(V2) from Java to C++
-    not too hard because it involves mainly bit-twiddling
-    [x] chess::MatSignature class
-    [ ] unit tests
-    [ ] unit test with real games (pgn?)
-    [ ] get rid of unnecesary dependencies in chess::Board (unistring,etc)
-    [ ] sanitizer. we don't want to crash the server.
-    [ ] mysql user-defined-functions
-        new_matsig(fen)     -- allocates a MatSignature object
-        new_matsig(wsig,bsig)
-        free_matsig(handle)
-
-        reachable(handle, wsig,bsig)    -- replicates MatSignature::canReach()
-        reachable(wsig,bsig, handle)
-        ...
-        [ ] unit test udf functions
-
-[ ] (2) port replay logic from Java to C++
-    [x] rule engine: chess::Board already there
-    [ ] binary decoder
-        [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-            sort by PieceListEntry.index ?
-    [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-    [ ] mysql udf's
-        zobrist_key(fen)
-        find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
-        [ ] unit test udf functions
+[x] (1) port MatSignature(V2) from Java to C++
 
 [ ] (3) read MyISAM files natively
-    [ ] lift code from MySQL sources (myisamchk e.g.)
-    [ ] full-table scan
-    [ ] index-range scan
-    [ ] in parallel (OpenMP or TBB?)
-    [ ] Java interface (JNI): java.sql.ResultSet
-        [ ] thread-safe queue for results
-        [ ] ResultSet.next() blocks/polls until new results arrive in queue
+    [x] lift code from MariaDB sources (mi_test)
+        [x] link static
+        [-] link dynamic (not on Linux)
+    [x] full-table scan
+    [x] index-range scan
+        [ ] index skip ? index search ?
+    [ ] port PosSearchRecord, PosFilter
+        [x] search pos,pawns
+        [x] unit tests
+        [ ] parallelize
+    [ ] hash flags ???
+    [ ] in-memory index:
+        GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
+        [x] equi-join Game->MoreGame
+            no need for a hash table if both indexes are sorted identically
+        [x] pull out CId -> [row..row[
+            [x] Interval, IntervalSet
+        [x] GId can be retrieved late from MoreGame
+        [x] squeeze hasVariations into msb of pointer
+         -> [x] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+            24 * 16M = 384 MB
+        [x] unit test (small, huge)
+    [ ] Parallelistion
+        [x] omp (for Windows)
+        [x] my_thread_init. Table is not thread-safe
+        [x] works in principle but doing index scan, file read, replay
+            all at once is too much (for the caches)
+            - scanning the index is fast (1s) single-threaded is best
+            - reading rows (mi_rrnd) takes abt 10 seconds for 5M rows
+            - replaying (BinReader::read) takes abt 8 seconds for 5M rows,
+                on a warmed up cache
+            -> 20 s on a cold cache
+            >  10 s on a warm cache
+            compare to 14 s with TCP+Java !?!?!
 
-[x] move chess++ to github
-[ ] build mariadb, or mysql5 from source
+            we need more insights on:
+            [-] (1) early-cut-off scan in parallel
+                [x] omp for (static, dynamic?)
+                [x] single-threaded is fastest
+                [ ] put rowptrs in a separate vector (for better cache layout)
+                [ ] put HasVariations into a std::bitset, or hash set of int ?
+            [ ] (2) loading blobs from file
+                [x] re-create _mi_read_dynamic_record
+                    [x] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
+                    [x] get rid of _mi_unpack ?
+                    [x]   don't memcpy, just compute offsets of some columns
+                [x] refactor index to use DynRec columns
+                [ ] use mmapped pointers for index read, too
+                [ ] how many 'block's are needed for one record?
+                    check with blobs > 64kb
+            [x] (3) replay in parallel
+                mmapped reads:
+                11s for 5M games (cold cache)
+                6-9s (warm cache)
+
+    [-] Java interface (JNI): java.sql.ResultSet
+        [-] thread-safe queue for results
+        [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
+        [-] ResultSet.next() blocks/polls until new results arrive in queue
+    [-] simpler JNI interface:
+        [ ] build index, invalidate, check version
+        [ ] start, cancel pos query
+        [ ] callback resultsFound(int[]) posts into event loop.
+            No need for ResultSet and Queue.
+    [x] command-line interface
+
+[x] (2) port replay logic from Java to C++
+[-] mysql udf's
 
 ==== Interesting New Features
 
@@ -177,6 +227,8 @@ Maintenance:
 
 * Logos: User
     [ ] document? (would have to be stored in db :(
+
+* Labels for Games: Tournament, Stars, Colors, ...
 
 * Foldable variations.
     - Use LineLabelNode as buttons
@@ -224,9 +276,15 @@ Maintenance:
 
 ==== Project
 
+[ ] Version 1.6
+    [ ] MariaDB from sources
+        [ ] with w/out grant tables
+    [ ] jose-cpp native position search (share server.dll)
+        [ ] no udf's (yet)
+
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode
-[ ] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
+[x] Windows: replace jre/bin/msvcp140.dll with newer version (see https://github.com/adoptium/temurin-build/issues/3887)
              causes easylink.dll to crash when called from jre/bin/java.exe.
              *Fortunately* not from jose.exe b/c it pulls the system-supplied msvcp140.dll.
 

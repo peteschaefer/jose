@@ -1,0 +1,80 @@
+Position Searching
+==================
+
+How does jose perform position searches on the database?
+
+Wait, use an Index!
+-------------------
+First thing that springs to mind is an *index*. Lichess Opening Explorer(*) uses an index to deliver fast position queries, why don't we do the same?
+Unfortunately, such an index would have to be *huge*. It would need hundreds of gigabytes of disk space, as well as many hours to create it.
+
+While this is small fish for the people at Lichess, I don't want to bother PC users with such a monstrous contraption.
+For that reason, jose does the next-best thing: an exhaustive, O(n), scan over all games.
+A let-down for database experts, but Scid and ChessBase are doing it no differently.
+
+(*) btw, jose can query the Lichess Opening Explorer online: see Edit / Options / Opening Books.
+
+Exhaustive Search
+-----------------
+1. Database Columns
+    MoreGame.Bin holds the move data in compact binary form (see binary.txt)
+    MoreGame.FEN holds the starting position (or NULL to indicate the standard starting position in most games)
+    MoreGame.WhiteSignature, BlackSignature hold the final material signature
+2. Check early cut-offs by Material Signature (see matsig.txt)
+    - this check is currently done client-side in Java code
+    - but it can be offloaded to the server (using a user-defined MySQL function. See branch experimental/native-matsig)
+    - MatSig cut-offs are astonishingly effective. Up tp 99% of games can be filtered by MatSig alone.
+3. Replay
+    once the binary data are received from the database server,
+    and early-cutoff games are skipped, the remaining games are re-played.
+    The replay processing happens in parallel, i.e. it utilizes all available processor cores on your machine
+
+    During replay, in-game cut-offs are detected, and the position is compared to the query position:
+    - exact position search finds positions by comparing Zobrist keys
+    - pawn structure search compares the lower 48 bits of the MatSignature (and only after "noisy" moves)
+
+    More position comparison features are conceivable (pawns on files, good/bad bishops, castling status, etc.).
+    Take care that those features play together with MatSig cut-offs (e.g. castling status is not (yet) part of MatSig).
+
+"Benchmarks"
+------------
+* Lumbra's Gigabase: 16 million games, 1.3 billion positions
+* on a powerful notebook, an exhaustive search takes abt 10 seconds, rarely 15 seconds
+* on a really powerful workstation, exhaustive searches take abt 5 to 8 seconds
+
+MySQL Woes
+----------
+Exhaustive search performs a full-table scan on MoreGame. Sounds scary, but is, in fact, decently fast.
+Trouble starts when a position query is combined with a meta-data query (say, for player's name, tournament date, etc.)
+
+Now, the SQL query joins two tables, Game and MoreGame by a straightforward equi-join (Game.Id=MoreGame.GId).
+One would expect that MySQL can handle equi-joins efficiently (by using a hash join), but unfortunately
+that is not the case. Instead, MySQL does an index scan on Game and looks up each MoreGame row separately.
+Which is *very* slow.
+
+We are looking into ways to ameliorate this:
+
+1. Quick & (a little) dirty:
+    Queries for a single Collection (which are frequent if the user selects a collection in the DB panel)
+    are translated into MoreGame.GId BETWEEN .. AND .. Assuming that Collections cover a consecutive range of Ids.
+    This assumption is unfounded in general, but it makes sense for huge databases like Lubra's that are mostly used in a read-only fashion.
+    In the worst of cases, a query returns too many results, from different collections.
+
+2. Smarten up MySQL
+    Try new versions of MariaDB (11,12?) or MySQL (8,9?). Both work well, but no significant performance improvement has been observed :(
+    We keep on investigating; once I find a MariaDB version that can do efficient equi-joins, I will be happy to upgrade.
+
+3. Access database files directly, bypassing the server.
+    Means: port the search routines to C++.
+    This is work in progress (see https://github.com/peteschaefer/jose-cpp. oh, wait. it's a private repo :).
+    Fortunately, some components are already implemented in C++
+    - a chess rules engine
+    - the MatSignature
+    - the binary replay format (some work still to do)
+
+    What's currently missing is a processor for MyISAM disk files.
+    Is there an OSS project that does such a thing already?
+    Do we have to lift source code from MariaDB? (myisamcheck, for example)
+
+    Then again: investing work into a very old data format may be not the smartest thing to do.
+    Better wait for MariaDB, or MySQL to do their job well...

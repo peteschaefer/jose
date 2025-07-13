@@ -7,7 +7,7 @@ on:
   # trigger on changes to main branch and /src directory
   push:  
     branches: [ "main" ]
-    paths: [ "src/**", "xsl/**", "web/**" ]
+    paths: [ "src/**", "xsl/**", "web/**", "build.xml" ]
   # ..and on all pull requests   
   pull_request:
     branches: [ "main" ]
