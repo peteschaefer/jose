@@ -208,12 +208,24 @@ Maintenance:
 * Bulk edit with F4
     [ ] Autocomplete/suggest for Player, Event, Site (more?)
         [ ] suggest = grey suffix
-        [ ] complete = popup list
+        [ ] complete = popup list "..."
         -> derive from styled JTextArea
+        [ ] tab, or click expands suggestion / popup
+        [ ] offload query to pooled thread
     [ ] auto-complete in Search Panel
+        [ ] sql completer with optional constraints (GameSource)
+        [ ] distinct not needed (b/c Player is already distinct)
+        [ ] wildcards (query differs from result)
+        [x] case insensitive -> for free (collate ut8_ci !)
+        https://dev.mysql.com/doc/refman/8.4/en/regexp.html
     [ ] re-use Search Panel for Bulk Edit
+        [ ] use Completer mechanism to fill in fields
+            -> here's a synergy between autocomplete and bulk edit
+        [ ] mark edited fields
+        [ ] smart update: new Player row, or edit old in place?
     [ ] re-use Search Panel for Single Game Edit
         [ ] GameSource is the abstraction
+
 
 * Search ELO >=
 * Query History
