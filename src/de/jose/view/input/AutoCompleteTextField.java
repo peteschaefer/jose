@@ -1,11 +1,17 @@
 package de.jose.view.input;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 /**
@@ -18,7 +24,7 @@ import java.util.List;
  *      * on demand, if auto-complete key is pressed (Tab, or something else)
  *      * as user types (more calls to completer, of course)
  */
-public class AutoCompleteTextField extends JTextArea
+public class AutoCompleteTextField extends JTextArea implements DocumentListener, CaretListener, KeyListener
 {
     public interface Completer {
         List<String> findTexts(String prefix, int limit);
@@ -44,6 +50,9 @@ public class AutoCompleteTextField extends JTextArea
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
         StyleConstants.setForeground(suffixStyle, Color.gray);
+        doc.addDocumentListener(this);
+        super.addKeyListener(this);
+        super.addCaretListener(this);
     }
     public AutoCompleteTextField(Completer completer) {
         this(completer, ShowOn.ASYOUTYPE, ShowOn.ONKEY, DEFAULT_COMPLETE_KEY);
@@ -78,4 +87,43 @@ public class AutoCompleteTextField extends JTextArea
     //
     //  Methods
     //
+
+    //
+    //  Implemented Interfaces
+    //
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void caretUpdate(CaretEvent e) {
+
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+
+    }
+
 }
