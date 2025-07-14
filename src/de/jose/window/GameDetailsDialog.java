@@ -15,6 +15,7 @@ package de.jose.window;
 import de.jose.*;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
+import de.jose.db.io.DBFieldCompleter;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.chess.Position;
@@ -24,6 +25,7 @@ import de.jose.pgn.PgnUtil;
 import de.jose.pgn.TagNode;
 import de.jose.view.DocumentPanel;
 import de.jose.view.JoToolBar;
+import de.jose.view.input.AutoCompleteTextField;
 import de.jose.view.input.JDateField;
 
 import javax.swing.*;
@@ -135,8 +137,10 @@ public class GameDetailsDialog
 		tab1.add(newLabel("dialog.details.white"), ELEMENT_TWO_SMALL);
 		tab1.add(newLabel("dialog.details.black"), ELEMENT_ROW_SMALL);
 
+		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
+
 		tab1.add(newLabel("dialog.details.name"), labelOne);
-		add(tab1, newTextField(TAG_WHITE), ELEMENT_TWO);
+		add(tab1, newTextField(TAG_WHITE,playerCompleter), ELEMENT_TWO);
 		add(tab1, newTextField(TAG_BLACK), ELEMENT_ROW);
 
 		tab1.add(newLabel("dialog.details.elo"), labelOne);

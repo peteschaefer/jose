@@ -692,6 +692,14 @@ public class JoDialog
 		return text;
 	}
 
+	public static final AutoCompleteTextField newTextField(String name, AutoCompleteTextField.Completer completer)
+	{
+		AutoCompleteTextField text = new AutoCompleteTextField(completer);
+		text.setName(name);
+		text.setToolTipText(Language.getTip(name));
+		return text;
+	}
+
     public static final JTextField newTextField(DocumentListener listener)
     {
         JTextField field = new JTextField();

@@ -17,7 +17,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     }
 
     @Override
-    public List<String> findTexts(String prefix, int limit) {
+    public List<String> getCompletions(String prefix, int limit) {
         JoConnection conn=null;
         ArrayList<String> result = new ArrayList<>();
         try {
