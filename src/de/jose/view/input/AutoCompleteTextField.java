@@ -1,5 +1,6 @@
 package de.jose.view.input;
 
+import de.jose.Application;
 import de.jose.view.JoLineBorder;
 
 import javax.swing.*;
@@ -53,8 +54,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         this.completerKey = completerKey;
       //  Border border = (Border) UIManager.get("TextPane.border");
         super.setBorder(new LineBorder(Color.red));
-        // setup styled JTextArea and Styled Dcoument
-        //  single-line
+        //  todo single-line, don't expand
         this.doc = super.getStyledDocument();
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
@@ -86,7 +86,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     //  length of user-typed prefix
     private int prefixLen = 0;
     private List<String> completions = new ArrayList<String>();
-    private String suggestion;
+    private String suggestion = "";
 
     private Completer completer;
     private ShowOn showSuggest, showComplete;
@@ -111,18 +111,34 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     }
 
     private void updateCompletions() {
+        Application.theExecutorService.submit(AutoCompleteTextField.this::doUpdateCompletions);
+    }
+
+    private void doUpdateCompletions()
+    {
         String query = getText();
-        this.completions = completer.getCompletions(query, 0);
+        List<String> completions = completer.getCompletions(query, 0);
+        if (completions==null) return;  //  query was aborted by Completer
+
+        this.completions = completions;
+        suggestion = computeSuggestion(completions, query);
+
+        System.err.println(query+": "+this.completions.size()+" completions; sugegstion = '"+suggestion+"'");
+        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+    }
+
+    private String computeSuggestion(List<String> completions, String query)
+    {
         //  find suggestions length
         int suggLen = 0;
-        suggestion = "";
+        String suggestion = "";
 
         if (!completions.isEmpty()) {
             String res0 = completions.get(0);
             int px0 = completer.prefixLength(query,res0);
             suggLen = res0.length() - px0;
 
-            for(int i=1; suggLen > 0 && i < completions.size(); i++) {
+            for(int i = 1; suggLen > 0 && i < completions.size(); i++) {
                 String resi = completions.get(i);
                 int pxi = completer.prefixLength(query,resi);
                 for (int j=0; j < suggLen; j++) {
@@ -136,8 +152,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
             if (suggLen > 0)
                 suggestion = res0.substring(px0, suggLen);
         }
-
-        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        return suggestion;
     }
 
     private void updateDocument() {
@@ -154,7 +169,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         } finally {
-            super.setCaret(caret);
+           // super.setCaret(caret);
             blockListeners=false;
         }
     }
@@ -165,13 +180,15 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     @Override
     public void keyTyped(KeyEvent e) {
         if (blockListeners) return;
-        
-        if (e.getKeyCode()==completerKey.getKeyCode()
-                && e.getModifiersEx()==completerKey.getModifiers())
+
+        if (e.getKeyChar()==completerKey.getKeyChar()
+                //&& e.getKeyCode()==completerKey.getKeyCode()
+                && e.getModifiers()==completerKey.getModifiers())
         {
+            e.consume();    //  does not what I expect :(
             if (super.getCaret().getDot() < prefixLen+suggestion.length())
                 applySuggestion();
-            else
+            else if (completions.size() >= 2)
                 showCompletionPopup();
         }
     }
