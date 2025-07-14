@@ -211,14 +211,15 @@ Maintenance:
         [ ] complete = popup list "..."
         -> derive from styled JTextArea
         [ ] tab, or click expands suggestion / popup
+        [ ] find suggestion by comparing prefixes/suffixes
         [ ] offload query to pooled thread
     [ ] auto-complete in Search Panel
-        [ ] sql completer with optional constraints (GameSource)
+        [ ] sql completer without constrain
         [ ] distinct not needed (b/c Player is already distinct)
+        [ ] with constraint optional constraints (GameSource)
         [ ] wildcards (query differs from result)
         [x] case insensitive -> for free (collate ut8_ci !)
-        https://dev.mysql.com/doc/refman/8.4/en/regexp.html
-    [ ] re-use Search Panel for Bulk Edit
+    [ ] have one base Edit Panel for: Search Panel, Single Edit F4, Bulk Edit
         [ ] use Completer mechanism to fill in fields
             -> here's a synergy between autocomplete and bulk edit
         [ ] mark edited fields
