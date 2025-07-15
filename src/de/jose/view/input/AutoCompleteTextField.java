@@ -2,6 +2,7 @@ package de.jose.view.input;
 
 import de.jose.Application;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.CaretEvent;
@@ -11,6 +12,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +29,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
  *      * on demand, if auto-complete key is pressed (Tab, or something else)
  *      * as user types (more calls to completer, of course)
  */
-public class AutoCompleteTextField extends JComponent implements CaretListener
+public class AutoCompleteTextField extends JComponent implements CaretListener, FocusListener
 {
+
     /**
      * Interface that completion providers must implement
      * @see de.jose.db.io.DBFieldCompleter which retrieves completions from the database.
@@ -77,7 +81,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
         add(scroller);
 
         //  scroller has a nicer focus border ?!
-        text.setBorder(scroller.getBorder());
+        //text.setBorder(scroller.getBorder());
 
         this.completer = completer;
         this.showSuggest = showSuggest;
@@ -91,6 +95,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
         StyleConstants.setForeground(suffixStyle, Color.gray);
         //doc.addDocumentListener(this);
         text.addCaretListener(this);
+        text.addFocusListener(this);
 
         Object oldkey = text.getInputMap().get(completerKey);
         Action oldaction = text.getActionMap().get(oldkey);
@@ -120,9 +125,11 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
     }
 
     public String getText() {
+        assert(prefixLen <= doc.getLength());
         try {
             return doc.getText(0,prefixLen);
         } catch (BadLocationException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -131,6 +138,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
     //  Members
     //
     //  length of user-typed prefix
+    private int minPrefixLen = 1;   //  don't autocomplete on an empty string (it works, but is not intuitive)
     private int prefixLen = 0;
     private List<String> suffixes = new ArrayList<String>();
     private boolean wasAbbreviated = false;
@@ -175,7 +183,14 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
 
     private void updateCompletions() {
         hideCompletionPopup();
-        Application.theExecutorService.submit(AutoCompleteTextField.this::doUpdateCompletions);
+        if (text.hasFocus()) {
+            if (prefixLen >= minPrefixLen) {
+                Application.theExecutorService.submit(AutoCompleteTextField.this::doUpdateCompletions);
+            } else {
+                suffixes.clear();
+                updateDocument();
+            }
+        }
     }
 
     private void doUpdateCompletions()
@@ -261,10 +276,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
             doc.remove(prefixLen, doc.getLength() - prefixLen);
             doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
 
-            if (suffixes.size()==1)
-                doc.insertString(prefixLen, suffixes.get(0), suffixStyle);
-            if (suffixes.size() >= 2 || wasAbbreviated)
-                doc.insertString(doc.getLength(), "...", suffixStyle);
+            if (text.hasFocus()) {
+                if (suffixes.size() == 1)
+                    doc.insertString(prefixLen, suffixes.get(0), suffixStyle);
+                if (suffixes.size() >= 2 || wasAbbreviated)
+                    doc.insertString(doc.getLength(), "...", suffixStyle);
+            }
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         } finally {
@@ -313,6 +330,16 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
         }
     }
 
+    @Override
+    public void focusGained(FocusEvent e) {
+        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateCompletions);
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+    }
+
     class AutoCompleteTextPane extends JTextPane
     {
         //  hack to avoid line breaking ?!
@@ -340,7 +367,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
         private void onUpdate(int offset, int length) {
             if (length==0) return;
             if (offset <= prefixLen)
-                prefixLen += length;
+                prefixLen += length;    //  length may be negative!
+            assert(prefixLen <= doc.getLength());
             updateCompletions();
         }
 
@@ -350,6 +378,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
                 int chunk = Math.min(length,prefixLen-offset);
                 prefixLen -= chunk;
             }
+            assert(prefixLen <= doc.getLength());
             updateCompletions();
         }
 
@@ -389,7 +418,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
                 if (text.isEmpty())
                     onRemove(offset, length);
                 else
-                    onUpdate(offset, text.length());
+                    onUpdate(offset, text.length()-length);
             }
 
             blockListeners=wasBlockListeners;

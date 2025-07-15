@@ -236,7 +236,8 @@ abstract public class DBAdapter
 				ClassPathUtil.addAllToClassPath(libDir, classPath);
 			}*/
 
-			Class adapterClass = Class.forName(adapterClassName);
+			ClassLoader currentLoader = DBAdapter.class.getClassLoader();
+			Class adapterClass = Class.forName(adapterClassName,true,currentLoader);
 			adapter = (DBAdapter)adapterClass.newInstance();
 
 			int serverMode = DBAdapter.MODE_EXTERNAL;

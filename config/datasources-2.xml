@@ -120,7 +120,7 @@
 
 
 	<!-- MySQL separate server process -->
-	<data-source default="true">
+	<data-source default="false">
 		<display-name> Maria-standalone </display-name>
 		<jndi-name> jdbc/maria-standalone </jndi-name>
 		<adapter-class mode="standalone"> de.jose.db.MariaDBAdapter </adapter-class>

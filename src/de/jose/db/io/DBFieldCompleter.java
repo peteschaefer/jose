@@ -60,7 +60,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
                 result.add(res.getString(1));
             }
 
-        } catch (SQLException ex) {
+        } catch (Throwable ex) {
+            ex.printStackTrace();
             throw new RuntimeException(ex);
         } finally {
             JoConnection.release(conn);
