@@ -76,6 +76,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener
         setLayout(new GridLayout(1,1));
         add(scroller);
 
+        //  scroller has a nicer focus border ?!
         text.setBorder(scroller.getBorder());
 
         this.completer = completer;
