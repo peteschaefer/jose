@@ -24,7 +24,7 @@ import java.util.List;
  *      * on demand, if auto-complete key is pressed (Tab, or something else)
  *      * as user types (more calls to completer, of course)
  */
-public class AutoCompleteTextField extends JTextPane implements DocumentListener, CaretListener
+public class AutoCompleteTextField extends JTextPane implements CaretListener
 {
     public interface Completer {
         List<String> getCompletions(String query, int limit);
@@ -56,7 +56,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
         StyleConstants.setForeground(suffixStyle, Color.gray);
-        doc.addDocumentListener(this);
+        //doc.addDocumentListener(this);
         super.addCaretListener(this);
 
         getInputMap().put(completerKey, "completerTyped");
@@ -68,6 +68,8 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         });
 
         doc.setDocumentFilter(new ACDocumentFilter());
+
+        //  todo hide popup on: ESC, focus loss
     }
 
     public AutoCompleteTextField(Completer completer) {
@@ -102,6 +104,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
 
     private Style prefixStyle, suffixStyle;
     private boolean blockListeners=false;
+    private JPopupMenu popupMenu;
 
     //
     //  Methods
@@ -116,10 +119,21 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     }
 
     private void showCompletionPopup() {
-        //  todo
+        popupMenu = new JPopupMenu();
+        for(String s : suffixes)
+            popupMenu.add(s);
+        //  align below Caret
+        Point p = getCaret().getMagicCaretPosition();
+        popupMenu.show(this, p.x, p.y);
+    }
+
+    private void hideCompletionPopup() {
+        if (popupMenu!=null) popupMenu.setVisible(false);
+        popupMenu = null;
     }
 
     private void updateCompletions() {
+        hideCompletionPopup();
         Application.theExecutorService.submit(AutoCompleteTextField.this::doUpdateCompletions);
     }
 
@@ -200,8 +214,9 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         caret.setDot(0);
         setCaret(null);
 
+        boolean wasBlockListeners = blockListeners;
+        blockListeners=true;
         try {
-            blockListeners=true;
             doc.remove(prefixLen, doc.getLength() - prefixLen);
             doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
 
@@ -215,7 +230,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
             super.setCaret(caret);
             caret.setDot(Math.min(prefixLen,oldMark));
             caret.moveDot(Math.min(prefixLen,oldDot));
-            blockListeners=false;
+            blockListeners=wasBlockListeners;
         }
     }
 
@@ -224,13 +239,16 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     //
 
     private void onCompleterKey() {
+        if (blockListeners) return;
+
         int dot = super.getCaret().getDot();
         if (inSuggestion(dot)) {
             String suggestion = suffixes.get(0);    //  note: **do** evaluate before lambda
             SwingUtilities.invokeLater(() -> applySuggestion(suggestion));
         }
-        else if (suffixes.size() >= 2)
+        else if (suffixes.size() >= 2) {
             SwingUtilities.invokeLater(AutoCompleteTextField.this::showCompletionPopup);
+        }
     }
 
     private boolean inSuggestion(int pos) {
@@ -244,39 +262,9 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     public void caretUpdate(CaretEvent e) {
         if (blockListeners) return;
 
-        if (e.getDot() <= prefixLen) {
-            //  click in editable section. ok.
-        }
-        else {
+        if (e.getDot() > prefixLen) {
             onCompleterKey();
         }
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        if (blockListeners) return;
-
-        if (e.getOffset() <= prefixLen)
-            prefixLen += e.getLength();
-        updateCompletions();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        if (blockListeners) return;
-
-        if (e.getOffset() <= prefixLen) {
-            int chunk = Math.min(e.getLength(),prefixLen-e.getOffset());
-            prefixLen -= chunk;
-        }
-        updateCompletions();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        if (blockListeners) return;
-
-        updateCompletions();
     }
 
     class ACDocumentFilter extends DocumentFilter
@@ -289,19 +277,62 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
             return input;//  or newlines
         }
 
+        private void onUpdate(int offset, int length) {
+            if (length==0) return;
+            if (offset <= prefixLen)
+                prefixLen += length;
+            updateCompletions();
+        }
+
+        private void onRemove(int offset, int length) {
+            if (length==0) return;
+            if (offset <= prefixLen) {
+                int chunk = Math.min(length,prefixLen-offset);
+                prefixLen -= chunk;
+            }
+            updateCompletions();
+        }
+
         @Override
-        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-            fb.insertString(offset, filterString(string), attr);
+        public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
+            boolean wasBlockListeners = blockListeners;
+            blockListeners=true;
+            text = filterString(text);
+            fb.insertString(offset, text, attr);
+
+            if (!wasBlockListeners)
+                onUpdate(offset,text.length());
+
+            blockListeners=wasBlockListeners;
         }
 
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            boolean wasBlockListeners = blockListeners;
+            blockListeners=true;
             fb.remove(offset, length);
+
+            if (!wasBlockListeners)
+                onRemove(offset,length);
+
+            blockListeners=wasBlockListeners;
         }
 
         @Override
         public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-            fb.replace(offset, length, filterString(text), attrs);
+            boolean wasBlockListeners = blockListeners;
+            blockListeners=true;
+            text = filterString(text);
+            fb.replace(offset, length, text, attrs);
+
+            if (!wasBlockListeners) {
+                if (text.isEmpty())
+                    onRemove(offset, length);
+                else
+                    onUpdate(offset, text.length());
+            }
+
+            blockListeners=wasBlockListeners;
         }
     }
 
