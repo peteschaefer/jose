@@ -110,6 +110,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     private void applySuggestion(String suggestion) {
         prefixLen += suggestion.length();
         doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
+        getCaret().setDot(prefixLen);
         suffixes.clear();
         updateCompletions(); // ?
     }
@@ -284,6 +285,7 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         private String filterString(String input) {
             input = input.replace("\t","");   //  can not insert tabs
             input = input.replace("\n","");
+            input = input.replace("\r","");
             return input;//  or newlines
         }
 
