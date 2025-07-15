@@ -73,8 +73,5 @@ We are looking into ways to ameliorate this:
     - the binary replay format (some work still to do)
 
     What's currently missing is a processor for MyISAM disk files.
-    Is there an OSS project that does such a thing already?
-    Do we have to lift source code from MariaDB? (myisamcheck, for example)
+    We have to lift source code from MariaDB. It is not always fun to read, but it should work.
 
-    Then again: investing work into a very old data format may be not the smartest thing to do.
-    Better wait for MariaDB, or MySQL to do their job well...

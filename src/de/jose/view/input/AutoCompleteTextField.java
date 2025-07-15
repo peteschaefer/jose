@@ -1,10 +1,8 @@
 package de.jose.view.input;
 
 import de.jose.Application;
-import de.jose.view.JoLineBorder;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -12,8 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +24,7 @@ import java.util.List;
  *      * on demand, if auto-complete key is pressed (Tab, or something else)
  *      * as user types (more calls to completer, of course)
  */
-public class AutoCompleteTextField extends JTextPane implements DocumentListener, CaretListener, KeyListener
+public class AutoCompleteTextField extends JTextPane implements DocumentListener, CaretListener
 {
     public interface Completer {
         List<String> getCompletions(String query, int limit);
@@ -55,14 +52,24 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
       //  Border border = (Border) UIManager.get("TextPane.border");
         super.setBorder(new LineBorder(Color.red));
         //  todo single-line, don't expand
-        this.doc = super.getStyledDocument();
+        this.doc = (DefaultStyledDocument) super.getStyledDocument();
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
         StyleConstants.setForeground(suffixStyle, Color.gray);
         doc.addDocumentListener(this);
-        super.addKeyListener(this);
         super.addCaretListener(this);
+
+        getInputMap().put(completerKey, "completerTyped");
+        getActionMap().put("completerTyped", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { onCompleterKey(); }
+            @Override
+            public boolean accept(Object sender) { return true; }
+        });
+
+        doc.setDocumentFilter(new ACDocumentFilter());
     }
+
     public AutoCompleteTextField(Completer completer) {
         this(completer, ShowOn.ASYOUTYPE, ShowOn.ONKEY, DEFAULT_COMPLETE_KEY);
     }
@@ -85,13 +92,13 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     //
     //  length of user-typed prefix
     private int prefixLen = 0;
-    private List<String> completions = new ArrayList<String>();
-    private String suggestion = "";
+    private List<String> suffixes = new ArrayList<String>();
+    private boolean wasAbbreviated = false;
 
     private Completer completer;
     private ShowOn showSuggest, showComplete;
     private KeyStroke completerKey;
-    private StyledDocument doc;
+    private DefaultStyledDocument doc;
 
     private Style prefixStyle, suffixStyle;
     private boolean blockListeners=false;
@@ -100,10 +107,11 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     //  Methods
     //
 
-    private void applySuggestion() {
+    private void applySuggestion(String suggestion) {
         prefixLen += suggestion.length();
         doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
-        suggestion = "";
+        suffixes.clear();
+        updateCompletions(); // ?
     }
 
     private void showCompletionPopup() {
@@ -117,59 +125,95 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     private void doUpdateCompletions()
     {
         String query = getText();
-        List<String> completions = completer.getCompletions(query, 0);
-        if (completions==null) return;  //  query was aborted by Completer
+        List<String> completions = null;
+        try {
 
-        this.completions = completions;
-        suggestion = computeSuggestion(completions, query);
+            completions = completer.getCompletions(query, 0);
+            if (completions==null) return;  //  query was aborted by Completer
 
-        System.err.println(query+": "+this.completions.size()+" completions; sugegstion = '"+suggestion+"'");
+            computeSuffixes(completions, query);
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        System.err.println(query+": "+completions.size()+" completions; "+suffixes.size()+" suffixes");
+        if (suffixes.size()==1)
+            System.err.println("suggestion: '"+suffixes.get(0)+"'");
+
         SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
     }
 
-    private String computeSuggestion(List<String> completions, String query)
+    private void computeSuffixes(List<String> completions, String query)
     {
-        //  find suggestions length
-        int suggLen = 0;
-        String suggestion = "";
+        //  find suffixes length
+        int suffLen = 0;
+        this.suffixes = new ArrayList<>();
+        this.wasAbbreviated = false;
+        int i,j;
 
-        if (!completions.isEmpty()) {
-            String res0 = completions.get(0);
-            int px0 = completer.prefixLength(query,res0);
-            suggLen = res0.length() - px0;
+        outer_loop:
+        for(i=0; i<completions.size(); i++)
+        {
+            String cmpi = completions.get(i);
+            int pxi = completer.prefixLength(query,cmpi);
+            suffLen = cmpi.length() - pxi;
+            if (suffLen==0) continue;   //  skip this one
 
-            for(int i = 1; suggLen > 0 && i < completions.size(); i++) {
-                String resi = completions.get(i);
-                int pxi = completer.prefixLength(query,resi);
-                for (int j=0; j < suggLen; j++) {
-                    if (resi.charAt(pxi+j) != res0.charAt(px0+j)) {
-                        suggLen = j;
+            assert(suffLen > 0);
+            for(j = i+1; j < completions.size(); j++) {
+                String cmpj = completions.get(j);
+                int pxj = completer.prefixLength(query,cmpj);
+
+                if (cmpi.charAt(pxi) != cmpj.charAt(pxj))  {
+                    //  ends one run
+                    suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
+                    i=j-1;
+                    continue outer_loop;
+                }
+
+                for (int k=1; k < suffLen; k++) {
+                    if (cmpi.charAt(pxi+k) != cmpj.charAt(pxj+k)) {
+                        suffLen = k;
+                        wasAbbreviated = true;//  shorten suffix
                         break;
                     }
                 }
+                assert(suffLen > 0);
             }
-
-            if (suggLen > 0)
-                suggestion = res0.substring(px0, suggLen);
+            //  eof
+            assert(j==completions.size());
+            suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
+            break;
         }
-        return suggestion;
     }
 
     private void updateDocument() {
         Caret caret = super.getCaret();
+        int oldDot = caret.getDot();
+        int oldMark = caret.getMark();
+
+        //  text operations should not mess up the caret. it is restored at the end
+        //  @see also AWTUtil.setTextSafe()
+        caret.setDot(0);
+        setCaret(null);
+
         try {
             blockListeners=true;
             doc.remove(prefixLen, doc.getLength() - prefixLen);
             doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
 
-            if (!suggestion.isEmpty())
-                doc.insertString(prefixLen, suggestion, suffixStyle);
-            if (completions.size() >= 2)
+            if (suffixes.size()==1)
+                doc.insertString(prefixLen, suffixes.get(0), suffixStyle);
+            if (suffixes.size() >= 2 || wasAbbreviated)
                 doc.insertString(doc.getLength(), "...", suffixStyle);
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         } finally {
-           // super.setCaret(caret);
+            super.setCaret(caret);
+            caret.setDot(Math.min(prefixLen,oldMark));
+            caret.moveDot(Math.min(prefixLen,oldDot));
             blockListeners=false;
         }
     }
@@ -177,26 +221,23 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     //
     //  Implemented Interfaces
     //
-    @Override
-    public void keyTyped(KeyEvent e) {
-        if (blockListeners) return;
 
-        if (e.getKeyChar()==completerKey.getKeyChar()
-                //&& e.getKeyCode()==completerKey.getKeyCode()
-                && e.getModifiers()==completerKey.getModifiers())
-        {
-            e.consume();    //  does not what I expect :(
-            if (super.getCaret().getDot() < prefixLen+suggestion.length())
-                applySuggestion();
-            else if (completions.size() >= 2)
-                showCompletionPopup();
+    private void onCompleterKey() {
+        int dot = super.getCaret().getDot();
+        if (inSuggestion(dot)) {
+            String suggestion = suffixes.get(0);    //  note: **do** evaluate before lambda
+            SwingUtilities.invokeLater(() -> applySuggestion(suggestion));
         }
+        else if (suffixes.size() >= 2)
+            SwingUtilities.invokeLater(AutoCompleteTextField.this::showCompletionPopup);
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) { }
-    @Override
-    public void keyReleased(KeyEvent e) { }
+    private boolean inSuggestion(int pos) {
+        return (suffixes.size()==1)
+                && (pos >= prefixLen)
+                && (pos < prefixLen+suffixes.get(0).length());
+    }
+
 
     @Override
     public void caretUpdate(CaretEvent e) {
@@ -205,13 +246,8 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         if (e.getDot() <= prefixLen) {
             //  click in editable section. ok.
         }
-        else if (e.getDot() < prefixLen+suggestion.length()) {
-            //  click in suggestion
-            applySuggestion();
-        }
         else {
-            //  click in "..."
-            showCompletionPopup();
+            onCompleterKey();
         }
     }
 
@@ -228,8 +264,10 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
     public void removeUpdate(DocumentEvent e) {
         if (blockListeners) return;
 
-        if (e.getOffset() <= prefixLen)
-            prefixLen -= e.getLength();
+        if (e.getOffset() <= prefixLen) {
+            int chunk = Math.min(e.getLength(),prefixLen-e.getOffset());
+            prefixLen -= chunk;
+        }
         updateCompletions();
     }
 
@@ -238,6 +276,31 @@ public class AutoCompleteTextField extends JTextPane implements DocumentListener
         if (blockListeners) return;
 
         updateCompletions();
+    }
+
+    class ACDocumentFilter extends DocumentFilter
+    {
+        //  gobble tabs and newlines
+        private String filterString(String input) {
+            input = input.replace("\t","");   //  can not insert tabs
+            input = input.replace("\n","");
+            return input;//  or newlines
+        }
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            fb.insertString(offset, filterString(string), attr);
+        }
+
+        @Override
+        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            fb.remove(offset, length);
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            fb.replace(offset, length, filterString(text), attrs);
+        }
     }
 
 }
