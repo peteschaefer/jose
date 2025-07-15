@@ -26,9 +26,33 @@ import java.util.List;
  */
 public class AutoCompleteTextField extends JTextPane implements CaretListener
 {
+    /**
+     * Interface that completion providers must implement
+     * @see de.jose.db.io.DBFieldCompleter which retrieves completions from the database.
+     *  Also demontrates how to handle concurrent queries: only the last query survives, previous queries are aborted.
+     */
     public interface Completer {
+        /**
+         * return a list of completions, matching a prefix.
+         * May be called from a background thread, and concurrently.
+         *
+         * Make sure that the implementation is thread safe!
+         * Queries may be aborted, if a new query comes in.
+         * Only the last query has to return valid results.
+         *
+         * @param query the query prefix. may contain wildcards
+         * @param limit max. number of results
+         * @return a list of completions, sorted alphabetically.
+         *  Null if the query was interrupted by a subsequent query.
+         */
         List<String> getCompletions(String query, int limit);
 
+        /**
+         * @param query string (may contain wildcards)
+         * @param result completion string (one of the list returned by getCompletions)
+         * @return length of prefix. Usually, this is just query.getLength(),
+         *               but differs if there were wildcards in the query string.*
+         */
         default int prefixLength(String query, String result) {
             return query.length();
             //  todo re-implemented for wildcard queries
