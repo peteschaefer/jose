@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,15 +98,24 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         text.addCaretListener(this);
         text.addFocusListener(this);
 
-        Object oldkey = text.getInputMap().get(completerKey);
-        Action oldaction = text.getActionMap().get(oldkey);
+        /**
+         * Focus traversal keys are
+         *  Tab, Ctrl-Tab for normal components
+         *  but only Ctrl-Tab for multi-line text.
+         *  'text' is a multi-linte text edit that should behave like a single-line,
+         *  i.e. Tab should
+         *  (1) trigger auto completion
+         *  (2) trigger focus traversal
+         */
 
         text.getInputMap().put(completerKey, "completerTyped");
         text.getActionMap().put("completerTyped", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (! onCompleterKey())
-                    oldaction.actionPerformed(e);   //  pass Tab key on to Dialog, ot whatever
+                if (! onCompleterKey()) {
+                    KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                    focusManager.focusNextComponent();
+                }
             }
             @Override
             public boolean accept(Object sender) { return true; }
@@ -168,9 +178,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     private void showCompletionPopup() {
+        String t = getText();
         popupMenu = new JPopupMenu();
         for(String s : suffixes)
-            popupMenu.add(s);
+            popupMenu.add(t+s);
         //  align below Caret
         Point p = text.getCaret().getMagicCaretPosition();
         popupMenu.show(this, p.x, p.y);
@@ -249,6 +260,9 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                         suffLen = k;
                         wasAbbreviated = true;//  shorten suffix
                         break;
+                        /** todo we would like to know for each suffix whether it is an abbreviation
+                         *  s.t. we can indicate it in the menu like "suf..."
+                         */
                     }
                 }
                 assert(suffLen > 0);

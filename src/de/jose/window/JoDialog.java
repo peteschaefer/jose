@@ -1135,6 +1135,8 @@ public class JoDialog
 			return ((ValueHolder)comp).getValue();
 		else if (comp instanceof JTextComponent)
 			return ((JTextComponent)comp).getText();
+		else if (comp instanceof AutoCompleteTextField)
+			return ((AutoCompleteTextField)comp).getText();
 		else if (comp instanceof JLabel)
 			return ((JLabel)comp).getText();
 		else if (comp instanceof JComboBox)
