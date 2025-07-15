@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
+
 /**
  * Similar to JTextField but with Autocomplete/suggestion
  *
@@ -24,7 +26,7 @@ import java.util.List;
  *      * on demand, if auto-complete key is pressed (Tab, or something else)
  *      * as user types (more calls to completer, of course)
  */
-public class AutoCompleteTextField extends JTextPane implements CaretListener
+public class AutoCompleteTextField extends JComponent implements CaretListener
 {
     /**
      * Interface that completion providers must implement
@@ -69,24 +71,36 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
                           ShowOn showSuggest, ShowOn showComplete,
                           KeyStroke completerKey)
     {
+        this.text = new AutoCompleteTextPane();
+        this.scroller = new JScrollPane(text,VERTICAL_SCROLLBAR_NEVER,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        setLayout(new GridLayout(1,1));
+        add(scroller);
+
+        text.setBorder(scroller.getBorder());
+
         this.completer = completer;
         this.showSuggest = showSuggest;
         this.showComplete = showComplete;
         this.completerKey = completerKey;
       //  Border border = (Border) UIManager.get("TextPane.border");
-        super.setBorder(new LineBorder(Color.red));
-        //  todo single-line, don't expand
-        this.doc = (DefaultStyledDocument) super.getStyledDocument();
+        //super.setBorder(new LineBorder(Color.red));
+        this.doc = (DefaultStyledDocument) text.getStyledDocument();
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
         StyleConstants.setForeground(suffixStyle, Color.gray);
         //doc.addDocumentListener(this);
-        super.addCaretListener(this);
+        text.addCaretListener(this);
 
-        getInputMap().put(completerKey, "completerTyped");
-        getActionMap().put("completerTyped", new AbstractAction() {
+        Object oldkey = text.getInputMap().get(completerKey);
+        Action oldaction = text.getActionMap().get(oldkey);
+
+        text.getInputMap().put(completerKey, "completerTyped");
+        text.getActionMap().put("completerTyped", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { onCompleterKey(); }
+            public void actionPerformed(ActionEvent e) {
+                if (! onCompleterKey())
+                    oldaction.actionPerformed(e);   //  pass Tab key on to Dialog, ot whatever
+            }
             @Override
             public boolean accept(Object sender) { return true; }
         });
@@ -101,8 +115,7 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
     }
 
     public void setText(String text) {
-        // todo
-        super.setText(text);
+        this.text.setText(text);
     }
 
     public String getText() {
@@ -128,6 +141,9 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
 
     private Style prefixStyle, suffixStyle;
     private boolean blockListeners=false;
+
+    private JScrollPane scroller;
+    private AutoCompleteTextPane text;
     private JPopupMenu popupMenu;
 
     //
@@ -137,7 +153,7 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
     private void applySuggestion(String suggestion) {
         prefixLen += suggestion.length();
         doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
-        getCaret().setDot(prefixLen);
+        text.getCaret().setDot(prefixLen);
         suffixes.clear();
         updateCompletions(); // ?
     }
@@ -147,7 +163,7 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
         for(String s : suffixes)
             popupMenu.add(s);
         //  align below Caret
-        Point p = getCaret().getMagicCaretPosition();
+        Point p = text.getCaret().getMagicCaretPosition();
         popupMenu.show(this, p.x, p.y);
     }
 
@@ -229,14 +245,14 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
     }
 
     private void updateDocument() {
-        Caret caret = super.getCaret();
+        Caret caret = text.getCaret();
         int oldDot = caret.getDot();
         int oldMark = caret.getMark();
 
         //  text operations should not mess up the caret. it is restored at the end
         //  @see also AWTUtil.setTextSafe()
         caret.setDot(0);
-        setCaret(null);
+        text.setCaret(null);
 
         boolean wasBlockListeners = blockListeners;
         blockListeners=true;
@@ -251,7 +267,7 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         } finally {
-            super.setCaret(caret);
+            text.setCaret(caret);
             caret.setDot(Math.min(prefixLen,oldMark));
             caret.moveDot(Math.min(prefixLen,oldDot));
             blockListeners=wasBlockListeners;
@@ -262,16 +278,21 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
     //  Implemented Interfaces
     //
 
-    private void onCompleterKey() {
-        if (blockListeners) return;
+    private boolean onCompleterKey() {
+        if (blockListeners) return true;
 
-        int dot = super.getCaret().getDot();
+        int dot = text.getCaret().getDot();
         if (inSuggestion(dot)) {
             String suggestion = suffixes.get(0);    //  note: **do** evaluate before lambda
             SwingUtilities.invokeLater(() -> applySuggestion(suggestion));
+            return true;
         }
         else if (suffixes.size() >= 2) {
             SwingUtilities.invokeLater(AutoCompleteTextField.this::showCompletionPopup);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -281,13 +302,27 @@ public class AutoCompleteTextField extends JTextPane implements CaretListener
                 && (pos < prefixLen+suffixes.get(0).length());
     }
 
-
+    //  implements CaretListener
     @Override
     public void caretUpdate(CaretEvent e) {
         if (blockListeners) return;
 
         if (e.getDot() > prefixLen) {
             onCompleterKey();
+        }
+    }
+
+    class AutoCompleteTextPane extends JTextPane
+    {
+        //  hack to avoid line breaking ?!
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            // Only track viewport width when the viewport is wider than the preferred width
+            return getUI().getPreferredSize(this).width <= getParent().getSize().width;
+        }
+        @Override
+        public Dimension getPreferredSize() {
+            return getUI().getPreferredSize(this);
         }
     }
 

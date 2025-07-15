@@ -138,10 +138,23 @@ public class GameDetailsDialog
 		tab1.add(newLabel("dialog.details.black"), ELEMENT_ROW_SMALL);
 
 		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
+		AutoCompleteTextField whiteEdit = newTextField(TAG_WHITE,playerCompleter);
+		//JScrollPane scroller = new JScrollPane(whiteEdit, VERTICAL_SCROLLBAR_NEVER,HORIZONTAL_SCROLLBAR_NEVER);
+
+		//	todo JTextPane has a nicer focus border than JScrollPane. what can we do about it?
+		//whiteEdit.setBorder(scroller.getBorder());
+		//scroller.setBorder(null);
+
+		//FlatScrollPaneBorder border1 = (FlatScrollPaneBorder) scroller.getBorder();
+
+		JTextField blackEdit = newTextField(TAG_BLACK);
+	//	FlatTextBorder border2 = (FlatTextBorder) blackEdit.getBorder();
+	//	todo don't import FlatLaf. Just for experimenting.
+
 
 		tab1.add(newLabel("dialog.details.name"), labelOne);
-		add(tab1, newTextField(TAG_WHITE,playerCompleter), ELEMENT_TWO);
-		add(tab1, newTextField(TAG_BLACK), ELEMENT_ROW);
+		add(tab1, whiteEdit, ELEMENT_TWO);
+		add(tab1, blackEdit, ELEMENT_ROW);
 
 		tab1.add(newLabel("dialog.details.elo"), labelOne);
 		add(tab1, field=newIntegerField(TAG_WHITE_ELO), ELEMENT_TWO_SMALL);

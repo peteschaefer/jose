@@ -1193,6 +1193,8 @@ public class JoDialog
 			((ValueHolder)comp).setValue(value);
 		else if (comp instanceof JTextComponent)
 			((JTextComponent)comp).setText(StringUtil.nullValueOf(value));
+		else if (comp instanceof AutoCompleteTextField)
+			((AutoCompleteTextField)comp).setText(StringUtil.nullValueOf(value));
 		else if (comp instanceof JLabel)
 			((JLabel)comp).setText(StringUtil.nullValueOf(value));
 		else if (comp instanceof JComboBox)
