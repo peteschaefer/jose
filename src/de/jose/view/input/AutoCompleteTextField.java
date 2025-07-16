@@ -173,7 +173,6 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             prefixLen += suggestion.length();
             text.getCaret().setDot(prefixLen);
             suffixes.clear();
-            blockListeners=false;
             updateCompletions(true);    //  todo then continue, if there are more completions
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
@@ -185,6 +184,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     private void showCompletionPopup() {
         String t = getText();
         popupMenu.removeAll();
+
         for(String s : suffixes) {
             //popupMenu.add(t+s);
             Action action = new AbstractAction(s) {                 @Override
@@ -192,7 +192,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                     appendSuggestion(s);
                 }
             };
-            action.putValue(Action.NAME, t+s);
+            action.putValue(Action.NAME, t+" > "+s);
             if (s.length()>=1) {
                 action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(s.substring(0, 1)));
                 action.putValue(Action.MNEMONIC_KEY, (int)s.charAt(0));
@@ -205,12 +205,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     private void hideCompletionPopup() {
-        if (popupMenu.isVisible())
+        if (popupMenu.isVisible() && !blockListeners)
             popupMenu.setVisible(false);
     }
 
     private void updateCompletions() {
-        hideCompletionPopup();
+        //hideCompletionPopup();
         if (text.hasFocus())
             updateCompletions(false);
     }
@@ -384,7 +384,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     @Override
     public void focusLost(FocusEvent e) {
-        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        if (e.getOppositeComponent()==popupMenu) {
+            //  popup menu gained focus. no worry
+        }
+        else {
+            SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        }
     }
 
     class ACTextPane extends JTextPane
