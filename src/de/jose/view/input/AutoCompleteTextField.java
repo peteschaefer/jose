@@ -168,12 +168,17 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     //  append a suggestion that is not yet displayed (from popup menu)
     private void appendSuggestion(String suggestion) {
         try {
-            doc.insertString(prefixLen,suggestion,prefixStyle); //  note: updates prefixLen by virtue of DocumentFilter
+            blockListeners=true;
+            doc.insertString(prefixLen,suggestion,prefixStyle);     //  would not trigger updateCompletion !
+            prefixLen += suggestion.length();
             text.getCaret().setDot(prefixLen);
             suffixes.clear();
+            blockListeners=false;
             updateCompletions(true);    //  todo then continue, if there are more completions
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
+        } finally {
+            blockListeners=false;
         }
     }
 
@@ -200,7 +205,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     private void hideCompletionPopup() {
-        popupMenu.setVisible(false);
+        if (popupMenu.isVisible())
+            popupMenu.setVisible(false);
     }
 
     private void updateCompletions() {
