@@ -206,6 +206,11 @@ Maintenance:
     - drop info from Game header
 
 * Bulk edit with F4
+    [ ] GameSource is the abstraction
+        [ ] define GameSource by SearchRecord where-clause
+        [ ] use where-clause for dialog field filling
+        [ ] use where-clause for bulk update
+        [ ] in-memory GameSource has no where-clause, but a Game pointer
     [ ] Autocomplete/suggest for Player, Event, Site (more?)
         [x] suggest = grey suffix
         [ ] complete = popup list "..."
@@ -213,6 +218,11 @@ Maintenance:
         [ ] tab, or click expands suggestion / popup
         [x] find suggestion by comparing prefixes/suffixes
         [x] offload query to pooled thread
+        [ ] how to handle single-char suggestions?
+            - too many are confusing "Sa,Sb,Sc,..."
+            - too few are skipping important alternatives "P., Peter"
+            [ ] accept characters as menu shortcut
+            [ ] pop up sequence automatically
     [ ] auto-complete in Search Panel
         [x] sql completer without constraint
         [ ] distinct not needed (b/c Player is already distinct)
@@ -220,7 +230,7 @@ Maintenance:
         [ ] wildcards (query differs from result)
         [x] case insensitive -> for free (collate ut8_ci !)
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
-        search "Schäfer, P.", replace with "Schäfer, Peter"
+        search "Schï¿½fer, P.", replace with "Schï¿½fer, Peter"
 
     [ ] have one base Edit Panel for: Search Panel, Single Edit F4, Bulk Edit
         [ ] use Completer mechanism to fill in fields
@@ -228,7 +238,6 @@ Maintenance:
         [ ] mark edited fields
         [ ] smart update: new Player row, or edit old in place?
     [ ] re-use Search Panel for Single Game Edit
-        [ ] GameSource is the abstraction
 
 
 * Search ELO >=

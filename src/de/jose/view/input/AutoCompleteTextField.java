@@ -3,19 +3,14 @@ package de.jose.view.input;
 import de.jose.Application;
 import de.jose.util.CharUtil;
 
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +66,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     public AutoCompleteTextField(Completer completer, KeyStroke completerKey)
     {
-        this.text = new AutoCompleteTextPane();
+        this.text = new ACTextPane();
         this.scroller = new JScrollPane(text,VERTICAL_SCROLLBAR_NEVER,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         setLayout(new GridLayout(1,1));
         add(scroller);
@@ -154,49 +149,77 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     private boolean blockListeners=false;
 
     private JScrollPane scroller;
-    private AutoCompleteTextPane text;
-    private JPopupMenu popupMenu;
+    private ACTextPane text;
+    private JPopupMenu popupMenu = new JPopupMenu();
 
     //
     //  Methods
     //
 
+    //  append a suggestion that is already displayed (greyed out)
     private void applySuggestion(String suggestion) {
         prefixLen += suggestion.length();
         doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
         text.getCaret().setDot(prefixLen);
         suffixes.clear();
-        updateCompletions(); // ?
+        updateCompletions();
+    }
+
+    //  append a suggestion that is not yet displayed (from popup menu)
+    private void appendSuggestion(String suggestion) {
+        try {
+            doc.insertString(prefixLen,suggestion,prefixStyle); //  note: updates prefixLen by virtue of DocumentFilter
+            text.getCaret().setDot(prefixLen);
+            suffixes.clear();
+            updateCompletions(true);    //  todo then continue, if there are more completions
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void showCompletionPopup() {
         String t = getText();
-        popupMenu = new JPopupMenu();
-        for(String s : suffixes)
-            popupMenu.add(t+s);
+        popupMenu.removeAll();
+        for(String s : suffixes) {
+            //popupMenu.add(t+s);
+            Action action = new AbstractAction(s) {                 @Override
+                public void actionPerformed(ActionEvent e) {
+                    appendSuggestion(s);
+                }
+            };
+            action.putValue(Action.NAME, t+s);
+            if (s.length()>=1) {
+                action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(s.substring(0, 1)));
+                action.putValue(Action.MNEMONIC_KEY, (int)s.charAt(0));
+            }
+            popupMenu.add(action);
+        }
         //  align below Caret
-        Point p = text.getCaret().getMagicCaretPosition();
-        popupMenu.show(this, p.x, p.y);
+        Point p = text.getLocation();
+        popupMenu.show(this, p.x, p.y+text.getHeight());
     }
 
     private void hideCompletionPopup() {
-        if (popupMenu!=null) popupMenu.setVisible(false);
-        popupMenu = null;
+        popupMenu.setVisible(false);
     }
 
     private void updateCompletions() {
         hideCompletionPopup();
-        if (text.hasFocus()) {
-            if (prefixLen >= minPrefixLen) {
-                Application.theExecutorService.submit(AutoCompleteTextField.this::doUpdateCompletions);
-            } else {
-                suffixes.clear();
-                updateDocument();
-            }
+        if (text.hasFocus())
+            updateCompletions(false);
+    }
+
+    private void updateCompletions(boolean continuePopping)
+    {
+        if (prefixLen >= minPrefixLen) {
+            Application.theExecutorService.submit(() -> doUpdateCompletions(continuePopping));
+        } else {
+            suffixes.clear();
+            updateDocument();
         }
     }
 
-    private void doUpdateCompletions()
+    private void doUpdateCompletions(boolean continuePopping)
     {
         String query = getText();
         List<String> completions = null;
@@ -216,7 +239,15 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         if (suffixes.size()==1)
             System.err.println("suggestion: '"+suffixes.get(0)+"'");
 
-        SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        if (continuePopping) {
+            SwingUtilities.invokeLater(() -> {
+                updateDocument();
+                showCompletionPopup();
+            });
+        }
+        else {
+            SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        }
     }
 
     private void computeSuffixes(List<String> completions, String query)
@@ -350,7 +381,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
     }
 
-    class AutoCompleteTextPane extends JTextPane
+    class ACTextPane extends JTextPane
     {
         //  hack to avoid line breaking ?!
         @Override
