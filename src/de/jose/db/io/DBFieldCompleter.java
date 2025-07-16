@@ -39,7 +39,10 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             prefix = prefix.replace('*','%');
             prefix += "%";
 
-            String sql = "select "+column+" from "+table+" where "+column+" like ?";
+            String sql = "select "+column+
+                    " from "+table+
+                    " where "+column+" like ?"+
+                    " order by "+column;
             if (limit > 0) sql += " limit "+(limit+1);
             //  note: table has collection ut8_ci. It is already unicode aware & case-insensitive
             //  note: 'distinct' is not needed b/c Player,Event,Site are already normalized

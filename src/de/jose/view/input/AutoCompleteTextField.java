@@ -1,6 +1,7 @@
 package de.jose.view.input;
 
 import de.jose.Application;
+import de.jose.util.CharUtil;
 
 import javax.sound.midi.SysexMessage;
 import javax.swing.*;
@@ -66,15 +67,9 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
-    public enum ShowOn {
-        NEVER, ONKEY, ASYOUTYPE
-    };
-
     public static KeyStroke DEFAULT_COMPLETE_KEY = KeyStroke.getKeyStroke('\t');
 
-    public AutoCompleteTextField(Completer completer,
-                          ShowOn showSuggest, ShowOn showComplete,
-                          KeyStroke completerKey)
+    public AutoCompleteTextField(Completer completer, KeyStroke completerKey)
     {
         this.text = new AutoCompleteTextPane();
         this.scroller = new JScrollPane(text,VERTICAL_SCROLLBAR_NEVER,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -85,8 +80,6 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         //text.setBorder(scroller.getBorder());
 
         this.completer = completer;
-        this.showSuggest = showSuggest;
-        this.showComplete = showComplete;
         this.completerKey = completerKey;
       //  Border border = (Border) UIManager.get("TextPane.border");
         //super.setBorder(new LineBorder(Color.red));
@@ -127,7 +120,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     public AutoCompleteTextField(Completer completer) {
-        this(completer, ShowOn.ASYOUTYPE, ShowOn.ONKEY, DEFAULT_COMPLETE_KEY);
+        this(completer, DEFAULT_COMPLETE_KEY);
     }
 
     public void setText(String text) {
@@ -154,7 +147,6 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     private boolean wasAbbreviated = false;
 
     private Completer completer;
-    private ShowOn showSuggest, showComplete;
     private KeyStroke completerKey;
     private DefaultStyledDocument doc;
 
@@ -248,15 +240,19 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                 String cmpj = completions.get(j);
                 int pxj = completer.prefixLength(query,cmpj);
 
-                if (cmpi.charAt(pxi) != cmpj.charAt(pxj))  {
+                if (CharUtil.toUpperCase(cmpi,pxi) != CharUtil.toUpperCase(cmpj,pxj))
+                {
                     //  ends one run
+                    //  todo single-char completions are rather pointless; but must not get lost, either?
+                    // if (suffLen >= 2)
                     suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
                     i=j-1;
                     continue outer_loop;
                 }
 
                 for (int k=1; k < suffLen; k++) {
-                    if (cmpi.charAt(pxi+k) != cmpj.charAt(pxj+k)) {
+                    if (CharUtil.toUpperCase(cmpi,pxi+k) != CharUtil.toUpperCase(cmpj,pxj+k))
+                    {
                         suffLen = k;
                         wasAbbreviated = true;//  shorten suffix
                         break;

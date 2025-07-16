@@ -199,7 +199,15 @@ public class CharUtil
 	{
 		return Character.toUpperCase(stripDiacritic(c));
 	}
-	
+
+	public static final char toUpperCase(String s, int i) {
+	 	return toUpperCase(s.charAt(i));
+	}
+
+	public static final char toLowerCase(String s, int i) {
+		return toLowerCase(s.charAt(i));
+	}
+
 	public static final void toLowerCase(char[] c)
 	{
 		for (int i=c.length-1; i>=0; i--) c[i] = toLowerCase(c[i]);
