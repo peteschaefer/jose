@@ -241,7 +241,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
         if (continuePopping) {
             SwingUtilities.invokeLater(() -> {
-                updateDocument();
+                updateDocument();   //  todo w/out triggering updateCompletions !?
                 showCompletionPopup();
             });
         }
