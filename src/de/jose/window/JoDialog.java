@@ -707,6 +707,13 @@ public class JoDialog
         return field;
     }
 
+	public static final AutoCompleteTextField newTextField(AutoCompleteTextField.TextListener listener, AutoCompleteTextField.Completer completer)
+	{
+		AutoCompleteTextField field = new AutoCompleteTextField(completer);
+		field.addTextListener(listener);
+		return field;
+	}
+
     public static final JTextField newTextField(Dimension size, DocumentListener listener)
     {
         JTextField field = newTextField(listener);

@@ -19,6 +19,7 @@ import de.jose.chess.Move;
 import de.jose.chess.Position;
 import de.jose.comm.Command;
 import de.jose.comm.CommandAction;
+import de.jose.db.io.DBFieldCompleter;
 import de.jose.image.Surface;
 import de.jose.pgn.SearchRecord;
 import de.jose.profile.LayoutProfile;
@@ -26,6 +27,7 @@ import de.jose.profile.UserProfile;
 import de.jose.util.FontUtil;
 import de.jose.util.StringUtil;
 import de.jose.util.icon.TextIcon;
+import de.jose.view.input.AutoCompleteTextField;
 import de.jose.view.list.IDBTableModel;
 import de.jose.window.JoDialog;
 import de.jose.window.JoMenuBar;
@@ -42,7 +44,7 @@ import java.util.*;
 
 public class QueryPanel
 		extends JoPanel
-        implements IDBPanel, TableModelListener, ChangeListener, DocumentListener
+        implements IDBPanel, TableModelListener, ChangeListener, DocumentListener, AutoCompleteTextField.TextListener
 {
 
     //-------------------------------------------------------------------------------
@@ -104,6 +106,7 @@ public class QueryPanel
 		new GridBagConstraints(2,GridBagConstraints.RELATIVE, 1,1, 0,0,
 						   GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 						   INSETS_NORMAL, 0,0);
+
 
 
 	class PosAdapter extends SetupBoardAdapter
@@ -194,9 +197,9 @@ public class QueryPanel
 	/**	player name labels	*/
 	protected JLabel whiteLabel,blackLabel;
 	/**	input field for player names	*/
-	protected JTextField whiteName,blackName;
+	protected AutoCompleteTextField whiteName,blackName;
 	/**	inpurt field for event	*/
-	protected JTextField eventName,siteName;
+	protected AutoCompleteTextField eventName,siteName;
 	/**	input fields for ECO code (from .. to)	*/
 	protected JTextField eco1,eco2;
 	/**	input field for opening	*/
@@ -339,8 +342,12 @@ public class QueryPanel
 		p2.add(whiteLabel = JoDialog.newLabel("dialog.query.white",JLabel.LEFT));
 		p2.add(blackLabel = JoDialog.newLabel("dialog.query.black",JLabel.LEFT));
 
-		p2.add(whiteName = JoDialog.newTextField(this));
-		p2.add(blackName = JoDialog.newTextField(this));
+		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
+		AutoCompleteTextField.Completer eventCompleter = new DBFieldCompleter("Event","Name");
+		AutoCompleteTextField.Completer siteCompleter = new DBFieldCompleter("Site","Name");
+
+		p2.add(whiteName = JoDialog.newTextField(this,playerCompleter));
+		p2.add(blackName = JoDialog.newTextField(this,playerCompleter));
 		reg(whiteName,"query.white");
 		reg(blackName,"query.black");
 
@@ -356,10 +363,10 @@ public class QueryPanel
 		p1 = new JPanel(new GridBagLayout());
 		//	"Event"
 		p1.add(JoDialog.newLabel("dialog.query.event"), LABEL_ONE);
-		p1.add(eventName = JoDialog.newTextField(this), JoDialog.gridConstraint(ELEMENT_ROW,1,0,1));
+		p1.add(eventName = JoDialog.newTextField(this,eventCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,0,1));
 		//	"Site"
 		p1.add(JoDialog.newLabel("dialog.query.site"), LABEL_ONE);
-		p1.add(siteName = JoDialog.newTextField(this), JoDialog.gridConstraint(ELEMENT_ROW,1,1,1));
+		p1.add(siteName = JoDialog.newTextField(this,siteCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,1,1));
 		//	"Opening"
 		p1.add(JoDialog.newLabel("dialog.query.opening"), LABEL_ONE);
 		p1.add(openingName = JoDialog.newTextField(this), JoDialog.gridConstraint(ELEMENT_ROW,1,2,1));
@@ -848,18 +855,20 @@ public class QueryPanel
 	//	interface DocumentListener
 	//-------------------------------------------------------------------------------
 
-
+	@Override
 	public void changedUpdate(DocumentEvent e) {
 		activate(e.getDocument());
 	}
-
+	@Override
 	public void insertUpdate(DocumentEvent e) {
 		activate(e.getDocument());
 	}
-
+	@Override
 	public void removeUpdate(DocumentEvent e) {
 		activate(e.getDocument());
 	}
+	@Override
+	public void textChanged(String text) { activate(null); }
 
 	protected void activate(Object source)
 	{

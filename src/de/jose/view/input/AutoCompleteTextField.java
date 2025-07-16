@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -63,6 +64,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             return query.length();
             //  todo re-implemented for wildcard queries
         }
+    }
+
+    public interface TextListener {
+        void textChanged(String text);
     }
 
     public static KeyStroke DEFAULT_COMPLETE_KEY = KeyStroke.getKeyStroke('\t');
@@ -141,6 +146,14 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
+    public Document getDocument() {
+        return doc;
+    }
+
+    public void addTextListener(TextListener listener) {
+        listeners.add(listener);
+    }
+
     @Override
     public void setMinimumSize(Dimension minimumSize) {
         super.setMinimumSize(minimumSize);
@@ -167,6 +180,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     private Completer completer;
     private KeyStroke completerKey;
     private DefaultStyledDocument doc;
+    private List<TextListener> listeners = new ArrayList<TextListener>();
 
     private Style prefixStyle, suffixStyle;
     private boolean blockListeners=false;
@@ -445,6 +459,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             if (offset <= prefixLen)
                 prefixLen += length;    //  length may be negative!
             assert(prefixLen <= doc.getLength());
+            for(TextListener list : listeners)
+                list.textChanged(getText());
             updateCompletions();
         }
 
@@ -455,6 +471,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                 prefixLen -= chunk;
             }
             assert(prefixLen <= doc.getLength());
+            for(TextListener list : listeners)
+                list.textChanged(getText());
             updateCompletions();
         }
 

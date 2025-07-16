@@ -211,24 +211,30 @@ Maintenance:
         [ ] use where-clause for dialog field filling
         [ ] use where-clause for bulk update
         [ ] in-memory GameSource has no where-clause, but a Game pointer
-    [ ] Autocomplete/suggest for Player, Event, Site (more?)
+    [x] Autocomplete/suggest for Player, Event, Site (more?)
         [x] suggest = grey suffix
-        [ ] complete = popup list "..."
+        [x] complete = popup list "..."
         -> derive from styled JTextPane
-        [ ] tab, or click expands suggestion / popup
+        [x] tab, or click expands suggestion / popup
         [x] find suggestion by comparing prefixes/suffixes
         [x] offload query to pooled thread
-        [ ] how to handle single-char suggestions?
+        [x] how to handle single-char suggestions?
             - too many are confusing "Sa,Sb,Sc,..."
             - too few are skipping important alternatives "P., Peter"
-            [ ] accept characters as menu shortcut
-            [ ] pop up sequence automatically
+            [x] accept characters as menu shortcut
+            [x] pop up sequence automatically
     [ ] auto-complete in Search Panel
         [x] sql completer without constraint
         [ ] distinct not needed (b/c Player is already distinct)
         [ ] with optional constraints (GameSource)
         [ ] wildcards (query differs from result)
         [x] case insensitive -> for free (collate ut8_ci !)
+    [ ] fix: LIKE and RLIKE with Umlauts
+        search "Schafer","Schäfer,H." "Schafer,H."
+        seems like LIKE is umlaut-insensitive (by virtue of collation ??) ok, so far.
+        seems like RLIKE is umlaut-sensitive
+        why that mechanism in the first place? better way to tolerate whitespace?
+
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
 
