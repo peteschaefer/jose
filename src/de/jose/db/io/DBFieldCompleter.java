@@ -2,6 +2,8 @@ package de.jose.db.io;
 
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
+import de.jose.db.ParamStatement;
+import de.jose.pgn.SearchRecord;
 import de.jose.view.input.AutoCompleteTextField;
 
 import java.sql.ResultSet;
@@ -15,6 +17,11 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     public DBFieldCompleter(String table, String column) {
         this.table = table;
         this.column = column;
+
+        this.sql = new ParamStatement();
+        sql.select.append(column);
+        sql.from.append(table);
+        sql.order.append(column);
     }
 
     @Override
@@ -35,15 +42,19 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         JoConnection conn=null;
         ArrayList<String> result = new ArrayList<>();
         try {
-            prefix = prefix.replace('?','_');
-            prefix = prefix.replace('*','%');
-            prefix += "%";
+            sql.where.setLength(0);
+            sql.clearParameters();
+            SearchRecord.appendNameSearchPattern(sql,table,column, prefix,false);
 
-            String sql = "select "+column+
-                    " from "+table+
-                    " where "+column+" like ?"+
-                    " order by "+column;
-            if (limit > 0) sql += " limit "+(limit+1);
+            if (limit > 0) {
+                sql.limit.setLength(0);
+                sql.limit.append(String.valueOf(limit + 1));
+            }
+
+            //prefix = prefix.replace('?','_');
+            //prefix = prefix.replace('*','%');
+            //prefix += "%";
+
             //  note: table has collection ut8_ci. It is already unicode aware & case-insensitive
             //  note: 'distinct' is not needed b/c Player,Event,Site are already normalized
 
@@ -51,8 +62,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             conn = JoConnection.get();
             if (thisQuery < queryCounter.get()) return null;    //  new query is underway
 
-            JoPreparedStatement pstm = new JoPreparedStatement(conn,sql);
-            pstm.setString(1, prefix);
+            JoPreparedStatement pstm = sql.toPreparedStatement(conn);
             pstm.execute();
 
             if (thisQuery < queryCounter.get()) return null;    //  new query is underway
@@ -77,5 +87,6 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     //  todo constrain by Collection Ids (GameSource)
     //  todo color-insensitive Players
     private String table, column;
+    private ParamStatement sql;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }

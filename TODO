@@ -223,17 +223,20 @@ Maintenance:
             - too few are skipping important alternatives "P., Peter"
             [x] accept characters as menu shortcut
             [x] pop up sequence automatically
+        [ ] umlauts !?
     [ ] auto-complete in Search Panel
         [x] sql completer without constraint
         [ ] distinct not needed (b/c Player is already distinct)
         [ ] with optional constraints (GameSource)
         [ ] wildcards (query differs from result)
         [x] case insensitive -> for free (collate ut8_ci !)
-    [ ] fix: LIKE and RLIKE with Umlauts
+    [x] fix: LIKE and RLIKE with Umlauts
         search "Schafer","Schäfer,H." "Schafer,H."
-        seems like LIKE is umlaut-insensitive (by virtue of collation ??) ok, so far.
-        seems like RLIKE is umlaut-sensitive
-        why that mechanism in the first place? better way to tolerate whitespace?
+        LIKE is umlaut-insensitive (by virtue of collation ??)
+        RLIKE is umlaut-sensitive
+        [x] use a consistent mechanism
+        [ ] is LIKE actually faster?
+        [x] use same query for Completer
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"

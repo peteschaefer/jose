@@ -25,7 +25,6 @@ import de.jose.util.map.IntHashSet;
 import de.jose.view.ListPanel;
 import de.jose.view.input.JDateField;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -839,7 +838,7 @@ public class SearchRecord implements Cloneable
 		return null;	//	search '*' == don't search at all
 	}
 
-	protected void makeSearchPatterns(String searchText,
+	protected static void makeSearchPatterns(String searchText,
 	                                StringBuffer likePattern,
 	                                StringBuffer regexPattern)
 	{
@@ -901,10 +900,10 @@ public class SearchRecord implements Cloneable
 			//  truncate like pattern
 			likePattern.replace(truncate,likePattern.length(),"%");
 		}
-		else {
+//		else {
 			//  regex is not needed at all
-			regexPattern.setLength(0);
-		}
+//			regexPattern.setLength(0);
+//		}
 	}
 
 
@@ -1343,26 +1342,36 @@ public class SearchRecord implements Cloneable
 		else {
 			//  if there is Whitespace, or punctuation, use Regex
 			//  otherwise use LIKE (it's faster, anyway)
-			StringBuffer likePattern = new StringBuffer();
-			StringBuffer regexPattern = new StringBuffer();
-
-			makeSearchPatterns(pattern, likePattern,regexPattern);
-
-			if ((regexPattern.length() > 0) || isCaseSensitive())
-			{
-				//  use LIKE pattern to narrow down search. It's more efficient than RLIKE
-				sql.where.append(" (");
-				appendLikeClause(sql,table+".Name",likePattern.toString(),false);
-				appendOperator(sql,"AND");
-				if (regexPattern.length() > 0)
-					appendRegexClause(sql,table+".Name", regexPattern.toString(), isCaseSensitive());
-				else
-					appendLikeClause(sql,table+".Name", likePattern.toString(), isCaseSensitive());
-				sql.where.append(") ");
-			}
-			else
-				appendLikeClause(sql,table+".Name",likePattern.toString(),false);
+			appendNameSearchPattern(sql, table, "Name", pattern, isCaseSensitive());
 		}
+	}
+
+	public static void appendNameSearchPattern(ParamStatement sql,
+											   String table, String column,
+											   String pattern,
+											   boolean caseSensitive)
+	{
+		StringBuffer likePattern = new StringBuffer();
+		StringBuffer regexPattern = new StringBuffer();
+
+		makeSearchPatterns(pattern, likePattern,regexPattern);
+
+//			if ((regexPattern.length() > 0) || isCaseSensitive())
+//			{
+		//  use LIKE pattern to narrow down search. It's more efficient than RLIKE
+		//	todo but RLIKE is sensitive to umlaut (diacritics). LIKE is not.
+		//	Leads to inconsisten results
+		sql.where.append(" (");
+		appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
+		appendOperator(sql,"AND");
+//				if (regexPattern.length() > 0)
+		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
+//				else
+//					appendLikeClause(sql,table+".Name", likePattern.toString(), isCaseSensitive());
+		sql.where.append(") ");
+//			}
+//			else
+//				appendLikeClause(sql,table+".Name",likePattern.toString(),false);
 	}
 
 	protected void appendFulltextCondition(ParamStatement sql, String operator, String column, String pattern)
@@ -1383,7 +1392,7 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
-	protected void appendLikeClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
+	protected static void appendLikeClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
 	{
 		if (caseSensitive) sql.where.append(" BINARY ");
 		sql.where.append(column);
@@ -1393,7 +1402,7 @@ public class SearchRecord implements Cloneable
 		sql.addParameter(Types.VARCHAR,pattern);
 	}
 
-	protected void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
+	protected static void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
 	{
 		if (caseSensitive) sql.where.append(" BINARY ");
 		sql.where.append(column);
@@ -1507,7 +1516,7 @@ public class SearchRecord implements Cloneable
 		return true;
 	}
 
-	protected boolean appendOperator(ParamStatement sql, String operator)
+	protected static boolean appendOperator(ParamStatement sql, String operator)
 	{
 		if (operator != null && sql.where.length() > 0) {
 			sql.where.append(" ");
