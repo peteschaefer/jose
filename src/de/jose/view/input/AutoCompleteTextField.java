@@ -1,9 +1,12 @@
 package de.jose.view.input;
 
+import com.formdev.flatlaf.ui.FlatTextBorder;
 import de.jose.Application;
 import de.jose.util.CharUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.*;
@@ -76,8 +79,14 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
         this.completer = completer;
         this.completerKey = completerKey;
-      //  Border border = (Border) UIManager.get("TextPane.border");
-        //super.setBorder(new LineBorder(Color.red));
+
+        FlatTextBorder border = (FlatTextBorder) UIManager.get("TextField.border");
+//        text.setBorder(border);
+//        scroller.setBorder(null);
+        setMinimumSize(new Dimension(100,22));
+        //  todo why is this necessary ? height collapses *sometimes* with long text ?
+
+
         this.doc = (DefaultStyledDocument) text.getStyledDocument();
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
@@ -130,6 +139,20 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setMinimumSize(Dimension minimumSize) {
+        super.setMinimumSize(minimumSize);
+        scroller.setMinimumSize(minimumSize);
+        text.setMinimumSize(minimumSize);
+    }
+
+    @Override
+    public void setPreferredSize(Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+        scroller.setPreferredSize(preferredSize);
+        text.setPreferredSize(preferredSize);
     }
 
     //
@@ -192,10 +215,11 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                     appendSuggestion(s);
                 }
             };
-            action.putValue(Action.NAME, t+" > "+s);
+            action.putValue(Action.NAME, t+"-"+s);
             if (s.length()>=1) {
-                action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(s.substring(0, 1)));
-                action.putValue(Action.MNEMONIC_KEY, (int)s.charAt(0));
+                char mnemo = CharUtil.toUpperCase(s,0);
+                action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(mnemo));
+                action.putValue(Action.MNEMONIC_KEY, (int)mnemo);
             }
             popupMenu.add(action);
         }
