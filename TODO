@@ -236,14 +236,14 @@ Maintenance:
         RLIKE is accent-sensitive
         BINARY loses accent-insenstivity
         -> LIKE, vs LIKE AND RLIKE return different results
-        [ ] use alway LIKE AND RLIKE -> accent-insensitivity is lost
+        [-] use alway LIKE AND RLIKE -> accent-insensitivity is lost
             [ ] but results are consistent
             [ ] later mysql versions have accent-insensitive collations !
-        [ ] use only LIKE
-            [ ] accent-insensitivity is preserved
-            [ ] use _% to match punctuation and white space.
+        [x] use only LIKE
+            [x] accent-insensitivity is preserved
+            [x] use _% to match punctuation and white space.
                 not matched exactly, but no matter.
-            [ ] BINARY is case and accent-sensitive
+            [ ] BINARY is case and accent-sensitive. BUT FAR TOO EXPENSIVE, WHY?
 
         [ ] is LIKE actually faster?
         [x] use same query for Completer

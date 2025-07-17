@@ -838,6 +838,79 @@ public class SearchRecord implements Cloneable
 		return null;	//	search '*' == don't search at all
 	}
 
+	//	states
+	private static char STATE_ALPHA = 'a';
+	private static char STATE_PUNCT = '.';
+	private static char STATE_WILD1 = '?';
+	private static char STATE_WILDS = '*';
+	private static char STATE_EOF	= '\0';
+
+	protected static char advancePatternState(char current, char next, StringBuffer out) {
+		assert(current!=STATE_EOF);
+
+		switch (current) {
+			case '.':	//	STATE_PUNCT
+				switch(next) {
+					case '.':		return STATE_PUNCT;
+					case '?':		return STATE_PUNCT;
+					case '*':		return STATE_PUNCT;
+					case '\0':		return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			case '?':	//	STATE_WILD1
+				switch(next) {
+					case '.':		out.append('%'); return STATE_PUNCT;
+					case '?':		out.append('_'); return STATE_WILD1;
+					case '*':		out.append('%'); return STATE_PUNCT;
+					case '\0':		out.append('%'); return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			case '*':	//	STATE_WILDS
+				switch(next) {
+					case '.':		out.append('_'); return STATE_PUNCT;
+					case '?':		out.append('_'); return STATE_PUNCT;
+					case '*':		return STATE_WILDS;
+					case '\0':		return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			default:	//	STATE_ALPHA
+				switch(next) {
+					case '.':		out.append("_%"); return STATE_PUNCT;
+					case '?':		out.append('_'); return STATE_WILD1;
+					case '*':		out.append('%'); return STATE_WILDS;
+					case '\0':		out.append('%'); return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+		}
+	}
+
+	protected static void makeSearchPattern(String searchText, StringBuffer likePattern)
+	{
+		char current=STATE_ALPHA;
+		char next;
+
+		for(int i=0; i < searchText.length(); i++)
+		{
+			next = searchText.charAt(i);
+			switch(next) {
+				case '?':	break;
+				case '*':	break;
+				default:
+					if (!Character.isLetterOrDigit(next))
+						next = STATE_PUNCT;
+					break;
+			}
+
+			current = advancePatternState(current, next, likePattern);
+		}
+		advancePatternState(current, STATE_EOF, likePattern);
+	}
+
+
+	@Deprecated
 	protected static void makeSearchPatterns(String searchText,
 	                                StringBuffer likePattern,
 	                                StringBuffer regexPattern)
@@ -1352,23 +1425,27 @@ public class SearchRecord implements Cloneable
 											   boolean caseSensitive)
 	{
 		StringBuffer likePattern = new StringBuffer();
-		StringBuffer regexPattern = new StringBuffer();
+		//StringBuffer regexPattern = new StringBuffer();
 
-		makeSearchPatterns(pattern, likePattern,regexPattern);
+		makeSearchPattern(pattern, likePattern);
 
 //			if ((regexPattern.length() > 0) || isCaseSensitive())
 //			{
-		//  use LIKE pattern to narrow down search. It's more efficient than RLIKE
-		//	todo but RLIKE is sensitive to umlaut (diacritics). LIKE is not.
-		//	Leads to inconsisten results
-		sql.where.append(" (");
-		appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
-		appendOperator(sql,"AND");
+		//  NOTE:
+		//		LIKE is insensitive to CASE and ACCENTS
+		//		RLIKE is sensitive to ACCENTS but insensitve to CASE
+		//		(R)LIKE BINARY is sensitive to CASE and ACCENTS
+		//	take care when combining both
+		//	Alternative one:
+		//		use LIKE for fast filter, RLIKE for exact -> accent-ins
+		//sql.where.append(" (");
+		appendLikeClause(sql, table + "." + column,likePattern.toString(),caseSensitive);
+//		appendOperator(sql,"AND");
 //				if (regexPattern.length() > 0)
-		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
+//		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
 //				else
 //					appendLikeClause(sql,table+".Name", likePattern.toString(), isCaseSensitive());
-		sql.where.append(") ");
+//		sql.where.append(") ");
 //			}
 //			else
 //				appendLikeClause(sql,table+".Name",likePattern.toString(),false);
@@ -1394,11 +1471,11 @@ public class SearchRecord implements Cloneable
 
 	protected static void appendLikeClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
 	{
-		if (caseSensitive) sql.where.append(" BINARY ");
+		sql.where.append(caseSensitive ? " BINARY ":" ");
 		sql.where.append(column);
-		sql.where.append(" LIKE ");
-		if (caseSensitive) sql.where.append(" BINARY ");
-		sql.where.append(" ? ");
+		sql.where.append(" LIKE");
+		sql.where.append(caseSensitive ? " BINARY ":" ");
+		sql.where.append("? ");
 		sql.addParameter(Types.VARCHAR,pattern);
 	}
 
