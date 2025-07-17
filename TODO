@@ -232,9 +232,19 @@ Maintenance:
         [x] case insensitive -> for free (collate ut8_ci !)
     [x] fix: LIKE and RLIKE with Umlauts
         search "Schafer","Schäfer,H." "Schafer,H."
-        LIKE is umlaut-insensitive (by virtue of collation ??)
-        RLIKE is umlaut-sensitive
-        [x] use a consistent mechanism
+        LIKE is accent-insensitive
+        RLIKE is accent-sensitive
+        BINARY loses accent-insenstivity
+        -> LIKE, vs LIKE AND RLIKE return different results
+        [ ] use alway LIKE AND RLIKE -> accent-insensitivity is lost
+            [ ] but results are consistent
+            [ ] later mysql versions have accent-insensitive collations !
+        [ ] use only LIKE
+            [ ] accent-insensitivity is preserved
+            [ ] use _% to match punctuation and white space.
+                not matched exactly, but no matter.
+            [ ] BINARY is case and accent-sensitive
+
         [ ] is LIKE actually faster?
         [x] use same query for Completer
 
