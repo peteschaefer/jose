@@ -219,6 +219,19 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
+    private static char findMnemo(String s) {
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isLetterOrDigit(c))
+                return Character.toUpperCase(c);
+        }
+        if (s.length() > 0) {
+            char c = s.charAt(0);
+            return Character.toUpperCase(c);
+        }
+        return '\0';
+    }
+
     private void showCompletionPopup() {
         String t = getText();
         popupMenu.removeAll();
@@ -232,9 +245,11 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             };
             action.putValue(Action.NAME, t+"-"+s);
             if (s.length()>=1) {
-                char mnemo = CharUtil.toUpperCase(s,0);
-                action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(mnemo));
-                action.putValue(Action.MNEMONIC_KEY, (int)mnemo);
+                char mnemo = findMnemo(s);
+                if (mnemo!=0) {
+                    action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(mnemo));
+                    action.putValue(Action.MNEMONIC_KEY, (int) mnemo);
+                }
             }
             popupMenu.add(action);
         }
@@ -330,6 +345,16 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                 for (int k=1; k < suffLen; k++) {
                     if (CharUtil.toUpperCase(cmpi,pxi+k) != CharUtil.toUpperCase(cmpj,pxj+k))
                     {
+                        //  skip punctation, too
+                        while(k > 0 && !Character.isLetterOrDigit(cmpj.charAt(pxj+k-1)))
+                            k--;
+                        if (k==0) {
+                            //  ends one run
+                            suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
+                            i=j-1;
+                            continue outer_loop;
+                        }
+
                         suffLen = k;
                         wasAbbreviated = true;//  shorten suffix
                         break;
