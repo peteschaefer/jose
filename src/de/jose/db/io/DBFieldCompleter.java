@@ -63,9 +63,13 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             if (thisQuery < queryCounter.get()) return null;    //  new query is underway
 
             JoPreparedStatement pstm = sql.toPreparedStatement(conn);
-            pstm.execute();
+            boolean ok = pstm.execute();
+            assert(ok);
+            if (!ok)
+                return null;
 
-            if (thisQuery < queryCounter.get()) return null;    //  new query is underway
+            if (thisQuery < queryCounter.get())
+                return null;    //  new query is underway
 
             ResultSet res = pstm.getResultSet();
             while(res.next()) {

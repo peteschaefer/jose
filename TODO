@@ -243,9 +243,9 @@ Maintenance:
             [x] accent-insensitivity is preserved
             [x] use _% to match punctuation and white space.
                 not matched exactly, but no matter.
-            [ ] BINARY is case and accent-sensitive. BUT FAR TOO EXPENSIVE, WHY?
+            [x] BINARY is case and accent-sensitive. use simple LIKE as prefilter
 
-        [ ] is LIKE actually faster?
+        [x] is LIKE actually faster? yes, faster than BINARY LIKE and RLIKE
         [x] use same query for Completer
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields

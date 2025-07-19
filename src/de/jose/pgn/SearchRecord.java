@@ -1438,14 +1438,20 @@ public class SearchRecord implements Cloneable
 		//	take care when combining both
 		//	Alternative one:
 		//		use LIKE for fast filter, RLIKE for exact -> accent-ins
-		//sql.where.append(" (");
-		appendLikeClause(sql, table + "." + column,likePattern.toString(),caseSensitive);
-//		appendOperator(sql,"AND");
+		if (caseSensitive) {
+			sql.where.append(" (");
+			appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
+			appendOperator(sql,"AND");
+			appendLikeClause(sql, table + "." + column,likePattern.toString(),true);
+			sql.where.append(") ");
+		}
+		else {
+			appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
+		}
 //				if (regexPattern.length() > 0)
 //		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
 //				else
 //					appendLikeClause(sql,table+".Name", likePattern.toString(), isCaseSensitive());
-//		sql.where.append(") ");
 //			}
 //			else
 //				appendLikeClause(sql,table+".Name",likePattern.toString(),false);

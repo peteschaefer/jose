@@ -2,6 +2,7 @@ package de.jose.view.input;
 
 import com.formdev.flatlaf.ui.FlatTextBorder;
 import de.jose.Application;
+import de.jose.db.JoConnection;
 import de.jose.util.CharUtil;
 
 import javax.swing.*;
@@ -282,6 +283,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         System.err.println(query+": "+completions.size()+" completions; "+suffixes.size()+" suffixes");
         if (suffixes.size()==1)
             System.err.println("suggestion: '"+suffixes.get(0)+"'");
+        System.err.println(JoConnection.getPool().size()+" pooled connections");
 
         if (continuePopping) {
             SwingUtilities.invokeLater(() -> {
@@ -364,6 +366,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             if (text.hasFocus()) {
                 if (suffixes.size() == 1)
                     doc.insertString(prefixLen, suffixes.get(0), suffixStyle);
+                if (suffixes.size() >= 2 || wasAbbreviated)
                 if (suffixes.size() >= 2 || wasAbbreviated)
                     doc.insertString(doc.getLength(), "...", suffixStyle);
             }
