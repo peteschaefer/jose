@@ -2,6 +2,7 @@ package de.jose.chess;
 
 import de.jose.db.ParamStatement;
 import de.jose.pgn.SearchRecord;
+import de.jose.util.GlobMatcher;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,5 +49,15 @@ public class SqlStatementTest
 
         //  always have a % at the end
         assertEquals("Schäfer_%P%",makeCondition("Schäfer,P",false));
+    }
+
+    @Test
+    void testGlobMatcher () {
+        GlobMatcher gl = new GlobMatcher("*a?c*d",false,false);
+
+        assertEquals(4, gl.match("abcde"));
+        assertEquals(4, gl.match("Abcde"));
+        assertEquals(4, gl.match("Äbcde"));
+        assertEquals(7, gl.match("xxabcyde"));
     }
 }

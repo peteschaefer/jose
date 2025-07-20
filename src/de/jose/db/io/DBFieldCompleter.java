@@ -104,6 +104,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             //  todo accent insensitive (\p{Normalizer.normalize(text, Form.NFD)
             //            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
             //  make a unit test for it
+            // think of it, it may be easier to implement our own
+            //  globbing matcher (case- and accent-insensitive)
         }
 
         Matcher matcher = regex.matcher(result);
