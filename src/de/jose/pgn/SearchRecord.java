@@ -887,6 +887,8 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
+	//	todo move to GlobMatcher
+	//	todo record glob pattern groups (?,*,letters, punctuation(?))
 	protected static void makeSearchPattern(String searchText, StringBuffer likePattern)
 	{
 		char current=STATE_ALPHA;

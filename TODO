@@ -250,7 +250,9 @@ Maintenance:
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
-        [ ] smart globbing replacement
+        [ ] query to glob pattern (_%)
+        [ ] map glob pattern groups to replacement patterns
+        [ ] -> update only modified groups
 
     [ ] have one base Edit Panel for: Search Panel, Single Edit F4, Bulk Edit
         [ ] use Completer mechanism to fill in fields
