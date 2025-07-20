@@ -435,4 +435,12 @@ public class CharUtil
 		out.println("};");
 		out.println();
 	}
+
+    public static int countLettersAndDigits(String text) {
+		int count=0;
+		for(int i=0; i < text.length();++i)
+			if (Character.isLetterOrDigit(text.charAt(i)))
+				count++;
+		return count;
+    }
 }

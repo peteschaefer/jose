@@ -173,7 +173,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     //  Members
     //
     //  length of user-typed prefix
-    private int minPrefixLen = 1;   //  don't autocomplete on an empty string (it works, but is not intuitive)
+    private int minLetters = 2;   //  don't autocomplete on an empty string (it works, but is not intuitive)
     private int prefixLen = 0;
     private List<String> suffixes = new ArrayList<String>();
     private boolean wasAbbreviated = false;
@@ -271,7 +271,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     private void updateCompletions(boolean continuePopping)
     {
-        if (prefixLen >= minPrefixLen) {
+        if (CharUtil.countLettersAndDigits(getText()) >= minLetters) {
             Application.theExecutorService.submit(() -> doUpdateCompletions(continuePopping));
         } else {
             suffixes.clear();
@@ -302,7 +302,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
         if (continuePopping) {
             SwingUtilities.invokeLater(() -> {
-                updateDocument();   //  todo w/out triggering updateCompletions !?
+                updateDocument();   //  w/out triggering updateCompletions !
                 showCompletionPopup();
             });
         }

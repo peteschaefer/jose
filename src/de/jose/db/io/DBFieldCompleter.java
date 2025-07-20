@@ -11,6 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 public class DBFieldCompleter implements AutoCompleteTextField.Completer
 {
@@ -88,9 +92,32 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         assert(cleanCounter%2 == 0);
         return result;
     }
+
+    @Override
+    public int prefixLength(String query, String result) {
+        //  query is already regex, right ??
+        //  unit test
+        if (!query.equals(lastQuery)) {
+            lastQuery = query;
+            regex = Pattern.compile(query,CASE_INSENSITIVE|Pattern.UNICODE_CASE);
+            //  todo globbing pattern * ?
+            //  todo accent insensitive (\p{Normalizer.normalize(text, Form.NFD)
+            //            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            //  make a unit test for it
+        }
+
+        Matcher matcher = regex.matcher(result);
+        if (matcher.start()==0)
+            return matcher.end();
+        else
+            return 0;
+    }
+
     //  todo constrain by Collection Ids (GameSource)
     //  todo color-insensitive Players
     private String table, column;
     private ParamStatement sql;
+    private String lastQuery;
+    private Pattern regex;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }
