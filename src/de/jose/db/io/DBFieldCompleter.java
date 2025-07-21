@@ -102,17 +102,10 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         //  unit test
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            glob = new GlobMatcher(SearchRecord.makeLikePattern(query),false,false,true, GLOB_WILDCARDS);
-            //  todo globbing pattern * ?
-            //  todo accent insensitive (\p{Normalizer.normalize(text, Form.NFD)
-            //            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-            //  make a unit test for it
-            // think of it, it may be easier to implement our own
-            //  globbing matcher (case- and accent-insensitive)
+            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, GLOB_WILDCARDS);
         }
 
-        int len = glob.match(result);
-        return len;
+        return Math.max(0, glob.match(result));
     }
 
     //  todo constrain by Collection Ids (GameSource)

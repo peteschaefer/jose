@@ -40,9 +40,9 @@ public class GlobMatcher
 
     private int match(CharSequence p0, CharSequence i0) {
         if (p0.length() == 0)
-            return -i0.length();
-        if (i0.length() == 0)
             return 0;
+        if (i0.length() == 0)
+            return -p0.length();
 
         char cp = p0.charAt(0);
         CharSequence p1 = p0.subSequence(1, p0.length());

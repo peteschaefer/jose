@@ -6,6 +6,7 @@ import de.jose.util.GlobMatcher;
 import org.junit.jupiter.api.Test;
 
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
+import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlStatementTest
@@ -40,16 +41,16 @@ public class SqlStatementTest
         //  Later mysql version have _ai (accent-insensitive) collations.
         //  Once these become available, RLIKE would become interesting again.
 
-        assertEquals("Sch�fer_%P_%",makeCondition("Sch�fer,P.",false));
-        assertEquals("Sch�fe_%P_%",makeCondition("Sch�fe?,P.",false));
-        assertEquals("Sch�f%_P_%",makeCondition("Sch�f*,P.",false));
+        assertEquals("Sch\u00e4fer_%P_%",makeCondition("Sch\u00e4fer,P.",false)); //  \u00e4 = a umlaut, ä
+        assertEquals("Sch\u00e4fe_%P_%",makeCondition("Sch\u00e4fe?,P.",false));
+        assertEquals("Sch\u00e4f%_P_%",makeCondition("Sch\u00e4f*,P.",false));
         assertEquals("Sch_fer_%P_%",makeCondition("Sch?fer,P.",false));
         assertEquals("Sch%fer_%P_%",makeCondition("Sch*fer,P.",false));
         assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?fer,P.",false));
         assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?*fer,P.",false));
 
         //  always have a % at the end
-        assertEquals("Sch�fer_%P%",makeCondition("Sch�fer,P",false));
+        assertEquals("Sch\u00e4fer_%P%",makeCondition("Sch\u00e4fer,P",false));
     }
 
     @Test
@@ -58,7 +59,15 @@ public class SqlStatementTest
 
         assertEquals(4, gl.match("abcde"));
         assertEquals(4, gl.match("Abcde"));
-        assertEquals(4, gl.match("�bcde"));
+        assertEquals(4, gl.match("\u00e4bcde"));
         assertEquals(7, gl.match("xxabcyde"));
+
+        gl = new GlobMatcher("sc",false,false, true, GLOB_WILDCARDS);
+        assertEquals(2, gl.match("Sc"));
+        assertEquals(2, gl.match("Sch"));
+        assertEquals(2, gl.match("Scacco,Mauro"));
+
+        gl = new GlobMatcher("Sc%",false,false, true, SQL_WILDCARDS);
+        assertEquals(11, gl.match("Scacco,Mauro"));
     }
 }

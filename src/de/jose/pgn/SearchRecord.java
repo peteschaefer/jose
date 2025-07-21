@@ -889,7 +889,7 @@ public class SearchRecord implements Cloneable
 
 	//	todo move to GlobMatcher
 	//	todo record glob pattern groups (?,*,letters, punctuation(?))
-	public static String makeLikePattern(String searchText)
+	public static String makeLikePattern(String searchText, boolean fullString)
 	{
 		StringBuffer likePattern = new StringBuffer();
 		char current=STATE_ALPHA;
@@ -909,7 +909,8 @@ public class SearchRecord implements Cloneable
 
 			current = advancePatternState(current, next, likePattern);
 		}
-		advancePatternState(current, STATE_EOF, likePattern);
+		if (fullString)
+			advancePatternState(current, STATE_EOF, likePattern);
 		return likePattern.toString();
 	}
 
@@ -1428,7 +1429,7 @@ public class SearchRecord implements Cloneable
 											   String pattern,
 											   boolean caseSensitive)
 	{
-		String likePattern = makeLikePattern(pattern);
+		String likePattern = makeLikePattern(pattern,true);
 		//StringBuffer regexPattern = new StringBuffer();
 
 
@@ -1463,7 +1464,7 @@ public class SearchRecord implements Cloneable
 //				if (regexPattern.length() > 0)
 //		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
 //				else
-//					appendLikeClause(sql,table+".Name", likePattern.toString(), isCaseSensitive());
+//					appendLikeClause(sql,table+".Name", likePattern, isCaseSensitive());
 //			}
 //			else
 //				appendLikeClause(sql,table+".Name",likePattern.toString(),false);
