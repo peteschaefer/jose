@@ -257,7 +257,8 @@ Maintenance:
 	[ ] link statically
 	[ ] provide mysql interface
 	[ ] provide jni interface
-		-> consistent regex handling across Mysql and Java.
+	[ ] or: use icu4j
+	[ ] consistent regex handling across Mysql and Java.
 
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
