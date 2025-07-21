@@ -5,6 +5,7 @@ import de.jose.pgn.SearchRecord;
 import de.jose.util.GlobMatcher;
 import org.junit.jupiter.api.Test;
 
+import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlStatementTest
@@ -39,25 +40,25 @@ public class SqlStatementTest
         //  Later mysql version have _ai (accent-insensitive) collations.
         //  Once these become available, RLIKE would become interesting again.
 
-        assertEquals("Schäfer_%P_%",makeCondition("Schäfer,P.",false));
-        assertEquals("Schäfe_%P_%",makeCondition("Schäfe?,P.",false));
-        assertEquals("Schäf%_P_%",makeCondition("Schäf*,P.",false));
+        assertEquals("Schï¿½fer_%P_%",makeCondition("Schï¿½fer,P.",false));
+        assertEquals("Schï¿½fe_%P_%",makeCondition("Schï¿½fe?,P.",false));
+        assertEquals("Schï¿½f%_P_%",makeCondition("Schï¿½f*,P.",false));
         assertEquals("Sch_fer_%P_%",makeCondition("Sch?fer,P.",false));
         assertEquals("Sch%fer_%P_%",makeCondition("Sch*fer,P.",false));
         assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?fer,P.",false));
         assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?*fer,P.",false));
 
         //  always have a % at the end
-        assertEquals("Schäfer_%P%",makeCondition("Schäfer,P",false));
+        assertEquals("Schï¿½fer_%P%",makeCondition("Schï¿½fer,P",false));
     }
 
     @Test
     void testGlobMatcher () {
-        GlobMatcher gl = new GlobMatcher("*a?c*d",false,false);
+        GlobMatcher gl = new GlobMatcher("*a?c*d",false,false, true, GLOB_WILDCARDS);
 
         assertEquals(4, gl.match("abcde"));
         assertEquals(4, gl.match("Abcde"));
-        assertEquals(4, gl.match("Äbcde"));
+        assertEquals(4, gl.match("ï¿½bcde"));
         assertEquals(7, gl.match("xxabcyde"));
     }
 }

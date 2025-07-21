@@ -4,6 +4,7 @@ import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
 import de.jose.db.ParamStatement;
 import de.jose.pgn.SearchRecord;
+import de.jose.util.GlobMatcher;
 import de.jose.view.input.AutoCompleteTextField;
 
 import java.sql.ResultSet;
@@ -14,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
+import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 public class DBFieldCompleter implements AutoCompleteTextField.Completer
@@ -99,7 +102,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         //  unit test
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            regex = Pattern.compile(query,CASE_INSENSITIVE|Pattern.UNICODE_CASE);
+            glob = new GlobMatcher(SearchRecord.makeLikePattern(query),false,false,true, GLOB_WILDCARDS);
             //  todo globbing pattern * ?
             //  todo accent insensitive (\p{Normalizer.normalize(text, Form.NFD)
             //            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -108,11 +111,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             //  globbing matcher (case- and accent-insensitive)
         }
 
-        Matcher matcher = regex.matcher(result);
-        if (matcher.start()==0)
-            return matcher.end();
-        else
-            return 0;
+        int len = glob.match(result);
+        return len;
     }
 
     //  todo constrain by Collection Ids (GameSource)
@@ -120,6 +120,6 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     private String table, column;
     private ParamStatement sql;
     private String lastQuery;
-    private Pattern regex;
+    private GlobMatcher glob;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }

@@ -238,7 +238,11 @@ Maintenance:
         -> LIKE, vs LIKE AND RLIKE return different results
         [-] use alway LIKE AND RLIKE -> accent-insensitivity is lost
             [ ] but results are consistent
+            [ ] distinguish punctuation from letters
             [ ] later mysql versions have accent-insensitive collations !
+            [ ] udf-implemented regex, based on ICU
+                [ ] icu packaged with JDK? how to link?
+                [ ] accent- and case-insensitive
         [x] use only LIKE
             [x] accent-insensitivity is preserved
             [x] use _% to match punctuation and white space.

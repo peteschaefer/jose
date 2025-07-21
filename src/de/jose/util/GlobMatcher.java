@@ -2,10 +2,15 @@ package de.jose.util;
 
 public class GlobMatcher
 {
-    public GlobMatcher(String pattern, boolean caseSensitive, boolean accentSensitive) {
+    public static char[] GLOB_WILDCARDS = {'?','*'};
+    public static char[] SQL_WILDCARDS = {'_','%'};
+
+    public GlobMatcher(String pattern, boolean caseSensitive, boolean accentSensitive, boolean greedy, char[] wildcards) {
         this.pattern = pattern;
         this.caseSensitive = caseSensitive;
         this.accentSensitive = accentSensitive;
+        this.greedy = greedy;
+        this.wildcards = wildcards;
     }
 
     public int match(String input) {
@@ -15,6 +20,7 @@ public class GlobMatcher
     private boolean caseSensitive=false;
     private boolean accentSensitive=false;
     private boolean greedy=false;
+    private char[] wildcards = GLOB_WILDCARDS;
     private String pattern;
 
     private static int mmax(int m1, int m2) {
@@ -41,14 +47,15 @@ public class GlobMatcher
         char cp = p0.charAt(0);
         CharSequence p1 = p0.subSequence(1, p0.length());
         CharSequence i1 = i0.subSequence(1, i0.length());
-        switch (cp) {
-            case '*':
-                int m1 = mplus(match(p0,i1),1);
-                int m2 = match(p1,i0);
-                return greedy? mmax(m1,m2) : mmin(m1,m2);
-            case '?':
-                return mplus(match(p1, i1),1);
+        if (cp==wildcards[1]) {
+            int m1 = mplus(match(p0, i1), 1);
+            int m2 = match(p1, i0);
+            return greedy ? mmax(m1, m2) : mmin(m1, m2);
         }
+        if (cp==wildcards[0]) {
+            return mplus(match(p1, i1),1);
+        }
+
         //  else match 1 character
         char ci = i0.charAt(0);
         if (!caseSensitive) {

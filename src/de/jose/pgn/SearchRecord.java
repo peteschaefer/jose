@@ -889,8 +889,9 @@ public class SearchRecord implements Cloneable
 
 	//	todo move to GlobMatcher
 	//	todo record glob pattern groups (?,*,letters, punctuation(?))
-	protected static void makeSearchPattern(String searchText, StringBuffer likePattern)
+	public static String makeLikePattern(String searchText)
 	{
+		StringBuffer likePattern = new StringBuffer();
 		char current=STATE_ALPHA;
 		char next;
 
@@ -909,6 +910,7 @@ public class SearchRecord implements Cloneable
 			current = advancePatternState(current, next, likePattern);
 		}
 		advancePatternState(current, STATE_EOF, likePattern);
+		return likePattern.toString();
 	}
 
 
@@ -1426,29 +1428,37 @@ public class SearchRecord implements Cloneable
 											   String pattern,
 											   boolean caseSensitive)
 	{
-		StringBuffer likePattern = new StringBuffer();
+		String likePattern = makeLikePattern(pattern);
 		//StringBuffer regexPattern = new StringBuffer();
 
-		makeSearchPattern(pattern, likePattern);
+
 
 //			if ((regexPattern.length() > 0) || isCaseSensitive())
 //			{
-		//  NOTE:
-		//		LIKE is insensitive to CASE and ACCENTS
-		//		RLIKE is sensitive to ACCENTS but insensitve to CASE
-		//		(R)LIKE BINARY is sensitive to CASE and ACCENTS
-		//	take care when combining both
-		//	Alternative one:
-		//		use LIKE for fast filter, RLIKE for exact -> accent-ins
+		/**	todo what I would like to do is
+		 * 		LIKE	for fast filtering
+		 * 	AND
+		 * 		RLIKE	for precise filtering;
+		 * 				+ distinguish punctuation from letters
+		 * 				**unfortunately** RLIKE is always sensitive to accents
+		 * 				desirable is an accent-insensitive RLIKE funtion
+		 * 				where do we get one? native ICU? Java?
+		 * 				later mysql versions have accent-insensitive collations (needs rebuilding the indexes :(
+		 *
+		 * current compromise:
+		 * 		LIKE AND BINARY LIKE
+		 * 			+ applies case-sensitivity
+		 * 			- can not distinguish punctuation from letters. Thus returning too many results, potentially.
+		 */
 		if (caseSensitive) {
 			sql.where.append(" (");
-			appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
+			appendLikeClause(sql, table + "." + column,likePattern,false);
 			appendOperator(sql,"AND");
-			appendLikeClause(sql, table + "." + column,likePattern.toString(),true);
+			appendLikeClause(sql, table + "." + column,likePattern,true);
 			sql.where.append(") ");
 		}
 		else {
-			appendLikeClause(sql, table + "." + column,likePattern.toString(),false);
+			appendLikeClause(sql, table + "." + column,likePattern,false);
 		}
 //				if (regexPattern.length() > 0)
 //		appendRegexClause(sql, table + "." + column, regexPattern.toString(), caseSensitive);
