@@ -240,17 +240,25 @@ Maintenance:
             [ ] but results are consistent
             [ ] distinguish punctuation from letters
             [ ] later mysql versions have accent-insensitive collations !
-            [ ] udf-implemented regex, based on ICU
-                [ ] icu packaged with JDK? how to link?
-                [ ] accent- and case-insensitive
         [x] use only LIKE
             [x] accent-insensitivity is preserved
             [x] use _% to match punctuation and white space.
                 not matched exactly, but no matter.
             [x] BINARY is case and accent-sensitive. use simple LIKE as prefilter
-
+	    [-] no clear distinction between punctuation and letters :(
+		therefore, we need:
         [x] is LIKE actually faster? yes, faster than BINARY LIKE and RLIKE
         [x] use same query for Completer
+
+[ ] udf-supplied, better, regex, based on ICU
+	[ ] accent- and case-insensitive:
+		Normalizers, Transliterators! https://unicode-org.github.io/icu/userguide/transforms/normalization/
+		then remove diacritical marks
+	[ ] link statically
+	[ ] provide mysql interface
+	[ ] provide jni interface
+		-> consistent regex handling across Mysql and Java.
+
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
