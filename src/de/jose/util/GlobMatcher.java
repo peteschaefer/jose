@@ -41,18 +41,33 @@ public class GlobMatcher
     private int match(CharSequence p0, CharSequence i0) {
         if (p0.length() == 0)
             return 0;
-        if (i0.length() == 0)
-            return -p0.length();
 
         char cp = p0.charAt(0);
         CharSequence p1 = p0.subSequence(1, p0.length());
-        CharSequence i1 = i0.subSequence(1, i0.length());
         if (cp==wildcards[1]) {
-            int m1 = mplus(match(p0, i1), 1);
+            //  match *
+            int m1 = -1;
+            if (i0.length() > 0) {
+                //  * matches 1 or more chars
+                CharSequence i1 = i0.subSequence(1, i0.length());
+                m1 = mplus(match(p0, i1), 1);
+            }
+
+            //  * matches 0 chars
             int m2 = match(p1, i0);
+
             return greedy ? mmax(m1, m2) : mmin(m1, m2);
         }
+
+        //  else: at least one char match
+        if (i0.length() == 0)
+            return -p0.length();
+
+        assert(i0.length() > 0);
+        CharSequence i1 = i0.subSequence(1, i0.length());
+
         if (cp==wildcards[0]) {
+            //  match ? arbitrary char
             return mplus(match(p1, i1),1);
         }
 

@@ -332,7 +332,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                 String cmpj = completions.get(j);
                 int pxj = completer.prefixLength(query,cmpj);
 
-                if (CharUtil.toUpperCase(cmpi,pxi) != CharUtil.toUpperCase(cmpj,pxj))
+                if (    (pxi < cmpi.length()) && (pxj < cmpj.length()) &&
+                        (CharUtil.toUpperCase(cmpi,pxi) != CharUtil.toUpperCase(cmpj,pxj)))
                 {
                     //  ends one run
                     //  todo single-char completions are rather pointless; but must not get lost, either?
@@ -342,7 +343,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                     continue outer_loop;
                 }
 
-                for (int k=1; k < suffLen; k++) {
+                for (int k=1; (k < suffLen) && (pxi+k < cmpi.length()) && (pxj+k < cmpj.length()); k++) {
                     if (CharUtil.toUpperCase(cmpi,pxi+k) != CharUtil.toUpperCase(cmpj,pxj+k))
                     {
                         //  skip punctation, too

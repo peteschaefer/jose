@@ -51,6 +51,14 @@ public class SqlStatementTest
 
         //  always have a % at the end
         assertEquals("Sch\u00e4fer_%P%",makeCondition("Sch\u00e4fer,P",false));
+
+        //  not always have a % at the end
+        assertEquals("Schaefer_",SearchRecord.makeLikePattern("Schaefer,",false));
+    }
+
+    int globMatch(String pattern, String input) {
+        GlobMatcher gl = new GlobMatcher(pattern,false,false, true, SQL_WILDCARDS);
+        return gl.match(input);
     }
 
     @Test
@@ -67,7 +75,11 @@ public class SqlStatementTest
         assertEquals(2, gl.match("Sch"));
         assertEquals(2, gl.match("Scacco,Mauro"));
 
-        gl = new GlobMatcher("Sc%",false,false, true, SQL_WILDCARDS);
-        assertEquals(11, gl.match("Scacco,Mauro"));
+        assertEquals(12, globMatch("Sc%","Scacco,Mauro"));
+        assertEquals( 9, globMatch("Schaefer_","Schaefer,"));
+        assertEquals( 2, globMatch("_%"," L"));
+        assertEquals(10, globMatch("Schaefer_%","Schaefer L"));
+
+        assertEquals( 9, globMatch("Schaefer_","Schaefers"));
     }
 }

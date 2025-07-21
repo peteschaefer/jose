@@ -102,7 +102,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         //  unit test
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, GLOB_WILDCARDS);
+            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
         }
 
         return Math.max(0, glob.match(result));

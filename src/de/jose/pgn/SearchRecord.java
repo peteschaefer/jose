@@ -909,8 +909,11 @@ public class SearchRecord implements Cloneable
 
 			current = advancePatternState(current, next, likePattern);
 		}
-		if (fullString)
-			advancePatternState(current, STATE_EOF, likePattern);
+		advancePatternState(current, STATE_EOF, likePattern);
+		if (!fullString && likePattern.charAt(likePattern.length()-1)=='%')
+			likePattern.deleteCharAt(likePattern.length()-1);
+		//	note: that's a bit unclean. We would like to match any number of punctuation, but not letters.
+		//	Unfortunately, LIKE can not distinguish. RLIKE could but has disadvantages.
 		return likePattern.toString();
 	}
 
