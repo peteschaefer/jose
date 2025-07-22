@@ -236,22 +236,21 @@ Maintenance:
         RLIKE is accent-sensitive
         BINARY loses accent-insenstivity
         -> LIKE, vs LIKE AND RLIKE return different results
-        [+] use alway LIKE AND RLIKE -> accent-insensitivity is lost
-            [ ] but results are consistent
-            [+] distinguish punctuation from letters
-                not so easy b/c RLIKE does not support utf-8
-                (although the tables are utf8; goodness, what are you doing at mysql??)
-                combine LIKE and RLIKE with character class placeholder does work ok
+        [+] use always LIKE AND RLIKE
+            [x] LIKE is fast and matches letters (case-(in)-sensitive, accent-(in)-sensitive)
+            [x] RLIKE matches punctuation [[:punct:][:white:]]
+            [+] RLIKE is not accent-sensitive b/c accented chars are usually utf-8
+                and RLIKE **does not** support utf-8
+                (although the table collation **is** utf8; goodness, what have you been thinking at mysql??)
+                ok workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
             [ ] later mysql versions have accent-insensitive collations !
+                (and, hopefully, RLIKE does support utf-8 ?!?)
+            [x] use same query for Completer
         [x] use only LIKE
             [x] accent-insensitivity is preserved
             [x] use _% to match punctuation and white space.
                 not matched exactly, but no matter.
             [x] BINARY is case and accent-sensitive. use simple LIKE as prefilter
-	    [-] no clear distinction between punctuation and letters :(
-		therefore, we need:
-        [x] is LIKE actually faster? yes, faster than BINARY LIKE and RLIKE
-        [x] use same query for Completer
 
 [ ] udf-supplied, better, regex, based on ICU
 	[ ] accent- and case-insensitive:
