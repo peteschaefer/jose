@@ -236,9 +236,12 @@ Maintenance:
         RLIKE is accent-sensitive
         BINARY loses accent-insenstivity
         -> LIKE, vs LIKE AND RLIKE return different results
-        [-] use alway LIKE AND RLIKE -> accent-insensitivity is lost
+        [+] use alway LIKE AND RLIKE -> accent-insensitivity is lost
             [ ] but results are consistent
-            [ ] distinguish punctuation from letters
+            [+] distinguish punctuation from letters
+                not so easy b/c RLIKE does not support utf-8
+                (although the tables are utf8; goodness, what are you doing at mysql??)
+                combine LIKE and RLIKE with character class placeholder does work ok
             [ ] later mysql versions have accent-insensitive collations !
         [x] use only LIKE
             [x] accent-insensitivity is preserved
@@ -255,11 +258,11 @@ Maintenance:
 		Normalizers, Transliterators! https://unicode-org.github.io/icu/userguide/transforms/normalization/
 		then remove diacritical marks
 	[ ] link statically
-	[ ] provide mysql interface
+	[ ] provide mysql interface (-> requires rights tables :(
 	[ ] provide jni interface
 	[ ] or: use icu4j
 	[ ] consistent regex handling across Mysql and Java.
-
+--> postpone
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
