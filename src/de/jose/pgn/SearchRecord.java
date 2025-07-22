@@ -887,16 +887,16 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
-	//	wildcard matchinig with RLIKE is tricky b/c it does not really support utf-8 encoded characters !?
+	public static String[] POSIX_WILDCARDS = {
+			"\\w",		//	matches one letter
+			"\\w*",		//	matches any number of letters
+			"\\W+",		//	matches punctuation and whitespace
+	};
+	//	wildcard matching with RLIKE is tricky b/c it does not really support utf-8 encoded characters !?
 	public static String[] MYSQL_RLIKE_WILDCARDS = {
 			"[[:alnum:]]{1,3}",		//	matches one letter, possibly encoded in up to 3 utf-8 chars
-			"[[:alnum:]]*",			//	matches any number of letter
+			"[[:alnum:]]*",			//	matches any number of letters
 			"[[:punct:][:space:]]+",	//	matches punctuation and whitespace
-	};
-	public static String[] POSIX_WILDCARDS = {
-			"\\w",		//	matches one letter, possibly encoded in up to 3 utf-8 chars
-			"\\w*",			//	matches any number of letter
-			"\\W+",	//	matches punctuation and whitespace
 	};
 
 	protected static char advanceRegexPatternState(char current, char next, StringBuffer out, String[] wild, boolean caseSensitive) {

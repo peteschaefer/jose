@@ -19,7 +19,7 @@ import static de.jose.pgn.SearchRecord.MYSQL_RLIKE_WILDCARDS;
 import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.*;
 
 public class DBFieldCompleter implements AutoCompleteTextField.Completer
 {
@@ -53,7 +53,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         try {
             sql.where.setLength(0);
             sql.clearParameters();
-            SearchRecord.appendNameSearchPattern(sql,table,column, prefix, MYSQL_RLIKE_WILDCARDS, false);
+            SearchRecord.appendNameSearchPattern(sql,table,column, prefix, MYSQL_RLIKE_WILDCARDS, caseSensitive);
 
             if (limit > 0) {
                 sql.limit.setLength(0);
@@ -104,17 +104,28 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         //  unit test
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
+   //         glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
+            String regexStr = SearchRecord.makeRegexPattern(query,false,POSIX_WILDCARDS,caseSensitive);
+            int flags = UNICODE_CHARACTER_CLASS;
+            if (!caseSensitive)
+                flags |= CASE_INSENSITIVE|UNICODE_CASE;
+            regex = Pattern.compile(regexStr,flags);
         }
 
-        return Math.max(0, glob.match(result));
+        Matcher mat = regex.matcher(result);
+        if (mat.find() && mat.start() == 0)
+           return mat.end();
+        //  else
+        return 0;
     }
 
     //  todo constrain by Collection Ids (GameSource)
     //  todo color-insensitive Players
     private String table, column;
+    private boolean caseSensitive=false;
     private ParamStatement sql;
     private String lastQuery;
-    private GlobMatcher glob;
+    //private GlobMatcher glob;
+    private Pattern regex;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }
