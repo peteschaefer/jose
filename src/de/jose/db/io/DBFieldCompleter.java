@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static de.jose.pgn.SearchRecord.MYSQL_RLIKE_WILDCARDS;
+import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -51,7 +53,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         try {
             sql.where.setLength(0);
             sql.clearParameters();
-            SearchRecord.appendNameSearchPattern(sql,table,column, prefix,false);
+            SearchRecord.appendNameSearchPattern(sql,table,column, prefix, MYSQL_RLIKE_WILDCARDS, false);
 
             if (limit > 0) {
                 sql.limit.setLength(0);

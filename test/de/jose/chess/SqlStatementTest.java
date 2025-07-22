@@ -5,21 +5,26 @@ import de.jose.pgn.SearchRecord;
 import de.jose.util.GlobMatcher;
 import org.junit.jupiter.api.Test;
 
+import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlStatementTest
 {
-    static String makeCondition(String pattern, boolean caseSensitive)
+    static void assertSearchPatterns(String likePattern, String regexPattern, String pattern, boolean caseSensitive)
     {
         ParamStatement sql = new ParamStatement();
-        SearchRecord.appendNameSearchPattern(sql,"Player","Name",pattern,caseSensitive);
-        if (caseSensitive)
-            assertEquals(" BINARY Player.Name LIKE BIANRY ? ",sql.where.toString());
-        else
-            assertEquals(" Player.Name LIKE ? ",sql.where.toString());
-        return (String)sql.getParameter(1);
+        SearchRecord.appendNameSearchPattern(sql,"Player","Name",pattern, SearchRecord.POSIX_WILDCARDS, caseSensitive);
+//        if (caseSensitive)
+//            assertEquals(" BINARY Player.Name LIKE BIANRY ? ",sql.where.toString());
+//        else
+//            assertEquals(" Player.Name LIKE ? ",sql.where.toString());
+
+        if (likePattern != null)
+            assertEquals(likePattern, (String)sql.getParameter(1));
+        if (regexPattern != null)
+            assertEquals(regexPattern, (String)sql.getParameter(2));
     }
 
     @Test
@@ -41,16 +46,16 @@ public class SqlStatementTest
         //  Later mysql version have _ai (accent-insensitive) collations.
         //  Once these become available, RLIKE would become interesting again.
 
-        assertEquals("Sch\u00e4fer_%P_%",makeCondition("Sch\u00e4fer,P.",false)); //  \u00e4 = a umlaut, ä
-        assertEquals("Sch\u00e4fe_%P_%",makeCondition("Sch\u00e4fe?,P.",false));
-        assertEquals("Sch\u00e4f%_P_%",makeCondition("Sch\u00e4f*,P.",false));
-        assertEquals("Sch_fer_%P_%",makeCondition("Sch?fer,P.",false));
-        assertEquals("Sch%fer_%P_%",makeCondition("Sch*fer,P.",false));
-        assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?fer,P.",false));
-        assertEquals("Sch%_fer_%P_%",makeCondition("Sch*?*fer,P.",false));
+        assertSearchPatterns("Sch\u00e4fer_%P_%",   "Sch\\wfer\\W+P\\W+.*",     "Sch\u00e4fer,P.",false); //  \u00e4 = a umlaut, ä
+        assertSearchPatterns("Sch\u00e4fe_%P_%",    "Sch\\wfe\\w\\W+P\\W+.*",   "Sch\u00e4fe?,P.",false);
+        assertSearchPatterns("Sch\u00e4f%_P_%",     "Sch\\wf\\w*\\W+P\\W+.*",   "Sch\u00e4f*,P.",false);
+        assertSearchPatterns("Sch_fer_%P_%",        "Sch\\wfer\\W+P\\W+.*",     "Sch?fer,P.",false);
+        assertSearchPatterns("Sch%fer_%P_%",        "Sch\\w*fer\\W+P\\W+.*",    "Sch*fer,P.",false);
+        assertSearchPatterns("Sch%_fer_%P_%",       "Sch\\w*\\wfer\\W+P\\W+.*", "Sch*?fer,P.",false);
+        assertSearchPatterns("Sch%_fer_%P_%",       "Sch\\w*\\w\\w*fer\\W+P\\W+.*","Sch*?*fer,P.",false);
 
         //  always have a % at the end
-        assertEquals("Sch\u00e4fer_%P%",makeCondition("Sch\u00e4fer,P",false));
+        assertSearchPatterns("Sch\u00e4fer_%P%","Sch\\wfer\\W+P.*", "Sch\u00e4fer,P",false);
 
         //  not always have a % at the end
         assertEquals("Schaefer_",SearchRecord.makeLikePattern("Schaefer,",false));

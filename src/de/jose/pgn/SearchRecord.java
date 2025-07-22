@@ -845,7 +845,7 @@ public class SearchRecord implements Cloneable
 	private static char STATE_WILDS = '*';
 	private static char STATE_EOF	= '\0';
 
-	protected static char advancePatternState(char current, char next, StringBuffer out) {
+	protected static char advanceLikePatternState(char current, char next, StringBuffer out) {
 		assert(current!=STATE_EOF);
 
 		switch (current) {
@@ -887,8 +887,36 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
-	//	todo move to GlobMatcher
-	//	todo record glob pattern groups (?,*,letters, punctuation(?))
+	//	wildcard matchinig with RLIKE is tricky b/c it does not really support utf-8 encoded characters !?
+	public static String[] MYSQL_RLIKE_WILDCARDS = {
+			"[[:alnum:]]{1,3}",		//	matches one letter, possibly encoded in up to 3 utf-8 chars
+			"[[:alnum:]]*",			//	matches any number of letter
+			"[[:punct:][:space:]]+",	//	matches punctuation and whitespace
+	};
+	public static String[] POSIX_WILDCARDS = {
+			"\\w",		//	matches one letter, possibly encoded in up to 3 utf-8 chars
+			"\\w*",			//	matches any number of letter
+			"\\W+",	//	matches punctuation and whitespace
+	};
+
+	protected static char advanceRegexPatternState(char current, char next, StringBuffer out, String[] wild, boolean caseSensitive) {
+		assert(current!=STATE_EOF);
+
+		switch(next) {
+			case '.':
+				if(current!='.') out.append(wild[2]);
+				return STATE_PUNCT;
+
+			case '?':		out.append(wild[0]); return STATE_WILD1;
+			case '*':		out.append(wild[1]); return STATE_WILDS;
+			case '\0':		out.append(".*"); return STATE_EOF;
+			default:		out.append((caseSensitive || next < 128) ? next:wild[0]); return next;
+			//	note accented chars are utf-8 encoded. RLIKE can't handle utf-8. match against {1..3} characters !?
+			//	as a neat side effect, ä matches ae, which is not so bad after all
+			//	letter matching is better done by LIKE
+		}
+	}
+
 	public static String makeLikePattern(String searchText, boolean fullString)
 	{
 		StringBuffer likePattern = new StringBuffer();
@@ -907,14 +935,41 @@ public class SearchRecord implements Cloneable
 					break;
 			}
 
-			current = advancePatternState(current, next, likePattern);
+			current = advanceLikePatternState(current, next, likePattern);
 		}
-		advancePatternState(current, STATE_EOF, likePattern);
+
+		advanceLikePatternState(current, STATE_EOF, likePattern);
 		if (!fullString && likePattern.charAt(likePattern.length()-1)=='%')
 			likePattern.deleteCharAt(likePattern.length()-1);
 		//	note: that's a bit unclean. We would like to match any number of punctuation, but not letters.
 		//	Unfortunately, LIKE can not distinguish. RLIKE could but has disadvantages.
 		return likePattern.toString();
+	}
+
+	public static String makeRegexPattern(String searchText, boolean fullString, String[] wildcards, boolean caseSensitive)
+	{
+		StringBuffer regexPattern = new StringBuffer();
+		char current=STATE_ALPHA;
+		char next;
+
+		for(int i=0; i < searchText.length(); i++)
+		{
+			next = searchText.charAt(i);
+			switch(next) {
+				case '?':	break;
+				case '*':	break;
+				default:
+					if (!Character.isLetterOrDigit(next))
+						next = STATE_PUNCT;
+					break;
+			}
+
+			current = advanceRegexPatternState(current, next, regexPattern, wildcards, caseSensitive);
+		}
+
+		if (fullString)
+			advanceRegexPatternState(current, STATE_EOF, regexPattern, wildcards, caseSensitive);
+		return regexPattern.toString();
 	}
 
 
@@ -1423,42 +1478,61 @@ public class SearchRecord implements Cloneable
 		else {
 			//  if there is Whitespace, or punctuation, use Regex
 			//  otherwise use LIKE (it's faster, anyway)
-			appendNameSearchPattern(sql, table, "Name", pattern, isCaseSensitive());
+			appendNameSearchPattern(sql, table, "Name", pattern, MYSQL_RLIKE_WILDCARDS, isCaseSensitive());
 		}
 	}
 
 	public static void appendNameSearchPattern(ParamStatement sql,
 											   String table, String column,
 											   String pattern,
+											   String[] wildcards,
 											   boolean caseSensitive)
 	{
 		String likePattern = makeLikePattern(pattern,true);
-		//StringBuffer regexPattern = new StringBuffer();
+		String regexPattern = makeRegexPattern(pattern, true,wildcards,caseSensitive);
+		boolean hasPunctuation = regexPattern.contains(wildcards[2]);
 
 
-
-//			if ((regexPattern.length() > 0) || isCaseSensitive())
-//			{
-		/**	todo what I would like to do is
-		 * 		LIKE	for fast filtering
-		 * 	AND
-		 * 		RLIKE	for precise filtering;
-		 * 				+ distinguish punctuation from letters
-		 * 				**unfortunately** RLIKE is always sensitive to accents
-		 * 				desirable is an accent-insensitive RLIKE funtion
-		 * 				where do we get one? native ICU? Java?
-		 * 				later mysql versions have accent-insensitive collations (needs rebuilding the indexes :(
+		/**
+		 * Searching for names is done by a combination of LIKE, LIKE BINARY and RLIKE.
+		 * Why so complicated?
 		 *
-		 * current compromise:
-		 * 		LIKE AND BINARY LIKE
-		 * 			+ applies case-sensitivity
-		 * 			- can not distinguish punctuation from letters. Thus returning too many results, potentially.
+		 * LIKE	is
+		 * 	+ fast
+		 * 	+ case- and accent-insensitive
+		 * 	- can not distinguish punctuation from letters (% matches both)
+		 *
+		 * LIKE BINARY is
+		 *  - slow
+		 *  + case- and accent-sensitive
+		 *
+		 * RLIKE is
+		 * 	- slow
+		 * 	+ case-insensitive but *always* accent-sensitive.
+		 * 		Why? B/c accented chars are encoded as multi-byte UTF-8 !
+		 * 		RLIKE does not support utf-8 :(
+		 * 		it's even hard to match them with regex wildcards :(
+		 * 	+ can distinguish punctuation from letters
+		 *
+		 *  * we use LIKE always first for fast filtering and matching letters accent-insensitive
+		 *  * an additional LIKE BINARY for case-sensitive matching
+		 *  * an addition RLIKE for matching punctuation and word boundaries
+		 *
+		 * desirable would be a REGEX matcher that is optionally accent-sensitive. Later MySQL versions
+		 * have collations that can do that. ICU regexes can do that. But in the mean time we use what we have.
+		 * @see also DBFiedlCompleter that uses (must use) the same mechanism.
 		 */
-		if (caseSensitive) {
+
+
+		if (hasPunctuation || caseSensitive) {
 			sql.where.append(" (");
+			//	fast LIKE. matches letters, digits, case- and accent-insensitive
 			appendLikeClause(sql, table + "." + column,likePattern,false);
 			appendOperator(sql,"AND");
-			appendLikeClause(sql, table + "." + column,likePattern,true);
+			if (hasPunctuation)
+				appendRegexClause(sql, table + "." + column,regexPattern,caseSensitive);
+			else
+				appendLikeClause(sql, table + "." + column,likePattern,caseSensitive);
 			sql.where.append(") ");
 		}
 		else {
