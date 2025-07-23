@@ -910,7 +910,7 @@ public class SearchRecord implements Cloneable
 			case '?':		out.append(wild[0]); return STATE_WILD1;
 			case '*':		out.append(wild[1]); return STATE_WILDS;
 			case '\0':		out.append(".*"); return STATE_EOF;
-			default:		out.append((caseSensitive || next < 128) ? next:wild[0]); return next;
+			default:		out.append((caseSensitive || next < 128) ? next : wild[0]); return next;
 			//	note accented chars are utf-8 encoded. RLIKE can't handle utf-8. match against {1..3} characters !?
 			//	as a neat side effect, ä matches ae, which is not so bad after all
 			//	letter matching is better done by LIKE

@@ -99,9 +99,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     }
 
     @Override
-    public int prefixLength(String query, String result) {
-        //  query is already regex, right ??
-        //  unit test
+    public int prefixLength(String query, String result)
+    {
         if (!query.equals(lastQuery)) {
             lastQuery = query;
    //         glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);

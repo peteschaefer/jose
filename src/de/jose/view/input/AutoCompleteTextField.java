@@ -269,12 +269,27 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             updateCompletions(false);
     }
 
+    private boolean canComplete(String query) {
+        /**
+         *  skip completion if
+         *      - query is empty
+         *      - too few letters (->combinatorial explosion)
+         *      - starts with *, or ?? (combinatorial explosion)
+         *      - ends with * (can not delineate prefix from completion)
+         */
+        if (query.isEmpty() || CharUtil.countLettersAndDigits(query) <= minLetters) return false;
+        if (query.startsWith("*") || query.startsWith("??")) return false;
+        if (query.endsWith("*")) return false;
+        return true;
+    }
+
     private void updateCompletions(boolean continuePopping)
     {
-        if (CharUtil.countLettersAndDigits(getText()) >= minLetters) {
+        if (canComplete(getText())) {
             Application.theExecutorService.submit(() -> doUpdateCompletions(continuePopping));
         } else {
             suffixes.clear();
+            wasAbbreviated=false;
             updateDocument();
         }
     }
