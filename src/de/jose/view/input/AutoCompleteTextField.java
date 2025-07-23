@@ -15,6 +15,7 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.awt.event.KeyEvent.VK_DELETE;
@@ -177,7 +178,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     //
     //  length of user-typed prefix
     private int prefixLen = 0;
-    private List<String> suffixes = new ArrayList<String>();
+    private ArrayList<String> suffixes = new ArrayList<String>();
     private boolean wasAbbreviated = false;
 
     private Completer completer;
@@ -383,13 +384,32 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                     continue outer_loop;
                 }
                 //  else
-                current = common;
                 if (common.length() < current.length()) wasAbbreviated=true;
+                current = common;
             }
             //  eof
             assert(j==completions.size());
             suffixes.add( current.toString() );
             break;
+        }
+
+        removeDuplicates(suffixes);
+    }
+
+    private static void removeDuplicates(ArrayList<String> strs) {
+        //  now that punctuation has been skipped, sort *again*
+        strs.sort(new Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                return a.compareToIgnoreCase(b);
+            }
+        });
+        //  and remove duplicates
+        for(int i=1; i < strs.size(); ) {
+            if (strs.get(i-1).equalsIgnoreCase(strs.get(i)))
+                strs.remove(i);
+            else
+                i++;
         }
     }
 
