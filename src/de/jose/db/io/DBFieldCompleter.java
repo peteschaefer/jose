@@ -4,6 +4,7 @@ import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
 import de.jose.db.ParamStatement;
 import de.jose.pgn.SearchRecord;
+import de.jose.util.CharUtil;
 import de.jose.util.GlobMatcher;
 import de.jose.view.input.AutoCompleteTextField;
 
@@ -99,6 +100,21 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     }
 
     @Override
+    public boolean canComplete(String query) {
+        /**
+         *  skip completion if
+         *      - query is empty
+         *      - too few letters (->combinatorial explosion)
+         *      - starts with *, or ?? (combinatorial explosion)
+         *      - ends with * (can not delineate prefix from completion)
+         */
+        if (query.isEmpty() || CharUtil.countLettersAndDigits(query) <= minLetters) return false;
+        if (query.startsWith("*") || query.startsWith("??")) return false;
+        if (query.endsWith("*")) return false;
+        return true;
+    }
+
+    @Override
     public int prefixLength(String query, String result)
     {
         if (!query.equals(lastQuery)) {
@@ -120,6 +136,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
 
     //  todo constrain by Collection Ids (GameSource)
     //  todo color-insensitive Players
+    private int minLetters = 2;   //  don't autocomplete on an empty string (it works, but is not intuitive)
+
     private String table, column;
     private boolean caseSensitive=false;
     private ParamStatement sql;

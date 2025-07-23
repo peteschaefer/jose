@@ -13,12 +13,11 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.awt.event.KeyEvent.VK_DELETE;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
 
 /**
@@ -54,6 +53,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
          *  Null if the query was interrupted by a subsequent query.
          */
         List<String> getCompletions(String query, int limit);
+
+        default boolean canComplete(String query) {
+            return !query.isEmpty();
+        }
 
         /**
          * @param query string (may contain wildcards)
@@ -173,7 +176,6 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     //  Members
     //
     //  length of user-typed prefix
-    private int minLetters = 2;   //  don't autocomplete on an empty string (it works, but is not intuitive)
     private int prefixLen = 0;
     private List<String> suffixes = new ArrayList<String>();
     private boolean wasAbbreviated = false;
@@ -269,23 +271,9 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             updateCompletions(false);
     }
 
-    private boolean canComplete(String query) {
-        /**
-         *  skip completion if
-         *      - query is empty
-         *      - too few letters (->combinatorial explosion)
-         *      - starts with *, or ?? (combinatorial explosion)
-         *      - ends with * (can not delineate prefix from completion)
-         */
-        if (query.isEmpty() || CharUtil.countLettersAndDigits(query) <= minLetters) return false;
-        if (query.startsWith("*") || query.startsWith("??")) return false;
-        if (query.endsWith("*")) return false;
-        return true;
-    }
-
     private void updateCompletions(boolean continuePopping)
     {
-        if (canComplete(getText())) {
+        if (completer.canComplete(getText())) {
             Application.theExecutorService.submit(() -> doUpdateCompletions(continuePopping));
         } else {
             suffixes.clear();
@@ -326,10 +314,48 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
+    private int nextLetter(CharSequence s, int k) {
+        while(k < s.length() && !Character.isLetterOrDigit(s.charAt(k)))
+            k++;
+        return k;
+    }
+
+    private CharSequence commonSuffix(CharSequence s1, CharSequence s2)
+    {
+        int k1 = nextLetter(s1,0);
+        int k2 = nextLetter(s2,0);
+        int commonChars = 0;
+
+        while(k1 < s1.length() && k2 < s2.length()) {
+            char c1 = s1.charAt(k1);
+            char c2 = s2.charAt(k2);
+
+            assert(Character.isLetterOrDigit(c1));
+            assert(Character.isLetterOrDigit(c2));
+
+            c1 = CharUtil.toUpperCase(c1);
+            c2 = CharUtil.toUpperCase(c2);
+
+            if (c1==c2)
+                commonChars++;
+            else
+                break;
+
+            k1 = nextLetter(s1,k1+1);
+            k2 = nextLetter(s2,k2+1);
+        }
+
+        if (commonChars==0)
+            return null;
+        else
+            return s1.subSequence(0,k1);
+    }
+
     private void computeSuffixes(List<String> completions, String query)
     {
         //  find suffixes length
-        int suffLen = 0;
+        //int suffLen = 0;
+        CharSequence current;
         this.suffixes = new ArrayList<>();
         this.wasAbbreviated = false;
         int i,j;
@@ -339,51 +365,30 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         {
             String cmpi = completions.get(i);
             int pxi = completer.prefixLength(query,cmpi);
-            suffLen = cmpi.length() - pxi;
-            if (suffLen==0) continue;   //  skip this one
+            current = cmpi.subSequence(pxi,cmpi.length());
+            if (current.length()==0) continue;   //  skip this one
 
-            assert(suffLen > 0);
+            assert(current.length() > 0);
             for(j = i+1; j < completions.size(); j++) {
                 String cmpj = completions.get(j);
                 int pxj = completer.prefixLength(query,cmpj);
+                CharSequence next = cmpj.subSequence(pxj,cmpj.length());
+                if (next.length()==0) continue; //  skip this one
 
-                if (    (pxi < cmpi.length()) && (pxj < cmpj.length()) &&
-                        (CharUtil.toUpperCase(cmpi,pxi) != CharUtil.toUpperCase(cmpj,pxj)))
-                {
-                    //  ends one run
-                    //  todo single-char completions are rather pointless; but must not get lost, either?
-                    // if (suffLen >= 2)
-                    suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
+                CharSequence common = commonSuffix(current, next);
+                if (common==null || common.length()==0) {
+                    //  end this run
+                    suffixes.add(current.toString());
                     i=j-1;
                     continue outer_loop;
                 }
-
-                for (int k=1; (k < suffLen) && (pxi+k < cmpi.length()) && (pxj+k < cmpj.length()); k++) {
-                    if (CharUtil.toUpperCase(cmpi,pxi+k) != CharUtil.toUpperCase(cmpj,pxj+k))
-                    {
-                        //  skip punctation, too
-                        while(k > 0 && !Character.isLetterOrDigit(cmpj.charAt(pxj+k-1)))
-                            k--;
-                        if (k==0) {
-                            //  ends one run
-                            suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
-                            i=j-1;
-                            continue outer_loop;
-                        }
-
-                        suffLen = k;
-                        wasAbbreviated = true;//  shorten suffix
-                        break;
-                        /** todo we would like to know for each suffix whether it is an abbreviation
-                         *  s.t. we can indicate it in the menu like "suf..."
-                         */
-                    }
-                }
-                assert(suffLen > 0);
+                //  else
+                current = common;
+                if (common.length() < current.length()) wasAbbreviated=true;
             }
             //  eof
             assert(j==completions.size());
-            suffixes.add( cmpi.substring(pxi, pxi+suffLen) );
+            suffixes.add( current.toString() );
             break;
         }
     }
