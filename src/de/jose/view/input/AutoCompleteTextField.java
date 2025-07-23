@@ -327,6 +327,9 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         int k2 = nextLetter(s2,0);
         int commonChars = 0;
 
+        /**
+         * todo don't ignore punctuation. Treat as one entity. Ignore at end.
+         */
         while(k1 < s1.length() && k2 < s2.length()) {
             char c1 = s1.charAt(k1);
             char c2 = s2.charAt(k2);
@@ -398,6 +401,9 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     private static void removeDuplicates(ArrayList<String> strs) {
         //  now that punctuation has been skipped, sort *again*
+        /**
+         * todo Treat punctuation as one entity when sorting.
+         */
         strs.sort(new Comparator<String>() {
             @Override
             public int compare(String a, String b) {
