@@ -203,7 +203,7 @@ public class QueryPanel
 	/**	input fields for ECO code (from .. to)	*/
 	protected JTextField eco1,eco2;
 	/**	input field for opening	*/
-	protected JTextField openingName;
+	protected AutoCompleteTextField openingName;
 	/**	input fields for date (from .. to)	*/
 	protected JTextField date1,date2;
 	/**	input fields for move count (from..to)	*/
@@ -214,7 +214,7 @@ public class QueryPanel
 
 	/**		Comment Panel	*/
 	/**	input field for annotator	*/
-	protected JTextField annotatorName;
+	protected AutoCompleteTextField annotatorName;
 	/**	input field for comments	*/
 	protected JTextArea commentText;
 	/** falg: has comments  */
@@ -345,6 +345,7 @@ public class QueryPanel
 		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
 		AutoCompleteTextField.Completer eventCompleter = new DBFieldCompleter("Event","Name");
 		AutoCompleteTextField.Completer siteCompleter = new DBFieldCompleter("Site","Name");
+		AutoCompleteTextField.Completer openingCompleter = new DBFieldCompleter("Opening","Name");
 
 		p2.add(whiteName = JoDialog.newTextField(this,playerCompleter));
 		p2.add(blackName = JoDialog.newTextField(this,playerCompleter));
@@ -369,7 +370,7 @@ public class QueryPanel
 		p1.add(siteName = JoDialog.newTextField(this,siteCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,1,1));
 		//	"Opening"
 		p1.add(JoDialog.newLabel("dialog.query.opening"), LABEL_ONE);
-		p1.add(openingName = JoDialog.newTextField(this), JoDialog.gridConstraint(ELEMENT_ROW,1,2,1));
+		p1.add(openingName = JoDialog.newTextField(this,openingCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,2,1));
 		reg(eventName,"query.event");
 		reg(siteName,"query.site");
 		reg(openingName,"query.opening");
@@ -451,9 +452,11 @@ public class QueryPanel
 		reg(flagComments,"query.com.flag");
 		reg(flagVars,"query.var.flag");
 
+		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
+
 		//	"Annotator"
 		commentPanel.add(JoDialog.newLabel("dialog.query.annotator",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
-		commentPanel.add(annotatorName = JoDialog.newTextField(this), JoDialog.ELEMENT_ONE);
+		commentPanel.add(annotatorName = JoDialog.newTextField(this,playerCompleter), JoDialog.ELEMENT_ONE);
 		//	"Comment Text"
 		commentPanel.add(JoDialog.newLabel("dialog.query.commenttext",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
 		commentPanel.add(commentText = JoDialog.newTextArea(this), JoDialog.ELEMENT_NEXTROW_REMAINDER);

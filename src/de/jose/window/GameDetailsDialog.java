@@ -183,16 +183,19 @@ public class GameDetailsDialog
 		add(moreTags, field=newTextField(TAG_ECO), ELEMENT_TWO);
 		field.setColumns(4);
 
+		AutoCompleteTextField.Completer openingCompleter = new DBFieldCompleter("Opening","Name");
+		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
+
 		JButton add_button;
 		Icon addIcon = JoToolBar.create1AwesomeIcon("\uf0fe:#dddd00:#444444",24f);
 		add(moreTags, add_button=newButton("dialog.details.add",addIcon,(String)null), ELEMENT_ROW_SMALL);
 		add_button.setBorder(new EmptyBorder(0,0,0,0));
 
 		moreTags.add(newLabel("dialog.details.opening"), labelOne);
-		add(moreTags, field=newTextField(TAG_OPENING), ELEMENT_ROW);
+		add(moreTags, newTextField(TAG_OPENING,openingCompleter), ELEMENT_ROW);
 
 		moreTags.add(newLabel("dialog.details.annotator"), labelOne);
-		add(moreTags, newTextField(TAG_ANNOTATOR), ELEMENT_ROW);
+		add(moreTags, newTextField(TAG_ANNOTATOR,playerCompleter), ELEMENT_ROW);
 
 		JScrollPane scroller = new JScrollPane(moreTags);
 		scroller.setBorder(new EmptyBorder(0,0,0,0));
