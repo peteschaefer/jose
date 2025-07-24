@@ -1,7 +1,7 @@
 package de.jose.view.input;
 
-import com.formdev.flatlaf.ui.FlatTextBorder;
 import de.jose.Application;
+import de.jose.Language;
 import de.jose.db.JoConnection;
 import de.jose.util.CharUtil;
 
@@ -122,16 +122,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         });
 
         doc.setDocumentFilter(new ACDocumentFilter());
-
         //  todo hide popup on: ESC, focus loss
-        Border b1 = this.getBorder(); // null
-        Border b2 = scroller.getBorder(); //
-        Border b3 = text.getBorder(); // empty
-
-        FlatTextBorder border = (FlatTextBorder) UIManager.get("TextField.border");
-//        text.setBorder(border);
-//        scroller.setBorder(null);
-        scroller.setBorder(border);
+        //  todo focused border width is too narrow. No way to fix it :(
     }
 
     public AutoCompleteTextField(Completer completer) {
@@ -140,6 +132,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     public void setText(String text) {
         this.text.setText(text);
+        prefixLen = text.length();
+        updateDocument();
     }
 
     public String getText() {
@@ -150,6 +144,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        updateDocument();
     }
 
     public Document getDocument() {
@@ -192,7 +192,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     private JScrollPane scroller;
     private ACTextPane text;
-    private JPopupMenu popupMenu = new JPopupMenu();
+    private ACPopupMenu popupMenu = new ACPopupMenu();
 
     //
     //  Methods
@@ -242,7 +242,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
         for(String s : suffixes) {
             //popupMenu.add(t+s);
-            Action action = new AbstractAction(s) {                 @Override
+            Action action = new AbstractAction(s) {
                 public void actionPerformed(ActionEvent e) {
                     appendSuggestion(s);
                 }
@@ -485,7 +485,18 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             doc.remove(prefixLen, doc.getLength() - prefixLen);
             doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
 
-            if (text.hasFocus()) {
+            if (prefixLen==0) {
+                String tip = getName();
+                if (tip!=null) {
+                    tip = Language.get(tip,null);
+                    if (tip==null)
+                        tip = Language.getTip(getName());
+                    if (tip==null)
+                        tip = getName();
+                    doc.insertString(0, tip, suffixStyle);
+                }
+            }
+            else if (text.hasFocus()) {
                 if (suffixes.size() == 1)
                     doc.insertString(prefixLen, suffixes.get(0), suffixStyle);
                 if (suffixes.size() >= 2 || wasAbbreviated)
@@ -552,6 +563,18 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
         else {
             SwingUtilities.invokeLater(AutoCompleteTextField.this::updateDocument);
+        }
+    }
+
+    class ACPopupMenu extends JPopupMenu {
+        @Override
+        protected void processKeyEvent(KeyEvent evt) {
+            super.processKeyEvent(evt);
+        }
+
+        @Override
+        protected void processComponentKeyEvent(KeyEvent e) {
+            super.processComponentKeyEvent(e);
         }
     }
 

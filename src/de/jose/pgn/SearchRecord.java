@@ -1489,8 +1489,8 @@ public class SearchRecord implements Cloneable
 											   boolean caseSensitive)
 	{
 		String likePattern = makeLikePattern(pattern,true);
-		String regexPattern = makeRegexPattern(pattern, true,wildcards,caseSensitive);
-		boolean hasPunctuation = regexPattern.contains(wildcards[2]);
+		//String regexPattern = makeRegexPattern(pattern, true,wildcards,caseSensitive);
+		//boolean hasPunctuation = regexPattern.contains(wildcards[2]);
 
 
 		/**
@@ -1508,15 +1508,14 @@ public class SearchRecord implements Cloneable
 		 *
 		 * RLIKE is
 		 * 	- slow
-		 * 	+ case-insensitive but *always* accent-sensitive.
+		 * 	+ case-insensitive but
+		 * 	+ can distinguish punctuation from letters
+		 * 	- *always* accent-sensitive.
 		 * 		Why? B/c accented chars are encoded as multi-byte UTF-8 !
 		 * 		RLIKE does not support utf-8 :(
 		 * 		it's even hard to match them with regex wildcards :(
-		 * 	+ can distinguish punctuation from letters
-		 *
-		 *  * we use LIKE always first for fast filtering and matching letters accent-insensitive
-		 *  * an additional LIKE BINARY for case-sensitive matching
-		 *  * an addition RLIKE for matching punctuation and word boundaries
+		 * 		...and that's bad b/c if LIKE matches accent-insensitive RLIKE would undo that match
+		 * 	--> RLIKE is currently USELESS
 		 *
 		 * desirable would be a REGEX matcher that is optionally accent-sensitive. Later MySQL versions
 		 * have collations that can do that. ICU regexes can do that. But in the mean time we use what we have.

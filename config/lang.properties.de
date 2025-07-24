@@ -944,6 +944,8 @@ dialog.query.position = Stellung
 
 dialog.query.white	= Weiß:
 dialog.query.black	= Schwarz:
+query.white.tip = Weißer Spieler
+query.black.tip = Schwarzer Spieler
 
 dialog.query.flags = Einstellungen
 dialog.query.color.sensitive = Farbe beachten
@@ -960,6 +962,12 @@ dialog.query.to = bis
 dialog.query.opening = Eröffnung:
 dialog.query.date = Datum:
 dialog.query.movecount = Züge:
+
+query.event.tip = Turnier
+query.site.tip = Ort
+query.opening.tip = Eröffnung
+query.annotator.tip = Kommentator
+
 
 dialog.query.annotator = Kommentator:
 dialog.query.commenttext = Kommentar:
