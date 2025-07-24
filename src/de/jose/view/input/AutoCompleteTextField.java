@@ -7,18 +7,14 @@ import de.jose.util.CharUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import static java.awt.event.KeyEvent.VK_DELETE;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
 
 /**
@@ -327,21 +323,21 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     static class SuffixCompare {
-        int compare;
-        int len;
-        int commonChars;
+        int compare;        //  comparison result < 0, == 0, > 0
+        int len;            //  match length
+        int letters;        //  # matched letters
 
-        SuffixCompare set(int cmp, int len) {
-            this.compare = cmp;
+        public SuffixCompare(int compare, int len, int letters) {
+            this.compare = compare;
             this.len = len;
-            return this;
+            this.letters = letters;
         }
     }
 
     private static SuffixCompare compareSuffixSequences(CharSequence s1, CharSequence s2)
     {
-        SuffixCompare cmp = new SuffixCompare();
         int k1 = 0, k2 = 0;
+        int commonLetters = 0;
 
         while (k1 < s1.length() && k2 < s2.length()) {
             char c1 = s1.charAt(k1);
@@ -351,13 +347,14 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             boolean punct2 = !Character.isLetterOrDigit(c2);
 
             if (punct1 && !punct2)
-                return cmp.set(-1,k1);
+                return new SuffixCompare(-1,k1,commonLetters);
             if (!punct1 && punct2)
-                return cmp.set(+1,k1);
+                return new SuffixCompare(+1,k1,commonLetters);
 
             if (punct1 && punct2) {
                 k1 = nextLetter(s1, k1+1);
                 k2 = nextLetter(s2, k2+1);
+                //  treat sequences of punctation as one entity
                 continue;
             }
 
@@ -372,28 +369,27 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             c1 = CharUtil.toUpperCase(c1);
             c2 = CharUtil.toUpperCase(c2);
 
-            if (c1==c2) {
-                cmp.commonChars++;
-                k1++;
-                k2++;
-                continue;
-            }
-            //else
-            return cmp.set(c1-c2,k1);
+            if (c1!=c2)
+                return new SuffixCompare(c1-c2,k1,commonLetters);
+
+            //  else
+            commonLetters++;
+            k1++;
+            k2++;
         }
 
         if (k1 < s1.length())
-            return cmp.set(+1,k1);
+            return new SuffixCompare(+1,k1,commonLetters);
         if (k2 < s2.length())
-            return cmp.set(-1,k1);
+            return new SuffixCompare(-1,k1,commonLetters);
         //  else
-        return cmp.set(0,s1.length());
+        return new SuffixCompare(0,s1.length(),commonLetters);
     }
 
     private CharSequence commonSuffix(CharSequence s1, CharSequence s2)
     {
         SuffixCompare cmp = compareSuffixSequences(s1, s2);
-        if (cmp.commonChars==0)
+        if (cmp.letters ==0)
             return null;
         else
             return s1.subSequence(0,cmp.len);
