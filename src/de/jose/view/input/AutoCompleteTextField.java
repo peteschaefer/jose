@@ -411,11 +411,28 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
 
     private void truncatePrefixes(List<String> completions, String query)
     {
-        for(int i=0; i < completions.size(); ++i) {
+        for(int i=0; i < completions.size(); ) {
             String s = completions.get(i);
             int pi = completer.prefixLength(query,s);   //  might differ with wildcards
-            s = s.substring(pi,s.length());
-            completions.set(i, s);
+            if (pi > 0) {
+                s = s.substring(pi, s.length());
+                completions.set(i, s);
+                i++;
+            }
+            else {
+                //  note that the GlobX matcher used by DBFieldCompleter
+                //  is stricter than the SQL query w.r.t. punctuation
+                /*  an example:
+                    user input = "Kasparov, G"
+                    SQL like pattern = "Kaspoarov%G"    (note that LIKE can not detect punctuation)
+                    matches, among others, "Kasparov, Sergey".
+                    But that's not what we wanted.
+
+                    Globx pattern = "Kasparov.G"    is strict about punctuation and rejects ", Sergey".
+                    Does this make sense?
+                 */
+                completions.remove(i);
+            }
         }
     }
 

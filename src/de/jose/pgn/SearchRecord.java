@@ -887,6 +887,48 @@ public class SearchRecord implements Cloneable
 		}
 	}
 
+	protected static char advanceGlobxPatternState(char current, char next, StringBuffer out) {
+		assert(current!=STATE_EOF);
+
+		switch (current) {
+			case '.':	//	STATE_PUNCT
+				switch(next) {
+					case '.':		return STATE_PUNCT;
+					case '?':		out.append('?'); return STATE_WILD1;
+					case '*':		out.append('*'); return STATE_WILDS;
+					case '\0':		out.append('*'); return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			case '?':	//	STATE_WILD1
+				switch(next) {
+					case '.':		out.append('.'); return STATE_PUNCT;
+					case '?':		out.append('?'); return STATE_WILD1;
+					case '*':		out.append('*'); return STATE_WILDS;
+					case '\0':		out.append('*'); return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			case '*':	//	STATE_WILDS
+				switch(next) {
+					case '.':		out.append('.'); return STATE_PUNCT;
+					case '?':		return STATE_WILDS;
+					case '*':		return STATE_WILDS;
+					case '\0':		return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+
+			default:	//	STATE_ALPHA
+				switch(next) {
+					case '.':		out.append("."); return STATE_PUNCT;
+					case '?':		out.append('?'); return STATE_WILD1;
+					case '*':		out.append('*'); return STATE_WILDS;
+					case '\0':		out.append('*'); return STATE_EOF;
+					default:		out.append(next); return next;
+				}
+		}
+	}
+
 	public static String[] POSIX_WILDCARDS = {
 			"\\w",		//	matches one letter
 			"\\w*",		//	matches any number of letters
@@ -944,6 +986,32 @@ public class SearchRecord implements Cloneable
 		//	note: that's a bit unclean. We would like to match any number of punctuation, but not letters.
 		//	Unfortunately, LIKE can not distinguish. RLIKE could but has disadvantages.
 		return likePattern.toString();
+	}
+
+	public static String makeGlobxPattern(String searchText, boolean fullString)
+	{
+		StringBuffer globxPattern = new StringBuffer();
+		char current=STATE_ALPHA;
+		char next;
+
+		for(int i=0; i < searchText.length(); i++)
+		{
+			next = searchText.charAt(i);
+			switch(next) {
+				case '?':	break;
+				case '*':	break;
+				case '.': 	break;
+				default:
+					if (!Character.isLetterOrDigit(next))
+						next = STATE_PUNCT;
+					break;
+			}
+
+			current = advanceGlobxPatternState(current, next, globxPattern);
+		}
+		if (fullString)
+			advanceGlobxPatternState(current, STATE_EOF, globxPattern);
+		return globxPattern.toString();
 	}
 
 	public static String makeRegexPattern(String searchText, boolean fullString, String[] wildcards, boolean caseSensitive)
@@ -1478,14 +1546,13 @@ public class SearchRecord implements Cloneable
 		else {
 			//  if there is Whitespace, or punctuation, use Regex
 			//  otherwise use LIKE (it's faster, anyway)
-			appendNameSearchPattern(sql, table, "Name", pattern, MYSQL_RLIKE_WILDCARDS, isCaseSensitive());
+			appendNameSearchPattern(sql, table, "Name", pattern, isCaseSensitive());
 		}
 	}
 
 	public static void appendNameSearchPattern(ParamStatement sql,
 											   String table, String column,
 											   String pattern,
-											   String[] wildcards,
 											   boolean caseSensitive)
 	{
 		String likePattern = makeLikePattern(pattern,true);

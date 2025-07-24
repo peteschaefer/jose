@@ -9,18 +9,11 @@ import de.jose.util.GlobMatcher;
 import de.jose.view.input.AutoCompleteTextField;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static de.jose.pgn.SearchRecord.MYSQL_RLIKE_WILDCARDS;
-import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
-import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
+import static de.jose.util.GlobMatcher.GLOBX_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
-import static java.util.regex.Pattern.*;
 
 public class DBFieldCompleter implements AutoCompleteTextField.Completer
 {
@@ -54,7 +47,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
         try {
             sql.where.setLength(0);
             sql.clearParameters();
-            SearchRecord.appendNameSearchPattern(sql,table,column, prefix, MYSQL_RLIKE_WILDCARDS, caseSensitive);
+            SearchRecord.appendNameSearchPattern(sql,table,column, prefix, caseSensitive);
 
             if (limit > 0) {
                 sql.limit.setLength(0);
@@ -119,12 +112,15 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     {
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
-   //         String regexStr = SearchRecord.makeRegexPattern(query,false,POSIX_WILDCARDS,caseSensitive);
-   //         int flags = UNICODE_CHARACTER_CLASS;
-   //         if (!caseSensitive)
-   //             flags |= CASE_INSENSITIVE|UNICODE_CASE;
-   //         regex = Pattern.compile(regexStr,flags);
+            glob = new GlobMatcher(SearchRecord.makeGlobxPattern(query,false),
+                    false,false,true, GLOBX_WILDCARDS);
+            /*  Note that GlobX matcher is strict about punctuation.
+                Simple Glob and SQL LIKE is not.
+
+                That means that an SQL query may return more results than
+                the Auto-Completer would accept. That's a bit odd but not very much.
+                @see AutoCompleteTextField.truncatePrefixes()
+             */
         }
 
         int mat = glob.match(result);

@@ -2,8 +2,9 @@ package de.jose.util;
 
 public class GlobMatcher
 {
-    public static char[] GLOB_WILDCARDS = {'?','*'};
-    public static char[] SQL_WILDCARDS = {'_','%'};
+    public static char[] GLOB_WILDCARDS = {'?','*'};    //  out-of-the-box Glob matcher
+    public static char[] GLOBX_WILDCARDS = {'?','*','.'};   //  Glob + punctuation wildcard
+    public static char[] SQL_WILDCARDS = {'_','%'}; //  SQL LIKE matcher (identical to Glob, only different wildcard characters)
 
     public GlobMatcher(String pattern, boolean caseSensitive, boolean accentSensitive, boolean greedy, char[] wildcards) {
         this.pattern = pattern;
@@ -57,6 +58,19 @@ public class GlobMatcher
             int m2 = match(p1, i0);
 
             return greedy ? mmax(m1, m2) : mmin(m1, m2);
+        }
+
+        if (wildcards.length >= 3 && cp==wildcards[2]) {
+            //  match . = at least one punctuation+
+            if (i0.length() > 0 && !Character.isLetterOrDigit(i0.charAt(0))) {
+                int q1=1;
+                if (greedy) {
+                    while(q1 < i0.length() && !Character.isLetterOrDigit(i0.charAt(q1)))
+                        q1++;
+                }
+                CharSequence i1 = i0.subSequence(q1,i0.length());
+                return mplus(match(p1,i1),q1);
+            }
         }
 
         //  else: at least one char match

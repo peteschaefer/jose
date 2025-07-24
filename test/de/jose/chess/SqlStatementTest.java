@@ -5,7 +5,6 @@ import de.jose.pgn.SearchRecord;
 import de.jose.util.GlobMatcher;
 import org.junit.jupiter.api.Test;
 
-import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +14,7 @@ public class SqlStatementTest
     static void assertSearchPatterns(String likePattern, String regexPattern, String pattern, boolean caseSensitive)
     {
         ParamStatement sql = new ParamStatement();
-        SearchRecord.appendNameSearchPattern(sql,"Player","Name",pattern, SearchRecord.POSIX_WILDCARDS, caseSensitive);
+        SearchRecord.appendNameSearchPattern(sql,"Player","Name",pattern, caseSensitive);
 //        if (caseSensitive)
 //            assertEquals(" BINARY Player.Name LIKE BIANRY ? ",sql.where.toString());
 //        else
