@@ -950,5 +950,25 @@ public class QueryPanel
     public void updateLanguage()
     {
         Language.update(cardPanel);
+		//	There's a quirk in naming some check boxes.
+		//	Their original name is dialog.query.*
+		//	Then it changes to query.*
+		//
+		//	I /think/ I did this to store values in the user preferences.
+		//	and that's why I wouldn't change it light-heartedly.
+		//
+		//	As a work-around, set them again, manually:
+		//	todo no, that's not how it was meant to be.
+		colorSens.setText(Language.get("dialog.query.color.sensitive"));
+		caseSens.setText(Language.get("dialog.query.case.sensitive"));
+		soundSens.setText(Language.get("dialog.query.soundex"));
+
+		win.setText(Language.get("Result.1-0"));
+		draw.setText(Language.get("Result.1/2"));
+		lose.setText(Language.get("Result.0-1"));
+		unknown.setText(Language.get("Result.*"));
+
+		flagComments.setText(Language.get("dialog.query.com.flag"));
+		flagVars.setText(Language.get("dialog.query.var.flag"));
     }
 }

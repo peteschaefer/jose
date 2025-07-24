@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.awt.event.KeyEvent.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
 
 /**
@@ -569,15 +570,25 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
-    class ACPopupMenu extends JPopupMenu {
+    class ACPopupMenu extends JPopupMenu
+    {
         @Override
-        protected void processKeyEvent(KeyEvent evt) {
-            super.processKeyEvent(evt);
-        }
-
-        @Override
-        protected void processComponentKeyEvent(KeyEvent e) {
-            super.processComponentKeyEvent(e);
+        public void processKeyEvent(KeyEvent e, MenuElement[] path, MenuSelectionManager manager) {
+            super.processKeyEvent(e, path, manager);
+            if (e.isConsumed()) {
+                //  ok
+            }
+            else switch (e.getID()) {
+                case KEY_PRESSED:
+                case KEY_RELEASED:
+                    break;
+                case KEY_TYPED:
+                    //  forward to text field
+                    this.setVisible(false);
+                    AutoCompleteTextField.this.text.grabFocus();
+                    AutoCompleteTextField.this.text.postKeyEvent(e);
+                    break;
+            }
         }
     }
 
@@ -592,6 +603,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         @Override
         public Dimension getPreferredSize() {
             return getUI().getPreferredSize(this);
+        }
+
+        protected void postKeyEvent(KeyEvent e) {
+            super.processKeyEvent(e);
         }
     }
 
