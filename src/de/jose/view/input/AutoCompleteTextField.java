@@ -138,9 +138,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     public String getText() {
+        assert(prefixLen >= 0);
         assert(prefixLen <= doc.getLength());
         try {
-            return doc.getText(0,prefixLen);
+            return doc.getText(0, Math.max(0,Math.min(prefixLen,doc.getLength())));
         } catch (BadLocationException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -312,7 +313,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             System.err.println("suggestion: '"+suffixes.get(0)+"'");
         System.err.println(JoConnection.getPool().size()+" pooled connections");
 
-        if (continuePopping) {
+        if (continuePopping && suffixes.size() >= 2) {
             SwingUtilities.invokeLater(() -> {
                 updateDocument();   //  w/out triggering updateCompletions !
                 showCompletionPopup();
