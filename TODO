@@ -226,10 +226,12 @@ Maintenance:
         [ ] umlauts !?
     [ ] auto-complete in Search Panel
         [x] sql completer without constraint
-        [ ] distinct not needed (b/c Player is already distinct)
+        [x] distinct not needed (b/c Player is already distinct)
         [ ] with optional constraints (GameSource)
-        [ ] wildcards (query differs from result)
+        [x] wildcards (query differs from result)
         [x] case insensitive -> for free (collate ut8_ci !)
+        [ ] bug: extra char appears
+
     [x] fix: LIKE and RLIKE with Umlauts
         search "Schafer","Schäfer,H." "Schafer,H."
         LIKE is accent-insensitive
@@ -243,6 +245,7 @@ Maintenance:
                 and RLIKE **does not** support utf-8
                 (although the table collation **is** utf8; goodness, what have you been thinking at mysql??)
                 ok workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
+            [-] RLIKE prevents accent-sensitive matches from LIKE. That's a k-o criterion.
             [ ] later mysql versions have accent-insensitive collations !
                 (and, hopefully, RLIKE does support utf-8 ?!?)
             [x] use same query for Completer
@@ -340,9 +343,13 @@ Maintenance:
 
 [ ] Version 1.6
     [ ] MariaDB from sources
-        [ ] with w/out grant tables
-    [ ] jose-cpp native position search (share server.dll)
-        [ ] no udf's (yet)
+        [ ] with grant tables
+    [ ] jose-cpp native position search
+        [ ] more search options
+    [ ] ICU regexes for search and auto-completion
+        [ ] icu4c, udf
+        [ ] icu4j
+    [ ] bulk Game edit (needs proper regexes on both sides)
 
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode

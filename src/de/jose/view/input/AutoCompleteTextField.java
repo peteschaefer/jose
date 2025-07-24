@@ -94,7 +94,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         this.doc = (DefaultStyledDocument) text.getStyledDocument();
         this.prefixStyle = this.doc.addStyle("prefix", null);
         this.suffixStyle = this.doc.addStyle("suffix",null);
-        StyleConstants.setForeground(suffixStyle, Color.gray);
+        StyleConstants.setForeground(suffixStyle, new Color(148,148,148));
         //doc.addDocumentListener(this);
         text.addCaretListener(this);
         text.addFocusListener(this);
