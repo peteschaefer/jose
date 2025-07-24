@@ -87,14 +87,14 @@
 
 	-->
 	<data-source default="false">
-		<display-name> MySQL-external </display-name>
-		<jndi-name> jdbc/mysql-external </jndi-name>
+		<display-name> MySQL-AWS </display-name>
+		<jndi-name> jdbc/mysql-aws </jndi-name>
 		<!-- runs MySQL >= 8 -->
 		<!-- requires appropriate driver >= 8 -->
         <adapter-class mode="external"> de.jose.db.MySQLAdapter </adapter-class>
-		<driver-class> com.mysql.cj.jdbc.Driver </driver-class>
-		<class-path>mysql-connector-java-8.0.27.jar</class-path>
-		<jdbc-url> jdbc:mysql://[host]:3306/jose </jdbc-url>
+		<driver-class> com.mysql.jdbc.Driver </driver-class>
+		<class-path>mysql.jar</class-path>
+		<jdbc-url> jdbc:mysql://3.65.11.92:3306/jose </jdbc-url>
 		<!-- insert actual host name or IP address	-->
 		<!-- insert port number, unless default -->
 
@@ -141,18 +141,6 @@
 		<jdbc-url> jdbc:mariadb://[host]:3306/[schema] </jdbc-url>
 		<!-- insert actual host name or IP address	-->
 		<!-- insert port number, unless default -->
-
-		<!-- insert user name -->
-		<connection-param>
-			<param-name> user </param-name>
-			<param-value> [user] </param-value>
-		</connection-param>
-
-		<!-- insert password (if required) -->
-		<connection-param>
-			<param-name> password </param-name>
-			<param-value> [password] </param-value>
-		</connection-param>
 
 		<!-- transactions are supported but not required	-->
 		<connection-param>

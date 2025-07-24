@@ -35,7 +35,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     }
 
     @Override
-    public List<String> getCompletions(String prefix, int limit)
+    public ArrayList<String> getCompletions(String prefix, int limit)
     {
         if (queryCounter.get()%2 == 1) {
             //  another query is still active
@@ -119,19 +119,17 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     {
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-   //         glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
-            String regexStr = SearchRecord.makeRegexPattern(query,false,POSIX_WILDCARDS,caseSensitive);
-            int flags = UNICODE_CHARACTER_CLASS;
-            if (!caseSensitive)
-                flags |= CASE_INSENSITIVE|UNICODE_CASE;
-            regex = Pattern.compile(regexStr,flags);
+            glob = new GlobMatcher(SearchRecord.makeLikePattern(query,false),false,false,true, SQL_WILDCARDS);
+   //         String regexStr = SearchRecord.makeRegexPattern(query,false,POSIX_WILDCARDS,caseSensitive);
+   //         int flags = UNICODE_CHARACTER_CLASS;
+   //         if (!caseSensitive)
+   //             flags |= CASE_INSENSITIVE|UNICODE_CASE;
+   //         regex = Pattern.compile(regexStr,flags);
         }
 
-        Matcher mat = regex.matcher(result);
-        if (mat.find() && mat.start() == 0)
-           return mat.end();
+        int mat = glob.match(result);
         //  else
-        return 0;
+        return Math.max(0,mat);
     }
 
     //  todo constrain by Collection Ids (GameSource)
@@ -142,7 +140,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     private boolean caseSensitive=false;
     private ParamStatement sql;
     private String lastQuery;
-    //private GlobMatcher glob;
-    private Pattern regex;
+    private GlobMatcher glob;
+    //private Pattern regex;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }

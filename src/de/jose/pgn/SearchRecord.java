@@ -1524,15 +1524,16 @@ public class SearchRecord implements Cloneable
 		 */
 
 
-		if (hasPunctuation || caseSensitive) {
+		if (caseSensitive) {
 			sql.where.append(" (");
 			//	fast LIKE. matches letters, digits, case- and accent-insensitive
 			appendLikeClause(sql, table + "." + column,likePattern,false);
 			appendOperator(sql,"AND");
-			if (hasPunctuation)
-				appendRegexClause(sql, table + "." + column,regexPattern,caseSensitive);
-			else
-				appendLikeClause(sql, table + "." + column,likePattern,caseSensitive);
+			//if (hasPunctuation)
+			//	DON'T RLIKE would filter out desired accent matches
+			//	appendRegexClause(sql, table + "." + column,regexPattern,caseSensitive);
+			//else
+			appendLikeClause(sql, table + "." + column,likePattern,true);
 			sql.where.append(") ");
 		}
 		else {

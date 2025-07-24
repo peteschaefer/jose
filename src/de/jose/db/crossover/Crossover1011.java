@@ -223,7 +223,7 @@ public class Crossover1011
 	public static void launchDBServer() throws Exception {
 		if (Version.linux) {
 			System.setProperty("java.library.path", "lib/Linux_amd64");
-			System.setProperty("jose.datadir","/home/schaefer/src/jose/database");
+			System.setProperty("jose.datadir","/home/nightrider/src/jose/database");
 		}
 		if (Version.windows) {
 			System.setProperty("java.library.path", ".;lib/Windows");

@@ -53,7 +53,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
          * @return a list of completions, sorted alphabetically.
          *  Null if the query was interrupted by a subsequent query.
          */
-        List<String> getCompletions(String query, int limit);
+        ArrayList<String> getCompletions(String query, int limit);
 
         default boolean canComplete(String query) {
             return !query.isEmpty();
@@ -90,9 +90,6 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         this.completer = completer;
         this.completerKey = completerKey;
 
-        FlatTextBorder border = (FlatTextBorder) UIManager.get("TextField.border");
-//        text.setBorder(border);
-//        scroller.setBorder(null);
         setMinimumSize(new Dimension(100,22));
         //  todo why is this necessary ? height collapses *sometimes* with long text ?
 
@@ -131,6 +128,14 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         doc.setDocumentFilter(new ACDocumentFilter());
 
         //  todo hide popup on: ESC, focus loss
+        Border b1 = this.getBorder(); // null
+        Border b2 = scroller.getBorder(); //
+        Border b3 = text.getBorder(); // empty
+
+        FlatTextBorder border = (FlatTextBorder) UIManager.get("TextField.border");
+//        text.setBorder(border);
+//        scroller.setBorder(null);
+        scroller.setBorder(border);
     }
 
     public AutoCompleteTextField(Completer completer) {
@@ -286,7 +291,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     private void doUpdateCompletions(boolean continuePopping)
     {
         String query = getText();
-        List<String> completions = null;
+        ArrayList<String> completions = null;
         try {
 
             completions = completer.getCompletions(query, 0);
@@ -315,50 +320,104 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         }
     }
 
-    private int nextLetter(CharSequence s, int k) {
+    private static int nextLetter(CharSequence s, int k) {
         while(k < s.length() && !Character.isLetterOrDigit(s.charAt(k)))
             k++;
         return k;
     }
 
-    private CharSequence commonSuffix(CharSequence s1, CharSequence s2)
-    {
-        int k1 = nextLetter(s1,0);
-        int k2 = nextLetter(s2,0);
-        int commonChars = 0;
+    static class SuffixCompare {
+        int compare;
+        int len;
+        int commonChars;
 
-        /**
-         * todo don't ignore punctuation. Treat as one entity. Ignore at end.
-         */
-        while(k1 < s1.length() && k2 < s2.length()) {
+        SuffixCompare set(int cmp, int len) {
+            this.compare = cmp;
+            this.len = len;
+            return this;
+        }
+    }
+
+    private static SuffixCompare compareSuffixSequences(CharSequence s1, CharSequence s2)
+    {
+        SuffixCompare cmp = new SuffixCompare();
+        int k1 = 0, k2 = 0;
+
+        while (k1 < s1.length() && k2 < s2.length()) {
             char c1 = s1.charAt(k1);
             char c2 = s2.charAt(k2);
 
+            boolean punct1 = !Character.isLetterOrDigit(c1);
+            boolean punct2 = !Character.isLetterOrDigit(c2);
+
+            if (punct1 && !punct2)
+                return cmp.set(-1,k1);
+            if (!punct1 && punct2)
+                return cmp.set(+1,k1);
+
+            if (punct1 && punct2) {
+                k1 = nextLetter(s1, k1+1);
+                k2 = nextLetter(s2, k2+1);
+                continue;
+            }
+
+            assert(!punct1);
+            assert(!punct2);
             assert(Character.isLetterOrDigit(c1));
             assert(Character.isLetterOrDigit(c2));
+
+            c1 = CharUtil.stripDiacritic(c1);
+            c2 = CharUtil.stripDiacritic(c2);
 
             c1 = CharUtil.toUpperCase(c1);
             c2 = CharUtil.toUpperCase(c2);
 
-            if (c1==c2)
-                commonChars++;
-            else
-                break;
-
-            k1 = nextLetter(s1,k1+1);
-            k2 = nextLetter(s2,k2+1);
+            if (c1==c2) {
+                cmp.commonChars++;
+                k1++;
+                k2++;
+                continue;
+            }
+            //else
+            return cmp.set(c1-c2,k1);
         }
 
-        if (commonChars==0)
-            return null;
-        else
-            return s1.subSequence(0,k1);
+        if (k1 < s1.length())
+            return cmp.set(+1,k1);
+        if (k2 < s2.length())
+            return cmp.set(-1,k1);
+        //  else
+        return cmp.set(0,s1.length());
     }
 
-    private void computeSuffixes(List<String> completions, String query)
+    private CharSequence commonSuffix(CharSequence s1, CharSequence s2)
     {
-        //  find suffixes length
-        //int suffLen = 0;
+        SuffixCompare cmp = compareSuffixSequences(s1, s2);
+        if (cmp.commonChars==0)
+            return null;
+        else
+            return s1.subSequence(0,cmp.len);
+    }
+
+
+    private static int compareSuffixes(CharSequence s1, CharSequence s2) {
+        SuffixCompare cmp = compareSuffixSequences(s1, s2);
+        return cmp.compare;
+    }
+
+
+    private void truncatePrefixes(List<String> completions, String query)
+    {
+        for(int i=0; i < completions.size(); ++i) {
+            String s = completions.get(i);
+            int pi = completer.prefixLength(query,s);   //  might differ with wildcards
+            s = s.substring(pi,s.length());
+            completions.set(i, s);
+        }
+    }
+
+    private void findSuffixRuns(ArrayList<String> completions)
+    {
         CharSequence current;
         this.suffixes = new ArrayList<>();
         this.wasAbbreviated = false;
@@ -367,16 +426,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         outer_loop:
         for(i=0; i<completions.size(); i++)
         {
-            String cmpi = completions.get(i);
-            int pxi = completer.prefixLength(query,cmpi);
-            current = cmpi.subSequence(pxi,cmpi.length());
+            current = completions.get(i);
             if (current.length()==0) continue;   //  skip this one
 
             assert(current.length() > 0);
             for(j = i+1; j < completions.size(); j++) {
-                String cmpj = completions.get(j);
-                int pxj = completer.prefixLength(query,cmpj);
-                CharSequence next = cmpj.subSequence(pxj,cmpj.length());
+                CharSequence next = completions.get(j);
                 if (next.length()==0) continue; //  skip this one
 
                 CharSequence common = commonSuffix(current, next);
@@ -395,24 +450,23 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             suffixes.add( current.toString() );
             break;
         }
+    }
 
+    private void computeSuffixes(ArrayList<String> completions, String query)
+    {
+        truncatePrefixes(completions, query);
+        completions.sort(AutoCompleteTextField::compareSuffixes);
+        findSuffixRuns(completions);
         removeDuplicates(suffixes);
     }
 
     private static void removeDuplicates(ArrayList<String> strs) {
         //  now that punctuation has been skipped, sort *again*
-        /**
-         * todo Treat punctuation as one entity when sorting.
-         */
-        strs.sort(new Comparator<String>() {
-            @Override
-            public int compare(String a, String b) {
-                return a.compareToIgnoreCase(b);
-            }
-        });
         //  and remove duplicates
         for(int i=1; i < strs.size(); ) {
-            if (strs.get(i-1).equalsIgnoreCase(strs.get(i)))
+            String s0 = strs.get(i-1);
+            String s1 = strs.get(i);
+            if (compareSuffixes(s0,s1)==0)
                 strs.remove(i);
             else
                 i++;
