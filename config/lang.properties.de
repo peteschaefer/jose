@@ -946,6 +946,7 @@ dialog.query.white	= Weiß:
 dialog.query.black	= Schwarz:
 query.white.tip = Weißer Spieler
 query.black.tip = Schwarzer Spieler
+query.player.tip = Spieler
 
 dialog.query.flags = Einstellungen
 dialog.query.color.sensitive = Farbe beachten

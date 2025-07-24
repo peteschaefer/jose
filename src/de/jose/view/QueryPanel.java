@@ -195,7 +195,7 @@ public class QueryPanel
 
 	/**		Info Panel	*/
 	/**	player name labels	*/
-	protected JLabel whiteLabel,blackLabel;
+	//protected JLabel whiteLabel,blackLabel;
 	/**	input field for player names	*/
 	protected AutoCompleteTextField whiteName,blackName;
 	/**	inpurt field for event	*/
@@ -336,11 +336,14 @@ public class QueryPanel
 		infoPanel = new JPanel(new GridBagLayout());
 		//	"White" "Black"
 		p1 = new JPanel(new BorderLayout());
-		infoPanel.add(p1, JoDialog.gridConstraint(ELEMENT_ONE_ROW,0,0,3));
+		GridBagConstraints constraints = JoDialog.gridConstraint(ELEMENT_ONE_ROW, 0, 0, 3);
+		constraints.insets.left = 8;
+		constraints.insets.top = 4;
+		infoPanel.add(p1, constraints);
 
-		p2 = new JPanel(new GridLayout(2,2));
-		p2.add(whiteLabel = JoDialog.newLabel("dialog.query.white",JLabel.LEFT));
-		p2.add(blackLabel = JoDialog.newLabel("dialog.query.black",JLabel.LEFT));
+		p2 = new JPanel(new GridLayout(1,2));
+		//p2.add(whiteLabel = JoDialog.newLabel("dialog.query.white",JLabel.LEFT));
+		//p2.add(blackLabel = JoDialog.newLabel("dialog.query.black",JLabel.LEFT));
 
 		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
 		AutoCompleteTextField.Completer eventCompleter = new DBFieldCompleter("Event","Name");
@@ -354,23 +357,23 @@ public class QueryPanel
 
 		p1.add(p2,BorderLayout.CENTER);
 
-		Icon swapIcon = JoToolBar.create1AwesomeIcon("\uf2f1:#808080",26);
+		Icon swapIcon = JoToolBar.create1AwesomeIcon("\uf2f1:#808080",20);
 		JButton swap = JoDialog.newButton("dialog.query.swap.colors",swapIcon,this);
         swap.setBorderPainted(true);
         swap.setContentAreaFilled(false);
-		swap.setBorder(new EmptyBorder(4,4,4,4));
+		swap.setBorder(new EmptyBorder(2,2,2,2));
 		p1.add(swap,BorderLayout.EAST);
 
 		p1 = new JPanel(new GridBagLayout());
 		//	"Event"
-		p1.add(JoDialog.newLabel("dialog.query.event"), LABEL_ONE);
-		p1.add(eventName = JoDialog.newTextField(this,eventCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,0,1));
+		//p1.add(JoDialog.newLabel("dialog.query.event"), LABEL_ONE);
+		p1.add(eventName = JoDialog.newTextField(this,eventCompleter), JoDialog.gridConstraint(ELEMENT_ROW,0,0,2));
 		//	"Site"
-		p1.add(JoDialog.newLabel("dialog.query.site"), LABEL_ONE);
-		p1.add(siteName = JoDialog.newTextField(this,siteCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,1,1));
+		//p1.add(JoDialog.newLabel("dialog.query.site"), LABEL_ONE);
+		p1.add(siteName = JoDialog.newTextField(this,siteCompleter), JoDialog.gridConstraint(ELEMENT_ROW,0,1,2));
 		//	"Opening"
-		p1.add(JoDialog.newLabel("dialog.query.opening"), LABEL_ONE);
-		p1.add(openingName = JoDialog.newTextField(this,openingCompleter), JoDialog.gridConstraint(ELEMENT_ROW,1,2,1));
+		//p1.add(JoDialog.newLabel("dialog.query.opening"), LABEL_ONE);
+		p1.add(openingName = JoDialog.newTextField(this,openingCompleter), JoDialog.gridConstraint(ELEMENT_ROW,0,2,2));
 		reg(eventName,"query.event");
 		reg(siteName,"query.site");
 		reg(openingName,"query.opening");
@@ -455,7 +458,7 @@ public class QueryPanel
 		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
 
 		//	"Annotator"
-		commentPanel.add(JoDialog.newLabel("dialog.query.annotator",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
+		//commentPanel.add(JoDialog.newLabel("dialog.query.annotator",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
 		commentPanel.add(annotatorName = JoDialog.newTextField(this,playerCompleter), JoDialog.ELEMENT_ONE);
 		//	"Comment Text"
 		commentPanel.add(JoDialog.newLabel("dialog.query.commenttext",JLabel.LEFT), JoDialog.LABEL_ONE_LEFT);
@@ -847,9 +850,15 @@ public class QueryPanel
 
 	public void stateChanged(ChangeEvent evt)
 	{
-		whiteLabel.setVisible(colorSens.isSelected());
-		blackLabel.setVisible(colorSens.isSelected());
-		caseSens.setEnabled(! soundSens.isSelected());
+		if (evt.getSource()==colorSens) {
+			boolean colsens = colorSens.isSelected();
+			whiteName.setToolTipText(colsens ? "query.white" : "query.player");
+			blackName.setToolTipText(colsens ? "query.black" : "query.player");
+		}
+		//whiteLabel.setVisible(colorSens.isSelected());
+		//blackLabel.setVisible(colorSens.isSelected());
+		if (evt.getSource()==soundSens)
+			caseSens.setEnabled(! soundSens.isSelected());
 
 		activate(evt.getSource());
 	}

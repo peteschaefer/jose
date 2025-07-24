@@ -152,6 +152,12 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         updateDocument();
     }
 
+    @Override
+    public void setToolTipText(String text) {
+        super.setToolTipText(text);
+        updateDocument();
+    }
+
     public Document getDocument() {
         return doc;
     }
@@ -486,13 +492,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             doc.setCharacterAttributes(0, prefixLen, prefixStyle, true);
 
             if (prefixLen==0) {
-                String tip = getName();
-                if (tip!=null) {
-                    tip = Language.get(tip,null);
-                    if (tip==null)
-                        tip = Language.getTip(getName());
-                    if (tip==null)
-                        tip = getName();
+                if (getName()!=null || getToolTipText()!=null) {
+                    String tip = Language.getTip((getToolTipText()!=null) ? getToolTipText():getName());
+                    //if (tip==null && getName()!=null) tip = Language.getTip(getName());
+                    if (tip==null && getName()!=null) tip = Language.get(getName());
                     doc.insertString(0, tip, suffixStyle);
                 }
             }
