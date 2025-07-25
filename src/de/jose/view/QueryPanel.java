@@ -63,7 +63,7 @@ public class QueryPanel
 
 	protected static final GridBagConstraints LABEL_ONE =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
-							   GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
+							   GridBagConstraints.EAST, GridBagConstraints.NONE,
 							   INSETS_NORMAL, 0,0);
 
 	public static final GridBagConstraints LABEL_THREE =

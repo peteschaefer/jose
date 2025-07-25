@@ -75,12 +75,12 @@ public class JoDialog
 	/**	grid bag constraints: label on column one	 */
 	public static final GridBagConstraints LABEL_ONE =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
-							   GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
+							   GridBagConstraints.EAST, GridBagConstraints.NONE,
 							   INSETS_NORMAL, 90,0);
 	//	todo why such a large padding? who needs it?
 	public static final GridBagConstraints LABEL_ONE_NOPAD =
 			new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
-					GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
+					GridBagConstraints.EAST, GridBagConstraints.NONE,
 					INSETS_NORMAL, 0,0);
 
 	public static final GridBagConstraints LABEL_INDENTED =
@@ -91,7 +91,7 @@ public class JoDialog
 	/**	grid bag constraints: label on column one, left aligned	 */
 	public static final GridBagConstraints LABEL_ONE_LEFT =
 		new GridBagConstraints(0,GridBagConstraints.RELATIVE, 1,1, 0,0,
-							   GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+							   GridBagConstraints.WEST, GridBagConstraints.NONE,
 							   INSETS_NORMAL, 0,0);
 
 	/**	grid bag constraints: dialog element on column one	 */

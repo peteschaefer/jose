@@ -246,8 +246,9 @@ Maintenance:
                 (although the table collation **is** utf8; goodness, what have you been thinking at mysql??)
                 ok workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
             [-] RLIKE prevents accent-sensitive matches from LIKE. That's a k-o criterion.
-            [ ] later mysql versions have accent-insensitive collations !
-                (and, hopefully, RLIKE does support utf-8 ?!?)
+            [-] MySQL 8 has 'regexp_like(Name, 'Sch[=a=]fer.*' collate utf8mb4_0900_ai_ci);'
+                [x] solves the utf-8 problem; [:alnum:] actually matches one letter
+                [-] does not solve the accent match problem
             [x] use same query for Completer
         [x] use only LIKE
             [x] accent-insensitivity is preserved
@@ -264,7 +265,7 @@ Maintenance:
 	[ ] provide jni interface
 	[ ] or: use icu4j
 	[ ] consistent regex handling across Mysql and Java.
---> postpone
+--> postpone until MariaDB or MySQL 8,9
 
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
@@ -344,12 +345,15 @@ Maintenance:
 [ ] Version 1.6
     [ ] MariaDB from sources
         [ ] with grant tables
-    [ ] jose-cpp native position search
-        [ ] more search options
-    [ ] ICU regexes for search and auto-completion
-        [ ] icu4c, udf
+    [ ] or MySQL 8 (9?) from repos
+        [ ] --initialize-insecure should be easy; root with(/out) password works
+        [ ] query performance??
+    [ ] ICU regexes for search and auto-completion (case- and accent-insensitive)
+        [ ] icu4c, provide as udf
         [ ] icu4j
     [ ] bulk Game edit (needs proper regexes on both sides)
+    [ ] jose-cpp native position search
+        [ ] more search options
 
 [x] Linux ARM
 [x] Windows: build all .dll's in release mode

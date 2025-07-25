@@ -132,6 +132,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
     }
 
     public void setText(String text) {
+        if (text==null) text="";
         this.text.setText(text);
         prefixLen = text.length();
         updateDocument();
