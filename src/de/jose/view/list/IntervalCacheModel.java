@@ -344,7 +344,7 @@ abstract public class IntervalCacheModel
 			                    pstm = pkStatement.toPreparedStatement(synch_conn);
 			                    if (synch_conn.isConnectorJ())
 			                        pstm.setFetchSize(0);	//	hint to Connector/J driver: fetch complete set
-								System.err.println("["+pkStatement.toString()+" ");
+								Application.debugPrintln("["+pkStatement.toString()+" ");
 			                    pstm.execute();
 //		                    Util.printTime("synch. execute",startTime);
 		                    } catch (SQLException e) {
@@ -380,7 +380,7 @@ abstract public class IntervalCacheModel
                              * - execute it in the StatemenExecutor thread
                              */
                             pstm = null;    //  will be created by StatementExecutor
-							System.err.println("["+pkStatement.toString()+" ");
+							Application.debugPrintln("["+pkStatement.toString()+" ");
 		                    executor.execute(pkStatement);
 
 		                    if (status!=HALTED) {
@@ -446,7 +446,7 @@ abstract public class IntervalCacheModel
 										//	wait for PosFilterPool to finish queries
 										PositionFilter.executorPool.finish();
 										long time = System.currentTimeMillis() - startTime;
-										System.err.println(time/1000.0+"s"
+										Application.debugPrintln(time/1000.0+"s"
 															+"; result rows="+rowCount
 															+"; early cut-offs="+cnt_early
 															+"; result set size="+chunk

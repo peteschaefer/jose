@@ -247,7 +247,8 @@ public class Application
 			error(e);
 		}
 */
-		if (!Version.getSystemProperty("jose.console.output",false))
+		logConsole = Version.getSystemProperty("jose.console.output",false);
+		if (!logConsole)
 		{	//  send standard output to error.log
 			PrintStream out = new PrintStream(new FileOutputStream("error.log"));
 			System.setOut(out);

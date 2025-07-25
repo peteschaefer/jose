@@ -309,10 +309,10 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             throw new RuntimeException(e);
         }
 
-        System.err.println(query+": "+completions.size()+" completions; "+suffixes.size()+" suffixes");
-        if (suffixes.size()==1)
-            System.err.println("suggestion: '"+suffixes.get(0)+"'");
-        System.err.println(JoConnection.getPool().size()+" pooled connections");
+            Application.debugPrintln(query + ": " + completions.size() + " completions; " + suffixes.size() + " suffixes");
+            if (suffixes.size() == 1)
+                Application.debugPrintln("suggestion: '" + suffixes.get(0) + "'");
+            Application.debugPrintln(JoConnection.getPool().size() + " pooled connections");
 
         if (continuePopping && suffixes.size() >= 2) {
             SwingUtilities.invokeLater(() -> {

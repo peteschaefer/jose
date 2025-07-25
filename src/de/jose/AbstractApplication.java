@@ -64,6 +64,8 @@ abstract public class AbstractApplication
 	public static boolean		logVersion = true;
 	/**	show error dialog ?	*/
 	public static boolean		showErrors = true;
+	/**	true = logs to console, false = logs to error.log */
+	public static boolean		logConsole = true;
 	/**	icon image (for window frames, etc.)	 */
 	public Image				theIconImage;
 	/**	show 3d frame rate on std out	*/
@@ -262,6 +264,12 @@ abstract public class AbstractApplication
 
 
 		dialog.show();
+	}
+
+	public static void debugPrintln(String line)
+	{
+		if (logConsole)
+			System.err.println(line);
 	}
 
 	//-------------------------------------------------------------------------------
