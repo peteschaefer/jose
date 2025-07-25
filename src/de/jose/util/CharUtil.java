@@ -110,7 +110,11 @@ public class CharUtil
 	}
 		
  }
- 
+
+	/**
+	 * @deprecated use TextUtil.stripDiacritics instead
+	 */
+ 	@Deprecated
 	public static final char stripDiacritic(char c) 
 	{
 		short ety = gCharacterMap[c];
@@ -188,35 +192,47 @@ public class CharUtil
 		else
 			return bmap[gEscapeMap[c1]];
 	}
-	
-	
+
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final char toLowerCase(char c)
 	{
 		return Character.toLowerCase(stripDiacritic(c));
 	}
-	
+
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final char toUpperCase(char c)
 	{
 		return Character.toUpperCase(stripDiacritic(c));
 	}
 
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final char toUpperCase(String s, int i) {
 	 	return toUpperCase(s.charAt(i));
 	}
 
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final char toLowerCase(String s, int i) {
 		return toLowerCase(s.charAt(i));
 	}
 
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final void toLowerCase(char[] c)
 	{
 		for (int i=c.length-1; i>=0; i--) c[i] = toLowerCase(c[i]);
 	}
-	
+
+	//!@deprecated use TextUtil.sripDiacritics() instead
+	@Deprecated
 	public static final void toUpperCase(char[] c)
 	{
 		for (int i=c.length-1; i>=0; i--) c[i] = toUpperCase(c[i]);
 	}
+
 /*
 	public static void main(String[] args) 
 		throws java.io.IOException

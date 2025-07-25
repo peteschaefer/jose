@@ -4,6 +4,7 @@ import de.jose.Application;
 import de.jose.Language;
 import de.jose.db.JoConnection;
 import de.jose.util.CharUtil;
+import de.jose.util.TextUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -371,11 +372,11 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             assert(Character.isLetterOrDigit(c1));
             assert(Character.isLetterOrDigit(c2));
 
-            c1 = CharUtil.stripDiacritic(c1);
-            c2 = CharUtil.stripDiacritic(c2);
+            c1 = TextUtil.stripDiacritics(c1);
+            c2 = TextUtil.stripDiacritics(c2);
 
-            c1 = CharUtil.toUpperCase(c1);
-            c2 = CharUtil.toUpperCase(c2);
+            c1 = Character.toUpperCase(c1);
+            c2 = Character.toUpperCase(c2);
 
             if (c1!=c2)
                 return new SuffixCompare(c1-c2,k1,commonLetters);

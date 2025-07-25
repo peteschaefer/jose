@@ -17,7 +17,10 @@ import de.jose.util.map.IntHashSet;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.util.*;
+
+import static java.text.Normalizer.Form.*;
 
 public class StringUtil
 {
