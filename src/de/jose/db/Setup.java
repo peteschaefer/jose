@@ -53,7 +53,7 @@ public class Setup
 	public static final boolean IGNORE_ERRORS           = true;
 	public static final boolean REPORT_ERRORS           = false;
 
-	public static String DEFAULT_CHARSET = "utf8";
+	public static String DEFAULT_CHARSET = "utf8mb3";
 	public static String DEFAULT_COLLATE = "utf8_general_ci";
 
 	public Setup(Config cfg, String schemaName,

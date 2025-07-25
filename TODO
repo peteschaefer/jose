@@ -251,17 +251,17 @@ Maintenance:
 [ ] give mariadb a try
     [.] can run with quick setup (unzip data dir?)
         [ ] really? check dependencies (plugin-dir,data-dir, ...)
+        [ ] Linux more tricky. Needs root to initialze
     [x] supports MyIsam
         [x] 'alter table force' required for old data (not for IO_, fortunately :)
     [x] Crossover
         [x] just move mysql/jose directory :)
     [x] .jose import
         Gigabase = 52 minutes. ok.
-        [ ] Collection missing?
     [x] .jose export
     [ ] build for
         [x] Win (download)
-        [ ] Linux x64 (download)
+        [x] Linux x64 (download)
         [ ] Linux arm64 (download)
         [ ] macOS x64 (homebrew)
         [ ] macOS aarch64 (homebrew?)
