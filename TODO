@@ -343,11 +343,14 @@ Maintenance:
 ==== Project
 
 [ ] Version 1.6
-    [ ] MariaDB from sources
+    [1] MariaDB from sources
         [ ] with grant tables
-    [ ] or MySQL 8 (9?) from repos
+    [2] or MySQL 8 (9?) from repos
         [ ] --initialize-insecure should be easy; root with(/out) password works
         [ ] query performance??
+    [3] stick with MySQL 5
+        [ ] add grant-tables to database/mysql/mysql
+        [ ] connect with root/no password
     [ ] ICU regexes for search and auto-completion (case- and accent-insensitive)
         [ ] icu4c, provide as udf
         [ ] icu4j

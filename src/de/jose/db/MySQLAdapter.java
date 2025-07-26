@@ -134,7 +134,7 @@ public class MySQLAdapter
 
             switch(getServerMode()) {
 				case MODE_STANDALONE:
-					props.put("user","");
+					props.put("user","root");
 					props.put("password","");
 					props.put("characterEncoding","UTF8");
 					String portno = Version.getSystemProperty("jose.db.port");
@@ -516,7 +516,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		command.add("--skip-grant-tables");
+		//command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
