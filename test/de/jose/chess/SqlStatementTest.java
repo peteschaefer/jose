@@ -130,6 +130,23 @@ public class SqlStatementTest
     }
 
     @Test
+    void printNormchars() {
+        char max = 1024;
+        int j=0;
+        for(int i=0; i < max; i++) {
+            char c0 = (char)i;
+            char c1 = TextUtil.stripDiacritics(c0);
+            if (c0!=c1) {
+                System.out.print(c0);
+                System.out.print("-");
+                System.out.print(c1);
+                System.out.print(" ");
+                if (j++ % 80 == 0) System.out.println();
+            }
+        }
+    }
+
+    @Test
     void printCppNormchars() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(new FileOutputStream("norm_chars.c"));
         char max = Character.MAX_VALUE;

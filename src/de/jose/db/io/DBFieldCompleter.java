@@ -123,7 +123,8 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
             regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE| Pattern.UNICODE_CASE);
         }
 
-        if (!caseSensitive) result = TextUtil.stripDiacritics(result);
+        if (!caseSensitive)
+            result = TextUtil.stripDiacritics(result);
 
         Matcher mat = regex.matcher(result);
         if (mat.find() && mat.start()==0)

@@ -1659,6 +1659,11 @@ public class SearchRecord implements Cloneable
 			//	for reasons unbeknownst to us, RLIKE becomes case-sensitve
 			//		if used against strip_diacritics. Arghl..
 			column = "strip_diacritics(lower("+column+"))";
+			//	note: lower(strip_diacritics()) does not work b/c strip_diacritics
+			//	loses collation information, s.t. the subsequent call to lower() is ineffective.
+			//	For similar reasons strip_diacritics() RLIKE becomes case-sensitive against our will.
+			// 	MySQL is so much fun ... :(
+		// 	todo how can we retain Collation on a user-defined function ???
 			pattern = TextUtil.stripDiacritics(pattern).toLowerCase();
 		}
 

@@ -113,7 +113,7 @@ public class CharUtil
 
 	/**
 	 * @deprecated use TextUtil.stripDiacritics instead
-	 */
+	 *
  	@Deprecated
 	public static final char stripDiacritic(char c) 
 	{
@@ -138,7 +138,7 @@ public class CharUtil
 		int col = (ety >> 8);
 		return kEscape[0].charAt(col) != ' ';
 	}
-	
+*/
 	public static final void escape(char c, StringBuffer buf)
 	{
 		short ety = gCharacterMap[c];
@@ -197,14 +197,14 @@ public class CharUtil
 	@Deprecated
 	public static final char toLowerCase(char c)
 	{
-		return Character.toLowerCase(stripDiacritic(c));
+		return Character.toLowerCase(TextUtil.stripDiacritics(c));
 	}
 
 	//!@deprecated use TextUtil.sripDiacritics() instead
 	@Deprecated
 	public static final char toUpperCase(char c)
 	{
-		return Character.toUpperCase(stripDiacritic(c));
+		return Character.toUpperCase(TextUtil.stripDiacritics(c));
 	}
 
 	//!@deprecated use TextUtil.sripDiacritics() instead
@@ -426,7 +426,7 @@ public class CharUtil
 			out.print("\t");
 			for (int j=0; j<16; j++) {
 				out.print("0x");
-				char c = CharUtil.stripDiacritic(chars[16*i+j]);
+				char c = TextUtil.stripDiacritics(chars[16*i+j]);
 				out.print(toHexString2(c));
 				out.print(",");
 			}
@@ -440,7 +440,7 @@ public class CharUtil
 			out.print("\t");
 			for (int j=0; j<16; j++) {
 				out.print("0x");
-				char c = CharUtil.stripDiacritic(chars[i*16+j]);
+				char c = TextUtil.stripDiacritics(chars[i*16+j]);
 				c = Character.toUpperCase(c);
 				        
 				out.print(toHexString2(c));
