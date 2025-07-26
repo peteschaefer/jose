@@ -197,7 +197,9 @@ Maintenance:
     [x] command-line interface
 
 [x] (2) port replay logic from Java to C++
-[-] mysql udf's
+[ ] mysql udf's !
+    [ ] can_reach() checks Matsignature
+    [ ] find_pos() finds by hash key, pawn signature, ...
 
 ==== Interesting New Features
 
@@ -211,20 +213,8 @@ Maintenance:
         [ ] use where-clause for dialog field filling
         [ ] use where-clause for bulk update
         [ ] in-memory GameSource has no where-clause, but a Game pointer
-    [x] Autocomplete/suggest for Player, Event, Site (more?)
-        [x] suggest = grey suffix
-        [x] complete = popup list "..."
-        -> derive from styled JTextPane
-        [x] tab, or click expands suggestion / popup
-        [x] find suggestion by comparing prefixes/suffixes
-        [x] offload query to pooled thread
-        [x] how to handle single-char suggestions?
-            - too many are confusing "Sa,Sb,Sc,..."
-            - too few are skipping important alternatives "P., Peter"
-            [x] accept characters as menu shortcut
-            [x] pop up sequence automatically
-        [ ] umlauts !?
-    [ ] auto-complete in Search Panel
+    [x] Autocomplete/suggest for Player, Event, Site, Opening (more?)
+    [x] auto-complete in Search Panel
         [x] sql completer without constraint
         [x] distinct not needed (b/c Player is already distinct)
         [ ] with optional constraints (GameSource)
@@ -232,7 +222,7 @@ Maintenance:
         [x] case insensitive -> for free (collate ut8_ci !)
         [ ] bug: extra char appears
 
-    [x] fix: LIKE and RLIKE with Umlauts
+    [x] fix: LIKE and RLIKE with accents
         search "Schafer","Schäfer,H." "Schafer,H."
         LIKE is accent-insensitive
         RLIKE is accent-sensitive
@@ -244,40 +234,30 @@ Maintenance:
             [+] RLIKE is not accent-sensitive b/c accented chars are usually utf-8
                 and RLIKE **does not** support utf-8
                 (although the table collation **is** utf8; goodness, what have you been thinking at mysql??)
-                ok workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
-            [-] RLIKE prevents accent-sensitive matches from LIKE. That's a k-o criterion.
+                poor workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
+            [-] RLIKE prevents accent-sensitive matches from LIKE. That's nasty.
             [-] MySQL 8 has 'regexp_like(Name, 'Sch[=a=]fer.*' collate utf8mb4_0900_ai_ci);'
                 [x] solves the utf-8 problem; [:alnum:] actually matches one letter
                 [-] does not solve the accent match problem
             [x] use same query for Completer
 
             [x] java.text.Normalizer + Regex in prefixLength(); remove GlobX matcher
-            [ ] install grant tables
+            [x] install grant tables
             [x] port stripDiacritics to C++
-            [ ] load UDF stripDiacritics
-            [ ] stripDiacritics + Regex in SQL
+            [x] load UDF stripDiacritics
+            [x] stripDiacritics + Regex in SQL
+            [x] nasty (again): strip_diacritics() loses string collation. Use with care.
 
-        [x] use only LIKE
+        [-] use only LIKE as fallback until there are UDFs for all platforms.
             [x] accent-insensitivity is preserved
             [x] use _% to match punctuation and white space.
                 not matched exactly, but no matter.
             [x] BINARY is case and accent-sensitive. use simple LIKE as prefilter
 
-[-] udf-supplied, better, regex, based on ICU
-	[ ] accent- and case-insensitive:
-		Normalizers, Transliterators! https://unicode-org.github.io/icu/userguide/transforms/normalization/
-		then remove diacritical marks
-	[ ] link statically
-	[ ] provide mysql interface (-> requires rights tables :(
-	[ ] provide jni interface
-	[ ] or: use icu4j
-	[ ] consistent regex handling across Mysql and Java.
---> postpone until MariaDB or MySQL 8,9
-
     [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
         search "Sch�fer, P.", replace with "Sch�fer, Peter"
         [ ] query to glob pattern (_%)
-        [ ] map glob pattern groups to replacement patterns
+        [ ] map glob pattern groups to replacement patterns. //somehow//
         [ ] -> update only modified groups
 
     [ ] have one base Edit Panel for: Search Panel, Single Edit F4, Bulk Edit
@@ -285,6 +265,11 @@ Maintenance:
             -> here's a synergy between autocomplete and bulk edit
         [ ] mark edited fields
         [ ] smart update: new Player row, or edit old in place?
+    [ ] 4 modes of operation
+        [ ] One Game object in memory
+        [ ] One Game in DB
+        [ ] Set of Games from DB; show only distinct fields?
+        [ ] Result Set; possibly with wildcard fields
     [ ] re-use Search Panel for Single Game Edit
 
 
@@ -350,13 +335,10 @@ Maintenance:
 ==== Project
 
 [ ] Version 1.6
-    [ ] MariaDB from sources
-        [ ] with grant tables
+    [?] MariaDB from sources. Not urgent. No obvious
+    [?] MySQL from download. Only if performance is satisfactory.
     [ ] jose-cpp native position search
         [ ] more search options
-    [ ] ICU regexes for search and auto-completion
-        [ ] icu4c, udf
-        [ ] icu4j
     [ ] bulk Game edit (needs proper regexes on both sides)
 
 [x] Linux ARM
