@@ -15,6 +15,7 @@ package de.jose.db;
 //import com.mysql.embedded.jdbc.MyConnection;
 import de.jose.*;
 import de.jose.comm.Command;
+import de.jose.db.io.ArchiveFile;
 import de.jose.plugin.InputListener;
 import de.jose.task.Task;
 import de.jose.task.db.CheckDBTask;
@@ -490,6 +491,18 @@ public class MySQLAdapter
 		return pb.start();
 	}
 
+	private void unpackGrantTables(File zipFile, File dbDir) throws IOException {
+		if (!zipFile.exists())
+			throw new IOException("database/mysql-grant-tables.zip is missing");
+
+		File mysqlDir = new File(dbDir,"mysql");
+		mysqlDir.mkdirs();
+
+		ArchiveFile zip = new ArchiveFile(zipFile);
+		zip.open(null);	//	detect pack format, etc.
+		zip.extractAllFiles(mysqlDir,false);
+	}
+
 	public Process startStandaloneServer(boolean printCommandLine)
 		throws IOException
 	{
@@ -508,9 +521,9 @@ public class MySQLAdapter
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
 
 	//	unzip grant tables
-		String grantZip = Application.theWorkingDirectory.getAbsolutePath()+File.separator
-						+"database"+File.separator+"mysql-grant-tables.zip";
-		//todo unpackGrantTables(grantZip,mysqldir);
+		File grantZip = new File(Application.theWorkingDirectory.getAbsolutePath()+File.separator
+						+"database"+File.separator,"mysql-grant-tables.zip");
+		unpackGrantTables(grantZip,mysqldir);
 
 		Vector command = new Vector();
 		Vector env = new Vector();

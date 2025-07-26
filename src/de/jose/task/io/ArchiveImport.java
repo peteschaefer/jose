@@ -146,7 +146,7 @@ public class ArchiveImport
 		long startTime = System.currentTimeMillis();
         broadcastOnUpdate(getName());
 
-        archive.extractAllFiles(dataDir);
+        archive.extractAllFiles(dataDir,true);
         archive.close();
 	    /**
 	     * et voil�: the IO schema is back again !

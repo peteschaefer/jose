@@ -1583,8 +1583,9 @@ public class SearchRecord implements Cloneable
 		 * 	--> RLIKE is currently USELESS
 		 *
 		 * desirable would be a REGEX matcher that is optionally accent-sensitive. Later MySQL versions
-		 * have collations that can do that. ICU regexes can do that. But in the mean time we use what we have.
-		 * @see also DBFiedlCompleter that uses (must use) the same mechanism.
+		 * have collations that can do that. ICU regexes can do that. But in the mean time we use what we have,
+		 * namely: a user-defined-function strip_diacritics() (located in lib/Windows/udf.dll)
+		 * @see also DBFieldCompleter that uses (must use) the same mechanism.
 		 */
 
 
@@ -1656,14 +1657,12 @@ public class SearchRecord implements Cloneable
 		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).hasStripDiacritics();
 		if (has_strip && !caseSensitive) {
 			//	remove diacritics. If available.
-			//	for reasons unbeknownst to us, RLIKE becomes case-sensitve
-			//		if used against strip_diacritics. Arghl..
 			column = "strip_diacritics(lower("+column+"))";
 			//	note: lower(strip_diacritics()) does not work b/c strip_diacritics
 			//	loses collation information, s.t. the subsequent call to lower() is ineffective.
 			//	For similar reasons strip_diacritics() RLIKE becomes case-sensitive against our will.
 			// 	MySQL is so much fun ... :(
-		// 	todo how can we retain Collation on a user-defined function ???
+			// 	todo how can we retain Collation on a user-defined function ???
 			pattern = TextUtil.stripDiacritics(pattern).toLowerCase();
 		}
 

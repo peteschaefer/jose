@@ -441,7 +441,7 @@ public class ArchiveFile
 	    System.err.println("]");
     }
 
-	public File extractNextFile(File destDir)
+	public File extractNextFile(File destDir, boolean force)
 			throws IOException
 	{
 		File result;
@@ -454,8 +454,10 @@ public class ArchiveFile
 			if (zipEntry==null) return null;
 
 			result = new File(destDir,zipEntry.getName());
-			FileUtil.copyStream(zip_in,zipEntry.getSize(), result);
-			result.setLastModified(zipEntry.getTime());
+			if (force || !result.exists()) {
+				FileUtil.copyStream(zip_in, zipEntry.getSize(), result);
+				result.setLastModified(zipEntry.getTime());
+			}
 			return result;
 		default:
 		case PACK_TAR:
@@ -463,18 +465,20 @@ public class ArchiveFile
 			if (tarEntry==null) return null;
 
 			result = new File(destDir, tarEntry.getName());
-			FileUtil.copyStream(tar_in,tarEntry.getSize(), result);
-			result.setLastModified(tarEntry.getModTime().getTime());
+			if (force ||!result.exists()) {
+				FileUtil.copyStream(tar_in, tarEntry.getSize(), result);
+				result.setLastModified(tarEntry.getModTime().getTime());
+			}
 			return result;
 		}
 	}
 
-	public void extractAllFiles(File destDir) throws IOException
+	public void extractAllFiles(File destDir, boolean force) throws IOException
 	{
 		if (compressMethod==COMPRESS_RAR)
 			extractRarFile(destDir);
 		else {
-		while (extractNextFile(destDir) != null)
+		while (extractNextFile(destDir,force) != null)
 			;
 	}
 	}
