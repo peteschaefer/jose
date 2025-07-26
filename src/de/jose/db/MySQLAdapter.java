@@ -55,6 +55,10 @@ public class MySQLAdapter
 	public static final int ER_QUERY_INTERRUPTED = 1317;
 	public static final int ER_SORT_ABORTED = 1028;
 
+	//	if udf.dll was loaded: version
+	//	note: not available on all platforms; versions may differ on platforms
+	public int udfVersion = 0;
+
 	/**	default ctor	*/
 	protected MySQLAdapter()
 	{ }
@@ -175,6 +179,9 @@ public class MySQLAdapter
 
 				if (bootstrap)
 					bootstrap(connection.getJdbcConnection());
+
+				//	load udf.dll, if available
+				udfVersion = defineUDFs();
 
 				Task checkIntegrity = new CheckDBTask(connection);
 				checkIntegrity.setSilentTime(5000);
@@ -499,6 +506,11 @@ public class MySQLAdapter
 		 */
 		File mysqldir = new File(Application.theDatabaseDirectory, "mysql");
 		File tmpdir = new File(Application.theDatabaseDirectory, "tmp");
+
+	//	unzip grant tables
+		String grantZip = Application.theWorkingDirectory.getAbsolutePath()+File.separator
+						+"database"+File.separator+"mysql-grant-tables.zip";
+		//todo unpackGrantTables(grantZip,mysqldir);
 
 		Vector command = new Vector();
 		Vector env = new Vector();
@@ -1049,7 +1061,11 @@ public class MySQLAdapter
 	}
 	 */
 
-	public static int defineUDFs(JoConnection conn) throws SQLException
+	public boolean hasStripDiacritics() {
+		return udfVersion >= 1012;
+	}
+
+	public static int defineUDFs() throws SQLException
 	{
 		/**	get path to library	*/
 		File libDir = new File(
@@ -1065,10 +1081,16 @@ public class MySQLAdapter
 		if (!FileUtil.exists(libDir,libFile))
 			return 0;
 
-		defineUDF(conn,"udf_version","Integer", libFile);
-		defineUDF(conn,"strip_diacritics", "String", libFile);
-
-		return conn.selectInt("select udf_version()");
+		JoConnection conn = null;
+		try {
+			conn = JoConnection.get();
+			defineUDF(conn, "udf_version", "Integer", libFile);
+			defineUDF(conn, "strip_diacritics", "String", libFile);
+//		defineUDF(conn,"can_reach", "Integer", libFile);
+			return conn.selectInt("select udf_version()");
+		} finally {
+			JoConnection.release(conn);
+		}
 	}
 
 	public static boolean defineUDF(JoConnection conn, String name, String returnType, String soFile) throws SQLException

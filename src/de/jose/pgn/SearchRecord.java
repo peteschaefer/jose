@@ -15,12 +15,10 @@ package de.jose.pgn;
 import de.jose.Util;
 import de.jose.Version;
 import de.jose.Application;
-import de.jose.db.DBAdapter;
-import de.jose.db.JoConnection;
-import de.jose.db.JoPreparedStatement;
-import de.jose.db.ParamStatement;
+import de.jose.db.*;
 import de.jose.util.Metaphone;
 import de.jose.util.StringUtil;
+import de.jose.util.TextUtil;
 import de.jose.util.map.IntHashSet;
 import de.jose.view.ListPanel;
 import de.jose.view.input.JDateField;
@@ -936,9 +934,9 @@ public class SearchRecord implements Cloneable
 	};
 	//	wildcard matching with RLIKE is tricky b/c it does not really support utf-8 encoded characters !?
 	public static String[] MYSQL_RLIKE_WILDCARDS = {
-			"[[:alnum:]]{1,3}",		//	matches one letter, possibly encoded in up to 3 utf-8 chars
+			"[[:alnum:]]",			//	matches one letter
 			"[[:alnum:]]*",			//	matches any number of letters
-			"[[:punct:][:space:]]+",	//	matches punctuation and whitespace
+			"[[:punct:][:space:]]+",//	matches punctuation and whitespace
 	};
 
 	protected static char advanceRegexPatternState(char current, char next, StringBuffer out, String[] wild, boolean caseSensitive) {
@@ -1556,7 +1554,7 @@ public class SearchRecord implements Cloneable
 											   boolean caseSensitive)
 	{
 		String likePattern = makeLikePattern(pattern,true);
-		//String regexPattern = makeRegexPattern(pattern, true,wildcards,caseSensitive);
+		String regexPattern = makeRegexPattern(pattern, true,MYSQL_RLIKE_WILDCARDS,caseSensitive);
 		//boolean hasPunctuation = regexPattern.contains(wildcards[2]);
 
 
@@ -1590,19 +1588,30 @@ public class SearchRecord implements Cloneable
 		 */
 
 
-		if (caseSensitive) {
+		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).hasStripDiacritics();
+
+		if (has_strip || caseSensitive) {
+			//	LIKE + RLIKE
 			sql.where.append(" (");
 			//	fast LIKE. matches letters, digits, case- and accent-insensitive
 			appendLikeClause(sql, table + "." + column,likePattern,false);
 			appendOperator(sql,"AND");
-			//if (hasPunctuation)
-			//	DON'T RLIKE would filter out desired accent matches
-			//	appendRegexClause(sql, table + "." + column,regexPattern,caseSensitive);
+			//else
+			appendRegexClause(sql, table + "." + column,regexPattern,caseSensitive);
+			sql.where.append(") ");
+		}
+		else if (caseSensitive) {
+			//	fallback LIKE + LIKE BINARY
+			sql.where.append(" (");
+			//	fast LIKE. matches letters, digits, case- and accent-insensitive
+			appendLikeClause(sql, table + "." + column,likePattern,false);
+			appendOperator(sql,"AND");
 			//else
 			appendLikeClause(sql, table + "." + column,likePattern,true);
 			sql.where.append(") ");
 		}
 		else {
+			//	fallback LIKE only
 			appendLikeClause(sql, table + "." + column,likePattern,false);
 		}
 //				if (regexPattern.length() > 0)
@@ -1644,6 +1653,15 @@ public class SearchRecord implements Cloneable
 
 	protected static void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
 	{
+		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).hasStripDiacritics();
+		if (has_strip && !caseSensitive) {
+			//	remove diacritics. If available.
+			//	for reasons unbeknownst to us, RLIKE becomes case-sensitve
+			//		if used against strip_diacritics. Arghl..
+			column = "strip_diacritics(lower("+column+"))";
+			pattern = TextUtil.stripDiacritics(pattern).toLowerCase();
+		}
+
 		if (caseSensitive) sql.where.append(" BINARY ");
 		sql.where.append(column);
 		sql.where.append(" RLIKE ");

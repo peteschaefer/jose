@@ -237,11 +237,11 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
         for(int i=0; i<s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isLetterOrDigit(c))
-                return Character.toUpperCase(c);
+                return Character.toUpperCase(TextUtil.stripDiacritics(c));
         }
         if (s.length() > 0) {
             char c = s.charAt(0);
-            return Character.toUpperCase(c);
+            return Character.toUpperCase(TextUtil.stripDiacritics(c));
         }
         return '\0';
     }
@@ -423,17 +423,7 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
                 i++;
             }
             else {
-                //  note that the GlobX matcher used by DBFieldCompleter
-                //  is stricter than the SQL query w.r.t. punctuation
-                /*  an example:
-                    user input = "Kasparov, G"
-                    SQL like pattern = "Kaspoarov%G"    (note that LIKE can not detect punctuation)
-                    matches, among others, "Kasparov, Sergey".
-                    But that's not what we wanted.
-
-                    Globx pattern = "Kasparov.G"    is strict about punctuation and rejects ", Sergey".
-                    Does this make sense?
-                 */
+                //  should not happen as the completer uses the same query os the actual SearchRecord ?!
                 completions.remove(i);
             }
         }
