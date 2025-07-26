@@ -6,12 +6,16 @@ import de.jose.db.ParamStatement;
 import de.jose.pgn.SearchRecord;
 import de.jose.util.CharUtil;
 import de.jose.util.GlobMatcher;
+import de.jose.util.TextUtil;
 import de.jose.view.input.AutoCompleteTextField;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static de.jose.pgn.SearchRecord.POSIX_WILDCARDS;
 import static de.jose.util.GlobMatcher.GLOBX_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
 
@@ -112,20 +116,18 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     {
         if (!query.equals(lastQuery)) {
             lastQuery = query;
-            glob = new GlobMatcher(SearchRecord.makeGlobxPattern(query,false),
-                    false,false,true, GLOBX_WILDCARDS);
-            /*  Note that GlobX matcher is strict about punctuation.
-                Simple Glob and SQL LIKE is not.
-
-                That means that an SQL query may return more results than
-                the Auto-Completer would accept. That's a bit odd but not very much.
-                @see AutoCompleteTextField.truncatePrefixes()
-             */
+            //glob = new GlobMatcher(SearchRecord.makeGlobxPattern(query,false),
+            //        false,false,true, GLOBX_WILDCARDS);
+            query = TextUtil.stripDiacritics(query);
+            String pattern = SearchRecord.makeRegexPattern(query, false, POSIX_WILDCARDS,true);
+            regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE| Pattern.UNICODE_CASE);
         }
 
-        int mat = glob.match(result);
-        //  else
-        return Math.max(0,mat);
+        Matcher mat = regex.matcher(result);
+        if (mat.find() && mat.start()==0)
+            return mat.end();
+        else
+            return 0;
     }
 
     //  todo constrain by Collection Ids (GameSource)
@@ -136,7 +138,7 @@ public class DBFieldCompleter implements AutoCompleteTextField.Completer
     private boolean caseSensitive=false;
     private ParamStatement sql;
     private String lastQuery;
-    private GlobMatcher glob;
-    //private Pattern regex;
+    //private GlobMatcher glob;
+    private Pattern regex;
     private AtomicInteger queryCounter = new AtomicInteger(0);
 }

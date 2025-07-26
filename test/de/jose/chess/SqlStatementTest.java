@@ -3,10 +3,17 @@ package de.jose.chess;
 import de.jose.db.ParamStatement;
 import de.jose.pgn.SearchRecord;
 import de.jose.util.GlobMatcher;
+import de.jose.util.TextUtil;
 import org.junit.jupiter.api.Test;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.text.Normalizer;
 
 import static de.jose.util.GlobMatcher.GLOB_WILDCARDS;
 import static de.jose.util.GlobMatcher.SQL_WILDCARDS;
+import static java.text.Normalizer.Form.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlStatementTest
@@ -85,5 +92,54 @@ public class SqlStatementTest
         assertEquals(10, globMatch("Schaefer_%","Schaefer L"));
 
         assertEquals( 9, globMatch("Schaefer_","Schaefers"));
+    }
+
+    void prints(CharSequence s) {
+        for(int i=0; i < s.length(); i++)
+            System.out.print(s.charAt(i));
+        System.out.println();
+        for(int i=0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            System.out.print(Integer.toHexString(c));
+            System.out.print(" (");
+            System.out.print(Character.getType(c));
+            System.out.print(") ");
+        }
+        System.out.println();
+    }
+
+    @Test
+    void testNormalizer()
+    {
+        String s = "Sch\u00e4fer, P\u00e9ter";
+        String s1 = Normalizer.normalize(s,NFD);
+        String s2 = Normalizer.normalize(s,NFC);
+        String s3 = Normalizer.normalize(s,NFKC);
+        String s4 = Normalizer.normalize(s,NFKD);
+
+        prints(s);
+        prints(s1);
+        prints(s2);
+        prints(s3);
+        prints(s4);
+
+        assertEquals('a', TextUtil.stripDiacritics('\u00e4'));
+        assertEquals('e', TextUtil.stripDiacritics('\u00e9'));
+        assertEquals("Schafer, Peter", TextUtil.stripDiacritics(s));
+    }
+
+    @Test
+    void printCppNormchars() throws FileNotFoundException {
+        PrintWriter out = new PrintWriter(new FileOutputStream("norm_chars.c"));
+        char max = Character.MAX_VALUE;
+        for(int c=0; c <= max; ++c) {
+            if (c>0 && c%64==0) out.println();
+            out.print("0x");
+            out.print(Integer.toHexString(TextUtil.stripDiacritics((char)c)));
+            if (c < max) out.print(", ");
+        }
+        out.println();
+        out.flush();
     }
 }

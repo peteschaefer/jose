@@ -87,13 +87,13 @@ public class GlobMatcher
 
         //  else match 1 character
         char ci = i0.charAt(0);
-        if (!caseSensitive) {
-            cp = CharUtil.toUpperCase(cp);
-            ci = CharUtil.toUpperCase(ci);
-        }
         if (!accentSensitive) {
-            cp = CharUtil.stripDiacritic(cp);
-            ci = CharUtil.stripDiacritic(ci);
+            cp = TextUtil.stripDiacritics(cp);
+            ci = TextUtil.stripDiacritics(ci);
+        }
+        if (!caseSensitive) {
+            cp = Character.toUpperCase(cp);
+            ci = Character.toUpperCase(ci);
         }
         if (cp != ci)
             return -i0.length();
