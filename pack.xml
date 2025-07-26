@@ -60,6 +60,7 @@
 			<zipfileset dir="database" prefix="${appldir}/database" dirmode="664">
 				<include name="starter.pgn"/>
 				<include name="mysql/info.txt"/>
+				<include name="mysql-grant-tables.zip"/>
 				<include name="tmp"/>
 			</zipfileset>
 
@@ -315,6 +316,7 @@
 				<include name="winUtils.dll"/>
 				<include name="hidapi.dll"/>
 				<include name="easylink.dll"/>
+				<include name="udf.dll"/>
 			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
@@ -335,6 +337,9 @@
 			<zipfileset dir="doc" prefix="doc">
 				<include name="annotations.pgn"/>
 				<include name="annotations.pdf"/>
+			</zipfileset>
+			<zipfileset dir="database" prefix="database">
+				<include name="mysql-grant-tables.zip"/>
 			</zipfileset>
 		</zip>
 

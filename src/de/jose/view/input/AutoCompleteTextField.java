@@ -521,8 +521,8 @@ public class AutoCompleteTextField extends JComponent implements CaretListener, 
             throw new RuntimeException(e);
         } finally {
             text.setCaret(caret);
-            caret.setDot(Math.min(prefixLen,oldMark));
-            caret.moveDot(Math.min(prefixLen,oldDot));
+            caret.setDot(Math.min(Math.min(prefixLen,oldMark),doc.getLength()));
+            caret.moveDot(Math.min(Math.min(prefixLen,oldDot),doc.getLength()));
             blockListeners=wasBlockListeners;
         }
     }
