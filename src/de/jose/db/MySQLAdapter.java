@@ -594,12 +594,14 @@ public class MySQLAdapter
 
 		boolean tcpConnect = false;
 
+		String libPath = Application.theWorkingDirectory.getAbsolutePath()+
+				"/lib/"+Version.osDir;
 		if (Version.unix && Version.MYSQL_UDF) {
 			//	set library path fo UDF
-			String libPath = Application.theWorkingDirectory.getAbsolutePath()+
-							"/lib/"+Version.osDir;
 			env.add("LD_LIBRARY_PATH="+libPath);
 		}
+
+		command.add("--plugin_dir="+libPath);
 
 		if (! Version.getSystemProperty("jose.pipe",true))
 			tcpConnect = true;
@@ -1047,37 +1049,44 @@ public class MySQLAdapter
 	}
 	 */
 
-	public static void defineUDFs(JoConnection conn) throws SQLException
+	public static int defineUDFs(JoConnection conn) throws SQLException
 	{
 		/**	get path to library	*/
-		String lib;
+		File libDir = new File(
+				Application.theWorkingDirectory.getAbsolutePath()
+				+ File.separator+ "lib" + File.separator+Version.osDir);
+		String libFile;
 		if (Version.windows)
-			lib = Application.theWorkingDirectory.getAbsolutePath() +
-				"\\lib\\"+Version.osDir+"\\metaphone.dll";
+			libFile = "udf.dll";
 		else
-			lib = "metaphone.so";
-			//	NOTE: LD_LIBRARY_PATH must be set to <work-dir>/lib/Linux_i386
+			libFile = "udf.so";
+			//	NOTE: LD_LIBRARY_PATH and plugin_dir must be set to <work-dir>/lib/Linux_i386
 
-		defineUDF(conn,"metaphone",lib);
-		defineUDF(conn,"jucase",lib);
+		if (!FileUtil.exists(libDir,libFile))
+			return 0;
+
+		defineUDF(conn,"udf_version","Integer", libFile);
+		defineUDF(conn,"strip_diacritics", "String", libFile);
+
+		return conn.selectInt("select udf_version()");
 	}
 
-	public static boolean defineUDF(JoConnection conn, String name, String path) throws SQLException
+	public static boolean defineUDF(JoConnection conn, String name, String returnType, String soFile) throws SQLException
 	{
 		/**	(1)	check if function already exists	*/
 		String dbpath = conn.selectString("SELECT dl FROM mysql.func WHERE name = '"+name+"'");
 
-		if (dbpath!=null && dbpath.equals(path))
+		if (dbpath!=null && dbpath.equals(soFile))
 			return false;	//	already defined
 
 		if (dbpath!=null)	//	defined but wrong path - delete
 			conn.executeUpdate("DROP FUNCTION "+name);
 
-		path = StringUtil.replace(path,"\\","\\\\");
+		//path = StringUtil.replace(path,"\\","\\\\");
 
 		String create = "CREATE FUNCTION "+name+
-						" RETURNS String "+
-						" SONAME '"+path+"'";
+						" RETURNS "+returnType+
+						" SONAME '"+soFile+"'";
 		conn.executeUpdate(create);
 		return true;
 	}
