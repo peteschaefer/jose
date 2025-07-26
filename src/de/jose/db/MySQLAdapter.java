@@ -1100,6 +1100,8 @@ public class MySQLAdapter
 			defineUDF(conn, "udf_version", "Integer", libFile);
 			defineUDF(conn, "strip_diacritics", "String", libFile);
 //		defineUDF(conn,"can_reach", "Integer", libFile);
+//		defineUDF(conn,"pos_match", "Integer", libFile);
+
 			return conn.selectInt("select udf_version()");
 		} finally {
 			JoConnection.release(conn);
