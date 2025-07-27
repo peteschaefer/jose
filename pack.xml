@@ -318,6 +318,9 @@
 				<include name="easylink.dll"/>
 				<include name="udf.dll"/>
 			</zipfileset>
+			<zipfileset dir="lib/Linux_amd64" prefix="lib/Linux_amd64">
+				<include name="libudf.so"/>
+			</zipfileset>
 			<zipfileset dir="fop" prefix="fop">
 				<include name="FIG-??-2.XML"/>
 				<include name="fop.xconf"/>

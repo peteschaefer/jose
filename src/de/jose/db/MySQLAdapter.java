@@ -1087,6 +1087,8 @@ public class MySQLAdapter
 		String libFile;
 		if (Version.windows)
 			libFile = "udf.dll";
+		else if (Version.linux)
+			libFile = "libudf.so";
 		else
 			libFile = "udf.so";
 			//	NOTE: LD_LIBRARY_PATH and plugin_dir must be set to <work-dir>/lib/Linux_i386
