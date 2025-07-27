@@ -207,6 +207,13 @@ Maintenance:
     Q: sort by Collection, or by Event name (needs to be curated accurately) ?
     - drop info from Game header
 
+[ ] Move Games to Collection.
+    Useful for combining a bunch of pgn files (like Lubra's files)
+    everything is there:
+        GameSource src = GameSource.collectionContents(C1);
+        MoveTask move (src, C2);
+    just needs to be wired to a menu entry
+
 * Bulk edit with F4
     [ ] GameSource is the abstraction
         [ ] define GameSource by SearchRecord where-clause
