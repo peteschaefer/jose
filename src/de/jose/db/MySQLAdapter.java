@@ -59,6 +59,7 @@ public class MySQLAdapter
 	//	if udf.dll was loaded: version
 	//	note: not available on all platforms; versions may differ on platforms
 	public int udfVersion = 0;
+	public boolean udfStripDiacritics=false;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -182,7 +183,7 @@ public class MySQLAdapter
 					bootstrap(connection.getJdbcConnection());
 
 				//	load udf.dll, if available
-				udfVersion = defineUDFs();
+				defineUDFs();
 
 				Task checkIntegrity = new CheckDBTask(connection);
 				checkIntegrity.setSilentTime(5000);
@@ -1074,11 +1075,7 @@ public class MySQLAdapter
 	}
 	 */
 
-	public boolean hasStripDiacritics() {
-		return udfVersion >= 1012;
-	}
-
-	public static int defineUDFs() throws SQLException
+	public void defineUDFs() throws SQLException
 	{
 		/**	get path to library	*/
 		File libDir = new File(
@@ -1088,23 +1085,27 @@ public class MySQLAdapter
 		if (Version.windows)
 			libFile = "udf.dll";
 		else if (Version.linux)
-			libFile = "libudf.so";
+			libFile = "libudf.so";	//	NOTE: LD_LIBRARY_PATH and plugin_dir must be set to <work-dir>/lib/Linux_i386
 		else
-			libFile = "udf.so";
-			//	NOTE: LD_LIBRARY_PATH and plugin_dir must be set to <work-dir>/lib/Linux_i386
+			return;
 
 		if (!FileUtil.exists(libDir,libFile))
-			return 0;
+			return;
 
 		JoConnection conn = null;
 		try {
 			conn = JoConnection.get();
 			defineUDF(conn, "udf_version", "Integer", libFile);
-			defineUDF(conn, "strip_diacritics", "String", libFile);
-//		defineUDF(conn,"can_reach", "Integer", libFile);
-//		defineUDF(conn,"pos_match", "Integer", libFile);
+			this.udfVersion = conn.selectInt("select udf_version()");
 
-			return conn.selectInt("select udf_version()");
+			if (udfVersion >= 1012) {
+				defineUDF(conn, "strip_diacritics", "String", libFile);
+				this.udfStripDiacritics = true;
+			}
+//		defineUDF(conn,"can_reach", "Integer", libFile);
+//		defineUDF(conn,"sig_match", "Integer", libFile);
+//		defineUDF(conn,"bin_match", "Integer", libFile);
+
 		} finally {
 			JoConnection.release(conn);
 		}

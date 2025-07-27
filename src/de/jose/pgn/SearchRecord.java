@@ -1589,7 +1589,7 @@ public class SearchRecord implements Cloneable
 		 */
 
 
-		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).hasStripDiacritics();
+		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).udfStripDiacritics;
 
 		if (has_strip || caseSensitive) {
 			//	LIKE + RLIKE
@@ -1654,7 +1654,7 @@ public class SearchRecord implements Cloneable
 
 	protected static void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
 	{
-		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).hasStripDiacritics();
+		boolean has_strip = ((MySQLAdapter)JoConnection.getAdapter()).udfStripDiacritics;
 		if (has_strip && !caseSensitive) {
 			//	remove diacritics. If available.
 			column = "strip_diacritics(lower("+column+"))";
