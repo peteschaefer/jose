@@ -501,7 +501,6 @@ public class SearchRecord implements Cloneable
 
 			if (sigMatchSql) {
 				//	native early cut-off by sig_match()
-				//	todo drop Signature from select (resp. replace by 0)
 				/*
 					((pos.variations && hasVariations)
 						|| sig.canReach(endSignature)

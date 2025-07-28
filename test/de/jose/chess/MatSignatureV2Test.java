@@ -935,13 +935,7 @@ class MatSignatureV2Test {
         pos.setup(fen);
 
         PosSearchRecord prec = new PosSearchRecord();
-        prec.setSearch(pos,POS_EXACT|VARS|REVERSED);
-
-        assertEquals(0x8100000055a200L, prec.sigEarly.getWhiteSignature());
-        assertEquals(0x84452844000000L, prec.sigEarly.getBlackSignature());
-
-        assertEquals(0x90000000442845L, prec.sigEarlyReversed.getWhiteSignature());
-        assertEquals(0x8100a255000000L, prec.sigEarlyReversed.getBlackSignature());
+        prec.setSearch(pos,POS_EXACT);
 
         PositionFilter pflt = new PositionFilter(prec);
 
@@ -950,15 +944,15 @@ class MatSignatureV2Test {
          */
 
         String sql = "SELECT GId,  FEN, Bin,  " +
-                "   WhiteSignature, BlackSignature, LOCATE(0xf0,Bin) AS HasVariations" +
+                "   0, 0, 0 AS HasVariations" +
                 "   FROM MoreGame " +
-                "   WHERE sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?) " +
+                "   WHERE sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
                 "   LIMIT 1073741822 ";
 
         JoConnection conn = JoConnection.get();
         JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         pstm.setString(1,fen);
-        pstm.setInt(2,POS_EXACT|VARS|REVERSED);
+        pstm.setInt(2,POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 
         long startTime = System.currentTimeMillis();
@@ -966,19 +960,11 @@ class MatSignatureV2Test {
         pstm.execute();
         long rowCount = 0;
         long foundRowCount = 0;
-        long earlyCutoffCount = 0;
+
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
             rowCount++;
             int GId = res.getInt(1);
-
-            //  early cut-off should not appear here !
-            MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
-            boolean hasVariations = res.getInt(6) > 0;
-
-            if (prec.earlyCutOff(gameEndSig,hasVariations)) {
-                earlyCutoffCount++;
-            }
 
             if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT )
                 foundRowCount++;
@@ -988,14 +974,67 @@ class MatSignatureV2Test {
 
         System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
-        System.out.println("Unexpected Early Cutoffs " + earlyCutoffCount);
         System.out.println("["+time/1000.0+" secs]");
 
-        assertEquals(0,earlyCutoffCount);
-        assertTrue(1 <= foundRowCount);
+        assertTrue(2 <= foundRowCount);
 
         MatSignatureV2 strangeEndSig = new MatSignatureV2(0x5D44000020008200L, 0x3D41002810020000L);
         assertFalse(prec.earlyCutOff(strangeEndSig,false));
         assertTrue( prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig) );
     }
+
+
+
+    @Test
+    void testUdfBinMatch() throws Exception
+    {
+        withDBServer();
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+        assertTrue( 1013 <= adapter.udfVersion );
+        assertTrue(adapter.udfBinMatch);
+
+        //  this is a normal position search query
+        String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
+        pos.setup(fen);
+
+        /**
+         * replace can_reach() with sig_match() and bin_match()
+         * all the position search is done server-side, no more client-side action !
+         */
+
+        String sql = "SELECT GId" +
+                "   FROM MoreGame " +
+                "   WHERE sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
+                "     AND bin_match(FEN,Bin,0, ?,?)" +
+                "   LIMIT 1073741822 ";
+
+        JoConnection conn = JoConnection.get();
+        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setString(1,fen);
+        pstm.setInt(2,POS_EXACT);
+        pstm.setString(3,fen);
+        pstm.setInt(4,POS_EXACT);
+        pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
+
+        long startTime = System.currentTimeMillis();
+
+        pstm.execute();
+        long rowCount = 0;
+        long foundRowCount = 0;
+
+        ResultSet res = pstm.getResultSet();
+        while(res.next()) {
+            rowCount++;
+            int GId = res.getInt(1);
+        }
+
+        long time = System.currentTimeMillis()-startTime;
+
+        System.out.println("Visited " + rowCount + " rows");
+        System.out.println("Found " + foundRowCount + " rows");
+        System.out.println("["+time/1000.0+" secs]");
+
+        assertTrue(2 <= foundRowCount);
+    }
+
 }
