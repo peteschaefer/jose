@@ -1063,14 +1063,20 @@ class MatSignatureV2Test {
 
         ThreadPoolExecutor pool = new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(threads));
 
-        long startTime = System.currentTimeMillis();
-        ArrayList<Future<Long>> jobs = new ArrayList<>();
-
-        for(int j=0; j<threads; j++) {
+        ArrayList<JoPreparedStatement> stmts = new ArrayList<>();
+        for (int j = 0; j < threads; j++) {
             int id1 = minId + j*chunk;
             int id2 = minId + (j+1)*chunk-1;
+            stmts.add(makeStatement(id1,id2));
+        }
 
-            Future<Long> job = pool.submit(() -> findPositions(id1, id2, fen, POS_EXACT));
+        ArrayList<Future<Long>> jobs = new ArrayList<>();
+
+        long startTime = System.currentTimeMillis();
+
+        for(int j=0; j<threads; j++) {
+            JoPreparedStatement pstm = stmts.get(j);
+            Future<Long> job = pool.submit(() -> findPositions(pstm, fen, POS_EXACT));
             jobs.add(job);
         }
 
@@ -1086,12 +1092,26 @@ class MatSignatureV2Test {
         assertTrue(2 <= foundRowCount);
     }
 
-    private static long findPositions(int minId, int maxId, String fen, int what)
+    private static JoPreparedStatement makeStatement(int minId, int maxId) throws SQLException
     {
-        JoConnection conn = null;
+        JoConnection conn = JoConnection.get();
+        String sql = "SELECT GId" +
+                "   FROM MoreGame " +
+                "   WHERE GId BETWEEN ? AND ?" +
+                "     AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
+                "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)"+
+                "   LIMIT 1073741822 ";
+
+        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setInt(1, minId);
+        pstm.setInt(2, maxId);
+        return pstm;
+    }
+
+    private static long findPositions(JoPreparedStatement pstm, String fen, int what)
+    {
         long foundRowCount= 0;
         try {
-            conn = JoConnection.get();
 /*
             String sql1 = "CREATE TEMPORARY TABLE prefilter AS (" +
                             " SELECT GId"+
@@ -1116,23 +1136,11 @@ class MatSignatureV2Test {
             pstm.setInt(2, what);
             pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 */
-            String sql = "SELECT GId" +
-                    "   FROM MoreGame " +
-                    "   WHERE GId BETWEEN ? AND ?" +
-                    "     AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
-                    "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)"+
-                    "   LIMIT 1073741822 ";
-
-            JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            pstm.setInt(1, minId);
-            pstm.setInt(2, maxId);
             pstm.setString(3, fen);
             pstm.setInt(4, what);
             pstm.setString(5, fen);
             pstm.setInt(6, what);
             pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
-
-            System.err.println("[between "+minId+" and "+maxId+"]");
 
             pstm.execute();
 
@@ -1145,7 +1153,8 @@ class MatSignatureV2Test {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            JoConnection.release(conn);
+            pstm.close();
+            JoConnection.release(pstm.getConnection());
         }
         return foundRowCount;
     }

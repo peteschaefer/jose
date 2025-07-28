@@ -125,11 +125,11 @@ Maintenance:
 
 === Native Position Search
 
-[ ] (1) port MatSignature(V2) from Java to C++
+[+] (1) port MatSignature(V2) from Java to C++
     not too hard because it involves mainly bit-twiddling
     [x] chess::MatSignature class
     [x] unit tests
-    [ ] unit test with real games (pgn?)
+    [x] unit test with real games (pgn?)
     [.] get rid of unnecesary dependencies in chess::Board (unistring,text,units)
     [ ] sanitizer. we don't want to crash the server.
     [x] mysql user-defined-functions
@@ -138,9 +138,6 @@ Maintenance:
     [x] launch MySQL with Grant Table (we have to)
     [x] udf_version()
 
-    [ ] can_reach() works but there are still early cut-offs on the Java side.
-    [ ] sig_match() replacement for can_reach() unit test
-
 [ ] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
     [x] binary decoder
@@ -148,14 +145,27 @@ Maintenance:
             sort by PieceListEntry.index, PiecListEntry.originFile ?
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
 
-    [ ] bin_match() unit tests. hows the performance?
-    [ ] bin_match() with parallel Connections. unit test first.
+    [-] bin_match() ~ 20sec for a full search
+    [-] bin_match() with parallel Connections ~ 17 sec
 
 [ ] (3) read MyISAM files natively
     [x] lift code from MySQL sources (myisamchk e.g.)
     [x] full-table scan
     [ ] index-range scan
     [X] in parallel (OpenMP or TBB?)
+
+Comparison:
+(0) SQL + Java replay (parallel)        13 seconds
+(1) sig_match (early cutoffs in SQL)    10 seconds
+(2) bin_match (replay in SQL, parallel) 10 seconds
+(3) josemi (replay in cli tool)          7 seconds
+
+(1) is easy to implement
+(2) is harder to implement, yields nothing. sad.
+(3) is hardest to implement
+    - requires larger rewriting in IntervalCacheModel
+    - time & logic for index building
+
 
 [x] move chess++ to github
 [ ] build mariadb, or mysql5 from source
