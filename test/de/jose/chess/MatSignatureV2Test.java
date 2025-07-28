@@ -1095,14 +1095,19 @@ class MatSignatureV2Test {
     private static JoPreparedStatement makeStatement(int minId, int maxId) throws SQLException
     {
         JoConnection conn = JoConnection.get();
-        String sql = "SELECT GId" +
+        String sql1 = "SELECT GId" +
                 "   FROM MoreGame " +
                 "   WHERE GId BETWEEN ? AND ?" +
                 "     AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
                 "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)"+
                 "   LIMIT 1073741822 ";
-
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+/*
+        String sql2 =   "SELECT MoreGame.GId" +
+                "  FROM MoreGame JOIN prefilter ON prefilter.GId = MoreGame.GId " +
+                "  WHERE bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
+                "  LIMIT 1073741822 ";
+*/
+        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         pstm.setInt(1, minId);
         pstm.setInt(2, maxId);
         return pstm;
@@ -1113,28 +1118,18 @@ class MatSignatureV2Test {
         long foundRowCount= 0;
         try {
 /*
-            String sql1 = "CREATE TEMPORARY TABLE prefilter AS (" +
+            String sql0 = "CREATE TEMPORARY TABLE prefilter ENGINE=MEMORY" +
+                            " AS " +
                             " SELECT GId"+
                             " FROM MoreGame"+
                             " WHERE GId BETWEEN ? AND ?"+
-                            "   AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
-                            ")";
-            JoPreparedStatement pstm1 = new JoPreparedStatement(conn,sql1);
+                            "   AND sig_match(WhiteSignature,BlackSignature,0, ?,?) ";
+    /*      JoPreparedStatement pstm1 = new JoPreparedStatement(pstm.getConnection(),sql1);
             pstm1.setInt(1,minId);
             pstm1.setInt(2,maxId);
             pstm1.setString(3, fen);
             pstm1.setInt(4, what);
             pstm1.execute();
-
-            String sql2 =   "SELECT MoreGame.GId" +
-                            "  FROM MoreGame JOIN prefilter ON prefilter.GId = MoreGame.GId " +
-                            "  WHERE bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
-                            "  LIMIT 1073741822 ";
-
-            JoPreparedStatement pstm = new JoPreparedStatement(conn,sql2, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            pstm.setString(1, fen);
-            pstm.setInt(2, what);
-            pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 */
             pstm.setString(3, fen);
             pstm.setInt(4, what);

@@ -16,8 +16,8 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
 {
     public QueueThreadPool(int queueCapacity) {
         //  assuming that are tasks are memory-bound, we don't want to use hyper-threading
-        //  use physical processor count (and let 1 free for the gui)
-        this(Math.max(2,Runtime.getRuntime().availableProcessors()/2-1), queueCapacity);
+       //  use physical processor count
+        this(Math.max(2,Runtime.getRuntime().availableProcessors()/2), queueCapacity);
     }
 
     public QueueThreadPool(int poolSize, int queueCapacity) {
