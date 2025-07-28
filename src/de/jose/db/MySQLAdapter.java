@@ -60,6 +60,7 @@ public class MySQLAdapter
 	//	note: not available on all platforms; versions may differ on platforms
 	public int udfVersion = 0;
 	public boolean udfStripDiacritics=false;
+	public boolean udfCanReach=false;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -622,7 +623,7 @@ public class MySQLAdapter
 
 		String libPath = Application.theWorkingDirectory.getAbsolutePath()+
 				"/lib/"+Version.osDir;
-		if (Version.unix && Version.MYSQL_UDF) {
+		if (Version.unix) {
 			//	set library path fo UDF
 			env.add("LD_LIBRARY_PATH="+libPath);
 		}
@@ -1104,8 +1105,10 @@ public class MySQLAdapter
 			if (udfVersion >= 1012) {
 				defineUDF(conn, "strip_diacritics", "String", libFile);
 				this.udfStripDiacritics = true;
+				defineUDF(conn, "can_reach", "Integer", libFile);
+				this.udfCanReach = true;
 			}
-//		defineUDF(conn,"can_reach", "Integer", libFile);
+
 //		defineUDF(conn,"sig_match", "Integer", libFile);
 //		defineUDF(conn,"bin_match", "Integer", libFile);
 

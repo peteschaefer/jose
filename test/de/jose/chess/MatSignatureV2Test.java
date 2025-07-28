@@ -4,8 +4,10 @@ import de.jose.db.*;
 import de.jose.db.crossover.Crossover1011;
 import de.jose.pgn.BinReader;
 import de.jose.pgn.PosSearchRecord;
+import de.jose.pgn.PositionFilter;
 import de.jose.util.BitUtil;
 import de.jose.util.file.FileUtil;
+import de.jose.Version;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -21,6 +23,7 @@ import static de.jose.chess.Constants.*;
 import static de.jose.chess.MatSignatureV2.PAWN_MASK;
 import static de.jose.chess.MatSignatureV2.longBoard;
 import static de.jose.pgn.BinReader.REPLAY;
+import static de.jose.pgn.PosSearchRecord.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
@@ -134,10 +137,19 @@ class MatSignatureV2Test {
 
 
     void withDBServer() throws Exception {
-        if (JoConnection.getAdapter(false)==null)
-            Crossover1011.launchDBServer();
-        MySQLAdapter.loadUDF();
-        assertNotNull(JoConnection.getAdapter(true));
+        if (JoConnection.getAdapter(false)==null) {
+            String datadir=null;
+            if (Version.linux)
+                datadir = "/home/schaefer/src/jose/database";
+            if (Version.windows)
+                datadir = "C:\\dev\\jose\\work\\database";
+            Crossover1011.launchDBServer(datadir);
+        }
+
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+        assertNotNull(adapter);
+        assertTrue(1012 <= adapter.udfVersion);
+        assertTrue(adapter.udfCanReach);
 /*
         String log_file = new File(Application.theDatabaseDirectory,
                                     "mysql"+File.separator+"error.log").getAbsolutePath();
@@ -398,7 +410,7 @@ class MatSignatureV2Test {
 
         int offset = 14800000;
         int limit = 1000000;
-        int searchFlags = PosSearchRecord.POS_EXACT;
+        int searchFlags = POS_EXACT;
         withDBServer();
 //        System.out.println("[unfiltered - all games]");
 //        testCutoff(null,null, 0,0);
@@ -445,7 +457,7 @@ class MatSignatureV2Test {
         int limit = 1000000;
 
         System.out.println("[exact position search]");
-        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.POS_EXACT, offset,limit);
+        testCutoff(endgame1,MatSignatureV2.class, POS_EXACT, offset,limit);
         int early1 = counter.early;
 
         System.out.println("[pawn search]");
@@ -713,6 +725,7 @@ class MatSignatureV2Test {
     @Test
     void testMysqlUdf() throws Exception
     {
+/*
         String libPath="";
         String libName="";
         if (Version.windows) {
@@ -726,11 +739,10 @@ class MatSignatureV2Test {
         }
         //  library needs to be copied to the plugin_dir (=lib/os)
         FileUtil.copyFile(new File(libPath,libName), new File("lib/"+Version.osDir,libName));
-
-        MySQLAdapter.HAS_GRANT_TABLES = true;
+*/
         withDBServer();
-
-        assertEquals( 1012, MySQLAdapter.loadUDF() );
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+        assertEquals( 1012, adapter.udfVersion );
 
         JoConnection conn = JoConnection.get();
         assertEquals( 1012, conn.selectInt("SELECT udf_version()") );
@@ -830,5 +842,81 @@ class MatSignatureV2Test {
         }
 
         // canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6)
+    }
+
+    @Test
+    void testUdfEarlyCutoffs() throws Exception
+    {
+        withDBServer();
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+        assertEquals( 1012, adapter.udfVersion );
+        assertTrue(adapter.udfCanReach);
+
+        //  this is a normal position search query
+        String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
+        pos.setup(fen);
+
+        PosSearchRecord prec = new PosSearchRecord();
+        prec.setSearch(pos,POS_EXACT|VARS|REVERSED);
+
+        assertEquals(0x8100000055a200L, prec.sigEarly.getWhiteSignature());
+        assertEquals(0x84452844000000L, prec.sigEarly.getBlackSignature());
+
+        assertEquals(0x90000000442845L, prec.sigEarlyReversed.getWhiteSignature());
+        assertEquals(0x8100a255000000L, prec.sigEarlyReversed.getBlackSignature());
+
+        PositionFilter pflt = new PositionFilter(prec);
+
+        String sql = "SELECT MoreGame.GId,  MoreGame.FEN, MoreGame.Bin,  " +
+                "   MoreGame.WhiteSignature, MoreGame.BlackSignature, LOCATE(0xf0,MoreGame.Bin) AS HasVariations" +
+                "   FROM MoreGame WHERE LOCATE(0xf0,MoreGame.Bin)" +
+                "     OR can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)" +
+                "     OR can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)" +
+                "   LIMIT 1073741822 ";
+
+        JoConnection conn = JoConnection.get();
+        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setLong(1,prec.sigEarly.getWhiteSignature());
+        pstm.setLong(2,prec.sigEarly.getBlackSignature());
+        pstm.setLong(3,prec.sigEarlyReversed.getWhiteSignature());
+        pstm.setLong(4,prec.sigEarlyReversed.getBlackSignature());
+        pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
+
+        long startTime = System.currentTimeMillis();
+
+        pstm.execute();
+        long rowCount = 0;
+        long foundRowCount = 0;
+        long earlyCutoffCount = 0;
+        ResultSet res = pstm.getResultSet();
+        while(res.next()) {
+            rowCount++;
+            int GId = res.getInt(1);
+
+            //  early cut-off should not appear here !
+            MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
+            boolean hasVariations = res.getInt(6) > 0;
+
+            if (prec.earlyCutOff(gameEndSig,hasVariations)) {
+                earlyCutoffCount++;
+            }
+
+            if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT )
+                foundRowCount++;
+        }
+
+        long time = System.currentTimeMillis()-startTime;
+
+        System.out.println("Visited " + rowCount + " rows");
+        System.out.println("Found " + foundRowCount + " rows");
+        System.out.println("Unexpected Early Cutoffs " + earlyCutoffCount);
+        System.out.println("["+time/1000.0+" secs]");
+
+        assertEquals(0,earlyCutoffCount);
+        assertTrue(1 <= foundRowCount);
+
+        MatSignatureV2 strangeEndSig = new MatSignatureV2(0x5D44000020008200L, 0x3D41002810020000L);
+        assertFalse(prec.earlyCutOff(strangeEndSig,false));
+        assertTrue( prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig) );
     }
 }

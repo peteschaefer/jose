@@ -419,7 +419,18 @@ abstract public class IntervalCacheModel
 										addResult(res.getInt(1));
 									else switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
 									{
-										case REJECT:	cnt_early++; break;
+										case REJECT:
+											cnt_early++;
+											MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
+											if (adapter.udfCanReach) {
+												/*	not supposed to happen. Early cut-offs should have been filtered by can_reach()
+													This indicates that either:
+													- can_reach() is broken server-side
+													- accept() is broken client-side (e.g. by a thread-unsafe copy of MatSignatureV2 !!)
+												 */
+												throw new SQLException("early-cutoffs handled by can_reach()");
+											}
+											break;
 										case WAIT:		/*will call back asynchroneously*/ break;
 										case ACCEPT:
 											addResult(res.getInt(1));
@@ -559,10 +570,6 @@ abstract public class IntervalCacheModel
         pkStore = new IntBuffer(Math.min(intervalSz,4096), 0);  //  so that one interval fits neatly into a block
         reader = new ResultSetReader();
         reader.start(); //  will go to sleep immediately and wait for reset()
-
-		//	initialize MySQL UDF for native matsig filter
-		//	todo are there better places to do this?
-		MySQLAdapter.loadUDF();	//	may fail, if not supported on a platform
     }
 
     public void reset(ParamStatement pkStm, PosSearchRecord posQuery,

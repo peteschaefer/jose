@@ -89,7 +89,7 @@ Maintenance:
 === Position Search Features
 
 [x] search pawn structure
-[ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
 [?] cache MoreGame in memory
     [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
     [x] -Xmx64G
@@ -137,33 +137,25 @@ Maintenance:
     [x] integrate with SeachRecord
     [x] launch MySQL with Grant Table (we have to)
     [x] udf_version()
-    [ ] Q: why are there still early cutoffs in Java ??
-    [ ] conclusion: result set size is reduced significantly,
-        but speedup is *moderate*, if not to say disappointing.
-        Unfortunately, mysql (and mariadb) have no multi-threading.
-        Splitting the query among multiple connections is complicated; not a promising option.
-        (3) will be our best bet
+
+    [ ] can_reach() works but there are still early cut-offs on the Java side.
+    [ ] sig_match() replacement for can_reach() unit test
 
 [ ] (2) port replay logic from Java to C++
     [x] rule engine: chess::Board already there
-    [ ] binary decoder
-        [ ] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
+    [x] binary decoder
+        [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
             sort by PieceListEntry.index, PiecListEntry.originFile ?
     [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-    [ ] mysql udf's
-        zobrist_key(fen) -> BIGINT
-        find(zkey,matsig, MoreGame.FEN,MoreGame.Bin)  -- replicates PositionFilter.accept()
-        [ ] unit test udf functions
+
+    [ ] bin_match() unit tests. hows the performance?
+    [ ] bin_match() with parallel Connections. unit test first.
 
 [ ] (3) read MyISAM files natively
-    [ ] lift code from MySQL sources (myisamchk e.g.)
-    [ ] full-table scan
+    [x] lift code from MySQL sources (myisamchk e.g.)
+    [x] full-table scan
     [ ] index-range scan
-    [ ] in parallel (OpenMP or TBB?)
-    [ ] Java interface (JNI): java.sql.ResultSet
-        [ ] what about FFM api?
-        [ ] thread-safe queue for results
-        [ ] ResultSet.next() blocks/polls until new results arrive in queue
+    [X] in parallel (OpenMP or TBB?)
 
 [x] move chess++ to github
 [ ] build mariadb, or mysql5 from source

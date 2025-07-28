@@ -492,7 +492,8 @@ public class SearchRecord implements Cloneable
 			sql.select.append(hasVariations());
 			sql.select.append(" AS HasVariations");
 
-			if (MySQLAdapter.UDF_VERSION >= 1012) {
+			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
+			if (adapter.udfCanReach) {
 				//	native early cut-off
 				/*
 					((pos.variations && hasVariations)
@@ -506,13 +507,13 @@ public class SearchRecord implements Cloneable
 					sql.where.append(" OR ");	//	skip early cutoff if there are variations
 				}
 				sql.where.append("can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");
-				sql.addLongParameter(pos.sig.getWhiteSignature());
-				sql.addLongParameter(pos.sig.getBlackSignature());
+				sql.addLongParameter(pos.sigEarly.getWhiteSignature());
+				sql.addLongParameter(pos.sigEarly.getBlackSignature());
 
 				if (pos.reversedColor) {
 					sql.where.append(" OR can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");	//	reversed Signature
-					sql.addLongParameter(pos.sigReversed.getWhiteSignature());
-					sql.addLongParameter(pos.sigReversed.getBlackSignature());
+					sql.addLongParameter(pos.sigEarlyReversed.getWhiteSignature());
+					sql.addLongParameter(pos.sigEarlyReversed.getBlackSignature());
 				}
 				if (needs_and) sql.where.append(")");
 			}
