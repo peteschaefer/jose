@@ -486,16 +486,20 @@ public class SearchRecord implements Cloneable
 
 		if (!pos.isEmpty()) {
 			//	Position Search
-			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
-					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
+			boolean sigMatchSql = adapter.udfSigMatch;
+
+			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, ");
+			if (sigMatchSql)
+				sql.select.append(" 0, 0, ");
+			else
+				sql.select.append(" MoreGame.WhiteSignature, MoreGame.BlackSignature, ");
 			//	Has Variations can be queried from Game.Attribute
 			//	or from MoreGame.Bin (more expensive but needs no extra join)
-			sql.select.append(", ");
 			sql.select.append(hasVariations());
 			sql.select.append(" AS HasVariations");
 
-			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
-			if (adapter.udfSigMatch) {
+			if (sigMatchSql) {
 				//	native early cut-off by sig_match()
 				//	todo drop Signature from select (resp. replace by 0)
 				/*
@@ -505,10 +509,9 @@ public class SearchRecord implements Cloneable
 				*/
 				boolean needs_and = sql.where.length() > 0;
 				if (needs_and) sql.where.append(" AND ");
-				sql.where.append("sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?) != 0");
+				sql.where.append("(sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?) != 0)");
 				sql.addParameter(VARCHAR,pos.fen);
 				sql.addIntParameter(pos.what);
-				if (needs_and) sql.where.append(")");
 			}
 		}
 

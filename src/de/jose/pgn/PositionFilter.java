@@ -174,11 +174,16 @@ public class PositionFilter
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
-		MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
-		boolean hasVariations = res.getInt(6) > 0;
+		long whiteSignature = res.getLong(4);
+		long blackSignature = res.getLong(5);
+		//	==0 indicates that test was done server-side
+		if (whiteSignature!=0 && blackSignature!=0) {
+			MatSignatureV2 gameEndSig = new MatSignatureV2(whiteSignature, blackSignature);
+			boolean hasVariations = res.getInt(6) > 0;
 
-		if (query.earlyCutOff(gameEndSig,hasVariations))
-			return Result.REJECT;
+			if (query.earlyCutOff(gameEndSig, hasVariations))
+				return Result.REJECT;
+		}
 
 		int GId = res.getInt(1);
 		String fen = res.getString(2);
