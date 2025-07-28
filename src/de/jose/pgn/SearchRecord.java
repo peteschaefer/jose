@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.lang.reflect.Field;
 
+import static java.sql.Types.VARCHAR;
+
 public class SearchRecord implements Cloneable
 {
     /** show system collection when no search condition is set ?
@@ -493,28 +495,19 @@ public class SearchRecord implements Cloneable
 			sql.select.append(" AS HasVariations");
 
 			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
-			if (adapter.udfCanReach) {
-				//	native early cut-off
+			if (adapter.udfSigMatch) {
+				//	native early cut-off by sig_match()
+				//	todo drop Signature from select (resp. replace by 0)
 				/*
 					((pos.variations && hasVariations)
 						|| sig.canReach(endSignature)
 						|| (reversedColor && sigReversed.canReach(endSignature)))
 				*/
 				boolean needs_and = sql.where.length() > 0;
-				if (needs_and) sql.where.append(" AND (");
-				if (pos.variations) {
-					sql.where.append(hasVariations());
-					sql.where.append(" OR ");	//	skip early cutoff if there are variations
-				}
-				sql.where.append("can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");
-				sql.addLongParameter(pos.sigEarly.getWhiteSignature());
-				sql.addLongParameter(pos.sigEarly.getBlackSignature());
-
-				if (pos.reversedColor) {
-					sql.where.append(" OR can_reach(?,?,MoreGame.WhiteSignature,MoreGame.BlackSignature)");	//	reversed Signature
-					sql.addLongParameter(pos.sigEarlyReversed.getWhiteSignature());
-					sql.addLongParameter(pos.sigEarlyReversed.getBlackSignature());
-				}
+				if (needs_and) sql.where.append(" AND ");
+				sql.where.append("sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?) != 0");
+				sql.addParameter(VARCHAR,pos.fen);
+				sql.addIntParameter(pos.what);
 				if (needs_and) sql.where.append(")");
 			}
 		}
@@ -1258,8 +1251,8 @@ public class SearchRecord implements Cloneable
 	        //	remove wildcards (TODO)
 	        appendOperator(sql,"AND");
 	        sql.where.append(" ECO >= ? AND ECO <= ? ");
-	        sql.addParameter(Types.VARCHAR,eco1);
-	        sql.addParameter(Types.VARCHAR,eco2);
+	        sql.addParameter(VARCHAR,eco1);
+	        sql.addParameter(VARCHAR,eco2);
 				joins |= JOIN_GAME;
 	    }
 	    else if (eco1!=null) {
@@ -1273,7 +1266,7 @@ public class SearchRecord implements Cloneable
 	        //	remove wildcards (TODO)
 	        appendOperator(sql,"AND");
 	        sql.where.append(" ECO <= ? ");
-	        sql.addParameter(Types.VARCHAR,eco2);
+	        sql.addParameter(VARCHAR,eco2);
 				joins |= JOIN_GAME;
 	    }
 	}
@@ -1667,7 +1660,7 @@ public class SearchRecord implements Cloneable
 			sql.where.append("MATCH (");
 			sql.where.append(column);
 			sql.where.append(") AGAINST (?)");
-			sql.addParameter(Types.VARCHAR,pattern);
+			sql.addParameter(VARCHAR,pattern);
 		}
 		else {
 			/**	fallback: LIKE */
@@ -1682,7 +1675,7 @@ public class SearchRecord implements Cloneable
 		sql.where.append(" LIKE");
 		sql.where.append(caseSensitive ? " BINARY ":" ");
 		sql.where.append("? ");
-		sql.addParameter(Types.VARCHAR,pattern);
+		sql.addParameter(VARCHAR,pattern);
 	}
 
 	protected static void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
@@ -1704,7 +1697,7 @@ public class SearchRecord implements Cloneable
 		sql.where.append(" RLIKE ");
 		if (caseSensitive) sql.where.append(" BINARY ");
 		sql.where.append(" ? ");
-		sql.addParameter(Types.VARCHAR,pattern);
+		sql.addParameter(VARCHAR,pattern);
 	}
 
 	protected boolean appendResultCondition(ParamStatement sql, String operator, String column,
