@@ -65,6 +65,10 @@ public class PositionFilter
 		setPosOptions();
 	}
 
+	public PosSearchRecord getQuery() {
+		return query;
+	}
+
 	protected void setPosOptions()
 	{
 		//  calculate hash keys & material signature
@@ -96,7 +100,7 @@ public class PositionFilter
 */
 	public void copySearchParams(PositionFilter that)
 	{
-		that.query= this.query; //(this.targetSig==null) ? null : (MatSignature)this.targetSig.clone();
+		that.query.assign(this.query);
 		that.result = this.result;
 	}
 
@@ -112,7 +116,7 @@ public class PositionFilter
 	public PositionFilter getFilterLike()
 	{
 		PositionFilter pf = pooledFilter.get();
-		this.copySearchParams(pf);
+		this.copySearchParams(pf);	//	make a thread-safe(!!) copy
 		return pf;
 	}
 
@@ -167,7 +171,6 @@ public class PositionFilter
 			if (rs == Result.ACCEPT) callback.accept(GId);
 		}
 	}
-
 
 	public Result accept(ResultSet res, IntConsumer asyncCallback) throws SQLException
 	{
