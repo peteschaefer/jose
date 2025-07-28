@@ -491,7 +491,7 @@ public class SearchRecord implements Cloneable
 
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, ");
 			if (sigMatchSql)
-				sql.select.append(" 0, 0, ");
+				sql.select.append(" 0, 0, ");		//	indicates to PositionFilter that the early-cut-off check is already done server-side
 			else
 				sql.select.append(" MoreGame.WhiteSignature, MoreGame.BlackSignature, ");
 			//	Has Variations can be queried from Game.Attribute
@@ -508,7 +508,7 @@ public class SearchRecord implements Cloneable
 				*/
 				boolean needs_and = sql.where.length() > 0;
 				if (needs_and) sql.where.append(" AND ");
-				sql.where.append("(sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?) != 0)");
+				sql.where.append("sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?)");
 				sql.addParameter(VARCHAR,pos.fen);
 				sql.addIntParameter(pos.what);
 			}

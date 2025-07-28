@@ -6,17 +6,16 @@ import de.jose.pgn.BinReader;
 import de.jose.pgn.PosSearchRecord;
 import de.jose.pgn.PositionFilter;
 import de.jose.util.BitUtil;
-import de.jose.util.file.FileUtil;
 import de.jose.Version;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
@@ -845,7 +844,7 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testUdfEarlyCutoffs() throws Exception
+    void testCanReachEarlyCutoffs() throws Exception
     {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
@@ -923,7 +922,7 @@ class MatSignatureV2Test {
 
 
     @Test
-    void testUdfSigMatch() throws Exception
+    void testSigMatchEarlyCutoffs() throws Exception
     {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
@@ -966,8 +965,10 @@ class MatSignatureV2Test {
             rowCount++;
             int GId = res.getInt(1);
 
-            if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT )
+            if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT ) {
                 foundRowCount++;
+                System.err.println("[" + GId + "]");
+            }
         }
 
         long time = System.currentTimeMillis()-startTime;
@@ -986,7 +987,7 @@ class MatSignatureV2Test {
 
 
     @Test
-    void testUdfBinMatch() throws Exception
+    void testBinMatchFullScan() throws Exception
     {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
@@ -1005,7 +1006,7 @@ class MatSignatureV2Test {
         String sql = "SELECT GId" +
                 "   FROM MoreGame " +
                 "   WHERE sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
-                "     AND bin_match(FEN,Bin,0, ?,?)" +
+                "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
                 "   LIMIT 1073741822 ";
 
         JoConnection conn = JoConnection.get();
@@ -1025,7 +1026,9 @@ class MatSignatureV2Test {
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
             rowCount++;
+            foundRowCount++;
             int GId = res.getInt(1);
+            System.err.println("["+GId+"]");
         }
 
         long time = System.currentTimeMillis()-startTime;
@@ -1035,6 +1038,116 @@ class MatSignatureV2Test {
         System.out.println("["+time/1000.0+" secs]");
 
         assertTrue(2 <= foundRowCount);
+    }
+
+    @Test
+    void testBinMatchParallelScan() throws Exception
+    {
+        withDBServer();
+        MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
+        assertTrue( 1013 <= adapter.udfVersion );
+        assertTrue(adapter.udfBinMatch);
+
+        //  this is a normal position search query
+        String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
+        pos.setup(fen);
+
+
+        JoConnection conn1 = JoConnection.get();
+        int minId = conn1.selectInt("select min(GId) from MoreGame");
+        int maxId = conn1.selectInt("select max(GId) from MoreGame");
+        JoConnection.release(conn1);
+
+        int threads = 4;
+        int chunk = (maxId-minId+threads-1)/threads;
+
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(threads));
+
+        long startTime = System.currentTimeMillis();
+        ArrayList<Future<Long>> jobs = new ArrayList<>();
+
+        for(int j=0; j<threads; j++) {
+            int id1 = minId + j*chunk;
+            int id2 = minId + (j+1)*chunk-1;
+
+            Future<Long> job = pool.submit(() -> findPositions(id1, id2, fen, POS_EXACT));
+            jobs.add(job);
+        }
+
+        long foundRowCount = 0; //  findPosition() run one chunk in this thread?
+        for(Future<Long> job : jobs)
+            foundRowCount += job.get();
+
+        long time = System.currentTimeMillis()-startTime;
+
+        System.out.println("Found " + foundRowCount + " rows");
+        System.out.println("["+time/1000.0+" secs]");
+
+        assertTrue(2 <= foundRowCount);
+    }
+
+    private static long findPositions(int minId, int maxId, String fen, int what)
+    {
+        JoConnection conn = null;
+        long foundRowCount= 0;
+        try {
+            conn = JoConnection.get();
+/*
+            String sql1 = "CREATE TEMPORARY TABLE prefilter AS (" +
+                            " SELECT GId"+
+                            " FROM MoreGame"+
+                            " WHERE GId BETWEEN ? AND ?"+
+                            "   AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
+                            ")";
+            JoPreparedStatement pstm1 = new JoPreparedStatement(conn,sql1);
+            pstm1.setInt(1,minId);
+            pstm1.setInt(2,maxId);
+            pstm1.setString(3, fen);
+            pstm1.setInt(4, what);
+            pstm1.execute();
+
+            String sql2 =   "SELECT MoreGame.GId" +
+                            "  FROM MoreGame JOIN prefilter ON prefilter.GId = MoreGame.GId " +
+                            "  WHERE bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
+                            "  LIMIT 1073741822 ";
+
+            JoPreparedStatement pstm = new JoPreparedStatement(conn,sql2, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            pstm.setString(1, fen);
+            pstm.setInt(2, what);
+            pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
+*/
+            String sql = "SELECT GId" +
+                    "   FROM MoreGame " +
+                    "   WHERE GId BETWEEN ? AND ?" +
+                    "     AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
+                    "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)"+
+                    "   LIMIT 1073741822 ";
+
+            JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            pstm.setInt(1, minId);
+            pstm.setInt(2, maxId);
+            pstm.setString(3, fen);
+            pstm.setInt(4, what);
+            pstm.setString(5, fen);
+            pstm.setInt(6, what);
+            pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
+
+            System.err.println("[between "+minId+" and "+maxId+"]");
+
+            pstm.execute();
+
+            ResultSet res = pstm.getResultSet();
+            while(res.next()) {
+                foundRowCount++;
+                int GId = res.getInt(1);
+                System.err.println("["+GId+"]");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            JoConnection.release(conn);
+        }
+        return foundRowCount;
     }
 
 }
