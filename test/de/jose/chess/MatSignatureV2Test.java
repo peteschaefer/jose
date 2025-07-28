@@ -1052,6 +1052,11 @@ class MatSignatureV2Test {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
         pos.setup(fen);
 
+        /*  MySQL keeps a separate thread for each connection.
+            We try to make a multi-threaded query by opening a number of parallel connections.
+            Unfortunately, this approach seems not to scale very well.
+            With more than 4 connections, performance deteriorates quickly :(
+         */
 
         JoConnection conn1 = JoConnection.get();
         int minId = conn1.selectInt("select min(GId) from MoreGame");
