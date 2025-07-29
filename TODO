@@ -135,34 +135,19 @@ Maintenance:
 
 [ ] (3) read MyISAM files natively
 
-[ ] (4) native thread pool
-    [ ] boost::asio::thread_pool
-    [ ] collect rows into buckets (just like BatchThreadPool)
-    [ ] thread-safe result queue (possibly with bulk operations, push_many, pop_many)
-
-    [ ]     select task_push_pop(Fen,Bin,?,?)
-            from MoreGame
-            where sig_match(...)
-        pushes a task; retrieves some results, if available
-    [ ]     select task_pop(63)
+[ ] (4) native thread pool with udf function api
+    [x] boost::asio::thread_pool
+    [x] collect rows into buckets (just like BatchThreadPool)
+    [x] thread-safe result queue (bulk operations)
+    [x] udf api: select task_push(Fen,Bin,?,?)
+    [x] udf api: select task_pop()
         pops outstanding results, blocks if necessary
-    [ ] do we need a from clause? is there such a thing as a generator in mysql?
-    [ ] pool has two states
-        - open: accept new tasks
-        - closed: join() will wait for outstanding task
-        task_push_pop()
-            -enters open state;
-            -add a row to bucket;
-            -pushes task if bucket is full
-        task_pop()
-            -enters closed state;
-            -pushes rest bucket;
-            -retrieve tasks from queue;
-            -join() if necessary
-        task_stop()
-            -enters closed state;
-            -discards tasks
-
+    [x] do we need a from clause? from MoreGame
+    [-] performance is not as good as expected
+        - scanning for early-cut-offs needs ~ 9 seconds
+        - running the BinReader tasks and collecting results needs ~ 20 seconds :(
+        jose (Java PoolExecutor) and josemi (omp) do the same thing much faster.
+        why???
 
 
 Comparison:
@@ -170,6 +155,7 @@ Comparison:
 (1) sig_match (early cutoffs in SQL)    10 seconds
 (2) bin_match (replay in SQL, parallel) 10 seconds
 (3) josemi (replay in cli tool)          7 seconds
+(4) boost::asio + udf functions         30 seconds :(
 
 (1) is easy to implement
 (2) is harder to implement, yields nothing. sad.
