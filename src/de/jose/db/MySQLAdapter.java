@@ -1115,6 +1115,8 @@ public class MySQLAdapter
 				this.udfSigMatch = true;
 				defineUDF(conn, "bin_match", "Integer", libFile);
 				this.udfBinMatch = true;
+				defineUDF(conn, "task_push_pop", "String", libFile);
+				defineUDF(conn, "task_pop", "String", libFile);
 			}
 
 //		defineUDF(conn,"bin_match", "Integer", libFile);

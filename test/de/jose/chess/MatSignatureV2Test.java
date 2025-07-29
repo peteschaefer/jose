@@ -1173,36 +1173,43 @@ class MatSignatureV2Test {
     @Test
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?), 1" +
+        String sql1 = "select 1 as Phase, " +
+                        "  task_push_pop(GId,WhiteSignature,BlackSignature,Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Result" +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
-                      "union all"+
-                        " select task_pop(), 2" +  //  collects outstanding results; blocks if necessary
-                        " from MoreGame";       //  returns NULL at end
+                        " having Result is not null" +
+                " union all"+
+                        " select 2 as Phase, task_pop() as Result" +  //  collects outstanding results; blocks if necessary
+                        " from MoreGame"+
+                        " having Result is not null";
 /*     crucial that:
         - task_push_pop() is only called for rows that have passed sig_match()
             returns a bucket of (unrelated!!,possibly empty) results
         - task_pop() is called afterwards; as often as there are result 'buckets'
             'from MoreGame' creates a loop of sufficient length
             break as soon as NULL is encountered
- */
+ *//*   todo 'having Result' filters for non-null results. Great!
+        but it seems like task_pop() is called to often, eating results in the process.
+        we should need "having task_peek() is not null"
+    */
+        withDBServer();
+
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
+        long rowCount=0;
 
         //  (1) process Moregame, push tasks
         JoConnection conn = JoConnection.get();
         JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
         pstm.setString(1, fen);
         pstm.setInt(2, POS_EXACT);
-        pstm.setString(3, fen);
-        pstm.setInt(4, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
 
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
-            byte[] bucket = res.getBytes(1);
-            int phase = res.getInt(2);
+            rowCount++;
+            int phase = res.getInt(1);
+            byte[] bucket = res.getBytes(2);
             if (phase==2 && res.wasNull()) break;
             foundRowCount += processResults(bucket);
         }
@@ -1210,6 +1217,7 @@ class MatSignatureV2Test {
 
         long time = System.currentTimeMillis() - startTime;
 
+        System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
         System.out.println("[" + time / 1000.0 + " secs]");
     }
@@ -1224,9 +1232,9 @@ class MatSignatureV2Test {
     }
 
     static int to_int32(byte[] b, int i) {
-        return    (int)b[i] << 24
-                | (int)b[i+1] << 16
-                | (int)b[i+2] << 8
-                | (int)b[i+3];
+        return    ((int)b[i+3]&0x00ff) << 24
+                | ((int)b[i+2]&0x00ff) << 16
+                | ((int)b[i+1]&0x00ff) << 8
+                | ((int)b[i]&0x00ff);
     }
 }
