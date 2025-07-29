@@ -1200,7 +1200,6 @@ class MatSignatureV2Test {
         second section needs 20 secs (=waiting for BinReader tasks to complete).
         jose, josemi does it < 10 secs.
         Why is this so slow???
-        todo increase input bucket size?
 
         sig_match() and task_push() can be combined into one call. No noticeable difference, however.
     */
