@@ -1173,13 +1173,19 @@ class MatSignatureV2Test {
     @Test
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select task_push_pop(GId,Fen,Bin,?,?)" +
+        String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?)" +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,?,?)"+
+                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
                       "union all"+
                         " select task_pop()" +  //  collects outstanding results; blocks if necessary
                         " from MoreGame";       //  returns NULL at end
-
+/*     crucial that:
+        - task_push_pop() is only called for rows that have passed sig_match()
+            returns a bucket of (unrelated!!,possibly empty) results
+        - task_pop() is called afterwards; as often as there are result 'buckets'
+            'from MoreGame' creates a loop of sufficient length
+            break as soon as NULL is encountered
+ */
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
 
@@ -1195,10 +1201,9 @@ class MatSignatureV2Test {
 
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
-            int GId = res.getInt(1);
+            byte[] bucket = res.getBytes(1);
             if (res.wasNull()) break;
-            System.err.println("[" + GId + "]");
-            foundRowCount++;
+            foundRowCount += processResults(bucket);
         }
         pstm.close();
 
@@ -1210,7 +1215,7 @@ class MatSignatureV2Test {
 
     int processResults(byte[] results) {
         if (results==null) return 0;
-        for(int i=0; i<results.length; i += 4) {
+        for(int i=0; i < results.length; i += 4) {
             int GId = to_int32(results,i);
             System.out.println("[" + GId + "]");
         }
