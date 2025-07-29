@@ -1176,11 +1176,11 @@ class MatSignatureV2Test {
         String sql1 = "select task_pop(0) as Result " +
                         " from MoreGame" +
                         " where task_push(GId, WhiteSignature,BlackSignature, Fen,Bin,LOCATE(0xf0,Bin), ?,?) "+
-                        " having task_peek(0)=1 "+
+                        "   and task_peek(0) "+
                 " union all"+
                         " select task_pop(1) as Result" +  //  collects outstanding results; blocks if necessary
                         " from MoreGame"+
-                        " having task_peek(1)=1 ";
+                        " where task_peek(1) ";
 /*     crucial that:
         - task_push_pop() is only called for rows that have passed sig_match()
             returns a bucket of (unrelated!!,possibly empty) results
@@ -1192,7 +1192,7 @@ class MatSignatureV2Test {
         in phase 2:     if task_peek()==1 then task_pop()   OK
         in phase 1:     task_push(), if task_peek() then task_pop()
                 i.e., it is crucial that task_push() must be called before task_peek()
-                note that task_push() >= 0 is always true. We want task_push() be called before 'having'.
+                note that task_push() >= 0 is always true. We want task_push() be called (before having).
     */
         withDBServer();
 
@@ -1218,6 +1218,7 @@ class MatSignatureV2Test {
             //int phase = res.getInt(1);
             byte[] bucket = res.getBytes(1);
             //if (phase==2 && res.wasNull()) break;
+
             foundRowCount += processResults(bucket);
         }
         pstm.close();
