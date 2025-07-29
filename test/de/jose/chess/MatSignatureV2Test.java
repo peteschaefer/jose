@@ -19,16 +19,14 @@ import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 import static de.jose.chess.Constants.*;
-import static de.jose.chess.MatSignatureV2.PAWN_MASK;
-import static de.jose.chess.MatSignatureV2.longBoard;
+import static de.jose.chess.MatSignatureV2.*;
 import static de.jose.pgn.BinReader.REPLAY;
 import static de.jose.pgn.PosSearchRecord.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatSignatureV2Test {
 
-    class TestBinReader extends BinReader
-    {
+    class TestBinReader extends BinReader {
         public ArrayList<MatSignatureV2> sigs = new ArrayList<>();
         public ArrayList<String> fens = new ArrayList<>();
 
@@ -41,24 +39,40 @@ class MatSignatureV2Test {
             if (!pos.wasSilent()) {
                 //  silent moves do not modify the signature
                 MatSignatureV2 matSig = (MatSignatureV2) pos.getMatSig();
-                assertTrue(matSig.matches(pos), () -> mv+": "+pos+" != "+matSig+" "+matSig.toHexString());
-                if (getNestLevel()==0) {    //  don't record variations; our list is flat
+                assertTrue(matSig.matches(pos), () -> mv + ": " + pos + " != " + matSig + " " + matSig.toHexString());
+                if (getNestLevel() == 0) {    //  don't record variations; our list is flat
                     sigs.add((MatSignatureV2) matSig.clone());
                     fens.add(pos.toString());
                 }
             }
         }
 
-        @Override public void beforeMove(Move mv, int ply, boolean displayHint) { }
-        @Override public void annotation(int nagCode) { }
-        @Override public void comment(StringBuffer text) { }
-        @Override public void startOfLine(int nestLevel) { }
-        @Override public void endOfLine(int nestLevel) { }
-        @Override public void result(int resultCode) { }
+        @Override
+        public void beforeMove(Move mv, int ply, boolean displayHint) {
+        }
+
+        @Override
+        public void annotation(int nagCode) {
+        }
+
+        @Override
+        public void comment(StringBuffer text) {
+        }
+
+        @Override
+        public void startOfLine(int nestLevel) {
+        }
+
+        @Override
+        public void endOfLine(int nestLevel) {
+        }
+
+        @Override
+        public void result(int resultCode) {
+        }
     }
 
-    class CountingBinReader extends BinReader
-    {
+    class CountingBinReader extends BinReader {
         public int moves, noisy, early;
         public PosSearchRecord cutoff;
         public long backtrackSum;
@@ -78,8 +92,8 @@ class MatSignatureV2Test {
             moves++;
             if (!pos.wasSilent()) {
                 noisy++;
-                if (cutoff!=null) {
-                    if (cutoff.cutOff(pos,!pos.wasSilent())) eof=true;
+                if (cutoff != null) {
+                    if (cutoff.cutOff(pos, !pos.wasSilent())) eof = true;
                     MatSignature matSig = pos.getMatSig();
                     if (matSig instanceof MatSignatureV2) {
                         int backtrackCount = ((MatSignatureV2) matSig).getBacktrackCount();
@@ -90,12 +104,29 @@ class MatSignatureV2Test {
             }
         }
 
-        @Override public void beforeMove(Move mv, int ply, boolean displayHint) { }
-        @Override public void annotation(int nagCode) { }
-        @Override public void comment(StringBuffer text) { }
-        @Override public void startOfLine(int nestLevel) { }
-        @Override public void endOfLine(int nestLevel) { }
-        @Override public void result(int resultCode) { }
+        @Override
+        public void beforeMove(Move mv, int ply, boolean displayHint) {
+        }
+
+        @Override
+        public void annotation(int nagCode) {
+        }
+
+        @Override
+        public void comment(StringBuffer text) {
+        }
+
+        @Override
+        public void startOfLine(int nestLevel) {
+        }
+
+        @Override
+        public void endOfLine(int nestLevel) {
+        }
+
+        @Override
+        public void result(int resultCode) {
+        }
     }
 
     MatSignatureV2 sig;
@@ -105,14 +136,14 @@ class MatSignatureV2Test {
 
     public MatSignatureV2Test() {
         sig = new MatSignatureV2();
-        pos = new Position(JoseHashKey.class,MatSignatureV2.class);
-        pos.setOption(Position.CHECK,false);
-        pos.setOption(Position.STALEMATE,false);
-        pos.setOption(Position.DRAW_3,false);
-        pos.setOption(Position.INCREMENT_HASH,false);
-        pos.setOption(Position.INCREMENT_REVERSED_HASH,false);
-        pos.setOption(Position.EXPOSED_CHECK,false);
-        pos.setOption(Position.INCREMENT_SIGNATURE,true);
+        pos = new Position(JoseHashKey.class, MatSignatureV2.class);
+        pos.setOption(Position.CHECK, false);
+        pos.setOption(Position.STALEMATE, false);
+        pos.setOption(Position.DRAW_3, false);
+        pos.setOption(Position.INCREMENT_HASH, false);
+        pos.setOption(Position.INCREMENT_REVERSED_HASH, false);
+        pos.setOption(Position.EXPOSED_CHECK, false);
+        pos.setOption(Position.INCREMENT_SIGNATURE, true);
         reader = new TestBinReader(pos);
         counter = new CountingBinReader(pos);
     }
@@ -125,19 +156,19 @@ class MatSignatureV2Test {
     void tearDown() throws Exception {
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(false);
         if (adapter != null)
-        try {
-            JoConnection conn = JoConnection.get();
-            //adapter.shutDown(conn.getJdbcConnection());
-           // adapter.shutDown(conn);
-        } catch (Throwable e) {
-            //  can't help it.
-        }
+            try {
+                JoConnection conn = JoConnection.get();
+                //adapter.shutDown(conn.getJdbcConnection());
+                // adapter.shutDown(conn);
+            } catch (Throwable e) {
+                //  can't help it.
+            }
     }
 
 
     void withDBServer() throws Exception {
-        if (JoConnection.getAdapter(false)==null) {
-            String datadir=null;
+        if (JoConnection.getAdapter(false) == null) {
+            String datadir = null;
             if (Version.linux)
                 datadir = "/home/schaefer/src/jose/database";
             if (Version.windows)
@@ -159,14 +190,13 @@ class MatSignatureV2Test {
  */
     }
 
-    void test1(String fen, String hexExpected, String stringExpected) throws Exception
-    {
+    void test1(String fen, String hexExpected, String stringExpected) throws Exception {
         pos.setup(fen);
         sig.setBoard(pos);
         System.out.println(sig.toString());
 
-        assertEquals(hexExpected,sig.toHexString());
-        assertEquals(stringExpected,sig.toString());
+        assertEquals(hexExpected, sig.toHexString());
+        assertEquals(stringExpected, sig.toString());
         assertTrue(sig.matches(pos));
     }
 
@@ -188,7 +218,7 @@ class MatSignatureV2Test {
         pos.setup(fen2);
         MatSignatureV2 sig2 = (MatSignatureV2) pos.getMatSig().clone();
 
-        assertTrue(sig1.canReach(sig2), () -> fen1+"="+sig1+" -> "+fen2+"="+sig2);
+        assertTrue(sig1.canReach(sig2), () -> fen1 + "=" + sig1 + " -> " + fen2 + "=" + sig2);
     }
 
     @Test
@@ -197,40 +227,40 @@ class MatSignatureV2Test {
         pos.setup(fen);
         MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig().clone();
 
-        long wsig = sig.getWhiteSignature()&PAWN_MASK;
-        long bsig = sig.getBlackSignature()&PAWN_MASK;
-        System.out.println(longBoard(wsig,'P'));
-        System.out.println(longBoard(bsig,'p'));
+        long wsig = sig.getWhiteSignature() & PAWN_MASK;
+        long bsig = sig.getBlackSignature() & PAWN_MASK;
+        System.out.println(longBoard(wsig, 'P'));
+        System.out.println(longBoard(bsig, 'p'));
 
         assertEquals(
                 "7. . . . \n" +
-                "6 . . . .\n" +
-                "5. . .P. \n" +
-                "4 . .P. .\n" +
-                "3PP.P. .P\n" +
-                "2 .P. P .\n" +
-                " abcdefgh\n",longBoard(wsig,'P'));
+                        "6 . . . .\n" +
+                        "5. . .P. \n" +
+                        "4 . .P. .\n" +
+                        "3PP.P. .P\n" +
+                        "2 .P. P .\n" +
+                        " abcdefgh\n", longBoard(wsig, 'P'));
         assertEquals(
                 "7p . .p. \n" +
-                "6 . . . p\n" +
-                "5.pp p . \n" +
-                "4 . p . .\n" +
-                "3. . . . \n" +
-                "2 . . . .\n" +
-                " abcdefgh\n", longBoard(bsig,'p'));
+                        "6 . . . p\n" +
+                        "5.pp p . \n" +
+                        "4 . p . .\n" +
+                        "3. . . . \n" +
+                        "2 . . . .\n" +
+                        " abcdefgh\n", longBoard(bsig, 'p'));
 
         //  black rotated
-        long brotsig = (BitUtil.reverseBits(bsig)>>16)&PAWN_MASK;
-        assertTrue((brotsig&~PAWN_MASK) == 0);
-        assertEquals(Long.bitCount(bsig),Long.bitCount(brotsig));
-        System.out.println(longBoard(brotsig,'p'));
+        long brotsig = (BitUtil.reverseBits(bsig) >> 16) & PAWN_MASK;
+        assertTrue((brotsig & ~PAWN_MASK) == 0);
+        assertEquals(Long.bitCount(bsig), Long.bitCount(brotsig));
+        System.out.println(longBoard(brotsig, 'p'));
         assertEquals("7. . . . \n" +
                 "6 . . . .\n" +
                 "5. . p . \n" +
                 "4 . p pp.\n" +
                 "3p . . . \n" +
                 "2 .p. . p\n" +
-                " abcdefgh\n",longBoard(brotsig,'p'));
+                " abcdefgh\n", longBoard(brotsig, 'p'));
     }
 
     @Test
@@ -239,13 +269,13 @@ class MatSignatureV2Test {
         pos.setup(fen);
         MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig();
 
-        assertTrue(sig.matches(pos), () -> fen+" != "+sig);
+        assertTrue(sig.matches(pos), () -> fen + " != " + sig);
     }
 
     @Test
     void testPieceCount() {
-        MatSignatureV2 sig1 = new MatSignatureV2(0x3196000008800063L,0x2196334080000000L);
-        MatSignatureV2 sig2 = new MatSignatureV2(0x3196000008800063L,0x2195334080000000L);
+        MatSignatureV2 sig1 = new MatSignatureV2(0x3196000008800063L, 0x2196334080000000L);
+        MatSignatureV2 sig2 = new MatSignatureV2(0x3196000008800063L, 0x2195334080000000L);
         //  a black officer was captured. not enough pieces
         assertFalse(sig2.canReach(sig1));
     }
@@ -257,7 +287,7 @@ class MatSignatureV2Test {
         //  four queens (recorded as 3Q)
         //  one gets captured
         MatSignatureV2 sig = (MatSignatureV2) pos.getMatSig();
-        assertTrue(pos.tryMove(new Move(H1,H2)));
+        assertTrue(pos.tryMove(new Move(H1, H2)));
         //  3-1=3 :)
         assertTrue(sig.matches(pos));
     }
@@ -265,10 +295,10 @@ class MatSignatureV2Test {
     @Test
     void testPawnAdvance() {
         //  r1bqkb1r/pp1ppp2/2n3p1/4P2p/2Bp2nP/2P2N2/PP3PP1/RNBQK2R w KQkq - 0 8
-        MatSignatureV2 goal = new MatSignatureV2(0x2d96000000880063L,0x2196334080000000L);
+        MatSignatureV2 goal = new MatSignatureV2(0x2d96000000880063L, 0x2196334080000000L);
         assertTrue(goal.isExact());
         //  the very same position, but with estimated advance
-        MatSignatureV2 from = new MatSignatureV2(0x196000008800063L,0x196334080000000L);
+        MatSignatureV2 from = new MatSignatureV2(0x196000008800063L, 0x196334080000000L);
         assertFalse(from.isExact());
         //  a pawn has advanced. We can deduce that it can't move back.
         //  (if the pawn counts are equal)
@@ -276,11 +306,10 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testReversed()
-    {
-        String fen1             = "3r2k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 w - - 0 33";
-        String fen2             = "6k1/6p1/4p2p/P3p3/1B1nP1P1/5P1P/5K2/8 b - - 0 37";
-        String fen2_reversed    = "8/5k2/5p1p/1b1Np1p1/p3P3/4P2P/6P1/6K1 b - - 0 37";
+    void testReversed() {
+        String fen1 = "3r2k1/6p1/1B2pn1p/p3p3/Pp2P1P1/5P1P/1P3K2/8 w - - 0 33";
+        String fen2 = "6k1/6p1/4p2p/P3p3/1B1nP1P1/5P1P/5K2/8 b - - 0 37";
+        String fen2_reversed = "8/5k2/5p1p/1b1Np1p1/p3P3/4P2P/6P1/6K1 b - - 0 37";
 
         pos.setup(fen1);
         MatSignatureV2 sig1 = (MatSignatureV2) pos.computeMatSig().clone();
@@ -291,23 +320,22 @@ class MatSignatureV2Test {
 
         assertTrue(sig1.canReach(sig2));
 
-        assertEquals(sig2,sig2.reverse().reverse());
+        assertEquals(sig2, sig2.reverse().reverse());
 
         assertEquals(sig2.getWhiteSignature(), sig2.reverse().reverse().getWhiteSignature());
         assertEquals(sig2.getBlackSignature(), sig2.reverse().reverse().getBlackSignature());
 
-        assertTrue(canReach(sig1,sig2,1));
+        assertTrue(canReach(sig1, sig2, 1));
 
-        assertEquals(sig2rev,sig2.cloneReversed());
-        assertEquals(sig2,sig2rev.cloneReversed());
+        assertEquals(sig2rev, sig2.cloneReversed());
+        assertEquals(sig2, sig2rev.cloneReversed());
 
         assertTrue(sig1.canReach(sig2));
         assertTrue(sig1.canReachReversed(sig2rev));
     }
 
     @Test
-    void testIllegal()
-    {
+    void testIllegal() {
         //  illegal positions that can not be reached from the initial setup
         //  dense block of pawns
         assertFalse(isLegal("7k/8/8/8/8/P7/PP6/7K b - - 0 1"));
@@ -333,14 +361,14 @@ class MatSignatureV2Test {
     }
 
     boolean canReach(MatSignatureV2 sig1, MatSignatureV2 sig2, int backtracks) {
-        sig1.print(System.out,WHITE,true);
+        sig1.print(System.out, WHITE, true);
         System.out.println("\n-->");
-        sig2.print(System.out,WHITE,true);
+        sig2.print(System.out, WHITE, true);
         System.out.println("\n");
         boolean result = sig1.canReach(sig2);
-        System.out.println("[backtracks="+sig1.backtrack+"]");
+        System.out.println("[backtracks=" + sig1.backtrack + "]");
         if (backtracks >= 0)
-            assertEquals(backtracks,sig1.backtrack);
+            assertEquals(backtracks, sig1.backtrack);
         System.out.println("\n\n");
         return result;
     }
@@ -351,22 +379,22 @@ class MatSignatureV2Test {
         //  s.t. we walk into the resolve_pawns() branch
 
         //  a backward pawn
-        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1","7k/8/8/8/3P4/7P/8/7K w - - 0 1", 2));
+        assertFalse(canReach("7k/8/8/3P4/8/8/7P/7K w - - 0 1", "7k/8/8/8/3P4/7P/8/7K w - - 0 1", 2));
         //  an extra pawn
-        assertFalse(canReach("6rk/8/8/3P4/8/7P/7P/7K w - - 0 1","7k/8/8/3P4/3P4/8/7P/7K w - - 0 1", 1));
+        assertFalse(canReach("6rk/8/8/3P4/8/7P/7P/7K w - - 0 1", "7k/8/8/3P4/3P4/8/7P/7K w - - 0 1", 1));
         //  a less obvious backward pawn
-        assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
+        assertFalse(canReach("7k/3P4/3P4/8/3P4/8/7P/7K w - - 0 1", "7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
         //  ...with an explanation by capture
-        assertTrue(canReach("r6k/3P4/3P4/8/3P4/8/2P4P/7K w - - 0 1","7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
+        assertTrue(canReach("r6k/3P4/3P4/8/3P4/8/2P4P/7K w - - 0 1", "7k/3P4/8/3P4/3P4/7P/8/7K w - - 0 1", 2));
         //  two captures required
-        assertTrue(canReach("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1","7k/8/8/8/8/3PP3/8/7K w - - 0 1", 3));
+        assertTrue(canReach("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1", "7k/8/8/8/8/3PP3/8/7K w - - 0 1", 3));
 
         //  15 captures on a-file. can be resolved unambiguously
-        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPP2/7K w - - 0 1", "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
         //  mirrored
-        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/2PPPPPP/7K w - - 0 1",   "4k3/7P/7P/7P/7P/7P/7P/7K w - - 0 1", 5));
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/8/8/2PPPPPP/7K w - - 0 1", "4k3/7P/7P/7P/7P/7P/7P/7K w - - 0 1", 5));
         //  same, but fails by counting victims -> we need no backtracking at all
-        assertFalse(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1",   "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
+        assertFalse(canReach("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPP2/7K w - - 0 1", "4k3/P7/P7/P7/P7/P7/P7/7K w - - 0 1", 5));
 
         //  9 captures on d-file; fails by capture count, but only after exhaustive backtracking !
         assertFalse(canReach("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/7K w - - 0 1", "r1bq1bnr/3P4/P2P1kP1/3P4/3P4/3P4/3P4/7K w - - 0 1", 245));
@@ -374,12 +402,11 @@ class MatSignatureV2Test {
 
     @Disabled("requires a Gigabase")
     @Test
-    void testDBGames() throws Exception
-    {
+    void testDBGames() throws Exception {
         withDBServer();
-        ResultSet rs = selectGames(0,80000);
+        ResultSet rs = selectGames(0, 80000);
         int i;
-        for (i=0; rs.next(); ++i) {
+        for (i = 0; rs.next(); ++i) {
             int GId = rs.getInt(1);
             String FEN = rs.getString(2);
             byte[] bin = rs.getBytes(3);
@@ -387,19 +414,18 @@ class MatSignatureV2Test {
             long blackSignature = rs.getLong(5);
 
             //System.out.println(GId);
-            MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
-            test1Game(FEN,bin,endSig);
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSignature, blackSignature);
+            test1Game(FEN, bin, endSig);
             /*  note that test1Game() test only MatSignatures from the same game (with monotonous pawn advance, etc.)
                 a better test would use an arbitrary query (see below)
              */
         }
-        System.out.println("["+i+" games replayed]");
+        System.out.println("[" + i + " games replayed]");
     }
 
     @Disabled("benchmark on MatSignature efficiency; requires a Gigabase")
     @Test
-    void testCutoffCount() throws Exception
-    {
+    void testCutoffCount() throws Exception {
         String initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         String opening = "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/5NP1/PP2PP1P/RNBQKB1R b KQkq - 0 4";
         String middle1 = "2r1r1n1/p2b1p1k/2nq3p/1pp1pPbB/3pP3/PP1P3P/1BPN1PQK/R5R1 w - - 3 23";
@@ -422,23 +448,23 @@ class MatSignatureV2Test {
 //        System.out.println("[opening - V1]");
 //        testCutoff(opening,MatSignatureV1.class, offset,limit);
         System.out.println("[opening - V2]");
-        testCutoff(opening,MatSignatureV2.class,searchFlags, offset,limit);
+        testCutoff(opening, MatSignatureV2.class, searchFlags, offset, limit);
 //        System.out.println("[middle game - V1]");
 //        testCutoff(middle1,MatSignatureV1.class, offset,limit);
-       System.out.println("[middle game - V2]");
-        testCutoff(middle1,MatSignatureV2.class,searchFlags, offset,limit);
-//        System.out.println("[middle game - V1]");
- //       testCutoff(middle2,MatSignatureV1.class, offset,limit);
         System.out.println("[middle game - V2]");
-        testCutoff(middle2,MatSignatureV2.class,searchFlags, offset,limit);
+        testCutoff(middle1, MatSignatureV2.class, searchFlags, offset, limit);
+//        System.out.println("[middle game - V1]");
+        //       testCutoff(middle2,MatSignatureV1.class, offset,limit);
+        System.out.println("[middle game - V2]");
+        testCutoff(middle2, MatSignatureV2.class, searchFlags, offset, limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame1,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame1,MatSignatureV2.class,searchFlags, offset,limit);
+        testCutoff(endgame1, MatSignatureV2.class, searchFlags, offset, limit);
 //        System.out.println("[end game - V1]");
 //        testCutoff(endgame2,MatSignatureV1.class, offset,limit);
         System.out.println("[end game - V2]");
-        testCutoff(endgame2,MatSignatureV2.class,searchFlags, offset,limit);
+        testCutoff(endgame2, MatSignatureV2.class, searchFlags, offset, limit);
     }
 
     @Disabled
@@ -456,15 +482,15 @@ class MatSignatureV2Test {
         int limit = 1000000;
 
         System.out.println("[exact position search]");
-        testCutoff(endgame1,MatSignatureV2.class, POS_EXACT, offset,limit);
+        testCutoff(endgame1, MatSignatureV2.class, POS_EXACT, offset, limit);
         int early1 = counter.early;
 
         System.out.println("[pawn search]");
-        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_EXACT, offset,limit);
+        testCutoff(endgame1, MatSignatureV2.class, PosSearchRecord.PAWNS_EXACT, offset, limit);
         int early2 = counter.early;
 
         System.out.println("[pawn subset search]");
-        testCutoff(endgame1,MatSignatureV2.class, PosSearchRecord.PAWNS_SUBSET, offset,limit);
+        testCutoff(endgame1, MatSignatureV2.class, PosSearchRecord.PAWNS_SUBSET, offset, limit);
         int early3 = counter.early;
 
         assertTrue(early1 >= early2);
@@ -472,8 +498,7 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void test1PawnCutoff()
-    {
+    void test1PawnCutoff() {
         String endgame1 = "2K5/4kp2/7p/8/B4P2/8/8/8 b - - 0 63";
         MatSignatureV2 queryExact = getMatSignatureV2(endgame1);
         MatSignatureV2 queryPawns = (MatSignatureV2) queryExact.clone();
@@ -485,7 +510,7 @@ class MatSignatureV2Test {
         querySubset.addJokerPieces();
         querySubset.addJokerPawns();
 
-        MatSignatureV2 endSig = new MatSignatureV2(0x2444000000000000L,0x3440000000000000L);
+        MatSignatureV2 endSig = new MatSignatureV2(0x2444000000000000L, 0x3440000000000000L);
 
         boolean exactCanReach = queryExact.canReach(endSig);
         boolean pawnsCanReach = queryPawns.canReach(endSig);
@@ -518,15 +543,15 @@ class MatSignatureV2Test {
         int exactCutoffs = 0;
         int pawnsCutoffs = 0;
         int subsetCutoffs = 0;
-        int games=0;
+        int games = 0;
 
-        ResultSet res = selectSignatures(0,-1);
-        while(res.next()) {
+        ResultSet res = selectSignatures(0, -1);
+        while (res.next()) {
             games++;
             int GId = res.getInt(1);
             long whiteSig = res.getLong(2);
             long blackSig = res.getLong(3);
-            MatSignatureV2 endSig = new MatSignatureV2(whiteSig,blackSig);
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSig, blackSig);
 
             boolean exactCutoff = !queryExact.canReach(endSig);
             boolean pawnsCutoff = !queryPawns.canReach(endSig);
@@ -537,61 +562,60 @@ class MatSignatureV2Test {
             if (subsetCutoff) subsetCutoffs++;
 
             //  pawns cutoff => exact cutoff
-            assertTrue(!pawnsCutoff || exactCutoff, () -> ""+GId+" "+endSig.toHexString());
+            assertTrue(!pawnsCutoff || exactCutoff, () -> "" + GId + " " + endSig.toHexString());
             //  subset cutoff => pawns cutoff
-            assertTrue(!subsetCutoff || pawnsCutoff, () -> ""+GId+" "+endSig.toHexString());
+            assertTrue(!subsetCutoff || pawnsCutoff, () -> "" + GId + " " + endSig.toHexString());
         }
 
-        System.out.println("["+games+" games]");
-        System.out.println("["+exactCutoffs+" exactCutoffs]");
-        System.out.println("["+pawnsCutoffs+" pawnsCutoffs]");
-        System.out.println("["+subsetCutoffs+" subsetCutoffs]");
+        System.out.println("[" + games + " games]");
+        System.out.println("[" + exactCutoffs + " exactCutoffs]");
+        System.out.println("[" + pawnsCutoffs + " pawnsCutoffs]");
+        System.out.println("[" + subsetCutoffs + " subsetCutoffs]");
     }
 
     void testCutoff(String queryFen, Class matsigClass, int searchFlags, int offset, int limit) throws SQLException {
         counter.reset();
-        if (queryFen != null && matsigClass!=null) {
+        if (queryFen != null && matsigClass != null) {
             pos.setup(queryFen);
             pos.useMatSignature(matsigClass);
-            counter.cutoff = new PosSearchRecord ();
-            counter.cutoff.setSearch(pos,searchFlags);
+            counter.cutoff = new PosSearchRecord();
+            counter.cutoff.setSearch(pos, searchFlags);
         }
         long startTime = System.currentTimeMillis();
-        int games=0;
-        ResultSet res = selectGames(offset,limit);
-        while(res.next()) {
+        int games = 0;
+        ResultSet res = selectGames(offset, limit);
+        while (res.next()) {
             games++;
             //int GId = res.getInt(1);
             String FEN = res.getString(2);
             byte[] bin = res.getBytes(3);
             long whiteSignature = res.getLong(4);
             long blackSignature = res.getLong(5);
-            MatSignatureV2 endSig = new MatSignatureV2(whiteSignature,blackSignature);
-            if (counter.cutoff.earlyCutOff(endSig,false)) {
+            MatSignatureV2 endSig = new MatSignatureV2(whiteSignature, blackSignature);
+            if (counter.cutoff.earlyCutOff(endSig, false)) {
                 counter.early++;
                 continue;
             }
 
-            counter.read(bin,0, null,0, FEN,REPLAY);
+            counter.read(bin, 0, null, 0, FEN, REPLAY);
         }
-        long time = System.currentTimeMillis()-startTime;
-        System.out.println("["+games+" games replayed]");
-        System.out.println("["+counter.early+" early cutoffs]");
-        System.out.println("["+counter.moves+" moves]");
-        System.out.println("["+counter.noisy+" noisy moves]");
-        System.out.println("["+time/1000.0+" secs]");
-        System.out.println("["+ counter.backtrackWatermark+" max. backtrack]");
-        System.out.println("["+ ((double)counter.backtrackSum/counter.noisy)+" avg. backtrack]");
+        long time = System.currentTimeMillis() - startTime;
+        System.out.println("[" + games + " games replayed]");
+        System.out.println("[" + counter.early + " early cutoffs]");
+        System.out.println("[" + counter.moves + " moves]");
+        System.out.println("[" + counter.noisy + " noisy moves]");
+        System.out.println("[" + time / 1000.0 + " secs]");
+        System.out.println("[" + counter.backtrackWatermark + " max. backtrack]");
+        System.out.println("[" + ((double) counter.backtrackSum / counter.noisy) + " avg. backtrack]");
         System.out.println("\n");
     }
 
-    private static ResultSet selectGames(int offset, int limit) throws SQLException
-    {
+    private static ResultSet selectGames(int offset, int limit) throws SQLException {
         JoConnection conn = JoConnection.get();
         String sql = "select GId,FEN,Bin,WhiteSignature,BlackSignature from MoreGame";
         if (offset > 0 || limit > 0) {
             sql += " limit ";
-            if (offset > 0) sql += (offset+", ");
+            if (offset > 0) sql += (offset + ", ");
             sql += limit;
         }
         JoPreparedStatement pstm = conn.getPreparedStatement(sql);
@@ -601,13 +625,12 @@ class MatSignatureV2Test {
         return rs;
     }
 
-    private static ResultSet selectSignatures(int offset, int limit) throws SQLException
-    {
+    private static ResultSet selectSignatures(int offset, int limit) throws SQLException {
         JoConnection conn = JoConnection.get();
         String sql = "select GId,WhiteSignature,BlackSignature from MoreGame";
         if (offset > 0 || limit > 0) {
             sql += " limit ";
-            if (offset > 0) sql += (offset+", ");
+            if (offset > 0) sql += (offset + ", ");
             sql += limit;
         }
         JoPreparedStatement pstm = conn.getPreparedStatement(sql);
@@ -618,18 +641,17 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testRegressions()
-    {
+    void testRegressions() {
         //  long reversal with uppermost bit
-        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1","5k2/p4p2/1p2q3/5RQp/6n1/4P3/PP6/6K1 w - - 0 35", 3));
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1", "5k2/p4p2/1p2q3/5RQp/6n1/4P3/PP6/6K1 w - - 0 35", 3));
         //  don't cap additional capture count
-        assertTrue(canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16",6));
+        assertTrue(canReach("r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5", "r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 6));
         //  subtract actual capture count
-        assertTrue(canReach("r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R b KQkq - 0 9","r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 3));
+        assertTrue(canReach("r1bqkb1r/ppp2pp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R b KQkq - 0 9", "r1bqr1k1/pp3pp1/2P2n1p/8/2P1p3/1NP4P/P1P1QPP1/R1B2RK1 b - - 0 16", 3));
 
-        assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2","rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",0));
+        assertTrue(canReach("rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2", "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2", 0));
 
-        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1","1Q3Q2/5b2/6k1/q3bN2/4p2P/5pP1/5P1K/8 b - - 0 40",4));
+        assertTrue(canReach("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1", "1Q3Q2/5b2/6k1/q3bN2/4p2P/5pP1/5P1K/8 b - - 0 40", 4));
     }
 
     MatSignatureV2 getMatSignatureV2(String fen) {
@@ -638,8 +660,7 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testBishops()
-    {
+    void testBishops() {
         //  good, bad, ugly
         assertTrue(getMatSignatureV2("rnbqk1nr/pppppppp/8/8/8/8/PPPPPPPP/RN1QKBNR w KQkq - 0 1").evenColouredBishops());
         assertTrue(getMatSignatureV2("rn1qkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN1QKBNR w KQkq - 0 1").oppositeColouredBishops());
@@ -651,10 +672,9 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testJokers()
-    {
+    void testJokers() {
         MatSignatureV2 from = getMatSignatureV2("7k/3pp3/8/8/8/8/2PP4/7K w - - 0 1");
-        MatSignatureV2 to = getMatSignatureV2(  "7k/8/8/8/8/3PP3/8/R6K w - - 0 1");
+        MatSignatureV2 to = getMatSignatureV2("7k/8/8/8/8/3PP3/8/R6K w - - 0 1");
 
         // can not create a piece from thin air
         assertFalse(from.canReach(to));
@@ -679,23 +699,22 @@ class MatSignatureV2Test {
     void testCrossover() throws Exception {
         withDBServer();
         JoConnection conn = JoConnection.get();
-        int rows = Crossover1011.updateMatSignatureV2(conn,"jose.MoreGame",-1/*2_000_000*/);
-        System.out.println("["+rows+" rows updated]");
+        int rows = Crossover1011.updateMatSignatureV2(conn, "jose.MoreGame", -1/*2_000_000*/);
+        System.out.println("[" + rows + " rows updated]");
     }
 
     private static String print(String fen, MatSignatureV2 sig) {
         return "[" + fen + "]\n" + sig + "\n" + sig.toHexString();
     }
 
-    private void test1Game(String initFen, byte[] bin, MatSignatureV2 endSig)
-    {
+    private void test1Game(String initFen, byte[] bin, MatSignatureV2 endSig) {
         reader.sigs.clear();
         reader.fens.clear();
-        reader.read(bin,0, null,0, initFen, REPLAY);
+        reader.read(bin, 0, null, 0, initFen, REPLAY);
         //  reachability:
-        for(int i=1; i < reader.sigs.size(); i++) {
+        for (int i = 1; i < reader.sigs.size(); i++) {
             MatSignatureV2 sigi = reader.sigs.get(i);
-            String feni= reader.fens.get(i);
+            String feni = reader.fens.get(i);
             pos.setup(feni);
             MatSignatureV2 sigq = new MatSignatureV2(pos);
 
@@ -704,16 +723,16 @@ class MatSignatureV2Test {
             for (int j = 0; j <= i; ++j) {
                 MatSignatureV2 sigj = (MatSignatureV2) reader.sigs.get(j);
                 String fenj = reader.fens.get(j);
-                Supplier<String> printInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigi);
-                Supplier<String> printQInfo = () -> print(fenj,sigj)+"\n->\n"+print(feni,sigq);
+                Supplier<String> printInfo = () -> print(fenj, sigj) + "\n->\n" + print(feni, sigi);
+                Supplier<String> printQInfo = () -> print(fenj, sigj) + "\n->\n" + print(feni, sigq);
 
-                assertTrue(sigj.equals(sigi) || sigj.canReach(sigi),printInfo);
+                assertTrue(sigj.equals(sigi) || sigj.canReach(sigi), printInfo);
                 //  previous positions can not be reached (if we have an exact advance count!)
                 //  (sigi!=sigj) => !sigi.canReach(sigj)
-                assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj),printInfo);
+                assertTrue(sigi.equals(sigj) || !sigi.canReach(sigj), printInfo);
                 //  this is not necessarily true, if the advance count is estimated.
                 //  try this to find border cases that might be solvable:
-                assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj),printQInfo);
+                assertTrue(sigq.similar(sigj) || !sigq.canReach(sigj), printQInfo);
             }
         }
     }
@@ -722,8 +741,7 @@ class MatSignatureV2Test {
     // MySQL user-defined-function
     //
     @Test
-    void testMysqlUdf() throws Exception
-    {
+    void testMysqlUdf() throws Exception {
 /*
         String libPath="";
         String libName="";
@@ -741,10 +759,10 @@ class MatSignatureV2Test {
 */
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        assertEquals( 1012, adapter.udfVersion );
+        assertEquals(1012, adapter.udfVersion);
 
         JoConnection conn = JoConnection.get();
-        assertEquals( 1012, conn.selectInt("SELECT udf_version()") );
+        assertEquals(1012, conn.selectInt("SELECT udf_version()"));
 
         String fen1 = "r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5";
         pos.setup(fen1);
@@ -758,33 +776,33 @@ class MatSignatureV2Test {
         System.err.println(sig1.toHexString());
         System.err.println(sig2.toHexString());
 
-        int ok = conn.selectInt("SELECT can_reach("+
-                sig1.getWhiteSignature()+","+sig1.getBlackSignature()+"," +
-                sig2.getWhiteSignature()+","+sig2.getBlackSignature() +")");
+        int ok = conn.selectInt("SELECT can_reach(" +
+                sig1.getWhiteSignature() + "," + sig1.getBlackSignature() + "," +
+                sig2.getWhiteSignature() + "," + sig2.getBlackSignature() + ")");
 
-        assertEquals(1,ok);
+        assertEquals(1, ok);
 
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,"SELECT can_reach(?,?,?,?)");
-        pstm.setLong(1,sig1.getWhiteSignature());
-        pstm.setLong(2,sig1.getBlackSignature());
-        pstm.setLong(3,sig2.getWhiteSignature());
-        pstm.setLong(4,sig2.getBlackSignature());
-        assertEquals(1,pstm.selectInt());
+        JoPreparedStatement pstm = new JoPreparedStatement(conn, "SELECT can_reach(?,?,?,?)");
+        pstm.setLong(1, sig1.getWhiteSignature());
+        pstm.setLong(2, sig1.getBlackSignature());
+        pstm.setLong(3, sig2.getWhiteSignature());
+        pstm.setLong(4, sig2.getBlackSignature());
+        assertEquals(1, pstm.selectInt());
 
-        pstm = new JoPreparedStatement(conn,"SELECT can_reach(?,?)");
-        pstm.setString(1,fen1);
-        pstm.setString(2,fen2);
-        assertEquals(1,pstm.selectInt());
+        pstm = new JoPreparedStatement(conn, "SELECT can_reach(?,?)");
+        pstm.setString(1, fen1);
+        pstm.setString(2, fen2);
+        assertEquals(1, pstm.selectInt());
 
         //
         //  read stuff from DB
         //
-         // with FEN argument
+        // with FEN argument
         pstm = new JoPreparedStatement(conn,
                 "SELECT WhiteSignature, BlackSignature, " +
-                    " can_reach(?,WhiteSignature,BlackSignature) " +
-                    " FROM MoreGame WHERE GId BETWEEN 1010 AND 1200");
-        pstm.setString(1,fen2);
+                        " can_reach(?,WhiteSignature,BlackSignature) " +
+                        " FROM MoreGame WHERE GId BETWEEN 1010 AND 1200");
+        pstm.setString(1, fen2);
         pstm.execute();
         ResultSet res = pstm.getResultSet();
         while (res.next()) {
@@ -792,7 +810,7 @@ class MatSignatureV2Test {
             long bsig = res.getLong(2);
             boolean can_reach = res.getBoolean(3);
 
-            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            MatSignatureV2 sigres = new MatSignatureV2(wsig, bsig);
             assertEquals(sig2.canReach(sigres), can_reach);
         }
 
@@ -803,8 +821,8 @@ class MatSignatureV2Test {
                 "SELECT WhiteSignature, BlackSignature, " +
                         " can_reach(?,?,WhiteSignature,BlackSignature) " +
                         " FROM MoreGame WHERE GId BETWEEN 1010 AND 1200");
-        pstm.setLong(1,sig.getWhiteSignature());
-        pstm.setLong(2,sig.getBlackSignature());
+        pstm.setLong(1, sig.getWhiteSignature());
+        pstm.setLong(2, sig.getBlackSignature());
         pstm.execute();
         res = pstm.getResultSet();
         while (res.next()) {
@@ -812,7 +830,7 @@ class MatSignatureV2Test {
             long bsig = res.getLong(2);
             boolean can_reach = res.getBoolean(3);
 
-            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            MatSignatureV2 sigres = new MatSignatureV2(wsig, bsig);
             assertEquals(sig2.canReach(sigres), can_reach);
         }
 
@@ -826,17 +844,17 @@ class MatSignatureV2Test {
                         " WHERE GId BETWEEN 1010 AND 1200" +
                         "   AND (can_reach(?,?,WhiteSignature,BlackSignature)" +
                         "     OR can_reach(?,?,WhiteSignature,BlackSignature))");
-        pstm.setLong(1,sig.getWhiteSignature());
-        pstm.setLong(2,sig.getBlackSignature());
-        pstm.setLong(3,sigrev.getWhiteSignature());
-        pstm.setLong(4,sigrev.getBlackSignature());
+        pstm.setLong(1, sig.getWhiteSignature());
+        pstm.setLong(2, sig.getBlackSignature());
+        pstm.setLong(3, sigrev.getWhiteSignature());
+        pstm.setLong(4, sigrev.getBlackSignature());
         pstm.execute();
         res = pstm.getResultSet();
         while (res.next()) {
             long wsig = res.getLong(1);
             long bsig = res.getLong(2);
 
-            MatSignatureV2 sigres = new MatSignatureV2(wsig,bsig);
+            MatSignatureV2 sigres = new MatSignatureV2(wsig, bsig);
             assertTrue(sig.canReach(sigres) || sigrev.canReach(sigres));
         }
 
@@ -844,11 +862,10 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testCanReachEarlyCutoffs() throws Exception
-    {
+    void testCanReachEarlyCutoffs() throws Exception {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        assertTrue( 1012 <= adapter.udfVersion );
+        assertTrue(1012 <= adapter.udfVersion);
         assertTrue(adapter.udfCanReach);
 
         //  this is a normal position search query
@@ -856,7 +873,7 @@ class MatSignatureV2Test {
         pos.setup(fen);
 
         PosSearchRecord prec = new PosSearchRecord();
-        prec.setSearch(pos,POS_EXACT|VARS|REVERSED);
+        prec.setSearch(pos, POS_EXACT | VARS | REVERSED);
 
         assertEquals(0x8100000055a200L, prec.sigEarly.getWhiteSignature());
         assertEquals(0x84452844000000L, prec.sigEarly.getBlackSignature());
@@ -875,11 +892,11 @@ class MatSignatureV2Test {
                 "   LIMIT 1073741822 ";
 
         JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        pstm.setLong(1,prec.sigEarly.getWhiteSignature());
-        pstm.setLong(2,prec.sigEarly.getBlackSignature());
-        pstm.setLong(3,prec.sigEarlyReversed.getWhiteSignature());
-        pstm.setLong(4,prec.sigEarlyReversed.getBlackSignature());
+        JoPreparedStatement pstm = new JoPreparedStatement(conn, sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setLong(1, prec.sigEarly.getWhiteSignature());
+        pstm.setLong(2, prec.sigEarly.getBlackSignature());
+        pstm.setLong(3, prec.sigEarlyReversed.getWhiteSignature());
+        pstm.setLong(4, prec.sigEarlyReversed.getBlackSignature());
         pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 
         long startTime = System.currentTimeMillis();
@@ -889,44 +906,43 @@ class MatSignatureV2Test {
         long foundRowCount = 0;
         long earlyCutoffCount = 0;
         ResultSet res = pstm.getResultSet();
-        while(res.next()) {
+        while (res.next()) {
             rowCount++;
             int GId = res.getInt(1);
 
             //  early cut-off should not appear here !
-            MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4),res.getLong(5));
+            MatSignatureV2 gameEndSig = new MatSignatureV2(res.getLong(4), res.getLong(5));
             boolean hasVariations = res.getInt(6) > 0;
 
-            if (prec.earlyCutOff(gameEndSig,hasVariations)) {
+            if (prec.earlyCutOff(gameEndSig, hasVariations)) {
                 earlyCutoffCount++;
             }
 
-            if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT )
+            if (pflt.accept(res, null) == PositionFilter.Result.ACCEPT)
                 foundRowCount++;
         }
 
-        long time = System.currentTimeMillis()-startTime;
+        long time = System.currentTimeMillis() - startTime;
 
         System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
         System.out.println("Unexpected Early Cutoffs " + earlyCutoffCount);
-        System.out.println("["+time/1000.0+" secs]");
+        System.out.println("[" + time / 1000.0 + " secs]");
 
-        assertEquals(0,earlyCutoffCount);
+        assertEquals(0, earlyCutoffCount);
         assertTrue(1 <= foundRowCount);
 
         MatSignatureV2 strangeEndSig = new MatSignatureV2(0x5D44000020008200L, 0x3D41002810020000L);
-        assertFalse(prec.earlyCutOff(strangeEndSig,false));
-        assertTrue( prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig) );
+        assertFalse(prec.earlyCutOff(strangeEndSig, false));
+        assertTrue(prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig));
     }
 
 
     @Test
-    void testSigMatchEarlyCutoffs() throws Exception
-    {
+    void testSigMatchEarlyCutoffs() throws Exception {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        assertTrue( 1013 <= adapter.udfVersion );
+        assertTrue(1013 <= adapter.udfVersion);
         assertTrue(adapter.udfSigMatch);
 
         //  this is a normal position search query
@@ -934,7 +950,7 @@ class MatSignatureV2Test {
         pos.setup(fen);
 
         PosSearchRecord prec = new PosSearchRecord();
-        prec.setSearch(pos,POS_EXACT);
+        prec.setSearch(pos, POS_EXACT);
 
         PositionFilter pflt = new PositionFilter(prec);
 
@@ -949,9 +965,9 @@ class MatSignatureV2Test {
                 "   LIMIT 1073741822 ";
 
         JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        pstm.setString(1,fen);
-        pstm.setInt(2,POS_EXACT);
+        JoPreparedStatement pstm = new JoPreparedStatement(conn, sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setString(1, fen);
+        pstm.setInt(2, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 
         long startTime = System.currentTimeMillis();
@@ -961,37 +977,35 @@ class MatSignatureV2Test {
         long foundRowCount = 0;
 
         ResultSet res = pstm.getResultSet();
-        while(res.next()) {
+        while (res.next()) {
             rowCount++;
             int GId = res.getInt(1);
 
-            if ( pflt.accept(res,null) == PositionFilter.Result.ACCEPT ) {
+            if (pflt.accept(res, null) == PositionFilter.Result.ACCEPT) {
                 foundRowCount++;
                 System.err.println("[" + GId + "]");
             }
         }
 
-        long time = System.currentTimeMillis()-startTime;
+        long time = System.currentTimeMillis() - startTime;
 
         System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
-        System.out.println("["+time/1000.0+" secs]");
+        System.out.println("[" + time / 1000.0 + " secs]");
 
         assertTrue(2 <= foundRowCount);
 
         MatSignatureV2 strangeEndSig = new MatSignatureV2(0x5D44000020008200L, 0x3D41002810020000L);
-        assertFalse(prec.earlyCutOff(strangeEndSig,false));
-        assertTrue( prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig) );
+        assertFalse(prec.earlyCutOff(strangeEndSig, false));
+        assertTrue(prec.sigEarly.canReach(strangeEndSig) || prec.sigEarlyReversed.canReach(strangeEndSig));
     }
 
 
-
     @Test
-    void testBinMatchFullScan() throws Exception
-    {
+    void testBinMatchFullScan() throws Exception {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        assertTrue( 1013 <= adapter.udfVersion );
+        assertTrue(1013 <= adapter.udfVersion);
         assertTrue(adapter.udfBinMatch);
 
         //  this is a normal position search query
@@ -1010,11 +1024,11 @@ class MatSignatureV2Test {
                 "   LIMIT 1073741822 ";
 
         JoConnection conn = JoConnection.get();
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        pstm.setString(1,fen);
-        pstm.setInt(2,POS_EXACT);
-        pstm.setString(3,fen);
-        pstm.setInt(4,POS_EXACT);
+        JoPreparedStatement pstm = new JoPreparedStatement(conn, sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        pstm.setString(1, fen);
+        pstm.setInt(2, POS_EXACT);
+        pstm.setString(3, fen);
+        pstm.setInt(4, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);   //  fetch row-by-row
 
         long startTime = System.currentTimeMillis();
@@ -1024,28 +1038,27 @@ class MatSignatureV2Test {
         long foundRowCount = 0;
 
         ResultSet res = pstm.getResultSet();
-        while(res.next()) {
+        while (res.next()) {
             rowCount++;
             foundRowCount++;
             int GId = res.getInt(1);
-            System.err.println("["+GId+"]");
+            System.err.println("[" + GId + "]");
         }
 
-        long time = System.currentTimeMillis()-startTime;
+        long time = System.currentTimeMillis() - startTime;
 
         System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
-        System.out.println("["+time/1000.0+" secs]");
+        System.out.println("[" + time / 1000.0 + " secs]");
 
         assertTrue(2 <= foundRowCount);
     }
 
     @Test
-    void testBinMatchParallelScan() throws Exception
-    {
+    void testBinMatchParallelScan() throws Exception {
         withDBServer();
         MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter(true);
-        assertTrue( 1013 <= adapter.udfVersion );
+        assertTrue(1013 <= adapter.udfVersion);
         assertTrue(adapter.udfBinMatch);
 
         //  this is a normal position search query
@@ -1064,47 +1077,46 @@ class MatSignatureV2Test {
         JoConnection.release(conn1);
 
         int threads = 4;
-        int chunk = (maxId-minId+threads-1)/threads;
+        int chunk = (maxId - minId + threads - 1) / threads;
 
         ThreadPoolExecutor pool = new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(threads));
 
         ArrayList<JoPreparedStatement> stmts = new ArrayList<>();
         for (int j = 0; j < threads; j++) {
-            int id1 = minId + j*chunk;
-            int id2 = minId + (j+1)*chunk-1;
-            stmts.add(makeStatement(id1,id2));
+            int id1 = minId + j * chunk;
+            int id2 = minId + (j + 1) * chunk - 1;
+            stmts.add(makeStatement(id1, id2));
         }
 
         ArrayList<Future<Long>> jobs = new ArrayList<>();
 
         long startTime = System.currentTimeMillis();
 
-        for(int j=0; j<threads; j++) {
+        for (int j = 0; j < threads; j++) {
             JoPreparedStatement pstm = stmts.get(j);
             Future<Long> job = pool.submit(() -> findPositions(pstm, fen, POS_EXACT));
             jobs.add(job);
         }
 
         long foundRowCount = 0; //  findPosition() run one chunk in this thread?
-        for(Future<Long> job : jobs)
+        for (Future<Long> job : jobs)
             foundRowCount += job.get();
 
-        long time = System.currentTimeMillis()-startTime;
+        long time = System.currentTimeMillis() - startTime;
 
         System.out.println("Found " + foundRowCount + " rows");
-        System.out.println("["+time/1000.0+" secs]");
+        System.out.println("[" + time / 1000.0 + " secs]");
 
         assertTrue(2 <= foundRowCount);
     }
 
-    private static JoPreparedStatement makeStatement(int minId, int maxId) throws SQLException
-    {
+    private static JoPreparedStatement makeStatement(int minId, int maxId) throws SQLException {
         JoConnection conn = JoConnection.get();
         String sql1 = "SELECT GId" +
                 "   FROM MoreGame " +
                 "   WHERE GId BETWEEN ? AND ?" +
                 "     AND sig_match(WhiteSignature,BlackSignature,0, ?,?) " +
-                "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)"+
+                "     AND bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
                 "   LIMIT 1073741822 ";
 /*
         String sql2 =   "SELECT MoreGame.GId" +
@@ -1112,15 +1124,14 @@ class MatSignatureV2Test {
                 "  WHERE bin_match(FEN,Bin,LOCATE(0xf0,Bin), ?,?)" +
                 "  LIMIT 1073741822 ";
 */
-        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        JoPreparedStatement pstm = new JoPreparedStatement(conn, sql1, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         pstm.setInt(1, minId);
         pstm.setInt(2, maxId);
         return pstm;
     }
 
-    private static long findPositions(JoPreparedStatement pstm, String fen, int what)
-    {
-        long foundRowCount= 0;
+    private static long findPositions(JoPreparedStatement pstm, String fen, int what) {
+        long foundRowCount = 0;
         try {
 /*
             String sql0 = "CREATE TEMPORARY TABLE prefilter ENGINE=MEMORY" +
@@ -1145,10 +1156,10 @@ class MatSignatureV2Test {
             pstm.execute();
 
             ResultSet res = pstm.getResultSet();
-            while(res.next()) {
+            while (res.next()) {
                 foundRowCount++;
                 int GId = res.getInt(1);
-                System.err.println("["+GId+"]");
+                System.err.println("[" + GId + "]");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -1159,4 +1170,62 @@ class MatSignatureV2Test {
         return foundRowCount;
     }
 
+    @Test
+    void testBinMatchPooled() throws Exception {
+        String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
+        String sql1 = "select GId" +
+                        " from MoreGame" +
+                        " where sig_match(WhiteSignature,BlackSignature,?,?)" +
+                        "   and task_push(Fen,Bin,?,?)";    //  always false
+        String sql2 = "select task_pop(1000)";
+
+        long startTime = System.currentTimeMillis();
+        long foundRowCount = 0;
+
+        //  (1) process Moregame, push tasks
+        JoConnection conn = JoConnection.get();
+        JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
+        pstm.setString(1, fen);
+        pstm.setInt(2, POS_EXACT);
+        pstm.setString(3, fen);
+        pstm.setInt(4, POS_EXACT);
+        pstm.setFetchSize(Integer.MIN_VALUE);
+        pstm.execute();
+        //  no results
+        ResultSet res = pstm.getResultSet();
+        assertFalse( res.next() );
+        pstm.close();
+
+        //  (2) collect results
+        pstm = new JoPreparedStatement(conn,sql2,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
+        pstm.setFetchSize(Integer.MIN_VALUE);
+        do {
+            pstm.execute();
+            res = pstm.getResultSet();
+            assertTrue( res.next() );
+            byte[] results = res.getBytes(1);
+            if (results==null) break;
+            foundRowCount += processResults(results);
+        } while(true);
+
+        long time = System.currentTimeMillis() - startTime;
+
+        System.out.println("Found " + foundRowCount + " rows");
+        System.out.println("[" + time / 1000.0 + " secs]");
+    }
+
+    int processResults(byte[] results) {
+        for(int i=0; i<results.length; i += 4) {
+            int GId = to_int32(results,i);
+            System.out.println("[" + GId + "]");
+        }
+        return results.length/4;
+    }
+
+    static int to_int32(byte[] b, int i) {
+        return    (int)b[i] << 24
+                | (int)b[i+1] << 16
+                | (int)b[i+2] << 8
+                | (int)b[i+3];
+    }
 }
