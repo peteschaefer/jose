@@ -1174,14 +1174,16 @@ class MatSignatureV2Test {
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
         String sql1 = "select 1 as Phase, " +
-                        "  task_push_pop(GId, 0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Result" +
+                        "  task_push(GId, 0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Pushed, "+
+                        "  task_pop(0) as Result, " +
+                        "  GId"+
                         " from MoreGame" +
                         " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
                         //" having Result is not null" +
                 " union all"+
-                        " select 2 as Phase, task_pop() as Result" +  //  collects outstanding results; blocks if necessary
-                        " from MoreGame"+
-                        " having Result is not null";
+                        " select 2 as Phase, 0 as Pushed, task_pop(1) as Result, GId" +  //  collects outstanding results; blocks if necessary
+                        " from MoreGame";
+                        //" having Result is not null";
 /*     crucial that:
         - task_push_pop() is only called for rows that have passed sig_match()
             returns a bucket of (unrelated!!,possibly empty) results
@@ -1214,7 +1216,8 @@ class MatSignatureV2Test {
         while(res.next()) {
             rowCount++;
             int phase = res.getInt(1);
-            byte[] bucket = res.getBytes(2);
+            byte[] bucket = res.getBytes(3);
+            int GId = res.getInt(4);
             if (phase==2 && res.wasNull()) break;
             foundRowCount += processResults(bucket);
         }
@@ -1237,6 +1240,7 @@ class MatSignatureV2Test {
     }
 
     static int to_int32(byte[] b, int i) {
+        assert(b.length>=i+4);
         return    ((int)b[i+3]&0x00ff) << 24
                 | ((int)b[i+2]&0x00ff) << 16
                 | ((int)b[i+1]&0x00ff) << 8
