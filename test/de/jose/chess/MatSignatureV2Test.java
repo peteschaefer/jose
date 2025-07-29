@@ -1173,26 +1173,26 @@ class MatSignatureV2Test {
     @Test
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select 1 as Phase, " +
-                        "  task_push(GId, 0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Pushed, "+
-                        "  task_pop(0) as Result, " +
-                        "  GId"+
+        String sql1 = "select task_pop(0) as Result " +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
-                        //" having Result is not null" +
+                        " where task_push(GId, WhiteSignature,BlackSignature, Fen,Bin,LOCATE(0xf0,Bin), ?,?) "+
+                        " having task_peek(0)=1 "+
                 " union all"+
-                        " select 2 as Phase, 0 as Pushed, task_pop(1) as Result, GId" +  //  collects outstanding results; blocks if necessary
-                        " from MoreGame";
-                        //" having Result is not null";
+                        " select task_pop(1) as Result" +  //  collects outstanding results; blocks if necessary
+                        " from MoreGame"+
+                        " having task_peek(1)=1 ";
 /*     crucial that:
         - task_push_pop() is only called for rows that have passed sig_match()
             returns a bucket of (unrelated!!,possibly empty) results
         - task_pop() is called afterwards; as often as there are result 'buckets'
             'from MoreGame' creates a loop of sufficient length
             break as soon as NULL is encountered
- *//*   todo 'having Result' filters for non-null results. Great!
-        but it seems like task_pop() is called to often, eating results in the process.
-        we should try "having task_peek() is not null"
+ */
+/*   'having' is used to skip null results. But the evaluation order is crucial:
+        in phase 2:     if task_peek()==1 then task_pop()   OK
+        in phase 1:     task_push(), if task_peek() then task_pop()
+                i.e., it is crucial that task_push() must be called before task_peek()
+                note that task_push() >= 0 is always true. We want task_push() be called before 'having'.
     */
         withDBServer();
 
@@ -1205,8 +1205,8 @@ class MatSignatureV2Test {
         JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
         pstm.setString(1, fen);
         pstm.setInt(2, POS_EXACT);
-        pstm.setString(3, fen);
-        pstm.setInt(4, POS_EXACT);
+//        pstm.setString(3, fen);
+//        pstm.setInt(4, POS_EXACT);
 //        pstm.setString(5, fen);
 //        pstm.setInt(6, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
@@ -1215,10 +1215,9 @@ class MatSignatureV2Test {
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
             rowCount++;
-            int phase = res.getInt(1);
-            byte[] bucket = res.getBytes(3);
-            int GId = res.getInt(4);
-            if (phase==2 && res.wasNull()) break;
+            //int phase = res.getInt(1);
+            byte[] bucket = res.getBytes(1);
+            //if (phase==2 && res.wasNull()) break;
             foundRowCount += processResults(bucket);
         }
         pstm.close();
