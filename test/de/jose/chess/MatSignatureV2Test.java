@@ -1173,11 +1173,11 @@ class MatSignatureV2Test {
     @Test
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?)" +
+        String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?), 1" +
                         " from MoreGame" +
                         " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
                       "union all"+
-                        " select task_pop()" +  //  collects outstanding results; blocks if necessary
+                        " select task_pop(), 2" +  //  collects outstanding results; blocks if necessary
                         " from MoreGame";       //  returns NULL at end
 /*     crucial that:
         - task_push_pop() is only called for rows that have passed sig_match()
@@ -1202,7 +1202,8 @@ class MatSignatureV2Test {
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
             byte[] bucket = res.getBytes(1);
-            if (res.wasNull()) break;
+            int phase = res.getInt(2);
+            if (phase==2 && res.wasNull()) break;
             foundRowCount += processResults(bucket);
         }
         pstm.close();
