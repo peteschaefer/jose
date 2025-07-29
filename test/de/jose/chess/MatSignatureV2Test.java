@@ -1174,9 +1174,10 @@ class MatSignatureV2Test {
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
         String sql1 = "select 1 as Phase, " +
-                        "  task_push_pop(GId,WhiteSignature,BlackSignature,Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Result" +
+                        "  task_push_pop(GId, 0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) as Result" +
                         " from MoreGame" +
-                        " having Result is not null" +
+                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
+                        //" having Result is not null" +
                 " union all"+
                         " select 2 as Phase, task_pop() as Result" +  //  collects outstanding results; blocks if necessary
                         " from MoreGame"+
@@ -1189,7 +1190,7 @@ class MatSignatureV2Test {
             break as soon as NULL is encountered
  *//*   todo 'having Result' filters for non-null results. Great!
         but it seems like task_pop() is called to often, eating results in the process.
-        we should need "having task_peek() is not null"
+        we should try "having task_peek() is not null"
     */
         withDBServer();
 
@@ -1202,6 +1203,8 @@ class MatSignatureV2Test {
         JoPreparedStatement pstm = new JoPreparedStatement(conn,sql1,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
         pstm.setString(1, fen);
         pstm.setInt(2, POS_EXACT);
+        pstm.setString(3, fen);
+        pstm.setInt(4, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
 
