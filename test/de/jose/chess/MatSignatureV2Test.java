@@ -1173,11 +1173,10 @@ class MatSignatureV2Test {
     @Test
     void testBinMatchPooled() throws Exception {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select GId" +
+        String sql1 = "select task_push_pop(GId,Fen,Bin,?,?)" +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,?,?)" +
-                        "   and task_push(Fen,Bin,?,?)";    //  always false
-        String sql2 = "select task_pop(1000)";
+                        " where sig_match(WhiteSignature,BlackSignature,?,?)";
+        String sql2 = "select task_pop(1000)";  //  while not null
 
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
@@ -1191,9 +1190,12 @@ class MatSignatureV2Test {
         pstm.setInt(4, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
-        //  no results
+        //  some results, maybe
         ResultSet res = pstm.getResultSet();
-        assertFalse( res.next() );
+        while(res.next()) {
+            byte[] results = res.getBytes(1);
+            foundRowCount += processResults(results);
+        }
         pstm.close();
 
         //  (2) collect results
@@ -1215,6 +1217,7 @@ class MatSignatureV2Test {
     }
 
     int processResults(byte[] results) {
+        if (results==null) return 0;
         for(int i=0; i<results.length; i += 4) {
             int GId = to_int32(results,i);
             System.out.println("[" + GId + "]");
