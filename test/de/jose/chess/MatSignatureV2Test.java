@@ -1175,8 +1175,10 @@ class MatSignatureV2Test {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
         String sql1 = "select task_push_pop(GId,Fen,Bin,?,?)" +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,?,?)";
-        String sql2 = "select task_pop(1000)";  //  while not null
+                        " where sig_match(WhiteSignature,BlackSignature,?,?)"+
+                      "union all"+
+                        " select task_pop()" +  //  collects outstanding results; blocks if necessary
+                        " from MoreGame";       //  returns NULL at end
 
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
@@ -1190,25 +1192,15 @@ class MatSignatureV2Test {
         pstm.setInt(4, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
-        //  some results, maybe
+
         ResultSet res = pstm.getResultSet();
         while(res.next()) {
-            byte[] results = res.getBytes(1);
-            foundRowCount += processResults(results);
+            int GId = res.getInt(1);
+            if (res.wasNull()) break;
+            System.err.println("[" + GId + "]");
+            foundRowCount++;
         }
         pstm.close();
-
-        //  (2) collect results
-        pstm = new JoPreparedStatement(conn,sql2,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
-        pstm.setFetchSize(Integer.MIN_VALUE);
-        do {
-            pstm.execute();
-            res = pstm.getResultSet();
-            assertTrue( res.next() );
-            byte[] results = res.getBytes(1);
-            if (results==null) break;
-            foundRowCount += processResults(results);
-        } while(true);
 
         long time = System.currentTimeMillis() - startTime;
 
