@@ -1205,6 +1205,8 @@ class MatSignatureV2Test {
         pstm.setInt(2, POS_EXACT);
         pstm.setString(3, fen);
         pstm.setInt(4, POS_EXACT);
+//        pstm.setString(5, fen);
+//        pstm.setInt(6, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
 
