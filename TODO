@@ -127,32 +127,43 @@ Maintenance:
 
 [+] (1) port MatSignature(V2) from Java to C++
     not too hard because it involves mainly bit-twiddling
-    [x] chess::MatSignature class
-    [x] unit tests
-    [x] unit test with real games (pgn?)
-    [.] get rid of unnecesary dependencies in chess::Board (unistring,text,units)
     [ ] sanitizer. we don't want to crash the server.
-    [x] mysql user-defined-functions
-    [x] unit test udf functions
-    [x] integrate with SeachRecord
-    [x] launch MySQL with Grant Table (we have to)
-    [x] udf_version()
 
 [ ] (2) port replay logic from Java to C++
-    [x] rule engine: chess::Board already there
-    [x] binary decoder
-        [x] chess::Board piece indexing needs to be consistent with de.jose.chess.Board
-            sort by PieceListEntry.index, PiecListEntry.originFile ?
-    [x] Zobrist keys: already there. The coding is different from Java but should not be a problem
-
     [-] bin_match() ~ 20sec for a full search
     [-] bin_match() with parallel Connections ~ 17 sec
 
 [ ] (3) read MyISAM files natively
-    [x] lift code from MySQL sources (myisamchk e.g.)
-    [x] full-table scan
-    [ ] index-range scan
-    [X] in parallel (OpenMP or TBB?)
+
+[ ] (4) native thread pool
+    [ ] boost::asio::thread_pool
+    [ ] collect rows into buckets (just like BatchThreadPool)
+    [ ] thread-safe result queue (possibly with bulk operations, push_many, pop_many)
+
+    [ ]     select task_push_pop(Fen,Bin,?,?)
+            from MoreGame
+            where sig_match(...)
+        pushes a task; retrieves some results, if available
+    [ ]     select task_pop(63)
+        pops outstanding results, blocks if necessary
+    [ ] do we need a from clause? is there such a thing as a generator in mysql?
+    [ ] pool has two states
+        - open: accept new tasks
+        - closed: join() will wait for outstanding task
+        task_push_pop()
+            -enters open state;
+            -add a row to bucket;
+            -pushes task if bucket is full
+        task_pop()
+            -enters closed state;
+            -pushes rest bucket;
+            -retrieve tasks from queue;
+            -join() if necessary
+        task_stop()
+            -enters closed state;
+            -discards tasks
+
+
 
 Comparison:
 (0) SQL + Java replay (parallel)        13 seconds
