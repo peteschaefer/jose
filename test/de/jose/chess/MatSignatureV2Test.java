@@ -1171,7 +1171,8 @@ class MatSignatureV2Test {
     }
 
     @Test
-    void testBinMatchPooled() throws Exception {
+    void testBinMatchPooled() throws Exception
+    {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
         String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?), 1" +
                         " from MoreGame" +
@@ -1186,6 +1187,8 @@ class MatSignatureV2Test {
             'from MoreGame' creates a loop of sufficient length
             break as soon as NULL is encountered
  */
+        withDBServer();
+
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
 

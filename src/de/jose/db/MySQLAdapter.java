@@ -1118,7 +1118,8 @@ public class MySQLAdapter
 			}
 
 //		defineUDF(conn,"bin_match", "Integer", libFile);
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			JoConnection.release(conn);
 		}

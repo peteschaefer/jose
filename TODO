@@ -128,42 +128,16 @@ Maintenance:
 [+] (1) port MatSignature(V2) from Java to C++
     not too hard because it involves mainly bit-twiddling
     [ ] sanitizer. we don't want to crash the server.
-
+    [ ] crash in sig_match when searching "6k1/p1p1rppn/3p3p/1rp5/4P3/1P3N2/P1P1RPPP/R4K2 b - - 1 1"
 [ ] (2) port replay logic from Java to C++
     [-] bin_match() ~ 20sec for a full search
     [-] bin_match() with parallel Connections ~ 17 sec
 
 [ ] (3) read MyISAM files natively
 
-[ ] (4) native thread pool
-    [ ] boost::asio::thread_pool
-    [ ] collect rows into buckets (just like BatchThreadPool)
-    [ ] thread-safe result queue (possibly with bulk operations, push_many, pop_many)
-
-    [ ]     select task_push_pop(Fen,Bin,?,?)
-            from MoreGame
-            where sig_match(...)
-        pushes a task; retrieves some results, if available
-    [ ]     select task_pop(63)
-        pops outstanding results, blocks if necessary
-    [ ] do we need a from clause? is there such a thing as a generator in mysql?
-    [ ] pool has two states
-        - open: accept new tasks
-        - closed: join() will wait for outstanding task
-        task_push_pop()
-            -enters open state;
-            -add a row to bucket;
-            -pushes task if bucket is full
-        task_pop()
-            -enters closed state;
-            -pushes rest bucket;
-            -retrieve tasks from queue;
-            -join() if necessary
-        task_stop()
-            -enters closed state;
-            -discards tasks
-
-
+[-] (4) native thread pool
+    [x] boost::asio::thread_pool
+    -> not fast enough
 
 Comparison:
 (0) SQL + Java replay (parallel)        13 seconds
