@@ -1174,23 +1174,58 @@ class MatSignatureV2Test {
     void testBinMatchPooled() throws Exception
     {
         String fen = "2r5/p1p2bpr/3pkp2/2p3p1/P1P1P1P1/1P1RNPKP/7R/8 b - - 36 1";
-        String sql1 = "select task_push_pop(GId,Fen,Bin,LOCATE(0xf0,Bin), ?,?), 1" +
+        String sql1 = "select task_pop(0) as Result, 1 as Phase " +
                         " from MoreGame" +
-                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)"+
-                      "union all"+
-                        " select task_pop(), 2" +  //  collects outstanding results; blocks if necessary
-                        " from MoreGame";       //  returns NULL at end
-/*     crucial that:
-        - task_push_pop() is only called for rows that have passed sig_match()
-            returns a bucket of (unrelated!!,possibly empty) results
-        - task_pop() is called afterwards; as often as there are result 'buckets'
-            'from MoreGame' creates a loop of sufficient length
-            break as soon as NULL is encountered
- */
+                        " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)" +
+                        "   and task_push(GId,0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) "+
+                        "   and task_peek(0) ";     //  collects result if available
+                /*" union all ("+
+                        " select task_pop(1) as Result, 2 as Phase" +  //  collects outstanding results; blocks if necessary
+                        " from MoreGame"+
+                        " where task_peek(1) " +
+                        " limit 254000)";   //  max. number of buckets = table size / bucket_size
+                 */
+    /*     crucial that:
+            - task_push_pop() is only called for rows that have passed sig_match()
+                returns a bucket of (unrelated!!,possibly empty) results
+            - task_pop() is called afterwards; as often as there are result 'buckets'
+                'from MoreGame' creates a loop of sufficient length
+                break as soon as NULL is encountered
+     */
+    /*
+       task_peek() is used to skip null results. But the evaluation order is crucial:
+        in phase 2:     if task_peek()==1 then task_pop()   OK
+        in phase 1:     task_push(), if task_peek() then task_pop()
+                i.e., it is crucial that task_push() must be called before task_peek()
+                note that task_push() >= 0 is always true.
+    */
+    /*
+        first section of UNION needs abt. 9 secs (early-cut-off check over all rows)
+        second section needs 20 secs (=waiting for BinReader tasks to complete).
+        Java (jose), and josemi does it < 10 secs.
+        Why is this so slow???
+
+        In Phase 1 task_push() pushes ~ 9900 tasks with little progress.
+        task_pop(1) waits for all oft them to complete (long)
+        then we have lots of unecessary task_pop(1) calls (out queue is empty and remains so)
+
+        Q1: why is there such a huge backlog with very little progress?
+            b/c the main thread occupies the cpu
+            this is different with Client/Server, where there is breathing space due to network communication
+            s.t. interleaving i/o and computation works better.
+            Java ThreadPool has a very small backlog.
+        Q2: can we short-circuit once the queue remains empty?
+
+        sig_match() and task_push() can be combined into one call. No noticeable difference, however.
+    */
+        /*
+
+         */
         withDBServer();
 
         long startTime = System.currentTimeMillis();
         long foundRowCount = 0;
+        long rowCount=0;
 
         //  (1) process Moregame, push tasks
         JoConnection conn = JoConnection.get();
@@ -1199,20 +1234,35 @@ class MatSignatureV2Test {
         pstm.setInt(2, POS_EXACT);
         pstm.setString(3, fen);
         pstm.setInt(4, POS_EXACT);
+//        pstm.setString(5, fen);
+//        pstm.setInt(6, POS_EXACT);
         pstm.setFetchSize(Integer.MIN_VALUE);
         pstm.execute();
 
         ResultSet res = pstm.getResultSet();
+        byte[] bucket;
         while(res.next()) {
-            byte[] bucket = res.getBytes(1);
+            rowCount++;
+            bucket = res.getBytes(1);
             int phase = res.getInt(2);
-            if (phase==2 && res.wasNull()) break;
+            if (phase==2 && bucket!=null) break;
+
             foundRowCount += processResults(bucket);
         }
         pstm.close();
 
         long time = System.currentTimeMillis() - startTime;
+        System.out.println("[" + time / 1000.0 + " secs]");
 
+        //  sweep up remaining tasks
+        do {
+            bucket = conn.selectBytes("select task_pop(1)");
+            foundRowCount += processResults(bucket);
+        } while(bucket!=null);
+
+        time = System.currentTimeMillis() - startTime;
+
+        System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
         System.out.println("[" + time / 1000.0 + " secs]");
     }
@@ -1227,9 +1277,10 @@ class MatSignatureV2Test {
     }
 
     static int to_int32(byte[] b, int i) {
-        return    (int)b[i] << 24
-                | (int)b[i+1] << 16
-                | (int)b[i+2] << 8
-                | (int)b[i+3];
+        assert(b.length>=i+4);
+        return    ((int)b[i+3]&0x00ff) << 24
+                | ((int)b[i+2]&0x00ff) << 16
+                | ((int)b[i+1]&0x00ff) << 8
+                | ((int)b[i]&0x00ff);
     }
 }

@@ -456,6 +456,22 @@ public class JoConnection
 		return defaultValue;
 	}
 
+	public byte[] selectBytes(String sql)
+			throws SQLException
+	{
+		JoStatement stm = null;
+		try {
+			stm = new JoStatement(this);
+			stm.setMaxRows(1);
+			stm.execute(sql);
+			if (stm.next())
+				return stm.getBytes(1);
+		} finally {
+			if (stm!=null) stm.close();
+		}
+		return null;
+	}
+
 	public long selectLong(String sql, long defaultValue)
 			throws SQLException
 	{
