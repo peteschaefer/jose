@@ -1201,17 +1201,18 @@ class MatSignatureV2Test {
     /*
         first section of UNION needs abt. 9 secs (early-cut-off check over all rows)
         second section needs 20 secs (=waiting for BinReader tasks to complete).
-        jose, josemi does it < 10 secs.
+        Java (jose), and josemi does it < 10 secs.
         Why is this so slow???
 
-        In Phase 1 task_push() pushes ~ 9900 tasks.
+        In Phase 1 task_push() pushes ~ 9900 tasks with little progress.
         task_pop(1) waits for all oft them to complete (long)
         then we have lots of unecessary task_pop(1) calls (out queue is empty and remains so)
 
         Q1: why is there such a huge backlog with very little progress?
             b/c the main thread occupies the cpu
-            this is different with Client/Server, where there are free time slots due to network communication
-            s.t. interleaving i/o and computation works better
+            this is different with Client/Server, where there is breathing space due to network communication
+            s.t. interleaving i/o and computation works better.
+            Java ThreadPool has a very small backlog.
         Q2: can we short-circuit once the queue remains empty?
 
         sig_match() and task_push() can be combined into one call. No noticeable difference, however.
