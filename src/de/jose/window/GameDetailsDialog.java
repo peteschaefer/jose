@@ -30,13 +30,15 @@ import de.jose.view.input.JDateField;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class GameDetailsDialog
-		extends JoTabDialog
+		extends JoDialog
 		implements PgnConstants
 {
 	protected int GId;
@@ -60,12 +62,13 @@ public class GameDetailsDialog
 								   GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL,
 								   INSETS_NORMAL, 0,0);
 
-    protected static final Dimension SIZE = new Dimension(400,260);
+    protected static final Dimension SIZE = new Dimension(640,640);
 
 	public GameDetailsDialog(String name)
 	{
 		super(name,true);
         frame.setSize(SIZE.width,SIZE.height);
+		frame.setMinimumSize(SIZE);
 
 		int iconSize = 14;
 		Color iconColor = Color.lightGray;
@@ -73,13 +76,18 @@ public class GameDetailsDialog
 		Icon players = FontUtil.awesomeIcon('\ue068',iconSize,iconColor);	// two people
 		Icon more = FontUtil.awesomeIcon('\uf4ad',iconSize,iconColor);	//
 
-		Font fnt = getTabbedPane().getFont();
-		fnt = fnt.deriveFont(Font.BOLD,13);
-		getTabbedPane().setFont(fnt);
+		//Font fnt = getTabbedPane().getFont();
+		//fnt = fnt.deriveFont(Font.BOLD,13);
+		//getTabbedPane().setFont(fnt);
 
-		addTab(newGridPane(),event);
-		addTab(newGridPane(),players);
-		addTab(newGridPane(),more);
+		JComponent pane = getElementPane();
+		pane.setLayout(new GridLayout(3,1));
+		pane.add(createTab0(event));
+		pane.add(createTab1(players));
+		pane.add(createTab2(more));
+		//addGoup(newGridPane(),event);
+		//addGroup(newGridPane(),players);
+		//addGroup(newGridPane(),more);
 
 		addButtons(OK_CANCEL);
 		addSpacer(20);
@@ -89,23 +97,23 @@ public class GameDetailsDialog
 
 		values = new HashMap();
 
-		JoMenuBar.assignMnemonics(getTabbedPane());
+		//JoMenuBar.assignMnemonics(getTabbedPane());
 		JoMenuBar.assignMnemonics(buttonPane);
 
-		JoDialog.rescaleFonts(getTabbedPane());
+		//JoDialog.rescaleFonts(getTabbedPane());
 		JoDialog.rescaleFonts(buttonPane);
 	}
 
-	public void initTab0(Component comp0)
+	public JComponent createTab0(Icon icon)
 	{
-		JPanel tab0 = (JPanel)comp0;
+		JPanel tab0 = newGridBox("dialog.game.tab.1");
 		JTextField field;
 
 		AutoCompleteTextField.Completer eventCompleter = new DBFieldCompleter("Event","Name");
 		AutoCompleteTextField.Completer siteCompleter = new DBFieldCompleter("Site","Name");
 
 		GridBagConstraints labelOne = LABEL_ONE_NOPAD;
-		tab0.add(newLabel("dialog.details.event"), labelOne);
+		tab0.add(newLabel("dialog.details.event",icon), labelOne);
 		add(tab0, newTextField(TAG_EVENT,eventCompleter), ELEMENT_ROW);
 
 		tab0.add(newLabel("dialog.details.site"), labelOne);
@@ -128,16 +136,17 @@ public class GameDetailsDialog
 		setColumns(field,8);
 
 		tab0.add(new JLabel(""),ELEMENT_REMAINDER);
+		return tab0;
 	}
 
-	public void initTab1(Component comp1)
+	public JComponent createTab1(Icon icon)
 	{
-		JPanel tab1 = (JPanel)comp1;
+		JPanel tab1 = newGridBox("dialog.game.tab.2");
 		JTextField field;
 
 		GridBagConstraints labelOne = LABEL_ONE_NOPAD;
 		tab1.add(newLabel(""), labelOne);
-		tab1.add(newLabel("dialog.details.white"), ELEMENT_TWO_SMALL);
+		tab1.add(newLabel("dialog.details.white",icon), ELEMENT_TWO_SMALL);
 		tab1.add(newLabel("dialog.details.black"), ELEMENT_ROW_SMALL);
 
 		AutoCompleteTextField.Completer playerCompleter = new DBFieldCompleter("Player","Name");
@@ -168,11 +177,12 @@ public class GameDetailsDialog
 		tab1.add(box, ELEMENT_ROW);
 
 		tab1.add(new JLabel(""),ELEMENT_REMAINDER);
+		return tab1;
 	}
 
-	public void initTab2(Component comp2)
+	public JComponent createTab2(Icon icon)
 	{
-		JPanel tab2 = (JPanel)comp2;
+		JPanel tab2 = newGridBox("dialog.game.tab.3");
 		JTextField field;
 
 		moreTags = newGridPane();
@@ -202,6 +212,7 @@ public class GameDetailsDialog
 		tab2.add(scroller,ELEMENT_REMAINDER);
 
 //		tab2.add(new JLabel(""),ELEMENT_REMAINDER);
+		return tab2;
 	}
 
 	public void show()
@@ -232,11 +243,11 @@ public class GameDetailsDialog
 		game.getTagValues(values);
 	}
 
-	public void readTab0()  { read(0,values); }
-	public void readTab1()  {
-		read(1,values);
+	public void read() {
+		super.read(values);
 		if (values.get(TAG_RESULT)==null)
 			setValueByName(TAG_RESULT,"*");
+		readTab2();
 	}
 
 	private JTextField getMoreKey(int j)
@@ -297,8 +308,6 @@ public class GameDetailsDialog
 
 	public void readTab2()
 	{
-		read(2,values);
-
 		Iterator i = game.getMoreTags().iterator();
 		int j=1;
 		while (i.hasNext()) {
