@@ -1177,32 +1177,48 @@ class MatSignatureV2Test {
                         " from MoreGame" +
                         " where sig_match(WhiteSignature,BlackSignature,LOCATE(0xf0,Bin), ?,?)" +
                         "   and task_push(GId,0,0, Fen,Bin,LOCATE(0xf0,Bin), ?,?) "+
-                        "   and task_peek(0) "+     //  collects result if available
-                " union all ("+
+                        "   and task_peek(0) ";     //  collects result if available
+                /*" union all ("+
                         " select task_pop(1) as Result, 2 as Phase" +  //  collects outstanding results; blocks if necessary
                         " from MoreGame"+
                         " where task_peek(1) " +
                         " limit 254000)";   //  max. number of buckets = table size / bucket_size
-/*     crucial that:
-        - task_push_pop() is only called for rows that have passed sig_match()
-            returns a bucket of (unrelated!!,possibly empty) results
-        - task_pop() is called afterwards; as often as there are result 'buckets'
-            'from MoreGame' creates a loop of sufficient length
-            break as soon as NULL is encountered
- */
-/*   task_peek() is used to skip null results. But the evaluation order is crucial:
+                 */
+    /*     crucial that:
+            - task_push_pop() is only called for rows that have passed sig_match()
+                returns a bucket of (unrelated!!,possibly empty) results
+            - task_pop() is called afterwards; as often as there are result 'buckets'
+                'from MoreGame' creates a loop of sufficient length
+                break as soon as NULL is encountered
+     */
+    /*
+       task_peek() is used to skip null results. But the evaluation order is crucial:
         in phase 2:     if task_peek()==1 then task_pop()   OK
         in phase 1:     task_push(), if task_peek() then task_pop()
                 i.e., it is crucial that task_push() must be called before task_peek()
                 note that task_push() >= 0 is always true.
-    *//*
+    */
+    /*
         first section of UNION needs abt. 9 secs (early-cut-off check over all rows)
         second section needs 20 secs (=waiting for BinReader tasks to complete).
         jose, josemi does it < 10 secs.
         Why is this so slow???
 
+        In Phase 1 task_push() pushes ~ 9900 tasks.
+        task_pop(1) waits for all oft them to complete (long)
+        then we have lots of unecessary task_pop(1) calls (out queue is empty and remains so)
+
+        Q1: why is there such a huge backlog with very little progress?
+            b/c the main thread occupies the cpu
+            this is different with Client/Server, where there are free time slots due to network communication
+            s.t. interleaving i/o and computation works better
+        Q2: can we short-circuit once the queue remains empty?
+
         sig_match() and task_push() can be combined into one call. No noticeable difference, however.
     */
+        /*
+
+         */
         withDBServer();
 
         long startTime = System.currentTimeMillis();
@@ -1222,9 +1238,10 @@ class MatSignatureV2Test {
         pstm.execute();
 
         ResultSet res = pstm.getResultSet();
+        byte[] bucket;
         while(res.next()) {
             rowCount++;
-            byte[] bucket = res.getBytes(1);
+            bucket = res.getBytes(1);
             int phase = res.getInt(2);
             if (phase==2 && bucket!=null) break;
 
@@ -1233,6 +1250,15 @@ class MatSignatureV2Test {
         pstm.close();
 
         long time = System.currentTimeMillis() - startTime;
+        System.out.println("[" + time / 1000.0 + " secs]");
+
+        //  sweep up remaining tasks
+        do {
+            bucket = conn.selectBytes("select task_pop(1)");
+            foundRowCount += processResults(bucket);
+        } while(bucket!=null);
+
+        time = System.currentTimeMillis() - startTime;
 
         System.out.println("Visited " + rowCount + " rows");
         System.out.println("Found " + foundRowCount + " rows");
