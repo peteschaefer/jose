@@ -86,10 +86,10 @@ public class QueueThreadPool<R extends Runnable> extends ThreadPoolExecutor
                 Iterator<Future<R>> i =  futures.keySet().iterator();
                 while(i.hasNext()) {
                     Future<R> f = i.next();
-                    if (f.isDone())
-                        i.remove();
-                    else
+                    if (!f.isDone())
                         f.get(200, TimeUnit.MILLISECONDS);
+                    assert(f.isDone());
+                    i.remove();
                 }
             } catch (InterruptedException e) {
                 continue;
