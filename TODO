@@ -89,8 +89,9 @@ Maintenance:
 === Position Search Features
 
 [ ] bug: results go missing late in search
-    does not terminate
+    - does not terminate ?
     8/6k1/1N4n1/p5pp/8/5BKP/8/8
+    verify against josemi
 
 [x] search pawn structure
 [x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
