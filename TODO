@@ -88,6 +88,10 @@ Maintenance:
 
 === Position Search Features
 
+[ ] bug: results go missing late in search
+    does not terminate
+    8/6k1/1N4n1/p5pp/8/5BKP/8/8
+
 [x] search pawn structure
 [x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
 [?] cache MoreGame in memory
@@ -129,11 +133,11 @@ Maintenance:
     not too hard because it involves mainly bit-twiddling
     [ ] sanitizer. we don't want to crash the server.
 
-[ ] (2) port replay logic from Java to C++
+[x] (2) port replay logic from Java to C++
     [-] bin_match() ~ 20sec for a full search
     [-] bin_match() with parallel Connections ~ 17 sec
 
-[ ] (3) read MyISAM files natively
+[x] (3) read MyISAM files natively
 
 [-] (4) native thread pool
     [x] boost::asio::thread_pool
@@ -143,7 +147,7 @@ Comparison:
 (0) SQL + Java replay (parallel)        13 seconds
 (1) sig_match (early cutoffs in SQL)    10 seconds
 (2) bin_match (replay in SQL, parallel) 10 seconds
-(3) josemi (replay in cli tool)          7 seconds
+(3) josemi (replay in cli tool)        < 7 seconds
 (4) boost::asio + udf functions         30 seconds :(
 
 (1) is easy to implement
