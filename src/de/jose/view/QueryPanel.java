@@ -912,8 +912,11 @@ public class QueryPanel
 
     public void searchCurrentPosition()
     {
-        posEditor.defaultPosition();;
-        cardPanel.setSelectedIndex(2);
+		if (posEditor!=null)
+        	posEditor.defaultPosition();
+		if (cardPanel!=null)
+        	cardPanel.setSelectedIndex(2);
+		//	else: not yet inited; can't wait
     }
 
     //-------------------------------------------------------------------------------

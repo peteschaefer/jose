@@ -419,7 +419,18 @@ abstract public class IntervalCacheModel
 										addResult(res.getInt(1));
 									else switch(posFilter.accept(res, parallelPosSearch ? acceptCallback:null))
 									{
-										case REJECT:	cnt_early++; break;
+										case REJECT:
+											cnt_early++;
+											/*MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
+											if (adapter.udfSigMatch) {
+												/*	not supposed to happen. Early cut-offs should have been filtered by can_reach()
+													This indicates that either:
+													- can_reach() is broken server-side
+													- accept() is broken client-side (e.g. by a thread-unsafe copy of MatSignatureV2 !!)
+												 * /
+												throw new SQLException("early-cutoffs should have been handled by sig_match()");
+											}*/
+											break;
 										case WAIT:		/*will call back asynchroneously*/ break;
 										case ACCEPT:
 											addResult(res.getInt(1));

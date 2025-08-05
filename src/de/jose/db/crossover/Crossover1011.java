@@ -220,14 +220,14 @@ public class Crossover1011
 	}
 
 
-	public static void launchDBServer() throws Exception {
+	public static void launchDBServer(String datadir) throws Exception {
 		if (Version.linux) {
 			System.setProperty("java.library.path", "lib/Linux_amd64");
-			System.setProperty("jose.datadir","/home/nightrider/src/jose/database");
+			System.setProperty("jose.datadir",datadir);
 		}
 		if (Version.windows) {
 			System.setProperty("java.library.path", ".;lib/Windows");
-			System.setProperty("jose.datadir","C:\\dev\\jose\\work\\database");
+			System.setProperty("jose.datadir",datadir);
 		}
 		System.setProperty("jose.splash","off");
 		System.setProperty("jose.console.output","true");

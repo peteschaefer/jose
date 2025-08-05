@@ -46,12 +46,6 @@ public class Version
 	/** project home page   */
 	public static final String  projectURL      = SplashScreen.url;
 
-	/**
-	 * do we need MySQL UDFs ? currently not.
-	 * if so, we must enable the grant tables.
-	 */
-	public static final boolean MYSQL_UDF = false;
-
 	/**	Java Runtime Version
 	 */
 	public static final String java				= getSystemProperty("java.version");

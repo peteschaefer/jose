@@ -144,6 +144,12 @@ public class MatSignatureV2 implements MatSignature
         bfeat.setSignature(bsig);
     }
 
+    //  assigment
+    public MatSignatureV2 init(MatSignatureV2 that) {
+        init(that.getWhiteSignature(), that.getBlackSignature());
+        return this;
+    }
+
     public void setBoard(Board board)
     {
         clear();
