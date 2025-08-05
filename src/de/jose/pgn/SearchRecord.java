@@ -488,6 +488,9 @@ public class SearchRecord implements Cloneable
 			//	Position Search
 			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
 			boolean sigMatchSql = adapter.udfSigMatch;
+			//	udfSigMatch is currently disabled but checked into main branch.
+			//	Can be enabled as soon as native libraries are considered ready for production
+			//	(udf.dll, libudf.so, ...)
 
 			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, ");
 			if (sigMatchSql)

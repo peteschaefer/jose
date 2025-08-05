@@ -62,7 +62,7 @@ public class MySQLAdapter
 	public boolean udfStripDiacritics=false;
 	public boolean udfCanReach=false;
 	public boolean udfSigMatch=false;
-	public boolean udfBinMatch=false;
+//	public boolean udfBinMatch=false;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -1105,19 +1105,22 @@ public class MySQLAdapter
 			this.udfVersion = conn.selectInt("select udf_version()");
 
 			if (udfVersion >= 1012) {
+				//	used for text comparison
 				defineUDF(conn, "strip_diacritics", "String", libFile);
 				this.udfStripDiacritics = true;
+				//	still used?
 				defineUDF(conn, "can_reach", "Integer", libFile);
 				this.udfCanReach = true;
 			}
 			if (udfVersion >= 1013) {
+				//	currently disabled; can be switched on, soon
 				defineUDF(conn, "sig_match", "Integer", libFile);
-				this.udfSigMatch = true;
-				defineUDF(conn, "bin_match", "Integer", libFile);
-				this.udfBinMatch = true;
-				defineUDF(conn, "task_push", "Integer", libFile);
-				defineUDF(conn, "task_pop", "String", libFile);
-				defineUDF(conn, "task_peek", "Integer", libFile);
+				this.udfSigMatch = false;
+				//	not in used:
+//				defineUDF(conn, "bin_match", "Integer", libFile);
+//				defineUDF(conn, "task_push", "Integer", libFile);
+//				defineUDF(conn, "task_pop", "String", libFile);
+//				defineUDF(conn, "task_peek", "Integer", libFile);
 			}
 
 //		defineUDF(conn,"bin_match", "Integer", libFile);
