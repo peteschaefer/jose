@@ -231,7 +231,7 @@ Comparison:
 ==== Project
 
 [ ] v1.6
-    [ ] experimental/mariadb (which version?)
+    [-] experimental/mariadb (which version?)
         [ ] myisam format update required. is it backward compatible?
     [ ] experimental/native-matsig sig_match() from udf.dll
     [ ] experimental/josemi for purely positional search

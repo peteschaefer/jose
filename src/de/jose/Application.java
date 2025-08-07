@@ -1118,6 +1118,7 @@ public class Application
 			}
 		};
 		map.put("dnd.move.top.level",action);
+		map.put("dnd.move.up",action);
 
 
         action = new CommandAction() {
@@ -3296,6 +3297,10 @@ public class Application
 		}
 		else if (cmd.code.equalsIgnoreCase("dnd.move.top.level")) {
 			task = new MoveTask(src, 0, false,true,false);
+		}
+		else if (cmd.code.equalsIgnoreCase("dnd.move.up")) {
+			Collection parentCollection = (Collection)cmd.moreData;
+			task = new MoveTask(src, parentCollection.Id, true,true,false);
 		}
 
 		if (!(task instanceof MoveTask) && (task.size() > 500))

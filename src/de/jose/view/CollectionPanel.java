@@ -392,6 +392,15 @@ public class CollectionPanel
         if (currentCollection!=null && !currentCollection.isTopLevel()) {
 			list.add("dnd.move.top.level");
 			list.add(source);
+			if (source.isCollection() && source.size()==1)
+			{
+				GameSource contents = GameSource.collectionContents(source.firstId());
+				Collection parentCollection = getCollection(path.getParentPath());
+
+				list.add("dnd.move.up");
+				list.add(contents);
+				list.add(parentCollection);
+			}
 		}
 
         if (currentCollection != null)
