@@ -91,20 +91,8 @@ Maintenance:
 === Position Search Features
 
 [x] search pawn structure
-[ ] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
-[?] cache MoreGame in memory
-    [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
-    [x] -Xmx64G
-    [x] read-through ResultSet cache
-        works great!
-        caches 16M rows ~= 3GB
-        speedup from 11 to 4.2 s !
-    [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
-    [x] HANDLER is useless
-    [-] try MariaDB shared memory
-    [ ] disable if not enough memory available
-    [x] integrate with (Pos)SearchRecord, ParamStatement
-        [ ] test with, w/out CId, Comments, Info, Variations, Reversed
+[x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[-] cache MoreGame in memory
 
 [ ] search pawns on files:
     * compare number of pawns by file
@@ -112,10 +100,13 @@ Maintenance:
     * late cutoff sig: push pawns forth to 7th row
     * can be combined with subset search
         (o) pawn search
-            [ ] subset
+            [x] subset
             [ ] per file
 [ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
+    [ ] interval slider control |---[--]---|
+[ ] search officers pattern
+    -> access to Position, check silent moves too = more expensive)
 [ ] search NAGs
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
 [ ] search mate, stalemate, check (double check?)
@@ -136,48 +127,42 @@ Maintenance:
     [x] full-table scan
     [x] index-range scan
         [ ] index skip ? index search ?
-    [ ] port PosSearchRecord, PosFilter
+    [x] port PosSearchRecord, PosFilter
         [x] search pos,pawns
         [x] unit tests
-        [ ] parallelize
-    [ ] hash flags ???
-    [ ] in-memory index:
+        [x] parallelize
+    [x] hash flags off
+    [x] in-memory index:
         GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
         [x] equi-join Game->MoreGame
             no need for a hash table if both indexes are sorted identically
         [x] pull out CId -> [row..row[
             [x] Interval, IntervalSet
+            [ ] can become fragmented on heavily edited Collections
+                alternative: copy fragments into separate list
         [x] GId can be retrieved late from MoreGame
         [x] squeeze hasVariations into msb of pointer
          -> [x] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
             24 * 16M = 384 MB
         [x] unit test (small, huge)
-    [ ] Parallelistion
+    [x] Parallelistion
         [x] omp (for Windows)
         [x] my_thread_init. Table is not thread-safe
         [x] works in principle but doing index scan, file read, replay
-            all at once is too much (for the caches)
-            - scanning the index is fast (1s) single-threaded is best
-            - reading rows (mi_rrnd) takes abt 10 seconds for 5M rows
-            - replaying (BinReader::read) takes abt 8 seconds for 5M rows,
-                on a warmed up cache
-            -> 20 s on a cold cache
-            >  10 s on a warm cache
-            compare to 14 s with TCP+Java !?!?!
 
             we need more insights on:
             [-] (1) early-cut-off scan in parallel
                 [x] omp for (static, dynamic?)
                 [x] single-threaded is fastest
-                [ ] put rowptrs in a separate vector (for better cache layout)
-                [ ] put HasVariations into a std::bitset, or hash set of int ?
+                [x] put rowptrs in a separate vector (for better cache layout)
+                [x] put HasVariations into a std::bitset, or hash set of int ?
             [ ] (2) loading blobs from file
                 [x] re-create _mi_read_dynamic_record
                     [x] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
                     [x] get rid of _mi_unpack ?
                     [x]   don't memcpy, just compute offsets of some columns
                 [x] refactor index to use DynRec columns
-                [ ] use mmapped pointers for index read, too
+                [x] use mmapped pointers for index read, too
                 [ ] how many 'block's are needed for one record?
                     check with blobs > 64kb
             [x] (3) replay in parallel
@@ -186,33 +171,22 @@ Maintenance:
                 6-9s (warm cache)
 
     [-] Java interface (JNI): java.sql.ResultSet
-        [-] thread-safe queue for results
-        [ ] read/write batches (start with 1, increase to 10, 100, 1000, ...)
-        [-] ResultSet.next() blocks/polls until new results arrive in queue
     [-] simpler JNI interface:
-        [ ] build index, invalidate, check version
-        [ ] start, cancel pos query
-        [ ] callback resultsFound(int[]) posts into event loop.
-            No need for ResultSet and Queue.
     [x] command-line interface
+        [ ] writer / reader threads
+        [ ] report results through callback
 
 [x] (2) port replay logic from Java to C++
-[ ] mysql udf's !
-    [ ] can_reach() checks Matsignature
-    [ ] find_pos() finds by hash key, pawn signature, ...
+[x] mysql udf's !
+    [x] can_reach() checks Matsignature
+    [x] sig_match() checks early cut-off
+    [-] bin_match() checks late cut-offs -> too slow
 
 ==== Interesting New Features
 
 * FOP printing: subtitles for Events and Rounds
     Q: sort by Collection, or by Event name (needs to be curated accurately) ?
     - drop info from Game header
-
-[ ] Move Games to Collection.
-    Useful for combining a bunch of pgn files (like Lubra's files)
-    everything is there:
-        GameSource src = GameSource.collectionContents(C1);
-        MoveTask move (src, C2);
-    just needs to be wired to a menu entry
 
 * Bulk edit with F4
     [ ] GameSource is the abstraction
