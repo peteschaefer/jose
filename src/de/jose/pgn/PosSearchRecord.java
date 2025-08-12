@@ -8,15 +8,16 @@ import static de.jose.chess.Constants.KING;
 
 public class PosSearchRecord
 {
-    public static final int POS_EXACT     = 0x01;     //  search for exact position
-    public static final int PAWNS_EXACT   = 0x02;     //  search for exact pawn structure
-    public static final int PAWNS_SUBSET  = 0x04;     //  search for pawn subset
-    public static final int POS_MASK      = 0x07;
+    public static final int POS_EXACT     = 0x001;     //  search for exact position
+    public static final int PAWNS_EXACT   = 0x002;     //  search for exact pawn structure
+    public static final int PAWNS_SUBSET  = 0x004;     //  search for pawn subset
+    public static final int POS_MASK      = 0x007;
         //  material balance can be combined with PAWNS_*, but not with POS_EXACT
-    public static int MAT_BALANCE   = 0x08;
-
-    public static int VARS	= 0x10;
-    public static int REVERSED= 0x10;
+    public static int VARS	              = 0x010;
+    public static int REVERSED            = 0x020;
+        //  material pattern can be combined with PAWN_*, but not with POS_EXACT
+    public static int MAT_BALANCE         = 0x100;
+    public static int MAT_PATTERN         = 0x200;
 
     public int what=0;
     //  if!=0: search for exact position
@@ -40,6 +41,8 @@ public class PosSearchRecord
     //  material balance
     public int min[] = null;
     public int max[] = null;
+    //  material pattern (officers only)
+    public Piece mat[] = null;
 
     //  Bishop features
     public enum BishopColors { EVEN_COLORED, OPPOSITE_COLORED }
@@ -69,6 +72,7 @@ public class PosSearchRecord
     public boolean isEmpty() {
         return key == null && sigMatch == null
                 && min == null && max == null
+                && mat == null
                 && bishopColors == null
                 && whiteBishop == null
                 && blackBishop == null;
@@ -85,6 +89,7 @@ public class PosSearchRecord
         reversedColor = false;
         variations = false;
         min = max = null;
+        mat = null;
         bishopColors = null;
         whiteBishop = blackBishop = null;
     }
@@ -110,6 +115,7 @@ public class PosSearchRecord
         //  read-only can be shared
         min = that.min;
         max = that.max;
+        mat = that.mat;
     }
 
     private static MatSignatureV2 assign(MatSignatureV2 old, MatSignatureV2 that) {
@@ -265,6 +271,7 @@ public void setSearch(Position pos, int flags)
 
         //  todo compare mat balance
         //  todo compare bishop features
+        //  todo compare mat pattern (for silent moves, too. Store previous pawn match results.)
         return false;
     }
 
