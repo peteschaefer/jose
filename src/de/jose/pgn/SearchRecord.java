@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.lang.reflect.Field;
 
+import static java.sql.Types.VARCHAR;
+
 public class SearchRecord implements Cloneable
 {
     /** show system collection when no search condition is set ?
@@ -446,6 +448,16 @@ public class SearchRecord implements Cloneable
 		return pstm;
 	}
 
+	private String hasVariations()
+	{
+		if (!pos.variations)
+			return "0";	//	never
+		else if ((joins & JOIN_GAME) != 0)
+			return ("(Game.Attributes & 1)");	//	Game flags
+		else
+			return("LOCATE(0xf0,MoreGame.Bin)");	//	scan Bin
+	}
+
 	private ParamStatement makeIdStatement(boolean reversedColors) throws SQLException
 	{
 		ParamStatement sql = new ParamStatement();
@@ -474,16 +486,35 @@ public class SearchRecord implements Cloneable
 
 		if (!pos.isEmpty()) {
 			//	Position Search
-			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, " +
-					" MoreGame.WhiteSignature, MoreGame.BlackSignature");
+			MySQLAdapter adapter = (MySQLAdapter) JoConnection.getAdapter();
+			boolean sigMatchSql = adapter.udfSigMatch;
+			//	udfSigMatch is currently disabled but checked into main branch.
+			//	Can be enabled as soon as native libraries are considered ready for production
+			//	(udf.dll, libudf.so, ...)
+
+			sql.select.append(",  MoreGame.FEN, MoreGame.Bin, ");
+			if (sigMatchSql)
+				sql.select.append(" 0, 0, ");		//	indicates to PositionFilter that the early-cut-off check is already done server-side
+			else
+				sql.select.append(" MoreGame.WhiteSignature, MoreGame.BlackSignature, ");
 			//	Has Variations can be queried from Game.Attribute
 			//	or from MoreGame.Bin (more expensive but needs no extra join)
-			if (!pos.variations)
-				sql.select.append(", 0 AS HasVariations");
-			else if ((joins & JOIN_GAME) != 0)
-				sql.select.append(", (Game.Attributes & 1) AS HasVariations");
-			else
-				sql.select.append(", LOCATE(0xf0,MoreGame.Bin) AS HasVariations");
+			sql.select.append(hasVariations());
+			sql.select.append(" AS HasVariations");
+
+			if (sigMatchSql) {
+				//	native early cut-off by sig_match()
+				/*
+					((pos.variations && hasVariations)
+						|| sig.canReach(endSignature)
+						|| (reversedColor && sigReversed.canReach(endSignature)))
+				*/
+				boolean needs_and = sql.where.length() > 0;
+				if (needs_and) sql.where.append(" AND ");
+				sql.where.append("sig_match(MoreGame.WhiteSignature,MoreGame.BlackSignature,"+hasVariations()+", ?,?)");
+				sql.addParameter(VARCHAR,pos.fen);
+				sql.addIntParameter(pos.what);
+			}
 		}
 
 		return sql;
@@ -1225,8 +1256,8 @@ public class SearchRecord implements Cloneable
 	        //	remove wildcards (TODO)
 	        appendOperator(sql,"AND");
 	        sql.where.append(" ECO >= ? AND ECO <= ? ");
-	        sql.addParameter(Types.VARCHAR,eco1);
-	        sql.addParameter(Types.VARCHAR,eco2);
+	        sql.addParameter(VARCHAR,eco1);
+	        sql.addParameter(VARCHAR,eco2);
 				joins |= JOIN_GAME;
 	    }
 	    else if (eco1!=null) {
@@ -1240,7 +1271,7 @@ public class SearchRecord implements Cloneable
 	        //	remove wildcards (TODO)
 	        appendOperator(sql,"AND");
 	        sql.where.append(" ECO <= ? ");
-	        sql.addParameter(Types.VARCHAR,eco2);
+	        sql.addParameter(VARCHAR,eco2);
 				joins |= JOIN_GAME;
 	    }
 	}
@@ -1634,7 +1665,7 @@ public class SearchRecord implements Cloneable
 			sql.where.append("MATCH (");
 			sql.where.append(column);
 			sql.where.append(") AGAINST (?)");
-			sql.addParameter(Types.VARCHAR,pattern);
+			sql.addParameter(VARCHAR,pattern);
 		}
 		else {
 			/**	fallback: LIKE */
@@ -1649,7 +1680,7 @@ public class SearchRecord implements Cloneable
 		sql.where.append(" LIKE");
 		sql.where.append(caseSensitive ? " BINARY ":" ");
 		sql.where.append("? ");
-		sql.addParameter(Types.VARCHAR,pattern);
+		sql.addParameter(VARCHAR,pattern);
 	}
 
 	protected static void appendRegexClause(ParamStatement sql, String column, String pattern, boolean caseSensitive)
@@ -1671,7 +1702,7 @@ public class SearchRecord implements Cloneable
 		sql.where.append(" RLIKE ");
 		if (caseSensitive) sql.where.append(" BINARY ");
 		sql.where.append(" ? ");
-		sql.addParameter(Types.VARCHAR,pattern);
+		sql.addParameter(VARCHAR,pattern);
 	}
 
 	protected boolean appendResultCondition(ParamStatement sql, String operator, String column,

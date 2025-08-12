@@ -60,6 +60,9 @@ bin/share-5067/
 **/cmake-build-release/
 **/.vs/
 
+# unpacked grant tables
+database/mysql/mysql/**
+
 c/winUtils/Backup
 c/winUtils/Debug
 c/winUtils/winUtils/x64

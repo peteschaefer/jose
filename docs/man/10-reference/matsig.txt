@@ -65,10 +65,12 @@ Computation
 * thus, canReach() is not an equivalence relation
 * the Initial Position is a kind of "neutral" element,
     canReach(I,A)==true for any position.
+* similarly, the Zero position with just two kings, has a MatSignature of 0.
+    canReach(A,Z)==true for any position
 
 Storage
 =======
-* For each game, the signature of the final position is stored in the database:
+* For each game, the signature of the *final* position is stored in the database:
     columns MoreGame.WhiteSignature and MoreGame.BlackSignature.
 * with exact pawn moves count
 
@@ -83,7 +85,7 @@ Example: let's say we are searching for a position with 3 white pawns
     Let's call this condition an *early cut-off*
 - if, while replaying the game, the number of white pawns drops below 3, we can skip the rest of the game
     (b/c the queries position can not be reached in the rest of the game).
-    Let's call this condition an *in-game cut-off*
+    Let's call this condition an *in-game cut-off*, or late cut-off
 
 The canReach() function performs more sophisticated tests (counting the number of pieces, promotions, tracking pawn captures),
 but this gives you the idea.
@@ -94,9 +96,9 @@ The effectiveness of cut-offs hinges on the query position.
 * if we search for an endgame position (whith few pawns and pieces),
     we can expect many early-cutoffs
 
-In any case, cut-offs *are* effective.
+Combining both, cut-offs are *very* effective.
 E.g. Lumbra's Gigabase holds more than 1.3 billion positions. Cut-offs by MatSignature can reduce the search effort
-by more than 90% !
+oftentimes by more than 90% !
 
 ---
 

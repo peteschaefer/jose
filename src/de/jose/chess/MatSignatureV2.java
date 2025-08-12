@@ -144,6 +144,12 @@ public class MatSignatureV2 implements MatSignature
         bfeat.setSignature(bsig);
     }
 
+    //  assigment
+    public MatSignatureV2 init(MatSignatureV2 that) {
+        init(that.getWhiteSignature(), that.getBlackSignature());
+        return this;
+    }
+
     public void setBoard(Board board)
     {
         clear();
@@ -738,18 +744,22 @@ public class MatSignatureV2 implements MatSignature
             return resolve_next(from&~candidate,to,avail_captures,joker_pawns);
        }
 
-        public int mostAdvancedPawn() {
+        public int mostAdvancedPawn()
+        {
             if (EngUtil.isWhite(color)) {
-                for(int row=ROW_7; row > ROW_2; --row)
-                    if (MatSignatureV2.pawnCount(sig,row) > 0)
-                        return row-ROW_2;
+                int msb = BitUtil.highest_pos(sig&PAWN_MASK);
+                if (msb<0 || msb>=48)
+                    return 0;
+                else
+                    return msb/8;
             }
             else {
-                for(int row=ROW_2; row < ROW_7; ++row)
-                    if (MatSignatureV2.pawnCount(sig,row) > 0)
-                        return ROW_7-row;
+                int lsb = BitUtil.least_pos(sig&PAWN_MASK);
+                if (lsb >= 48)
+                    return 0;
+                else
+                    return 5-lsb/8;
             }
-            return 0;
         }
 
         public long toMatSignatureV1() {

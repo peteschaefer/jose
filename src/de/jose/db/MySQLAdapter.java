@@ -60,6 +60,9 @@ public class MySQLAdapter
 	//	note: not available on all platforms; versions may differ on platforms
 	public int udfVersion = 0;
 	public boolean udfStripDiacritics=false;
+	public boolean udfCanReach=false;
+	public boolean udfSigMatch=false;
+//	public boolean udfBinMatch=false;
 
 	/**	default ctor	*/
 	protected MySQLAdapter()
@@ -530,6 +533,7 @@ public class MySQLAdapter
 		Vector env = new Vector();
 		String binPath = Application.theWorkingDirectory.getAbsolutePath()+File.separator+"bin";
 		String execPath = binPath+File.separator+Version.osDir+File.separator+"mysqld";
+		String pluginPath = Application.theWorkingDirectory.getAbsolutePath()+File.separator+"lib"+File.separator+Version.osDir;
 //		String defaultsPath = Application.theWorkingDirectory.getAbsolutePath()+
 //		                    File.separator+"config"+File.separator+"mysql.ini";
 
@@ -542,7 +546,7 @@ public class MySQLAdapter
 		//  doesn't hurt to define them twice:
 		command.add("--skip-bdb");
 		command.add("--skip-innodb");
-		//command.add("--skip-grant-tables");
+		//	command.add("--skip-grant-tables");
 		command.add("--skip-name-resolve");
 		command.add("--character-set-server=utf8");
 		command.add("--collation-server=utf8_general_ci");
@@ -566,7 +570,7 @@ public class MySQLAdapter
 		command.add("--tmp-table-size=16G");
 		command.add("--max-heap-table-size=16G");
 		//command.add("--default-time-zone='+00:00'"); does not work
-		command.add("--max_allowed_packet=32M");	//blobs can be up to 16M in size, !?
+
 
 		//	for server-side operation: set connection timeout as high as possible:
 		String infTimeout = Version.windows ? "2147483" : "31536000";
@@ -594,7 +598,6 @@ public class MySQLAdapter
 			 */
 		}
 
-		if (!Version.MYSQL_UDF) command.add("--skip-external-locking");
 		command.add("--skip-locking");
 
 		// only connect to local host; skip DNS name resolve
@@ -622,7 +625,7 @@ public class MySQLAdapter
 
 		String libPath = Application.theWorkingDirectory.getAbsolutePath()+
 				"/lib/"+Version.osDir;
-		if (Version.unix && Version.MYSQL_UDF) {
+		if (Version.unix) {
 			//	set library path fo UDF
 			env.add("LD_LIBRARY_PATH="+libPath);
 		}
@@ -700,6 +703,9 @@ public class MySQLAdapter
 		//	set base directory
 		command.add("--basedir");
 		command.add(binPath);
+
+		//	don't we want to read server output on startup
+		//command.add("--log-error="+mysqldir.getAbsolutePath()+File.separator+"error.log");
 
 		String[] commandArray = StringUtil.toArray(command);
 		String[] envArray = StringUtil.toArray(env);
@@ -1099,13 +1105,27 @@ public class MySQLAdapter
 			this.udfVersion = conn.selectInt("select udf_version()");
 
 			if (udfVersion >= 1012) {
+				//	used for text comparison
 				defineUDF(conn, "strip_diacritics", "String", libFile);
 				this.udfStripDiacritics = true;
+				//	still used?
+				defineUDF(conn, "can_reach", "Integer", libFile);
+				this.udfCanReach = true;
 			}
-//		defineUDF(conn,"can_reach", "Integer", libFile);
-//		defineUDF(conn,"sig_match", "Integer", libFile);
-//		defineUDF(conn,"bin_match", "Integer", libFile);
+			if (udfVersion >= 1013) {
+				//	currently disabled; can be switched on, soon
+				defineUDF(conn, "sig_match", "Integer", libFile);
+				this.udfSigMatch = false;
+				//	not in used:
+//				defineUDF(conn, "bin_match", "Integer", libFile);
+//				defineUDF(conn, "task_push", "Integer", libFile);
+//				defineUDF(conn, "task_pop", "String", libFile);
+//				defineUDF(conn, "task_peek", "Integer", libFile);
+			}
 
+//		defineUDF(conn,"bin_match", "Integer", libFile);
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			JoConnection.release(conn);
 		}

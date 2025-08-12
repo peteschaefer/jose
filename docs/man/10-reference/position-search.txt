@@ -39,8 +39,11 @@ Exhaustive Search
 "Benchmarks"
 ------------
 * Lumbra's Gigabase: 16 million games, 1.3 billion positions
+  (remember that MatSignature cut-offs reduce the number of actually visited positions drastically)
 * on a powerful notebook, an exhaustive search takes abt 10 seconds, rarely 15 seconds
 * on a really powerful workstation, exhaustive searches take abt 5 to 8 seconds
+* josemi is an experimental implementation in C++. Search times can be reduced to 6 seconds on a notebook,
+  less than 2 seconds on a powerful workstation.
 
 MySQL Woes
 ----------

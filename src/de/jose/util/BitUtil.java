@@ -64,6 +64,14 @@ public class BitUtil
         return Long.numberOfTrailingZeros(bit);
     }
 
+    public static int highest_pos(long x) {
+        return 63-Long.numberOfLeadingZeros(x);
+    }
+
+    public static int least_pos(long x) {
+        return Long.numberOfTrailingZeros(x);
+    }
+
     public static long reverse32(long x) {
         return    ((x >> 32) & 0x00000000ffffffffL)
                 | ((x & 0x00000000ffffffffL) << 32);

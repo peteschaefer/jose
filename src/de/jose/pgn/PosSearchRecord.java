@@ -27,6 +27,8 @@ public class PosSearchRecord
     public boolean reversedColor;
     //  search inside variations
     public boolean variations;
+    //  position FEN (used for reference & sql queries only)
+    public String fen;
 
     //  if key!=0: signature of search position
     //  if key==0: pawn structure to search for
@@ -74,6 +76,7 @@ public class PosSearchRecord
 
     public void clear() {
         what = 0;
+        fen = null;
         key = null;
         keyReversed = null;
         sigEarly = sigEarlyReversed = null;
@@ -84,6 +87,35 @@ public class PosSearchRecord
         min = max = null;
         bishopColors = null;
         whiteBishop = blackBishop = null;
+    }
+
+    public void assign(PosSearchRecord that)
+    {
+        what = that.what;
+        fen = that.fen; //  read-only can be shared
+        key = that.key; //  read-only; can be shared
+        keyReversed = that.keyReversed;
+        reversedColor = that.reversedColor;
+        variations = that.variations;
+        bishopColors = that.bishopColors;
+        whiteBishop = that.whiteBishop;
+        blackBishop = that.blackBishop;
+        //  MatSignatureV2 keeps internal state; not thread-safe
+        sigEarly            = assign(sigEarly,that.sigEarly);
+        sigEarlyReversed    = assign(sigEarlyReversed,that.sigEarlyReversed);
+        sigLate             = assign(sigLate,that.sigLate);
+        sigLateReversed     = assign(sigLateReversed,that.sigLateReversed);
+        sigMatch            = assign(sigMatch,that.sigMatch);
+        sigMatchReversed    = assign(sigMatchReversed,that.sigMatchReversed);
+        //  read-only can be shared
+        min = that.min;
+        max = that.max;
+    }
+
+    private static MatSignatureV2 assign(MatSignatureV2 old, MatSignatureV2 that) {
+        if (that==null) return null;
+        if (old==null) return (MatSignatureV2) that.clone();
+        return old.init(that);
     }
 /*
     public Object clone() {
@@ -111,6 +143,7 @@ public void setSearch(Position pos, int flags)
     public void setExactSearch(Position pos)
     {
         what = (what&~POS_MASK) | POS_EXACT;
+        fen = pos.toString();
         setHashKey(pos);
 
         sigEarly = sigMatch = sigLate = (MatSignatureV2) pos.updateMatSig().clone();
@@ -144,6 +177,7 @@ public void setSearch(Position pos, int flags)
     public void setPawnSearch(Position pos, boolean exact)
     {
         what = (what&~POS_MASK) | (exact ? PAWNS_EXACT : PAWNS_SUBSET);
+        fen = pos.toString();
         key = null;
         keyReversed = null;
 

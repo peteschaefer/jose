@@ -1,6 +1,6 @@
 ==== Bugs
 
-[ ]] select games, Save As, Dialog component "transform" missing
+[ ] select games, Save As, Dialog component "transform" missing
 * double click insert variant; trying to delete it
 
 [ ] Context Help
@@ -90,7 +90,26 @@ Maintenance:
 
 === Position Search Features
 
+[ ] bug: results go missing late in search
+    - does not terminate ?
+    8/6k1/1N4n1/p5pp/8/5BKP/8/8
+    verify against josemi
+
 [x] search pawn structure
+[x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[?] cache MoreGame in memory
+    [x] GId, FEN, Bin, White,BlackSignature, 0 AS HasVariations
+    [x] -Xmx64G
+    [x] read-through ResultSet cache
+        works great!
+        caches 16M rows ~= 3GB
+        speedup from 11 to 4.2 s !
+    [x] full-table scan alone takes abt 9 seconds (i.e. replay is almost negligable!)
+    [x] HANDLER is useless
+    [-] try MariaDB shared memory
+    [ ] disable if not enough memory available
+    [x] integrate with (Pos)SearchRecord, ParamStatement
+        [ ] test with, w/out CId, Comments, Info, Variations, Reversed
 [x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
 [-] cache MoreGame in memory
 
@@ -118,6 +137,9 @@ Maintenance:
 
 === Native Position Search
 
+[+] (1) port MatSignature(V2) from Java to C++
+    not too hard because it involves mainly bit-twiddling
+    [ ] sanitizer. we don't want to crash the server.
 [x] (1) port MatSignature(V2) from Java to C++
 
 [ ] (3) read MyISAM files natively
@@ -177,6 +199,31 @@ Maintenance:
         [ ] report results through callback
 
 [x] (2) port replay logic from Java to C++
+    [-] bin_match() ~ 20sec for a full search
+    [-] bin_match() with parallel Connections ~ 17 sec
+
+[x] (3) read MyISAM files natively
+
+[-] (4) native thread pool
+    [x] boost::asio::thread_pool
+    -> not fast enough
+
+Comparison:
+(0) SQL + Java replay (parallel)        13 seconds
+(1) sig_match (early cutoffs in SQL)    10 seconds
+(2) bin_match (replay in SQL, parallel) 10 seconds
+(3) josemi (replay in cli tool)        < 7 seconds
+(4) boost::asio + udf functions         30 seconds :(
+
+(1) is easy to implement
+(2) is harder to implement, yields nothing. sad.
+(3) is hardest to implement
+    - requires larger rewriting in IntervalCacheModel
+    - time & logic for index building
+
+
+[x] move chess++ to github
+[ ] build mariadb, or mysql5 from source
 [x] mysql udf's !
     [x] can_reach() checks Matsignature
     [x] sig_match() checks early cut-off
@@ -187,6 +234,13 @@ Maintenance:
 * FOP printing: subtitles for Events and Rounds
     Q: sort by Collection, or by Event name (needs to be curated accurately) ?
     - drop info from Game header
+
+[ ] Move Games to Collection.
+    Useful for combining a bunch of pgn files (like Lubra's files)
+    everything is there:
+        GameSource src = GameSource.collectionContents(C1);
+        MoveTask move (src, C2);
+    just needs to be wired to a menu entry
 
 * Bulk edit with F4
     [ ] GameSource is the abstraction

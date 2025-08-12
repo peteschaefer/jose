@@ -429,7 +429,13 @@ public class JoConnection
 	{
 		return selectInt(sql,Integer.MIN_VALUE);
 	}
-	
+
+	public final long selectLong(String sql)
+			throws SQLException
+	{
+		return selectLong(sql,Long.MIN_VALUE);
+	}
+
 	/**
 	 * @param defaultValue return value if query returns no result
 	 * @return the result of querying exactly one value
@@ -444,6 +450,38 @@ public class JoConnection
 			stm.execute(sql);
 			if (stm.next())
 				return stm.getInt(1);
+		} finally {
+			if (stm!=null) stm.close();
+		}
+		return defaultValue;
+	}
+
+	public byte[] selectBytes(String sql)
+			throws SQLException
+	{
+		JoStatement stm = null;
+		try {
+			stm = new JoStatement(this);
+			stm.setMaxRows(1);
+			stm.execute(sql);
+			if (stm.next())
+				return stm.getBytes(1);
+		} finally {
+			if (stm!=null) stm.close();
+		}
+		return null;
+	}
+
+	public long selectLong(String sql, long defaultValue)
+			throws SQLException
+	{
+		JoStatement stm = null;
+		try {
+			stm = new JoStatement(this);
+			stm.setMaxRows(1);
+			stm.execute(sql);
+			if (stm.next())
+				return stm.getLong(1);
 		} finally {
 			if (stm!=null) stm.close();
 		}
