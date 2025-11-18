@@ -3,6 +3,7 @@ package de.jose.book.lichess;
 import de.jose.AbstractApplication;
 import de.jose.Application;
 import de.jose.chess.EngUtil;
+import de.jose.chess.StringMoveFormatter;
 import de.jose.comm.Command;
 import de.jose.Language;
 import de.jose.book.BookEntry;
@@ -317,7 +318,7 @@ public class LiChessOpeningExplorer extends OpeningBook
     {
         StringBuffer buf = new StringBuffer();
         while(mv1!=null && count>0) {
-            buf.append(mv1.getMove().toString());
+            buf.append(mv1.getMove().toString(StringMoveFormatter.ALGEBRAIC));  // language-agnostic
             buf.append(" ");
             mv1 = mv1.nextMove();
             count--;

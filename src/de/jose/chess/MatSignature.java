@@ -1,5 +1,7 @@
 package de.jose.chess;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import java.lang.reflect.Constructor;
 
 public interface MatSignature extends Cloneable
@@ -26,7 +28,8 @@ public interface MatSignature extends Cloneable
         return getBlackSignature()==0 && getWhiteSignature()==0;
     }
 
-	boolean isLegal();
+    boolean isLegal();
+    default boolean matches(Board board) { throw new NotImplementedException(); }
 
     /**
      * factory method

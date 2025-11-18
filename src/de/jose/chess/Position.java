@@ -426,6 +426,7 @@ public class Position
 
 		if (hasOption(INCREMENT_SIGNATURE) && !silent) {
 			theMatSignature.update(this,move);
+			assert(theMatSignature.matches(this));
 		}
 	}
 
@@ -494,7 +495,10 @@ public class Position
 		theSilentPlies = frame.silentPlies;
 		theHashKey.setValue(frame.hashValue);
 		theReversedHashKey.setValue(frame.reversedHashValue);
-		theMatSignature.init(frame.whiteSignature,frame.blackSignature);
+		if (hasOption(INCREMENT_SIGNATURE)) {
+			theMatSignature.init(frame.whiteSignature, frame.blackSignature);
+			assert (theMatSignature.matches(this));
+		}
 
 		option = oldOption;
 
@@ -748,30 +752,32 @@ public class Position
 			moveIterator.reset(theBlackPieces);
 
 		int oldOptions = getOptions();
-		setOptions(oldOptions & INCREMENT_HASH);
+		try {
+			setOptions(oldOptions & INCREMENT_HASH);
 
-		while (moveIterator.next()) {
-			Move mv = moveIterator.getMove();
+			while (moveIterator.next()) {
+				Move mv = moveIterator.getMove();
 
-			setOption(EXPOSED_CHECK, true);
+				setOption(EXPOSED_CHECK, true);
 
-			if (!tryMove(mv)) {
-				continue;	//	illegal move
-			}
+				if (!tryMove(mv)) {
+					continue;    //	illegal move
+				}
 
-			if (checked && isStillChecked()) {
-				//	move would keep king in check
+				if (checked && isStillChecked()) {
+					//	move would keep king in check
+					undoMove();
+					continue;
+				}
+				//	else: legal move
 				undoMove();
-				continue;
+				return false;    //	at least one legal move
 			}
-			//	else: legal move
-			undoMove();
-			setOptions(oldOptions);
-			return false;	//	at least one legal move
-		}
+			return true;    //	no legal move
 
-		setOptions(oldOptions);
-		return true;	//	no legal move
+		} finally {
+			setOptions(oldOptions);
+		}
 	}
 
 	protected boolean isStillChecked()

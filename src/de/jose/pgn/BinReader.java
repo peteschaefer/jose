@@ -262,6 +262,8 @@ abstract public class BinReader
                 wasMove = false;
                 continue;
             }
+
+            replayError(text,code, pos.ply());
         }   //  while(!eof)
 
 		endOfLine(0);

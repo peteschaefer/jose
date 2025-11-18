@@ -1115,7 +1115,7 @@ public class MySQLAdapter
 			if (udfVersion >= 1013) {
 				//	currently disabled; can be switched on, soon
 				defineUDF(conn, "sig_match", "Integer", libFile);
-				this.udfSigMatch = false;
+				this.udfSigMatch = true;
 				//	not in used:
 //				defineUDF(conn, "bin_match", "Integer", libFile);
 //				defineUDF(conn, "task_push", "Integer", libFile);

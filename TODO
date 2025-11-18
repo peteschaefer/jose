@@ -1,5 +1,8 @@
 ==== Bugs
 
+[ ] paste LiChess snippet with non-ansi figurine language (ru, Russian) causes parse error at GameUtil:1095
+  (use English and pass as parameter)
+
 [ ] select games, Save As, Dialog component "transform" missing
 * double click insert variant; trying to delete it
 
@@ -233,10 +236,13 @@ Comparison:
 [ ] v1.6
     [-] experimental/mariadb (which version?)
         [ ] myisam format update required. is it backward compatible?
-    [ ] experimental/native-matsig sig_match() from udf.dll
-    [ ] experimental/josemi for purely positional search
+    [x] experimental/native-matsig sig_match() from udf.dll
+        [ ] enable feature flag
+    [ ] feature/josemi for purely positional search
+        [ ] upgrade v1012. why is create index so slow?
         [ ] integrate with jose
         [ ] rebuild index on changes
+            [ ] maybe: restart process
         [ ] obviates CId hack
         [ ] different sort orders?
     [ ] Windows first.

@@ -392,7 +392,7 @@ public class CollectionPanel
         if (currentCollection!=null && !currentCollection.isTopLevel()) {
 			list.add("dnd.move.top.level");
 			list.add(source);
-			if (source.isCollection() && source.size()==1)
+			if (source.isCollection() && source.collectionSize()==1)
 			{
 				GameSource contents = GameSource.collectionContents(source.firstId());
 				Collection parentCollection = getCollection(path.getParentPath());

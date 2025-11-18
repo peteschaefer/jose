@@ -224,6 +224,25 @@ public class GameSource
 		return size;
 	}
 
+	public int collectionSize() {
+		int result = 0;
+		if (isSingleCollection() || isCollectionContents())
+			result = 1;
+
+		if (isCollectionSelection()) {
+			IntArray CIds = new IntArray();
+			DBSelectionModel select = getSelection();
+			for (int i=select.getMinSelectionIndex(); i <= select.getMaxSelectionIndex(); i++)
+				if (select.isSelectedIndex(i))
+					result++;
+		}
+
+		if (isCollectionArray())
+			result = getIds().length;
+
+		return result;
+	}
+
 	private int calcSize()
 	{
 		if (isNotSet())				return 0;

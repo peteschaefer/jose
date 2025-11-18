@@ -214,7 +214,12 @@ public class Move
 
 	public String toString()
 	{
-	    return StringMoveFormatter.getDefaultFormatter().toString(StringMoveFormatter.LONG, this);
+	    return toString(StringMoveFormatter.LONG);
+	}
+
+	public String toString(int format)
+	{
+		return StringMoveFormatter.getDefaultFormatter().toString(format, this);
 	}
 
 	public static Move fromString(String ucistr)

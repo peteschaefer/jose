@@ -140,6 +140,8 @@ public class MatSignatureV2 implements MatSignature
     }
 
     public void init(long wsig, long bsig) {
+        if ((wsig & bsig & PAWN_MASK) != 0)
+            throw new RuntimeException("pawns overlap");
         wfeat.setSignature(wsig);
         bfeat.setSignature(bsig);
     }
@@ -297,6 +299,12 @@ public class MatSignatureV2 implements MatSignature
         boolean breach = is_reachable(from.bfeat, to.bfeat);
         if (!breach) return false;
         //  post-conditiion: all .piece_cnt are up to date. and will be used below.
+        if (    from.wfeat.totalPieceCount() > 15   //  king is not counted
+            ||  from.bfeat.totalPieceCount() > 15)
+            throw new RuntimeException("too many pieces");
+        if (    to.wfeat.totalPieceCount() > 15
+            ||  to.bfeat.totalPieceCount() > 15)
+            throw new RuntimeException("too many pieces {},{}");
 
         //  (2) backtrack pawn position
         long frompawns = from.wfeat.sig&PAWN_MASK;
@@ -530,16 +538,21 @@ public class MatSignatureV2 implements MatSignature
         private void computePawnAdvanceBounds()
         {
             int promo_lower = computePromotionLowerBound();
-            int promo_upper = 8-pawnCount();
+            int pwnCnt = pawnCount();
+            if (pwnCnt > 8)
+                throw new RuntimeException("too many pawns");
+            int promo_upper = 8-pwnCnt;
             boolean more_promos=false;
             //  todo get a second promo_lower bound from Board
 
             int stored_padv = pawnAdvance(sig);
             padv_base = MatSignatureV2.computePawnAdvance(sig,color);
+            int computed_lower = padv_base + promo_lower*6;
+            int computed_upper = Math.min(ADV_TOP, computed_lower +promo_upper*6);
             switch (stored_padv) {
                 case -1: //  not known; estimate lower and upper bounds
-                        padv_lower = padv_base + promo_lower*6;
-                        padv_upper = Math.min(ADV_TOP, padv_lower +promo_upper*6);
+                        padv_lower = computed_lower;
+                        padv_upper = computed_upper;
                         break;
                 case ADV_MAX: // [46..48] rare case
                         padv_lower = ADV_MAX;
@@ -549,6 +562,10 @@ public class MatSignatureV2 implements MatSignature
                         padv_upper = padv_lower = stored_padv;
                         break;
             }
+            if (padv_lower > padv_upper)
+                throw new RuntimeException("invalid pawn advance bounds");
+            if (padv_lower < computed_lower || padv_upper > computed_upper)
+                throw new RuntimeException("invalid pawn advance bounds");
             updatePawnAdvance();
         }
 
