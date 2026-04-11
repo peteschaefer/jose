@@ -1,8 +1,5 @@
 ==== Bugs
 
-[ ] paste LiChess snippet with non-ansi figurine language (ru, Russian) causes parse error at GameUtil:1095
-  (use English and pass as parameter)
-
 [ ] select games, Save As, Dialog component "transform" missing
 * double click insert variant; trying to delete it
 
@@ -85,6 +82,8 @@ Maintenance:
 [x] update Matsig only after noisy moves
 [x] Easylink: replace Oracle's msvcp140.dll
 
+[x] Matsig V2
+
 [x] use concurrent insert for Archive Import
 [ ] Export ?
 
@@ -111,6 +110,8 @@ Maintenance:
     [ ] disable if not enough memory available
     [x] integrate with (Pos)SearchRecord, ParamStatement
         [ ] test with, w/out CId, Comments, Info, Variations, Reversed
+[x] PosSearchRecord refactor: sigEarly, sigEarlyReversed, sigMatch, sigInGame, sigEnd;
+[-] cache MoreGame in memory
 
 [ ] search pawns on files:
     * compare number of pawns by file
@@ -118,10 +119,13 @@ Maintenance:
     * late cutoff sig: push pawns forth to 7th row
     * can be combined with subset search
         (o) pawn search
-            [ ] subset
+            [x] subset
             [ ] per file
 [ ] check castling rights PosFilter. no (yet!!) stored in MatSig, but can be checked anyway. Or maybe not.
 [ ] search material balance
+    [ ] interval slider control |---[--]---|
+[ ] search officers pattern
+    -> access to Position, check silent moves too = more expensive)
 [ ] search NAGs
 [ ] search double, triple pawns, pawns on 7th rank, free pawns, backward pawns, isolated pawns, ...
 [ ] search mate, stalemate, check (double check?)
@@ -136,6 +140,63 @@ Maintenance:
 [+] (1) port MatSignature(V2) from Java to C++
     not too hard because it involves mainly bit-twiddling
     [ ] sanitizer. we don't want to crash the server.
+[x] (1) port MatSignature(V2) from Java to C++
+
+[ ] (3) read MyISAM files natively
+    [x] lift code from MariaDB sources (mi_test)
+        [x] link static
+        [-] link dynamic (not on Linux)
+    [x] full-table scan
+    [x] index-range scan
+        [ ] index skip ? index search ?
+    [x] port PosSearchRecord, PosFilter
+        [x] search pos,pawns
+        [x] unit tests
+        [x] parallelize
+    [x] hash flags off
+    [x] in-memory index:
+        GId, CId, Attributes, WhiteSig, BlackSig, <pointer to MoreGame row>
+        [x] equi-join Game->MoreGame
+            no need for a hash table if both indexes are sorted identically
+        [x] pull out CId -> [row..row[
+            [x] Interval, IntervalSet
+            [ ] can become fragmented on heavily edited Collections
+                alternative: copy fragments into separate list
+        [x] GId can be retrieved late from MoreGame
+        [x] squeeze hasVariations into msb of pointer
+         -> [x] index entry has only 24 bytes: WhiteSig,BlackSig, union{ row ptr, data ptr }
+            24 * 16M = 384 MB
+        [x] unit test (small, huge)
+    [x] Parallelistion
+        [x] omp (for Windows)
+        [x] my_thread_init. Table is not thread-safe
+        [x] works in principle but doing index scan, file read, replay
+
+            we need more insights on:
+            [-] (1) early-cut-off scan in parallel
+                [x] omp for (static, dynamic?)
+                [x] single-threaded is fastest
+                [x] put rowptrs in a separate vector (for better cache layout)
+                [x] put HasVariations into a std::bitset, or hash set of int ?
+            [ ] (2) loading blobs from file
+                [x] re-create _mi_read_dynamic_record
+                    [x] reads from mmap, copies to recbuf, "unpacks" to output buf. Too many copies!
+                    [x] get rid of _mi_unpack ?
+                    [x]   don't memcpy, just compute offsets of some columns
+                [x] refactor index to use DynRec columns
+                [x] use mmapped pointers for index read, too
+                [ ] how many 'block's are needed for one record?
+                    check with blobs > 64kb
+            [x] (3) replay in parallel
+                mmapped reads:
+                11s for 5M games (cold cache)
+                6-9s (warm cache)
+
+    [-] Java interface (JNI): java.sql.ResultSet
+    [-] simpler JNI interface:
+    [x] command-line interface
+        [ ] writer / reader threads
+        [ ] report results through callback
 
 [x] (2) port replay logic from Java to C++
     [-] bin_match() ~ 20sec for a full search
@@ -163,17 +224,90 @@ Comparison:
 
 [x] move chess++ to github
 [ ] build mariadb, or mysql5 from source
+[x] mysql udf's !
+    [x] can_reach() checks Matsignature
+    [x] sig_match() checks early cut-off
+    [-] bin_match() checks late cut-offs -> too slow
 
 ==== Interesting New Features
 
 * FOP printing: subtitles for Events and Rounds
     Q: sort by Collection, or by Event name (needs to be curated accurately) ?
     - drop info from Game header
+
+[ ] Move Games to Collection.
+    Useful for combining a bunch of pgn files (like Lubra's files)
+    everything is there:
+        GameSource src = GameSource.collectionContents(C1);
+        MoveTask move (src, C2);
+    just needs to be wired to a menu entry
+
 * Bulk edit with F4
-    - GameDetailsDialog uses GameSource. Two modes:
-        GameSource(object) refers to an opened document. ID==0 = new, or ID > 0 = existing
-        GemsSource(...) refers to a set of games. Write to DB directly.
-* Autocompletion for database fields (Event, Player, ...)
+    [ ] GameSource is the abstraction
+        [ ] define GameSource by SearchRecord where-clause
+        [ ] use where-clause for dialog field filling
+        [ ] use where-clause for bulk update
+        [ ] in-memory GameSource has no where-clause, but a Game pointer
+    [x] Autocomplete/suggest for Player, Event, Site, Opening (more?)
+    [x] auto-complete in Search Panel
+        [x] sql completer without constraint
+        [x] distinct not needed (b/c Player is already distinct)
+        [ ] with optional constraints (GameSource)
+        [x] wildcards (query differs from result)
+        [x] case insensitive -> for free (collate ut8_ci !)
+        [ ] bug: extra char appears
+
+    [x] fix: LIKE and RLIKE with accents
+        search "Schafer","Schäfer,H." "Schafer,H."
+        LIKE is accent-insensitive
+        RLIKE is accent-sensitive
+        BINARY loses accent-insenstivity
+        -> LIKE, vs LIKE AND RLIKE return different results
+        [+] use always LIKE AND RLIKE
+            [x] LIKE is fast and matches letters (case-(in)-sensitive, accent-(in)-sensitive)
+            [x] RLIKE matches punctuation [[:punct:][:white:]]
+            [+] RLIKE is not accent-sensitive b/c accented chars are usually utf-8
+                and RLIKE **does not** support utf-8
+                (although the table collation **is** utf8; goodness, what have you been thinking at mysql??)
+                poor workaround: character class placeholder [[:alpha:]]{1,3} matches one utf-8 letter
+            [-] RLIKE prevents accent-sensitive matches from LIKE. That's nasty.
+            [-] MySQL 8 has 'regexp_like(Name, 'Sch[=a=]fer.*' collate utf8mb4_0900_ai_ci);'
+                [x] solves the utf-8 problem; [:alnum:] actually matches one letter
+                [-] does not solve the accent match problem
+            [x] use same query for Completer
+
+            [x] java.text.Normalizer + Regex in prefixLength(); remove GlobX matcher
+            [x] install grant tables
+            [x] port stripDiacritics to C++
+            [x] load UDF stripDiacritics
+            [x] stripDiacritics + Regex in SQL
+            [x] nasty (again): strip_diacritics() loses string collation. Use with care.
+
+        [-] use only LIKE as fallback until there are UDFs for all platforms.
+            [x] accent-insensitivity is preserved
+            [x] use _% to match punctuation and white space.
+                not matched exactly, but no matter.
+            [x] BINARY is case and accent-sensitive. use simple LIKE as prefilter
+
+    [ ] Find & Replace. Idea: use search, then Bulk Edit to edit just some fields
+        search "Sch�fer, P.", replace with "Sch�fer, Peter"
+        [ ] query to glob pattern (_%)
+        [ ] map glob pattern groups to replacement patterns. //somehow//
+        [ ] -> update only modified groups
+
+    [ ] have one base Edit Panel for: Search Panel, Single Edit F4, Bulk Edit
+        [ ] use Completer mechanism to fill in fields
+            -> here's a synergy between autocomplete and bulk edit
+        [ ] mark edited fields
+        [ ] smart update: new Player row, or edit old in place?
+    [ ] 4 modes of operation
+        [ ] One Game object in memory
+        [ ] One Game in DB
+        [ ] Set of Games from DB; show only distinct fields?
+        [ ] Result Set; possibly with wildcard fields
+    [ ] re-use Search Panel for Single Game Edit
+
+
 * Search ELO >=
 * Query History
 * Pgn comments [%clk ] [%eval ]. Import/export to Eval. Drop [%clk] ?
@@ -186,6 +320,8 @@ Comparison:
 
 * Logos: User
     [ ] document? (would have to be stored in db :(
+
+* Labels for Games: Tournament, Stars, Colors, ...
 
 * Foldable variations.
     - Use LineLabelNode as buttons
@@ -236,13 +372,10 @@ Comparison:
 [ ] v1.6
     [-] experimental/mariadb (which version?)
         [ ] myisam format update required. is it backward compatible?
-    [x] experimental/native-matsig sig_match() from udf.dll
-        [ ] enable feature flag
-    [ ] feature/josemi for purely positional search
-        [ ] upgrade v1012. why is create index so slow?
+    [ ] experimental/native-matsig sig_match() from udf.dll
+    [ ] experimental/josemi for purely positional search
         [ ] integrate with jose
         [ ] rebuild index on changes
-            [ ] maybe: restart process
         [ ] obviates CId hack
         [ ] different sort orders?
     [ ] Windows first.
