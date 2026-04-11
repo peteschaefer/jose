@@ -333,6 +333,7 @@
 				<include name="meta.xml"/>
 				<include name="menu.xml"/>
 				<include name="misc.xml"/>
+				<include name="books.xml"/>
 				<include name="toolbars.xml"/>
 				<include name="lang.properties*"/>
 				<include name="themes/*"/>

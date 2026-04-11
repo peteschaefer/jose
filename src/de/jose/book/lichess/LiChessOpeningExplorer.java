@@ -12,6 +12,7 @@ import de.jose.chess.Position;
 import de.jose.db.JoConnection;
 import de.jose.db.JoPreparedStatement;
 import de.jose.pgn.*;
+import de.jose.pgn.Collection;
 import de.jose.task.GameSource;
 import de.jose.task.io.PGNImport;
 import de.jose.util.ListUtil;
@@ -22,19 +23,18 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LiChessOpeningExplorer extends OpeningBook
 {
     public static String apiUrl;
     public static String downloadUrl;
+    public static String apiAuth;
 
     //  list only moves if there are at least 20 games
     public static final int MIN_GAMES_PLAYED = 20;
@@ -49,6 +49,10 @@ public class LiChessOpeningExplorer extends OpeningBook
     public LiChessOpeningExplorer(org.w3c.dom.Element config)
     {
         apiUrl = XMLUtil.getChildValue(config,"URL");
+        apiAuth = XMLUtil.getChildValue(config,"AUTH");
+        Base64.Decoder decoder = Base64.getDecoder();
+        apiAuth = new String(decoder.decode(apiAuth));
+
         downloadUrl = XMLUtil.getChildValue(config,"DOWNLOAD");
         lruQueries = new LinkedHashMap<String,String>() {
             @Override
@@ -193,8 +197,13 @@ public class LiChessOpeningExplorer extends OpeningBook
 
         String urlString = apiUrl+"?fen="+URLEncoder.encode(fen)+"&topGames="+topGames;    //  don't enumerate games
         URL url = new URL(urlString);
+        // note: authentication required
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", apiAuth);
+        connection.connect();
 
-        InputStream in = url.openStream();
+        InputStream in = connection.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         jsonText = br.lines().collect(Collectors.joining("\n"));
         lruQueries.put(fen,jsonText);
