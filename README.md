@@ -18,7 +18,7 @@ analysis.
 
 Features:
 
-- Graphical frontend to game database
+- Graphical frontend to game database (with *millions* of games)
 - Read and write PGN (Portable Game Notations) files
 - 2D and 3D view
 - Edit games, insert comments, variations
@@ -33,7 +33,7 @@ Features:
 
 ---
 
-#### **<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.2 and Patch 1.5.15.</a>**
+#### **<a href="https://github.com/peteschaefer/jose/releases">Download Current Version 1.5.2 and Patch 1.5.16.</a>**
 
 <br>
 <a href="https://github.com/peteschaefer/jose/wiki/Installation-Notes">Installation Notes</a><br>
